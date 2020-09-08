@@ -1,0 +1,64 @@
+<vex-page-layout>
+    <vex-page-layout-header class="pb-16" fxLayout="column" fxLayoutAlign="center start">
+        <vex-secondary-toolbar current="Schools List" class="w-full">
+            <vex-breadcrumbs [crumbs]="['School']" class="flex-auto"></vex-breadcrumbs>
+        </vex-secondary-toolbar>
+    </vex-page-layout-header>
+
+    <vex-page-layout-content class="-mt-6">
+
+        <div class="card overflow-auto -mt-16">
+            <div class="bg-white px-6 h-16 border-b sticky left-0" fxLayout="row" fxLayoutAlign="start center">
+                <div class="flex w-full justify-between">
+                    <div class="py-3" fxFlex="300px" fxFlex.lt-md="auto" fxHide.xs fxLayout="row"
+                        fxLayoutAlign="start center">
+                        <div class="flex">
+                            <input
+                                class="px-4 py-3 border-0 outline-none w-full bg-transparent" placeholder="Search..."
+                                type="search">
+                            <button class="ml-4" fxFlex="none" fxHide.gt-xs mat-icon-button type="button">
+                                <mat-icon [icIcon]="icSearch"></mat-icon>
+                            </button>
+                        </div>
+                    </div>
+
+
+                    <div fxFlex="200px" class="pt-3">
+                        <button class="ml-4" fxFlex="none" mat-icon-button
+                            matTooltip="Filter Columns" type="button">
+                            <mat-icon [icIcon]="icFilterList"></mat-icon>
+                        </button>
+
+                        <button color="primary" class="ml-4" fxFlex="none" mat-raised-button type="button"
+                            (click)='goToAdd()'>
+                            <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true"
+                                size="24px">
+                            </ic-icon>
+                            <span>Add New School</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <table class="table table-striped text-nowrap">
+                <thead>
+                    <tr style="text-align: left">
+                        <th>School Name</th>
+                        <th>Address</th>
+                        <th>Principal</th>
+                        <th>Telephone</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let s of SchoolModelList?.schoolList">
+                        <td><a href="school_details.html">{{s.school_name}}</a></td>
+                        <td>{{s.school_address}}</td>
+                        <td>Carolyn Butler</td>
+                        <td>+1 404-252-8389</td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </vex-page-layout-content>
+</vex-page-layout>

@@ -1,0 +1,220 @@
+
+
+                <form [formGroup]="form" (ngSubmit)="send()">
+              
+                    <mat-card-header>
+                        <mat-card-title>{{"washInformation"|translate}}</mat-card-title>
+                    </mat-card-header>
+                    
+                    <mat-card-content>
+                        <div class="py-6" @stagger fxLayout="column">
+                            <div class="mb-2 md:flex md:flex-wrap">
+                                <div class="flex flex-1 mx-4 md:w-1/2">
+                                    <mat-form-field class="w-full" appearance="outline" color="primary">
+                                        <mat-label>{{'runningWater'|translate}}</mat-label>
+                                        <mat-select formControlName="runningWater">
+                                            <mat-option></mat-option>
+                                            <div *ngFor="let key of runningWater">
+                                            <mat-option value="{{key}}">{{key}}</mat-option>
+                                            </div>
+                                        </mat-select>
+                                        
+                                    </mat-form-field>
+                                </div>
+                                <div class="flex flex-1 mx-4 md:w-1/2">
+                                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                                        <mat-label>{{'mainSourceofDrinkingWater'|translate}}</mat-label>
+                                        <input matInput formControlName="mainSourceofDrinkingWater"     >
+
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="mb-2 md:flex md:flex-wrap">
+                                <div class="flex flex-1 mx-4 md:w-1/2">
+                                    <mat-form-field class="w-full" appearance="outline" color="primary">
+                                        <mat-label>{{'currentlyAvailable'|translate}}</mat-label>
+                                        <mat-select formControlName="currentlyAvailable">
+                                            <mat-option></mat-option>
+                                            <div *ngFor="let key of runningWater">
+                                            <mat-option value="{{key}}">{{key}}</mat-option>
+                                            </div>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="flex flex-1 mx-4 md:w-1/2">
+                                    <mat-form-field class="w-full" appearance="outline" color="primary">
+                                        <mat-label>{{'handwashingAvailable'|translate}}</mat-label>
+                                        <mat-select formControlName="handwashingAvailable">
+                                            <mat-option></mat-option>
+                                            <div *ngFor="let key of runningWater">
+                                            <mat-option value="{{key}}">{{key}}</mat-option>
+                                            </div>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="mb-2 md:flex md:flex-wrap">
+                                <div class="flex flex-1 mx-4 md:w-1/2">
+                                    <mat-form-field class="w-full" appearance="outline" color="primary">
+                                        <mat-label>{{'soapWaterAvailable'|translate}}</mat-label>
+                                        <mat-select formControlName="soapWaterAvailable">
+                                            <mat-option></mat-option>
+                                            <div *ngFor="let key of runningWater">
+                                            <mat-option value="{{key}}">{{key}}</mat-option>
+                                            </div>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="flex flex-1 mx-4 md:w-1/2">
+                                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                                        <mat-label>{{'hygeneEducation'|translate}}</mat-label>
+                                        <input matInput formControlName="hygeneEducation"   >
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="pb-6" @stagger fxLayout="column">
+                            <div class="px-6">
+                                <h4 class="text-primary">{{'femaleToiletInformation'|translate}}</h4>
+                            </div>
+
+                            <div class="mb-2 md:flex md:flex-wrap">
+                                <div class="flex flex-1 mx-4 md:w-1/2">
+                                    <mat-form-field class="w-full" appearance="outline" color="primary">
+                                        <mat-label>{{'femaleToiletType'|translate}}</mat-label>
+                                        <mat-select formControlName="femaleToiletType">
+                                            <mat-option></mat-option>
+                                            <div *ngFor="let key of runningWater">
+                                            <mat-option value="{{key}}">{{key}}</mat-option>
+                                            </div>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="flex flex-1 mx-4 md:w-1/2">
+                                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                                        <mat-label>{{'totalFemaleToilets'|translate}}</mat-label>
+                                        <input matInput formControlName="totalFemaleToilets"    >
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="mb-2 md:flex md:flex-wrap">
+                                <div class="flex flex-1 mx-4 md:w-1/2">
+                                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                                        <mat-label>{{'totalFemaleToiletsUsable'|translate}}</mat-label>
+                                        <input matInput formControlName="totalFemaleToiletsUsable"  >
+                                    </mat-form-field>
+                                </div>
+                                <div class="flex flex-1 mx-4 md:w-1/2">
+                                    <mat-form-field class="w-full" appearance="outline" color="primary">
+                                        <mat-label>{{'femaleToiletAccessibility'|translate}}</mat-label>
+                                        <mat-select formControlName="femaleToiletAccessibility">
+                                            <mat-option></mat-option>
+                                            <div *ngFor="let key of runningWater">
+                                            <mat-option value="{{key}}">{{key}}</mat-option>
+                                            </div>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pb-6" @stagger fxLayout="column">
+                            <div class="px-6">
+                                <h4 class="text-primary">{{'maleToiletInformation'|translate}}</h4>
+                            </div>
+
+                            <div class="mb-2 md:flex md:flex-wrap">
+                                <div class="flex flex-1 mx-4 md:w-1/2">
+                                    <mat-form-field class="w-full" appearance="outline" color="primary">
+                                        <mat-label>{{'maleToiletType'|translate}}</mat-label>
+                                        <mat-select formControlName="maleToiletType">
+                                            <mat-option></mat-option>
+                                            <div *ngFor="let key of runningWater">
+                                            <mat-option value="{{key}}">{{key}}</mat-option>
+                                            </div>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="flex flex-1 mx-4 md:w-1/2">
+                                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                                        <mat-label>{{'totalMaleToilets'|translate}}</mat-label>
+                                        <input matInput formControlName="totalMaleToilets"  >
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="mb-2 md:flex md:flex-wrap">
+                                <div class="flex flex-1 mx-4 md:w-1/2">
+                                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                                        <mat-label>{{'totalMaleToiletsUsable'|translate}}</mat-label>
+                                        <input matInput formControlName="totalMaleToiletsUsable"    >
+                                    </mat-form-field>
+                                </div>
+                                <div class="flex flex-1 mx-4 md:w-1/2">
+                                    <mat-form-field class="w-full" appearance="outline" color="primary">
+                                        <mat-label>{{'maleToiletAccessibility'|translate}}</mat-label>
+                                        <mat-select formControlName="maleToiletAccessibility">
+                                            <mat-option></mat-option>
+                                            <div *ngFor="let key of runningWater">
+                                            <mat-option value="{{key}}">{{key}}</mat-option>
+                                            </div>                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                        <div @stagger fxLayout="column">
+                            <div class="px-6">
+                                <h4 class="text-primary">{{'commonToiletInformation'|translate}}</h4>
+                            </div>
+
+                            <div class="mb-2 md:flex md:flex-wrap">
+                                <div class="flex flex-1 mx-4 md:w-1/2">
+                                    <mat-form-field class="w-full" appearance="outline" color="primary">
+                                        <mat-label>{{'commonToiletType'|translate}}</mat-label>
+                                        <mat-select formControlName="commonToiletType">
+                                            <mat-option></mat-option>
+                                            <div *ngFor="let key of runningWater">
+                                            <mat-option value="{{key}}">{{key}}</mat-option>
+                                            </div>                                        
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="flex flex-1 mx-4 md:w-1/2">
+                                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                                        <mat-label>{{'totalCommonToilets'|translate}}</mat-label>
+                                        <input matInput formControlName="totalCommonToilets"    >
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="mb-2 md:flex md:flex-wrap">
+                                <div class="flex flex-1 mx-4 md:w-1/2">
+                                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                                        <mat-label>{{'totalCommonToiletsUsable'|translate}}</mat-label>
+                                        <input matInput formControlName="totalCommonToiletsUsable"  >
+                                    </mat-form-field>
+                                </div>
+                                <div class="flex flex-1 mx-4 md:w-1/2">
+                                    <mat-form-field class="w-full" appearance="outline" color="primary">
+                                        <mat-label>{{'commonToiletAccessibility'|translate}}</mat-label>
+                                        <mat-select formControlName="commonToiletAccessibility">
+                                            <mat-option></mat-option>
+                                            <div *ngFor="let key of runningWater">
+                                            <mat-option value="{{key}}">{{key}}</mat-option>
+                                            </div>                                        
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-card-content>
+                    <mat-card-actions>
+                        <div class="px-6 pb-4 text-right">
+                            <button color="primary" mat-raised-button type="submit" >{{'submit'|translate}}</button>
+                        </div>
+                    </mat-card-actions>
+                    
+
+            </form>
+            

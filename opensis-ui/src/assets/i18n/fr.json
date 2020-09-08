@@ -1,0 +1,43 @@
+{
+    "SIS": "Hoekige site met meerdere talen",
+    "emailAddress":"Adresse électronique",
+    "emailAddressIsRequired":"Nous avons besoin d'une adresse e-mail pour vous connecter",
+    "password":"Mot de passe",
+    "passwordIsRequired":"Nous avons besoin d'un mot de passe pour vous connecter",
+    "language":"Langue",
+    "rememberMe":"Souviens-toi de moi",
+    "forgotPassword":"Mot de passe oublié?",
+    "signIn":"SE CONNECTER",
+    "2020OpenSolutionsForEducation(OS4Ed)":"2020 Solutions ouvertes pour l'éducation (OS4Ed)",
+
+    
+    "submit":"SOUMETTRE",
+    "cancel":"ANNULER",
+
+    
+    "addSection":"Ajouter une section",
+    "addNewSection":"Ajouter une nouvelle section",
+
+    "addRoom":"Ajouter une salle",
+    "addNewRoom":"Ajouter une nouvelle salle",
+    "title":"Titre",
+    "capacity":"Capacité",
+    "description":"La description",
+    "sortOrder":"Ordre de tri",
+    "action":"Action",
+
+    "addMarkingPeriod":"Ajouter une période de marquage",
+    "clickAnItemToViewDetailsOnTheRightSide":"Cliquez sur un élément pour afficher les détails sur le côté droit",
+    "editItem":"Modifier l'article",
+    "deleteItem":"Effacer l'article",
+    "addChildMarkingPeriod":"Ajouter une période de notation enfant",
+    "graded":"Noté",
+    "exam":"Examen",
+    "comments":"Commentaires",
+    "shortName":"Nom court",
+    "begins":"Commence",
+    "ends":"Prend fin",
+    "gradePostingBegins":"La publication des notes commence",
+    "gradePostingEnds":"Fin de la publication des notes"
+    
+}

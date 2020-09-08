@@ -1,0 +1,150 @@
+<vex-page-layout>
+    <vex-page-layout-header class="pb-16" fxLayout="column" fxLayoutAlign="center start">
+        <vex-secondary-toolbar current="Notices" class="w-full">
+            <vex-breadcrumbs [crumbs]="['School','Notices']" class="flex-auto"></vex-breadcrumbs>
+        </vex-secondary-toolbar>
+    </vex-page-layout-header>
+
+    <div class="-mt-6 absolute w-full" vexContainer>
+        <mat-drawer-container class="bg-transparent -mt-16 p-gutter" vexContainer>
+            <mat-card class="mb-5">
+                <div class="flex items-center pl-0" fxLayout="row" fxLayoutAlign="center center">
+                    <div class="flex-auto">
+                        <mat-button-toggle-group name="fontStyle" color="primary">
+                            <mat-button-toggle value="all" checked>All</mat-button-toggle>
+                            <mat-button-toggle value="today">Today</mat-button-toggle>
+                            <mat-button-toggle value="upcoming">Upcoming</mat-button-toggle>
+                            <mat-button-toggle value="past">Past</mat-button-toggle>
+                        </mat-button-toggle-group>
+                    </div>
+                    <button (click)="openAddNew()" type="button" color="primary" mat-raised-button><ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2 ic-inline" inline="true"></ic-icon> Add Notice</button>
+                </div>
+            </mat-card>
+
+            <div class="flex flex-col sm:flex-row">
+                <div class="flex-1">
+                    <div class="sm:pr-4">
+                        <vex-notice-cards imageUrl="assets/img/demo/landscape.jpg"
+                            title="Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+                            visibleFrom="Mar/1/2018 to May/30/2018"
+                            visibleTo="All School, Administrator w/Custom, Teacher w/Custom, Parent w/Custom, Super Administrator">
+                            <div class="px-gutter pt-4 pb-6">
+                                <p class="pb-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent sit
+                                    amet dui
+                                    varius, egestas tortor eget, vehicula ex. In sagittis erat id arcu vestibulum
+                                    pulvinar. Nam dictum placerat arcu ac laoreet. Maecenas luctus, lorem id
+                                    sollicitudin sagittis, erat nulla consectetur metus, eu egestas mi ipsum at metus.
+                                    Ut cursus rutrum consequat. Integer consectetur quam ut gravida congue. Curabitur
+                                    laoreet, metus ut interdum viverra, dolor nisi porta tellus, a congue est odio id
+                                    quam.</p>
+                                <p class="pb-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Class aptent
+                                    taciti sociosqu
+                                    ad litora torquent per conubia nostra, per inceptos himenaeos. Ut vulputate eget
+                                    nunc dapibus consequat. Integer dignissim ipsum et finibus interdum. Morbi nec risus
+                                    lacus. Curabitur at eleifend sapien. Vestibulum pharetra risus eget magna mollis
+                                    aliquet. Curabitur luctus cursus pellentesque. In vitae aliquam ante. Interdum et
+                                    malesuada fames ac ante ipsum primis in faucibus. Cras eget orci eu ex pretium
+                                    vehicula. Donec eleifend lorem aliquet consectetur pretium. Aenean sapien ex,
+                                    placerat id justo pretium, eleifend pellentesque felis. Nulla non varius ex.
+                                    Interdum et malesuada fames ac ante ipsum primis in faucibus.</p>
+                            </div>
+                        </vex-notice-cards>
+                        <vex-notice-cards title="Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+                            visibleFrom="Mar/1/2018 to May/30/2018"
+                            visibleTo="All School, Administrator w/Custom, Teacher w/Custom, Parent w/Custom, Super Administrator">
+                            <div class="px-gutter pt-4 pb-6">
+                                <p class="pb-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent sit
+                                    amet dui
+                                    varius, egestas tortor eget, vehicula ex. In sagittis erat id arcu vestibulum
+                                    pulvinar. Nam dictum placerat arcu ac laoreet. Maecenas luctus, lorem id
+                                    sollicitudin sagittis, erat nulla consectetur metus, eu egestas mi ipsum at metus.
+                                    Ut cursus rutrum consequat. Integer consectetur quam ut gravida congue. Curabitur
+                                    laoreet, metus ut interdum viverra, dolor nisi porta tellus, a congue est odio id
+                                    quam.</p>
+                                <p class="pb-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Class aptent
+                                    taciti sociosqu
+                                    ad litora torquent per conubia nostra, per inceptos himenaeos. Ut vulputate eget
+                                    nunc dapibus consequat. Integer dignissim ipsum et finibus interdum. Morbi nec risus
+                                    lacus. Curabitur at eleifend sapien. Vestibulum pharetra risus eget magna mollis
+                                    aliquet. Curabitur luctus cursus pellentesque. In vitae aliquam ante. Interdum et
+                                    malesuada fames ac ante ipsum primis in faucibus. Cras eget orci eu ex pretium
+                                    vehicula. Donec eleifend lorem aliquet consectetur pretium. Aenean sapien ex,
+                                    placerat id justo pretium, eleifend pellentesque felis. Nulla non varius ex.
+                                    Interdum et malesuada fames ac ante ipsum primis in faucibus.</p>
+                                <p class="pb-4">Vestibulum rhoncus auctor dolor vel semper. Curabitur interdum vel erat
+                                    a porta.
+                                    Donec molestie felis elit, ut convallis eros aliquam et. Phasellus convallis tortor
+                                    sed justo laoreet dictum. Vivamus vestibulum risus tincidunt elit accumsan accumsan.
+                                    Phasellus ornare dapibus diam, vel fringilla dui lacinia non. Morbi lacinia metus
+                                    ligula, vel faucibus nulla tempus sit amet. Orci varius natoque penatibus et magnis
+                                    dis parturient montes, nascetur ridiculus mus. </p>
+                            </div>
+                        </vex-notice-cards>
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <div class="sm:pl-4">
+                        <vex-notice-cards title="Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+                            visibleFrom="Mar/1/2018 to May/30/2018"
+                            visibleTo="All School, Administrator w/Custom, Teacher w/Custom, Parent w/Custom, Super Administrator">
+                            <div class="px-gutter pt-4 pb-6">
+                                <p class="pb-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent sit
+                                    amet dui
+                                    varius, egestas tortor eget, vehicula ex. In sagittis erat id arcu vestibulum
+                                    pulvinar. Nam dictum placerat arcu ac laoreet. Maecenas luctus, lorem id
+                                    sollicitudin sagittis, erat nulla consectetur metus, eu egestas mi ipsum at metus.
+                                    Ut cursus rutrum consequat. Integer consectetur quam ut gravida congue. Curabitur
+                                    laoreet, metus ut interdum viverra, dolor nisi porta tellus, a congue est odio id
+                                    quam.</p>
+                                <p class="pb-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Class aptent
+                                    taciti sociosqu
+                                    ad litora torquent per conubia nostra, per inceptos himenaeos. Ut vulputate eget
+                                    nunc dapibus consequat. Integer dignissim ipsum et finibus interdum. Morbi nec risus
+                                    lacus. Curabitur at eleifend sapien. Vestibulum pharetra risus eget magna mollis
+                                    aliquet. Curabitur luctus cursus pellentesque. In vitae aliquam ante. Interdum et
+                                    malesuada fames ac ante ipsum primis in faucibus. Cras eget orci eu ex pretium
+                                    vehicula. Donec eleifend lorem aliquet consectetur pretium. Aenean sapien ex,
+                                    placerat id justo pretium, eleifend pellentesque felis. Nulla non varius ex.
+                                    Interdum et malesuada fames ac ante ipsum primis in faucibus.</p>
+                                <p class="pb-4">Vestibulum rhoncus auctor dolor vel semper. Curabitur interdum vel erat
+                                    a porta.
+                                    Donec molestie felis elit, ut convallis eros aliquam et. Phasellus convallis tortor
+                                    sed justo laoreet dictum. Vivamus vestibulum risus tincidunt elit accumsan accumsan.
+                                    Phasellus ornare dapibus diam, vel fringilla dui lacinia non. Morbi lacinia metus
+                                    ligula, vel faucibus nulla tempus sit amet. Orci varius natoque penatibus et magnis
+                                    dis parturient montes, nascetur ridiculus mus. </p>
+                            </div>
+                        </vex-notice-cards>
+                        <vex-notice-cards imageUrl="assets/img/demo/landscape.jpg"
+                            title="Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+                            visibleFrom="Mar/1/2018 to May/30/2018"
+                            visibleTo="All School, Administrator w/Custom, Teacher w/Custom, Parent w/Custom, Super Administrator">
+                            <div class="px-gutter pt-4 pb-6">
+                                <p class="pb-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent sit
+                                    amet dui
+                                    varius, egestas tortor eget, vehicula ex. In sagittis erat id arcu vestibulum
+                                    pulvinar. Nam dictum placerat arcu ac laoreet. Maecenas luctus, lorem id
+                                    sollicitudin sagittis, erat nulla consectetur metus, eu egestas mi ipsum at metus.
+                                    Ut cursus rutrum consequat. Integer consectetur quam ut gravida congue. Curabitur
+                                    laoreet, metus ut interdum viverra, dolor nisi porta tellus, a congue est odio id
+                                    quam.</p>
+                                <p class="pb-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Class aptent
+                                    taciti sociosqu
+                                    ad litora torquent per conubia nostra, per inceptos himenaeos. Ut vulputate eget
+                                    nunc dapibus consequat. Integer dignissim ipsum et finibus interdum. Morbi nec risus
+                                    lacus. Curabitur at eleifend sapien. Vestibulum pharetra risus eget magna mollis
+                                    aliquet. Curabitur luctus cursus pellentesque. In vitae aliquam ante. Interdum et
+                                    malesuada fames ac ante ipsum primis in faucibus. Cras eget orci eu ex pretium
+                                    vehicula. Donec eleifend lorem aliquet consectetur pretium. Aenean sapien ex,
+                                    placerat id justo pretium, eleifend pellentesque felis. Nulla non varius ex.
+                                    Interdum et malesuada fames ac ante ipsum primis in faucibus.</p>
+                            </div>
+                        </vex-notice-cards>
+                    </div>
+
+
+                </div>
+            </div>
+        </mat-drawer-container>
+    </div>
+</vex-page-layout>

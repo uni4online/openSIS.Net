@@ -1,0 +1,37 @@
+.marking-period-tree {
+    .tree-node {
+        @apply border-primary-light rounded;
+
+        &.active {
+            @apply bg-blue;
+
+            a {
+                font-weight: bold;
+                @apply text-white;
+            }
+        }
+    }
+
+    ul {
+        margin-left: 15px;
+        @apply border-l-2 border-dotted border-primary-light ;
+
+        li {
+            padding-left: 30px;
+            padding-top: 15px;
+            position: relative;
+
+            .tree-node {
+                &:after {
+                    content: " ";
+                    width: 30px;
+                    height: 1px;
+                    position: absolute;
+                    @apply border-t-2 border-dotted border-primary-light;
+                    top: 40px;
+                    left: 0;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,146 @@
+<vex-page-layout>
+    <vex-page-layout-header class="pb-16" fxLayout="column" fxLayoutAlign="center start">
+        <vex-secondary-toolbar current="School Information" class="w-full">
+            <vex-breadcrumbs [crumbs]="['School','[School Name]']" class="flex-auto"></vex-breadcrumbs>
+        </vex-secondary-toolbar>
+    </vex-page-layout-header>
+
+    <vex-page-layout-content class="-mt-6">
+
+        <mat-drawer-container class="bg-transparent flex-auto flex -mt-16">
+            <mat-drawer-content class="flex-auto flex items-start">
+                <div class="hidden sm:block mr-6 ng-tns-c284-386 ng-star-inserted w-1/6">
+                    <div class="max-w-xxxs w-full">
+                        <div class="h-14 mb-6 flex items-center sm:px-0" fxLayout="row" fxLayoutAlign="start center">
+                            <div class="card w-3/4">asd</div>
+                        </div>
+
+                        <div class="px-gutter sm:px-0">
+                            <a @fadeInRight class="list-item mt-2 no-underline flex items-center" matRipple>
+                                <!-- <ic-icon [icon]="item.icon" [ngClass]="item.classes?.icon" class="ltr:mr-3 rtl:ml-3" size="24px"></ic-icon> -->
+                                <span>General Information</span>
+                            </a>
+                            <a @fadeInRight class="list-item mt-2 no-underline flex items-center" matRipple>
+                                <span>WASH Information</span>
+                            </a>
+                            <a @fadeInRight class="list-item mt-2 no-underline flex items-center" matRipple>
+                                <!-- <ic-icon [icon]="item.icon" [ngClass]="item.classes?.icon" class="ltr:mr-3 rtl:ml-3" size="24px"></ic-icon> -->
+                                <span>Other Information</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <mat-card @fadeInUp class="w-full" fxFlex="auto">
+                    <div class="flex items-center mx-4" fxLayout="row" fxLayoutAlign="center center">
+                        <h3 class="flex-auto">WASH Information</h3>
+                        <button mat-button color="primary"><mat-icon [icIcon]="icEdit"></mat-icon> Edit Information</button>
+                    </div>
+                    <mat-card-content>
+                        <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-4">
+                            <div class="my-6">
+                                <ul class="md:grid md:grid-cols-3 md:col-gap-8 md:row-gap-10">
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">Running Water</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Yes
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">Main Source of Drinking Water</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Filtered Ground Water</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">Currently Available?</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Yes</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">Handwashing Available?</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Yes</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">Soap and Water Available</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Yes</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">Hygene Education</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">-</p>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="mt-12">
+                                <div class="pb-4">
+                                    <h4 class="text-blue font-medium">Female Toilet Information</h4>
+                                </div>
+                                <ul class="md:grid md:grid-cols-3 md:col-gap-8 md:row-gap-10">
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">Female Toilet Type</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Flushing Toilet</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">Total Female Toilet</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">3</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">Total Female Toilets Usable</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">3</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">Female Toilet Accessability</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">-</p>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="mt-12">
+                                <div class="pb-4">
+                                    <h4 class="text-blue font-medium">Male Toilet Information</h4>
+                                </div>
+                                <ul class="md:grid md:grid-cols-3 md:col-gap-8 md:row-gap-10">
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">Male Toilet Type</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Flushing Toilet</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">Total Male Toilet</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">3</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">Total Male Toilets Usable</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">3</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">Male Toilet Accessability</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">-</p>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="mt-12">
+                                <div class="pb-4">
+                                    <h4 class="text-blue font-medium">Common Toilet Information</h4>
+                                </div>
+                                <ul class="md:grid md:grid-cols-3 md:col-gap-8 md:row-gap-10">
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">Common Toilet Type</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Flushing Toilet</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">Common Male Toilet</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">2</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">Common Male Toilets Usable</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">2</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">Common Toilet Accessability</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">-</p>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </mat-card-content>
+                </mat-card>
+            </mat-drawer-content>
+        </mat-drawer-container>
+    </vex-page-layout-content>
+</vex-page-layout>

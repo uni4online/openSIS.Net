@@ -1,0 +1,229 @@
+<vex-page-layout>
+    <vex-page-layout-header class="pb-16" fxLayout="column" fxLayoutAlign="center start">
+        <vex-secondary-toolbar current="School Information" class="w-full">
+            <vex-breadcrumbs [crumbs]="['School','[School Name]']" class="flex-auto"></vex-breadcrumbs>
+        </vex-secondary-toolbar>
+    </vex-page-layout-header>
+
+    <vex-page-layout-content class="-mt-6">
+
+        <mat-drawer-container class="bg-transparent flex-auto flex -mt-16">
+            <mat-drawer-content class="flex-auto flex items-start">
+                <div class="hidden sm:block mr-6 ng-tns-c284-386 ng-star-inserted w-1/6">
+                    <div class="max-w-xxxs w-full">
+                        <div class="h-14 mb-6 flex items-center sm:px-0" fxLayout="row" fxLayoutAlign="start center">
+                            <div class="card w-3/4">asd</div>
+                        </div>
+
+                        <div class="px-gutter sm:px-0">
+                            <a @fadeInRight class="list-item mt-2 no-underline flex items-center" matRipple>
+                                <!-- <ic-icon [icon]="item.icon" [ngClass]="item.classes?.icon" class="ltr:mr-3 rtl:ml-3" size="24px"></ic-icon> -->
+                                <span>General Information</span>
+                            </a>
+                            <a @fadeInRight class="list-item mt-2 no-underline flex items-center" matRipple>
+                                <span>WASH Information</span>
+                            </a>
+                            <a @fadeInRight class="list-item mt-2 no-underline flex items-center" matRipple>
+                                <!-- <ic-icon [icon]="item.icon" [ngClass]="item.classes?.icon" class="ltr:mr-3 rtl:ml-3" size="24px"></ic-icon> -->
+                                <span>Other Information</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <mat-card @fadeInUp class="w-full" fxFlex="auto">
+                    <div class="flex items-center mx-4" fxLayout="row" fxLayoutAlign="center center">
+                        <h3 class="flex-auto">General Information</h3>
+                        <button mat-button color="primary"><mat-icon [icIcon]="icEdit"></mat-icon> Edit Information</button>
+                    </div>
+                    <mat-card-content>
+                        <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-4">
+                            <div class="my-6">
+                                <ul class="md:grid md:grid-cols-3 md:col-gap-8 md:row-gap-10">
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">School Name</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Southpoint High School
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">Short Name</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">SPHS</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">School ID</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">1025</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">Alternate ID</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">-</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">School Level</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Middle</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">School Classification</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Public</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">Affiliation</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">-</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">Associations</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Central Board of Middle
+                                            Schools</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">Lowest Grade Level</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">1</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">Highest Grade Level</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">12</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">Date School Opened</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Jan 01, 2020</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">Date School Closed</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Dec 30, 2020</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">Locale/Code</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">-</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">Gender</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Boys</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">Internet</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Yes</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">Electricity</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Yes</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">Status</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2"><span
+                                                class="text-green">Active</span></p>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="mt-12">
+                                <div class="pb-4">
+                                    <h4 class="text-blue font-medium">Address Information</h4>
+                                </div>
+                                <ul class="md:grid md:grid-cols-3 md:col-gap-8 md:row-gap-10">
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">Street Address 1</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">1036 Lindbergh Dr NE</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">Street Address 2</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">-</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">City</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Atlanta</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">County</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Southpoint</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">Division</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">-</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">State/Region/Province</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Georgia</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">District</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">4th</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">Zip/Postal Code</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">30324</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">Country</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">United States of America
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">Latitude, Longitude</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">33.8193983,
+                                            -84.355816,17 </p>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="mt-12">
+                                <div class="pb-4">
+                                    <h4 class="text-blue font-medium">Contact Information</h4>
+                                </div>
+                                <ul class="md:grid md:grid-cols-3 md:col-gap-8 md:row-gap-10">
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">Principal</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">David Smith</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">Assistant Principal</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Jannie Cochran</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">Telephone</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">+1 (930) 242-5186</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">Fax</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">+1 (930) 242-5186</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">Website</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">www.southpointhigh.edu
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">Email</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">info@southpointhigh.edu
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">Twitter</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">-</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">Facebook</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2"><a
+                                                href="https://www.facebook.com/" target="_blank"
+                                                class="text-primary">https://www.facebook.com/southpointhigh</a></p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">Instagram</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2"><a
+                                                href="https://www.instagram.com/" target="_blank"
+                                                class="text-primary">@southpointhighschool</a></p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">Youtube</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">-</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">LinkedIn</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">-</p>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </mat-card-content>
+                </mat-card>
+            </mat-drawer-content>
+        </mat-drawer-container>
+    </vex-page-layout-content>
+</vex-page-layout>

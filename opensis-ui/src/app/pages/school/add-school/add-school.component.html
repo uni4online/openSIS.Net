@@ -1,0 +1,43 @@
+
+<vex-page-layout>
+    <vex-page-layout-header class="pb-16" fxLayout="column" fxLayoutAlign="center start">        
+        <vex-secondary-toolbar current="Add School Information" class="w-full">
+            <vex-breadcrumbs [crumbs]="['School','Add School']" class="flex-auto"></vex-breadcrumbs>
+        </vex-secondary-toolbar>
+    </vex-page-layout-header>    
+    <vex-page-layout-content class="-mt-6">
+        <mat-drawer-container class="bg-transparent flex-auto flex -mt-16">
+            <mat-drawer-content class="flex-auto flex items-start">
+                <div class="hidden sm:block mr-6 ng-tns-c284-386 ng-star-inserted w-1/6">
+                    <div class="max-w-xxxs w-full">
+                        <div class="h-14 mb-6 flex items-center sm:px-0" fxLayout="row" fxLayoutAlign="start center">
+                            <div class="card w-3/4">asd</div>
+                        </div>
+
+                        <div class="px-gutter sm:px-0">
+                            <a @fadeInRight [ngClass]=" generalFlag ? 'list-item mt-2 no-underline flex items-center bg-primary hover:bg-primary text-white' : 'list-item mt-2 no-underline flex items-center'" (click) = "showGeneral()" matRipple>
+                                <!-- <ic-icon [icon]="item.icon" [ngClass]="item.classes?.icon" class="ltr:mr-3 rtl:ml-3" size="24px"></ic-icon> -->
+                                <span>General Information</span>
+                            </a>
+                            <a @fadeInRight [ngClass]=" washFlag ? 'list-item mt-2 no-underline flex items-center bg-primary hover:bg-primary text-white' : 'list-item mt-2 no-underline flex items-center'"  (click) = "showWash()" matRipple>
+                                <span>WASH Information</span>
+                            </a>
+                            <a @fadeInRight class="list-item mt-2 no-underline flex items-center" matRipple>
+                                <!-- <ic-icon [icon]="item.icon" [ngClass]="item.classes?.icon" class="ltr:mr-3 rtl:ml-3" size="24px"></ic-icon> -->
+                                <span>Other Information</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <mat-card  class="w-full" fxFlex="auto">
+                    <div  *ngIf="displayGeneral">
+                        <vex-general-info></vex-general-info>
+                     </div>
+                     <div  *ngIf="displayWash">
+                        <vex-wash-info></vex-wash-info>
+                     </div>             
+                </mat-card>
+            </mat-drawer-content>
+        </mat-drawer-container>
+    </vex-page-layout-content>
+</vex-page-layout>

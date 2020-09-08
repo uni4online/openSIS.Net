@@ -1,0 +1,69 @@
+<div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
+    <h2 class="headline m-0" fxFlex="auto">{{'addMarkingPeriod' | translate}}</h2>
+
+    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+        <mat-icon [icIcon]="icClose"></mat-icon>
+    </button>
+</div>
+<mat-divider class="-mx-6 text-border"></mat-divider>
+
+<mat-dialog-content fxLayout="column">
+    <mat-form-field class="mt-6" appearance="outline" color="primary">
+        <mat-label>{{'title' | translate}}</mat-label>
+        <input cdkFocusInitial matInput required>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" color="primary">
+        <mat-label>{{'shortName' | translate}}</mat-label>
+        <input matInput required>
+    </mat-form-field>
+
+    <div class="mb-2 md:flex md:flex-wrap -mx-6">
+        <div class="flex flex-1 mx-6 md:w-1/2">
+            <mat-form-field class="w-full" appearance="outline" color="primary">
+                <mat-label>{{'begins' | translate}}</mat-label>
+                <input [matDatepicker]="begins" matInput>
+                <mat-datepicker-toggle [for]="begins" matSuffix></mat-datepicker-toggle>
+                <mat-datepicker #begins></mat-datepicker>
+            </mat-form-field>
+        </div>
+        <div class="flex flex-1 mx-6 md:w-1/2">
+            <mat-form-field class="w-full" appearance="outline" color="primary">
+                <mat-label>{{'ends' | translate}}</mat-label>
+                <input [matDatepicker]="ends" matInput>
+                <mat-datepicker-toggle [for]="ends" matSuffix></mat-datepicker-toggle>
+                <mat-datepicker #ends></mat-datepicker>
+            </mat-form-field>
+        </div>
+    </div>
+
+    <div class="mb-2 md:flex md:flex-wrap -mx-6">
+        <div class="flex flex-1 mx-6 md:w-1/2">
+            <mat-form-field class="w-full" appearance="outline" color="primary">
+                <mat-label>{{'gradePostingBegins' | translate}}</mat-label>
+                <input [matDatepicker]="gradePostingBegins" matInput>
+                <mat-datepicker-toggle [for]="gradePostingBegins" matSuffix></mat-datepicker-toggle>
+                <mat-datepicker #gradePostingBegins></mat-datepicker>
+            </mat-form-field>
+        </div>
+        <div class="flex flex-1 mx-6 md:w-1/2">
+            <mat-form-field class="w-full" appearance="outline" color="primary">
+                <mat-label>{{'gradePostingEnds' | translate}}</mat-label>
+                <input [matDatepicker]="gradePostingEnds" matInput>
+                <mat-datepicker-toggle [for]="gradePostingEnds" matSuffix></mat-datepicker-toggle>
+                <mat-datepicker #gradePostingEnds></mat-datepicker>
+            </mat-form-field>
+        </div>
+    </div>
+
+    <div fxLayout="row" fxLayoutGap="25px">
+        <mat-checkbox [checked]="false" color="primary">{{'graded' | translate}}</mat-checkbox>
+        <mat-checkbox [checked]="false" color="primary">{{'exam' | translate}}</mat-checkbox>
+        <mat-checkbox [checked]="false" color="primary">{{'comments' | translate}}</mat-checkbox>
+    </div>
+</mat-dialog-content>
+
+<mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" class="py-6">
+    <button mat-button mat-dialog-close type="button">{{'cancel' | translate}}</button>
+    <button color="primary" mat-raised-button type="submit">{{'submit' | translate}}</button>
+</mat-dialog-actions>
