@@ -15,4 +15,4 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 Please make sure to update tests as appropriate.
 
 ## License
-Coming soon.
+[GNU AGPLv3](https://www.gnu.org/licenses/agpl-3.0.en.html)
