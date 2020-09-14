@@ -1,4 +1,4 @@
-# [openSIS.Net](https://opensis.com/) - The next generation School Managemenet System
+# [openSIS.Net](https://opensis.com/) - The next generation School Management System
 
 ### Vision - Provide the ability to every school in this world to operate on-line.
 
