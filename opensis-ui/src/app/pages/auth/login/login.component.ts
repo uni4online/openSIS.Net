@@ -11,6 +11,10 @@ import { LoginService } from '../../../services/login.service';
 import { Observable, timer } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
+import { LoaderService } from 'src/app/services/loader.service';
+import { ValidationService } from '../../shared/validation.service';
+
+
 @Component({
   selector: 'vex-login',
   templateUrl: './login.component.html',
@@ -32,7 +36,7 @@ export class LoginComponent implements OnInit {
   icLanguage = icLanguage;
   public tenant = "";
   UserModel: UserViewModel = new UserViewModel();
-  public isDisable=true;
+  loading:Boolean;
 
   constructor(
     private router: Router,
@@ -41,33 +45,24 @@ export class LoginComponent implements OnInit {
     private cd: ChangeDetectorRef,
     private snackbar: MatSnackBar,
     private loginService: LoginService,
-    public translate: TranslateService
+    public translate: TranslateService,
+    private loaderService:LoaderService
   ) {
     translate.addLangs(['en', 'fr']);
     translate.setDefaultLang('en');
     this.Activeroute.params.subscribe(params => { this.tenant = params.id || 'OpensisV2'; });
     sessionStorage.setItem("tenant", this.tenant);  
-  
+    this.loaderService.isLoading.subscribe((v) => {
+      this.loading = v;
+    });
   }
   get f() { return this.form.controls; }
+
   ngOnInit() {   
     this.form = this.fb.group({
-      email: ['', Validators.required],
-      password: ['', Validators.required,
-      //Validators.pattern('(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$"')
-    ]
-    });
-    if(this.f.email.value !== "" && this.f.password.value !== ""){
-      this.isDisable=false;
-    }
-  }
-
-  checkDisable(){
-    if (this.form.valid) {
-      this.isDisable=false;
-    }else{
-      this.isDisable=true;
-    }
+      email: ['',[Validators.required, ValidationService.emailValidator] ],
+      password: ['', Validators.required]    
+    });  
   }
   
   send() {    
@@ -88,10 +83,9 @@ export class LoginComponent implements OnInit {
               duration: 10000
             });
           } else {
-          
             this.UserModel = data;        
             sessionStorage.setItem("token", data._token);
-            this.router.navigateByUrl("/school/dashboards");    
+            this.router.navigateByUrl("/school/dashboards");   
           
           }
         }

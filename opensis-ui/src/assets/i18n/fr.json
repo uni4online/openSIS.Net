@@ -8,11 +8,19 @@
     "rememberMe":"Souviens-toi de moi",
     "forgotPassword":"Mot de passe oublié?",
     "signIn":"SE CONNECTER",
-    "2020OpenSolutionsForEducation(OS4Ed)":"2020 Solutions ouvertes pour l'éducation (OS4Ed)",
 
     
     "submit":"SOUMETTRE",
     "cancel":"ANNULER",
+    "active":"Actif", 
+    "editItem":"Modifier l'article",
+    "deleteItem":"Effacer l'article",
+    "graded":"Noté",
+    "exam":"Examen",
+    "comments":"Commentaires",
+    "shortName":"Nom court",
+    "begins":"Commence",
+    "ends":"Prend fin",
 
     
     "addSection":"Ajouter une section",
@@ -28,16 +36,12 @@
 
     "addMarkingPeriod":"Ajouter une période de marquage",
     "clickAnItemToViewDetailsOnTheRightSide":"Cliquez sur un élément pour afficher les détails sur le côté droit",
-    "editItem":"Modifier l'article",
-    "deleteItem":"Effacer l'article",
     "addChildMarkingPeriod":"Ajouter une période de notation enfant",
-    "graded":"Noté",
-    "exam":"Examen",
-    "comments":"Commentaires",
-    "shortName":"Nom court",
-    "begins":"Commence",
-    "ends":"Prend fin",
     "gradePostingBegins":"La publication des notes commence",
-    "gradePostingEnds":"Fin de la publication des notes"
+    "gradePostingEnds":"Fin de la publication des notes",
+
+    "addNewGradeLevel":"Ajouter un nouveau niveau",
+    "addGradeLevel":"Ajouter un niveau scolaire",
+    "nextGrade":"Prochaine année"
     
 }

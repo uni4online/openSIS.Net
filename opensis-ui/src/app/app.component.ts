@@ -124,56 +124,6 @@ export class AppComponent {
             route: '/school/schoolinfo/notices',
             icon: icinfo
           },
-          {
-            type: 'link',
-            label: 'Periods',
-            route: '/school/periods',
-            icon: icinfo
-          },
-          {
-            type: 'link',
-            label: 'Grade Levels',
-            route: '/school/gradelevels',
-            icon: icinfo
-          },
-          {
-            type: 'link',
-            label: 'Sections',
-            route: '/school/schoolinfo/sections',
-            icon: icinfo
-          },
-          {
-            type: 'link',
-            label: 'Rooms',
-            route: '/school/schoolinfo/rooms',
-            icon: icinfo
-          },
-          {
-            type: 'dropdown',
-            label: 'Setup',            
-            icon: icinfo,
-            children: [
-              {
-                type: 'link',
-                label: 'School Custom Fields',
-                route: '/school/schoolcustom',
-                icon: icinfo
-              },
-              {
-                type: 'link',
-                label: 'School Preference',
-                route: '/school/schoolpreference',
-                icon: icinfo
-              },
-              {
-                type: 'link',
-                label: 'School Hierarchy',
-                route: '/school/schoolhierarchy',
-                icon: icinfo
-              }
-            ]
-          
-          },
         ]
       },
       { type: 'dropdown',
@@ -268,7 +218,7 @@ export class AppComponent {
       { type: 'link',
         label: 'Settings',
         icon: icsettings,
-        route: '/school/settings'       
+        route: '/settings/settings'       
       },
       { type: 'dropdown',
         label: 'Tools',

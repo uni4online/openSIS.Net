@@ -11,12 +11,20 @@
     "rememberMe":"Remember Me",
     "forgotPassword":"Forgot Password?",
     "signIn":"SIGN IN",
-    "2020OpenSolutionsForEducation(OS4Ed)":"2020 Open Solutions for Education (OS4Ed)",
+    "invalidEmailAddress":"Invalid Email Address",
 
     
     "submit":"SUBMIT",
     "cancel":"CANCEL",
- 
+    "active":"Active",    
+    "editItem":"Edit Item",
+    "deleteItem":"Delete Item",
+    "graded":"Graded",
+    "exam":"Exam",
+    "comments":"Comments",
+    "shortName":"Short Name",
+    "begins":"Begins",
+    "ends":"Ends",
 
 
     "generalInformation":"General Information",
@@ -63,7 +71,6 @@
     "county":"County",
 
 
-
     "washInformation":"WASH Information",
     "runningWater":"Running Water",    
     "mainSourceofDrinkingWater":"Main Source of Drinking Water",
@@ -101,15 +108,29 @@
 
     "addMarkingPeriod":"Add Marking Period",
     "clickAnItemToViewDetailsOnTheRightSide":"Click an Item to View Details on the Right Side",
-    "editItem":"Edit Item",
-    "deleteItem":"Delete Item",
     "addChildMarkingPeriod":"Add Child Marking Period",
-    "graded":"Graded",
-    "exam":"Exam",
-    "comments":"Comments",
-    "shortName":"Short Name",
-    "begins":"Begins",
-    "ends":"Ends",
     "gradePostingBegins":"Grade Posting Begins",
-    "gradePostingEnds":"Grade Posting Ends"
+    "gradePostingEnds":"Grade Posting Ends",
+
+    "addNewGradeLevel":"Add New Grade Level",
+    "addGradeLevel":"Add Grade Level",
+    "nextGrade":"Next Grade",
+    
+    "schoolNameIsRequired":"School Name is Required",
+    "schoolIdIsRequired":"School ID is Required",
+    "schoolLevelIsRequired":"School Level is Required",
+    "schoolClassificationIsRequired":"School Classification is Required",
+    "lowestGradeLevelIsRequired":"Lowest Grade Level is Required",
+    "highestGradeLevelIsRequired":"Highest Grade Level is Required",
+    "streetAddressIsRequired":"Street Address is Required",
+    "cityIsRequired":"City is Required",
+    "zipIsRequired":"Zip Code is Required",
+    "countryIsRequired":"Country is Required",
+    "principalNameIsRequired":"Principal Name is Required",
+    "telephoneIsRequired":"Telephone is Required",
+    "invalidWebsite":"Invalid Website",
+    "invalidTelephoneNumber":"Invalid Telephone Number"
+   
+    
+   
 }

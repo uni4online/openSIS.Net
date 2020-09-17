@@ -15,17 +15,14 @@ namespace opensis.core.School.Interfaces
         public bool IsMandatoryFieldsArePresent(Schools schools);
 
 
-        Task<SchoolAddViewMopdel> SaveSchool(SchoolAddViewMopdel schools);
-        Task<SchoolAddViewMopdel> UpdateSchool(SchoolAddViewMopdel schools);
+        public SchoolAddViewModel SaveSchool(SchoolAddViewModel schools);
+        public SchoolAddViewModel UpdateSchool(SchoolAddViewModel schools);
 
-        Task<SchoolAddViewMopdel> ViewSchool(SchoolAddViewMopdel schools);
+        public SchoolAddViewModel ViewSchool(SchoolAddViewModel schools);
 
-        Task<SchoolAddViewMopdel> EditSchool(SchoolAddViewMopdel schools);
+       
+        public SchoolListModel GetAllSchools(PageResult pageResult);
 
-        //Task<SchoolLogoUpdateModel> updateSchoolLogo(Guid guid, SchoolLogoUpdateModel schoolLogoUpdateModel);
-
-        //public List<Schools> getAllSchools(opensisContext context);
-
-        //public List<Schools> SaveSchool(Schools school, opensisContext context);
+        
     }
 }

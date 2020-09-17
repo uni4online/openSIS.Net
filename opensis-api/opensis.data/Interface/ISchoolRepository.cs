@@ -12,10 +12,12 @@ namespace opensis.data.Interface
         public List<Schools> GetAllSchools();
         public List<Schools> AddSchools(Schools school);
 
-        Task<SchoolAddViewMopdel> AddSchool(SchoolAddViewMopdel school);
-        Task<SchoolAddViewMopdel> UpdateSchool(SchoolAddViewMopdel school);
-        Task<SchoolAddViewMopdel> ViewSchool(SchoolAddViewMopdel school);
-        Task<SchoolAddViewMopdel> EditSchool(SchoolAddViewMopdel school);
+        public SchoolAddViewModel AddSchool(SchoolAddViewModel school);
+        public SchoolAddViewModel UpdateSchool(SchoolAddViewModel school);
+        public SchoolAddViewModel ViewSchool(SchoolAddViewModel school);
+      
+
+        public SchoolListModel GetAllSchools(PageResult pageResult);
         //Task<SchoolLogoUpdateModel> updateSchoolLogo(Guid guid, SchoolLogoUpdateModel schoolLogoUpdateModel);
     }
 }

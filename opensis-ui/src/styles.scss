@@ -4,6 +4,9 @@
 // @import "~bootstrap/dist/css/bootstrap.css";
 @import "./@vex/styles/core";
 
+@import "../node_modules/quill/dist/quill.snow.css";
+@import "./@vex/styles/partials/plugins/_quill.scss";
+
 
 .mat-button-toggle-appearance-standard {
   .mat-button-toggle-label-content {
@@ -26,7 +29,7 @@
 /**
   Uncomment the below code and adjust the values to fit your colors, the application will automatically adjust
  */
-:root {
+/*:root {
   // --color-primary: blue;
   // --color-primary-contrast: white;
 
@@ -35,7 +38,7 @@
 
   // --color-warn: yellow;
   // --color-warn-contrast: black;
-}
+} */
 
 
 //Bootstrap tables

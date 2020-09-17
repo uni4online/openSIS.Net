@@ -28,49 +28,89 @@ namespace opensisAPI.Controllers
         }
        
 
-        [HttpPost("getAllSchools")]
+        //[HttpPost("getAllSchools")]
 
-        public ActionResult<SchoolListViewModel> GetAllSchools(SchoolViewModel objModel)
-        {
-            //return _schoolRegisterService.getAllSchools(_context);
-            return _schoolRegisterService.getAllSchools(objModel);
-        }
+        //public ActionResult<SchoolListViewModel> GetAllSchools(SchoolViewModel objModel)
+        //{
+        //    //return _schoolRegisterService.getAllSchools(_context);
+        //    return _schoolRegisterService.getAllSchools(objModel);
+        //}
 
 
-        [HttpPut("addSchools")]
+        //[HttpPut("addSchools")]
 
-        public ActionResult<SchoolListViewModel> AddSchools(Schools schools)
-        {
-            return _schoolRegisterService.SaveSchool(schools);
-        }
+        //public ActionResult<SchoolListViewModel> AddSchools(Schools schools)
+        //{
+        //    return _schoolRegisterService.SaveSchool(schools);
+        //}
 
         [HttpPost("addSchool")]
-
-        public async Task<ActionResult<SchoolAddViewMopdel>> AddSchool(SchoolAddViewMopdel school)
+        public ActionResult<SchoolAddViewModel> AddSchool(SchoolAddViewModel school)
         {
-            return await _schoolRegisterService.SaveSchool(school);
+            SchoolAddViewModel schoolAdd = new SchoolAddViewModel();
+            try
+            {
+                schoolAdd= _schoolRegisterService.SaveSchool(school);
+            }
+            catch (Exception es)
+            {
+                schoolAdd._failure = true;
+                schoolAdd._message = es.Message;
+            }
+            return schoolAdd;
         }
 
         [HttpPut("updateSchool")]
 
-        public async Task<ActionResult<SchoolAddViewMopdel>> UpdateSchool(SchoolAddViewMopdel school)
+        public ActionResult<SchoolAddViewModel> UpdateSchool(SchoolAddViewModel school)
         {
-            return await _schoolRegisterService.UpdateSchool(school);
+            SchoolAddViewModel schoolAdd = new SchoolAddViewModel();
+            try
+            {
+                schoolAdd =  _schoolRegisterService.UpdateSchool(school);
+            }
+            catch (Exception es)
+            {
+                schoolAdd._failure = true;
+                schoolAdd._message = es.Message;
+            }
+            return schoolAdd;
         }
 
         [HttpPost("viewSchool")]
 
-        public async Task<ActionResult<SchoolAddViewMopdel>> ViewSchool(SchoolAddViewMopdel school)
+        public ActionResult<SchoolAddViewModel> ViewSchool(SchoolAddViewModel school)
         {
-            return await _schoolRegisterService.ViewSchool(school);
+            SchoolAddViewModel schoolAdd = new SchoolAddViewModel();
+            try
+            {
+                schoolAdd= _schoolRegisterService.ViewSchool(school);
+            }
+            catch (Exception es)
+            {
+                schoolAdd._failure = true;
+                schoolAdd._message = es.Message;
+            }
+            return schoolAdd;
         }
 
-        [HttpPost("getSchool")]
-        public async Task<ActionResult<SchoolAddViewMopdel>> GetSchool(SchoolAddViewMopdel school)
-        {
-            return await _schoolRegisterService.EditSchool(school);
-        }
+       
+        [HttpPost("getAllSchools")]
 
+        public ActionResult<SchoolListModel> GetAllSchools(PageResult pageResult)
+        {
+            SchoolListModel schoolList = new SchoolListModel();
+            try
+            {
+                schoolList =  _schoolRegisterService.GetAllSchools(pageResult);
+            }
+            catch (Exception es)
+            {
+                schoolList._message = es.Message;
+                schoolList._failure=true;
+            }
+            return schoolList;
+        }
         //[HttpPost("updateSchoolLogo/{guid}")]
         //public async Task<ActionResult<SchoolLogoUpdateModel>> UpdateSchoolLogo(Guid guid, [FromForm] SchoolLogoUpdateModel schoolLogoUpdateModel)
         //{

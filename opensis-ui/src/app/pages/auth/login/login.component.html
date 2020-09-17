@@ -1,38 +1,39 @@
+<vex-mat-spinner-overlay *ngIf="loading"></vex-mat-spinner-overlay>
+
 <div class="w-full h-full bg-gradient" fxLayout="column" fxLayoutAlign="center center">
-  
-  <div @fadeInUp class="w-full md:w-2/4 lg:w-4/12">
-  <div class="card overflow-hidden w-full py-6 px-4">
-    <div class="p-6 pb-0" fxLayout="column" fxLayoutAlign="center center">
+  <div @fadeInUp class="w-full md:w-2/4 lg:w-4/12 xl:w-3/12">
+
+    <div class="card overflow-hidden w-full">
+      <div class="p-6 pb-0 px-4" fxLayout="column" fxLayoutAlign="center center">
       <div class="fill-current text-center">
-        <img  src="assets/img/logo_dark.png">
+          <img src="assets/img/opensis_logo.png" alt="openSIS">
       </div>
     </div>
 
     <div class="datetime-container fixed bottom-10 left-10 text-white opacity-25 hidden md:block">
-
       <div class="text-6xl leading-tight">{{ time | async | date: 'H:mm' }}</div>
       <div class="text-2xl leading-tight">{{ time | async | date: 'fullDate'}}</div>
     </div>
 
-      <div class="text-center mt-4">
+      <div class="text-center mt-4 bg-primary-light py-2">
         <!-- <h2 class="title m-0">Welcome back</h2> -->
-        <h4 class="body-2 text-secondary m-0">{{'SIS'| translate}}</h4>
+        <h4 class="body-2 text-primary m-0">{{'SIS'| translate}}</h4>
       </div>
   
-      <form [formGroup]="form" class="p-6" fxLayout="column" fxLayoutGap="16px" (ngSubmit)="send()">
+      <form [formGroup]="form" class="px-10 py-6" fxLayout="column" fxLayoutGap="16px" (ngSubmit)="send()">
         <div fxFlex="auto" fxLayout="column">
+          
             <mat-form-field appearance="outline" class="vex-flex-form-field" color="primary">
-            <mat-label>{{'emailAddress'|translate}}</mat-label>
-            <input formControlName="email" (keyup)="checkDisable()" [(ngModel)]="UserModel.email" name="user_name"
-              matInput required>
+              <mat-label>{{'emailAddress'|translate}}</mat-label>
+                   <input  formControlName="email" [(ngModel)]="UserModel.email"  name="email"   matInput  required >
+
               <mat-error *ngIf="form.get('email').hasError('required')">{{'emailAddressIsRequired'|translate}}</mat-error>
-             
+              <mat-error *ngIf="!form.get('email').hasError('required') && form.get('email').hasError('invalidEmailAddress')">{{'invalidEmailAddress'|translate}}</mat-error>            
             </mat-form-field>
             
             <mat-form-field appearance="outline" class="vex-flex-form-field" color="primary">
               <mat-label>{{'password'|translate}}</mat-label>
-            <input [type]="inputType" (keyup)="checkDisable()" formControlName="password"
-              [(ngModel)]="UserModel.password" name="user_password" matInput required>
+              <input [type]="inputType" formControlName="password" [(ngModel)]="UserModel.password" name="user_password"   matInput required>
               <button (click)="toggleVisibility()" mat-icon-button matSuffix matTooltip="Toggle Visibility" type="button">
                 <mat-icon *ngIf="visible" [icIcon]="icVisibility"></mat-icon>
                 <mat-icon *ngIf="!visible" [icIcon]="icVisibilityOff"></mat-icon>
@@ -58,13 +59,13 @@
         </div>
       
        
-        <button color="primary" mat-raised-button type="button" [disabled]="isDisable" class="pt-2 pb-2" type="submit" >
+        <button color="primary" mat-raised-button type="button" class="pt-2 pb-2" type="submit" >
           {{'signIn'|translate}}
         </button>
        
     </form>    
+    </div>
   <div class="pt-5 text-center text-white">
-    &copy; {{'2020OpenSolutionsForEducation(OS4Ed)'|translate}}
-  </div>
+      openSIS is a product of Open Solutions for Education, Inc. (<a href="http://www.os4ed.com" target="_blank">OS4ED</a>) and is licensed under the GNU AGPLv3.
 </div>
   </div>

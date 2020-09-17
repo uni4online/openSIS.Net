@@ -1,0 +1,33 @@
+<div class="row" style="margin-top: 1%;display:none" *ngIf="enableCropTool">
+    <div class="text-center col-md-12">
+      <ng-template #mytemplate>
+        <div class="d-flex justify-content-end">
+          <button mat-raised-button color="warn" (click)="onClose()">Close</button>
+        </div>
+        <h2 class="text-center">Crop Image</h2>
+        <div class="d-flex justify-content-around">
+          <div>
+            <image-cropper (imageCropped)="imageCropped($event)" [imageChangedEvent]="imageChangedEvent"
+              [maintainAspectRatio]="false" (imageLoaded)="imageLoaded()" (cropperReady)="cropperReady()"
+              [onlyScaleDown]="false" (loadImageFailed)="loadImageFailed()">
+            </image-cropper>
+          </div>
+          <div>
+            <img [src]="croppedImage" style="border: 4px solid white;" width="200px" height="200px" />
+          </div>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+  <div class="input-group" style="display: none;">
+    <input type="file" (change)="uploadFile($event,fileUpload)" #fileUpload accept="image/jpg, image/jpeg, image/png">
+  </div>
+  <div @fadeInRight class="d-flex justify-content-center" (click)="fileUpload.click();unsetImage()" style="cursor: pointer;">
+    <img @fadeInRight *ngIf="croppedImage=='' && preview==''" src="../../../../assets/img/upload-school-logo.jpg" width="200"
+      height="200" style="border: 5px solid white;" alt="Upload School Logo">
+    <img @fadeInRight *ngIf="preview!='' && croppedImage==''" [src]="preview" style="border: 5px solid white;" width="200px"
+      height="200px" />
+    <div *ngIf="croppedImage!=''">
+      <img @fadeInRight [src]="croppedImage" style="border: 5px solid white;" width="200" height="200" />
+    </div>
+  </div>

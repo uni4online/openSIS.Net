@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit ,EventEmitter,Output} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { GeneralInfoModel } from '../../../../models/generalInfoModel';
+import {SchoolAddViewModel } from '../../../../models/schoolDetailsModel';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
 import {fadeInRight400ms} from '../../../../../@vex/animations/fade-in-right.animation';
-import { GeneralInfoService } from '../../../../services/general-info.service';
+import { SchoolService } from '../../../../services/school.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import * as _moment from 'moment';
 import {default as _rollupMoment} from 'moment';
 import {MomentDateAdapter} from '@angular/material-moment-adapter';
@@ -16,8 +16,11 @@ import { schoolLevel } from '../../../../enums/school_level.enum';
 import { schoolClassification } from '../../../../enums/school_classification.enum';
 import { gender } from '../../../../enums/gender.enum';
 import { country } from '../../../../enums/country.enum';
+import { status } from '../../../../enums/status.enum';
 import { highestGradeLevel } from '../../../../enums/highest_grade_level.enum';
-import {MY_FORMATS } from '../../../shared/format-datepicker'
+import {MY_FORMATS } from '../../../shared/format-datepicker';
+import { ValidationService } from '../../../shared/validation.service';
+import { LoaderService } from 'src/app/services/loader.service';
 const moment = _rollupMoment || _moment;
 
 
@@ -36,7 +39,10 @@ const moment = _rollupMoment || _moment;
     {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
   ],
 })
+
 export class GeneralInfoComponent implements OnInit {
+  @Output("parentShowWash") parentShowWash :EventEmitter<any> = new EventEmitter<any>();
+  
   private schoolLevels = schoolLevel;
   public schoolLevelOptions = [];
   private schoolClassifications = schoolClassification;
@@ -49,20 +55,29 @@ export class GeneralInfoComponent implements OnInit {
   public countryOption = [];
   private highestGradeLevels = highestGradeLevel;
   public highestGradeLevelsOption = [];
+  public tenant = "";
   form: FormGroup;  
-  UserModel: GeneralInfoModel = new GeneralInfoModel();
-  
+  UserModel: SchoolAddViewModel = new SchoolAddViewModel();
+  loading;
+
   constructor( private fb: FormBuilder,
-    private generalInfoService:GeneralInfoService,
+    private generalInfoService:SchoolService,
      private snackbar: MatSnackBar,
      private router: Router,
-     public translateService:TranslateService) {
+     private Activeroute: ActivatedRoute,
+     public translateService:TranslateService,
+     private loaderService:LoaderService) {
       translateService.use('en');
+      this.Activeroute.params.subscribe(params => { this.tenant = params.id || 'OpensisV2'; });
+      this.loaderService.isLoading.subscribe((val) => {
+        this.loading = val;
+      });
       }
 
   ngOnInit(): void {
-    this.form = this.fb.group({
-      school_name: ['', Validators.required],    
+    this.form = this.fb.group(
+      {
+      school_Name: ['', Validators.required],    
       alternate_name: ['',],
       school_id: ['', Validators.required],
       alternate_id: [''],
@@ -72,8 +87,8 @@ export class GeneralInfoComponent implements OnInit {
       associations: [''],
       lowest_grade_level: ['', Validators.required],
       highest_grade_level: ['', Validators.required],
-      date_school_opened: [moment()],
-      date_school_closed: [moment()],
+      date_school_opened: [''],
+      date_school_closed: [''],
       code: [''],
       gender: [''],
       internet: [''],
@@ -91,17 +106,17 @@ export class GeneralInfoComponent implements OnInit {
       longitude: [''],
       principal: ['',Validators.required],
       ass_principal: [''],
-      telephone: ['', Validators.required],
+      telephone: ['',[Validators.required,ValidationService.phoneValidator] ],
       fax: [''],
-      website: [''],
-      email: [''],
+      website: ['',ValidationService.websiteValidator],
+      email: ['',ValidationService.emailValidator],
       twitter: [''],
       facebook: [''],
       instagram: [''],
       youtube: [''],
       linkedin: [''],
       county: [''],
-    });
+    }, {validator: ValidationService.dateComparisonValidator('date_school_opened','date_school_closed')});
 
     this.schoolLevelOptions = Object.keys(this.schoolLevels);
     this.schoolClassificationOptions = Object.keys(this.schoolClassifications);
@@ -115,10 +130,13 @@ export class GeneralInfoComponent implements OnInit {
   {
      return this.form.controls;
   }
-
+  
+   
+ 
   submit() {    
     if (this.form.dirty && this.form.valid) {  
-     
+      this.UserModel._tenantName = this.tenant; 
+      this.UserModel._token = sessionStorage.getItem("token"); 
       this.generalInfoService.SaveGeneralInfo(this.UserModel).subscribe(data => {
         if(typeof(data)=='undefined')
         {
@@ -133,7 +151,11 @@ export class GeneralInfoComponent implements OnInit {
               duration: 10000
             });
           } else {
-          
+              
+              this.snackbar.open('General Info Submission Successful.', '', {
+              duration: 10000
+            });
+            this.parentShowWash.emit();
             
           }
         }

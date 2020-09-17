@@ -1,57 +1,62 @@
 
 export class SchoolMasterModel {  
 
-    public School_Id:Number;
-    public School_Alt_Id:string;
-    public School_State_Id:string
-    public School_District_Id: string;
-    public School_Level: string;
-    public School_Classification: string;
-    public School_Name: string;
-    public Alternate_Name: string;
-    public Street_Address_1: string;
-    public Street_Address_2: string;
-    public City: string;
-    public County: string;
-    public Division: string;
-    public State: string;
-    public District: string;
-    public Zip: string;
-    public Country: string;
-    public Current_Period_ends: string;
-    public Max_api_checks: Number;
-    public Features:string;
-    public Created_By: string;
-    public Date_Created: string;
-    public Modified_By: string;
-    public Date_Modifed:string;
+    public tenant_Id:String;
+    public school_Id:any;
+    public school_Alt_Id:string;
+    public school_State_Id:string
+    public school_District_Id: string;
+    public school_Level: string;
+    public school_Classification: string;
+    public school_Name: string;
+    public alternate_Name: string;
+    public street_Address_1: string;
+    public street_Address_2: string;
+    public city: string;
+    public county: string;
+    public division: string;
+    public state: string;
+    public district: string;
+    public zip: string;
+    public country: string;
+    public geoPosition: string;
+    public current_Period_ends: string;
+    public max_api_checks: Number;
+    public features:string;
+    public created_By: any;
+    public date_Created: string;
+    public modified_By: any;
+    public date_Modifed:string;
 
     constructor() {        
        
-        this.School_Id = 0;
-        this.School_Alt_Id = "";
-        this.School_State_Id = "";
-        this.School_District_Id = "";
-        this.School_Level = "";
-        this.School_Classification = "";
-        this.School_Name = "";
-        this.Alternate_Name = "";
-        this.Street_Address_1 = "";
-        this.Street_Address_2 = "";
-        this.City = "";
-        this.County = "";
-        this.Division = "";
-        this.State = "";
-        this.District = "";
-        this.Zip = "";
-        this.Country = "";
-        this.Current_Period_ends = "";
-        this.Max_api_checks = 0;
-        this.Features = "";
-        this.Created_By = "";
-        this.Date_Created = "";
-        this.Modified_By = "";
-        this.Date_Modifed = "";
+      this.tenant_Id= "1E93C7BF-0FAE-42BB-9E09-A1CEDC8C0355";
+      this.school_Id=0;
+      this.school_Alt_Id= "";
+      this.school_State_Id= "";
+      this.school_District_Id= "";
+      this.school_Level= "";
+      this.school_Classification= "";
+      this.school_Name= "";
+      this.alternate_Name= "";
+      this.street_Address_1="";
+      this.street_Address_2= "";
+      this.city="";
+      this.county= ' ';
+      this.division= ' ';
+      this.state= ' '; 
+      this.district= ' ';
+      this.zip= "";
+      this.country= "";
+      this.geoPosition= null;
+      this.current_Period_ends= "2020-09-08T17:05:22.135Z";
+      this.max_api_checks= 0;
+      this.features= "";
+      this.created_By= ' ',
+      this.date_Created= "2020-09-08T17:05:22.135Z";
+      this.modified_By= ' ';
+      this.date_Modifed= "2020-09-08T17:05:22.135Z"
        
       }
 }
+

@@ -19,9 +19,13 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-
+import { QuillModule } from 'ngx-quill';
 import { JwtHelperService, JWT_OPTIONS  } from '@auth0/angular-jwt';
+import { LoaderInterceptor } from './services/loader.interceptor';
+import { LoaderService } from './services/loader.service';
 import { ResponseMessageService } from './services/response-message.service';
+
+
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -36,11 +40,36 @@ import { ResponseMessageService } from './services/response-message.service';
     MatDatepickerModule,
     MatCheckboxModule,
     MatSnackBarModule,
-    
+
     // Vex
     VexModule,
     CustomLayoutModule,
     HttpClientModule,
+    QuillModule.forRoot({
+      modules: {
+        toolbar: [
+          ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+          ['blockquote', 'code-block'],
+
+          [{ header: 1 }, { header: 2 }],               // custom button values
+          [{ list: 'ordered' }, { list: 'bullet' }],
+          [{ script: 'sub' }, { script: 'super' }],      // superscript/subscript
+          [{ indent: '-1' }, { indent: '+1' }],          // outdent/indent
+          [{ direction: 'rtl' }],                         // text direction
+
+          [{ size: ['small', false, 'large', 'huge'] }],  // custom dropdown
+          [{ header: [1, 2, 3, 4, 5, 6, false] }],
+
+          [{ color: [] }, { background: [] }],          // dropdown with defaults from theme
+          [{ align: [] }],
+
+          ['clean'],                                         // remove formatting button
+
+          ['link', 'image', 'video']                         // link and image, video
+          
+        ]
+      }
+    }),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -55,9 +84,13 @@ import { ResponseMessageService } from './services/response-message.service';
     multi: true
   },
   { provide: JWT_OPTIONS, useValue: JWT_OPTIONS },
+  { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true },
+  LoaderService,
   JwtHelperService,
-  ResponseMessageService], 
-  bootstrap: [AppComponent]
+  ResponseMessageService
+  ], 
+  bootstrap: [AppComponent],
+  exports:[], 
 })
 export class AppModule { }
 export function httpTranslateLoader(http: HttpClient) {

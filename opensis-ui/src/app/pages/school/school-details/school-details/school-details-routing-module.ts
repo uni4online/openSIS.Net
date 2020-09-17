@@ -6,8 +6,9 @@ import { MarkingPeriodsComponent } from '../../marking-periods/marking-periods.c
 import { NoticesComponent } from '../../notices/notices.component';
 import { ViewSchoolComponent } from '../../view-school/view-school.component';
 import { ViewWashInfoComponent } from '../../view-school/view-wash-info/view-wash-info.component';
-import { RoomsComponent } from '../../rooms/rooms.component';
-import{SectionsComponent}from'../../sections/sections.component';
+//import { RoomsComponent } from '../../rooms/rooms.component';
+//import{SectionsComponent}from'../../sections/sections.component';
+//import { GradeLevelsComponent } from '../../grade-levels/grade-levels.component';
 
 
 const routes: Routes = [
@@ -20,8 +21,9 @@ const routes: Routes = [
  {path:'add-school',component:AddSchoolComponent}, 
  {path:'view-school',component:ViewSchoolComponent},
  {path:'view-school/view-wash-info',component:ViewWashInfoComponent},
- {path:'rooms',component:RoomsComponent},
-{path:'sections',component:SectionsComponent},
+ //{path:'rooms',component:RoomsComponent},
+ //{path:'sections',component:SectionsComponent},
+ //{path:'grade-levels',component:GradeLevelsComponent},
 ];
 
 

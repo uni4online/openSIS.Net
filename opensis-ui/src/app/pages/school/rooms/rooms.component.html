@@ -1,20 +1,8 @@
-<vex-page-layout>
-    <vex-page-layout-header class="pb-16" fxLayout="column" fxLayoutAlign="center start">
-        <vex-secondary-toolbar current="Rooms" class="w-full">
-            <vex-breadcrumbs [crumbs]="['School','Rooms']" class="flex-auto"></vex-breadcrumbs>
-        </vex-secondary-toolbar>
-    </vex-page-layout-header>
-
-    <vex-page-layout-content class="-mt-6">
-        <div class="card overflow-auto -mt-16">
             <div class="bg-white px-6 h-16 border-b sticky left-0" fxLayout="row" fxLayoutAlign="start center">
                 <div class="flex w-full justify-between">
-                    <div class="py-3" fxFlex="300px" fxFlex.lt-md="auto" fxHide.xs fxLayout="row"
-                        fxLayoutAlign="start center">
+        <div class="py-3" fxFlex="300px" fxFlex.lt-md="auto" fxHide.xs fxLayout="row" fxLayoutAlign="start center">
                         <div class="flex">
-                            <input
-                                class="px-4 py-3 border-0 outline-none w-full bg-transparent" placeholder="Search..."
-                                type="search">
+                <input class="py-3 border-0 outline-none w-full bg-transparent" placeholder="Search..." type="search">
                             <button class="ml-4" fxFlex="none" fxHide.gt-xs mat-icon-button type="button">
                                 <mat-icon [icIcon]="icSearch"></mat-icon>
                             </button>
@@ -23,15 +11,12 @@
 
 
                     <div fxFlex="200px" class="pt-3">
-                        <button class="ml-4" fxFlex="none" mat-icon-button
-                            matTooltip="Filter Columns" type="button">
+            <button class="ml-4" fxFlex="none" mat-icon-button matTooltip="Filter Columns" type="button">
                             <mat-icon [icIcon]="icFilterList"></mat-icon>
                         </button>
 
-                        <button color="primary" class="ml-4" fxFlex="none" mat-raised-button type="button"
-                            (click)='openAddNew()'>
-                            <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true"
-                                size="24px">
+            <button color="primary" class="ml-4" fxFlex="none" mat-raised-button type="button" (click)='openAddNew()'>
+                <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true" size="24px">
                             </ic-icon>
                             <span>{{'addNewRoom' | translate}}</span>
                         </button>
@@ -46,6 +31,7 @@
                         <th>{{'capacity' | translate}}</th>
                         <th>{{'description' | translate}}</th>
                         <th>{{'sortOrder' | translate}}</th>
+                        <th>{{'active' | translate}}</th>
                         <th width="160">{{'action' | translate}}</th>
                     </tr>
                 </thead>
@@ -55,31 +41,48 @@
                         <td>50</td>
                         <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit</td>
                         <td>1</td>
-                        <td><a href="" class="mr-3"><mat-icon [icIcon]="icEdit"></mat-icon></a><a href=""><mat-icon [icIcon]="icDelete"></mat-icon></a></td>
+                        <td>Yes</td>
+            <td><a href="" class="mr-3">
+                    <mat-icon [icIcon]="icEdit"></mat-icon>
+                </a><a href="">
+                    <mat-icon [icIcon]="icDelete"></mat-icon>
+                </a></td>
                     </tr>
                     <tr>
                         <td><a href="javascript:void(0)" (click)="openViewDetails()" class="text-blue">Room 2</a></td>
                         <td>50</td>
                         <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit</td>
                         <td>2</td>
-                        <td><a href="" class="mr-3"><mat-icon [icIcon]="icEdit"></mat-icon></a><a href=""><mat-icon [icIcon]="icDelete"></mat-icon></a></td>
+                        <td>Yes</td>
+            <td><a href="" class="mr-3">
+                    <mat-icon [icIcon]="icEdit"></mat-icon>
+                </a><a href="">
+                    <mat-icon [icIcon]="icDelete"></mat-icon>
+                </a></td>
                     </tr>
                     <tr>
                         <td><a href="javascript:void(0)" (click)="openViewDetails()" class="text-blue">Room 3</a></td>
                         <td>50</td>
                         <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit</td>
                         <td>3</td>
-                        <td><a href="" class="mr-3"><mat-icon [icIcon]="icEdit"></mat-icon></a><a href=""><mat-icon [icIcon]="icDelete"></mat-icon></a></td>
+                        <td>No</td>
+            <td><a href="" class="mr-3">
+                    <mat-icon [icIcon]="icEdit"></mat-icon>
+                </a><a href="">
+                    <mat-icon [icIcon]="icDelete"></mat-icon>
+                </a></td>
                     </tr>
                     <tr>
                         <td><a href="javascript:void(0)" (click)="openViewDetails()" class="text-blue">Room 4</a></td>
                         <td>50</td>
                         <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit</td>
                         <td>4</td>
-                        <td><a href="" class="mr-3"><mat-icon [icIcon]="icEdit"></mat-icon></a><a href=""><mat-icon [icIcon]="icDelete"></mat-icon></a></td>
+                        <td>Yes</td>
+            <td><a href="" class="mr-3">
+                    <mat-icon [icIcon]="icEdit"></mat-icon>
+                </a><a href="">
+                    <mat-icon [icIcon]="icDelete"></mat-icon>
+                </a></td>
                     </tr>
                 </tbody>
-            </table>
-        </div>
-    </vex-page-layout-content>
-</vex-page-layout>
+</table>

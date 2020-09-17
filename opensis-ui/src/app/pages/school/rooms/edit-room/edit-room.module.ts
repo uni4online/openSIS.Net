@@ -15,6 +15,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { TranslateModule } from '@ngx-translate/core';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 
 
@@ -35,7 +36,8 @@ import { TranslateModule } from '@ngx-translate/core';
     MatFormFieldModule,
     MatCheckboxModule,
     ReactiveFormsModule,
-    TranslateModule
+    TranslateModule,
+    MatSlideToggleModule
   ]
 })
 export class EditRoomModule { }

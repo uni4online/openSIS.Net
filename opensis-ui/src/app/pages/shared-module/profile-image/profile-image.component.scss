@@ -1,0 +1,66 @@
+.cropper .move {
+    border: 2px solid #0c3e8a !important;
+  }
+.show{
+    display: none;
+}
+.sm-button{
+  padding: 1px 4px;
+  margin-bottom: 2px;
+}
+.cropper-dialog{
+    display:inline-block
+}
+.col-md-12{
+    position: relative;
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+.row {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+  }
+.text-center {
+    text-align: center !important;
+  }
+.d-flex {
+    display: -ms-flexbox !important;
+    display: flex !important;
+  }
+  .justify-content-start {
+    -ms-flex-pack: start !important;
+    justify-content: flex-start !important;
+  }
+  
+  .justify-content-end {
+    -ms-flex-pack: end !important;
+    justify-content: flex-end !important;
+  }
+  
+  .justify-content-center {
+    -ms-flex-pack: center !important;
+    justify-content: center !important;
+  }
+  
+  .justify-content-between {
+    -ms-flex-pack: justify !important;
+    justify-content: space-between !important;
+  }
+  
+  .justify-content-around {
+    -ms-flex-pack: distribute !important;
+    justify-content: space-around !important;
+  }
+
+  @media (min-width: 768px){
+    .col-md-12 {
+        -ms-flex: 0 0 100%;
+        flex: 0 0 100%;
+        max-width: 100%;
+      }
+  }

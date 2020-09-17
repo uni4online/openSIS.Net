@@ -8,6 +8,7 @@ import icSearch from '@iconify/icons-ic/twotone-search';
 import icAdd from '@iconify/icons-ic/twotone-add';
 import icFilterList from '@iconify/icons-ic/twotone-filter-list';
 import { EditSectionComponent } from '../sections/edit-section/edit-section.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'vex-sections',
@@ -26,7 +27,7 @@ export class SectionsComponent implements OnInit {
   icAdd = icAdd;
   icFilterList = icFilterList;
 
-  constructor(private dialog: MatDialog) { }
+  constructor(private dialog: MatDialog, public translateService:TranslateService) { translateService.use('en'); }
 
   ngOnInit(): void {
   }

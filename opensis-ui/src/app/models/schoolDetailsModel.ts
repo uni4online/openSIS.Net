@@ -1,107 +1,125 @@
 
+import { SchoolMasterModel } from "../models/schoolMasterModel";
+import { CommonField } from "../models/commonField";
+ 
+export class schoolDetailsModel {    
 
-export class schoolDetailsModel{
+    public  id:Number;
+    public  tenant_Id:string;
+    public  school_Id:Number;
 
-    /* General info*/
-    public  Affiliation:string;
-    public  Associations:string;
-    public  Locale:string;
-    public  Lowest_Grade_Level:string;
-    public  Highest_Grade_Level:string;
-    public  Date_School_Opened:string;
-    public  Date_School_Closed:string;
-    public Status:boolean;
-    public Gender:string;
-    public Internet:string;
-    public Electricity:boolean;
-    public Telephone:string;
-    public Fax:string;
-    public Website:string;
-    public Email:string;
-    public Facebook:string;
-    public Twitter:string;
-    public Instagram:string;
-    public Youtube:string;
-    public LinkedIn:string;
-    public Name_of_Principal:string; 
-    public Name_of_Assistant_Principal:string; 
-    public School_Logo:any;
-
-
-    /* Wash info */
-    /**Water fields **/
-    public Running_Water :boolean;
-    public Main_Source_of_Drinking_Water:string;
-    public Currently_Available:boolean;
-    public Handwashing_Available:boolean 
-    public Soap_and_Water_Available:boolean
-    public Hygene_Education:string
+    public schoolMaster: SchoolMasterModel;
     
-    /** Female_Toilet **/
-    public Female_Toilet_Type:string;
-    public Total_Female_Toilets:number;
-    public Total_Female_Toilets_Usable:number;
-    public Female_Toilet_Accessibility:string;
-    
-    /** Female_Toilet **/
-    public Male_Toilet_Type:string;
-    public Total_Male_Toilets:number;
-    public Total_Male_Toilets_Usable:number;
-    public Male_Toilet_Accessibility:string;
-    
-    /** Female_Toilet **/
-    public Comon_Toilet_Type:string;
-    public Total_Common_Toilets:number;
-    public Total_Common_Toilets_Usable:number;
-    public Common_Toilet_Accessibility:string;
-    
+    public affiliation: string;
+    public associations: string;
+    public locale: string;
+    public lowest_Grade_Level: string;
+    public highest_Grade_Level: string;
+    public date_School_Opened: string;
+    public date_School_Closed: string;
+    public status: Boolean;
+    public gender: string;
+    public internet: Boolean;
+    public electricity: Boolean;
+    public telephone: string;
+    public fax: string;
+    public website: string;
+    public email: string;
+    public facebook: string;
+    public twitter: string;
+    public instagram: string;
+    public youtube: string;
+    public linkedIn: string;
+    public name_of_Principal: string;
+    public name_of_Assistant_Principal: string;
+    public school_Logo: string;
+    public running_Water: Boolean;
+    public main_Source_of_Drinking_Water: string;
+    public currently_Available: Boolean;
+    public female_Toilet_Type: string;
+    public total_Female_Toilets: Number;
+    public total_Female_Toilets_Usable: Number;
+    public female_Toilet_Accessibility: string;
+    public male_Toilet_Type: string;
+    public total_Male_Toilets: Number;
+    public total_Male_Toilets_Usable: Number;
+    public male_Toilet_Accessibility: string;
+    public  comon_Toilet_Type: string;
+    public total_Common_Toilets: Number;
+    public total_Common_Toilets_Usable: Number;
+    public common_Toilet_Accessibility: string;
+    public  handwashing_Available: Boolean;
+    public soap_and_Water_Available: Boolean;
+    public hygene_Education: string;
+   
     constructor(){
+        this.id= 0;
+        this.tenant_Id=  "1E93C7BF-0FAE-42BB-9E09-A1CEDC8C0355";
+        this.school_Id=  0;
 
-		this.Affiliation="";
-		this.Associations="";
-		this.Locale="";
-		this.Lowest_Grade_Level="";
-		this.Highest_Grade_Level="";
-		this.Date_School_Opened="";
-		this.Date_School_Closed="";
-		this.Status
-		this.Gender="";
-		this.Internet="";
-		this.Electricity
-		this.Telephone="";
-		this.Fax="";
-		this.Website="";
-		this.Email="";
-		this.Facebook="";
-		this.Twitter="";
-		this.Instagram="";
-		this.Youtube="";
-		this.LinkedIn="";
-		this.Name_of_Principal=""; 
-		this.Name_of_Assistant_Principal="";
-		this.School_Logo;
+        this.schoolMaster= new SchoolMasterModel();
 
-        this.Running_Water ;
-        this.Main_Source_of_Drinking_Water="";
-        this.Currently_Available;
-        this.Handwashing_Available 
-        this.Soap_and_Water_Available
-        this.Hygene_Education="";
-
-        this.Female_Toilet_Type="";
-        this.Total_Female_Toilets=0;
-        this.Total_Female_Toilets_Usable=0;
-        this.Female_Toilet_Accessibility="";
-
-        this.Male_Toilet_Type="";
-        this.Total_Male_Toilets=0;
-        this.Total_Male_Toilets_Usable=0;
-        this.Male_Toilet_Accessibility="";
-
-        this.Comon_Toilet_Type="";
-        this.Total_Common_Toilets=0;
-        this.Total_Common_Toilets_Usable=0;
-        this.Common_Toilet_Accessibility="";
+		this.affiliation="";
+		this.associations="";
+		this.locale="";
+		this.lowest_Grade_Level="";
+		this.highest_Grade_Level="";
+		this.date_School_Opened=null;
+		this.date_School_Closed=null;
+		this.status=false;
+		this.gender="";
+		this.internet=false;
+		this.electricity=false;
+		this.telephone="";
+		this.fax="";
+		this.website="";
+		this.email="";
+		this.facebook="";
+		this.twitter="";
+		this.instagram="";
+		this.youtube="";
+		this.linkedIn="";
+		this.name_of_Principal=""; 
+		this.name_of_Assistant_Principal="";
+		this.school_Logo=null;
+        this.running_Water=false ;
+        this.main_Source_of_Drinking_Water="";
+        this.currently_Available=false ;
+        this.female_Toilet_Type="";
+        this.total_Female_Toilets=0;
+        this.total_Female_Toilets_Usable=0;
+        this.female_Toilet_Accessibility="";
+        this.male_Toilet_Type="";
+        this.total_Male_Toilets=0;
+        this.total_Male_Toilets_Usable=0;
+        this.male_Toilet_Accessibility="";
+        this.comon_Toilet_Type="";
+        this.total_Common_Toilets=0;
+        this.total_Common_Toilets_Usable=0;
+        this.common_Toilet_Accessibility="";
+        this.handwashing_Available=false ; 
+        this.soap_and_Water_Available=false ;
+        this.hygene_Education="";
+        
+        
+       
+        
+       
+        
+        
     }
     
+}
+
+
+export class SchoolAddViewModel extends CommonField {
+    public tblSchoolDetail: schoolDetailsModel;
+    public latitude: Number;
+    public longitude:Number;
+    constructor() {
+        super();
+        this.tblSchoolDetail= new schoolDetailsModel();
+        this.latitude=0;
+        this.longitude=0;
+    }
 }

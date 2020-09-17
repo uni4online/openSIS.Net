@@ -18,6 +18,7 @@ namespace opensis.core.School.Services
         private static string SUCCESS = "success";
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         private static readonly string TOKENINVALID = "Token not Valid";
+       
         public ISchoolRepository schoolRepository;
         public SchoolRegister(ISchoolRepository schoolRepository)
         {
@@ -60,6 +61,41 @@ namespace opensis.core.School.Services
             return schoolList;
         }
 
+        public SchoolListModel GetAllSchools(PageResult pageResult)
+        {
+            logger.Info("Method getAllSchools called.");
+            SchoolListModel schoolList = new SchoolListModel();
+            try
+            {
+                if (TokenManager.CheckToken(pageResult._tenantName, pageResult._token))
+                {
+                    schoolList = this.schoolRepository.GetAllSchools(pageResult);
+                    schoolList._message = SUCCESS;
+                    schoolList._failure = false;
+                    logger.Info("Method getAllSchools end with success.");
+                }
+
+                else
+                {
+                    schoolList._failure = true;
+                    schoolList._message = TOKENINVALID;
+                    return schoolList;
+                }
+            }
+            catch (Exception ex)
+            {
+                schoolList._message = ex.Message;
+                schoolList._failure = true;
+                logger.Error("Method getAllSchools end with error :" + ex.Message);
+            }
+
+
+            return schoolList;
+        }
+
+
+
+
         //public List<Schools> SaveSchool(Schools schools, opensisContext context)
         public SchoolListViewModel SaveSchool(Schools schools)
         {
@@ -80,78 +116,63 @@ namespace opensis.core.School.Services
             }
 
         }
-        public async Task<SchoolAddViewMopdel> UpdateSchool(SchoolAddViewMopdel schools)
+        public SchoolAddViewModel UpdateSchool(SchoolAddViewModel schools)
         {
-            SchoolAddViewMopdel schoolAddViewMopdel = new SchoolAddViewMopdel();
+            SchoolAddViewModel SchoolAddViewModel = new SchoolAddViewModel();
             if (TokenManager.CheckToken(schools._tenantName, schools._token))
             {
-                schoolAddViewMopdel = await this.schoolRepository.UpdateSchool(schools);
+                SchoolAddViewModel =  this.schoolRepository.UpdateSchool(schools);
                 //return getAllSchools();
-                return schoolAddViewMopdel;
+                return SchoolAddViewModel;
             }
             else
             {
-                schoolAddViewMopdel._failure = true;
-                schoolAddViewMopdel._message = TOKENINVALID;
-                return schoolAddViewMopdel;
+                SchoolAddViewModel._failure = true;
+                SchoolAddViewModel._message = TOKENINVALID;
+                return SchoolAddViewModel;
             }
 
         }
 
-        public async Task<SchoolAddViewMopdel> SaveSchool(SchoolAddViewMopdel schools)
+        public SchoolAddViewModel SaveSchool(SchoolAddViewModel schools)
         {
-            SchoolAddViewMopdel schoolAddViewMopdel = new SchoolAddViewMopdel();
+            SchoolAddViewModel SchoolAddViewModel = new SchoolAddViewModel();
             if (TokenManager.CheckToken(schools._tenantName, schools._token))
             {
-                schoolAddViewMopdel = await this.schoolRepository.AddSchool(schools);
-                //return getAllSchools();
-                return schoolAddViewMopdel;
+                
+                    SchoolAddViewModel = this.schoolRepository.AddSchool(schools);
+                    //return getAllSchools();
+                    return SchoolAddViewModel;
+               
             }
             else
             {
-                schoolAddViewMopdel._failure = true;
-                schoolAddViewMopdel._message = TOKENINVALID;
-                return schoolAddViewMopdel;
+                SchoolAddViewModel._failure = true;
+                SchoolAddViewModel._message = TOKENINVALID;
+                return SchoolAddViewModel;
             }
 
         }
-        public async Task<SchoolAddViewMopdel> ViewSchool(SchoolAddViewMopdel schools)
+        public SchoolAddViewModel ViewSchool(SchoolAddViewModel schools)
         {
-            SchoolAddViewMopdel schoolAddViewMopdel = new SchoolAddViewMopdel();
+            SchoolAddViewModel SchoolAddViewModel = new SchoolAddViewModel();
             if (TokenManager.CheckToken(schools._tenantName, schools._token))
             {
-                schoolAddViewMopdel = await this.schoolRepository.ViewSchool(schools);
+                SchoolAddViewModel =  this.schoolRepository.ViewSchool(schools);
                 //return getAllSchools();
-                return schoolAddViewMopdel;
-
-            }
-            else
-            {
-                schoolAddViewMopdel._failure = true;
-                schoolAddViewMopdel._message = TOKENINVALID;
-                return schoolAddViewMopdel;
-            }
-
-        }
-
-        public async Task<SchoolAddViewMopdel> EditSchool(SchoolAddViewMopdel schools)
-        {
-            SchoolAddViewMopdel schoolAddViewMopdel = new SchoolAddViewMopdel();
-            if (TokenManager.CheckToken(schools._tenantName, schools._token))
-            {
-                schoolAddViewMopdel = await this.schoolRepository.EditSchool(schools);
-                //return getAllSchools();
-                return schoolAddViewMopdel;
+                return SchoolAddViewModel;
 
             }
             else
             {
-                schoolAddViewMopdel._failure = true;
-                schoolAddViewMopdel._message = TOKENINVALID;
-                return schoolAddViewMopdel;
+                SchoolAddViewModel._failure = true;
+                SchoolAddViewModel._message = TOKENINVALID;
+                return SchoolAddViewModel;
             }
 
         }
+
+       
 
         public bool IsMandatoryFieldsArePresent(Schools schools)
         {
@@ -163,5 +184,6 @@ namespace opensis.core.School.Services
 
             return isvalid;
         }
+        
     }
 }

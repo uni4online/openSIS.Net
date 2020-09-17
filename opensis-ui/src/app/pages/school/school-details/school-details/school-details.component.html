@@ -12,6 +12,7 @@
                 <div class="flex w-full justify-between">
                     <div class="py-3" fxFlex="300px" fxFlex.lt-md="auto" fxHide.xs fxLayout="row"
                         fxLayoutAlign="start center">
+                        
                         <div class="flex">
                             <input
                                 class="px-4 py-3 border-0 outline-none w-full bg-transparent" placeholder="Search..."
@@ -24,8 +25,13 @@
 
 
                     <div fxFlex="200px" class="pt-3">
-                        <button class="ml-4" fxFlex="none" mat-icon-button
-                            matTooltip="Filter Columns" type="button">
+                        <button 
+                        [matMenuTriggerFor]="columnFilterMenu"
+                  class="ml-4"
+                  fxFlex="none"
+                  mat-icon-button
+                  matTooltip="Filter Columns"
+                             type="button">
                             <mat-icon [icIcon]="icFilterList"></mat-icon>
                         </button>
 
@@ -40,25 +46,84 @@
                 </div>
             </div>
 
-            <table class="table table-striped text-nowrap">
-                <thead>
-                    <tr style="text-align: left">
-                        <th>School Name</th>
-                        <th>Address</th>
-                        <th>Principal</th>
-                        <th>Telephone</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let s of SchoolModelList?.schoolList">
-                        <td><a href="school_details.html">{{s.school_name}}</a></td>
-                        <td>{{s.school_address}}</td>
-                        <td>Carolyn Butler</td>
-                        <td>+1 404-252-8389</td>
-                    </tr>
+            <table @stagger mat-table [dataSource]="SchoolModelList" class="mat-elevation-z8" matSort>
+                <!-- Checkbox Column -->
+        <ng-container matColumnDef="checkbox">
+          <th mat-header-cell *matHeaderCellDef>
+            <mat-checkbox (change)="$event ? masterToggle() : null"
+                          [checked]="selection.hasValue() && isAllSelected()"
+                          [indeterminate]="selection.hasValue() && !isAllSelected()">
+            </mat-checkbox>
+          </th>
+          <td mat-cell *matCellDef="let row" >
+            <mat-checkbox (click)="$event.stopPropagation()"
+                          (change)="$event ? selection.toggle(row) : null"
+                          [checked]="selection.isSelected(row)">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+      
+        <ng-container matColumnDef="school_Name" >
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>NAME</th>
+               <td mat-cell *matCellDef="let element">
+                <b>{{element.school_Name}}</b>
+                </td>
+        </ng-container>
+      
+                <!-- Body -->
+                <ng-container matColumnDef="school_Address">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>ADDRESS </th>
+                       <td mat-cell *matCellDef="let element"> 
+                        {{element.school_Address}}            
+                    </td>
+                </ng-container>
+      
+                <ng-container matColumnDef="principle">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>PRINCIPLE </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{element.principle}}
+                    </td>
+                </ng-container>
+      
+                <ng-container matColumnDef="phone">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>PHONE </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{element.phone}}
+                       </td>
+                </ng-container>
+      
+                <ng-container matColumnDef="status">
+                  <th mat-header-cell *matHeaderCellDef>STATUS </th>
+                  <td mat-cell *matCellDef="let element"> 
+                    <span *ngIf="element.status">Active</span>
+                    <span *ngIf="!element.status">Inactive</span>
 
-                </tbody>
-            </table>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="loading">
+                  <mat-footer-cell *matFooterCellDef colspan="6">
+                    <vex-mat-spinner-overlay *ngIf="loading" color="accent"></vex-mat-spinner-overlay>
+                  </mat-footer-cell>
+                </ng-container>
+      
+                <tr mat-header-row *matHeaderRowDef="visibleColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: visibleColumns" @fadeInUp></tr>
+                <mat-footer-row *matFooterRowDef="['loading']" [class.hide]="!loading"></mat-footer-row>
+
+              </table>
+              <mat-paginator [length]="totalCount" [pageSize]="pageSize"
+                   [pageSizeOptions]="[10, 20, 30, 40]" showFirstLastButtons (page)='getPageEvent($event)'></mat-paginator>
         </div>
+        
     </vex-page-layout-content>
 </vex-page-layout>
+
+<mat-menu #columnFilterMenu="matMenu" xPosition="before" yPosition="below">
+    <button (click)="toggleColumnVisibility(column, $event)" *ngFor="let column of columns"
+            class="checkbox-item mat-menu-item">
+      <mat-checkbox (click)="$event.stopPropagation()" [(ngModel)]="column.visible" color="primary">
+        {{column.label}}
+      </mat-checkbox>
+    </button>
+</mat-menu>

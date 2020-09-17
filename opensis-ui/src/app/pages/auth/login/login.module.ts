@@ -13,6 +13,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { TranslateModule } from '@ngx-translate/core';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { SharedModuleModule } from '../../shared-module/shared-module.module';
 
 @NgModule({
   declarations: [LoginComponent],
@@ -28,7 +30,9 @@ import { TranslateModule } from '@ngx-translate/core';
     MatTooltipModule,
     MatButtonModule,
     MatCheckboxModule,   
-    TranslateModule
+    TranslateModule,
+    MatProgressBarModule,
+    SharedModuleModule
   ]
 })
 export class LoginModule {

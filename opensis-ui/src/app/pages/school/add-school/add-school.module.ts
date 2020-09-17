@@ -21,7 +21,7 @@ import{WashInfoComponent} from '../add-school/wash-info/wash-info.component';
 import { TranslateModule } from '@ngx-translate/core';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
+import { SharedModuleModule } from '../../shared-module/shared-module.module';
 @NgModule({
   declarations: [AddSchoolComponent,GeneralInfoComponent,WashInfoComponent],
   imports: [
@@ -44,7 +44,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     TranslateModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    SharedModuleModule
    
   ]
 })

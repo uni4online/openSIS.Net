@@ -18,7 +18,6 @@ import { NoticeCardsComponent } from './notice-cards/notice-cards.component';
 import { EditNoticeModule } from '../notices/edit-notice/edit-notice.module';
 
 
-
 @NgModule({
   declarations: [NoticesComponent, NoticeCardsComponent],
   imports: [

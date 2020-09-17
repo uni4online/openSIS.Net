@@ -66,10 +66,10 @@ namespace opensis.data.Repository
             try
             {
                 ReturnModel._tenantName = objModel._tenantName;
-                var encryptedPassword = EncodePassword(objModel.Password);
-                var user = await this.context?.Table_User_Master.FirstOrDefaultAsync(x => x.EmailAddress == objModel.Email && x.Tenant_Id == objModel.Tenant_Id && x.PasswordHash == encryptedPassword);
-                var correctEmailList=await this.context?.Table_User_Master.Where(x => x.EmailAddress.Contains(objModel.Email)).ToListAsync();
-                var correctPasswordList = await this.context?.Table_User_Master.Where(x => x.PasswordHash== encryptedPassword).ToListAsync();
+                //var encryptedPassword = EncodePassword(objModel.Password);
+                var user = await this.context?.TableUserMaster.FirstOrDefaultAsync(x => x.EmailAddress == objModel.Email && x.TenantId == objModel.Tenant_Id && x.PasswordHash == objModel.Password);
+                var correctEmailList = await this.context?.TableUserMaster.Where(x => x.EmailAddress.Contains(objModel.Email)).ToListAsync();
+                var correctPasswordList = await this.context?.TableUserMaster.Where(x => x.PasswordHash == objModel.Password).ToListAsync();
                 if (user == null && correctEmailList.Count>0 && correctPasswordList.Count==0)
                 {
                     ReturnModel.User_Id = null;
@@ -88,8 +88,8 @@ namespace opensis.data.Repository
                 }
                 else
                 {
-                    ReturnModel.User_Id = user.User_id;
-                    ReturnModel.Tenant_Id = user.Tenant_Id;
+                    ReturnModel.User_Id = user.UserId;
+                    ReturnModel.Tenant_Id = user.TenantId;
                     ReturnModel.Email = user.EmailAddress;
                     ReturnModel._failure = false;
                     ReturnModel._message = "";

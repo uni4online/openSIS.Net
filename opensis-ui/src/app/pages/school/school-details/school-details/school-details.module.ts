@@ -11,6 +11,15 @@ import { ContainerModule } from '../../../../../@vex/directives/container/contai
 import { IconModule } from '@visurel/iconify-angular';
 import { MatCardModule } from '@angular/material/card';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSelectModule } from '@angular/material/select';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { SharedModuleModule } from '../../../shared-module/shared-module.module';
+
 
 @NgModule({
   declarations: [SchoolDetailsComponent],
@@ -25,7 +34,16 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     PageLayoutModule,
     ContainerModule,
     MatCardModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatSelectModule,
+    MatCheckboxModule,
+    MatPaginatorModule,
+    MatTableModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatMenuModule,
+    MatButtonToggleModule,
+    SharedModuleModule,
   ]
 })
 export class SchoolDetailsModule { }

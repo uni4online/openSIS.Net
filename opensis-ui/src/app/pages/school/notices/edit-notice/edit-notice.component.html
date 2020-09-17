@@ -12,7 +12,11 @@
         <mat-label>Title</mat-label>
         <input cdkFocusInitial matInput required>
     </mat-form-field>
-
+    <div class="card">
+        <quill-editor (onEditorChanged)="changedEditor($event)"
+        [styles]="{ flex: '1 1 auto' }"></quill-editor>
+    
+    </div>
     <div class="mb-2 md:flex md:flex-wrap -mx-6">
         <div class="flex flex-1 mx-6 md:w-1/2">
             <mat-form-field class="w-full" appearance="outline" color="primary">
