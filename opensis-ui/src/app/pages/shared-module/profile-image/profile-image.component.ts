@@ -34,13 +34,14 @@ export class ProfileImageComponent implements OnInit {
   hideCropperToolButton:Boolean=true;
 
   @Input() enableCropTool=true;
-
+  @Input() responseImage;
   imageCropped(event: ImageCroppedEvent) {
     this.croppedImage = event.base64;
+    let base64ImageSplit=this.croppedImage.split(',')
     let sendCropImage=(croppedImage)=>{
       this._ImageCropperService.sendCroppedEvent(croppedImage);
       } 
-    sendCropImage(this.croppedImage);
+    sendCropImage(base64ImageSplit);
   }
 
   setImage(){
@@ -62,6 +63,7 @@ export class ProfileImageComponent implements OnInit {
 
   uploadFile(event,fileUpload){
   this.fileUploader=fileUpload;
+  this.responseImage=null;
   this.hideCropperToolButton=true;
     if(event.target.files[0]?.size>307200){
       this.snackbar.open('Warning: File must be less than 300kb', '', {duration: 10000});

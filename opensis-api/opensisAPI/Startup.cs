@@ -22,6 +22,8 @@ using opensis.data.Models;
 using opensis.data.Repository;
 using opensisAPI.TenantDbMappingMiddleWare;
 using Swashbuckle.AspNetCore.Swagger;
+using opensis.core.Common.Interfaces;
+using opensis.core.Common.Services;
 
 namespace opensisAPI
 {
@@ -45,6 +47,8 @@ namespace opensisAPI
             services.AddScoped<ISchoolRegisterService, SchoolRegister>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserService,UserService>();
+            services.AddScoped<ICommonService, CommonService>();
+            services.AddScoped<ICommonRepository, CommonRepository>();
 
             if (Configuration["dbtype"] == "sqlserver")
             {

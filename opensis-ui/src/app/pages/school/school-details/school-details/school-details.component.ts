@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit,Output,EventEmitter, ViewChild } from '@angular/core';
 import icMoreVert from '@iconify/icons-ic/twotone-more-vert';
 import icAdd from '@iconify/icons-ic/baseline-add';
 import icSearch from '@iconify/icons-ic/search';
@@ -51,7 +51,9 @@ export class SchoolDetailsComponent implements OnInit {
   loading:Boolean;
   getAllSchool: GetAllSchoolModel = new GetAllSchoolModel();
   SchoolModelList: MatTableDataSource<AllSchoolListModel>;
-  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator; 
+  
 
   constructor(private schoolService: SchoolService,
     private snackbar: MatSnackBar,
@@ -66,8 +68,10 @@ export class SchoolDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    
   }
   goToAdd(){
+   
     this.router.navigate(["school/schoolinfo/add-school"]);
   }  
   getSchooldetails()
@@ -83,7 +87,15 @@ export class SchoolDetailsComponent implements OnInit {
     this.getAllSchool.pageSize=event.pageSize;
     this.callAllSchool(this.getAllSchool);
   }
-
+  viewGeneralInfo(data:any){    
+   
+    var sessionId = sessionStorage.getItem("id");
+    if(sessionId === null){
+      sessionStorage.setItem("id",data);
+    }
+    this.router.navigate(["school/schoolinfo/add-school/"]);
+    
+  }
   callAllSchool(getAllSchool){
     this.schoolService.GetSchool(this.getAllSchool).subscribe(data => {
       if(data._failure){

@@ -99,12 +99,7 @@ export class schoolDetailsModel {
         this.common_Toilet_Accessibility="";
         this.handwashing_Available=false ; 
         this.soap_and_Water_Available=false ;
-        this.hygene_Education="";
-        
-        
-       
-        
-       
+        this.hygene_Education="";      
         
         
     }

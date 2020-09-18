@@ -21,38 +21,14 @@ namespace opensis.core.User.Services
             this.userRepository = userRepository;
         }
 
-        public UserViewModel ValidateLogin(UserViewModel ObjModel)
-        {
-            logger.Info("Method ValidateLogin called.");
-            UserViewModel ReturnModel = new UserViewModel();
-            try
-            {
-                               
-                ReturnModel=this.userRepository.ValidateLogin(ObjModel);
-                if(ReturnModel._failure==false)
-                {
-                    ReturnModel._token = TokenManager.GenerateToken(ReturnModel._tenantName);
-                    logger.Info("Method ValidateLogin end with success.");
-                }
-                
-            }
-            catch (Exception ex)
-            {
-                ReturnModel._failure = true;
-                ReturnModel._message = ex.Message;
-                logger.Info("Method getAllSchools end with error :" + ex.Message);
-            }
-
-
-            return ReturnModel;
-        }
-        public async Task<LoginViewModel> ValidateUserLogin(LoginViewModel ObjModel)
+      
+        public LoginViewModel ValidateUserLogin(LoginViewModel ObjModel)
         {
             logger.Info("Method ValidateLogin called.");
             LoginViewModel ReturnModel = new LoginViewModel();
             try
             {
-                ReturnModel = await this.userRepository.ValidateUserLogin(ObjModel);
+                ReturnModel = this.userRepository.ValidateUserLogin(ObjModel);
                 if (ReturnModel._failure == false)
                 {
                     ReturnModel._token = TokenManager.GenerateToken(ReturnModel._tenantName);

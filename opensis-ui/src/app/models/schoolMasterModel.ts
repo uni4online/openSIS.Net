@@ -41,20 +41,20 @@ export class SchoolMasterModel {
       this.alternate_Name= "";
       this.street_Address_1="";
       this.street_Address_2= "";
-      this.city="";
-      this.county= ' ';
-      this.division= ' ';
-      this.state= ' '; 
-      this.district= ' ';
-      this.zip= "";
-      this.country= "";
+      this.city=null;
+      this.county= null;
+      this.division= null;
+      this.state= null; 
+      this.district= null;
+      this.zip= null;
+      this.country= null;
       this.geoPosition= null;
       this.current_Period_ends= "2020-09-08T17:05:22.135Z";
       this.max_api_checks= 0;
       this.features= "";
-      this.created_By= ' ',
+      this.created_By= null;
       this.date_Created= "2020-09-08T17:05:22.135Z";
-      this.modified_By= ' ';
+      this.modified_By= null;
       this.date_Modifed= "2020-09-08T17:05:22.135Z"
        
       }

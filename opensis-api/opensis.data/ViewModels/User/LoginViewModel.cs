@@ -12,8 +12,8 @@ namespace opensis.data.ViewModels.User
         [Required]
         public string Password { get; set; }
 
-        public Guid? Tenant_Id { get; set; }
+        public Guid? TenantId { get; set; }
 
-        public int? User_Id { get; set; }
+        public int? UserId { get; set; }
     }
 }

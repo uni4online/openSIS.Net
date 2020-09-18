@@ -94,7 +94,37 @@ namespace opensis.core.School.Services
         }
 
 
+        public SchoolListModel GetAllSchoolList(SchoolListModel school)
+        {
+            logger.Info("Method getAllSchools called.");
+            SchoolListModel schoolList = new SchoolListModel();
+            try
+            {
+                if (TokenManager.CheckToken(school._tenantName, school._token))
+                {
+                    schoolList = this.schoolRepository.GetAllSchoolList(school);
+                    schoolList._message = SUCCESS;
+                    schoolList._failure = false;
+                    logger.Info("Method getAllSchools end with success.");
+                }
 
+                else
+                {
+                    schoolList._failure = true;
+                    schoolList._message = TOKENINVALID;
+                    return schoolList;
+                }
+            }
+            catch (Exception ex)
+            {
+                schoolList._message = ex.Message;
+                schoolList._failure = true;
+                logger.Error("Method getAllSchools end with error :" + ex.Message);
+            }
+
+
+            return schoolList;
+        }
 
         //public List<Schools> SaveSchool(Schools schools, opensisContext context)
         public SchoolListViewModel SaveSchool(Schools schools)
@@ -171,8 +201,6 @@ namespace opensis.core.School.Services
             }
 
         }
-
-       
 
         public bool IsMandatoryFieldsArePresent(Schools schools)
         {

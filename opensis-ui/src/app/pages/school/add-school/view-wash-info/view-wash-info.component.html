@@ -1,0 +1,127 @@
+
+
+                <mat-card @fadeInUp class="w-full" fxFlex="auto">
+                    <div class="flex items-center mx-4" fxLayout="row" fxLayoutAlign="center center">
+                        <h3 class="flex-auto">WASH Information</h3>
+                        <button mat-button color="primary" (click)="editWashInfo()"><mat-icon [icIcon]="icEdit"></mat-icon> Edit Information</button>
+                    </div>
+                    <mat-card-content>
+                        <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-4">
+                            <div class="my-6">
+                                <ul class="md:grid md:grid-cols-3 md:col-gap-8 md:row-gap-10">
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'runningWater' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                                            {{running_Water}}
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'mainSourceofDrinkingWater' | translate }}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                                            {{main_Source_of_Drinking_Water}}
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'currentlyAvailable' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                                            {{currently_Available}}
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'handwashingAvailable' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                                            {{handwashing_Available}}
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'soapWaterAvailable' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                                            {{soap_and_Water_Available}}
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'hygeneEducation' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                                            {{hygene_Education}}
+                                        </p>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="mt-12">
+                                <div class="pb-4">
+                                    <h4 class="text-blue font-medium">{{'femaleToiletInformation' | translate}}</h4>
+                                </div>
+                                <ul class="md:grid md:grid-cols-3 md:col-gap-8 md:row-gap-10">
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'femaleToiletType' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{female_Toilet_Type}}</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'totalFemaleToilets' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{total_Female_Toilets}}</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'totalFemaleToiletsUsable' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{total_Female_Toilets_Usable}}</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'femaleToiletAccessibility' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                                            {{female_Toilet_Accessibility}}
+                                        </p>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="mt-12">
+                                <div class="pb-4">
+                                    <h4 class="text-blue font-medium">{{'maleToiletInformation' | translate}}</h4>
+                                </div>
+                                <ul class="md:grid md:grid-cols-3 md:col-gap-8 md:row-gap-10">
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'maleToiletType' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{male_Toilet_Type}}</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'totalMaleToilets' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{total_Male_Toilets}}</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'totalMaleToiletsUsable' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{total_Male_Toilets_Usable}}</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'maleToiletAccessibility' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{male_Toilet_Accessibility}}</p>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="mt-12">
+                                <div class="pb-4">
+                                    <h4 class="text-blue font-medium">{{'commonToiletInformation' | translate}}</h4>
+                                </div>
+                                <ul class="md:grid md:grid-cols-3 md:col-gap-8 md:row-gap-10">
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'commonToiletType' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{comon_Toilet_Type}}</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'totalCommonToilets' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{total_Common_Toilets}}</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'totalCommonToiletsUsable' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{total_Common_Toilets_Usable}}</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'commonToiletAccessibility' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                                            {{common_Toilet_Accessibility}}
+                                        </p>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </mat-card-content>
+                </mat-card>
+           

@@ -1,15 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,EventEmitter,Output,Input } from '@angular/core';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { schoolDetailsModel } from '../../../../models/schoolDetailsModel';
 import { WashInfoEnum } from '../../../../enums/wash-info.enum';
-
-
+import { SchoolAddViewModel } from '../../../../models/schoolDetailsModel';
 import { fadeInRight400ms } from '../../../../../@vex/animations/fade-in-right.animation';
 import { TranslateService } from '@ngx-translate/core';
-
+import { SchoolService } from 'src/app/services/school.service'
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { LoaderService } from 'src/app/services/loader.service';
 @Component({
   selector: 'vex-wash-info',
   templateUrl: './wash-info.component.html',
@@ -19,22 +19,42 @@ import { TranslateService } from '@ngx-translate/core';
     stagger60ms,
     fadeInUp400ms,
     fadeInRight400ms
-  ]
+  ] 
 })
 export class WashInfoComponent implements OnInit {
+
+  @Output("parentShowWash") parentShowWash :EventEmitter<any> = new EventEmitter<any>();  
+  @Input() dataOfgeneralInfo: any;
+  @Input() dataOfWashInfoFromView: any;
+  
+  
   form:FormGroup
   washinfo= WashInfoEnum;
-  runningWater = [];
+  selectoption = [];
+  public tenant = "";  
+  schoolAddViewModel: SchoolAddViewModel = new SchoolAddViewModel();  
+  loading;
   
-  schoolDetail:schoolDetailsModel
-  selectoption =[{id:true,value:"Yes"},{id:false,value:"No"}]
-  constructor(
-    private translate: TranslateService,
-    private router: Router,
-    private fb:FormBuilder) {
-      this.runningWater=Object.keys(this.washinfo);
-      translate.use('en');
-      this.form=fb.group({
+  
+   
+  constructor( private fb: FormBuilder,
+    private generalInfoService:SchoolService,
+     private snackbar: MatSnackBar,
+     private router: Router,
+     private Activeroute: ActivatedRoute,
+     public translateService:TranslateService,
+     private loaderService:LoaderService) {
+       
+      translateService.use('en');
+      this.Activeroute.params.subscribe(params => { this.tenant = 'OpensisV2'; });
+      this.loaderService.isLoading.subscribe((val) => {
+        this.loading = val;
+      });
+      
+    }
+    ngOnInit(): void {
+      this.form = this.fb.group(
+        {
 
         runningWater:[''],
         mainSourceofDrinkingWater:[''],
@@ -51,7 +71,7 @@ export class WashInfoComponent implements OnInit {
 
         /* maleToiletInformation */
         maleToiletType:[""],
-        totalMaleToilets:[""],
+        totalMaleToilets:[""], 
         totalMaleToiletsUsable:[""],
         maleToiletAccessibility:[""],
 
@@ -61,17 +81,42 @@ export class WashInfoComponent implements OnInit {
         totalCommonToiletsUsable:[""],
         commonToiletAccessibility:[""]
       })
-     }
-
-  ngOnInit(): void {
-  }
-
-  openGeneralInfo() {
-    this.router.navigate(["school/schoolinfo/add-school"]);
-  }
-  send(){
+     
+      if(Object.keys(this.dataOfWashInfoFromView).length !== 0){
+        this.schoolAddViewModel=this.dataOfWashInfoFromView;        
+      }else{        
+        this.schoolAddViewModel=this.dataOfgeneralInfo;
+      }
     
-    console.log(this.form.value)
-  }
+     }
+ 
+     submit() {    
+        this.schoolAddViewModel._tenantName = this.tenant; 
+        this.schoolAddViewModel._token = sessionStorage.getItem("token");               
 
-}
+        this.generalInfoService.UpdateGeneralInfo(this.schoolAddViewModel).subscribe(data => {
+          if(typeof(data)=='undefined')
+          {
+            this.snackbar.open('Wash Info Submission failed. ' + sessionStorage.getItem("httpError"), '', {
+              duration: 10000
+            });
+          }
+          else
+          {
+            if (data._failure) {
+              this.snackbar.open('Wash Info Submission failed. ' + data._message, 'LOL THANKS', {
+                duration: 10000
+              });
+            } else {                
+                this.snackbar.open('Wash Info Submission Successful.', '', {
+                duration: 10000
+              });             
+             // sessionStorage.removeItem("id");
+              this.router.navigateByUrl("school/schoolinfo"); 
+            }
+          }
+            
+        })    
+    }   
+  
+  }

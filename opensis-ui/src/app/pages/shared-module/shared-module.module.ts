@@ -11,10 +11,10 @@ import { MatDialogModule} from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { IconModule } from '@visurel/iconify-angular';
-
+import { PhoneMaskDirective } from './phone-mask.directive';
 
 @NgModule({
-  declarations: [MatSpinnerOverlayComponent, ProfileImageComponent],
+  declarations: [MatSpinnerOverlayComponent, ProfileImageComponent,PhoneMaskDirective],
   imports: [
     CommonModule,
     MatProgressSpinnerModule,
@@ -25,6 +25,6 @@ import { IconModule } from '@visurel/iconify-angular';
     MatIconModule,
     IconModule
   ],
-  exports:[MatSpinnerOverlayComponent, ProfileImageComponent]
+  exports:[MatSpinnerOverlayComponent, ProfileImageComponent,PhoneMaskDirective]
 })
 export class SharedModuleModule { }

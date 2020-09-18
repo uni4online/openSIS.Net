@@ -49,12 +49,12 @@ namespace opensis.data.Repository
                                  from schools in schoolInfo.DefaultIfEmpty()
                                  select new GetSchoolForView()
                                  {
-                                     School_Name = schoolMaster.SchoolName,
+                                     School_Name = schoolMaster.SchoolName.Trim(),
                                      School_Id = schoolMaster.SchoolId,
                                      Tenant_Id = schoolMaster.TenantId,
-                                     Phone = schools == null ? string.Empty : schools.Telephone,
-                                     Principle = schools == null ? string.Empty : schools.NameOfPrincipal,
-                                     School_Address = schoolMaster.StreetAddress1 + " " + schoolMaster.StreetAddress2 + " " + schoolMaster.State + " " + schoolMaster.Country + " " + schoolMaster.Zip,
+                                     Phone = schools == null ? string.Empty : schools.Telephone.Trim(),
+                                     Principle = schools == null ? string.Empty : schools.NameOfPrincipal.Trim(),
+                                     School_Address = schoolMaster.StreetAddress1.Trim() + " " + schoolMaster.StreetAddress2.Trim() + " " + schoolMaster.State.Trim() + " " + schoolMaster.Country.Trim() + " " + schoolMaster.Zip.Trim(),
                                      Status = schools?.Status
                                  };
                 schoolListModel.TotalCount = courseInfo.Count();
@@ -74,6 +74,31 @@ namespace opensis.data.Repository
                 schoolListModel._failure=true;
                 schoolListModel._tenantName = pageResult._tenantName;
                 schoolListModel._token = pageResult._token;
+            }
+            return schoolListModel;
+
+        }
+
+        public SchoolListModel GetAllSchoolList(SchoolListModel school)
+        {
+            SchoolListModel schoolListModel = new SchoolListModel();
+            try
+            {
+
+                var schoolList = this.context?.TableSchoolMaster.Where(x => x.TenantId == school.TenantId).OrderBy(x => x.SchoolName).Select(x=> new GetSchoolForView() { School_Id=x.SchoolId,Tenant_Id=x.TenantId,School_Name=x.SchoolName.Trim(),Phone=null,Principle=null,School_Address=null,Status=null}).ToList();
+                schoolListModel.GetSchoolForView = schoolList;
+                schoolListModel.PageNumber = null;
+                schoolListModel._pageSize = null;
+                schoolListModel._tenantName = school._tenantName;
+                schoolListModel._token = school._token;
+                schoolListModel._failure = false;
+            }
+            catch (Exception es)
+            {
+                schoolListModel._message = es.Message;
+                schoolListModel._failure = true;
+                schoolListModel._tenantName = school._tenantName;
+                schoolListModel._token = school._token;
             }
             return schoolListModel;
 
@@ -206,8 +231,12 @@ namespace opensis.data.Repository
         {
             try
             {
-                int? MasterSchoolId = Utility<TableSchoolMaster>.GetMaxPK(this.context, new Func<TableSchoolMaster, int>(x => x.SchoolId));
-                int? Detail_Id = (int)Utility<TableSchoolDetail>.GetMaxPK(this.context, new Func<TableSchoolDetail, int>(x => x.Id));
+                //int? MasterSchoolId = Utility<TableSchoolMaster>.GetMaxPK(this.context, new Func<TableSchoolMaster, int>(x => x.SchoolId));
+               // int? Detail_Id = (int)Utility<TableSchoolDetail>.GetMaxPK(this.context, new Func<TableSchoolDetail, int>(x => x.Id));
+
+                int? MasterSchoolId = Utility.GetMaxPK(this.context, new Func<TableSchoolMaster, int>(x => x.SchoolId));
+                int? Detail_Id = (int)Utility.GetMaxPK(this.context, new Func<TableSchoolDetail, int>(x => x.Id));
+
                 Point currentLocation = null;
                 var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326);
                 if (school.longitude != null && school.latitude != null)

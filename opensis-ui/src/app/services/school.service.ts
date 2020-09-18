@@ -16,8 +16,17 @@ export class SchoolService {
     return this.http.post<AllSchoolListModel>(apiurl,obj)
   }
 
+  GetGeneralInfoById(obj: SchoolAddViewModel){    
+    let apiurl = this.apiUrl + obj._tenantName+ "/School/viewSchool"; 
+    return this.http.post<SchoolAddViewModel>(apiurl,obj)
+  }  
+
   SaveGeneralInfo(obj: SchoolAddViewModel){    
     let apiurl = this.apiUrl + obj._tenantName+ "/School/addSchool"; 
     return this.http.post<SchoolAddViewModel>(apiurl,obj)
+  }  
+  UpdateGeneralInfo(obj: SchoolAddViewModel){    
+    let apiurl = this.apiUrl + obj._tenantName+ "/School/updateSchool"; 
+    return this.http.put<SchoolAddViewModel>(apiurl,obj)
   }  
 }

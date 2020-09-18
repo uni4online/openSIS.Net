@@ -9,32 +9,22 @@ export class CryptoService {
 
 constructor() { }
 
-encryptAPI(value) {
-  let keys = CryptoJS.enc.Utf8.parse(environment.encryptionKey);
-  let iv = CryptoJS.enc.Utf8.parse(environment.encryptioniv);
 
-
-
-  var ciphertext = CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse(value), keys, {
-    keySize: 128 / 8,
-    iv: iv,
-    mode: CryptoJS.mode.CBC,
-    padding: CryptoJS.pad.Pkcs7
-  });
-
-  return ciphertext.toString();
-}
 
 //The set method is use for encrypt the value.
 encrypt(value){
-  let keys = environment.encryptionKey;
-  let iv= environment.encryptioniv;
-
-  
-
-  var ciphertext = CryptoJS.AES.encrypt(JSON.stringify(value), keys);
-
-  return ciphertext.toString();
+  var keySize = 256;
+    let keys = environment.encryptionKey;
+    var salt = CryptoJS.lib.WordArray.random(16); var key = CryptoJS.PBKDF2(keys, salt, {
+    keySize: keySize/32,
+    iterations: 100
+    }); var iv = CryptoJS.lib.WordArray.random(128/8);
+    var encrypted = CryptoJS.AES.encrypt(value, key, {
+    iv: iv,
+    padding: CryptoJS.pad.Pkcs7,
+    mode: CryptoJS.mode.CBC
+    }); var result =CryptoJS.enc.Base64.stringify(salt.concat(iv).concat(encrypted.ciphertext));
+   return result;
 }
 
 //The get method is use for decrypt the value.

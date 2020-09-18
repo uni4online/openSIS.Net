@@ -10,14 +10,14 @@
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'schoolName'|translate}}</mat-label>
-                    <input formControlName="school_Name" [(ngModel)]="UserModel.tblSchoolDetail.schoolMaster.school_Name" name="school_Name" matInput required>
+                    <input formControlName="school_Name" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.schoolMaster.school_Name" name="school_Name"  matInput required>
                     <mat-error *ngIf="form.get('school_Name').hasError('required')">{{'schoolNameIsRequired'|translate}}</mat-error>
                 </mat-form-field>
             </div>
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'alternateName'|translate}}</mat-label>
-                    <input formControlName="alternate_name" [(ngModel)]="UserModel.tblSchoolDetail.schoolMaster.alternate_Name" name="alternate_name" matInput>
+                    <input formControlName="alternate_name" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.schoolMaster.alternate_Name" name="alternate_name"  matInput>
                 </mat-form-field>
             </div>
         </div>
@@ -25,14 +25,14 @@
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'schoolId'|translate}}</mat-label>
-                    <input  formControlName="school_id" [(ngModel)]="UserModel.tblSchoolDetail.schoolMaster.school_Id" name="school_id" matInput required>
+                    <input  formControlName="school_id" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.schoolMaster.school_Id" name="school_id" matInput required>
                     <mat-error *ngIf="form.get('school_id').hasError('required')">{{'schoolIdIsRequired'|translate}}</mat-error>
                 </mat-form-field>
             </div>
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'schoolAlternateId'|translate}}</mat-label>
-                    <input formControlName="alternate_id" [(ngModel)]="UserModel.tblSchoolDetail.schoolMaster.school_Alt_Id" name="alternate_id" matInput>
+                    <input formControlName="alternate_id" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.schoolMaster.school_Alt_Id" name="alternate_id"matInput>
                 </mat-form-field>
             </div>
         </div>
@@ -40,19 +40,20 @@
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'schoolLevel'|translate}}</mat-label>
-                    <mat-select formControlName="school_level" [(ngModel)]="UserModel.tblSchoolDetail.schoolMaster.school_Level" name="school_level" required> 
+                    <mat-select formControlName="school_level" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.schoolMaster.school_Level" name="school_level" required> 
                         <mat-option></mat-option>
-                        <mat-option *ngFor="let key of schoolLevelOptions" [value]="key" >
+                        <mat-option *ngFor="let key of schoolLevelOptions" [value]='key' >
                            {{key}}
                           </mat-option>
                     </mat-select>
                     <mat-error *ngIf="form.get('school_level').hasError('required')">{{'schoolLevelIsRequired'|translate}}</mat-error>
                 </mat-form-field>
+                
             </div>
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'schoolClassification'|translate}}</mat-label>
-                    <mat-select formControlName="school_classification" [(ngModel)]="UserModel.tblSchoolDetail.schoolMaster.school_Classification" name="school_classification" required>
+                    <mat-select formControlName="school_classification" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.schoolMaster.school_Classification" name="school_classification"  required>
                         <mat-option></mat-option>
                         <mat-option *ngFor="let key of schoolClassificationOptions" [value]="key" >
                             {{key}}
@@ -66,13 +67,13 @@
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'affiliation'|translate}}</mat-label>
-                    <input formControlName="affiliation" [(ngModel)]="UserModel.tblSchoolDetail.affiliation" name="affiliation" matInput>
+                    <input formControlName="affiliation" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.affiliation" name="affiliation"  matInput>
                 </mat-form-field>
             </div>
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'associations'|translate}}</mat-label>
-                    <input formControlName="associations" [(ngModel)]="UserModel.tblSchoolDetail.associations" name="associations" matInput>
+                    <input formControlName="associations" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.associations" name="associations"  matInput>
                 </mat-form-field>
             </div>
         </div>
@@ -80,9 +81,9 @@
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'lowestGradeLevel'|translate}}</mat-label>
-                    <mat-select formControlName="lowest_grade_level" [(ngModel)]="UserModel.tblSchoolDetail.lowest_Grade_Level" name="lowest_grade_level" required>
-                        <mat-option></mat-option>
-                        <mat-option *ngFor="let key of highestGradeLevelsOption" [value]="key" >
+                    <mat-select formControlName="lowest_grade_level" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.lowest_Grade_Level" name="lowest_grade_level" required>
+                        
+                        <mat-option *ngFor="let key of highestGradeLevelsOption" [value]="key" [disabled]="key==schoolAddViewModel.tblSchoolDetail.highest_Grade_Level">
                             {{key}}
                            </mat-option>
                     </mat-select>
@@ -92,9 +93,9 @@
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'highestGradeLevel'|translate}}</mat-label>
-                    <mat-select formControlName="highest_grade_level" [(ngModel)]="UserModel.tblSchoolDetail.highest_Grade_Level" name="highest_grade_level" required>
+                    <mat-select formControlName="highest_grade_level" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.highest_Grade_Level"  name="highest_grade_level" required>
                         <mat-option></mat-option>
-                        <mat-option *ngFor="let key of highestGradeLevelsOption" [value]="key" >
+                        <mat-option *ngFor="let key of highestGradeLevelsOption" [value]="key" [disabled]="key==schoolAddViewModel.tblSchoolDetail.lowest_Grade_Level">
                             {{key}}
                            </mat-option>
                     </mat-select>
@@ -106,7 +107,7 @@
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'dateSchoolOpened'|translate}}</mat-label>
-                    <input formControlName="date_school_opened" [(ngModel)]="UserModel.tblSchoolDetail.date_School_Opened" name="date_school_opened" [matDatepicker]="datepickerRef" matInput>
+                    <input formControlName="date_school_opened" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.date_School_Opened" name="date_school_opened"  [matDatepicker]="datepickerRef" matInput>
                     <mat-datepicker-toggle [for]="datepickerRef" matSuffix></mat-datepicker-toggle>
                     <mat-datepicker #datepickerRef></mat-datepicker>
                     <mat-error *ngIf="form.get('date_school_closed').hasError('invalidDateComparison')"></mat-error>
@@ -115,10 +116,11 @@
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'dateSchoolClosed'|translate}}</mat-label>
-                    <input formControlName="date_school_closed" [(ngModel)]="UserModel.tblSchoolDetail.date_School_Closed" name="date_school_closed" [matDatepicker]="dateSchoolClosed" matInput>
+                    <input formControlName="date_school_closed" (dateChange)="dateCompare()" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.date_School_Closed"  name="date_school_closed" [matDatepicker]="dateSchoolClosed" matInput>
                     <mat-datepicker-toggle [for]="dateSchoolClosed" matSuffix></mat-datepicker-toggle>
                     <mat-datepicker #dateSchoolClosed></mat-datepicker>
-                    <mat-error *ngIf="form.get('date_school_closed').hasError('invalidDateComparison')"></mat-error>
+                    <mat-error *ngIf="form.get('date_school_closed').hasError('compareError')"></mat-error>
+            
                 </mat-form-field>
             </div>
         </div>
@@ -126,13 +128,13 @@
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'code'|translate}}</mat-label>
-                    <input formControlName="code" [(ngModel)]="UserModel.tblSchoolDetail.locale" name="code" matInput>
+                    <input formControlName="code" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.locale" name="code" matInput>
                 </mat-form-field>
             </div>
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'gender'|translate}}</mat-label>
-                    <mat-select formControlName="gender" [(ngModel)]="UserModel.tblSchoolDetail.gender" name="gender">
+                    <mat-select formControlName="gender" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.gender" name="gender">
                         <mat-option></mat-option>
                         <mat-option *ngFor="let key of genderOptions" [value]="key" >
                             {{key}}
@@ -145,17 +147,17 @@
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'internet'|translate}}</mat-label>
-                    <mat-select  formControlName="internet" [(ngModel)]="UserModel.tblSchoolDetail.internet" name="internet" matInput>   
+                    <mat-select  formControlName="internet" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.internet"  name="internet" matInput>   
                     <mat-option></mat-option>
-                    <mat-option  [value]="true">Yes</mat-option> 
-                    <mat-option  [value]="false">No</mat-option> 
+                    <mat-option *ngFor="let option of internet"  [value]="option.id">{{ option.name }}</mat-option> 
+                  
                     </mat-select>                  
                 </mat-form-field>
             </div>
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'electricity'|translate}}</mat-label>
-                    <mat-select formControlName="electricity" [(ngModel)]="UserModel.tblSchoolDetail.electricity" name="electricity"> 
+                    <mat-select formControlName="electricity" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.electricity" name="electricity"> 
                    
                     <mat-option></mat-option>
                     <mat-option  [value]="true">Yes</mat-option> 
@@ -169,10 +171,10 @@
                 <div class="mx-6">
                 <mat-form-field class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'status'|translate}}</mat-label>
-                    <mat-select formControlName="status" [(ngModel)]="UserModel.tblSchoolDetail.status" name="status"> 
+                    <mat-select formControlName="status" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.status"  name="status"> 
                         <mat-option></mat-option>
-                        <mat-option  [value]="true">Yes</mat-option> 
-                        <mat-option  [value]="false">No</mat-option> 
+                        <mat-option  [value]="true">Active</mat-option> 
+                        <mat-option  [value]="false">Inactive</mat-option> 
                     </mat-select>
                 </mat-form-field>
                 </div>
@@ -189,7 +191,7 @@
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'streetAddress1'|translate}}</mat-label>
-                    <input formControlName="street_address_1" [(ngModel)]="UserModel.tblSchoolDetail.schoolMaster.street_Address_1" name="street_address_1" matInput required>
+                    <input formControlName="street_address_1" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.schoolMaster.street_Address_1"  name="street_address_1" matInput required>
                     <mat-error *ngIf="form.get('street_address_1').hasError('required')">{{'streetAddressIsRequired'|translate}}</mat-error>
                 </mat-form-field>
                 
@@ -197,7 +199,7 @@
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'streetAddress2'|translate}}</mat-label>
-                    <input formControlName="street_address_2" [(ngModel)]="UserModel.tblSchoolDetail.schoolMaster.street_Address_2" name="street_address_2" matInput>
+                    <input formControlName="street_address_2" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.schoolMaster.street_Address_2" name="street_address_2" matInput>
                 </mat-form-field>
             </div>
         </div>
@@ -206,14 +208,14 @@
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'city'|translate}}</mat-label>
-                    <input formControlName="city" [(ngModel)]="UserModel.tblSchoolDetail.schoolMaster.city" name="city" matInput required>
+                    <input formControlName="city" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.schoolMaster.city" name="city" matInput required>
                     <mat-error *ngIf="form.get('city').hasError('required')">{{'cityIsRequired'|translate}}</mat-error>
                 </mat-form-field>
             </div>
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'county'|translate}}</mat-label>
-                    <input formControlName="county" [(ngModel)]="UserModel.tblSchoolDetail.schoolMaster.county" name="county" matInput>
+                    <input formControlName="county" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.schoolMaster.county" name="county" matInput>
                 </mat-form-field>
             </div>
         </div>
@@ -222,13 +224,13 @@
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'division'|translate}}</mat-label>
-                    <input  formControlName="division" [(ngModel)]="UserModel.tblSchoolDetail.schoolMaster.division" name="division" matInput>
+                    <input  formControlName="division" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.schoolMaster.division"  name="division" matInput>
                 </mat-form-field>
             </div>
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'stateRegionProvince'|translate}}</mat-label>
-                    <input formControlName="state" [(ngModel)]="UserModel.tblSchoolDetail.schoolMaster.state" name="state" matInput>
+                    <input formControlName="state" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.schoolMaster.state" name="state" matInput>
                 </mat-form-field>
             </div>
         </div>
@@ -237,13 +239,13 @@
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'district'|translate}}</mat-label>
-                    <input formControlName="district" [(ngModel)]="UserModel.tblSchoolDetail.schoolMaster.district" name="district" matInput>
+                    <input formControlName="district" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.schoolMaster.district"  name="district" matInput>
                 </mat-form-field>
             </div>
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'zipPostalCode'|translate}}</mat-label>
-                    <input formControlName="zip" [(ngModel)]="UserModel.tblSchoolDetail.schoolMaster.zip" name="zip" matInput required>
+                    <input formControlName="zip" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.schoolMaster.zip"  name="zip" matInput required>
                     <mat-error *ngIf="form.get('zip').hasError('required')">{{'zipIsRequired'|translate}}</mat-error>
                 </mat-form-field>
             </div>
@@ -254,7 +256,7 @@
                 <div class="mx-6">
                     <mat-form-field class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'country'|translate}}</mat-label>
-                    <mat-select formControlName="country" [(ngModel)]="UserModel.tblSchoolDetail.schoolMaster.country" name="country" required>
+                    <mat-select formControlName="country" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.schoolMaster.country" name="country" required>
                         <mat-option></mat-option>
                         <mat-option *ngFor="let key of countryOption" [value]="key" >
                             {{key}}
@@ -268,7 +270,7 @@
                 <div class="mx-6">
                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                         <mat-label>{{'latitude'|translate}}</mat-label>
-                        <input formControlName="latitude" [(ngModel)]="UserModel.latitude" name="latitude" matInput>
+                        <input formControlName="latitude" [(ngModel)]="schoolAddViewModel.latitude" name="latitude"  matInput>
                     </mat-form-field>
                 </div>
             </div>
@@ -276,7 +278,7 @@
                 <div class="mx-6">
                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                         <mat-label>{{'longitude'|translate}}</mat-label>
-                        <input formControlName="longitude" [(ngModel)]="UserModel.longitude" name="longitude" matInput>
+                        <input formControlName="longitude" [(ngModel)]="schoolAddViewModel.longitude" name="longitude"  matInput>
                     </mat-form-field>
                 </div>
             </div>
@@ -292,14 +294,14 @@
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'principal'|translate}}</mat-label>
-                    <input formControlName="principal" [(ngModel)]="UserModel.tblSchoolDetail.name_of_Principal" name="principal" matInput required>
+                    <input formControlName="principal" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.name_of_Principal" name="principal" matInput required>
                     <mat-error *ngIf="form.get('principal').hasError('required')">{{'principalNameIsRequired'|translate}}</mat-error>
                 </mat-form-field>
             </div>
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'assistantPrincipal'|translate}}</mat-label>
-                    <input formControlName="ass_principal" [(ngModel)]="UserModel.tblSchoolDetail.name_of_Assistant_Principal" name="ass_principal" matInput>
+                    <input formControlName="ass_principal" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.name_of_Assistant_Principal" name="ass_principal" matInput>
                 </mat-form-field>
             </div>
         </div>
@@ -308,7 +310,7 @@
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'telephone'|translate}}</mat-label>
-                    <input formControlName="telephone" [(ngModel)]="UserModel.tblSchoolDetail.telephone" name="telephone" matInput required>
+                    <input formControlName="telephone" maxlength="12" appPhoneMask [(ngModel)]="schoolAddViewModel.tblSchoolDetail.telephone" name="telephone" matInput required>
                     <mat-error *ngIf="form.get('telephone').hasError('required')">{{'telephoneIsRequired'|translate}}</mat-error>
                     <mat-error *ngIf="!form.get('telephone').hasError('required') && form.get('telephone').hasError('invalidPhoneNumber')">{{'invalidTelephoneNumber'|translate}}</mat-error>
                 </mat-form-field>
@@ -316,7 +318,7 @@
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'fax'|translate}}</mat-label>
-                    <input formControlName="fax" [(ngModel)]="UserModel.tblSchoolDetail.fax" name="fax" matInput>
+                    <input formControlName="fax" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.fax" name="fax" matInput>
                 </mat-form-field>
             </div>
         </div>
@@ -325,14 +327,14 @@
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'website'|translate}}</mat-label>
-                    <input formControlName="website" [(ngModel)]="UserModel.tblSchoolDetail.website" name="website" matInput>
+                    <input formControlName="website" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.website" name="website"  matInput>
                     <mat-error *ngIf="form.get('website').hasError('invalidWebsite')">{{'invalidTelephoneNumber'|translate}}</mat-error>
                 </mat-form-field>
             </div>
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'email'|translate}}</mat-label>
-                    <input formControlName="email" [(ngModel)]="UserModel.tblSchoolDetail.email" name="email" matInput>
+                    <input formControlName="email" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.email" name="email" matInput>
                     <mat-error *ngIf="form.get('email').hasError('invalidPhoneNumber')">{{'invalidWebsite'|translate}}</mat-error>
                 </mat-form-field>
             </div>
@@ -342,13 +344,13 @@
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'twitter'|translate}}</mat-label>
-                    <input formControlName="twitter" [(ngModel)]="UserModel.tblSchoolDetail.twitter" name="twitter" matInput>
+                    <input formControlName="twitter" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.twitter"  name="twitter" matInput>
                 </mat-form-field>
             </div>
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'facebook'|translate}}</mat-label>
-                    <input formControlName="facebook" [(ngModel)]="UserModel.tblSchoolDetail.facebook" name="facebook" matInput>
+                    <input formControlName="facebook" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.facebook"  name="facebook" matInput>
                 </mat-form-field>
             </div>
         </div>
@@ -357,13 +359,13 @@
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'instagram'|translate}}</mat-label>
-                    <input formControlName="instagram" [(ngModel)]="UserModel.tblSchoolDetail.instagram" name="instagram" matInput>
+                    <input formControlName="instagram" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.instagram" name="instagram" matInput>
                 </mat-form-field>
             </div>
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'youtube'|translate}}</mat-label>
-                    <input formControlName="youtube" [(ngModel)]="UserModel.tblSchoolDetail.youtube" name="youtube" matInput>
+                    <input formControlName="youtube" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.youtube" name="youtube" matInput>
                 </mat-form-field>
             </div>
         </div>
@@ -373,12 +375,12 @@
                 <div class="mx-6">
                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                         <mat-label>{{'linkedIn'|translate}}</mat-label>
-                        <input formControlName="linkedin" [(ngModel)]="UserModel.tblSchoolDetail.linkedIn" name="linkedin" matInput>
+                        <input formControlName="linkedin" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.linkedIn"  name="linkedin" matInput>
                     </mat-form-field>
                 </div>
             </div>
         </div>
-    </div>
+    </div>    
     </mat-card-content>
     <mat-card-actions>
         <div class="px-6 pb-4 text-right">

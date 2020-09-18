@@ -1,6 +1,7 @@
 {
   
-    "apiURL":"https://localhost:44309/"
+    "apiURL":"https://localhost:44309/",
+    "encryptionKey" :"oPen$!$.b14Ca5898a4e4133b!"
     
 }
   

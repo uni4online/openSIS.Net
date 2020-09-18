@@ -22,8 +22,10 @@ import { TranslateModule } from '@ngx-translate/core';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModuleModule } from '../../shared-module/shared-module.module';
+import { ViewGeneralInfoComponent } from './view-general-info/view-general-info.component';
+import { ViewWashInfoComponent } from './view-wash-info/view-wash-info.component';
 @NgModule({
-  declarations: [AddSchoolComponent,GeneralInfoComponent,WashInfoComponent],
+  declarations: [AddSchoolComponent,GeneralInfoComponent,WashInfoComponent, ViewGeneralInfoComponent, ViewWashInfoComponent],
   imports: [
     CommonModule,
     MatIconModule,

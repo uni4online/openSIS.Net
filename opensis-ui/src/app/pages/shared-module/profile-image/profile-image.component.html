@@ -23,9 +23,11 @@
     <input type="file" (change)="uploadFile($event,fileUpload)" #fileUpload accept="image/jpg, image/jpeg, image/png">
   </div>
   <div @fadeInRight class="d-flex justify-content-center" (click)="fileUpload.click();unsetImage()" style="cursor: pointer;">
-    <img @fadeInRight *ngIf="croppedImage=='' && preview==''" src="../../../../assets/img/upload-school-logo.jpg" width="200"
+    <img @fadeInRight *ngIf="croppedImage=='' && preview=='' && (responseImage==null || responseImage.length==0)" src="../../../../assets/img/upload-school-logo.jpg" width="200"
       height="200" style="border: 5px solid white;" alt="Upload School Logo">
-    <img @fadeInRight *ngIf="preview!='' && croppedImage==''" [src]="preview" style="border: 5px solid white;" width="200px"
+      <img @fadeInRight *ngIf="preview!='' && croppedImage==''" [src]="preview" style="border: 5px solid white;" width="200px"
+      height="200px" />
+      <img @fadeInRight *ngIf="responseImage" [src]="'data:image/jpeg;base64,'+responseImage" style="border: 5px solid white;" width="200px"
       height="200px" />
     <div *ngIf="croppedImage!=''">
       <img @fadeInRight [src]="croppedImage" style="border: 5px solid white;" width="200" height="200" />

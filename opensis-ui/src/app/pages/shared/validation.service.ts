@@ -4,6 +4,7 @@ import { FormGroup } from '@angular/forms';
   providedIn: 'root'
 })
 export class ValidationService {
+  
   static emailValidator(control) {
     if(control.dirty && control.value !== '') {
       if (
@@ -21,10 +22,11 @@ export class ValidationService {
   }
 
   static phoneValidator(control) {
-    if(control.dirty && control.value !== '') {
+    if(control.value !== '') {
     if (
       control.value.match(
-        /^[0-9]{10}$/
+        ///^[0-9]{10}$/
+        /^[0-9]{3}-[0-9]{3}-[0-9]{4}$/
       )
     ) {
       
@@ -52,13 +54,21 @@ export class ValidationService {
     return (group: FormGroup): {[key: string]: any} => {
       let f = group.controls[from];
       let t = group.controls[to];
-      if (f.value > t.value) {    
+      if (f.value > t.value) 
+      {    
         return { invalidDateComparison: true };
-        }else{         
-          return null;
-        }
-      }     
+      }else{         
+        return null;
+      }
+    }     
+  }
+
+  static compareValidation(firstValue,secondValue):boolean{
+    if(firstValue>secondValue){
+      return false
     }
-  
-  
+    else{
+      return true
+    }
+  }
 }

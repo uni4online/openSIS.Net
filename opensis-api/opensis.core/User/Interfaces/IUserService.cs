@@ -9,7 +9,7 @@ namespace opensis.core.User.Interfaces
 {
     public interface IUserService
     {
-        public UserViewModel ValidateLogin(UserViewModel ObjModel);
-        public Task<LoginViewModel> ValidateUserLogin(LoginViewModel ObjModel);
+        
+        public LoginViewModel ValidateUserLogin(LoginViewModel ObjModel);
     }
 }

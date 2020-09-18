@@ -22,16 +22,16 @@ namespace opensisAPI.Controllers
             _userService = userService;
         }
 
-        //[HttpPost("ValidateLogin")]
-        //public ActionResult<UserViewModel> ValidateLogin(UserViewModel objModel)
-        //{
-        //    return _userService.ValidateLogin(objModel);
-        //}
+        /// <summary>
+        /// This is used for authentcatred the login process
+        /// </summary>
+        /// <param name="objModel"></param>
+        /// <returns></returns>
 
         [HttpPost("ValidateLogin")]
-        public async Task<ActionResult<LoginViewModel>> ValidateLogin(LoginViewModel objModel)
+        public ActionResult<LoginViewModel> ValidateLogin(LoginViewModel objModel)
         {
-            return await _userService.ValidateUserLogin(objModel);
+            return  _userService.ValidateUserLogin(objModel);
         }
     }
 }

@@ -1,0 +1,194 @@
+
+                <mat-card @fadeInUp class="w-full" fxFlex="auto">
+                    <div class="flex items-center mx-4" fxLayout="row" fxLayoutAlign="center center">
+                        <h3 class="flex-auto">{{'generalInformation' | translate}}</h3>
+                        <button mat-button color="primary" (click)="editGeneralInfo()"><mat-icon [icIcon]="icEdit"></mat-icon> Edit Information</button>
+                    </div>
+                    <mat-card-content>
+                        <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-4">
+                            <div class="my-6">
+                                <ul class="md:grid md:grid-cols-3 md:col-gap-8 md:row-gap-10">
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'schoolName' | translate}} </label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.schoolMaster.school_Name}}
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'shortName' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.schoolMaster.alternate_Name}}</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'schoolId' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.schoolMaster.school_Id}}</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'alternateId' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.schoolMaster.school_Alt_Id}}</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'schoolLevel' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.schoolMaster.school_Level}}</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'schoolClassification' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.schoolMaster.school_Classification}}</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'affiliation' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.affiliation}}</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'associations' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.associations}}
+                                            Schools</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'lowestGradeLevel' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.lowest_Grade_Level}}</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'highestGradeLevel' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.highest_Grade_Level}}</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'dateSchoolOpened' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.date_School_Opened}}</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'dateSchoolClosed' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.date_School_Closed}}</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'code' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.locale}}</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'gender' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.gender}}</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'internet' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{internet}} </p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'electricity' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{electricity}}</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'status' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2"><span
+                                                class="text-green">{{status}}</span></p>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="mt-12">
+                                <div class="pb-4">
+                                    <h4 class="text-blue font-medium">Address Information</h4>
+                                </div>
+                                <ul class="md:grid md:grid-cols-3 md:col-gap-8 md:row-gap-10">
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'streetAddress1' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.schoolMaster.street_Address_1}}</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'streetAddress2' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.schoolMaster.street_Address_2}}</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'city' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.schoolMaster.city}}</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'county' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.schoolMaster.county}}</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'division' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.schoolMaster.division}}</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'stateRegionProvince' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.schoolMaster.state}}</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'district' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.schoolMaster.district}}</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'zipPostalCode' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.schoolMaster.zip}}</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'Country' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.schoolMaster.country}}
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'latitude' | translate}}, {{'longitude' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.latitude}},
+                                            {{schoolAddViewModel.longitude}} </p>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="mt-12">
+                                <div class="pb-4">
+                                    <h4 class="text-blue font-medium">{{'contactInformation' | translate}}</h4>
+                                </div>
+                                <ul class="md:grid md:grid-cols-3 md:col-gap-8 md:row-gap-10">
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'principal' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.name_of_Principal}}</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'assistantPrincipal' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.name_of_Assistant_Principal}}</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'telephone' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.telephone}}</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'fax' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.fax}}</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'website' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.website}}
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'email' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.email}}
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'twitter' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.twitter}}</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'facebook' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2"><a
+                                                href="{{schoolAddViewModel.tblSchoolDetail.facebook}}" target="_blank"
+                                                class="text-primary">{{schoolAddViewModel.tblSchoolDetail.facebook}}</a></p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'instagram' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2"><a
+                                                href="{{schoolAddViewModel.tblSchoolDetail.instagram}}" target="_blank"
+                                                class="text-primary">{{schoolAddViewModel.tblSchoolDetail.instagram}}</a></p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'youtube' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.youtube}}</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'linkedIn' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.linkedIn}}</p>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </mat-card-content>
+                </mat-card>
+          

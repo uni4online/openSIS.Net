@@ -17,33 +17,11 @@ namespace opensisAPI.Controllers
     public class SchoolController : ControllerBase
     {
         private ISchoolRegisterService _schoolRegisterService;
-        //private readonly opensisContext _context;
-
-        //public SchoolController(opensisContext context, ISchoolRegisterService schoolRegisterService)
         public SchoolController(ISchoolRegisterService schoolRegisterService)
         {
             _schoolRegisterService = schoolRegisterService;
-           // _context = context;
-            //_context.AddSampleData();
         }
        
-
-        //[HttpPost("getAllSchools")]
-
-        //public ActionResult<SchoolListViewModel> GetAllSchools(SchoolViewModel objModel)
-        //{
-        //    //return _schoolRegisterService.getAllSchools(_context);
-        //    return _schoolRegisterService.getAllSchools(objModel);
-        //}
-
-
-        //[HttpPut("addSchools")]
-
-        //public ActionResult<SchoolListViewModel> AddSchools(Schools schools)
-        //{
-        //    return _schoolRegisterService.SaveSchool(schools);
-        //}
-
         [HttpPost("addSchool")]
         public ActionResult<SchoolAddViewModel> AddSchool(SchoolAddViewModel school)
         {
@@ -94,7 +72,9 @@ namespace opensisAPI.Controllers
             return schoolAdd;
         }
 
-       
+        
+
+
         [HttpPost("getAllSchools")]
 
         public ActionResult<SchoolListModel> GetAllSchools(PageResult pageResult)
@@ -108,6 +88,23 @@ namespace opensisAPI.Controllers
             {
                 schoolList._message = es.Message;
                 schoolList._failure=true;
+            }
+            return schoolList;
+        }
+
+        [HttpPost("getAllSchoolList")]
+
+        public ActionResult<SchoolListModel> GetAllSchoolList(SchoolListModel school)
+        {
+            SchoolListModel schoolList = new SchoolListModel();
+            try
+            {
+                schoolList = _schoolRegisterService.GetAllSchoolList(school);
+            }
+            catch (Exception es)
+            {
+                schoolList._message = es.Message;
+                schoolList._failure = true;
             }
             return schoolList;
         }

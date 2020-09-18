@@ -11,17 +11,17 @@
                 <div class="hidden sm:block mr-6 ng-tns-c284-386 ng-star-inserted w-1/6">
                     <div class="max-w-xxxs w-full">
                         <div class="h-45 mb-6 flex items-center sm:px-0" fxLayout="row" fxLayoutAlign="start center">
-                            <vex-profile-image [enableCropTool]="enableCropTool"></vex-profile-image>
+                            <vex-profile-image [enableCropTool]="enableCropTool" [responseImage]="responseImage"></vex-profile-image>
                         </div>
 
                         <div class="px-gutter sm:px-0">
-                            <a @fadeInRight [ngClass]=" generalFlag ? 'list-item mt-2 no-underline flex items-center bg-primary hover:bg-primary text-white' : 'list-item mt-2 no-underline flex items-center'" (click) = "showGeneral()" matRipple>
+                            <a @fadeInRight [ngClass]=" generalFlag ? 'list-item mt-2 no-underline flex items-center bg-primary hover:bg-primary text-white' : 'list-item mt-2 no-underline flex items-center'" (click) = "isViewMode ? showViewGeneralInfo() : showGeneralEdit()" matRipple>
                                 <!-- <ic-icon [icon]="item.icon" [ngClass]="item.classes?.icon" class="ltr:mr-3 rtl:ml-3" size="24px"></ic-icon> -->
                                 <span>General Information</span>
                             </a>
-                            <a @fadeInRight [ngClass]=" washFlag ? 'list-item mt-2 no-underline flex items-center bg-primary hover:bg-primary text-white' : 'list-item mt-2 no-underline flex items-center'"   matRipple>
+                            <button @fadeInRight [ngClass]=" washFlag ? 'list-item mt-2 no-underline flex items-center bg-primary hover:bg-primary text-white' : 'list-item mt-2 no-underline flex items-center'" (click) = "isViewMode? showViewWashInfo() : showWashEdit($event)" [disabled]="disabledWashInfo"  matRipple>
                                 <span>WASH Information</span>
-                            </a>
+                            </button>
                             <a @fadeInRight class="list-item mt-2 no-underline flex items-center" matRipple>
                                 <!-- <ic-icon [icon]="item.icon" [ngClass]="item.classes?.icon" class="ltr:mr-3 rtl:ml-3" size="24px"></ic-icon> -->
                                 <span>Other Information</span>
@@ -31,11 +31,36 @@
                 </div>
                 <mat-card  class="w-full" fxFlex="auto">
                     <div  *ngIf="displayGeneral">
-                        <vex-general-info (parentShowWash)="showWash()"></vex-general-info>
+                        <vex-general-info (parentShowWash)="showWashEdit($event)"
+                            [dataOfgeneralInfoFromWash]="dataOfgeneralInfoFromWash"
+                            [dataOfwashInfoFromGeneral]="dataOfwashInfoFromGeneral"
+                            [dataOfgeneralInfoFromView]="dataOfgeneralInfoFromView" 
+                            (dataOfgeneralInfo) = "getDataOfgeneralInfo($event)" 
+                            [isEditMode]="isEditMode"
+                            [image]="image">
+                        </vex-general-info>
                      </div>
                      <div  *ngIf="displayWash">
-                        <vex-wash-info></vex-wash-info>
-                     </div>             
+                        <vex-wash-info  
+                            [dataOfgeneralInfo]="dataOfgeneralInfo" 
+                            [dataOfWashInfoFromView]="dataOfWashInfoFromView" >
+                        </vex-wash-info>
+                     </div>  
+                     <div *ngIf="displayViewGeneral" >
+                        <vex-view-general-info  
+                            [schoolId]="schoolId" 
+                            (imageResponse)="imageResponse($event)" 
+                            (parentShowWash)="showGeneralEdit()" 
+                            (dataOfgeneralInfoFromView)= "getDataOfgeneralInfoFromView($event)">
+                        </vex-view-general-info>
+                     </div> 
+                     <div *ngIf="displayViewWash" >
+                        <vex-view-wash-info 
+                            [schoolId]="schoolId" 
+                            (parentShowWash)="showWashEdit($event)" 
+                            (dataOfWashInfoFromView)= "getDataOfWashInfoFromView($event)" >
+                        </vex-view-wash-info>
+                     </div>            
                 </mat-card>
             </mat-drawer-content>
         </mat-drawer-container>

@@ -6,12 +6,12 @@ import icVisibility from '@iconify/icons-ic/twotone-visibility';
 import icVisibilityOff from '@iconify/icons-ic/twotone-visibility-off';
 import icLanguage from '@iconify/icons-ic/twotone-language';
 import { fadeInUp400ms } from '../../../../@vex/animations/fade-in-up.animation';
-import { UserModel, UserViewModel } from '../../../models/userModel';
+import { UserViewModel } from '../../../models/userModel';
 import { LoginService } from '../../../services/login.service';
 import { Observable, timer } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
-import { LoaderService } from 'src/app/services/loader.service';
+import { LoaderService } from '../../../services/loader.service';
 import { ValidationService } from '../../shared/validation.service';
 
 
@@ -26,7 +26,7 @@ import { ValidationService } from '../../shared/validation.service';
 })
 export class LoginComponent implements OnInit {
 
-  form: FormGroup;  
+  form: FormGroup;
   private date = new Date();
   time: Observable<Date> = timer(0, 1000).pipe(map(() => new Date()));
   inputType = 'password';
@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit {
   icLanguage = icLanguage;
   public tenant = "";
   UserModel: UserViewModel = new UserViewModel();
-  loading:Boolean;
+  loading: Boolean;
 
   constructor(
     private router: Router,
@@ -46,56 +46,55 @@ export class LoginComponent implements OnInit {
     private snackbar: MatSnackBar,
     private loginService: LoginService,
     public translate: TranslateService,
-    private loaderService:LoaderService
+    private loaderService: LoaderService
   ) {
     translate.addLangs(['en', 'fr']);
     translate.setDefaultLang('en');
     this.Activeroute.params.subscribe(params => { this.tenant = params.id || 'OpensisV2'; });
-    sessionStorage.setItem("tenant", this.tenant);  
+    sessionStorage.setItem("tenant", this.tenant);
     this.loaderService.isLoading.subscribe((v) => {
       this.loading = v;
     });
   }
   get f() { return this.form.controls; }
 
-  ngOnInit() {   
+  ngOnInit() {
     this.form = this.fb.group({
-      email: ['',[Validators.required, ValidationService.emailValidator] ],
-      password: ['', Validators.required]    
-    });  
+      email: ['', [Validators.required, ValidationService.emailValidator]],
+      password: ['', Validators.required]
+    });
   }
-  
-  send() {    
-    if (this.form.dirty && this.form.valid) {    
-     
-      this.UserModel._tenantName = this.tenant;        
+
+  send() {
+    if (this.form.dirty && this.form.valid) {
+
+      this.UserModel._tenantName = this.tenant;
       this.loginService.ValidateLogin(this.UserModel).subscribe(data => {
-        if(typeof(data)=='undefined')
-        {
+        if (typeof (data) == 'undefined') {
           this.snackbar.open('Login failed. ' + sessionStorage.getItem("httpError"), '', {
             duration: 10000
           });
         }
-        else
-        {
+        else {
           if (data._failure) {
             this.snackbar.open('Login failed. ' + data._message, 'LOL THANKS', {
               duration: 10000
             });
           } else {
-            this.UserModel = data;        
+            this.UserModel = data;
             sessionStorage.setItem("token", data._token);
-            this.router.navigateByUrl("/school/dashboards");   
-          
+            sessionStorage.setItem("tenant_Id", data.tenantId);
+            this.router.navigateByUrl("/school/dashboards");
+
           }
         }
-        
+
       })
 
-    }    
+    }
 
   }
- 
+
   toggleVisibility() {
     if (this.visible) {
       this.inputType = 'password';

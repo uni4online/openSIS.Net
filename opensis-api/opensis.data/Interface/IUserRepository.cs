@@ -9,8 +9,8 @@ namespace opensis.data.Interface
 {
     public interface IUserRepository
     {
-        public UserViewModel ValidateLogin(UserViewModel objmodel);
+        //public UserViewModel ValidateLogin(UserViewModel objmodel);
 
-        Task<LoginViewModel> ValidateUserLogin(LoginViewModel objmodel);
+        public LoginViewModel ValidateUserLogin(LoginViewModel objmodel);
     }
 }
