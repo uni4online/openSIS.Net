@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { environment } from 'src/environments/environment';
+import { environment } from '../../environments/environment';
 import { HttpClient} from '@angular/common/http';
 import { SchoolViewModel,SchoolListViewModel } from '../models/schoolModel';
 import { SchoolAddViewModel } from '../models/schoolDetailsModel';
@@ -16,16 +16,19 @@ export class SchoolService {
     return this.http.post<AllSchoolListModel>(apiurl,obj)
   }
 
-  GetGeneralInfoById(obj: SchoolAddViewModel){    
+  GetGeneralInfoById(obj: SchoolAddViewModel){   
+    //console.log(JSON.stringify(obj)) 
     let apiurl = this.apiUrl + obj._tenantName+ "/School/viewSchool"; 
     return this.http.post<SchoolAddViewModel>(apiurl,obj)
   }  
 
-  SaveGeneralInfo(obj: SchoolAddViewModel){    
+  SaveGeneralInfo(obj: SchoolAddViewModel){  
+    console.log('save',JSON.stringify(obj))   
     let apiurl = this.apiUrl + obj._tenantName+ "/School/addSchool"; 
     return this.http.post<SchoolAddViewModel>(apiurl,obj)
   }  
-  UpdateGeneralInfo(obj: SchoolAddViewModel){    
+  UpdateGeneralInfo(obj: SchoolAddViewModel){  
+    console.log('edit',JSON.stringify(obj))   
     let apiurl = this.apiUrl + obj._tenantName+ "/School/updateSchool"; 
     return this.http.put<SchoolAddViewModel>(apiurl,obj)
   }  

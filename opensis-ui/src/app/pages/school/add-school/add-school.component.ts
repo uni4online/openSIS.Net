@@ -15,9 +15,9 @@ import { ImageCropperService } from 'src/app/services/image-cropper.service';
 export class AddSchoolComponent implements OnInit {
   clickEventSubscriptionForCrop:Subscription;
   clickEventSubscriptionForUnCrop:Subscription;
-  enableCropTool:Boolean=false;
-  responseImage:String;
-  image:String='';
+  enableCropTool:boolean=false;
+  responseImage:string;
+  image:string='';
   displayGeneral = true;
   displayWash = false;
   generalFlag: boolean = true;
@@ -25,7 +25,7 @@ export class AddSchoolComponent implements OnInit {
   isEditMode:boolean=false;
   dataOfgeneralInfo:any={};
   id:any=0;
-  schoolId:Number=0;  
+  schoolId:number=0;  
   displayViewWash:boolean=false;
   displayViewGeneral:boolean=false;
   isViewMode:boolean=false;  
@@ -77,9 +77,12 @@ export class AddSchoolComponent implements OnInit {
     this.dataOfgeneralInfo=data;    
   }
 
-  getDataOfgeneralInfoFromView(data:any){      
-    this.dataOfgeneralInfoFromView=data;    
-    this.responseImage = this.dataOfgeneralInfoFromView.tblSchoolDetail.school_Logo;
+  getDataOfgeneralInfoFromView(data:any){  
+    if(Object.keys(data).length>0){
+      this.dataOfgeneralInfoFromView=data; 
+      this.responseImage = this.dataOfgeneralInfoFromView.tblSchoolDetail.schoolLogo;
+    }
+    
    
   }
 
@@ -122,7 +125,9 @@ export class AddSchoolComponent implements OnInit {
     this.displayViewGeneral=false;   
   }
   imageResponse(data:any){
-    this.responseImage = data.tblSchoolDetail.school_Logo;    
+    if(Object.keys(data).length>0){
+    this.responseImage = data.tblSchoolDetail.schoolLogo;
+    }    
   }
   showViewGeneralInfo(){     
     this.displayGeneral = false;

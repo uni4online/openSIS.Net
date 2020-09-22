@@ -1,17 +1,18 @@
 
 export class SchoolMasterModel {  
 
-    public tenant_Id:String;
-    public school_Id:any;
-    public school_Alt_Id:string;
-    public school_State_Id:string
-    public school_District_Id: string;
-    public school_Level: string;
-    public school_Classification: string;
-    public school_Name: string;
-    public alternate_Name: string;
-    public street_Address_1: string;
-    public street_Address_2: string;
+    public tenantId:string;
+    public schoolId:number;
+    public schoolInternalId:string;
+    public schoolAltId:string;
+    public schoolStateId:string
+    public schoolDistrictId: string;
+    public schoolLevel: string;
+    public schoolClassification: string;
+    public schoolName: string;
+    public alternateName: string;
+    public streetAddress1: string;
+    public streetAddress2: string;
     public city: string;
     public county: string;
     public division: string;
@@ -20,27 +21,29 @@ export class SchoolMasterModel {
     public zip: string;
     public country: string;
     public geoPosition: string;
-    public current_Period_ends: string;
-    public max_api_checks: Number;
+    public currentPeriodEnds?: number;
+    public maxApiChecks?: number;
     public features:string;
-    public created_By: any;
-    public date_Created: string;
-    public modified_By: any;
-    public date_Modifed:string;
+    public planId?:number;
+    public createdBy: string;
+    public dateCreated?: number;
+    public modifiedBy: string;
+    public dateModifed?:number;
 
     constructor() {        
        
-      this.tenant_Id= "1E93C7BF-0FAE-42BB-9E09-A1CEDC8C0355";
-      this.school_Id=0;
-      this.school_Alt_Id= "";
-      this.school_State_Id= "";
-      this.school_District_Id= "";
-      this.school_Level= "";
-      this.school_Classification= "";
-      this.school_Name= "";
-      this.alternate_Name= "";
-      this.street_Address_1="";
-      this.street_Address_2= "";
+      this.tenantId= sessionStorage.getItem("tenantId");;
+      this.schoolId=0;
+      this.schoolInternalId=null;
+      this.schoolAltId= null;
+      this.schoolStateId= null;
+      this.schoolDistrictId= null;
+      this.schoolLevel= null;
+      this.schoolClassification= null;
+      this.schoolName= null;
+      this.alternateName= null;
+      this.streetAddress1=null;
+      this.streetAddress2= null;
       this.city=null;
       this.county= null;
       this.division= null;
@@ -49,13 +52,14 @@ export class SchoolMasterModel {
       this.zip= null;
       this.country= null;
       this.geoPosition= null;
-      this.current_Period_ends= "2020-09-08T17:05:22.135Z";
-      this.max_api_checks= 0;
-      this.features= "";
-      this.created_By= null;
-      this.date_Created= "2020-09-08T17:05:22.135Z";
-      this.modified_By= null;
-      this.date_Modifed= "2020-09-08T17:05:22.135Z"
+      this.currentPeriodEnds= null;
+      this.maxApiChecks= null;
+      this.features= null;
+      this.planId=null;
+      this.createdBy= null;
+      this.dateCreated= null;
+      this.modifiedBy= null;
+      this.dateModifed= null;
        
       }
 }

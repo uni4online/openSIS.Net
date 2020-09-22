@@ -83,7 +83,7 @@ export class LoginComponent implements OnInit {
           } else {
             this.UserModel = data;
             sessionStorage.setItem("token", data._token);
-            sessionStorage.setItem("tenant_Id", data.tenantId);
+            sessionStorage.setItem("tenantId", data.tenantId);
             this.router.navigateByUrl("/school/dashboards");
 
           }

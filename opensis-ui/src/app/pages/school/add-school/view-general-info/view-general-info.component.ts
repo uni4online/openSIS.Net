@@ -19,7 +19,7 @@ import { TranslateService } from '@ngx-translate/core';
   ]
 })
 export class ViewGeneralInfoComponent implements OnInit {
-  @Input() schoolId: Number;
+  @Input() schoolId: number;
   @Output() imageResponse: EventEmitter<any> = new EventEmitter();
   @Output() parentShowWash :EventEmitter<any> = new EventEmitter<any>();
   @Output("dataOfgeneralInfoFromView") dataOfgeneralInfoFromView: EventEmitter<any> =   new EventEmitter();
@@ -56,24 +56,26 @@ export class ViewGeneralInfoComponent implements OnInit {
   {    
     this.schoolAddViewModel._tenantName=this.tenant; 
     this.schoolAddViewModel._token=sessionStorage.getItem("token");
-    this.schoolAddViewModel.tblSchoolDetail.tenant_Id="396862D6-92EA-406A-950F-F8BFF825988F";
-    this.schoolAddViewModel.tblSchoolDetail.school_Id=this.schoolId;
-    this.schoolAddViewModel.tblSchoolDetail.schoolMaster.school_Id=this.schoolId;
-    this.schoolAddViewModel.tblSchoolDetail.schoolMaster.tenant_Id="396862D6-92EA-406A-950F-F8BFF825988F";
-    
+    this.schoolAddViewModel.tblSchoolDetail.tenantId=sessionStorage.getItem("tenantId");
+    this.schoolAddViewModel.tblSchoolDetail.schoolId=this.schoolId;
+    this.schoolAddViewModel.tblSchoolDetail.tableSchoolMaster.schoolId=this.schoolId;
+    this.schoolAddViewModel.tblSchoolDetail.tableSchoolMaster.tenantId=sessionStorage.getItem("tenantId");
+    debugger
     this.generalInfoService.GetGeneralInfoById(this.schoolAddViewModel).subscribe(data => {
+      console.log(JSON.stringify(data)) 
       if(data._failure){
         this.snackbar.open('School information failed. '+ data._message, 'LOL THANKS', {
         duration: 10000
         });      
-      }else{              
+      }else{    
+        debugger          
         this.schoolAddViewModel=data;        
-        this.imageResponse.emit(this.schoolAddViewModel);
+       // this.imageResponse.emit(this.schoolAddViewModel);
         this.internet= this.schoolAddViewModel.tblSchoolDetail.internet?'Yes':'No';
         this.electricity= this.schoolAddViewModel.tblSchoolDetail.electricity?'Yes':'No';
         this.status= this.schoolAddViewModel.tblSchoolDetail.status?'Yes':'No';
-        this.schoolAddViewModel.tblSchoolDetail.date_School_Opened= this.formatDate(this.schoolAddViewModel.tblSchoolDetail.date_School_Opened);
-        this.schoolAddViewModel.tblSchoolDetail.date_School_Closed= this.formatDate(this.schoolAddViewModel.tblSchoolDetail.date_School_Closed);
+        this.schoolAddViewModel.tblSchoolDetail.dateSchoolOpened= this.formatDate(this.schoolAddViewModel.tblSchoolDetail.dateSchoolOpened);
+        this.schoolAddViewModel.tblSchoolDetail.dateSchoolClosed= this.formatDate(this.schoolAddViewModel.tblSchoolDetail.dateSchoolClosed);
         
         
       }

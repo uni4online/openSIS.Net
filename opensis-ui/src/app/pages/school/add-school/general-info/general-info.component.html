@@ -10,14 +10,14 @@
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'schoolName'|translate}}</mat-label>
-                    <input formControlName="school_Name" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.schoolMaster.school_Name" name="school_Name"  matInput required>
+                    <input formControlName="school_Name" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.tableSchoolMaster.schoolName" name="school_Name"  matInput required>
                     <mat-error *ngIf="form.get('school_Name').hasError('required')">{{'schoolNameIsRequired'|translate}}</mat-error>
                 </mat-form-field>
             </div>
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'alternateName'|translate}}</mat-label>
-                    <input formControlName="alternate_name" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.schoolMaster.alternate_Name" name="alternate_name"  matInput>
+                    <input formControlName="alternate_name" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.tableSchoolMaster.alternateName" name="alternate_name"  matInput>
                 </mat-form-field>
             </div>
         </div>
@@ -25,14 +25,14 @@
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'schoolId'|translate}}</mat-label>
-                    <input  formControlName="school_id" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.schoolMaster.school_Id" name="school_id" matInput required>
+                    <input  formControlName="school_id" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.tableSchoolMaster.schoolId" name="school_id" matInput required>
                     <mat-error *ngIf="form.get('school_id').hasError('required')">{{'schoolIdIsRequired'|translate}}</mat-error>
                 </mat-form-field>
             </div>
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'schoolAlternateId'|translate}}</mat-label>
-                    <input formControlName="alternate_id" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.schoolMaster.school_Alt_Id" name="alternate_id"matInput>
+                    <input formControlName="alternate_id" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.tableSchoolMaster.schoolAltId" name="alternate_id"matInput>
                 </mat-form-field>
             </div>
         </div>
@@ -40,7 +40,7 @@
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'schoolLevel'|translate}}</mat-label>
-                    <mat-select formControlName="school_level" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.schoolMaster.school_Level" name="school_level" required> 
+                    <mat-select formControlName="school_level" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.tableSchoolMaster.schoolLevel" name="school_level" required> 
                         <mat-option></mat-option>
                         <mat-option *ngFor="let key of schoolLevelOptions" [value]='key' >
                            {{key}}
@@ -53,7 +53,7 @@
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'schoolClassification'|translate}}</mat-label>
-                    <mat-select formControlName="school_classification" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.schoolMaster.school_Classification" name="school_classification"  required>
+                    <mat-select formControlName="school_classification" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.tableSchoolMaster.schoolClassification" name="school_classification"  required>
                         <mat-option></mat-option>
                         <mat-option *ngFor="let key of schoolClassificationOptions" [value]="key" >
                             {{key}}
@@ -81,9 +81,9 @@
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'lowestGradeLevel'|translate}}</mat-label>
-                    <mat-select formControlName="lowest_grade_level" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.lowest_Grade_Level" name="lowest_grade_level" required>
+                    <mat-select formControlName="lowest_grade_level" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.lowestGradeLevel" name="lowest_grade_level" required>
                         
-                        <mat-option *ngFor="let key of highestGradeLevelsOption" [value]="key" [disabled]="key==schoolAddViewModel.tblSchoolDetail.highest_Grade_Level">
+                        <mat-option *ngFor="let key of highestGradeLevelsOption" [value]="key" [disabled]="key==schoolAddViewModel.tblSchoolDetail.highestGradeLevel">
                             {{key}}
                            </mat-option>
                     </mat-select>
@@ -93,9 +93,9 @@
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'highestGradeLevel'|translate}}</mat-label>
-                    <mat-select formControlName="highest_grade_level" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.highest_Grade_Level"  name="highest_grade_level" required>
+                    <mat-select formControlName="highest_grade_level" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.highestGradeLevel"  name="highest_grade_level" required>
                         <mat-option></mat-option>
-                        <mat-option *ngFor="let key of highestGradeLevelsOption" [value]="key" [disabled]="key==schoolAddViewModel.tblSchoolDetail.lowest_Grade_Level">
+                        <mat-option *ngFor="let key of highestGradeLevelsOption" [value]="key" [disabled]="key==schoolAddViewModel.tblSchoolDetail.lowestGradeLevel">
                             {{key}}
                            </mat-option>
                     </mat-select>
@@ -107,7 +107,7 @@
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'dateSchoolOpened'|translate}}</mat-label>
-                    <input formControlName="date_school_opened" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.date_School_Opened" name="date_school_opened"  [matDatepicker]="datepickerRef" matInput>
+                    <input formControlName="date_school_opened" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.dateSchoolOpened" name="date_school_opened"  [matDatepicker]="datepickerRef" matInput>
                     <mat-datepicker-toggle [for]="datepickerRef" matSuffix></mat-datepicker-toggle>
                     <mat-datepicker #datepickerRef></mat-datepicker>
                     <mat-error *ngIf="form.get('date_school_closed').hasError('invalidDateComparison')"></mat-error>
@@ -116,7 +116,7 @@
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'dateSchoolClosed'|translate}}</mat-label>
-                    <input formControlName="date_school_closed" (dateChange)="dateCompare()" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.date_School_Closed"  name="date_school_closed" [matDatepicker]="dateSchoolClosed" matInput>
+                    <input formControlName="date_school_closed" (dateChange)="dateCompare()" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.dateSchoolClosed"  name="date_school_closed" [matDatepicker]="dateSchoolClosed" matInput>
                     <mat-datepicker-toggle [for]="dateSchoolClosed" matSuffix></mat-datepicker-toggle>
                     <mat-datepicker #dateSchoolClosed></mat-datepicker>
                     <mat-error *ngIf="form.get('date_school_closed').hasError('compareError')"></mat-error>
@@ -174,7 +174,7 @@
                     <mat-select formControlName="status" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.status"  name="status"> 
                         <mat-option></mat-option>
                         <mat-option  [value]="true">Active</mat-option> 
-                        <mat-option  [value]="false">Inactive</mat-option> 
+                        <mat-option  [value]="false">InActive</mat-option> 
                     </mat-select>
                 </mat-form-field>
                 </div>
@@ -191,7 +191,7 @@
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'streetAddress1'|translate}}</mat-label>
-                    <input formControlName="street_address_1" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.schoolMaster.street_Address_1"  name="street_address_1" matInput required>
+                    <input formControlName="street_address_1" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.tableSchoolMaster.streetAddress1"  name="street_address_1" matInput required>
                     <mat-error *ngIf="form.get('street_address_1').hasError('required')">{{'streetAddressIsRequired'|translate}}</mat-error>
                 </mat-form-field>
                 
@@ -199,7 +199,7 @@
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'streetAddress2'|translate}}</mat-label>
-                    <input formControlName="street_address_2" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.schoolMaster.street_Address_2" name="street_address_2" matInput>
+                    <input formControlName="street_address_2" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.tableSchoolMaster.streetAddress2" name="street_address_2" matInput>
                 </mat-form-field>
             </div>
         </div>
@@ -208,14 +208,14 @@
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'city'|translate}}</mat-label>
-                    <input formControlName="city" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.schoolMaster.city" name="city" matInput required>
+                    <input formControlName="city" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.tableSchoolMaster.city" name="city" matInput required>
                     <mat-error *ngIf="form.get('city').hasError('required')">{{'cityIsRequired'|translate}}</mat-error>
                 </mat-form-field>
             </div>
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'county'|translate}}</mat-label>
-                    <input formControlName="county" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.schoolMaster.county" name="county" matInput>
+                    <input formControlName="county" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.tableSchoolMaster.county" name="county" matInput>
                 </mat-form-field>
             </div>
         </div>
@@ -224,13 +224,13 @@
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'division'|translate}}</mat-label>
-                    <input  formControlName="division" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.schoolMaster.division"  name="division" matInput>
+                    <input  formControlName="division" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.tableSchoolMaster.division"  name="division" matInput>
                 </mat-form-field>
             </div>
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'stateRegionProvince'|translate}}</mat-label>
-                    <input formControlName="state" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.schoolMaster.state" name="state" matInput>
+                    <input formControlName="state" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.tableSchoolMaster.state" name="state" matInput>
                 </mat-form-field>
             </div>
         </div>
@@ -239,13 +239,13 @@
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'district'|translate}}</mat-label>
-                    <input formControlName="district" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.schoolMaster.district"  name="district" matInput>
+                    <input formControlName="district" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.tableSchoolMaster.district"  name="district" matInput>
                 </mat-form-field>
             </div>
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'zipPostalCode'|translate}}</mat-label>
-                    <input formControlName="zip" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.schoolMaster.zip"  name="zip" matInput required>
+                    <input formControlName="zip" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.tableSchoolMaster.zip"  name="zip" matInput required>
                     <mat-error *ngIf="form.get('zip').hasError('required')">{{'zipIsRequired'|translate}}</mat-error>
                 </mat-form-field>
             </div>
@@ -256,7 +256,7 @@
                 <div class="mx-6">
                     <mat-form-field class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'country'|translate}}</mat-label>
-                    <mat-select formControlName="country" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.schoolMaster.country" name="country" required>
+                    <mat-select formControlName="country" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.tableSchoolMaster.country" name="country" required>
                         <mat-option></mat-option>
                         <mat-option *ngFor="let key of countryOption" [value]="key" >
                             {{key}}
@@ -294,14 +294,14 @@
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'principal'|translate}}</mat-label>
-                    <input formControlName="principal" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.name_of_Principal" name="principal" matInput required>
+                    <input formControlName="principal" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.nameOfPrincipal" name="principal" matInput required>
                     <mat-error *ngIf="form.get('principal').hasError('required')">{{'principalNameIsRequired'|translate}}</mat-error>
                 </mat-form-field>
             </div>
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'assistantPrincipal'|translate}}</mat-label>
-                    <input formControlName="ass_principal" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.name_of_Assistant_Principal" name="ass_principal" matInput>
+                    <input formControlName="ass_principal" [(ngModel)]="schoolAddViewModel.tblSchoolDetail.nameOfAssistantPrincipal" name="ass_principal" matInput>
                 </mat-form-field>
             </div>
         </div>
