@@ -43,7 +43,10 @@ namespace opensis.data.Models
         public virtual DbSet<TableSemesters> TableSemesters { get; set; }
         public virtual DbSet<TableState> TableState { get; set; }
         public virtual DbSet<TableUserMaster> TableUserMaster { get; set; }
-
+        public virtual DbSet<TableRooms> TableRooms { get; set; }
+        public virtual DbSet<TableSections> TableSections { get; set; }
+        public virtual DbSet<TableGradelevels> TableGradelevels { get; set; }
+        public virtual DbSet<TableProgressPeriods> TableProgressPeriods { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Schools>().HasKey(e => e.school_id);
@@ -52,7 +55,33 @@ namespace opensis.data.Models
             //modelBuilder.Entity<tblSchoolMaster>().HasKey(ba => new { ba.Tenant_Id, ba.School_Id });
             //modelBuilder.Entity<tblSchoolDetail>().HasKey(ba => new { ba.id});
 
+            modelBuilder.Entity<TableSections>(entity =>
+            {
+                entity.HasKey(e => new { e.TenantId, e.SchoolId, e.SectionId });
 
+                entity.ToTable("Table_Sections");
+
+                entity.Property(e => e.TenantId).HasColumnName("Tenant_id");
+
+                entity.Property(e => e.SchoolId).HasColumnName("School_id");
+
+                entity.Property(e => e.SectionId).HasColumnName("Section_id");
+
+                entity.Property(e => e.LastUpdated)
+                    .HasColumnName("last_updated")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.Name)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SortOrder).HasColumnName("sort_order");
+
+                entity.Property(e => e.UpdatedBy)
+                    .HasColumnName("updated_by")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+            });
 
             modelBuilder.Entity<TableCity>(entity =>
             {
@@ -153,6 +182,136 @@ namespace opensis.data.Models
                     .HasForeignKey(d => new { d.TenantId, d.SchoolId })
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Table_membership_Table_School_Master");
+            });
+            modelBuilder.Entity<TableProgressPeriods>(entity =>
+            {
+                entity.HasKey(e => new { e.TenantId, e.SchoolId, e.MarkingPeriodId, e.AcademicYear, e.QuarterId });
+
+                entity.ToTable("Table_Progress_periods");
+
+                entity.Property(e => e.TenantId).HasColumnName("Tenant_id");
+
+                entity.Property(e => e.SchoolId).HasColumnName("School_id");
+
+                entity.Property(e => e.MarkingPeriodId).HasColumnName("Marking_period_id");
+
+                entity.Property(e => e.AcademicYear)
+                    .HasColumnName("Academic_year")
+                    .HasColumnType("decimal(4, 0)");
+
+                entity.Property(e => e.QuarterId).HasColumnName("Quarter_id");
+
+                entity.Property(e => e.DoesComments).HasColumnName("does_comments");
+
+                entity.Property(e => e.DoesExam).HasColumnName("does_exam");
+
+                entity.Property(e => e.DoesGrades).HasColumnName("does_grades");
+
+                entity.Property(e => e.EndDate)
+                    .HasColumnName("end_date")
+                    .HasColumnType("date");
+
+                entity.Property(e => e.LastUpdated)
+                    .HasColumnName("last_updated")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.PostEndDate)
+                    .HasColumnName("post_end_date")
+                    .HasColumnType("date");
+
+                entity.Property(e => e.PostStartDate)
+                    .HasColumnName("post_start_date")
+                    .HasColumnType("date");
+
+                entity.Property(e => e.RolloverId).HasColumnName("rollover_id");
+
+                entity.Property(e => e.ShortName)
+                    .HasColumnName("Short_name")
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SortOrder).HasColumnName("sort_order");
+
+                entity.Property(e => e.StartDate)
+                    .HasColumnName("start_date")
+                    .HasColumnType("date");
+
+                entity.Property(e => e.Title)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UpdatedBy)
+                    .HasColumnName("updated_by")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+            });
+            modelBuilder.Entity<TableRooms>(entity =>
+            {
+                entity.HasKey(e => new { e.TenantId, e.SchoolId, e.RoomId });
+
+                entity.ToTable("Table_Rooms");
+
+                entity.Property(e => e.TenantId).HasColumnName("Tenant_id");
+
+                entity.Property(e => e.SchoolId).HasColumnName("School_id");
+
+                entity.Property(e => e.RoomId).HasColumnName("room_id");
+
+                entity.Property(e => e.Capacity).HasColumnName("capacity");
+
+                entity.Property(e => e.Description)
+                    .HasColumnName("description")
+                    .HasColumnType("text");
+
+                entity.Property(e => e.LastUpdated)
+                    .HasColumnName("last_updated")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.SortOrder).HasColumnName("sort_order");
+
+                entity.Property(e => e.Title)
+                    .HasColumnName("title")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UpdatedBy)
+                    .HasColumnName("updated_by")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+            });
+            modelBuilder.Entity<TableGradelevels>(entity =>
+            {
+                entity.HasKey(e => new { e.TenantId, e.SchoolId, e.GradeId });
+
+                entity.ToTable("Table_Gradelevels");
+
+                entity.Property(e => e.TenantId).HasColumnName("Tenant_id");
+
+                entity.Property(e => e.SchoolId).HasColumnName("School_id");
+
+                entity.Property(e => e.GradeId).HasColumnName("Grade_id");
+
+                entity.Property(e => e.LastUpdated)
+                    .HasColumnName("last_updated")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.NextGradeId).HasColumnName("next_grade_id");
+
+                entity.Property(e => e.ShortName)
+                    .HasColumnName("Short_name")
+                    .HasMaxLength(5)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SortOrder).HasColumnName("sort_order");
+
+                entity.Property(e => e.Title)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UpdatedBy)
+                    .HasColumnName("updated_by")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<TableNotice>(entity =>

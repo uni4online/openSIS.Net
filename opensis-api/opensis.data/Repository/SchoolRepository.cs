@@ -145,6 +145,10 @@ namespace opensis.data.Repository
                     }
                     school.tblSchoolMaster = schoolMaster;
                     school.tblSchoolMaster.GeoPosition = null;
+                    if (school.tblSchoolMaster.TableSchoolDetail.ToList().Count > 0)
+                    {
+                        school.tblSchoolMaster.TableSchoolDetail.FirstOrDefault().TableSchoolMaster = null;
+                    } 
                     school._tenantName = school._tenantName;
                     return school;
                 }
@@ -247,6 +251,10 @@ namespace opensis.data.Repository
                 }
                 this.context?.SaveChanges();
                 school.tblSchoolMaster.GeoPosition = null;
+                if (school.tblSchoolMaster.TableSchoolDetail.ToList().Count > 0)
+                {
+                    school.tblSchoolMaster.TableSchoolDetail.FirstOrDefault().TableSchoolMaster = null;
+                }
                 school._failure = false;
                 return school;
             }
@@ -288,6 +296,10 @@ namespace opensis.data.Repository
                 this.context?.SaveChanges();
                 school._failure = false;
                 school.tblSchoolMaster.GeoPosition = null;
+                if (school.tblSchoolMaster.TableSchoolDetail.ToList().Count>0)
+                {
+                    school.tblSchoolMaster.TableSchoolDetail.FirstOrDefault().TableSchoolMaster = null;
+                }
                 return school;
 
             }
