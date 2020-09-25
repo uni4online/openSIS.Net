@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using opensis.core.School.Interfaces;
 using opensis.data.Models;
+using opensis.data.ViewModels.Notice;
 using opensis.data.ViewModels.School;
 
 namespace opensisAPI.Controllers
@@ -115,5 +116,6 @@ namespace opensisAPI.Controllers
         //    return result;
 
         //}
+
     }
 }

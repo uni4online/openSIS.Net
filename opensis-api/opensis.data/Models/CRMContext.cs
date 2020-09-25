@@ -21,13 +21,6 @@ namespace opensis.data.Models
         public DbSet<Schools> tblSchool { get; set; }
         public DbSet<Users> tblUser { get; set; }
 
-        //public DbSet<tblUserMaster> Table_User_Master { get; set; }
-
-        //public DbSet<tblSchoolMaster> Table_School_Master { get; set; }
-        //public DbSet<tblSchoolDetail> Table_School_Detail { get; set; }
-        //public DbSet<tblPlans> Table_Plans { get; set; }
-
-
         public virtual DbSet<TableCity> TableCity { get; set; }
         public virtual DbSet<TableCountry> TableCountry { get; set; }
         public virtual DbSet<TableLanguage> TableLanguage { get; set; }
@@ -50,11 +43,7 @@ namespace opensis.data.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Schools>().HasKey(e => e.school_id);
-            //modelBuilder.Entity<tblUserMaster>().HasKey(ba => new { ba.Tenant_Id, ba.School_id, ba.User_id });
-            //modelBuilder.Entity<tblPlans>().HasKey(ba => new { ba.Tenant_id, ba.School_id, ba.Plan_id });
-            //modelBuilder.Entity<tblSchoolMaster>().HasKey(ba => new { ba.Tenant_Id, ba.School_Id });
-            //modelBuilder.Entity<tblSchoolDetail>().HasKey(ba => new { ba.id});
-
+            
             modelBuilder.Entity<TableSections>(entity =>
             {
                 entity.HasKey(e => new { e.TenantId, e.SchoolId, e.SectionId });
@@ -1082,6 +1071,7 @@ namespace opensis.data.Models
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Table_User_Master_Table_membership1");
             });
+            
         }
         
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
