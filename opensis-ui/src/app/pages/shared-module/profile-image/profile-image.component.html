@@ -20,7 +20,7 @@
     </div>
   </div>
   <div class="input-group" style="display: none;">
-    <input type="file" (change)="uploadFile($event,fileUpload)" #fileUpload accept="image/jpg, image/jpeg, image/png">
+    <input [type]="inputType" (change)="uploadFile($event,fileUpload)" #fileUpload accept="image/jpg, image/jpeg, image/png">
   </div>
   <div @fadeInRight class="d-flex justify-content-center" (click)="fileUpload.click();unsetImage()" style="cursor: pointer;">
     <img @fadeInRight *ngIf="croppedImage=='' && preview=='' && (responseImage==null || responseImage.length==0)" src="../../../../assets/img/upload-school-logo.jpg" width="200"

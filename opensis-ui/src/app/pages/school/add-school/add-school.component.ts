@@ -1,7 +1,12 @@
-import { Component, OnInit,ViewChildren, AfterViewInit, QueryList } from '@angular/core';
+import { Component, OnInit, OnDestroy} from '@angular/core';
 import { Subscription } from 'rxjs';
 import {fadeInRight400ms} from '../../../../@vex/animations/fade-in-right.animation';
 import { ImageCropperService } from 'src/app/services/image-cropper.service';
+import { SchoolAddViewModel } from '../../../models/schoolMasterModel';
+import { ActivatedRoute } from '@angular/router';
+import { SchoolService } from '../../../services/school.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { SharedFunction } from '../../../pages/shared/shared-function';
 @Component({
   selector: 'vex-add-school',
   templateUrl: './add-school.component.html',
@@ -12,10 +17,9 @@ import { ImageCropperService } from 'src/app/services/image-cropper.service';
     
   ]
 })
-export class AddSchoolComponent implements OnInit {
+export class AddSchoolComponent implements OnInit,OnDestroy {
   clickEventSubscriptionForCrop:Subscription;
-  clickEventSubscriptionForUnCrop:Subscription;
-  enableCropTool:boolean=false;
+  clickEventSubscriptionForUnCrop:Subscription;  
   responseImage:string;
   image:string='';
   displayGeneral = true;
@@ -23,21 +27,31 @@ export class AddSchoolComponent implements OnInit {
   generalFlag: boolean = true;
   washFlag: boolean = false;
   isEditMode:boolean=false;
-  dataOfgeneralInfo:any={};
-  id:any=0;
+  dataOfgeneralInfo;
+  id;
   schoolId:number=0;  
   displayViewWash:boolean=false;
   displayViewGeneral:boolean=false;
   isViewMode:boolean=false;  
-  dataOfgeneralInfoFromView:any={};
-  dataOfWashInfoFromView:any={};
+  dataOfgeneralInfoFromView;
+  dataOfWashInfoFromView;
   disabledWashInfo:boolean=false;  
-  dataOfgeneralInfoFromWash:any={};
-  dataOfwashInfoFromGeneral:any={};
+  dataOfgeneralInfoFromWash;
+  dataOfwashInfoFromGeneral;
   isAddMode:boolean=false;
   getImageResponse="";
-  imageObj:any={};
-  constructor(private imageCropperService:ImageCropperService) { 
+  imageObj;
+  enableCropTool;
+  public tenant = "";
+  schoolAddViewModel: SchoolAddViewModel = new SchoolAddViewModel();
+  generalAndWashInfoData: SchoolAddViewModel = new SchoolAddViewModel();;
+  constructor(private imageCropperService:ImageCropperService,
+    private Activeroute: ActivatedRoute,
+    private generalInfoService:SchoolService,
+     private snackbar: MatSnackBar,
+     private commonFunction:SharedFunction) { 
+    this.Activeroute.params.subscribe(params => { this.tenant ='OpensisV2'; });
+
     this.clickEventSubscriptionForCrop=this.imageCropperService.getCroppedEvent().subscribe((res)=>{
      
         this.image=res;
@@ -47,46 +61,34 @@ export class AddSchoolComponent implements OnInit {
      
       //this.image='data:image/png;base64,'+btoa(res.target.result);
       this.image=btoa(res.target.result);
+      
+
      
         });
+
+
   }
 
   ngOnInit() { 
-    
     this.id = sessionStorage.getItem("id")
-    this.schoolId=Number(this.id);   
-    sessionStorage.removeItem("id") 
-  
-    if(this.id === null){
-      this.isAddMode=true;
-      this.showGeneralEdit();
-    } else{
-      this.isViewMode=true;
-      this.showViewGeneralInfo();
-    }
-    
-    this.getDataOfgeneralInfo(this.dataOfgeneralInfo);
-    this.getDataOfgeneralInfoFromView(this.dataOfgeneralInfoFromView);
-    this.getDataOfWashInfoFromView(this.dataOfgeneralInfoFromView);
-    this.imageResponse(this.imageObj);
-    
-   
+    this.schoolId=+this.id;   
+    this.getSchoolGeneralandWashInfoDetails();
    }
 
-  getDataOfgeneralInfo(data:any){   
+  getDataOfgeneralInfo(data){   
     this.dataOfgeneralInfo=data;    
   }
 
-  getDataOfgeneralInfoFromView(data:any){  
-    if(Object.keys(data).length>0){
+  getDataOfgeneralInfoFromView(data){  
+    if(this.commonFunction.checkEmptyObject(data) === true){
       this.dataOfgeneralInfoFromView=data; 
-      this.responseImage = this.dataOfgeneralInfoFromView.tblSchoolDetail.schoolLogo;
-    }
+      this.responseImage = this.generalAndWashInfoData.tblSchoolMaster.tableSchoolDetail[0]?.schoolLogo;
+      this.image = this.responseImage;
+    }   
     
-   
   }
 
-  getDataOfWashInfoFromView(data:any){    
+  getDataOfWashInfoFromView(data){    
     this.dataOfWashInfoFromView=data;   
   }
   
@@ -109,13 +111,11 @@ export class AddSchoolComponent implements OnInit {
     this.disabledWashInfo= true;
   }
 
-  showWashEdit(data:any){ 
+  showWashEdit(data){ 
     
     if(data){     
       this.isViewMode=false;
-    }else{       
-        this.isViewMode=false;        
-    }    
+    }  
     this.displayGeneral = false;
     this.displayWash = true;
     this.generalFlag = false;
@@ -124,9 +124,9 @@ export class AddSchoolComponent implements OnInit {
     this.displayViewWash=false;
     this.displayViewGeneral=false;   
   }
-  imageResponse(data:any){
-    if(Object.keys(data).length>0){
-    this.responseImage = data.tblSchoolDetail.schoolLogo;
+  imageResponse(data){
+    if(this.commonFunction.checkEmptyObject(data) === true){ 
+      this.responseImage = this.generalAndWashInfoData.tblSchoolMaster.tableSchoolDetail[0]?.schoolLogo;
     }    
   }
   showViewGeneralInfo(){     
@@ -137,6 +137,7 @@ export class AddSchoolComponent implements OnInit {
     this.isEditMode=false; 
     this.displayViewWash=false;
     this.displayViewGeneral=true;    
+    this.imageCropperService.nextMessage(true);
   }
   showViewWashInfo(){   
     this.displayGeneral = false;
@@ -146,6 +147,36 @@ export class AddSchoolComponent implements OnInit {
     this.isEditMode=false; 
     this.displayViewWash=true;
     this.displayViewGeneral=false; 
+    this.imageCropperService.nextMessage(true);
+  }
 
+  getSchoolGeneralandWashInfoDetails(){
+    this.schoolAddViewModel._tenantName=this.tenant; 
+    this.schoolAddViewModel._token=sessionStorage.getItem("token");
+    this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].tenantId=sessionStorage.getItem("tenantId");
+    this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].schoolId=this.schoolId;
+    this.schoolAddViewModel.tblSchoolMaster.schoolId=this.schoolId;
+    this.schoolAddViewModel.tblSchoolMaster.tenantId=sessionStorage.getItem("tenantId");
+
+    this.generalInfoService.GetGeneralInfoById(this.schoolAddViewModel).subscribe(data => {
+      this.generalAndWashInfoData = data;     
+      if(this.id === null){
+        this.isAddMode=true;
+        this.showGeneralEdit();
+      } else{
+        this.isViewMode=true;
+        this.responseImage = this.generalAndWashInfoData.tblSchoolMaster.tableSchoolDetail[0]?.schoolLogo;
+        this.showViewGeneralInfo();        
+      }
+      
+      this.getDataOfgeneralInfo(this.dataOfgeneralInfo);
+      this.getDataOfgeneralInfoFromView(this.dataOfgeneralInfoFromView);
+      this.getDataOfWashInfoFromView(this.dataOfgeneralInfoFromView);
+      this.imageResponse(this.imageObj);
+    })
+  }
+
+  ngOnDestroy(){
+    sessionStorage.removeItem("id") 
   }
 }

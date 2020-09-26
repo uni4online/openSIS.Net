@@ -115,7 +115,7 @@ export class AppComponent {
           {
             type: 'link',
             label: 'Calendars',
-            route: '/school/schoolcalendars',
+            route: '/school/schoolinfo/schoolcalendars',
             icon: icinfo
           },
           {

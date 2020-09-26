@@ -1,12 +1,11 @@
 import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { SchoolAddViewModel } from '../../../../models/schoolDetailsModel';
+import { SchoolAddViewModel } from '../../../../models/schoolMasterModel';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
 import { fadeInRight400ms } from '../../../../../@vex/animations/fade-in-right.animation';
 import { SchoolService } from '../../../../services/school.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute, Router } from '@angular/router';
 import * as _moment from 'moment';
 import { default as _rollupMoment } from 'moment';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
@@ -15,14 +14,21 @@ import { TranslateService } from '@ngx-translate/core';
 import { schoolLevel } from '../../../../enums/school_level.enum';
 import { schoolClassification } from '../../../../enums/school_classification.enum';
 import { gender } from '../../../../enums/gender.enum';
-import { country } from '../../../../enums/country.enum';
-import { status } from '../../../../enums/status.enum';
+import { WashInfoEnum } from '../../../../enums/wash-info.enum';
+import { status } from '../../../../enums/wash-info.enum';
 import { highestGradeLevel } from '../../../../enums/highest_grade_level.enum';
 import { MY_FORMATS } from '../../../shared/format-datepicker';
 import { ValidationService } from '../../../shared/validation.service';
 import { LoaderService } from 'src/app/services/loader.service';
 import { __values } from 'tslib';
-import { BehaviorSubject } from 'rxjs'
+import { BehaviorSubject } from 'rxjs';
+import { CountryModel } from '../../../../models/countryModel';
+import { StateModel } from '../../../../models/stateModel';
+import { CityModel } from '../../../../models/cityModel';
+import { CommonService } from '../../../../services/common.service';
+import { SharedFunction } from '../../../shared/shared-function';
+import { ImageCropperService } from '../../../../services/image-cropper.service';
+
 const moment = _rollupMoment || _moment;
 
 
@@ -43,47 +49,50 @@ const moment = _rollupMoment || _moment;
 })
 
 export class GeneralInfoComponent implements OnInit {
-  @Output("parentShowWash") parentShowWash: EventEmitter<any> = new EventEmitter<any>();
-  @Output() dataOfgeneralInfo: EventEmitter<any> = new EventEmitter();
+  @Output("parentShowWash") parentShowWash: EventEmitter<object> = new EventEmitter<object>();
+  @Output() dataOfgeneralInfo: EventEmitter<object> = new EventEmitter();
   @Input() isEditMode: Boolean;
-  @Input() dataOfgeneralInfoFromView: any;
-  @Input() dataOfgeneralInfoFromWash: any;
-  @Input() dataOfwashInfoFromGeneral: any;
-  @Input() image: any;
+  @Input() dataOfgeneralInfoFromView;
+  @Input() dataOfgeneralInfoFromWash;
+  @Input() dataOfwashInfoFromGeneral;
+  @Input() image;
 
   private schoolLevels = schoolLevel;
   public schoolLevelOptions = [];
   private schoolClassifications = schoolClassification;
   public schoolClassificationOptions = [];
   private genders = gender;
-  public genderOptions = [];
-  private statusList = status;
-  public statusOption = [];
-  private countryList = country;
-  public countryOption = [];
+  public genderOptions = [];  
   private highestGradeLevels = highestGradeLevel;
   public highestGradeLevelsOption = [];
-  public tenant = "";
+  public tenant = "OpensisV2";
   form: FormGroup;
   schoolAddViewModel: SchoolAddViewModel = new SchoolAddViewModel();
+  countryModel: CountryModel = new CountryModel();
+  stateModel: StateModel = new StateModel();
+  cityModel: CityModel = new CityModel();
   schoolViewModel = new BehaviorSubject<SchoolAddViewModel>(this.schoolAddViewModel)
   schoolViewModelObserver = this.schoolViewModel.asObservable()
   loading;
-
-  public internet = [
-    { "id": true, "name": "Yes" },
-    { "id": false, "name": "No" }
-  ]
+  countryListArr=[];
+  stateListArr=[];
+  cityListArr=[];
+  countryName="";
+  stateName="";
+  dateCreated=Date();
+  generalInfo=WashInfoEnum;
+  statusInfo=status;
+city:number;
   constructor(private fb: FormBuilder,
     private generalInfoService: SchoolService,
-    private snackbar: MatSnackBar,
-    private router: Router,
-    private Activeroute: ActivatedRoute,
+    private snackbar: MatSnackBar,    
     public translateService: TranslateService,
-    private loaderService: LoaderService) {
+    private loaderService: LoaderService,
+    private commonService: CommonService,
+    private commonFunction:SharedFunction,
+    private _ImageCropperService:ImageCropperService) {
 
-    translateService.use('en');
-    this.Activeroute.params.subscribe(params => { this.tenant = 'OpensisV2'; });
+    translateService.use('en');    
     this.loaderService.isLoading.subscribe((val) => {
       this.loading = val;
     });
@@ -91,99 +100,234 @@ export class GeneralInfoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    const today = moment();
+    this.dateCreated = today.format('YYYY-MM-DD');
+
     this.form = this.fb.group(
       {
-        school_Name: ['', Validators.required],
-        alternate_name: ['',],
-        school_id: ['', Validators.required],
-        alternate_id: [''],
+        school_Name: ['', [Validators.required,Validators.maxLength(100)]],
+        alternate_name: ['',Validators.maxLength(100)],
+        school_id: ['',Validators.maxLength(50)],
+        state_id: ['',Validators.maxLength(10)],
+        district_id: ['',Validators.maxLength(10)],
+        alternate_id: ['',[Validators.maxLength(10)]],
         school_level: ['', Validators.required],
-        school_classification: ['', Validators.required],
+        school_classification: ['', [Validators.required,Validators.maxLength(50)]],
         affiliation: [''],
         associations: [''],
         lowest_grade_level: ['', Validators.required],
         highest_grade_level: ['', Validators.required],
         date_school_opened: [''],
         date_school_closed: [''],
-        code: [''],
-        gender: [''],
+        code: ['',Validators.maxLength(100)],
+        gender: ['',Validators.maxLength(6)],
         internet: [''],
         electricity: [''],
         status: [''],
-        street_address_1: ['', Validators.required],
-        street_address_2: [''],
-        city: ['', Validators.required],
+        street_address_1: ['', [Validators.required,Validators.maxLength(150)]],
+        street_address_2: ['',Validators.maxLength(150)],
+        city: ['', [Validators.required,Validators.maxLength(50)]],
         country: ['', Validators.required],
-        division: [''],
-        district: [''],
-        zip: ['', Validators.required],
-        state: [''],
+        division: ['',Validators.maxLength(50)],
+        district: ['',Validators.maxLength(50)],
+        zip: ['', [Validators.required,Validators.maxLength(10)]],
+        state: ['',Validators.maxLength(50)],
         latitude: [''],
         longitude: [''],
-        principal: ['', Validators.required],
-        ass_principal: [''],
-        telephone: ['', [Validators.required]],
-        fax: [''],
-        website: ['', ValidationService.websiteValidator],
-        email: ['', ValidationService.emailValidator],
-        twitter: [''],
-        facebook: [''],
-        instagram: [''],
-        youtube: [''],
-        linkedin: [''],
-        county: [''],
+        principal: ['', [Validators.required,Validators.maxLength(100)]],
+        ass_principal: ['',Validators.maxLength(100)],
+        telephone: ['', [Validators.required,Validators.maxLength(20)]],
+        fax: ['',Validators.maxLength(20)],
+        website: [''],
+        email: ['', [ValidationService.emailValidator,Validators.maxLength(100)]],
+        twitter: ['',Validators.maxLength(100)],
+        facebook: ['',Validators.maxLength(100)],
+        instagram: ['',Validators.maxLength(100)],
+        youtube: ['',Validators.maxLength(100)],
+        linkedin: ['',Validators.maxLength(100)],
+        county: ['',Validators.maxLength(50)],
       });
-
+      this.getAllCountry();
+     
     this.schoolLevelOptions = Object.keys(this.schoolLevels);
     this.schoolClassificationOptions = Object.keys(this.schoolClassifications);
-    this.genderOptions = Object.keys(this.genders);
-    this.statusOption = Object.keys(this.statusList);
-    this.countryOption = Object.keys(this.countryList);
+    this.genderOptions = Object.keys(this.genders);   
     this.highestGradeLevelsOption = Object.keys(this.highestGradeLevels);
-
-
-    if (Object.keys(this.dataOfgeneralInfoFromView).length !== 0) {
+    
+    if (this.commonFunction.checkEmptyObject(this.dataOfgeneralInfoFromView) === true) {
       this.schoolAddViewModel = this.dataOfgeneralInfoFromView;
+    
 
 
-    } else if (Object.keys(this.dataOfwashInfoFromGeneral).length !== 0) {
+    } else if (this.commonFunction.checkEmptyObject(this.dataOfwashInfoFromGeneral) === true) {
       this.schoolAddViewModel = this.dataOfwashInfoFromGeneral;
 
     }
-    else if (Object.keys(this.dataOfgeneralInfoFromWash).length !== 0) {
+    else if (this.commonFunction.checkEmptyObject(this.dataOfgeneralInfoFromWash) === true) {
       this.schoolAddViewModel = this.dataOfgeneralInfoFromWash;
 
     }
 
-    this.schoolAddViewModel.tblSchoolDetail.tableSchoolMaster.schoolLevel = this.schoolAddViewModel.tblSchoolDetail.tableSchoolMaster.schoolLevel !== null ? this.schoolAddViewModel.tblSchoolDetail.tableSchoolMaster.schoolLevel.trim() : this.schoolAddViewModel.tblSchoolDetail.tableSchoolMaster.schoolLevel;
-    this.schoolAddViewModel.tblSchoolDetail.tableSchoolMaster.schoolClassification = this.schoolAddViewModel.tblSchoolDetail.tableSchoolMaster.schoolClassification !== null ? this.schoolAddViewModel.tblSchoolDetail.tableSchoolMaster.schoolClassification.trim() : this.schoolAddViewModel.tblSchoolDetail.tableSchoolMaster.schoolClassification;
-    this.schoolAddViewModel.tblSchoolDetail.lowestGradeLevel = this.schoolAddViewModel.tblSchoolDetail.lowestGradeLevel !== null ? this.schoolAddViewModel.tblSchoolDetail.lowestGradeLevel.trim() : this.schoolAddViewModel.tblSchoolDetail.lowestGradeLevel;
-    this.schoolAddViewModel.tblSchoolDetail.highestGradeLevel = this.schoolAddViewModel.tblSchoolDetail.highestGradeLevel !== null ? this.schoolAddViewModel.tblSchoolDetail.highestGradeLevel.trim() : this.schoolAddViewModel.tblSchoolDetail.highestGradeLevel;
-    this.schoolAddViewModel.tblSchoolDetail.gender = this.schoolAddViewModel.tblSchoolDetail.gender !== null ? this.schoolAddViewModel.tblSchoolDetail.gender.trim() : this.schoolAddViewModel.tblSchoolDetail.gender;
-    this.schoolAddViewModel.tblSchoolDetail.telephone = this.schoolAddViewModel.tblSchoolDetail.telephone !== null ? this.schoolAddViewModel.tblSchoolDetail.telephone.trim() : this.schoolAddViewModel.tblSchoolDetail.telephone;
+    
+    if ((this.commonFunction.checkEmptyObject(this.dataOfwashInfoFromGeneral) === true)
+     || (this.commonFunction.checkEmptyObject(this.dataOfgeneralInfoFromView) === true) 
+     || (this.commonFunction.checkEmptyObject(this.dataOfgeneralInfoFromWash) === true))
+     {
+      this._ImageCropperService.nextMessage(false);      
+      this.schoolAddViewModel.tblSchoolMaster.city = +this.schoolAddViewModel.tblSchoolMaster.city;
+      this.schoolAddViewModel.tblSchoolMaster.state = +this.schoolAddViewModel.tblSchoolMaster.state;
+      this.schoolAddViewModel.tblSchoolMaster.country = +this.schoolAddViewModel.tblSchoolMaster.country;
+   
+      this.getAllStateByCountry(this.schoolAddViewModel.tblSchoolMaster.country);
+      this.getAllCitiesByState(this.schoolAddViewModel.tblSchoolMaster.state);
+      this.schoolAddViewModel.tblSchoolMaster.modifiedBy = sessionStorage.getItem('email');
+      this.schoolAddViewModel.tblSchoolMaster.dateModifed = this.dateCreated;
+      this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].dateSchoolOpened=this.commonFunction.formatDateInEditMode(this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].dateSchoolOpened);      
+      this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].dateSchoolClosed=this.commonFunction.formatDateInEditMode(this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].dateSchoolClosed);
+      
+    }else{
+
+      
+      this.schoolAddViewModel.tblSchoolMaster.createdBy = sessionStorage.getItem('email');
+      this.schoolAddViewModel.tblSchoolMaster.dateCreated = this.dateCreated;     
+    }
+
+    this.schoolAddViewModel.tblSchoolMaster.schoolLevel = this.commonFunction.trimData(this.schoolAddViewModel.tblSchoolMaster.schoolLevel);
+    this.schoolAddViewModel.tblSchoolMaster.schoolClassification = this.commonFunction.trimData(this.schoolAddViewModel.tblSchoolMaster.schoolClassification) ;
+    this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].lowestGradeLevel = this.commonFunction.trimData(this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].lowestGradeLevel);
+    this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].highestGradeLevel = this.commonFunction.trimData(this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].highestGradeLevel);
+    this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].gender = this.commonFunction.trimData(this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].gender);
+    this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].telephone = this.commonFunction.trimData(this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].telephone) ;
+    this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].website = this.commonFunction.trimData(this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].website) ;
+    this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].twitter = this.commonFunction.trimData(this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].twitter) ;
+    this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].instagram = this.commonFunction.trimData(this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].instagram) ;
+
+
+
+    this.schoolAddViewModel.tblSchoolMaster.schoolName = this.commonFunction.trimData(this.schoolAddViewModel.tblSchoolMaster.schoolName);
+    this.schoolAddViewModel.tblSchoolMaster.alternateName = this.commonFunction.trimData(this.schoolAddViewModel.tblSchoolMaster.alternateName) ;
+    this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].locale = this.commonFunction.trimData(this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].locale);
+    this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].gender = this.commonFunction.trimData(this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].gender);
+    this.schoolAddViewModel.tblSchoolMaster.county = this.commonFunction.trimData(this.schoolAddViewModel.tblSchoolMaster.county);
+    this.schoolAddViewModel.tblSchoolMaster.division = this.commonFunction.trimData(this.schoolAddViewModel.tblSchoolMaster.division) ;
+  
+    this.schoolAddViewModel.tblSchoolMaster.district = this.commonFunction.trimData(this.schoolAddViewModel.tblSchoolMaster.district) ;
+    this.schoolAddViewModel.tblSchoolMaster.zip = this.commonFunction.trimData(this.schoolAddViewModel.tblSchoolMaster.zip) ;
+    
   }
+
 
   get f() {
     return this.form.controls;
   }
   dateCompare() {
+   
     let openingDate = this.form.controls.date_school_opened.value
     let closingDate = this.form.controls.date_school_closed.value
-
+   
     if (ValidationService.compareValidation(openingDate, closingDate) === false) {
       this.form.controls.date_school_closed.setErrors({ compareError: false })
-      console.log(this.form.controls.date_school_closed)
+      
     }
 
   }
+ getAllCountry(){
+  this.countryModel._tenantName = this.tenant;
+  this.countryModel._token = sessionStorage.getItem("token");
+  this.commonService.GetAllCountry(this.countryModel).subscribe(data => {
+    if (typeof (data) == 'undefined') {
+      this.countryListArr=[];
+    }
+    else {
+      if (data._failure) {
+        this.countryListArr=[];
+      } else {        
+        this.countryListArr=data.tableCountry;         
+      }
+    }
 
+  }) 
 
+ }
+
+ getAllStateByCountry(data){
+   
+   if (data.value === undefined)
+   {
+    this.stateModel.countryId= data;
+    this.countryName = data.toString();
+
+   }else{
+    this.stateModel.countryId= data.value;
+    this.countryName = data.value.toString();
+   }
+  this.stateModel._tenantName = this.tenant;
+  this.stateModel._token = sessionStorage.getItem("token");
+ 
+  this.commonService.GetAllState(this.stateModel).subscribe(data => {
+    if (typeof (data) == 'undefined') {
+      this.stateListArr=[];
+    }
+    else {
+      if (data._failure) {
+        this.stateListArr=[];
+       
+      } else {
+        this.cityListArr=[];
+        this.stateListArr=data.tableState;      
+       
+      }
+    }
+
+  })
+ }
+ getAllCitiesByState(data){
+
+  if (data.value === undefined)
+   {
+    this.cityModel.stateId= data;
+    this.stateName = data.toString();
+
+   }else{
+    this.cityModel.stateId= data.value;
+    this.stateName = data.value.toString();
+  }
+  
+  
+  this.cityModel._tenantName = this.tenant;
+  this.cityModel._token = sessionStorage.getItem("token");
+
+  this.commonService.GetAllCity(this.cityModel).subscribe(val => {
+    if (typeof (val) == 'undefined') {
+      this.cityListArr=[];
+    }
+    else {
+      if (val._failure) {
+        this.cityListArr=[];
+      } else {
+        this.cityListArr=val.tableCity;    
+      }
+    }
+
+  }) 
+
+ }
   submit() {
+    
     if (this.form.valid) {
       this.schoolAddViewModel._tenantName = this.tenant;
       this.schoolAddViewModel._token = sessionStorage.getItem("token");
-      this.schoolAddViewModel.tblSchoolDetail.schoolLogo = this.image;
-      (Object.keys(this.dataOfgeneralInfoFromWash).length > 0) || (Object.keys(this.dataOfgeneralInfoFromView).length > 0) || (Object.keys(this.dataOfwashInfoFromGeneral).length > 0) ?
+      
+      this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].schoolLogo = this.image;
+     
+      if ((this.commonFunction.checkEmptyObject(this.dataOfwashInfoFromGeneral) === true)
+     || (this.commonFunction.checkEmptyObject(this.dataOfgeneralInfoFromView) === true) 
+     || (this.commonFunction.checkEmptyObject(this.dataOfgeneralInfoFromWash) === true)){
+
+      this.schoolAddViewModel.tblSchoolMaster.country = this.countryName;
+      this.schoolAddViewModel.tblSchoolMaster.state = this.stateName;
+      this.schoolAddViewModel.tblSchoolMaster.city = this.schoolAddViewModel.tblSchoolMaster.city.toString();
+
         this.generalInfoService.UpdateGeneralInfo(this.schoolAddViewModel).subscribe(data => {
           if (typeof (data) == 'undefined') {
             this.snackbar.open('General Info Updation failed. ' + sessionStorage.getItem("httpError"), '', {
@@ -206,8 +350,12 @@ export class GeneralInfoComponent implements OnInit {
           }
 
         })
-        :
+      }else{
 
+        this.schoolAddViewModel.tblSchoolMaster.country = this.countryName;
+      this.schoolAddViewModel.tblSchoolMaster.state = this.stateName;
+      this.schoolAddViewModel.tblSchoolMaster.city = this.schoolAddViewModel.tblSchoolMaster.city.toString();
+        
         this.generalInfoService.SaveGeneralInfo(this.schoolAddViewModel).subscribe(data => {
           if (typeof (data) == 'undefined') {
             this.snackbar.open('General Info Submission failed. ' + sessionStorage.getItem("httpError"), '', {
@@ -231,7 +379,7 @@ export class GeneralInfoComponent implements OnInit {
 
         })
 
-
+      }
     }
   }
 

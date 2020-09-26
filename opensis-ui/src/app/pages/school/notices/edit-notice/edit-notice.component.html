@@ -1,81 +1,70 @@
 <div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
-    <h2 class="headline m-0" fxFlex="auto">Add Notice</h2>
+    <h2 class="headline m-0" fxFlex="auto">{{AddOrEditNotice |translate}}</h2>
 
     <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
         <mat-icon [icIcon]="icClose"></mat-icon>
     </button>
 </div>
 <mat-divider class="-mx-6 text-border"></mat-divider>
+<form [formGroup]="form" (ngSubmit)="submitNotice()">
+    <mat-dialog-content fxLayout="column">
+        <mat-form-field class="mt-6" appearance="outline" color="primary">
+            <mat-label>{{'title' |translate}}</mat-label>
+            <input formControlName="Title" [(ngModel)]="noticeAddViewModel.notice.title" name="Title" matInput required>
+            <mat-error *ngIf="form.get('Title').hasError('required')">{{'titleIsRequired'| translate}}</mat-error>
+        </mat-form-field>
+        <div class="card">
+            <quill-editor formControlName="Body" name="Body" [(ngModel)]="noticeAddViewModel.notice.body" (onEditorChanged)="changedEditor($event)" [styles]="{ flex: '1 1 auto' }"></quill-editor>
 
-<mat-dialog-content fxLayout="column">
-    <mat-form-field class="mt-6" appearance="outline" color="primary">
-        <mat-label>Title</mat-label>
-        <input cdkFocusInitial matInput required>
-    </mat-form-field>
-    <div class="card">
-        <quill-editor (onEditorChanged)="changedEditor($event)"
-        [styles]="{ flex: '1 1 auto' }"></quill-editor>
-    
-    </div>
-    <div class="mb-2 md:flex md:flex-wrap -mx-6">
-        <div class="flex flex-1 mx-6 md:w-1/2">
-            <mat-form-field class="w-full" appearance="outline" color="primary">
-                <mat-label>Visible From Date</mat-label>
-                <input [matDatepicker]="begins" matInput>
-                <mat-datepicker-toggle [for]="begins" matSuffix></mat-datepicker-toggle>
-                <mat-datepicker #begins></mat-datepicker>
-            </mat-form-field>
         </div>
-        <div class="flex flex-1 mx-6 md:w-1/2">
-            <mat-form-field class="w-full" appearance="outline" color="primary">
-                <mat-label>Visible To Date</mat-label>
-                <input [matDatepicker]="ends" matInput>
-                <mat-datepicker-toggle [for]="ends" matSuffix></mat-datepicker-toggle>
-                <mat-datepicker #ends></mat-datepicker>
-            </mat-form-field>
+        <div class="mb-2 md:flex md:flex-wrap -mx-6">
+            <div class="flex flex-1 mx-6 md:w-1/2">
+                <mat-form-field class="w-full" appearance="outline" color="primary">
+                    <mat-label>{{'visibleFromDate' |translate}}</mat-label>
+                    <input formControlName="valid_from" [(ngModel)]="noticeAddViewModel.notice.validFrom" name="valid_from" [matDatepicker]="begins" matInput required>
+                    <mat-datepicker-toggle [for]="begins" matSuffix></mat-datepicker-toggle>
+                    <mat-datepicker #begins></mat-datepicker>
+                    <mat-error *ngIf="form.get('valid_from').hasError('required')">{{'visibleFromDateIsRequired' | translate}}</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="flex flex-1 mx-6 md:w-1/2">
+                <mat-form-field class="w-full" appearance="outline" color="primary">
+                    <mat-label>{{'visibleToDate' | translate}}</mat-label>
+                    <input formControlName="valid_to" [(ngModel)]="noticeAddViewModel.notice.validTo" name="valid_to" [matDatepicker]="ends" matInput required>
+                    <mat-datepicker-toggle [for]="ends" matSuffix></mat-datepicker-toggle>
+                    <mat-datepicker #ends></mat-datepicker>
+                    <mat-error *ngIf="form.get('valid_to').hasError('required')">{{'visibleToDateIsRequired' | translate}}</mat-error>
+                </mat-form-field>
+            </div>
         </div>
-    </div>
 
-    <h6 class="text-primary mb-3">Visible to Profile</h6>
+        <h6 class="text-primary mb-3">{{'visibleToProfile' |translate }}</h6>
 
-    <div class="mb-3">
-        <mat-checkbox [checked]="false" color="accent">Check All</mat-checkbox>
-    </div>
-    <ul class="md:grid md:grid-cols-3 md:col-gap-10 md:row-gap-3">
-        <li>
-            <mat-checkbox [checked]="false" color="primary">Super Administrator</mat-checkbox>
-        </li>
-        <li>
-            <mat-checkbox [checked]="false" color="primary">Administrator</mat-checkbox>
-        </li>
-        <li>
-            <mat-checkbox [checked]="false" color="primary">Teacher</mat-checkbox>
-        </li>
-        <li>
-            <mat-checkbox [checked]="false" color="primary">Student</mat-checkbox>
-        </li>
-        <li>
-            <mat-checkbox [checked]="false" color="primary">Parent</mat-checkbox>
-        </li>
-        <li>
-            <mat-checkbox [checked]="false" color="primary">Admin Assistant</mat-checkbox>
-        </li>
-        <li>
-            <mat-checkbox [checked]="false" color="primary" class="truncate">Administrator w/Custom</mat-checkbox>
-        </li>
-        <li>
-            <mat-checkbox [checked]="false" color="primary">Teacher w/Custom</mat-checkbox>
-        </li>
-        <li>
-            <mat-checkbox [checked]="false" color="primary">Parent w/Custom</mat-checkbox>
-        </li>
-    </ul>
+        <div class="mb-3">
+            <!-- <mat-checkbox [checked]="false" color="accent">Check All</mat-checkbox> -->
+            <mat-checkbox (click)="updateCheck($event)" class="example-margin">
+                Select All
+            </mat-checkbox>
+        </div>
 
 
 
-</mat-dialog-content>
+        <ul class="md:grid md:grid-cols-3 md:col-gap-10 md:row-gap-3">
+            <li *ngFor="let member of getAllMembersList.getAllMemberList">
+                <mat-checkbox [checked]="memberArray.indexOf(member.membership_id) != -1" (click)="selectChildren($event,member.membership_id)" color="primary">
+                    {{member.profile}}</mat-checkbox>
+            </li>
 
-<mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" class="py-6">
-    <button mat-button mat-dialog-close type="button">CANCEL</button>
-    <button color="primary" mat-raised-button type="submit">SUBMIT</button>
-</mat-dialog-actions>
+        </ul>
+
+
+
+    </mat-dialog-content>
+
+    <mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" class="py-6">
+        <button mat-button mat-dialog-close>{{'cancel'| translate }}</button>
+        <button color="primary" mat-raised-button>{{'submit' | translate }}</button>
+
+    </mat-dialog-actions>
+
+</form>

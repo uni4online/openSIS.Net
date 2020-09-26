@@ -19,9 +19,6 @@ export class ProfileImageComponent implements OnInit {
   @ViewChild('modalClickButton') modalClickButton: TemplateRef<any>;
 
 
-  constructor(private dialog:MatDialog,
-    private _ImageCropperService:ImageCropperService,
-    private snackbar: MatSnackBar) { }
     
   icCrop=icCrop;
   preview:String='';originalFileName:String;
@@ -32,9 +29,34 @@ export class ProfileImageComponent implements OnInit {
   // afterConvertingBase64toFile;
   fileUploader:any;
   hideCropperToolButton:Boolean=true;
-
+  @Input() enableUpload:boolean;
+  inputType:string="file";
   @Input() enableCropTool=true;
   @Input() responseImage;
+
+
+  
+  constructor(private dialog:MatDialog,
+    private _ImageCropperService:ImageCropperService,
+    private snackbar: MatSnackBar) {
+      this._ImageCropperService.sharedMessage.subscribe((message) => {
+        this.enableUpload = message
+        let id = sessionStorage.getItem("id")
+        if(this.enableUpload){
+          this.inputType ="none";
+          if(id!=null){
+            this.inputType ="none";
+          }
+          if(id==null && this.enableUpload){
+            this.inputType="file"
+          }
+        }else if(!this.enableUpload){
+          this.inputType="file"
+        }
+      })
+     }
+
+     
   imageCropped(event: ImageCroppedEvent) {
     this.croppedImage = event.base64;
     let base64ImageSplit=this.croppedImage.split(',')

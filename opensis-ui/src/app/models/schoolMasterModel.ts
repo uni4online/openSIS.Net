@@ -1,4 +1,5 @@
-
+import { schoolDetailsModel } from "../models/schoolDetailsModel";
+import { CommonField } from "../models/commonField";
 export class SchoolMasterModel {  
 
     public tenantId:string;
@@ -13,54 +14,40 @@ export class SchoolMasterModel {
     public alternateName: string;
     public streetAddress1: string;
     public streetAddress2: string;
-    public city: string;
+    public city: any;
     public county: string;
     public division: string;
-    public state: string;
+    public state?: any;
     public district: string;
     public zip: string;
-    public country: string;
+    public country?: any;
     public geoPosition: string;
     public currentPeriodEnds?: number;
     public maxApiChecks?: number;
     public features:string;
     public planId?:number;
     public createdBy: string;
-    public dateCreated?: number;
+    public dateCreated:string;
     public modifiedBy: string;
-    public dateModifed?:number;
-
+    public dateModifed:string;
+    public tableSchoolDetail:[schoolDetailsModel];
     constructor() {        
        
-      this.tenantId= sessionStorage.getItem("tenantId");;
-      this.schoolId=0;
-      this.schoolInternalId=null;
-      this.schoolAltId= null;
-      this.schoolStateId= null;
-      this.schoolDistrictId= null;
-      this.schoolLevel= null;
-      this.schoolClassification= null;
-      this.schoolName= null;
-      this.alternateName= null;
-      this.streetAddress1=null;
-      this.streetAddress2= null;
-      this.city=null;
-      this.county= null;
-      this.division= null;
-      this.state= null; 
-      this.district= null;
-      this.zip= null;
-      this.country= null;
-      this.geoPosition= null;
-      this.currentPeriodEnds= null;
-      this.maxApiChecks= null;
-      this.features= null;
-      this.planId=null;
-      this.createdBy= null;
-      this.dateCreated= null;
-      this.modifiedBy= null;
-      this.dateModifed= null;
-       
+      this.tenantId= sessionStorage.getItem("tenantId");
+      this.tableSchoolDetail= [new schoolDetailsModel];
+     
       }
+}
+
+export class SchoolAddViewModel extends CommonField {
+  public tblSchoolMaster: SchoolMasterModel;
+  public latitude: number;
+  public longitude:number;
+  constructor() {
+      super();
+      this.tblSchoolMaster= new SchoolMasterModel();
+      this.latitude=null;
+      this.longitude=null;
+  }
 }
 

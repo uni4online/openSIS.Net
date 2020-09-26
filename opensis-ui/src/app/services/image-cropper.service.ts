@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { BehaviorSubject,Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -7,6 +7,8 @@ import { Observable, Subject } from 'rxjs';
 export class ImageCropperService {
   private cropEventSubject = new Subject<any>();
   private unCropEventSubject = new Subject<any>();
+  private message = new BehaviorSubject(true);
+  sharedMessage = this.message.asObservable();
   constructor() { }
 
   sendCroppedEvent(event) {
@@ -21,5 +23,9 @@ export class ImageCropperService {
   }
   getUncroppedEvent(): Observable<any> {
     return this.unCropEventSubject.asObservable();
+  }
+
+  nextMessage(message: boolean) {
+    this.message.next(message)
   }
 }

@@ -2,77 +2,85 @@
                 <mat-card @fadeInUp class="w-full" fxFlex="auto">
                     <div class="flex items-center mx-4" fxLayout="row" fxLayoutAlign="center center">
                         <h3 class="flex-auto">{{'generalInformation' | translate}}</h3>
-                        <button mat-button color="primary" (click)="editGeneralInfo()"><mat-icon [icIcon]="icEdit"></mat-icon> Edit Information</button>
+                        <button mat-button color="primary" (click)="editGeneralInfo()"><mat-icon [icIcon]="icEdit"></mat-icon>{{'editInformation' |translate}}</button>
                     </div>
                     <mat-card-content>
                         <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-4">
                             <div class="my-6">
                                 <ul class="md:grid md:grid-cols-3 md:col-gap-8 md:row-gap-10">
                                     <li>
+                                        <label class="text-sm leading-5 text-gray">{{'schoolId' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolMaster.schoolInternalId|EmtyValueCheckPipe}}</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'schoolAlternateId' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolMaster.schoolAltId|EmtyValueCheckPipe}}</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'stateId' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolMaster.schoolStateId|EmtyValueCheckPipe}}</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'districtId' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolMaster.schoolDistrictId|EmtyValueCheckPipe}}</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'schoolLevel' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolMaster.schoolLevel|EmtyValueCheckPipe}}</p>
+                                    </li>
+                                    <li>
+                                        <label class="text-sm leading-5 text-gray">{{'schoolClassification' | translate}}</label>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolMaster.schoolClassification|EmtyValueCheckPipe}}</p>
+                                    </li>
+                                    <li>
                                         <label class="text-sm leading-5 text-gray">{{'schoolName' | translate}} </label>
-                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.tableSchoolMaster.schoolName}}
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolMaster.schoolName|EmtyValueCheckPipe}}
                                         </p>
                                     </li>
                                     <li>
                                         <label class="text-sm leading-5 text-gray">{{'shortName' | translate}}</label>
-                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.tableSchoolMaster.alternateName}}</p>
-                                    </li>
-                                    <li>
-                                        <label class="text-sm leading-5 text-gray">{{'schoolId' | translate}}</label>
-                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.tableSchoolMaster.schoolId}}</p>
-                                    </li>
-                                    <li>
-                                        <label class="text-sm leading-5 text-gray">{{'alternateId' | translate}}</label>
-                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.tableSchoolMaster.schoolAltId}}</p>
-                                    </li>
-                                    <li>
-                                        <label class="text-sm leading-5 text-gray">{{'schoolLevel' | translate}}</label>
-                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.tableSchoolMaster.schoolLevel}}</p>
-                                    </li>
-                                    <li>
-                                        <label class="text-sm leading-5 text-gray">{{'schoolClassification' | translate}}</label>
-                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.tableSchoolMaster.schoolClassification}}</p>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolMaster.alternateName|EmtyValueCheckPipe}}</p>
                                     </li>
                                     <li>
                                         <label class="text-sm leading-5 text-gray">{{'affiliation' | translate}}</label>
-                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.affiliation}}</p>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].affiliation|EmtyValueCheckPipe}}</p>
                                     </li>
                                     <li>
                                         <label class="text-sm leading-5 text-gray">{{'associations' | translate}}</label>
-                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.associations}}
-                                            Schools</p>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].associations|EmtyValueCheckPipe}}
+                                    </p>
                                     </li>
                                     <li>
                                         <label class="text-sm leading-5 text-gray">{{'lowestGradeLevel' | translate}}</label>
-                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.lowestGradeLevel}}</p>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].lowestGradeLevel|EmtyValueCheckPipe}}</p>
                                     </li>
                                     <li>
                                         <label class="text-sm leading-5 text-gray">{{'highestGradeLevel' | translate}}</label>
-                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.highestGradeLevel}}</p>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].highestGradeLevel|EmtyValueCheckPipe}}</p>
                                     </li>
                                     <li>
                                         <label class="text-sm leading-5 text-gray">{{'dateSchoolOpened' | translate}}</label>
-                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.dateSchoolOpened}}</p>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].dateSchoolOpened|EmtyValueCheckPipe}}</p>
                                     </li>
                                     <li>
                                         <label class="text-sm leading-5 text-gray">{{'dateSchoolClosed' | translate}}</label>
-                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.dateSchoolClosed}}</p>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].dateSchoolClosed|EmtyValueCheckPipe}}</p>
                                     </li>
                                     <li>
                                         <label class="text-sm leading-5 text-gray">{{'code' | translate}}</label>
-                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.locale}}</p>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].locale|EmtyValueCheckPipe}}</p>
                                     </li>
                                     <li>
                                         <label class="text-sm leading-5 text-gray">{{'gender' | translate}}</label>
-                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.gender}}</p>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].gender|EmtyValueCheckPipe}}</p>
                                     </li>
                                     <li>
                                         <label class="text-sm leading-5 text-gray">{{'internet' | translate}}</label>
-                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{internet}} </p>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].internet|EmtyBooleanCheckPipe}} </p>
                                     </li>
                                     <li>
                                         <label class="text-sm leading-5 text-gray">{{'electricity' | translate}}</label>
-                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{electricity}}</p>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].electricity|EmtyBooleanCheckPipe}}</p>
                                     </li>
                                     <li>
                                         <label class="text-sm leading-5 text-gray">{{'status' | translate}}</label>
@@ -83,44 +91,44 @@
                             </div>
                             <div class="mt-12">
                                 <div class="pb-4">
-                                    <h4 class="text-blue font-medium">Address Information</h4>
+                                    <h4 class="text-blue font-medium">{{'addressInformation' | translate}}</h4>
                                 </div>
                                 <ul class="md:grid md:grid-cols-3 md:col-gap-8 md:row-gap-10">
                                     <li>
                                         <label class="text-sm leading-5 text-gray">{{'streetAddress1' | translate}}</label>
-                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.tableSchoolMaster.streetAddress1}}</p>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolMaster.streetAddress1|EmtyValueCheckPipe}}</p>
                                     </li>
                                     <li>
                                         <label class="text-sm leading-5 text-gray">{{'streetAddress2' | translate}}</label>
-                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.tableSchoolMaster.streetAddress2}}</p>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolMaster.streetAddress2|EmtyValueCheckPipe}}</p>
                                     </li>
                                     <li>
                                         <label class="text-sm leading-5 text-gray">{{'city' | translate}}</label>
-                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.tableSchoolMaster.city}}</p>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{cityName|EmtyValueCheckPipe}}</p>
                                     </li>
                                     <li>
                                         <label class="text-sm leading-5 text-gray">{{'county' | translate}}</label>
-                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.tableSchoolMaster.county}}</p>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolMaster.county|EmtyValueCheckPipe}}</p>
                                     </li>
                                     <li>
                                         <label class="text-sm leading-5 text-gray">{{'division' | translate}}</label>
-                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.tableSchoolMaster.division}}</p>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolMaster.division|EmtyValueCheckPipe}}</p>
                                     </li>
                                     <li>
                                         <label class="text-sm leading-5 text-gray">{{'stateRegionProvince' | translate}}</label>
-                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.tableSchoolMaster.state}}</p>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{stateName|EmtyValueCheckPipe}}</p>
                                     </li>
                                     <li>
                                         <label class="text-sm leading-5 text-gray">{{'district' | translate}}</label>
-                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.tableSchoolMaster.district}}</p>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolMaster.district|EmtyValueCheckPipe}}</p>
                                     </li>
                                     <li>
                                         <label class="text-sm leading-5 text-gray">{{'zipPostalCode' | translate}}</label>
-                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.tableSchoolMaster.zip}}</p>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolMaster.zip|EmtyValueCheckPipe}}</p>
                                     </li>
                                     <li>
                                         <label class="text-sm leading-5 text-gray">{{'Country' | translate}}</label>
-                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.tableSchoolMaster.country}}
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{countryName|EmtyValueCheckPipe}}
                                         </p>
                                     </li>
                                     <li>
@@ -130,60 +138,60 @@
                                     </li>
                                 </ul>
                             </div>
-                            <div class="mt-12">
+                            <div class="mt-12 pb-4">
                                 <div class="pb-4">
                                     <h4 class="text-blue font-medium">{{'contactInformation' | translate}}</h4>
                                 </div>
                                 <ul class="md:grid md:grid-cols-3 md:col-gap-8 md:row-gap-10">
                                     <li>
                                         <label class="text-sm leading-5 text-gray">{{'principal' | translate}}</label>
-                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.nameOfPrincipal}}</p>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].nameOfPrincipal|EmtyValueCheckPipe}}</p>
                                     </li>
                                     <li>
                                         <label class="text-sm leading-5 text-gray">{{'assistantPrincipal' | translate}}</label>
-                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.nameOfAssistantPrincipal}}</p>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].nameOfAssistantPrincipal|EmtyValueCheckPipe}}</p>
                                     </li>
                                     <li>
                                         <label class="text-sm leading-5 text-gray">{{'telephone' | translate}}</label>
-                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.telephone}}</p>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].telephone}}</p>
                                     </li>
                                     <li>
                                         <label class="text-sm leading-5 text-gray">{{'fax' | translate}}</label>
-                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.fax}}</p>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].fax}}</p>
                                     </li>
                                     <li>
                                         <label class="text-sm leading-5 text-gray">{{'website' | translate}}</label>
-                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.website}}
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].website|EmtyValueCheckPipe}}
                                         </p>
                                     </li>
                                     <li>
                                         <label class="text-sm leading-5 text-gray">{{'email' | translate}}</label>
-                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.email}}
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].email|EmtyValueCheckPipe}}
                                         </p>
                                     </li>
                                     <li>
                                         <label class="text-sm leading-5 text-gray">{{'twitter' | translate}}</label>
-                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.twitter}}</p>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].twitter|EmtyValueCheckPipe}}</p>
                                     </li>
                                     <li>
                                         <label class="text-sm leading-5 text-gray">{{'facebook' | translate}}</label>
                                         <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2"><a
-                                                href="{{schoolAddViewModel.tblSchoolDetail.facebook}}" target="_blank"
-                                                class="text-primary">{{schoolAddViewModel.tblSchoolDetail.facebook}}</a></p>
+                                                href="{{schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].facebook}}" target="_blank"
+                                                class="text-primary">{{schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].facebook|EmtyValueCheckPipe}}</a></p>
                                     </li>
                                     <li>
                                         <label class="text-sm leading-5 text-gray">{{'instagram' | translate}}</label>
                                         <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2"><a
-                                                href="{{schoolAddViewModel.tblSchoolDetail.instagram}}" target="_blank"
-                                                class="text-primary">{{schoolAddViewModel.tblSchoolDetail.instagram}}</a></p>
+                                                href="{{schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].instagram}}" target="_blank"
+                                                class="text-primary">{{schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].instagram|EmtyValueCheckPipe}}</a></p>
                                     </li>
                                     <li>
                                         <label class="text-sm leading-5 text-gray">{{'youtube' | translate}}</label>
-                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.youtube}}</p>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].youtube|EmtyValueCheckPipe}}</p>
                                     </li>
                                     <li>
                                         <label class="text-sm leading-5 text-gray">{{'linkedIn' | translate}}</label>
-                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolDetail.linkedIn}}</p>
+                                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].linkedIn|EmtyValueCheckPipe}}</p>
                                     </li>
                                 </ul>
                             </div>

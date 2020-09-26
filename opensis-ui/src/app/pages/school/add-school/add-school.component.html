@@ -29,7 +29,7 @@
                         </div>
                     </div>
                 </div>
-                <mat-card  class="w-full" fxFlex="auto">
+                <div class="w-full" fxFlex="auto">
                     <div  *ngIf="displayGeneral">
                         <vex-general-info (parentShowWash)="showWashEdit($event)"
                             [dataOfgeneralInfoFromWash]="dataOfgeneralInfoFromWash"
@@ -47,21 +47,23 @@
                         </vex-wash-info>
                      </div>  
                      <div *ngIf="displayViewGeneral" >
-                        <vex-view-general-info  
-                            [schoolId]="schoolId" 
-                            (imageResponse)="imageResponse($event)" 
+                        <vex-view-general-info                            
                             (parentShowWash)="showGeneralEdit()" 
-                            (dataOfgeneralInfoFromView)= "getDataOfgeneralInfoFromView($event)">
+                            (dataOfgeneralInfoFromView)= "getDataOfgeneralInfoFromView($event)"
+                            [generalAndWashInfoData]="generalAndWashInfoData"
+                            >
+
                         </vex-view-general-info>
                      </div> 
                      <div *ngIf="displayViewWash" >
-                        <vex-view-wash-info 
-                            [schoolId]="schoolId" 
+                        <vex-view-wash-info                           
                             (parentShowWash)="showWashEdit($event)" 
-                            (dataOfWashInfoFromView)= "getDataOfWashInfoFromView($event)" >
+                            (dataOfWashInfoFromView)= "getDataOfWashInfoFromView($event)" 
+                            [generalAndWashInfoData]="generalAndWashInfoData"
+                            >
                         </vex-view-wash-info>
                      </div>            
-                </mat-card>
+                </div>
             </mat-drawer-content>
         </mat-drawer-container>
     </vex-page-layout-content>

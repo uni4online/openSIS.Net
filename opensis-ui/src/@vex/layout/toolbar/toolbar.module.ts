@@ -15,6 +15,7 @@ import { RouterModule } from '@angular/router';
 import { NavigationItemModule } from '../../components/navigation-item/navigation-item.module';
 import { MegaMenuModule } from '../../components/mega-menu/mega-menu.module';
 import { ContainerModule } from '../../directives/container/container.module';
+import { SelectBarModule } from './select-bar/select-bar.module';
 
 
 @NgModule({
@@ -34,8 +35,9 @@ import { ContainerModule } from '../../directives/container/container.module';
     RouterModule,
     NavigationItemModule,
     MegaMenuModule,
-    ContainerModule
-  ],
+    ContainerModule,
+    SelectBarModule,
+      ],
   exports: [ToolbarComponent]
 })
 export class ToolbarModule {

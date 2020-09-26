@@ -1,0 +1,9 @@
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+::ng-deep .mat-form-field-underline {
+  display: none;
+}
+
+::ng-deep .mat-form-field-appearance-fill .mat-form-field-flex{
+    background-color: white !important;
+}

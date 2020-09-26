@@ -15,7 +15,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { QuillModule } from 'ngx-quill';
-
+import { TranslateModule } from '@ngx-translate/core';
 
 
 @NgModule({
@@ -35,6 +35,7 @@ import { QuillModule } from 'ngx-quill';
     MatMenuModule,
     MatFormFieldModule,
     MatCheckboxModule,
+    TranslateModule,
     QuillModule.forRoot({
       modules: {
         toolbar: [

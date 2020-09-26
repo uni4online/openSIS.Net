@@ -16,7 +16,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { NoticeCardsComponent } from './notice-cards/notice-cards.component';
 import { EditNoticeModule } from '../notices/edit-notice/edit-notice.module';
-
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [NoticesComponent, NoticeCardsComponent],
@@ -34,7 +34,8 @@ import { EditNoticeModule } from '../notices/edit-notice/edit-notice.module';
     ContainerModule,
     MatMenuModule,
     MatButtonToggleModule,
-    EditNoticeModule
+    EditNoticeModule,
+    TranslateModule
   ]
 })
 export class NoticesModule { }

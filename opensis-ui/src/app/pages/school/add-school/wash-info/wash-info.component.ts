@@ -1,15 +1,17 @@
 import { Component, OnInit,EventEmitter,Output,Input } from '@angular/core';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { WashInfoEnum } from '../../../../enums/wash-info.enum';
-import { SchoolAddViewModel } from '../../../../models/schoolDetailsModel';
+import { SchoolAddViewModel } from '../../../../models/schoolMasterModel';
 import { fadeInRight400ms } from '../../../../../@vex/animations/fade-in-right.animation';
 import { TranslateService } from '@ngx-translate/core';
 import { SchoolService } from 'src/app/services/school.service'
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { LoaderService } from 'src/app/services/loader.service';
+import { SharedFunction } from '../../../shared/shared-function';
+import { ImageCropperService } from '../../../../services/image-cropper.service';
 @Component({
   selector: 'vex-wash-info',
   templateUrl: './wash-info.component.html',
@@ -23,15 +25,14 @@ import { LoaderService } from 'src/app/services/loader.service';
 })
 export class WashInfoComponent implements OnInit {
 
-  @Output("parentShowWash") parentShowWash :EventEmitter<any> = new EventEmitter<any>();  
-  @Input() dataOfgeneralInfo: any;
-  @Input() dataOfWashInfoFromView: any;
+  @Output("parentShowWash") parentShowWash :EventEmitter<object> = new EventEmitter<object>();  
+  @Input() dataOfgeneralInfo;
+  @Input() dataOfWashInfoFromView;
   
   
   form:FormGroup
-  washinfo= WashInfoEnum;
-  selectoption = [];
-  public tenant = "";  
+  washinfo= WashInfoEnum;  
+  public tenant = "OpensisV2";  
   schoolAddViewModel: SchoolAddViewModel = new SchoolAddViewModel();  
   loading;
   
@@ -40,13 +41,13 @@ export class WashInfoComponent implements OnInit {
   constructor( private fb: FormBuilder,
     private generalInfoService:SchoolService,
      private snackbar: MatSnackBar,
-     private router: Router,
-     private Activeroute: ActivatedRoute,
+     private router: Router,    
      public translateService:TranslateService,
-     private loaderService:LoaderService) {
+     private loaderService:LoaderService,
+     private commonFunction: SharedFunction,
+     private _ImageCropperService:ImageCropperService) {
        
-      translateService.use('en');
-      this.Activeroute.params.subscribe(params => { this.tenant = 'OpensisV2'; });
+      translateService.use('en');      
       this.loaderService.isLoading.subscribe((val) => {
         this.loading = val;
       });
@@ -57,39 +58,51 @@ export class WashInfoComponent implements OnInit {
         {
 
         runningWater:[''],
-        mainSourceofDrinkingWater:[''],
+        mainSourceofDrinkingWater:['',Validators.maxLength(100)],
         currentlyAvailable:[""],
         handwashingAvailable:[""],
         soapWaterAvailable:[""],
-        hygeneEducation:[""],
+        hygeneEducation:["",Validators.maxLength(50)],
 
         /* Female Toilet Information */
-        femaleToiletType:[""],
+        femaleToiletType:["",Validators.maxLength(50)],
         totalFemaleToilets:[""],
         totalFemaleToiletsUsable:[""],
-        femaleToiletAccessibility:[""],
+        femaleToiletAccessibility:["",Validators.maxLength(50)],
 
         /* maleToiletInformation */
-        maleToiletType:[""],
+        maleToiletType:["",Validators.maxLength(50)],
         totalMaleToilets:[""], 
         totalMaleToiletsUsable:[""],
-        maleToiletAccessibility:[""],
+        maleToiletAccessibility:["",Validators.maxLength(50)],
 
         /* Common Toilet Information */
-        commonToiletType:[""],
+        commonToiletType:["",Validators.maxLength(50)],
         totalCommonToilets:[""],
         totalCommonToiletsUsable:[""],
-        commonToiletAccessibility:[""]
+        commonToiletAccessibility:["",Validators.maxLength(50)]
       })
      
-      if(Object.keys(this.dataOfWashInfoFromView).length !== 0){
+      if(this.commonFunction.checkEmptyObject(this.dataOfWashInfoFromView) === true){
+        this._ImageCropperService.nextMessage(false);
         this.schoolAddViewModel=this.dataOfWashInfoFromView;        
       }else{        
         this.schoolAddViewModel=this.dataOfgeneralInfo;
       }
+
+    this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].comonToiletType = this.commonFunction.trimData(this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].comonToiletType);   
+    this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].commonToiletAccessibility = this.commonFunction.trimData(this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].commonToiletAccessibility);
+    this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].maleToiletAccessibility = this.commonFunction.trimData(this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].maleToiletAccessibility);  
+    this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].maleToiletType = this.commonFunction.trimData(this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].maleToiletType) ;
+    this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].femaleToiletAccessibility = this.commonFunction.trimData(this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].femaleToiletAccessibility) ;     
+    this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].femaleToiletType=this.commonFunction.trimData(this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].femaleToiletType) ;
     
+
+      
      }
- 
+
+
+     
      submit() {    
         this.schoolAddViewModel._tenantName = this.tenant; 
         this.schoolAddViewModel._token = sessionStorage.getItem("token");               
@@ -111,7 +124,7 @@ export class WashInfoComponent implements OnInit {
                 this.snackbar.open('Wash Info Submission Successful.', '', {
                 duration: 10000
               });             
-             // sessionStorage.removeItem("id");
+            
               this.router.navigateByUrl("school/schoolinfo"); 
             }
           }

@@ -6,17 +6,14 @@ export class schoolDetailsModel {
 
     public  id:number;
     public  tenantId:string;
-    public  schoolId?:number;
-
-    public tableSchoolMaster: SchoolMasterModel;
-    
+    public  schoolId?:number;    
     public affiliation: string;
     public associations: string;
     public locale: string;
     public lowestGradeLevel: string;
     public highestGradeLevel: string;
-    public dateSchoolOpened?: number;
-    public dateSchoolClosed?: number;
+    public dateSchoolOpened?: string;
+    public dateSchoolClosed?: string;
     public status?: boolean;
     public gender: string;
     public internet?: boolean;
@@ -54,65 +51,10 @@ export class schoolDetailsModel {
    
     constructor(){
         this.id= 0;
-        this.tenantId=  sessionStorage.getItem("tenantId");
-        this.schoolId=  0;
-        this.tableSchoolMaster= new SchoolMasterModel();
-		this.affiliation=null;
-		this.associations=null;
-		this.locale=null;
-		this.lowestGradeLevel=null;
-		this.highestGradeLevel=null;
-		this.dateSchoolOpened=null;
-		this.dateSchoolClosed=null;
-		this.status=null;
-		this.gender=null;
-		this.internet=null;
-		this.electricity=null;
-		this.telephone=null;
-		this.fax=null;
-		this.website=null;
-		this.email=null;
-		this.facebook=null;
-		this.twitter=null;
-		this.instagram=null;
-		this.youtube=null;
-		this.linkedIn=null;
-		this.nameOfPrincipal=null; 
-		this.nameOfAssistantPrincipal=null;
-		this.schoolLogo=null;
-        this.runningWater=null;
-        this.mainSourceOfDrinkingWater=null;
-        this.currentlyAvailable=null;
-        this.femaleToiletType=null;
-        this.totalFemaleToilets=null;
-        this.totalFemaleToiletsUsable=null;
-        this.femaleToiletAccessibility=null;
-        this.maleToiletType=null;
-        this.totalMaleToilets=null;
-        this.totalMaleToiletsUsable=null;
-        this.maleToiletAccessibility=null;
-        this.comonToiletType=null;
-        this.totalCommonToilets=null;
-        this.totalCommonToiletsUsable=null;
-        this.commonToiletAccessibility=null;
-        this.handwashingAvailable=null; 
-        this.soapAndWaterAvailable=null;
-        this.hygeneEducation=null;      
-        
+        this.tenantId=sessionStorage.getItem("tenantId");
         
     }
     
 }
 
 
-export class SchoolAddViewModel extends CommonField {
-    public tblSchoolDetail: schoolDetailsModel;
-    public latitude: Number;
-    public longitude:Number;
-    constructor() {
-        super();
-        this.tblSchoolDetail= new schoolDetailsModel();
-        this.latitude=0;
-        this.longitude=0;
-    }
-}

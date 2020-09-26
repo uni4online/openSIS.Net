@@ -84,6 +84,7 @@ export class LoginComponent implements OnInit {
             this.UserModel = data;
             sessionStorage.setItem("token", data._token);
             sessionStorage.setItem("tenantId", data.tenantId);
+            sessionStorage.setItem("email", data.email);
             this.router.navigateByUrl("/school/dashboards");
 
           }

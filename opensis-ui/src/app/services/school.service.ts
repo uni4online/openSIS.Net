@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient} from '@angular/common/http';
-import { SchoolViewModel,SchoolListViewModel } from '../models/schoolModel';
-import { SchoolAddViewModel } from '../models/schoolDetailsModel';
-import { AllSchoolListModel, GetAllSchoolModel } from '../models/getAllSchoolModel';
+import { SchoolAddViewModel } from '../models/schoolMasterModel';
+import { AllSchoolListModel, GetAllSchoolModel, OnlySchoolListModel } from '../models/getAllSchoolModel';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -15,21 +15,28 @@ export class SchoolService {
     let apiurl = this.apiUrl + obj._tenantName+ "/School/getAllSchools";   
     return this.http.post<AllSchoolListModel>(apiurl,obj)
   }
+  
+  GetAllSchoolList(obj: OnlySchoolListModel){
+    let apiurl = this.apiUrl + obj._tenantName+ "/School/getAllSchoolList";
+    return this.http.post<AllSchoolListModel>(apiurl,obj);
+  }
 
   GetGeneralInfoById(obj: SchoolAddViewModel){   
-    //console.log(JSON.stringify(obj)) 
+    //console.log("view",JSON.stringify(obj)) 
     let apiurl = this.apiUrl + obj._tenantName+ "/School/viewSchool"; 
     return this.http.post<SchoolAddViewModel>(apiurl,obj)
   }  
 
   SaveGeneralInfo(obj: SchoolAddViewModel){  
-    console.log('save',JSON.stringify(obj))   
+   //console.log("add",JSON.stringify(obj)) 
     let apiurl = this.apiUrl + obj._tenantName+ "/School/addSchool"; 
     return this.http.post<SchoolAddViewModel>(apiurl,obj)
   }  
   UpdateGeneralInfo(obj: SchoolAddViewModel){  
-    console.log('edit',JSON.stringify(obj))   
+    //console.log("edit",JSON.stringify(obj))
     let apiurl = this.apiUrl + obj._tenantName+ "/School/updateSchool"; 
     return this.http.put<SchoolAddViewModel>(apiurl,obj)
   }  
+
+  
 }

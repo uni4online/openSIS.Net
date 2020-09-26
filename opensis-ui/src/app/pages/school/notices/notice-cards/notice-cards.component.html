@@ -3,31 +3,37 @@
         <div class="flex-auto">
             <h3>{{ title }}</h3>
         </div>
-        
+
         <button [matMenuTriggerFor]="addNewMenu" class="w-10 pt-3" type="button">
             <mat-icon [icIcon]="icMoreVert" size="20px"></mat-icon>
         </button>
 
         <mat-menu #addNewMenu="matMenu" [overlapTrigger]="false" xPosition="before" yPosition="below">
             <button mat-menu-item>
-                <span>Edit Item</span>
+                <span (click)="editNoticeById(noticeId)">{{'editItem' |translate }}</span>
             </button>
 
             <button mat-menu-item>
-                <span>Delete Item</span>
+                <span (click)="deleteNoticeById(noticeId)">{{'deleteItem' |translate}}</span>
             </button>
         </mat-menu>
     </div>
 
     <div class="px-gutter border-t border-b py-3">
-        <p class="text-secondary font-medium text-xs flex align-center mb-2"><mat-icon [icIcon]="icPreview" class="mr-3"></mat-icon><span>Visible from {{ visibleFrom }}</span></p>
-        <p class="text-secondary font-medium text-xs flex align-center"><mat-icon [icIcon]="icPeople" class="mr-3"></mat-icon><span>Visible to {{ visibleTo }}</span></p>
+        <p class="text-secondary font-medium text-xs flex align-center mb-2">
+            <mat-icon [icIcon]="icPreview" class="mr-3"></mat-icon><span>{{'visibleFrom' | translate}} {{ visibleFrom }}</span>
+        </p>
+        <p class="text-secondary font-medium text-xs flex align-center">
+            <mat-icon [icIcon]="icPeople" class="mr-3"></mat-icon><span>{{'visibleTo' | translate}} {{ visibleTo }}</span>
+        </p>
     </div>
 
     <div *ngIf="imageUrl">
         <img [src]="imageUrl" />
     </div>
+    <div class="ql-editor">
+        <ng-content></ng-content>
+    </div>
 
-    <ng-content></ng-content>
 
 </mat-card>

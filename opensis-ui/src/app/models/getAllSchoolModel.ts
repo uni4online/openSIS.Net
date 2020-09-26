@@ -20,8 +20,34 @@ export class AllSchoolListModel{
     totalCount:Number;
     pageNumber:Number;
     _pageSize:Number;
-    _tenantName:Number;
-    _token:Number;
+    _tenantName:string;
+    _token:string;
     _failure:Boolean;
     _message:String;
 }
+
+export class OnlySchoolListModel{
+    getSchoolForView: [];
+      tenantId: string;
+      totalCount: number;
+      pageNumber: number;
+      _pageSize: number;
+      _tenantName: string;
+      _token: string;
+      _failure: boolean;
+      _message: string
+
+      constructor(){
+        this.getSchoolForView=null;
+        this.tenantId="";
+        this.totalCount=null;
+        this.pageNumber=null;
+        this._pageSize=null;
+        this._tenantName="";
+        this._token="";
+        this._failure=false;
+        this._message="";
+      }
+}
+
+

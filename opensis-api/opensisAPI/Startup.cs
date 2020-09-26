@@ -26,6 +26,11 @@ using opensis.core.Common.Interfaces;
 using opensis.core.Common.Services;
 using opensis.core.Gradelevel.Interfaces;
 using opensis.core.Gradelevel.Services;
+using opensis.core.Room.Interfaces;
+using opensis.core.Room.Services;
+using opensis.core.Section.Interfaces;
+using opensis.core.Section.Services;
+
 
 namespace opensisAPI
 {
@@ -51,12 +56,15 @@ namespace opensisAPI
             services.AddScoped<IUserService,UserService>();
             services.AddScoped<ICommonService, CommonService>();
             services.AddScoped<ICommonRepository, CommonRepository>();
-
             services.AddScoped<IGradelevelService, GradelevelService>();
             services.AddScoped<IGradelevelRepository, GradelevelRepository>();
-
             services.AddScoped<IMembershipRepository, MembershipRepository>();
             services.AddScoped<IMembershipService, MembershipService>();
+            services.AddScoped<IRoomRepository, RoomRepository>();
+            services.AddScoped<IRoomRegisterService, RoomRegister>();
+            services.AddScoped<ISectionRepositiory, SectionRepository>();
+            services.AddScoped<ISectionService, SectionService>();
+
 
 
             if (Configuration["dbtype"] == "sqlserver")
