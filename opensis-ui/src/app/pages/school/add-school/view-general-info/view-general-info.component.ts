@@ -27,7 +27,7 @@ export class ViewGeneralInfoComponent implements OnInit {
   @Output() parentShowWash :EventEmitter<object> = new EventEmitter<object>();
   @Output("dataOfgeneralInfoFromView") dataOfgeneralInfoFromView: EventEmitter<object> =   new EventEmitter();
   icEdit = icEdit;
-  public tenant = "OpensisV2";
+  public tenant = "opensisv2";
   public internet="";
   public electricity="";
   public status="";

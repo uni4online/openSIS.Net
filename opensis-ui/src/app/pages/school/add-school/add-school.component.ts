@@ -50,7 +50,7 @@ export class AddSchoolComponent implements OnInit,OnDestroy {
     private generalInfoService:SchoolService,
      private snackbar: MatSnackBar,
      private commonFunction:SharedFunction) { 
-    this.Activeroute.params.subscribe(params => { this.tenant ='OpensisV2'; });
+    this.Activeroute.params.subscribe(params => { this.tenant ='opensisv2'; });
 
     this.clickEventSubscriptionForCrop=this.imageCropperService.getCroppedEvent().subscribe((res)=>{
      

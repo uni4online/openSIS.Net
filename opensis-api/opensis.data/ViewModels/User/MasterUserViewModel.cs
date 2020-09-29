@@ -8,9 +8,9 @@ namespace opensis.data.ViewModels.User
 {
     public class MasterUserViewModel : CommonFields
     {
-        public tblUserMaster user { get; set; }
-        [Required]
-        public string password { get; set; }
+        //public tblUserMaster user { get; set; }
+        //[Required]
+        //public string password { get; set; }
 
     }
 }

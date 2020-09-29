@@ -298,7 +298,7 @@
                 <div class="mx-6">
                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                         <mat-label>{{'latitude'|translate}}</mat-label>
-                        <input formControlName="latitude" [(ngModel)]="schoolAddViewModel.latitude" name="latitude"  matInput>
+                        <input formControlName="latitude" [(ngModel)]="schoolAddViewModel.tblSchoolMaster.latitude" name="latitude"  matInput>
                     </mat-form-field>
                 </div>
             </div>
@@ -306,7 +306,7 @@
                 <div class="mx-6">
                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                         <mat-label>{{'longitude'|translate}}</mat-label>
-                        <input formControlName="longitude" [(ngModel)]="schoolAddViewModel.longitude" name="longitude"  matInput>
+                        <input formControlName="longitude" [(ngModel)]="schoolAddViewModel.tblSchoolMaster.longitude" name="longitude"  matInput>
                     </mat-form-field>
                 </div>
             </div>

@@ -30,7 +30,7 @@ export class NoticesComponent implements OnInit {
   recordFor: string;
   tenant: string;
   constructor(private dialog: MatDialog, private router: Router,public translateService: TranslateService, private Activeroute: ActivatedRoute, private _noticeService: NoticeService, private snackbar: MatSnackBar) {
-    this.Activeroute.params.subscribe(params => { this.tenant = params.id || 'OpensisV2'; });
+    this.Activeroute.params.subscribe(params => { this.tenant = params.id || 'opensisv2'; });
     translateService.use('en');
   }
 

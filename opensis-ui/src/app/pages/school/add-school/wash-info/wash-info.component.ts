@@ -32,7 +32,7 @@ export class WashInfoComponent implements OnInit {
   
   form:FormGroup
   washinfo= WashInfoEnum;  
-  public tenant = "OpensisV2";  
+  public tenant = "opensisv2";  
   schoolAddViewModel: SchoolAddViewModel = new SchoolAddViewModel();  
   loading;
   

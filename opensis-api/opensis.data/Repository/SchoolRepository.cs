@@ -1,6 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using NetTopologySuite;
-using NetTopologySuite.Geometries;
 using opensis.data.Helper;
 using opensis.data.Interface;
 using opensis.data.Models;
@@ -138,13 +136,7 @@ namespace opensis.data.Repository
                 var schoolMaster =  this.context?.TableSchoolMaster.Include(x=>x.TableSchoolDetail).FirstOrDefault(x => x.TenantId == school.tblSchoolMaster.TenantId && x.SchoolId == school.tblSchoolMaster.SchoolId);
                 if (schoolMaster != null)
                 {
-                    if (schoolMaster.GeoPosition != null)
-                    {
-                        school.longitude = schoolMaster.GeoPosition.Centroid.X;
-                        school.latitude = schoolMaster.GeoPosition.Centroid.Y;
-                    }
                     school.tblSchoolMaster = schoolMaster;
-                    school.tblSchoolMaster.GeoPosition = null;
                     if (school.tblSchoolMaster.TableSchoolDetail.ToList().Count > 0)
                     {
                         school.tblSchoolMaster.TableSchoolDetail.FirstOrDefault().TableSchoolMaster = null;
@@ -194,6 +186,8 @@ namespace opensis.data.Repository
                 schoolMaster.DateModifed = DateTime.UtcNow;
                 schoolMaster.MaxApiChecks = school.tblSchoolMaster.MaxApiChecks;
                 schoolMaster.SchoolInternalId = school.tblSchoolMaster.SchoolInternalId;
+                schoolMaster.Latitude = school.tblSchoolMaster.Latitude;
+                schoolMaster.Longitude = school.tblSchoolMaster.Longitude;
                 if (schoolMaster.TableSchoolDetail.ToList().Count == 0 && school.tblSchoolMaster.TableSchoolDetail.ToList().Count > 0)
                 {
                     school.tblSchoolMaster.TableSchoolDetail.ToList().ForEach(p => p.Id = (int)Utility.GetMaxPK(this.context, new Func<TableSchoolDetail, int>(x => x.Id)));
@@ -250,7 +244,6 @@ namespace opensis.data.Repository
 
                 }
                 this.context?.SaveChanges();
-                school.tblSchoolMaster.GeoPosition = null;
                 if (school.tblSchoolMaster.TableSchoolDetail.ToList().Count > 0)
                 {
                     school.tblSchoolMaster.TableSchoolDetail.FirstOrDefault().TableSchoolMaster = null;
@@ -277,13 +270,6 @@ namespace opensis.data.Repository
             try
             {
                 int? MasterSchoolId = Utility.GetMaxPK(this.context, new Func<TableSchoolMaster, int>(x => x.SchoolId));
-                school.tblSchoolMaster.GeoPosition = null;
-                Point currentLocation = null;
-                var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326);
-                if (school.longitude != null && school.latitude != null)
-                {
-                    currentLocation = geometryFactory.CreatePoint(new Coordinate((double)school.longitude, (double)school.latitude));
-                }
                 school.tblSchoolMaster.SchoolId = (int)MasterSchoolId;
                 if (school.tblSchoolMaster.TableSchoolDetail.ToList().Count>0)
                 {
@@ -291,11 +277,9 @@ namespace opensis.data.Repository
                 }
                 school.tblSchoolMaster.DateCreated = DateTime.UtcNow;
                 school.tblSchoolMaster.TenantId = school.tblSchoolMaster.TenantId;
-                school.tblSchoolMaster.GeoPosition = currentLocation;
                 this.context?.TableSchoolMaster.Add(school.tblSchoolMaster);
                 this.context?.SaveChanges();
                 school._failure = false;
-                school.tblSchoolMaster.GeoPosition = null;
                 if (school.tblSchoolMaster.TableSchoolDetail.ToList().Count>0)
                 {
                     school.tblSchoolMaster.TableSchoolDetail.FirstOrDefault().TableSchoolMaster = null;

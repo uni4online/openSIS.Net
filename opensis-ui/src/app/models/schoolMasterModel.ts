@@ -20,8 +20,9 @@ export class SchoolMasterModel {
     public state?: any;
     public district: string;
     public zip: string;
+    public latitude?: number;
+    public longitude?:number;
     public country?: any;
-    public geoPosition: string;
     public currentPeriodEnds?: number;
     public maxApiChecks?: number;
     public features:string;
@@ -41,13 +42,11 @@ export class SchoolMasterModel {
 
 export class SchoolAddViewModel extends CommonField {
   public tblSchoolMaster: SchoolMasterModel;
-  public latitude: number;
-  public longitude:number;
   constructor() {
       super();
       this.tblSchoolMaster= new SchoolMasterModel();
-      this.latitude=null;
-      this.longitude=null;
+      this.tblSchoolMaster.latitude=null;
+      this.tblSchoolMaster.longitude=null;
   }
 }
 

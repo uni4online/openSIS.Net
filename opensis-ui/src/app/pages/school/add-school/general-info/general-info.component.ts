@@ -65,7 +65,7 @@ export class GeneralInfoComponent implements OnInit {
   public genderOptions = [];  
   private highestGradeLevels = highestGradeLevel;
   public highestGradeLevelsOption = [];
-  public tenant = "OpensisV2";
+  public tenant = "opensisv2";
   form: FormGroup;
   schoolAddViewModel: SchoolAddViewModel = new SchoolAddViewModel();
   countryModel: CountryModel = new CountryModel();

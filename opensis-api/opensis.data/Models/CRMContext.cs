@@ -619,8 +619,8 @@ namespace opensis.data.Models
                 entity.Property(e => e.SchoolId).HasColumnName("School_Id");
 
                 entity.Property(e => e.SchoolLogo)
-                    .HasColumnName("School_Logo")
-                    .HasColumnType("image");
+                    .HasColumnName("School_Logo");
+               
 
                 entity.Property(e => e.SoapAndWaterAvailable).HasColumnName("Soap_and_Water_Available");
 
@@ -1080,7 +1080,7 @@ namespace opensis.data.Models
             {
                 string[] tenants = new string[] { "TenantA" };
                 string connectionString = "Server=DESKTOP-OS2L82E\\SQLEXPRESS2019;Database={tenant};User Id=sa; Password=admin@123;MultipleActiveResultSets=true";
-                optionsBuilder.UseSqlServer(connectionString.Replace("{tenant}", "TenantA"),x => x.UseNetTopologySuite());
+                optionsBuilder.UseSqlServer(connectionString.Replace("{tenant}", "TenantA"));
 
                 //foreach (string tenant in tenants)
                 //{

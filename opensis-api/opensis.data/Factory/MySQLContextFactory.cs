@@ -25,7 +25,7 @@ namespace opensis.data.Factory
             if (!string.IsNullOrWhiteSpace(this.TenantName))
             {
                 var dbContextOptionsBuilder = new DbContextOptionsBuilder();
-                dbContextOptionsBuilder.UseMySQL(this.connectionStringTemplate
+                dbContextOptionsBuilder.UseMySql(this.connectionStringTemplate
                                        .Replace("{tenant}", this.TenantName));
 
                 context = new CRMContext(dbContextOptionsBuilder.Options);

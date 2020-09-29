@@ -50,7 +50,7 @@ export class LoginComponent implements OnInit {
   ) {
     translate.addLangs(['en', 'fr']);
     translate.setDefaultLang('en');
-    this.Activeroute.params.subscribe(params => { this.tenant = params.id || 'OpensisV2'; });
+    this.Activeroute.params.subscribe(params => { this.tenant = params.id || 'opensisv2'; });
     sessionStorage.setItem("tenant", this.tenant);
     this.loaderService.isLoading.subscribe((v) => {
       this.loading = v;

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using NetTopologySuite.Geometries;
 
 namespace opensis.data.Models
 {
@@ -36,11 +35,12 @@ namespace opensis.data.Models
         public string District { get; set; }
         public string Zip { get; set; }
         public string Country { get; set; }
-        public Geometry GeoPosition { get; set; }
         public DateTime? CurrentPeriodEnds { get; set; }
         public int? MaxApiChecks { get; set; }
         public string Features { get; set; }
         public int? PlanId { get; set; }
+        public double? Latitude { get; set; }
+        public double? Longitude { get; set; }
         public string CreatedBy { get; set; }
         public DateTime? DateCreated { get; set; }
         public string ModifiedBy { get; set; }

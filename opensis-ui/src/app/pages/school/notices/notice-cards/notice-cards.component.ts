@@ -31,7 +31,7 @@ export class NoticeCardsComponent implements OnInit {
   tenant: string;
 
   constructor(private dialog: MatDialog,private _noticeService: NoticeService,public translateService: TranslateService, private Activeroute: ActivatedRoute, private snackbar: MatSnackBar) {
-    this.Activeroute.params.subscribe(params => { this.tenant = params.id || 'OpensisV2'; });
+    this.Activeroute.params.subscribe(params => { this.tenant = params.id || 'opensisv2'; });
     translateService.use('en');
   }
 

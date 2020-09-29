@@ -29,10 +29,22 @@ export class SchoolService {
 
   SaveGeneralInfo(obj: SchoolAddViewModel){  
    //console.log("add",JSON.stringify(obj)) 
+   if(obj.tblSchoolMaster.longitude != null){
+    obj.tblSchoolMaster.longitude=Number(obj.tblSchoolMaster.longitude);
+  }
+  if(obj.tblSchoolMaster.latitude != null){
+    obj.tblSchoolMaster.latitude=Number(obj.tblSchoolMaster.latitude);
+  }
     let apiurl = this.apiUrl + obj._tenantName+ "/School/addSchool"; 
     return this.http.post<SchoolAddViewModel>(apiurl,obj)
   }  
   UpdateGeneralInfo(obj: SchoolAddViewModel){  
+    if(obj.tblSchoolMaster.longitude != null){
+      obj.tblSchoolMaster.longitude=Number(obj.tblSchoolMaster.longitude);
+    }
+    if(obj.tblSchoolMaster.latitude != null){
+      obj.tblSchoolMaster.latitude=Number(obj.tblSchoolMaster.latitude);
+    }
     //console.log("edit",JSON.stringify(obj))
     let apiurl = this.apiUrl + obj._tenantName+ "/School/updateSchool"; 
     return this.http.put<SchoolAddViewModel>(apiurl,obj)

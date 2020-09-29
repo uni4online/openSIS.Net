@@ -6,7 +6,5 @@ namespace opensis.data.ViewModels.School
     public class SchoolAddViewModel : CommonFields
     {
         public TableSchoolMaster tblSchoolMaster { get; set; }
-        public double? latitude { get; set; }
-        public double? longitude { get; set; }
     }
 }

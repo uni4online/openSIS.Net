@@ -5,7 +5,7 @@ import icClose from '@iconify/icons-ic/twotone-close';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
 import { EditorChangeContent, EditorChangeSelection } from 'ngx-quill';
-import { GetAllMembersList, GetAllMembers } from 'src/app/models/membershipNameModel';
+import { GetAllMembersList, GetAllMembers } from 'src/app/models/MembershipNameModel';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, ThemePalette } from '@angular/material/core';
 import { NoticeService } from 'src/app/services/notice.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -42,7 +42,7 @@ export class EditNoticeComponent implements OnInit {
   tenant: string;
   constructor(private dialogRef: MatDialogRef<EditNoticeComponent>, private router: Router, private Activeroute: ActivatedRoute, private fb: FormBuilder, private _noticeService: NoticeService, public translateService: TranslateService, private snackbar: MatSnackBar) {
     translateService.use('en');
-    this.Activeroute.params.subscribe(params => { this.tenant = params.id || 'OpensisV2'; });
+    this.Activeroute.params.subscribe(params => { this.tenant = params.id || 'opensisv2'; });
   }
 
   ngOnInit(): void {

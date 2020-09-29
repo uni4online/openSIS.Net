@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of, Subject } from 'rxjs';
-import { GetAllMembersList, GetAllMembers } from '../models/membershipNameModel';
+import { GetAllMembersList, GetAllMembers } from '../models/MembershipNameModel';
 import { NoticeAddViewModel, NoticeListViewModel } from '../models/noticeModel';
 import { NoticeDeleteModel } from '../models/noticeDeleteModel';
 @Injectable({

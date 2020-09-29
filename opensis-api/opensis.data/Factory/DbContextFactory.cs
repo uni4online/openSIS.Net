@@ -30,7 +30,7 @@ namespace opensis.data.Factory
                 var dbContextOptionsBuilder = new DbContextOptionsBuilder();
                
                     dbContextOptionsBuilder.UseSqlServer(this.connectionStringTemplate
-                                           .Replace("{tenant}", this.TenantName), x => x.UseNetTopologySuite());
+                                           .Replace("{tenant}", this.TenantName));
                 
 
                 context = new CRMContext(dbContextOptionsBuilder.Options);
