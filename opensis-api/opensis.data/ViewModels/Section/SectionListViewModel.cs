@@ -7,7 +7,7 @@ namespace opensis.data.ViewModels.Section
 {
     public class SectionListViewModel: CommonFields
     {
-        public List<TableSections> tableSectionsList { get; set; }
+        public List<Sections> tableSectionsList { get; set; }
         public Guid? TenantId { get; set; }
         public int? SchoolId { get; set; }
     }

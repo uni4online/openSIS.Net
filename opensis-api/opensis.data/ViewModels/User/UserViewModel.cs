@@ -8,6 +8,6 @@ namespace opensis.data.ViewModels.User
    
     public class UserViewModel : CommonFields
     {
-        public Users user { get; set; }
+        //public Users user { get; set; }
     }
 }

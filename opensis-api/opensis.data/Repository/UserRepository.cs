@@ -43,10 +43,10 @@ namespace opensis.data.Repository
                 string passwordHash = Utility.GetHashedPassword(decrypted );
                 ReturnModel._tenantName = objModel._tenantName;
                 //var encryptedPassword = EncodePassword(objModel.Password);
-                var user = this.context?.TableUserMaster.FirstOrDefault(x => x.EmailAddress == objModel.Email && x.TenantId == objModel.TenantId 
+                var user = this.context?.UserMaster.FirstOrDefault(x => x.EmailAddress == objModel.Email && x.TenantId == objModel.TenantId 
                 && x.PasswordHash == passwordHash);
-                var correctEmailList = this.context?.TableUserMaster.Where(x => x.EmailAddress.Contains(objModel.Email)).ToList();
-                var correctPasswordList = this.context?.TableUserMaster.Where(x => x.PasswordHash == passwordHash).ToList();
+                var correctEmailList = this.context?.UserMaster.Where(x => x.EmailAddress.Contains(objModel.Email)).ToList();
+                var correctPasswordList = this.context?.UserMaster.Where(x => x.PasswordHash == passwordHash).ToList();
                 if (user == null && correctEmailList.Count>0 && correctPasswordList.Count==0)
                 {
                     ReturnModel.UserId = null;

@@ -29,11 +29,11 @@ namespace opensis.data.Repository
         /// <returns></returns>
         public RoomAddViewModel AddRooms(RoomAddViewModel rooms)
         {
-            int? RoomlId = Utility.GetMaxPK(this.context, new Func<TableRooms, int>(x => x.RoomId));
+            int? RoomlId = Utility.GetMaxPK(this.context, new Func<Rooms, int>(x => x.RoomId));
             rooms.tableRoom.RoomId = (int)RoomlId;
             rooms.tableRoom.LastUpdated = DateTime.UtcNow;
             rooms.tableRoom.TenantId = rooms.tableRoom.TenantId;
-            this.context?.TableRooms.Add(rooms.tableRoom);
+            this.context?.Rooms.Add(rooms.tableRoom);
             this.context?.SaveChanges();
 
             return rooms;
@@ -48,7 +48,7 @@ namespace opensis.data.Repository
             try
             {
                 RoomAddViewModel roomAddViewModel = new RoomAddViewModel();
-                var roomMaster = this.context?.TableRooms.FirstOrDefault(x => x.TenantId == room.tableRoom.TenantId && x.SchoolId == room.tableRoom.SchoolId && x.RoomId == room.tableRoom.RoomId);
+                var roomMaster = this.context?.Rooms.FirstOrDefault(x => x.TenantId == room.tableRoom.TenantId && x.SchoolId == room.tableRoom.SchoolId && x.RoomId == room.tableRoom.RoomId);
                 if (roomMaster != null)
                 {
                     room.tableRoom = roomMaster;                    
@@ -78,7 +78,7 @@ namespace opensis.data.Repository
         {
             try
             {
-                var roomMaster = this.context?.TableRooms.FirstOrDefault(x => x.TenantId == room.tableRoom.TenantId && x.SchoolId == room.tableRoom.SchoolId && x.RoomId == room.tableRoom.RoomId);
+                var roomMaster = this.context?.Rooms.FirstOrDefault(x => x.TenantId == room.tableRoom.TenantId && x.SchoolId == room.tableRoom.SchoolId && x.RoomId == room.tableRoom.RoomId);
                 roomMaster.SchoolId = room.tableRoom.SchoolId;
                 roomMaster.TenantId = room.tableRoom.TenantId;
                 roomMaster.Title = room.tableRoom.Title;
@@ -110,7 +110,7 @@ namespace opensis.data.Repository
             try
             {
 
-                var room = this.context?.TableRooms.Where(x => x.TenantId == roomList.TenantId && x.SchoolId == roomList.SchoolId).OrderBy(x => x.SortOrder).ToList();
+                var room = this.context?.Rooms.Where(x => x.TenantId == roomList.TenantId && x.SchoolId == roomList.SchoolId).OrderBy(x => x.SortOrder).ToList();
                 roomListModel.TableroomList = room;
                 roomListModel._tenantName = roomList._tenantName;
                 roomListModel._token = roomList._token;
@@ -135,8 +135,8 @@ namespace opensis.data.Repository
         {
             try
             {
-                var Room= this.context?.TableRooms.FirstOrDefault(x => x.TenantId == room.tableRoom.TenantId && x.SchoolId == room.tableRoom.SchoolId && x.RoomId == room.tableRoom.RoomId);
-                this.context?.TableRooms.Remove(Room);
+                var Room= this.context?.Rooms.FirstOrDefault(x => x.TenantId == room.tableRoom.TenantId && x.SchoolId == room.tableRoom.SchoolId && x.RoomId == room.tableRoom.RoomId);
+                this.context?.Rooms.Remove(Room);
                 this.context?.SaveChanges();
                 room._failure = false;
                 room._message = "Deleted";

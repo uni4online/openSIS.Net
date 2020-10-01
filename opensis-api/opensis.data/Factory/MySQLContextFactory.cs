@@ -28,7 +28,8 @@ namespace opensis.data.Factory
                 dbContextOptionsBuilder.UseMySql(this.connectionStringTemplate
                                        .Replace("{tenant}", this.TenantName));
 
-                context = new CRMContext(dbContextOptionsBuilder.Options);
+                context = new CRMContextMySQL(dbContextOptionsBuilder.Options);
+                context.Database.Migrate();
             }
 
             return context;

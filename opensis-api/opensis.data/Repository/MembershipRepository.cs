@@ -26,7 +26,7 @@ namespace opensis.data.Repository
             GetAllMembersList getAllMembersList = new GetAllMembersList();
             try
             {
-                var noticeRepository = this.context?.TableMembership.ToList();
+                var noticeRepository = this.context?.Membership.ToList();
 
                 var query = (from o in noticeRepository
                              select new GetAllMembers()

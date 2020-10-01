@@ -7,6 +7,6 @@ namespace opensis.data.ViewModels.Room
 {
     public class RoomAddViewModel : CommonFields
     {
-        public TableRooms tableRoom { get; set; }
+        public Rooms tableRoom { get; set; }
     }
 }

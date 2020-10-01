@@ -9,8 +9,7 @@ namespace opensis.data.Interface
 {
     public interface ISchoolRepository
     {
-        public List<Schools> GetAllSchools();
-        public List<Schools> AddSchools(Schools school);
+      
 
         public SchoolAddViewModel AddSchool(SchoolAddViewModel school);
         public SchoolAddViewModel UpdateSchool(SchoolAddViewModel school);

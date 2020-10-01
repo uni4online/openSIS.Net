@@ -7,6 +7,6 @@ namespace opensis.data.ViewModels.Gradelevel
 {
     public class GradelevelViewModel : CommonFields
     {
-        public TableGradelevels tblGradelevel { get; set; }
+        public Gradelevels tblGradelevel { get; set; }
     }
 }

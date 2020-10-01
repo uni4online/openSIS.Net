@@ -29,7 +29,7 @@ namespace opensis.data.Repository
         {
             try
             {
-                int? noticeId = Utility.GetMaxPK(this.context, new Func<TableNotice, int>(x => x.NoticeId));
+                int? noticeId = Utility.GetMaxPK(this.context, new Func<Notice, int>(x => x.NoticeId));
 
                 notice.Notice.NoticeId = (int)noticeId;
 
@@ -39,7 +39,7 @@ namespace opensis.data.Repository
 
                 notice.Notice.CreatedTime = DateTime.UtcNow;
 
-                this.context?.TableNotice.Add(notice.Notice);
+                this.context?.Notice.Add(notice.Notice);
 
                 this.context?.SaveChanges();
                 notice._failure = false;
@@ -66,7 +66,7 @@ namespace opensis.data.Repository
             try
             {
                 NoticeAddViewModel noticeAddViewModel = new NoticeAddViewModel();
-                var noticeModel = this.context?.TableNotice.FirstOrDefault(x => x.TenantId == notice.Notice.TenantId && x.NoticeId == notice.Notice.NoticeId);
+                var noticeModel = this.context?.Notice.FirstOrDefault(x => x.TenantId == notice.Notice.TenantId && x.NoticeId == notice.Notice.NoticeId);
                 if (noticeModel != null)
                 {
                     noticeAddViewModel.Notice = noticeModel;
@@ -99,7 +99,7 @@ namespace opensis.data.Repository
         {
             try
             {
-                var noticeRepository = this.context?.TableNotice.Where(x => x.NoticeId == notice.NoticeId).ToList().OrderBy(x => x.NoticeId).LastOrDefault();
+                var noticeRepository = this.context?.Notice.Where(x => x.NoticeId == notice.NoticeId).ToList().OrderBy(x => x.NoticeId).LastOrDefault();
 
                 noticeRepository.Isactive = false;
                 this.context?.SaveChanges();
@@ -125,7 +125,7 @@ namespace opensis.data.Repository
         {
             try
             {
-                var noticeRepository = this.context?.TableNotice.FirstOrDefault(x => x.TenantId == notice.Notice.TenantId && x.SchoolId == notice.Notice.SchoolId && x.NoticeId == notice.Notice.NoticeId);
+                var noticeRepository = this.context?.Notice.FirstOrDefault(x => x.TenantId == notice.Notice.TenantId && x.SchoolId == notice.Notice.SchoolId && x.NoticeId == notice.Notice.NoticeId);
 
                 if (noticeRepository != null)
                 {
@@ -168,7 +168,7 @@ namespace opensis.data.Repository
             NoticeListViewModel getAllNoticeList = new NoticeListViewModel();
             try
             {
-                var noticeRepository = this.context?.TableNotice.OrderBy(x => x.ValidFrom).Where(x => x.Isactive == true).ToList();
+                var noticeRepository = this.context?.Notice.OrderBy(x => x.ValidFrom).Where(x => x.Isactive == true).ToList();
 
 
                 getAllNoticeList.NoticeList = noticeRepository;

@@ -9,10 +9,10 @@ namespace opensis.core.School.Interfaces
 {
     public interface ISchoolRegisterService
     {
-        public SchoolListViewModel getAllSchools(SchoolViewModel objModel);
+        //public SchoolListViewModel getAllSchools(SchoolViewModel objModel);
 
-        public SchoolListViewModel SaveSchool(Schools school);
-        public bool IsMandatoryFieldsArePresent(Schools schools);
+        //public SchoolListViewModel SaveSchool(Schools school);
+        //public bool IsMandatoryFieldsArePresent(Schools schools);
 
 
         public SchoolAddViewModel SaveSchool(SchoolAddViewModel schools);

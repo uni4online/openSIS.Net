@@ -5,6 +5,6 @@ namespace opensis.data.ViewModels.School
 {
     public class SchoolAddViewModel : CommonFields
     {
-        public TableSchoolMaster tblSchoolMaster { get; set; }
+        public SchoolMaster tblSchoolMaster { get; set; }
     }
 }

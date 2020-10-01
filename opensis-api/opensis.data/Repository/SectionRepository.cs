@@ -25,10 +25,10 @@ namespace opensis.data.Repository
         /// <returns></returns>
         public SectionAddViewModel AddSection(SectionAddViewModel section)
         {
-            int? MasterSectionId = Utility.GetMaxPK(this.context, new Func<TableSections, int>(x => x.SectionId));
+            int? MasterSectionId = Utility.GetMaxPK(this.context, new Func<Sections, int>(x => x.SectionId));
             section.tableSections.SectionId = (int)MasterSectionId;
             section.tableSections.LastUpdated = DateTime.UtcNow;
-            this.context?.TableSections.Add(section.tableSections);
+            this.context?.Sections.Add(section.tableSections);
             this.context?.SaveChanges();
             section._failure = false;
             return section;
@@ -44,7 +44,7 @@ namespace opensis.data.Repository
         {
             try
             {
-                var sectionUpdate = this.context?.TableSections.FirstOrDefault(x => x.TenantId == section.tableSections.TenantId && x.SchoolId == section.tableSections.SchoolId && x.SectionId == section.tableSections.SectionId);
+                var sectionUpdate = this.context?.Sections.FirstOrDefault(x => x.TenantId == section.tableSections.TenantId && x.SchoolId == section.tableSections.SchoolId && x.SectionId == section.tableSections.SectionId);
 
                 sectionUpdate.TenantId = section.tableSections.TenantId;
                 sectionUpdate.SchoolId = section.tableSections.SchoolId;
@@ -80,7 +80,7 @@ namespace opensis.data.Repository
             try
             {
                 SectionAddViewModel sectionView = new SectionAddViewModel();
-                var sectionById = this.context?.TableSections.FirstOrDefault(x => x.TenantId == section.tableSections.TenantId && x.SchoolId == section.tableSections.SchoolId && x.SectionId== section.tableSections.SectionId);
+                var sectionById = this.context?.Sections.FirstOrDefault(x => x.TenantId == section.tableSections.TenantId && x.SchoolId == section.tableSections.SchoolId && x.SectionId== section.tableSections.SectionId);
                 if (sectionById != null)
                 {
                     sectionView.tableSections = sectionById;
@@ -112,7 +112,7 @@ namespace opensis.data.Repository
             try
             {
 
-                var sectionAll = this.context?.TableSections.Where(x => x.TenantId == section.TenantId && x.SchoolId == section.SchoolId).OrderBy(x => x.SortOrder).ToList();
+                var sectionAll = this.context?.Sections.Where(x => x.TenantId == section.TenantId && x.SchoolId == section.SchoolId).OrderBy(x => x.SortOrder).ToList();
                 sectionList.tableSectionsList = sectionAll;
                 sectionList._tenantName = section._tenantName;
                 sectionList._token = section._token;
@@ -138,8 +138,8 @@ namespace opensis.data.Repository
         {
             try
             {
-                var sectionDel = this.context?.TableSections.FirstOrDefault(x => x.TenantId == section.tableSections.TenantId && x.SchoolId == section.tableSections.SchoolId && x.SectionId == section.tableSections.SectionId);
-                this.context?.TableSections.Remove(sectionDel);
+                var sectionDel = this.context?.Sections.FirstOrDefault(x => x.TenantId == section.tableSections.TenantId && x.SchoolId == section.tableSections.SchoolId && x.SectionId == section.tableSections.SectionId);
+                this.context?.Sections.Remove(sectionDel);
                 this.context?.SaveChanges();
                 section._failure = false;
                 section._message = "Deleted";

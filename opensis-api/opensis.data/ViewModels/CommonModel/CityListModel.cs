@@ -7,7 +7,7 @@ namespace opensis.data.ViewModels.CommonModel
 {
     public class CityListModel : CommonFields
     {
-        public List<TableCity> TableCity { get; set; }
+        public List<City> TableCity { get; set; }
         public int StateId { get; set; }
     }
 }

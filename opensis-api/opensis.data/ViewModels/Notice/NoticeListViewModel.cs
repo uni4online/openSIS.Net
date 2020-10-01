@@ -7,6 +7,6 @@ namespace opensis.data.ViewModels.Notice
 {
    public class NoticeListViewModel : CommonFields
     {
-        public List<TableNotice> NoticeList { get; set; }
+        public List<opensis.data.Models.Notice> NoticeList { get; set; }
     }
 }

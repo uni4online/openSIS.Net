@@ -7,6 +7,6 @@ namespace opensis.data.ViewModels.CommonModel
 {
     public class LanguageListModel : CommonFields
     {
-        public List<TableLanguage> TableLanguage { get; set; }
+        public List<Language> TableLanguage { get; set; }
     }
 }

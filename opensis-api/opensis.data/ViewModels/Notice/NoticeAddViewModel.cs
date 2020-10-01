@@ -8,7 +8,7 @@ namespace opensis.data.ViewModels.Notice
 {
     public class NoticeAddViewModel : CommonFields
     {
-        public TableNotice Notice { get; set; }
+        public opensis.data.Models.Notice Notice { get; set; }
 
     }
 }

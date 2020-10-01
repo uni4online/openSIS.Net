@@ -34,6 +34,7 @@ namespace opensis.data.Factory
                 
 
                 context = new CRMContext(dbContextOptionsBuilder.Options);
+                context.Database.Migrate();
             }
 
             return context;

@@ -1,4 +1,4 @@
-<div  style="margin-top: 3px;" *ngIf="schoolCtrl">
+<div class="text-right" *ngIf="schoolCtrl">
   <mat-form-field >
     <mat-select [formControl]="schoolCtrl" placeholder="School Name" #singleSelect (selectionChange)="changeSchool($event.value.school_Name,$event.value.school_Id)">
       <mat-option>

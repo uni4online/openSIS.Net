@@ -8,7 +8,7 @@ namespace opensis.data.ViewModels.Room
     public class RoomListModel: CommonFields
     {
        
-            public List<TableRooms> TableroomList { get; set; }
+            public List<Rooms> TableroomList { get; set; }
             public Guid? TenantId { get; set; }
             public int? SchoolId { get; set; }
 

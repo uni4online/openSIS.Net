@@ -28,38 +28,38 @@ namespace opensis.core.School.Services
         //Required for Unit Testing
         public SchoolRegister() { }
         //public List<Schools> getAllSchools(opensisContext context)
-        public SchoolListViewModel getAllSchools(SchoolViewModel objModel)
-        {
-            logger.Info("Method getAllSchools called.");
-            SchoolListViewModel schoolList = new SchoolListViewModel();
-            try
-            {
-                if (TokenManager.CheckToken(objModel._tenantName, objModel._token))
-                {
-                    List<Schools> schools = this.schoolRepository.GetAllSchools();
-                    schoolList.schoolList = schools;
-                    schoolList._message = SUCCESS;
-                    schoolList._failure = false;
-                    logger.Info("Method getAllSchools end with success.");
-                }
-                else
-                {
-                    schoolList._failure = true;
-                    schoolList._message = TOKENINVALID;
-                }
+        //public SchoolListViewModel getAllSchools(SchoolViewModel objModel)
+        //{
+        //    logger.Info("Method getAllSchools called.");
+        //    SchoolListViewModel schoolList = new SchoolListViewModel();
+        //    try
+        //    {
+        //        if (TokenManager.CheckToken(objModel._tenantName, objModel._token))
+        //        {
+        //            List<Schools> schools = this.schoolRepository.GetAllSchools();
+        //            schoolList.schoolList = schools;
+        //            schoolList._message = SUCCESS;
+        //            schoolList._failure = false;
+        //            logger.Info("Method getAllSchools end with success.");
+        //        }
+        //        else
+        //        {
+        //            schoolList._failure = true;
+        //            schoolList._message = TOKENINVALID;
+        //        }
 
 
-            }
-            catch (Exception ex)
-            {
-                schoolList._message = ex.Message;
-                schoolList._failure = true;
-                logger.Error("Method getAllSchools end with error :" + ex.Message);
-            }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        schoolList._message = ex.Message;
+        //        schoolList._failure = true;
+        //        logger.Error("Method getAllSchools end with error :" + ex.Message);
+        //    }
 
 
-            return schoolList;
-        }
+        //    return schoolList;
+        //}
 
         public SchoolListModel GetAllSchools(PageResult pageResult)
         {
@@ -127,25 +127,25 @@ namespace opensis.core.School.Services
         }
 
         //public List<Schools> SaveSchool(Schools schools, opensisContext context)
-        public SchoolListViewModel SaveSchool(Schools schools)
-        {
+        //public SchoolListViewModel SaveSchool(Schools schools)
+        //{
 
 
-            //context.tblSchool.Add(schools);
-            //context.SaveChanges();
+        //    //context.tblSchool.Add(schools);
+        //    //context.SaveChanges();
 
-            if (IsMandatoryFieldsArePresent(schools))
-            {
-                this.schoolRepository.AddSchools(schools);
-                //return getAllSchools();
-                return null;
-            }
-            else
-            {
-                return null;
-            }
+        //    if (IsMandatoryFieldsArePresent(schools))
+        //    {
+        //        this.schoolRepository.AddSchools(schools);
+        //        //return getAllSchools();
+        //        return null;
+        //    }
+        //    else
+        //    {
+        //        return null;
+        //    }
 
-        }
+        //}
         public SchoolAddViewModel UpdateSchool(SchoolAddViewModel schools)
         {
             SchoolAddViewModel SchoolAddViewModel = new SchoolAddViewModel();
@@ -202,16 +202,16 @@ namespace opensis.core.School.Services
 
         }
 
-        public bool IsMandatoryFieldsArePresent(Schools schools)
-        {
-            bool isvalid = false;
-            if (schools.tenant_id != "" && schools.school_name != "")
-            {
-                isvalid = true;
-            }
+        //public bool IsMandatoryFieldsArePresent(Schools schools)
+        //{
+        //    bool isvalid = false;
+        //    if (schools.tenant_id != "" && schools.school_name != "")
+        //    {
+        //        isvalid = true;
+        //    }
 
-            return isvalid;
-        }
+        //    return isvalid;
+        //}
         
     }
 }

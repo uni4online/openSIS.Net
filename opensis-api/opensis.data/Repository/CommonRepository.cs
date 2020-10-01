@@ -22,7 +22,7 @@ namespace opensis.data.Repository
             try
             {
                 cityListModel.TableCity = null;
-                var CityList = this.context?.TableCity.Where(x => x.StateId == city.StateId).ToList();
+                var CityList = this.context?.City.Where(x => x.StateId == city.StateId).ToList();
                 if (CityList.Count > 0)
                 {
                     cityListModel.TableCity = CityList;
@@ -47,7 +47,7 @@ namespace opensis.data.Repository
             try
             {
                 stateListModel.TableState = null;
-                var StateList = this.context?.TableState.Where(x => x.CountryId == state.CountryId).ToList();
+                var StateList = this.context?.State.Where(x => x.CountryId == state.CountryId).ToList();
                 if (StateList.Count > 0)
                 {
                     stateListModel.TableState = StateList;
@@ -72,7 +72,7 @@ namespace opensis.data.Repository
             try
             {
                 countryListModel.TableCountry = null;
-                var CountryList = this.context?.TableCountry.ToList();
+                var CountryList = this.context?.Country.ToList();
                 if (CountryList.Count > 0)
                 {
                     countryListModel.TableCountry = CountryList;
@@ -98,7 +98,7 @@ namespace opensis.data.Repository
             try
             {
                 languageListModel.TableLanguage = null;
-                var languages = this.context?.TableLanguage.ToList();
+                var languages = this.context?.Language.ToList();
                 if (languages.Count > 0)
                 {
                     languageListModel.TableLanguage = languages;

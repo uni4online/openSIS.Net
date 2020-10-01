@@ -29,9 +29,9 @@ namespace opensis.data.Repository
         {
             try
             {
-                int? MasterSchoolId = Utility.GetMaxPK(this.context, new Func<TableGradelevels, int>(x => x.GradeId));
+                int? MasterSchoolId = Utility.GetMaxPK(this.context, new Func<Gradelevels, int>(x => x.GradeId));
                 gradelevel.tblGradelevel.GradeId = (int)MasterSchoolId;
-                this.context?.TableGradelevels.Add(gradelevel.tblGradelevel);
+                this.context?.Gradelevels.Add(gradelevel.tblGradelevel);
                 this.context?.SaveChanges();
                 gradelevel._failure = false;
             }
@@ -53,7 +53,7 @@ namespace opensis.data.Repository
             GradelevelViewModel gradelevelModel = new GradelevelViewModel();
             try
             {
-                var Gradelevel = this.context?.TableGradelevels.FirstOrDefault(x => x.TenantId == gradelevel.tblGradelevel.TenantId && x.SchoolId == gradelevel.tblGradelevel.SchoolId && x.GradeId == gradelevel.tblGradelevel.GradeId);
+                var Gradelevel = this.context?.Gradelevels.FirstOrDefault(x => x.TenantId == gradelevel.tblGradelevel.TenantId && x.SchoolId == gradelevel.tblGradelevel.SchoolId && x.GradeId == gradelevel.tblGradelevel.GradeId);
                 if (Gradelevel != null)
                 {
                     gradelevelModel.tblGradelevel = Gradelevel;
@@ -83,7 +83,7 @@ namespace opensis.data.Repository
             GradelevelViewModel gradelevelUpdate = new GradelevelViewModel();
             try
             {
-                var GradeLevel = this.context?.TableGradelevels.FirstOrDefault(x => x.TenantId == gradelevel.tblGradelevel.TenantId && x.SchoolId == gradelevel.tblGradelevel.SchoolId && x.GradeId == gradelevel.tblGradelevel.GradeId);
+                var GradeLevel = this.context?.Gradelevels.FirstOrDefault(x => x.TenantId == gradelevel.tblGradelevel.TenantId && x.SchoolId == gradelevel.tblGradelevel.SchoolId && x.GradeId == gradelevel.tblGradelevel.GradeId);
                 GradeLevel.Title = gradelevel.tblGradelevel.Title;
                 GradeLevel.LastUpdated = DateTime.UtcNow;
                 GradeLevel.NextGradeId = gradelevel.tblGradelevel.NextGradeId;
@@ -110,8 +110,8 @@ namespace opensis.data.Repository
         {
             try
             {
-                var GradeLevel = this.context?.TableGradelevels.FirstOrDefault(x => x.TenantId == gradelevel.tblGradelevel.TenantId && x.SchoolId == gradelevel.tblGradelevel.SchoolId && x.GradeId == gradelevel.tblGradelevel.GradeId);
-                this.context?.TableGradelevels.Remove(GradeLevel);
+                var GradeLevel = this.context?.Gradelevels.FirstOrDefault(x => x.TenantId == gradelevel.tblGradelevel.TenantId && x.SchoolId == gradelevel.tblGradelevel.SchoolId && x.GradeId == gradelevel.tblGradelevel.GradeId);
+                this.context?.Gradelevels.Remove(GradeLevel);
                 this.context?.SaveChanges();
                 gradelevel._failure = false;
                 gradelevel._message = "Deleted";
@@ -130,7 +130,7 @@ namespace opensis.data.Repository
             try
             {
 
-                var gradelevels = this.context?.TableGradelevels.Where(x => x.TenantId == gradelevelList.TenantId && x.SchoolId==gradelevelList.SchoolId).OrderBy(x=>x.SortOrder).ToList();
+                var gradelevels = this.context?.Gradelevels.Where(x => x.TenantId == gradelevelList.TenantId && x.SchoolId==gradelevelList.SchoolId).OrderBy(x=>x.SortOrder).ToList();
                 gradelevelListModel.TableGradelevelList = gradelevels;
                 gradelevelListModel._tenantName = gradelevelList._tenantName;
                 gradelevelListModel._token = gradelevelList._token;

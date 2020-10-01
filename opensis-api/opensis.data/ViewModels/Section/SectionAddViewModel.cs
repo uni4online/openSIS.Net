@@ -7,6 +7,6 @@ namespace opensis.data.ViewModels.Section
 {
     public class SectionAddViewModel: CommonFields
     {
-        public TableSections tableSections { get; set; }
+        public Sections tableSections { get; set; }
     }
 }
