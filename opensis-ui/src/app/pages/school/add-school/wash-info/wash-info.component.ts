@@ -32,7 +32,7 @@ export class WashInfoComponent implements OnInit {
   
   form:FormGroup
   washinfo= WashInfoEnum;  
-  public tenant = "opensisv2";  
+  //public tenant = "opensisv2";  
   schoolAddViewModel: SchoolAddViewModel = new SchoolAddViewModel();  
   loading;
   
@@ -90,12 +90,12 @@ export class WashInfoComponent implements OnInit {
         this.schoolAddViewModel=this.dataOfgeneralInfo;
       }
 
-    this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].comonToiletType = this.commonFunction.trimData(this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].comonToiletType);   
-    this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].commonToiletAccessibility = this.commonFunction.trimData(this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].commonToiletAccessibility);
-    this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].maleToiletAccessibility = this.commonFunction.trimData(this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].maleToiletAccessibility);  
-    this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].maleToiletType = this.commonFunction.trimData(this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].maleToiletType) ;
-    this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].femaleToiletAccessibility = this.commonFunction.trimData(this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].femaleToiletAccessibility) ;     
-    this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].femaleToiletType=this.commonFunction.trimData(this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].femaleToiletType) ;
+    this.schoolAddViewModel.schoolMaster.schoolDetail[0].comonToiletType = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolDetail[0].comonToiletType);   
+    this.schoolAddViewModel.schoolMaster.schoolDetail[0].commonToiletAccessibility = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolDetail[0].commonToiletAccessibility);
+    this.schoolAddViewModel.schoolMaster.schoolDetail[0].maleToiletAccessibility = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolDetail[0].maleToiletAccessibility);  
+    this.schoolAddViewModel.schoolMaster.schoolDetail[0].maleToiletType = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolDetail[0].maleToiletType) ;
+    this.schoolAddViewModel.schoolMaster.schoolDetail[0].femaleToiletAccessibility = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolDetail[0].femaleToiletAccessibility) ;     
+    this.schoolAddViewModel.schoolMaster.schoolDetail[0].femaleToiletType=this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolDetail[0].femaleToiletType) ;
     
 
       
@@ -104,7 +104,7 @@ export class WashInfoComponent implements OnInit {
 
      
      submit() {    
-        this.schoolAddViewModel._tenantName = this.tenant; 
+        this.schoolAddViewModel._tenantName = sessionStorage.getItem("tenant"); 
         this.schoolAddViewModel._token = sessionStorage.getItem("token");               
 
         this.generalInfoService.UpdateGeneralInfo(this.schoolAddViewModel).subscribe(data => {

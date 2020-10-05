@@ -33,7 +33,7 @@ namespace opensis.core.Room.Services
             if (TokenManager.CheckToken(rooms._tenantName, rooms._token))
             {
 
-                RoomAddViewModel = this.roomRepository.AddRooms(rooms);                
+                RoomAddViewModel = this.roomRepository.AddRoom(rooms);                
                 return RoomAddViewModel;
 
             }
@@ -55,7 +55,7 @@ namespace opensis.core.Room.Services
             RoomAddViewModel roomAddViewModel = new RoomAddViewModel();
             if (TokenManager.CheckToken(room._tenantName, room._token))
             {
-                roomAddViewModel = this.roomRepository.ViewRooms(room);
+                roomAddViewModel = this.roomRepository.ViewRoom(room);
                 //return getAllSection();
                 return roomAddViewModel;
 
@@ -78,7 +78,7 @@ namespace opensis.core.Room.Services
             RoomAddViewModel RoomAddViewModel = new RoomAddViewModel();
             if (TokenManager.CheckToken(room._tenantName, room._token))
             {
-                RoomAddViewModel = this.roomRepository.UpdateRooms(room);                
+                RoomAddViewModel = this.roomRepository.UpdateRoom(room);                
                 return RoomAddViewModel;
             }
             else
@@ -129,7 +129,7 @@ namespace opensis.core.Room.Services
             {
                 if (TokenManager.CheckToken(room._tenantName, room._token))
                 {
-                    roomListdelete = this.roomRepository.DeleteRooms(room);
+                    roomListdelete = this.roomRepository.DeleteRoom(room);
                 }
                 else
                 {

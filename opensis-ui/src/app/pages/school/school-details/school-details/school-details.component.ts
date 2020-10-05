@@ -97,7 +97,7 @@ export class SchoolDetailsComponent implements OnInit {
     
   }
   callAllSchool(getAllSchool){
-    this.schoolService.GetSchool(this.getAllSchool).subscribe(data => {
+    this.schoolService.GetAllSchoolList(this.getAllSchool).subscribe(data => {
       if(data._failure){
         this.snackbar.open('School information failed. '+ data._message, 'LOL THANKS', {
         duration: 10000

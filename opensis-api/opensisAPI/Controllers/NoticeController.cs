@@ -90,12 +90,12 @@ namespace opensisAPI.Controllers
         }
 
         [HttpPost("getAllNotice")]
-        public ActionResult<NoticeListViewModel> GetAllNotice(NoticeListViewModel notice)
+        public ActionResult<NoticeListViewModel> GetAllNotice(NoticeListViewModel noticeList)
         {
             NoticeListViewModel noticeAdd = new NoticeListViewModel();
             try
             {
-                noticeAdd = _noticeService.GetAllNotice(notice);
+                noticeAdd = _noticeService.GetAllNotice(noticeList);
             }
             catch (Exception es)
             {

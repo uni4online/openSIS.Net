@@ -1,6 +1,6 @@
 <div class="text-right" *ngIf="schoolCtrl">
   <mat-form-field >
-    <mat-select [formControl]="schoolCtrl" placeholder="School Name" #singleSelect (selectionChange)="changeSchool($event.value.school_Name,$event.value.school_Id)">
+    <mat-select [formControl]="schoolCtrl" placeholder="School Name" (selectionChange)="changeSchool($event.value.school_Name,$event.value.school_Id)">
       <mat-option>
         <ngx-mat-select-search  [formControl]="schoolFilterCtrl" ngxMatSelectSearchClear noEntriesFoundLabel="No matching school found" placeholderLabel="Find School..."></ngx-mat-select-search>
       </mat-option>
@@ -12,24 +12,16 @@
   </mat-form-field>
 
   <mat-form-field style="width: 20%;">
-    <mat-select [formControl]="yearCtrl" placeholder="Year" #singleSelectYear>
-      <mat-option>
-        <ngx-mat-select-search [formControl]="yearFilterCtrl" ngxMatSelectSearchClear noEntriesFoundLabel="No matching year found" placeholderLabel="Find Year..."></ngx-mat-select-search>
-      </mat-option>
-
-      <mat-option *ngFor="let year of filteredYears | async" [value]="year">
+    <mat-select [formControl]="yearCtrl" placeholder="Year">
+      <mat-option *ngFor="let year of years" [value]="year">
         {{year.name}}
       </mat-option>
     </mat-select>
   </mat-form-field>
 
   <mat-form-field style="width: 17%;">
-    <mat-select [formControl]="partCtrl" placeholder="Parts" #singleSelectPart>
-      <mat-option>
-        <ngx-mat-select-search [formControl]="partFilterCtrl" ngxMatSelectSearchClear noEntriesFoundLabel="No matching part found" placeholderLabel="Find Parts..."></ngx-mat-select-search>
-      </mat-option>
-
-      <mat-option *ngFor="let part of filteredParts | async" [value]="part">
+    <mat-select [formControl]="partCtrl" placeholder="Parts">
+      <mat-option *ngFor="let part of parts" [value]="part">
         {{part.name}}
       </mat-option>
     </mat-select>

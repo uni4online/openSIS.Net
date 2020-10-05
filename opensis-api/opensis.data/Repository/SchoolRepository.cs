@@ -4,11 +4,7 @@ using opensis.data.Interface;
 using opensis.data.Models;
 using opensis.data.ViewModels.School;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace opensis.data.Repository
 {
@@ -37,36 +33,62 @@ namespace opensis.data.Repository
             return address;
         }
         /// <summary>
-        /// Get Schools for pagination
+        /// Get SchoolsList with pagination
         /// </summary>
         /// <param name="pageResult"></param>
         /// <returns></returns>
-        public SchoolListModel GetAllSchools(PageResult pageResult)
+        public SchoolListModel GetAllSchoolList(PageResult pageResult)
         {
             SchoolListModel schoolListModel = new SchoolListModel();
             try
             {
+                //string sortField = "SchoolName"; string sortOrder = "desc";
 
-                var courseInfo = from schoolMaster in this.context?.SchoolMaster.ToList()
-                                 join schoolDetails in this.context?.SchoolDetail.ToList()
-                                 on schoolMaster.SchoolId equals schoolDetails.SchoolId into schoolInfo
-                                 from schools in schoolInfo.DefaultIfEmpty()
-                                 select new GetSchoolForView()
-                                 {
-                                     School_Name = schoolMaster.SchoolName.Trim(),
-                                     School_Id = schoolMaster.SchoolId,
-                                     Tenant_Id = schoolMaster.TenantId,
-                                     Phone = schools == null ? string.Empty : schools.Telephone.Trim(),
-                                     Principle = schools == null ? string.Empty : schools.NameOfPrincipal.Trim(),
-                                     ////School_Address = schoolMaster.StreetAddress1 == null ? string.Empty : schoolMaster.StreetAddress1.Trim() + " " + schoolMaster.StreetAddress2.Trim() + " " + schoolMaster.State.Trim() + " " + schoolMaster.Country.Trim() + " " + schoolMaster.Zip.Trim(),
-                                     School_Address = ToFullAddress(schoolMaster.StreetAddress1, schoolMaster.StreetAddress2, schoolMaster.City, schoolMaster.State, schoolMaster.Country, schoolMaster.Zip),
-                                     Status = schools?.Status
-                                 };
-                schoolListModel.TotalCount = courseInfo.Count();
+                IQueryable<SchoolMaster> transactionIQ = this.context?.SchoolMaster
+                    .Include(d => d.SchoolDetail)
+                    .Where(x => x.TenantId == pageResult.TenantId);
+                if (pageResult.SoertingModel != null)
+                {
+                    switch (pageResult.SoertingModel.SortColumn)
+                    {
+                        case "NameOfPrincipal":
 
-                //courseInfo=courseInfo.Where(s => s.School_Name.Contains(pageResult.FilterText) || s.Principle.Contains(pageResult.FilterText) || s.School_Address.Contains(pageResult.FilterText) || s.Phone.Contains(pageResult.FilterText)).Where(x=>x.School_Name.Equals(pageResult.SchoolNameFilter));
-                courseInfo = courseInfo.OrderBy(x=>x.School_Name).Skip((pageResult.PageNumber - 1) * pageResult.PageSize).Take(pageResult.PageSize).ToList();
-                schoolListModel.GetSchoolForView = courseInfo.ToList();
+                            if (pageResult.SoertingModel.SortDirection.ToLower() == "asc")
+                            {
+
+                                transactionIQ = transactionIQ.OrderBy(a => a.SchoolDetail.FirstOrDefault().NameOfPrincipal);
+                            }
+                            else
+                            {
+                                transactionIQ = transactionIQ.OrderByDescending(a => a.SchoolDetail.FirstOrDefault().NameOfPrincipal);
+                            }
+                            break;
+
+                        default:
+                            transactionIQ = Utility.Sort(transactionIQ, pageResult.SoertingModel.SortColumn, pageResult.SoertingModel.SortDirection.ToLower());
+                            break;
+                    }
+
+                }
+
+                int totalCount = transactionIQ.Count();
+                transactionIQ = transactionIQ.Skip((pageResult.PageNumber - 1) * pageResult.PageSize).Take(pageResult.PageSize);
+                var schoollist = transactionIQ.AsNoTracking().Select(s => new GetSchoolForView
+                {
+                    School_Id = s.SchoolId,
+                    School_Name = s.SchoolName,
+                    Tenant_Id = s.TenantId,
+                    Phone = s.SchoolDetail.FirstOrDefault().Telephone == null ? string.Empty : s.SchoolDetail.FirstOrDefault().Telephone.Trim(),
+                    Principle = s.SchoolDetail.FirstOrDefault().NameOfPrincipal == null ? string.Empty : s.SchoolDetail.FirstOrDefault().NameOfPrincipal.Trim(),
+                    School_Address = ToFullAddress(s.StreetAddress1, s.StreetAddress2,
+                    //(!string.IsNullOrEmpty(s.City)?this.context.TableCity.Where(x => x.Id == int.Parse(s.City)).FirstOrDefault().Name: string.Empty),
+                    this.context.City.Where(x => x.Id == Convert.ToInt32(s.City)).FirstOrDefault().Name,
+                    this.context.State.Where(x => x.Id == Convert.ToInt32(s.State)).FirstOrDefault().Name,
+                    this.context.Country.Where(x => x.Id == Convert.ToInt32(s.Country)).FirstOrDefault().Name, s.Zip),
+                    Status = s.SchoolDetail.FirstOrDefault().Status == null ? false : s.SchoolDetail.FirstOrDefault().Status
+                }).ToList();
+
+                schoolListModel.GetSchoolForView = schoollist;
                 schoolListModel.PageNumber = pageResult.PageNumber;
                 schoolListModel._pageSize = pageResult.PageSize;
                 schoolListModel._tenantName = pageResult._tenantName;
@@ -76,7 +98,7 @@ namespace opensis.data.Repository
             catch (Exception es)
             {
                 schoolListModel._message = es.Message;
-                schoolListModel._failure=true;
+                schoolListModel._failure = true;
                 schoolListModel._tenantName = pageResult._tenantName;
                 schoolListModel._token = pageResult._token;
             }
@@ -84,11 +106,11 @@ namespace opensis.data.Repository
 
         }
         /// <summary>
-        /// Get All school list for dropdown
+        /// Get All school for dropdown
         /// </summary>
         /// <param name="school"></param>
         /// <returns></returns>
-        public SchoolListModel GetAllSchoolList(SchoolListModel school)
+        public SchoolListModel GetAllSchools(SchoolListModel school)
         {
             SchoolListModel schoolListModel = new SchoolListModel();
             try
@@ -122,13 +144,13 @@ namespace opensis.data.Repository
             try
             {
                 SchoolAddViewModel SchoolAddViewModel = new SchoolAddViewModel();
-                var schoolMaster =  this.context?.SchoolMaster.Include(x=>x.SchoolDetail).FirstOrDefault(x => x.TenantId == school.tblSchoolMaster.TenantId && x.SchoolId == school.tblSchoolMaster.SchoolId);
+                var schoolMaster =  this.context?.SchoolMaster.Include(x=>x.SchoolDetail).FirstOrDefault(x => x.TenantId == school.schoolMaster.TenantId && x.SchoolId == school.schoolMaster.SchoolId);
                 if (schoolMaster != null)
                 {
-                    school.tblSchoolMaster = schoolMaster;
-                    if (school.tblSchoolMaster.SchoolDetail.ToList().Count > 0)
+                    school.schoolMaster = schoolMaster;
+                    if (school.schoolMaster.SchoolDetail.ToList().Count > 0)
                     {
-                        school.tblSchoolMaster.SchoolDetail.FirstOrDefault().SchoolMaster = null;
+                        school.schoolMaster.SchoolDetail.FirstOrDefault().SchoolMaster = null;
                     } 
                     school._tenantName = school._tenantName;
                     return school;
@@ -152,97 +174,97 @@ namespace opensis.data.Repository
         {
             try
             {
-                var schoolMaster = this.context?.SchoolMaster.Include(x => x.SchoolDetail).FirstOrDefault(x => x.TenantId == school.tblSchoolMaster.TenantId && x.SchoolId == school.tblSchoolMaster.SchoolId);
+                var schoolMaster = this.context?.SchoolMaster.Include(x => x.SchoolDetail).FirstOrDefault(x => x.TenantId == school.schoolMaster.TenantId && x.SchoolId == school.schoolMaster.SchoolId);
 
-                schoolMaster.SchoolAltId = school.tblSchoolMaster.SchoolAltId;
-                schoolMaster.SchoolStateId = school.tblSchoolMaster.SchoolStateId;
-                schoolMaster.SchoolDistrictId = school.tblSchoolMaster.SchoolDistrictId;
-                schoolMaster.SchoolLevel = school.tblSchoolMaster.SchoolLevel;
-                schoolMaster.SchoolClassification = school.tblSchoolMaster.SchoolClassification;
-                schoolMaster.SchoolName = school.tblSchoolMaster.SchoolName;
-                schoolMaster.AlternateName = school.tblSchoolMaster.AlternateName;
-                schoolMaster.StreetAddress1 = school.tblSchoolMaster.StreetAddress1;
-                schoolMaster.StreetAddress2 = school.tblSchoolMaster.StreetAddress2;
-                schoolMaster.City = school.tblSchoolMaster.City;
-                schoolMaster.County = school.tblSchoolMaster.County;
-                schoolMaster.Division = school.tblSchoolMaster.Division;
-                schoolMaster.State = school.tblSchoolMaster.State;
-                schoolMaster.District = school.tblSchoolMaster.District;
-                schoolMaster.Zip = school.tblSchoolMaster.Zip;
-                schoolMaster.Country = school.tblSchoolMaster.Country;
-                schoolMaster.Features = school.tblSchoolMaster.Features;
-                schoolMaster.ModifiedBy = school.tblSchoolMaster.ModifiedBy;
+                schoolMaster.SchoolAltId = school.schoolMaster.SchoolAltId;
+                schoolMaster.SchoolStateId = school.schoolMaster.SchoolStateId;
+                schoolMaster.SchoolDistrictId = school.schoolMaster.SchoolDistrictId;
+                schoolMaster.SchoolLevel = school.schoolMaster.SchoolLevel;
+                schoolMaster.SchoolClassification = school.schoolMaster.SchoolClassification;
+                schoolMaster.SchoolName = school.schoolMaster.SchoolName;
+                schoolMaster.AlternateName = school.schoolMaster.AlternateName;
+                schoolMaster.StreetAddress1 = school.schoolMaster.StreetAddress1;
+                schoolMaster.StreetAddress2 = school.schoolMaster.StreetAddress2;
+                schoolMaster.City = school.schoolMaster.City;
+                schoolMaster.County = school.schoolMaster.County;
+                schoolMaster.Division = school.schoolMaster.Division;
+                schoolMaster.State = school.schoolMaster.State;
+                schoolMaster.District = school.schoolMaster.District;
+                schoolMaster.Zip = school.schoolMaster.Zip;
+                schoolMaster.Country = school.schoolMaster.Country;
+                schoolMaster.Features = school.schoolMaster.Features;
+                schoolMaster.ModifiedBy = school.schoolMaster.ModifiedBy;
                 schoolMaster.DateModifed = DateTime.UtcNow;
-                schoolMaster.MaxApiChecks = school.tblSchoolMaster.MaxApiChecks;
-                schoolMaster.SchoolInternalId = school.tblSchoolMaster.SchoolInternalId;
-                schoolMaster.Latitude = school.tblSchoolMaster.Latitude;
-                schoolMaster.Longitude = school.tblSchoolMaster.Longitude;
-                if (schoolMaster.SchoolDetail.ToList().Count == 0 && school.tblSchoolMaster.SchoolDetail.ToList().Count > 0)
+                schoolMaster.MaxApiChecks = school.schoolMaster.MaxApiChecks;
+                schoolMaster.SchoolInternalId = school.schoolMaster.SchoolInternalId;
+                schoolMaster.Latitude = school.schoolMaster.Latitude;
+                schoolMaster.Longitude = school.schoolMaster.Longitude;
+                if (schoolMaster.SchoolDetail.ToList().Count == 0 && school.schoolMaster.SchoolDetail.ToList().Count > 0)
                 {
-                    school.tblSchoolMaster.SchoolDetail.ToList().ForEach(p => p.Id = (int)Utility.GetMaxPK(this.context, new Func<SchoolDetail, int>(x => x.Id)));
-                    school.tblSchoolMaster.SchoolDetail.ToList().ForEach(p => p.SchoolId = school.tblSchoolMaster.SchoolId);
-                    school.tblSchoolMaster.SchoolDetail.ToList().ForEach(p => p.TenantId = school.tblSchoolMaster.TenantId);
-                    this.context?.SchoolDetail.AddRange(school.tblSchoolMaster.SchoolDetail);
+                    school.schoolMaster.SchoolDetail.ToList().ForEach(p => p.Id = (int)Utility.GetMaxPK(this.context, new Func<SchoolDetail, int>(x => x.Id)));
+                    school.schoolMaster.SchoolDetail.ToList().ForEach(p => p.SchoolId = school.schoolMaster.SchoolId);
+                    school.schoolMaster.SchoolDetail.ToList().ForEach(p => p.TenantId = school.schoolMaster.TenantId);
+                    this.context?.SchoolDetail.AddRange(school.schoolMaster.SchoolDetail);
                 }
                 if (schoolMaster.SchoolDetail.ToList().Count > 0)
                 {
                     foreach (var detailes in schoolMaster.SchoolDetail.ToList())
                     {
-                        detailes.Affiliation = school.tblSchoolMaster.SchoolDetail.FirstOrDefault().Affiliation;
-                        detailes.Associations = school.tblSchoolMaster.SchoolDetail.FirstOrDefault().Associations;
-                        detailes.Locale = school.tblSchoolMaster.SchoolDetail.FirstOrDefault().Locale;
-                        detailes.LowestGradeLevel = school.tblSchoolMaster.SchoolDetail.FirstOrDefault().LowestGradeLevel;
-                        detailes.HighestGradeLevel = school.tblSchoolMaster.SchoolDetail.FirstOrDefault().HighestGradeLevel;
-                        detailes.DateSchoolOpened = school.tblSchoolMaster.SchoolDetail.FirstOrDefault().DateSchoolOpened;
-                        detailes.DateSchoolClosed = school.tblSchoolMaster.SchoolDetail.FirstOrDefault().DateSchoolClosed;
-                        detailes.Status = school.tblSchoolMaster.SchoolDetail.FirstOrDefault().Status;
-                        detailes.Gender = school.tblSchoolMaster.SchoolDetail.FirstOrDefault().Gender;
-                        detailes.Internet = school.tblSchoolMaster.SchoolDetail.FirstOrDefault().Internet;
-                        detailes.Electricity = school.tblSchoolMaster.SchoolDetail.FirstOrDefault().Electricity;
-                        detailes.Telephone = school.tblSchoolMaster.SchoolDetail.FirstOrDefault().Telephone;
-                        detailes.Fax = school.tblSchoolMaster.SchoolDetail.FirstOrDefault().Fax;
-                        detailes.Website = school.tblSchoolMaster.SchoolDetail.FirstOrDefault().Website;
-                        detailes.Email = school.tblSchoolMaster.SchoolDetail.FirstOrDefault().Email;
-                        detailes.Facebook = school.tblSchoolMaster.SchoolDetail.FirstOrDefault().Facebook;
-                        detailes.Twitter = school.tblSchoolMaster.SchoolDetail.FirstOrDefault().Twitter;
-                        detailes.Instagram = school.tblSchoolMaster.SchoolDetail.FirstOrDefault().Instagram;
-                        detailes.Youtube = school.tblSchoolMaster.SchoolDetail.FirstOrDefault().Youtube;
-                        detailes.LinkedIn = school.tblSchoolMaster.SchoolDetail.FirstOrDefault().LinkedIn;
-                        detailes.NameOfPrincipal = school.tblSchoolMaster.SchoolDetail.FirstOrDefault().NameOfPrincipal;
-                        detailes.NameOfAssistantPrincipal = school.tblSchoolMaster.SchoolDetail.FirstOrDefault().NameOfAssistantPrincipal;
-                        detailes.SchoolLogo = school.tblSchoolMaster.SchoolDetail.FirstOrDefault().SchoolLogo;
-                        detailes.RunningWater = school.tblSchoolMaster.SchoolDetail.FirstOrDefault().RunningWater;
-                        detailes.MainSourceOfDrinkingWater = school.tblSchoolMaster.SchoolDetail.FirstOrDefault().MainSourceOfDrinkingWater;
-                        detailes.CurrentlyAvailable = school.tblSchoolMaster.SchoolDetail.FirstOrDefault().CurrentlyAvailable;
-                        detailes.FemaleToiletType = school.tblSchoolMaster.SchoolDetail.FirstOrDefault().FemaleToiletType;
-                        detailes.TotalFemaleToilets = school.tblSchoolMaster.SchoolDetail.FirstOrDefault().TotalFemaleToilets;
-                        detailes.TotalFemaleToiletsUsable = school.tblSchoolMaster.SchoolDetail.FirstOrDefault().TotalFemaleToiletsUsable;
-                        detailes.FemaleToiletAccessibility = school.tblSchoolMaster.SchoolDetail.FirstOrDefault().FemaleToiletAccessibility;
-                        detailes.MaleToiletType = school.tblSchoolMaster.SchoolDetail.FirstOrDefault().MaleToiletType;
-                        detailes.TotalMaleToilets = school.tblSchoolMaster.SchoolDetail.FirstOrDefault().TotalMaleToilets;
-                        detailes.TotalMaleToiletsUsable = school.tblSchoolMaster.SchoolDetail.FirstOrDefault().TotalMaleToiletsUsable;
-                        detailes.MaleToiletAccessibility = school.tblSchoolMaster.SchoolDetail.FirstOrDefault().MaleToiletAccessibility;
-                        detailes.ComonToiletType = school.tblSchoolMaster.SchoolDetail.FirstOrDefault().ComonToiletType;
-                        detailes.TotalCommonToilets = school.tblSchoolMaster.SchoolDetail.FirstOrDefault().TotalCommonToilets;
-                        detailes.TotalCommonToiletsUsable = school.tblSchoolMaster.SchoolDetail.FirstOrDefault().TotalCommonToiletsUsable;
-                        detailes.CommonToiletAccessibility = school.tblSchoolMaster.SchoolDetail.FirstOrDefault().CommonToiletAccessibility;
-                        detailes.HandwashingAvailable = school.tblSchoolMaster.SchoolDetail.FirstOrDefault().HandwashingAvailable;
-                        detailes.SoapAndWaterAvailable = school.tblSchoolMaster.SchoolDetail.FirstOrDefault().SoapAndWaterAvailable;
-                        detailes.HygeneEducation = school.tblSchoolMaster.SchoolDetail.FirstOrDefault().HygeneEducation;
+                        detailes.Affiliation = school.schoolMaster.SchoolDetail.FirstOrDefault().Affiliation;
+                        detailes.Associations = school.schoolMaster.SchoolDetail.FirstOrDefault().Associations;
+                        detailes.Locale = school.schoolMaster.SchoolDetail.FirstOrDefault().Locale;
+                        detailes.LowestGradeLevel = school.schoolMaster.SchoolDetail.FirstOrDefault().LowestGradeLevel;
+                        detailes.HighestGradeLevel = school.schoolMaster.SchoolDetail.FirstOrDefault().HighestGradeLevel;
+                        detailes.DateSchoolOpened = school.schoolMaster.SchoolDetail.FirstOrDefault().DateSchoolOpened;
+                        detailes.DateSchoolClosed = school.schoolMaster.SchoolDetail.FirstOrDefault().DateSchoolClosed;
+                        detailes.Status = school.schoolMaster.SchoolDetail.FirstOrDefault().Status;
+                        detailes.Gender = school.schoolMaster.SchoolDetail.FirstOrDefault().Gender;
+                        detailes.Internet = school.schoolMaster.SchoolDetail.FirstOrDefault().Internet;
+                        detailes.Electricity = school.schoolMaster.SchoolDetail.FirstOrDefault().Electricity;
+                        detailes.Telephone = school.schoolMaster.SchoolDetail.FirstOrDefault().Telephone;
+                        detailes.Fax = school.schoolMaster.SchoolDetail.FirstOrDefault().Fax;
+                        detailes.Website = school.schoolMaster.SchoolDetail.FirstOrDefault().Website;
+                        detailes.Email = school.schoolMaster.SchoolDetail.FirstOrDefault().Email;
+                        detailes.Facebook = school.schoolMaster.SchoolDetail.FirstOrDefault().Facebook;
+                        detailes.Twitter = school.schoolMaster.SchoolDetail.FirstOrDefault().Twitter;
+                        detailes.Instagram = school.schoolMaster.SchoolDetail.FirstOrDefault().Instagram;
+                        detailes.Youtube = school.schoolMaster.SchoolDetail.FirstOrDefault().Youtube;
+                        detailes.LinkedIn = school.schoolMaster.SchoolDetail.FirstOrDefault().LinkedIn;
+                        detailes.NameOfPrincipal = school.schoolMaster.SchoolDetail.FirstOrDefault().NameOfPrincipal;
+                        detailes.NameOfAssistantPrincipal = school.schoolMaster.SchoolDetail.FirstOrDefault().NameOfAssistantPrincipal;
+                        detailes.SchoolLogo = school.schoolMaster.SchoolDetail.FirstOrDefault().SchoolLogo;
+                        detailes.RunningWater = school.schoolMaster.SchoolDetail.FirstOrDefault().RunningWater;
+                        detailes.MainSourceOfDrinkingWater = school.schoolMaster.SchoolDetail.FirstOrDefault().MainSourceOfDrinkingWater;
+                        detailes.CurrentlyAvailable = school.schoolMaster.SchoolDetail.FirstOrDefault().CurrentlyAvailable;
+                        detailes.FemaleToiletType = school.schoolMaster.SchoolDetail.FirstOrDefault().FemaleToiletType;
+                        detailes.TotalFemaleToilets = school.schoolMaster.SchoolDetail.FirstOrDefault().TotalFemaleToilets;
+                        detailes.TotalFemaleToiletsUsable = school.schoolMaster.SchoolDetail.FirstOrDefault().TotalFemaleToiletsUsable;
+                        detailes.FemaleToiletAccessibility = school.schoolMaster.SchoolDetail.FirstOrDefault().FemaleToiletAccessibility;
+                        detailes.MaleToiletType = school.schoolMaster.SchoolDetail.FirstOrDefault().MaleToiletType;
+                        detailes.TotalMaleToilets = school.schoolMaster.SchoolDetail.FirstOrDefault().TotalMaleToilets;
+                        detailes.TotalMaleToiletsUsable = school.schoolMaster.SchoolDetail.FirstOrDefault().TotalMaleToiletsUsable;
+                        detailes.MaleToiletAccessibility = school.schoolMaster.SchoolDetail.FirstOrDefault().MaleToiletAccessibility;
+                        detailes.ComonToiletType = school.schoolMaster.SchoolDetail.FirstOrDefault().ComonToiletType;
+                        detailes.TotalCommonToilets = school.schoolMaster.SchoolDetail.FirstOrDefault().TotalCommonToilets;
+                        detailes.TotalCommonToiletsUsable = school.schoolMaster.SchoolDetail.FirstOrDefault().TotalCommonToiletsUsable;
+                        detailes.CommonToiletAccessibility = school.schoolMaster.SchoolDetail.FirstOrDefault().CommonToiletAccessibility;
+                        detailes.HandwashingAvailable = school.schoolMaster.SchoolDetail.FirstOrDefault().HandwashingAvailable;
+                        detailes.SoapAndWaterAvailable = school.schoolMaster.SchoolDetail.FirstOrDefault().SoapAndWaterAvailable;
+                        detailes.HygeneEducation = school.schoolMaster.SchoolDetail.FirstOrDefault().HygeneEducation;
                     }
 
                 }
                 this.context?.SaveChanges();
-                if (school.tblSchoolMaster.SchoolDetail.ToList().Count > 0)
+                if (school.schoolMaster.SchoolDetail.ToList().Count > 0)
                 {
-                    school.tblSchoolMaster.SchoolDetail.FirstOrDefault().SchoolMaster = null;
+                    school.schoolMaster.SchoolDetail.FirstOrDefault().SchoolMaster = null;
                 }
                 school._failure = false;
                 return school;
             }
             catch (Exception ex)
             {
-                school.tblSchoolMaster = null;
+                school.schoolMaster = null;
                 school._failure = true;
                 school._message = NORECORDFOUND;
                 return school;
@@ -259,19 +281,19 @@ namespace opensis.data.Repository
             try
             {
                 int? MasterSchoolId = Utility.GetMaxPK(this.context, new Func<SchoolMaster, int>(x => x.SchoolId));
-                school.tblSchoolMaster.SchoolId = (int)MasterSchoolId;
-                if (school.tblSchoolMaster.SchoolDetail.ToList().Count>0)
+                school.schoolMaster.SchoolId = (int)MasterSchoolId;
+                if (school.schoolMaster.SchoolDetail.ToList().Count>0)
                 {
-                    school.tblSchoolMaster.SchoolDetail.ToList().ForEach(p => p.Id=(int)Utility.GetMaxPK(this.context, new Func<SchoolDetail, int>(x=>x.Id)));
+                    school.schoolMaster.SchoolDetail.ToList().ForEach(p => p.Id=(int)Utility.GetMaxPK(this.context, new Func<SchoolDetail, int>(x=>x.Id)));
                 }
-                school.tblSchoolMaster.DateCreated = DateTime.UtcNow;
-                school.tblSchoolMaster.TenantId = school.tblSchoolMaster.TenantId;
-                this.context?.SchoolMaster.Add(school.tblSchoolMaster);
+                school.schoolMaster.DateCreated = DateTime.UtcNow;
+                school.schoolMaster.TenantId = school.schoolMaster.TenantId;
+                this.context?.SchoolMaster.Add(school.schoolMaster);
                 this.context?.SaveChanges();
                 school._failure = false;
-                if (school.tblSchoolMaster.SchoolDetail.ToList().Count>0)
+                if (school.schoolMaster.SchoolDetail.ToList().Count>0)
                 {
-                    school.tblSchoolMaster.SchoolDetail.FirstOrDefault().SchoolMaster = null;
+                    school.schoolMaster.SchoolDetail.FirstOrDefault().SchoolMaster = null;
                 }
                 return school;
 

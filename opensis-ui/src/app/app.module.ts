@@ -24,6 +24,7 @@ import { JwtHelperService, JWT_OPTIONS  } from '@auth0/angular-jwt';
 import { LoaderInterceptor } from './services/loader.interceptor';
 import { LoaderService } from './services/loader.service';
 import { ResponseMessageService } from './services/response-message.service';
+import { ConfirmDialogComponent } from './pages/shared-module/confirm-dialog/confirm-dialog.component';
 
 
 @NgModule({
@@ -89,6 +90,7 @@ import { ResponseMessageService } from './services/response-message.service';
   JwtHelperService,
   ResponseMessageService
   ], 
+  entryComponents: [ConfirmDialogComponent],
   bootstrap: [AppComponent],
   exports:[], 
 })

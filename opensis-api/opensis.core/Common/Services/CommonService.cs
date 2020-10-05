@@ -74,15 +74,16 @@ namespace opensis.core.Common.Services
         public LanguageListModel GetAllLanguage(LanguageListModel language)
         {
             LanguageListModel languageListModel = new LanguageListModel();
-            if (TokenManager.CheckToken(language._tenantName, language._token))
+            try
             {
                 languageListModel = this.commonRepository.GetAllLanguage(language);
                 return languageListModel;
             }
-            else
+            catch (Exception ex)
             {
+
                 languageListModel._failure = true;
-                languageListModel._message = TOKENINVALID;
+                languageListModel._message = null;
                 return languageListModel;
             }
 

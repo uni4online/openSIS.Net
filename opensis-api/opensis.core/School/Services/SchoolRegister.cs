@@ -27,74 +27,8 @@ namespace opensis.core.School.Services
 
         //Required for Unit Testing
         public SchoolRegister() { }
-        //public List<Schools> getAllSchools(opensisContext context)
-        //public SchoolListViewModel getAllSchools(SchoolViewModel objModel)
-        //{
-        //    logger.Info("Method getAllSchools called.");
-        //    SchoolListViewModel schoolList = new SchoolListViewModel();
-        //    try
-        //    {
-        //        if (TokenManager.CheckToken(objModel._tenantName, objModel._token))
-        //        {
-        //            List<Schools> schools = this.schoolRepository.GetAllSchools();
-        //            schoolList.schoolList = schools;
-        //            schoolList._message = SUCCESS;
-        //            schoolList._failure = false;
-        //            logger.Info("Method getAllSchools end with success.");
-        //        }
-        //        else
-        //        {
-        //            schoolList._failure = true;
-        //            schoolList._message = TOKENINVALID;
-        //        }
-
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        schoolList._message = ex.Message;
-        //        schoolList._failure = true;
-        //        logger.Error("Method getAllSchools end with error :" + ex.Message);
-        //    }
-
-
-        //    return schoolList;
-        //}
-
-        public SchoolListModel GetAllSchools(PageResult pageResult)
-        {
-            logger.Info("Method getAllSchools called.");
-            SchoolListModel schoolList = new SchoolListModel();
-            try
-            {
-                if (TokenManager.CheckToken(pageResult._tenantName, pageResult._token))
-                {
-                    schoolList = this.schoolRepository.GetAllSchools(pageResult);
-                    schoolList._message = SUCCESS;
-                    schoolList._failure = false;
-                    logger.Info("Method getAllSchools end with success.");
-                }
-
-                else
-                {
-                    schoolList._failure = true;
-                    schoolList._message = TOKENINVALID;
-                    return schoolList;
-                }
-            }
-            catch (Exception ex)
-            {
-                schoolList._message = ex.Message;
-                schoolList._failure = true;
-                logger.Error("Method getAllSchools end with error :" + ex.Message);
-            }
-
-
-            return schoolList;
-        }
-
-
-        public SchoolListModel GetAllSchoolList(SchoolListModel school)
+        
+        public SchoolListModel GetAllSchools(SchoolListModel school)
         {
             logger.Info("Method getAllSchools called.");
             SchoolListModel schoolList = new SchoolListModel();
@@ -102,7 +36,7 @@ namespace opensis.core.School.Services
             {
                 if (TokenManager.CheckToken(school._tenantName, school._token))
                 {
-                    schoolList = this.schoolRepository.GetAllSchoolList(school);
+                    schoolList = this.schoolRepository.GetAllSchools(school);
                     schoolList._message = SUCCESS;
                     schoolList._failure = false;
                     logger.Info("Method getAllSchools end with success.");
@@ -126,26 +60,42 @@ namespace opensis.core.School.Services
             return schoolList;
         }
 
-        //public List<Schools> SaveSchool(Schools schools, opensisContext context)
-        //public SchoolListViewModel SaveSchool(Schools schools)
-        //{
+
+        public SchoolListModel GetAllSchoolList(PageResult pageResult)
+        {
+            logger.Info("Method getAllSchoolList called.");
+            SchoolListModel schoolList = new SchoolListModel();
+            try
+            {
+                if (TokenManager.CheckToken(pageResult._tenantName, pageResult._token))
+                {
+                    schoolList = this.schoolRepository.GetAllSchoolList(pageResult);
+                    schoolList._message = SUCCESS;
+                    schoolList._failure = false;
+                    logger.Info("Method getAllSchoolList end with success.");
+                }
+
+                else
+                {
+                    schoolList._failure = true;
+                    schoolList._message = TOKENINVALID;
+                    return schoolList;
+                }
+            }
+            catch (Exception ex)
+            {
+                schoolList._message = ex.Message;
+                schoolList._failure = true;
+                logger.Error("Method getAllSchools end with error :" + ex.Message);
+            }
 
 
-        //    //context.tblSchool.Add(schools);
-        //    //context.SaveChanges();
+            return schoolList;
 
-        //    if (IsMandatoryFieldsArePresent(schools))
-        //    {
-        //        this.schoolRepository.AddSchools(schools);
-        //        //return getAllSchools();
-        //        return null;
-        //    }
-        //    else
-        //    {
-        //        return null;
-        //    }
+            
+        }
 
-        //}
+        
         public SchoolAddViewModel UpdateSchool(SchoolAddViewModel schools)
         {
             SchoolAddViewModel SchoolAddViewModel = new SchoolAddViewModel();

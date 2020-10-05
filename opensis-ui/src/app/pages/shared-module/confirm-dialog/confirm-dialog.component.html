@@ -1,0 +1,14 @@
+<mat-card fxLayoutGap>
+
+    <p mat-dialog-title>{{data.title}}</p>
+
+    <p display-2>{{data.message}}</p>
+
+
+    <mat-dialog-actions>
+        <button mat-button (click)="onDismiss()">{{'no'|translate}}</button>
+        <button mat-raised-button color="primary" (click)="onConfirm()">{{'yes'|translate}}</button>
+    </mat-dialog-actions>
+
+    
+</mat-card>

@@ -7,7 +7,7 @@ namespace opensis.data.Interface
 {
     public interface IMembershipRepository
     {
-        GetAllMembersList GetAllMemberList();
+        GetAllMembersList GetAllMemberList(GetAllMembersList membersList);
 
     }
 }

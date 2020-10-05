@@ -19,8 +19,8 @@ namespace opensis.core.School.Interfaces
         public SchoolAddViewModel UpdateSchool(SchoolAddViewModel schools);
 
         public SchoolAddViewModel ViewSchool(SchoolAddViewModel schools);
-        public SchoolListModel GetAllSchools(PageResult pageResult);
+        public SchoolListModel GetAllSchools(SchoolListModel school);
 
-        public SchoolListModel GetAllSchoolList(SchoolListModel school);
+        public SchoolListModel GetAllSchoolList(PageResult pageResult);
     }
 }

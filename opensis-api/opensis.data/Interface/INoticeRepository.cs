@@ -12,7 +12,7 @@ namespace opensis.data.Interface
 
         NoticeAddViewModel UpdateNotice(NoticeAddViewModel notice);
 
-        NoticeListViewModel GetAllNotice();
+        NoticeListViewModel GetAllNotice(NoticeListViewModel noticeList);
         NoticeDeleteModel DeleteNotice(NoticeDeleteModel notice);
         NoticeAddViewModel ViewNotice(NoticeAddViewModel notice);
     }

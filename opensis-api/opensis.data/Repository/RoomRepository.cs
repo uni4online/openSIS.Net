@@ -27,7 +27,7 @@ namespace opensis.data.Repository
         /// </summary>
         /// <param name="rooms"></param>
         /// <returns></returns>
-        public RoomAddViewModel AddRooms(RoomAddViewModel rooms)
+        public RoomAddViewModel AddRoom(RoomAddViewModel rooms)
         {
             int? RoomlId = Utility.GetMaxPK(this.context, new Func<Rooms, int>(x => x.RoomId));
             rooms.tableRoom.RoomId = (int)RoomlId;
@@ -43,7 +43,7 @@ namespace opensis.data.Repository
         /// </summary>
         /// <param name="room"></param>
         /// <returns></returns>
-        public RoomAddViewModel ViewRooms(RoomAddViewModel room)
+        public RoomAddViewModel ViewRoom(RoomAddViewModel room)
         {
             try
             {
@@ -74,7 +74,7 @@ namespace opensis.data.Repository
         /// </summary>
         /// <param name="room"></param>
         /// <returns></returns>
-        public RoomAddViewModel UpdateRooms(RoomAddViewModel room)
+        public RoomAddViewModel UpdateRoom(RoomAddViewModel room)
         {
             try
             {
@@ -131,7 +131,7 @@ namespace opensis.data.Repository
         /// </summary>
         /// <param name="room"></param>
         /// <returns></returns>
-        public RoomAddViewModel DeleteRooms(RoomAddViewModel room)
+        public RoomAddViewModel DeleteRoom(RoomAddViewModel room)
         {
             try
             {

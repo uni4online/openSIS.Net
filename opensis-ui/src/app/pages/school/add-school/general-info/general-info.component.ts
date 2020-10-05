@@ -174,45 +174,45 @@ city:number;
      || (this.commonFunction.checkEmptyObject(this.dataOfgeneralInfoFromWash) === true))
      {
       this._ImageCropperService.nextMessage(false);      
-      this.schoolAddViewModel.tblSchoolMaster.city = +this.schoolAddViewModel.tblSchoolMaster.city;
-      this.schoolAddViewModel.tblSchoolMaster.state = +this.schoolAddViewModel.tblSchoolMaster.state;
-      this.schoolAddViewModel.tblSchoolMaster.country = +this.schoolAddViewModel.tblSchoolMaster.country;
+      this.schoolAddViewModel.schoolMaster.city = +this.schoolAddViewModel.schoolMaster.city;
+      this.schoolAddViewModel.schoolMaster.state = +this.schoolAddViewModel.schoolMaster.state;
+      this.schoolAddViewModel.schoolMaster.country = +this.schoolAddViewModel.schoolMaster.country;
    
-      this.getAllStateByCountry(this.schoolAddViewModel.tblSchoolMaster.country);
-      this.getAllCitiesByState(this.schoolAddViewModel.tblSchoolMaster.state);
-      this.schoolAddViewModel.tblSchoolMaster.modifiedBy = sessionStorage.getItem('email');
-      this.schoolAddViewModel.tblSchoolMaster.dateModifed = this.dateCreated;
-      this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].dateSchoolOpened=this.commonFunction.formatDateInEditMode(this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].dateSchoolOpened);      
-      this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].dateSchoolClosed=this.commonFunction.formatDateInEditMode(this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].dateSchoolClosed);
+      this.getAllStateByCountry(this.schoolAddViewModel.schoolMaster.country);
+      this.getAllCitiesByState(this.schoolAddViewModel.schoolMaster.state);
+      this.schoolAddViewModel.schoolMaster.modifiedBy = sessionStorage.getItem('email');
+      this.schoolAddViewModel.schoolMaster.dateModifed = this.dateCreated;
+      this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolOpened=this.commonFunction.formatDateInEditMode(this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolOpened);      
+      this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolClosed=this.commonFunction.formatDateInEditMode(this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolClosed);
       
     }else{
 
       
-      this.schoolAddViewModel.tblSchoolMaster.createdBy = sessionStorage.getItem('email');
-      this.schoolAddViewModel.tblSchoolMaster.dateCreated = this.dateCreated;     
+      this.schoolAddViewModel.schoolMaster.createdBy = sessionStorage.getItem('email');
+      this.schoolAddViewModel.schoolMaster.dateCreated = this.dateCreated;     
     }
 
-    this.schoolAddViewModel.tblSchoolMaster.schoolLevel = this.commonFunction.trimData(this.schoolAddViewModel.tblSchoolMaster.schoolLevel);
-    this.schoolAddViewModel.tblSchoolMaster.schoolClassification = this.commonFunction.trimData(this.schoolAddViewModel.tblSchoolMaster.schoolClassification) ;
-    this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].lowestGradeLevel = this.commonFunction.trimData(this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].lowestGradeLevel);
-    this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].highestGradeLevel = this.commonFunction.trimData(this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].highestGradeLevel);
-    this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].gender = this.commonFunction.trimData(this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].gender);
-    this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].telephone = this.commonFunction.trimData(this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].telephone) ;
-    this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].website = this.commonFunction.trimData(this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].website) ;
-    this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].twitter = this.commonFunction.trimData(this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].twitter) ;
-    this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].instagram = this.commonFunction.trimData(this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].instagram) ;
+    this.schoolAddViewModel.schoolMaster.schoolLevel = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolLevel);
+    this.schoolAddViewModel.schoolMaster.schoolClassification = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolClassification) ;
+    this.schoolAddViewModel.schoolMaster.schoolDetail[0].lowestGradeLevel = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolDetail[0].lowestGradeLevel);
+    this.schoolAddViewModel.schoolMaster.schoolDetail[0].highestGradeLevel = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolDetail[0].highestGradeLevel);
+    this.schoolAddViewModel.schoolMaster.schoolDetail[0].gender = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolDetail[0].gender);
+    this.schoolAddViewModel.schoolMaster.schoolDetail[0].telephone = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolDetail[0].telephone) ;
+    this.schoolAddViewModel.schoolMaster.schoolDetail[0].website = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolDetail[0].website) ;
+    this.schoolAddViewModel.schoolMaster.schoolDetail[0].twitter = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolDetail[0].twitter) ;
+    this.schoolAddViewModel.schoolMaster.schoolDetail[0].instagram = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolDetail[0].instagram) ;
 
 
 
-    this.schoolAddViewModel.tblSchoolMaster.schoolName = this.commonFunction.trimData(this.schoolAddViewModel.tblSchoolMaster.schoolName);
-    this.schoolAddViewModel.tblSchoolMaster.alternateName = this.commonFunction.trimData(this.schoolAddViewModel.tblSchoolMaster.alternateName) ;
-    this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].locale = this.commonFunction.trimData(this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].locale);
-    this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].gender = this.commonFunction.trimData(this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].gender);
-    this.schoolAddViewModel.tblSchoolMaster.county = this.commonFunction.trimData(this.schoolAddViewModel.tblSchoolMaster.county);
-    this.schoolAddViewModel.tblSchoolMaster.division = this.commonFunction.trimData(this.schoolAddViewModel.tblSchoolMaster.division) ;
+    this.schoolAddViewModel.schoolMaster.schoolName = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolName);
+    this.schoolAddViewModel.schoolMaster.alternateName = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.alternateName) ;
+    this.schoolAddViewModel.schoolMaster.schoolDetail[0].locale = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolDetail[0].locale);
+    this.schoolAddViewModel.schoolMaster.schoolDetail[0].gender = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolDetail[0].gender);
+    this.schoolAddViewModel.schoolMaster.county = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.county);
+    this.schoolAddViewModel.schoolMaster.division = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.division) ;
   
-    this.schoolAddViewModel.tblSchoolMaster.district = this.commonFunction.trimData(this.schoolAddViewModel.tblSchoolMaster.district) ;
-    this.schoolAddViewModel.tblSchoolMaster.zip = this.commonFunction.trimData(this.schoolAddViewModel.tblSchoolMaster.zip) ;
+    this.schoolAddViewModel.schoolMaster.district = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.district) ;
+    this.schoolAddViewModel.schoolMaster.zip = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.zip) ;
     
   }
 
@@ -318,15 +318,15 @@ city:number;
       this.schoolAddViewModel._tenantName = this.tenant;
       this.schoolAddViewModel._token = sessionStorage.getItem("token");
       
-      this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].schoolLogo = this.image;
+      this.schoolAddViewModel.schoolMaster.schoolDetail[0].schoolLogo = this.image;
      
       if ((this.commonFunction.checkEmptyObject(this.dataOfwashInfoFromGeneral) === true)
      || (this.commonFunction.checkEmptyObject(this.dataOfgeneralInfoFromView) === true) 
      || (this.commonFunction.checkEmptyObject(this.dataOfgeneralInfoFromWash) === true)){
 
-      this.schoolAddViewModel.tblSchoolMaster.country = this.countryName;
-      this.schoolAddViewModel.tblSchoolMaster.state = this.stateName;
-      this.schoolAddViewModel.tblSchoolMaster.city = this.schoolAddViewModel.tblSchoolMaster.city.toString();
+      this.schoolAddViewModel.schoolMaster.country = this.countryName;
+      this.schoolAddViewModel.schoolMaster.state = this.stateName;
+      this.schoolAddViewModel.schoolMaster.city = this.schoolAddViewModel.schoolMaster.city.toString();
 
         this.generalInfoService.UpdateGeneralInfo(this.schoolAddViewModel).subscribe(data => {
           if (typeof (data) == 'undefined') {
@@ -352,9 +352,9 @@ city:number;
         })
       }else{
 
-        this.schoolAddViewModel.tblSchoolMaster.country = this.countryName;
-      this.schoolAddViewModel.tblSchoolMaster.state = this.stateName;
-      this.schoolAddViewModel.tblSchoolMaster.city = this.schoolAddViewModel.tblSchoolMaster.city.toString();
+        this.schoolAddViewModel.schoolMaster.country = this.countryName;
+      this.schoolAddViewModel.schoolMaster.state = this.stateName;
+      this.schoolAddViewModel.schoolMaster.city = this.schoolAddViewModel.schoolMaster.city.toString();
         
         this.generalInfoService.SaveGeneralInfo(this.schoolAddViewModel).subscribe(data => {
           if (typeof (data) == 'undefined') {

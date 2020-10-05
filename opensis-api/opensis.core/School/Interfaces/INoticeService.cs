@@ -9,8 +9,8 @@ namespace opensis.core.School.Interfaces
     public interface INoticeService
     {
         NoticeAddViewModel SaveNotice(NoticeAddViewModel notice);
-        
-        NoticeListViewModel GetAllNotice(NoticeListViewModel noticeListView);
+
+        NoticeListViewModel GetAllNotice(NoticeListViewModel noticeList);
 
         NoticeAddViewModel UpdateNotice(NoticeAddViewModel notice);
         NoticeDeleteModel DeleteNotice(NoticeDeleteModel notice);

@@ -8,7 +8,7 @@ namespace opensis.data.Migrations.SqlServerMigrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "City",
+                name: "city",
                 columns: table => new
                 {
                     id = table.Column<int>(nullable: false)
@@ -22,7 +22,7 @@ namespace opensis.data.Migrations.SqlServerMigrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Country",
+                name: "country",
                 columns: table => new
                 {
                     id = table.Column<int>(nullable: false)
@@ -36,7 +36,7 @@ namespace opensis.data.Migrations.SqlServerMigrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Gradelevels",
+                name: "gradelevels",
                 columns: table => new
                 {
                     tenant_id = table.Column<Guid>(nullable: false),
@@ -55,7 +55,7 @@ namespace opensis.data.Migrations.SqlServerMigrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Language",
+                name: "language",
                 columns: table => new
                 {
                     lang_id = table.Column<int>(nullable: false),
@@ -69,7 +69,7 @@ namespace opensis.data.Migrations.SqlServerMigrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Notice",
+                name: "notice",
                 columns: table => new
                 {
                     tenant_id = table.Column<Guid>(nullable: false),
@@ -90,7 +90,7 @@ namespace opensis.data.Migrations.SqlServerMigrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Plans",
+                name: "plans",
                 columns: table => new
                 {
                     tenant_id = table.Column<Guid>(nullable: false),
@@ -106,7 +106,7 @@ namespace opensis.data.Migrations.SqlServerMigrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Rooms",
+                name: "rooms",
                 columns: table => new
                 {
                     tenant_id = table.Column<Guid>(nullable: false),
@@ -125,7 +125,7 @@ namespace opensis.data.Migrations.SqlServerMigrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Sections",
+                name: "sections",
                 columns: table => new
                 {
                     tenant_id = table.Column<Guid>(nullable: false),
@@ -142,7 +142,7 @@ namespace opensis.data.Migrations.SqlServerMigrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "State",
+                name: "state",
                 columns: table => new
                 {
                     id = table.Column<int>(nullable: false)
@@ -186,8 +186,8 @@ namespace opensis.data.Migrations.SqlServerMigrations
                     date_created = table.Column<DateTime>(type: "datetime", nullable: true),
                     modified_by = table.Column<string>(unicode: false, fixedLength: true, maxLength: 50, nullable: true),
                     date_modifed = table.Column<DateTime>(type: "datetime", nullable: true),
-                    Longitude = table.Column<double>(nullable: true),
-                    Latitude = table.Column<double>(nullable: true)
+                    longitude = table.Column<double>(nullable: true),
+                    latitude = table.Column<double>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -261,14 +261,14 @@ namespace opensis.data.Migrations.SqlServerMigrations
                     affiliation = table.Column<string>(fixedLength: true, maxLength: 100, nullable: true),
                     associations = table.Column<string>(fixedLength: true, maxLength: 100, nullable: true),
                     locale = table.Column<string>(fixedLength: true, maxLength: 100, nullable: true),
-                    lowestgradelevel = table.Column<string>(fixedLength: true, maxLength: 100, nullable: true),
+                    lowest_grade_level = table.Column<string>(fixedLength: true, maxLength: 100, nullable: true),
                     highest_grade_level = table.Column<string>(fixedLength: true, maxLength: 100, nullable: true),
                     date_school_opened = table.Column<DateTime>(type: "date", nullable: true),
                     date_school_closed = table.Column<DateTime>(type: "date", nullable: true),
-                    Status = table.Column<bool>(nullable: true),
+                    status = table.Column<bool>(nullable: true),
                     gender = table.Column<string>(fixedLength: true, maxLength: 6, nullable: true),
-                    Internet = table.Column<bool>(nullable: true),
-                    Electricity = table.Column<bool>(nullable: true),
+                    internet = table.Column<bool>(nullable: true),
+                    electricity = table.Column<bool>(nullable: true),
                     telephone = table.Column<string>(fixedLength: true, maxLength: 20, nullable: true),
                     fax = table.Column<string>(fixedLength: true, maxLength: 20, nullable: true),
                     website = table.Column<string>(fixedLength: true, maxLength: 150, nullable: true),
@@ -409,7 +409,7 @@ namespace opensis.data.Migrations.SqlServerMigrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Semesters",
+                name: "semesters",
                 columns: table => new
                 {
                     tenant_id = table.Column<Guid>(nullable: false),
@@ -449,7 +449,7 @@ namespace opensis.data.Migrations.SqlServerMigrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Quarters",
+                name: "quarters",
                 columns: table => new
                 {
                     tenant_id = table.Column<Guid>(nullable: false),
@@ -523,7 +523,7 @@ namespace opensis.data.Migrations.SqlServerMigrations
                 });
 
             migrationBuilder.InsertData(
-                table: "City",
+                table: "city",
                 columns: new[] { "id", "name", "stateid" },
                 values: new object[,]
                 {
@@ -538,7 +538,7 @@ namespace opensis.data.Migrations.SqlServerMigrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Country",
+                table: "country",
                 columns: new[] { "id", "countrycode", "name" },
                 values: new object[,]
                 {
@@ -549,7 +549,7 @@ namespace opensis.data.Migrations.SqlServerMigrations
                 });
 
             migrationBuilder.InsertData(
-                table: "State",
+                table: "state",
                 columns: new[] { "id", "countryid", "name" },
                 values: new object[,]
                 {
@@ -602,22 +602,22 @@ namespace opensis.data.Migrations.SqlServerMigrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "City");
+                name: "city");
 
             migrationBuilder.DropTable(
-                name: "Country");
+                name: "country");
 
             migrationBuilder.DropTable(
-                name: "Gradelevels");
+                name: "gradelevels");
 
             migrationBuilder.DropTable(
-                name: "Notice");
+                name: "notice");
 
             migrationBuilder.DropTable(
                 name: "progress_periods");
 
             migrationBuilder.DropTable(
-                name: "Rooms");
+                name: "rooms");
 
             migrationBuilder.DropTable(
                 name: "school_calendars");
@@ -629,25 +629,25 @@ namespace opensis.data.Migrations.SqlServerMigrations
                 name: "school_periods");
 
             migrationBuilder.DropTable(
-                name: "Sections");
+                name: "sections");
 
             migrationBuilder.DropTable(
-                name: "State");
+                name: "state");
 
             migrationBuilder.DropTable(
                 name: "user_master");
 
             migrationBuilder.DropTable(
-                name: "Quarters");
+                name: "quarters");
 
             migrationBuilder.DropTable(
-                name: "Language");
+                name: "language");
 
             migrationBuilder.DropTable(
                 name: "membership");
 
             migrationBuilder.DropTable(
-                name: "Semesters");
+                name: "semesters");
 
             migrationBuilder.DropTable(
                 name: "school_years");
@@ -656,7 +656,7 @@ namespace opensis.data.Migrations.SqlServerMigrations
                 name: "school_master");
 
             migrationBuilder.DropTable(
-                name: "Plans");
+                name: "plans");
         }
     }
 }

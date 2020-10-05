@@ -10,14 +10,16 @@ import {MatButtonModule} from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { IconModule } from '@visurel/iconify-angular';
 import { PhoneMaskDirective } from './directives/phone-mask.directive';
-
 import { EmtyBooleanCheckPipe } from 'src/app/pages/shared-module/user-define-pipe/emty-boolean-check-pipe';
 import { EmtyValueCheckPipe } from 'src/app/pages/shared-module/user-define-pipe/emty-value-check.pipe';
 import {EmtyNumberCheckPipe} from 'src/app/pages/shared-module/user-define-pipe/emty-number-check.pipe';
+import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
+import { MatCardModule } from '@angular/material/card';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [MatSpinnerOverlayComponent, ProfileImageComponent,PhoneMaskDirective,EmtyBooleanCheckPipe,
-    EmtyValueCheckPipe,EmtyNumberCheckPipe],
+    EmtyValueCheckPipe,EmtyNumberCheckPipe, ConfirmDialogComponent],
   imports: [
     CommonModule,
     MatProgressSpinnerModule,
@@ -26,7 +28,9 @@ import {EmtyNumberCheckPipe} from 'src/app/pages/shared-module/user-define-pipe/
     MatDialogModule,
     MatButtonModule,
     MatIconModule,
-    IconModule
+    IconModule,
+    MatCardModule,
+    TranslateModule
   ],
   exports:[MatSpinnerOverlayComponent, ProfileImageComponent,PhoneMaskDirective,EmtyBooleanCheckPipe,EmtyValueCheckPipe,EmtyNumberCheckPipe]
 })

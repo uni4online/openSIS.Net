@@ -23,7 +23,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { GradeLevelsComponent } from '../../school/grade-levels/grade-levels.component';
 import { SectionsComponent } from '../../school/sections/sections.component';
 import { RoomsComponent } from '../../school/rooms/rooms.component';
-
+import { MatTableModule } from '@angular/material/table';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import {MatSortModule} from '@angular/material/sort';
+import { SharedModuleModule } from '../../../pages/shared-module/shared-module.module';
 
 @NgModule({
   declarations: [SchoolSettingsComponent,GradeLevelsComponent,SectionsComponent, RoomsComponent],
@@ -47,7 +52,13 @@ import { RoomsComponent } from '../../school/rooms/rooms.component';
     TranslateModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    MatTableModule,
+    MatMenuModule,
+    MatCheckboxModule,
+    MatPaginatorModule,
+    MatSortModule,
+    SharedModuleModule
   ]
 })
 export class SchoolSettingsModule { }

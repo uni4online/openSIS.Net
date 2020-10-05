@@ -86,21 +86,21 @@ namespace opensisAPI.Controllers
             }
             return gradelevelList;
         }
-        //[HttpPost("deleteGradelevel")]
+        [HttpPost("deleteGradelevel")]
 
-        //public ActionResult<GradelevelViewModel> DeleteGradelevel(GradelevelViewModel gradelevel)
-        //{
-        //    GradelevelViewModel gradelevelDelete = new GradelevelViewModel();
-        //    try
-        //    {
-        //        gradelevelDelete = _gradelevelService.DeleteGradelevel(gradelevel);
-        //    }
-        //    catch (Exception es)
-        //    {
-        //        gradelevelDelete._failure = true;
-        //        gradelevelDelete._message = es.Message;
-        //    }
-        //    return gradelevelDelete;
-        //}
+        public ActionResult<GradelevelViewModel> DeleteGradelevel(GradelevelViewModel gradelevel)
+        {
+            GradelevelViewModel gradelevelDelete = new GradelevelViewModel();
+            try
+            {
+                gradelevelDelete = _gradelevelService.DeleteGradelevel(gradelevel);
+            }
+            catch (Exception es)
+            {
+                gradelevelDelete._failure = true;
+                gradelevelDelete._message = es.Message;
+            }
+            return gradelevelDelete;
+        }
     }
 }

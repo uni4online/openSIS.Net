@@ -78,29 +78,13 @@ namespace opensisAPI.Controllers
 
         [HttpPost("getAllSchools")]
 
-        public ActionResult<SchoolListModel> GetAllSchools(PageResult pageResult)
+        public ActionResult<SchoolListModel> GetAllSchools(SchoolListModel school)
         {
+            
             SchoolListModel schoolList = new SchoolListModel();
             try
             {
-                schoolList =  _schoolRegisterService.GetAllSchools(pageResult);
-            }
-            catch (Exception es)
-            {
-                schoolList._message = es.Message;
-                schoolList._failure=true;
-            }
-            return schoolList;
-        }
-
-        [HttpPost("getAllSchoolList")]
-
-        public ActionResult<SchoolListModel> GetAllSchoolList(SchoolListModel school)
-        {
-            SchoolListModel schoolList = new SchoolListModel();
-            try
-            {
-                schoolList = _schoolRegisterService.GetAllSchoolList(school);
+                schoolList = _schoolRegisterService.GetAllSchools(school);
             }
             catch (Exception es)
             {
@@ -109,13 +93,24 @@ namespace opensisAPI.Controllers
             }
             return schoolList;
         }
-        //[HttpPost("updateSchoolLogo/{guid}")]
-        //public async Task<ActionResult<SchoolLogoUpdateModel>> UpdateSchoolLogo(Guid guid, [FromForm] SchoolLogoUpdateModel schoolLogoUpdateModel)
-        //{
-        //    var result = await _schoolRegisterService.updateSchoolLogo(guid, schoolLogoUpdateModel);
-        //    return result;
 
-        //}
+        [HttpPost("getAllSchoolList")]
+
+        public ActionResult<SchoolListModel> GetAllSchoolList(PageResult pageResult)
+        {
+            SchoolListModel schoolList = new SchoolListModel();
+            try
+            {
+                schoolList = _schoolRegisterService.GetAllSchoolList(pageResult);
+            }
+            catch (Exception es)
+            {
+                schoolList._message = es.Message;
+                schoolList._failure = true;
+            }
+            return schoolList;
+        }
+    
 
     }
 }

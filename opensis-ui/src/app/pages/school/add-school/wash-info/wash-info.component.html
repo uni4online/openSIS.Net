@@ -12,7 +12,7 @@
                                 <div class="flex flex-1 mx-4 md:w-1/2">
                                     <mat-form-field class="w-full" appearance="outline" color="primary">
                                         <mat-label>{{'runningWater'|translate}}</mat-label>
-                                        <mat-select formControlName="runningWater" [(ngModel)]="schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].runningWater">
+                                        <mat-select formControlName="runningWater" [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].runningWater">
                                             <mat-option ></mat-option>
                                            
                                             <mat-option [value]="washinfo.Yes">{{washinfo['true']}}</mat-option>
@@ -25,7 +25,7 @@
                                 <div class="flex flex-1 mx-4 md:w-1/2">
                                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                                         <mat-label>{{'mainSourceofDrinkingWater'|translate}}</mat-label>
-                                        <input matInput formControlName="mainSourceofDrinkingWater" maxlength="100" [(ngModel)]="schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].mainSourceOfDrinkingWater"    >
+                                        <input matInput formControlName="mainSourceofDrinkingWater" maxlength="100" [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].mainSourceOfDrinkingWater"    >
 
                                     </mat-form-field>
                                 </div>
@@ -34,7 +34,7 @@
                                 <div class="flex flex-1 mx-4 md:w-1/2">
                                     <mat-form-field class="w-full" appearance="outline" color="primary">
                                         <mat-label>{{'currentlyAvailable'|translate}}</mat-label>
-                                        <mat-select formControlName="currentlyAvailable" [(ngModel)]="schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].currentlyAvailable">
+                                        <mat-select formControlName="currentlyAvailable" [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].currentlyAvailable">
                                             <mat-option ></mat-option>
                                            
                                             <mat-option [value]="washinfo.Yes">{{washinfo['true']}}</mat-option>
@@ -45,7 +45,7 @@
                                 <div class="flex flex-1 mx-4 md:w-1/2">
                                     <mat-form-field class="w-full" appearance="outline" color="primary">
                                         <mat-label>{{'handwashingAvailable'|translate}}</mat-label>
-                                        <mat-select formControlName="handwashingAvailable" [(ngModel)]="schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].handwashingAvailable">
+                                        <mat-select formControlName="handwashingAvailable" [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].handwashingAvailable">
                                             <mat-option ></mat-option>
                                            
                                             <mat-option [value]="washinfo.Yes">{{washinfo['true']}}</mat-option>
@@ -58,7 +58,7 @@
                                 <div class="flex flex-1 mx-4 md:w-1/2">
                                     <mat-form-field class="w-full" appearance="outline" color="primary">
                                         <mat-label>{{'soapWaterAvailable'|translate}}</mat-label>
-                                        <mat-select formControlName="soapWaterAvailable" [(ngModel)]="schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].soapAndWaterAvailable">
+                                        <mat-select formControlName="soapWaterAvailable" [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].soapAndWaterAvailable">
                                             <mat-option ></mat-option>
                                            
                                             <mat-option [value]="washinfo.Yes">{{washinfo['true']}}</mat-option>
@@ -69,7 +69,7 @@
                                 <div class="flex flex-1 mx-4 md:w-1/2">
                                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                                         <mat-label>{{'hygeneEducation'|translate}}</mat-label>
-                                        <input matInput formControlName="hygeneEducation" maxlength="50" [(ngModel)]="schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].hygeneEducation"  >
+                                        <input matInput formControlName="hygeneEducation" maxlength="50" [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].hygeneEducation"  >
                                     </mat-form-field>
                                 </div>
                             </div>
@@ -84,7 +84,7 @@
                                 <div class="flex flex-1 mx-4 md:w-1/2">
                                     <mat-form-field class="w-full" appearance="outline" color="primary">
                                         <mat-label>{{'femaleToiletType'|translate}}</mat-label>
-                                        <mat-select formControlName="femaleToiletType" [(ngModel)]="schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].femaleToiletType">
+                                        <mat-select formControlName="femaleToiletType" [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].femaleToiletType">
                                             <mat-option ></mat-option>
                                            
                                             <mat-option value="Female Toilet Type 1">Female Toilet Type 1</mat-option>
@@ -95,7 +95,7 @@
                                 <div class="flex flex-1 mx-4 md:w-1/2">
                                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                                         <mat-label>{{'totalFemaleToilets'|translate}}</mat-label>
-                                        <input matInput formControlName="totalFemaleToilets" type="number" [(ngModel)]="schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].totalFemaleToilets"   >
+                                        <input matInput formControlName="totalFemaleToilets" type="number" [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].totalFemaleToilets"   >
                                     </mat-form-field>
                                 </div>
                             </div>
@@ -104,13 +104,13 @@
                                 <div class="flex flex-1 mx-4 md:w-1/2">
                                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                                         <mat-label>{{'totalFemaleToiletsUsable'|translate}}</mat-label>
-                                        <input matInput formControlName="totalFemaleToiletsUsable" type="number" [(ngModel)]="schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].totalFemaleToiletsUsable" >
+                                        <input matInput formControlName="totalFemaleToiletsUsable" type="number" [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].totalFemaleToiletsUsable" >
                                     </mat-form-field>
                                 </div>
                                 <div class="flex flex-1 mx-4 md:w-1/2">
                                     <mat-form-field class="w-full" appearance="outline" color="primary">
                                         <mat-label>{{'femaleToiletAccessibility'|translate}}</mat-label>
-                                        <mat-select formControlName="femaleToiletAccessibility" [(ngModel)]="schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].femaleToiletAccessibility">
+                                        <mat-select formControlName="femaleToiletAccessibility" [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].femaleToiletAccessibility">
                                             <mat-option ></mat-option>
                                            
                                             <mat-option value="Female Toilet Accessibility 1">Female Toilet Accessibility 1</mat-option>
@@ -129,7 +129,7 @@
                                 <div class="flex flex-1 mx-4 md:w-1/2">
                                     <mat-form-field class="w-full" appearance="outline" color="primary">
                                         <mat-label>{{'maleToiletType'|translate}}</mat-label>
-                                        <mat-select formControlName="maleToiletType" [(ngModel)]="schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].maleToiletType">
+                                        <mat-select formControlName="maleToiletType" [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].maleToiletType">
                                             <mat-option ></mat-option>
                                             
                                             <mat-option value="Male Toilet Type 1">Male Toilet Type 1</mat-option>
@@ -140,7 +140,7 @@
                                 <div class="flex flex-1 mx-4 md:w-1/2">
                                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                                         <mat-label>{{'totalMaleToilets'|translate}}</mat-label>
-                                        <input matInput formControlName="totalMaleToilets" type="number" [(ngModel)]="schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].totalMaleToilets"  >
+                                        <input matInput formControlName="totalMaleToilets" type="number" [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].totalMaleToilets"  >
                                     </mat-form-field>
                                 </div>
                             </div>
@@ -149,13 +149,13 @@
                                 <div class="flex flex-1 mx-4 md:w-1/2">
                                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                                         <mat-label>{{'totalMaleToiletsUsable'|translate}}</mat-label>
-                                        <input matInput formControlName="totalMaleToiletsUsable" type="number" [(ngModel)]="schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].totalMaleToiletsUsable"   >
+                                        <input matInput formControlName="totalMaleToiletsUsable" type="number" [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].totalMaleToiletsUsable"   >
                                     </mat-form-field>
                                 </div>
                                 <div class="flex flex-1 mx-4 md:w-1/2">
                                     <mat-form-field class="w-full" appearance="outline" color="primary">
                                         <mat-label>{{'maleToiletAccessibility'|translate}}</mat-label>
-                                        <mat-select formControlName="maleToiletAccessibility" [(ngModel)]="schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].maleToiletAccessibility">
+                                        <mat-select formControlName="maleToiletAccessibility" [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].maleToiletAccessibility">
                                             <mat-option ></mat-option>
                                            
                                             <mat-option value="Male Toilet Accessibility 1">Male Toilet Accessibility 1</mat-option>
@@ -174,7 +174,7 @@
                                 <div class="flex flex-1 mx-4 md:w-1/2">
                                     <mat-form-field class="w-full" appearance="outline" color="primary">
                                         <mat-label>{{'commonToiletType'|translate}}</mat-label>
-                                        <mat-select formControlName="commonToiletType" [(ngModel)]="schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].comonToiletType">
+                                        <mat-select formControlName="commonToiletType" [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].comonToiletType">
                                             <mat-option ></mat-option>
                                            
                                             <mat-option value="Common Toilet Type 1">Common Toilet Type 1</mat-option>
@@ -185,7 +185,7 @@
                                 <div class="flex flex-1 mx-4 md:w-1/2">
                                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                                         <mat-label>{{'totalCommonToilets'|translate}}</mat-label>
-                                        <input matInput formControlName="totalCommonToilets" type="number" [(ngModel)]="schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].totalCommonToilets">
+                                        <input matInput formControlName="totalCommonToilets" type="number" [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].totalCommonToilets">
                                     </mat-form-field>
                                 </div>
                             </div>
@@ -194,13 +194,13 @@
                                 <div class="flex flex-1 mx-4 md:w-1/2">
                                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                                         <mat-label>{{'totalCommonToiletsUsable'|translate}}</mat-label>
-                                        <input matInput formControlName="totalCommonToiletsUsable" type="number" [(ngModel)]="schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].totalCommonToiletsUsable">
+                                        <input matInput formControlName="totalCommonToiletsUsable" type="number" [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].totalCommonToiletsUsable">
                                     </mat-form-field>
                                 </div>
                                 <div class="flex flex-1 mx-4 md:w-1/2">
                                     <mat-form-field class="w-full" appearance="outline" color="primary">
                                         <mat-label>{{'commonToiletAccessibility'|translate}}</mat-label>
-                                        <mat-select formControlName="commonToiletAccessibility" [(ngModel)]="schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].commonToiletAccessibility">
+                                        <mat-select formControlName="commonToiletAccessibility" [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].commonToiletAccessibility">
                                             <mat-option ></mat-option>
                                            
                                             <mat-option value="Common Toilet Accessibility 1">Common Toilet Accessibility 1</mat-option>

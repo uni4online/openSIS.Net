@@ -1,11 +1,13 @@
 export class GetAllSchoolModel {
+        tenantId:string;
         pageNumber: number;
-        pageSize: Number;
-        _tenantName: String;
-        _token: String;
-        _failure: Boolean;
-        _message: String;
+        pageSize: number;
+        _tenantName: string;
+        _token: string;
+        _failure: boolean;
+        _message: string;
     constructor() {
+        this.tenantId= sessionStorage.getItem("tenantId");
         this.pageNumber=1;
         this.pageSize=10;
         this._tenantName="";
@@ -17,13 +19,13 @@ export class GetAllSchoolModel {
 
 export class AllSchoolListModel{
     getSchoolForView:[];
-    totalCount:Number;
-    pageNumber:Number;
-    _pageSize:Number;
+    totalCount:number;
+    pageNumber:number;
+    _pageSize:number;
     _tenantName:string;
     _token:string;
-    _failure:Boolean;
-    _message:String;
+    _failure:boolean;
+    _message:string;
 }
 
 export class OnlySchoolListModel{

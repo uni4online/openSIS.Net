@@ -55,12 +55,16 @@
   background-size: 64px 128px;
 }
 
-.bg-gradient {
+.login-bg {
   background: #00a0dd; /* Old browsers */
   background: -moz-radial-gradient(center, ellipse cover,  #00a0dd 0%, #0e3777 100%); /* FF3.6-15 */
   background: -webkit-radial-gradient(center, ellipse cover,  #00a0dd 0%,#0e3777 100%); /* Chrome10-25,Safari5.1-6 */
   background: radial-gradient(ellipse at center,  #00a0dd 0%,#0e3777 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00a0dd', endColorstr='#0e3777',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+}
+
+@media only screen and (max-width: 767px) {
+  .login-bg { background: rgba(var(--background-base), 1);}
 }
 
 .mat-form-field {

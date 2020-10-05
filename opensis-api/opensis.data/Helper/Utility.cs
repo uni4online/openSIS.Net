@@ -2,13 +2,14 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Security.Cryptography;
 using System.Text;
 
 namespace opensis.data.Helper
 {
     
-    public class Utility
+    public static class Utility
     {
         /// <summary>
         /// This method returns a int primarykeyId  for an entity.
@@ -92,5 +93,21 @@ namespace opensis.data.Helper
             return sb.ToString();
         }
 
-    }
+        public static IQueryable<T> Sort<T>(this IQueryable<T> source, string sortBy, string sortDirection)
+        {
+            var param = Expression.Parameter(typeof(T), "item");
+
+            var sortExpression = Expression.Lambda<Func<T, object>>
+                (Expression.Convert(Expression.Property(param, sortBy), typeof(object)), param);
+
+            switch (sortDirection.ToLower())
+            {
+                case "asc":
+                    return source.AsQueryable<T>().OrderBy<T, object>(sortExpression);
+                default:
+                    return source.AsQueryable<T>().OrderByDescending<T, object>(sortExpression);
+            }
+        }
+
+        }
 }

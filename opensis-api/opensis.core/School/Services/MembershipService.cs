@@ -24,7 +24,7 @@ namespace opensis.core.School.Services
 
             if (TokenManager.CheckToken(allMembersList._tenantName, allMembersList._token))
             {
-                getAllMembers = this.membershipRepository.GetAllMemberList();
+                getAllMembers = this.membershipRepository.GetAllMemberList(allMembersList);
                 return getAllMembers;
             }
             else

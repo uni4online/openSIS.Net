@@ -87,12 +87,12 @@ namespace opensis.core.School.Services
             }
 
         }
-        public NoticeListViewModel GetAllNotice(NoticeListViewModel noticeListView)
+        public NoticeListViewModel GetAllNotice(NoticeListViewModel noticeList)
         {
             NoticeListViewModel getAllNoticeList = new NoticeListViewModel();
-            if (TokenManager.CheckToken(noticeListView._tenantName, noticeListView._token))
+            if (TokenManager.CheckToken(noticeList._tenantName, noticeList._token))
             {
-                getAllNoticeList = this.noticeRepository.GetAllNotice();
+                getAllNoticeList = this.noticeRepository.GetAllNotice(noticeList);
                 return getAllNoticeList;
             }
             else

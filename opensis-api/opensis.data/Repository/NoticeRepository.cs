@@ -2,7 +2,6 @@
 using opensis.data.Interface;
 using opensis.data.Models;
 using opensis.data.ViewModels.Notice;
-using opensis.data.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,6 +36,10 @@ namespace opensis.data.Repository
 
                 notice.Notice.Isactive = true;
 
+                notice.Notice.ValidFrom = notice.Notice.ValidFrom;
+
+                notice.Notice.ValidTo = notice.Notice.ValidTo;
+
                 notice.Notice.CreatedTime = DateTime.UtcNow;
 
                 this.context?.Notice.Add(notice.Notice);
@@ -62,7 +65,6 @@ namespace opensis.data.Repository
         /// <returns></returns>
         public NoticeAddViewModel ViewNotice(NoticeAddViewModel notice)
         {
-
             try
             {
                 NoticeAddViewModel noticeAddViewModel = new NoticeAddViewModel();
@@ -70,7 +72,6 @@ namespace opensis.data.Repository
                 if (noticeModel != null)
                 {
                     noticeAddViewModel.Notice = noticeModel;
-
                 }
                 else
                 {
@@ -163,13 +164,20 @@ namespace opensis.data.Repository
         /// Get all Notice
         /// </summary>
         /// <returns></returns>
-        public NoticeListViewModel GetAllNotice()
+        public NoticeListViewModel GetAllNotice(NoticeListViewModel noticeList)
         {
             NoticeListViewModel getAllNoticeList = new NoticeListViewModel();
             try
             {
-                var noticeRepository = this.context?.Notice.OrderBy(x => x.ValidFrom).Where(x => x.Isactive == true).ToList();
-
+                var noticeRepository = this.context?.Notice.OrderBy(x => x.ValidFrom).Where(x => x.TenantId == noticeList.TenantId && x.SchoolId == noticeList.SchoolId && x.Isactive == true).ToList();
+                foreach (var notice in noticeRepository)
+                {
+                    string[] membersList = notice.TargetMembershipIds.Split(",");
+                    int[] memberIds = Array.ConvertAll(membersList, s => int.Parse(s));
+                    var profiles = this.context?.Membership.Where(t => memberIds.Contains(t.MembershipId)).Select(t => t.Profile).ToArray();
+                    var mebershipIds = string.Join(",", profiles);
+                    notice.TargetMembershipIds = mebershipIds;
+                }
 
                 getAllNoticeList.NoticeList = noticeRepository;
 

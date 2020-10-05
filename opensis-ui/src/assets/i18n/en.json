@@ -110,6 +110,10 @@
     "gradePostingEnds": "Grade Posting Ends",
     "addNewGradeLevel": "Add New Grade Level",
     "addGradeLevel": "Add Grade Level",
+    "updateGradeLevel": "Update Grade Level",
+    "update":"Update",
+    "shortNameIsRequired":"Short Name is Required",
+    "sortOrderIsRequired":"Sort Order is Required",
     "nextGrade": "Next Grade",
     "schoolNameIsRequired": "School Name is Required",
     "schoolIdIsRequired": "School ID is Required",
@@ -133,7 +137,9 @@
     "upcoming":"Upcoming",
     "visibleFrom" :"Visible from",
     "visibleTo" :"Visible to",
-    "editInformation":"Edit Information"
+    "editInformation":"Edit Information",
+    "no":"No",
+    "yes":"Yes"
    
     
    

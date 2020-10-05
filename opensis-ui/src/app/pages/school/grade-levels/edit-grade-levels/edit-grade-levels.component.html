@@ -1,5 +1,5 @@
 <div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
-    <h2 class="headline m-0" fxFlex="auto">{{'addGradeLevel' | translate}}</h2>
+    <h2 class="headline m-0" fxFlex="auto">{{editMode? 'Update Grade Level':'addGradeLevel'|translate}}</h2>
 
     <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
         <mat-icon [icIcon]="icClose"></mat-icon>
@@ -7,36 +7,37 @@
 </div>
 <mat-divider class="-mx-6 text-border"></mat-divider>
 
-<mat-dialog-content fxLayout="column">
-    
+<mat-dialog-content fxLayout="column" [formGroup]="form">
     <mat-form-field class="mt-6" appearance="outline" color="primary">
         <mat-label>{{'title' | translate}}</mat-label>
-        <input cdkFocusInitial matInput required>
+        <input formControlName="title" cdkFocusInitial matInput required>
+        <mat-error *ngIf="form.get('title').hasError('required')">{{'titleIsRequired'|translate}}</mat-error>
     </mat-form-field>
 
     <div class="mb-2 md:flex md:flex-wrap -mx-6">
         <div class="flex-1 mx-6 md:w-1/2">
             <mat-form-field class="mt-6 w-full" appearance="outline" color="primary">
                 <mat-label>{{'shortName' | translate}}</mat-label>
-                <input cdkFocusInitial matInput required>
+                <input formControlName="shortName" cdkFocusInitial matInput required>
+                <mat-error *ngIf="form.get('shortName').hasError('required')">{{'shortNameIsRequired'|translate}}</mat-error>
             </mat-form-field>
         </div>
         <div class="flex-1 mx-6 md:w-1/2">
             <mat-form-field class="mt-6 w-full" appearance="outline" color="primary">
                 <mat-label>{{'sortOrder' | translate}}</mat-label>
-                <input cdkFocusInitial matInput required>
+                <input type="number" formControlName="sortOrder" cdkFocusInitial matInput required>
+                <mat-error *ngIf="form.get('sortOrder').hasError('required')">{{'sortOrderIsRequired'|translate}}</mat-error>
             </mat-form-field>
         </div>
     </div>
-    
+
     <mat-form-field class="mt-6" appearance="outline" color="primary">
         <mat-label>{{'nextGrade' | translate}}</mat-label>
-        <mat-select required>
-            <mat-option>-</mat-option>
-            <mat-option>Fifth Grade</mat-option>
-            <mat-option>Sixth Grade</mat-option>
-            <mat-option>Seventh Grade</mat-option>
-            <mat-option>Eighth Grade</mat-option>
+        <mat-select  formControlName="nextGradeId" name="nextGrade"  required>
+            <mat-option value="null">N/A</mat-option>
+            <mat-option *ngFor="let nextLevel of nextGradeLevelList"  value="{{nextLevel.gradeId}}" >
+                {{nextLevel.title}}
+               </mat-option>
         </mat-select>
     </mat-form-field>
 
@@ -46,5 +47,5 @@
 
 <mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" class="py-6">
     <button mat-button mat-dialog-close type="button">{{'cancel' | translate}}</button>
-    <button color="primary" mat-raised-button type="submit">{{'submit' | translate}}</button>
+    <button color="primary" mat-raised-button type="submit" (click)="submit()">{{editMode?'Update':'submit' | translate}}</button>
 </mat-dialog-actions>

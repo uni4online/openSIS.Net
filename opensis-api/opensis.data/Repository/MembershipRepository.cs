@@ -21,12 +21,12 @@ namespace opensis.data.Repository
         /// Get All Members
         /// </summary>
         /// <returns></returns>
-        public GetAllMembersList GetAllMemberList()
+        public GetAllMembersList GetAllMemberList(GetAllMembersList membersList)
         {
             GetAllMembersList getAllMembersList = new GetAllMembersList();
             try
             {
-                var noticeRepository = this.context?.Membership.ToList();
+                var noticeRepository = this.context?.Membership.Where(x => x.TenantId == membersList.TenantId && x.SchoolId == membersList.SchoolId).ToList();
 
                 var query = (from o in noticeRepository
                              select new GetAllMembers()

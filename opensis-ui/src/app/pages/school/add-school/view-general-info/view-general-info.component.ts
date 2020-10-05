@@ -27,7 +27,7 @@ export class ViewGeneralInfoComponent implements OnInit {
   @Output() parentShowWash :EventEmitter<object> = new EventEmitter<object>();
   @Output("dataOfgeneralInfoFromView") dataOfgeneralInfoFromView: EventEmitter<object> =   new EventEmitter();
   icEdit = icEdit;
-  public tenant = "opensisv2";
+  //public tenant = "opensisv2";
   public internet="";
   public electricity="";
   public status="";
@@ -52,15 +52,15 @@ export class ViewGeneralInfoComponent implements OnInit {
   ngOnInit(): void {
     this.getSchoolGeneralInfoDetails();
     this.getAllCountry();
-    this.getAllStateByCountry(+this.schoolAddViewModel.tblSchoolMaster.country);
-    this.getAllCitiesByState(+this.schoolAddViewModel.tblSchoolMaster.state);
+    this.getAllStateByCountry(+this.schoolAddViewModel.schoolMaster.country);
+    this.getAllCitiesByState(+this.schoolAddViewModel.schoolMaster.state);
   }
   editGeneralInfo(){
     this.parentShowWash.emit(this.schoolAddViewModel);    
     this.dataOfgeneralInfoFromView.emit(this.schoolAddViewModel);
   }
   getAllCountry(){
-    this.countryModel._tenantName = this.tenant;
+    this.countryModel._tenantName = sessionStorage.getItem("tenant");
     this.countryModel._token = sessionStorage.getItem("token");
     this.commonService.GetAllCountry(this.countryModel).subscribe(data => {
       if (typeof (data) == 'undefined') {
@@ -72,7 +72,7 @@ export class ViewGeneralInfoComponent implements OnInit {
         } else {        
           this.countryListArr=data.tableCountry; 
           this.countryListArr.map((val) => {
-          var countryInNumber = +this.schoolAddViewModel.tblSchoolMaster.country;  
+          var countryInNumber = +this.schoolAddViewModel.schoolMaster.country;  
           
             if(val.id === countryInNumber){
               this.countryName= val.name;
@@ -88,7 +88,7 @@ export class ViewGeneralInfoComponent implements OnInit {
    getAllStateByCountry(data){   
    
     this.stateModel.countryId= data;   
-    this.stateModel._tenantName = this.tenant;
+    this.stateModel._tenantName = sessionStorage.getItem("tenant");
     this.stateModel._token = sessionStorage.getItem("token");
   
    this.commonService.GetAllState(this.stateModel).subscribe(data => {
@@ -103,7 +103,7 @@ export class ViewGeneralInfoComponent implements OnInit {
          this.cityListArr=[];
          this.stateListArr=data.tableState;      
          this.stateListArr.map((val) => {
-          var stateInNumber = +this.schoolAddViewModel.tblSchoolMaster.state;         
+          var stateInNumber = +this.schoolAddViewModel.schoolMaster.state;         
             if(val.id === stateInNumber){
               this.stateName= val.name;
             }
@@ -115,7 +115,7 @@ export class ViewGeneralInfoComponent implements OnInit {
   }
   getAllCitiesByState(data){   
     this.cityModel.stateId= data; 
-    this.cityModel._tenantName = this.tenant;
+    this.cityModel._tenantName = sessionStorage.getItem("tenant");
     this.cityModel._token = sessionStorage.getItem("token");
   
     this.commonService.GetAllCity(this.cityModel).subscribe(val => {
@@ -128,7 +128,7 @@ export class ViewGeneralInfoComponent implements OnInit {
         } else {
           this.cityListArr=val.tableCity;   
           this.cityListArr.map((val) => {
-            var cityInNumber = +this.schoolAddViewModel.tblSchoolMaster.city;         
+            var cityInNumber = +this.schoolAddViewModel.schoolMaster.city;         
               if(val.id === cityInNumber){
                 this.cityName= val.name;
               }
@@ -147,9 +147,9 @@ export class ViewGeneralInfoComponent implements OnInit {
         });      
       }else{      
         this.schoolAddViewModel=this.generalAndWashInfoData;         
-        this.status= this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].status?'Active':'Inactive';
-        this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].dateSchoolOpened= this.commonFunction.formatDate(this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].dateSchoolOpened);
-        this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].dateSchoolClosed= this.commonFunction.formatDate(this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].dateSchoolClosed);
+        this.status= this.schoolAddViewModel.schoolMaster.schoolDetail[0].status?'Active':'Inactive';
+        this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolOpened= this.commonFunction.formatDate(this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolOpened);
+        this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolClosed= this.commonFunction.formatDate(this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolClosed);
       }
   }
 

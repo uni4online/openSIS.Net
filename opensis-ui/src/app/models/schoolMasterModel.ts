@@ -31,22 +31,22 @@ export class SchoolMasterModel {
     public dateCreated:string;
     public modifiedBy: string;
     public dateModifed:string;
-    public tableSchoolDetail:[schoolDetailsModel];
+    public schoolDetail:[schoolDetailsModel];
     constructor() {        
        
       this.tenantId= sessionStorage.getItem("tenantId");
-      this.tableSchoolDetail= [new schoolDetailsModel];
+      this.schoolDetail= [new schoolDetailsModel];
      
       }
 }
 
 export class SchoolAddViewModel extends CommonField {
-  public tblSchoolMaster: SchoolMasterModel;
+  public schoolMaster: SchoolMasterModel;
   constructor() {
       super();
-      this.tblSchoolMaster= new SchoolMasterModel();
-      this.tblSchoolMaster.latitude=null;
-      this.tblSchoolMaster.longitude=null;
+      this.schoolMaster= new SchoolMasterModel();
+      this.schoolMaster.latitude=null;
+      this.schoolMaster.longitude=null;
   }
 }
 
