@@ -7,6 +7,7 @@ import { SchoolService } from '../../../../app/services/school.service';
 import { AllSchoolListModel,OnlySchoolListModel } from 'src/app/models/getAllSchoolModel';
 import { Router } from '@angular/router';
 
+
 @Component({
   selector: 'vex-select-bar',
   templateUrl: './select-bar.component.html',
@@ -34,8 +35,18 @@ export class SelectBarComponent implements OnInit {
   protected _onDestroy = new Subject<void>();
 
   constructor(private _schoolService: SchoolService,
-      private router:Router
+      private router:Router,
+      
     ) {
+   this._schoolService.currentMessage.subscribe((res)=>{
+     if(res){
+      this.callAllSchoolList();
+     }
+   })
+   this.callAllSchoolList();
+  }
+
+  callAllSchoolList(){
     this.getSchoolList.tenantId = sessionStorage.getItem("tenantId");
     this.getSchoolList._tenantName = sessionStorage.getItem("tenant");
     this.getSchoolList._token = sessionStorage.getItem("token");
@@ -57,10 +68,10 @@ export class SelectBarComponent implements OnInit {
           });
           // Beacause of Reload in Setting, we have to check the existing id to retrieve
           // school name from dropdown.
-          if(!sessionStorage.getItem("selectedId")){
-            sessionStorage.setItem("selectedId",this.schools[0].school_Id);
+          if(!sessionStorage.getItem("selectedSchoolId")){
+            sessionStorage.setItem("selectedSchoolId",this.schools[0].school_Id);
           }else{
-            let id = parseInt(sessionStorage.getItem("selectedId"));
+            let id = parseInt(sessionStorage.getItem("selectedSchoolId"));
             let index = this.schools.findIndex((x) => {
               return x.school_Id === id
             });
@@ -73,7 +84,7 @@ export class SelectBarComponent implements OnInit {
       })
   }
   changeSchool(name,id){
-    sessionStorage.setItem("selectedId",id);
+    sessionStorage.setItem("selectedSchoolId",id);
     this.router.navigate(['/school/dashboards']);
   }
 

@@ -5,6 +5,10 @@ import { addDays, addHours, endOfDay, endOfMonth, isSameDay, isSameMonth, startO
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CalendarEditComponent } from './calendar-edit/calendar-edit.component';
+import { AddCalendarComponent } from './add-calendar/add-calendar.component';
+import { AddEventComponent } from './add-event/add-event.component';
+import icAdd from '@iconify/icons-ic/add';
+import icEdit from '@iconify/icons-ic/edit';
 import icChevronLeft from '@iconify/icons-ic/twotone-chevron-left';
 import icChevronRight from '@iconify/icons-ic/twotone-chevron-right';
 
@@ -40,6 +44,8 @@ export class CalendarComponent {
   viewDate: Date = new Date();
   icChevronLeft = icChevronLeft;
   icChevronRight = icChevronRight;
+  icAdd = icAdd;
+  icEdit = icEdit;
 
   modalData: {
     action: string;
@@ -170,5 +176,19 @@ export class CalendarComponent {
 
   closeOpenMonthViewDay() {
     this.activeDayIsOpen = false;
+  }
+
+  openAddNewCalendar() {
+    this.dialog.open(AddCalendarComponent, {
+      data: null,
+      width: '600px'
+    });
+  }
+
+  openAddNewEvent(){
+    this.dialog.open(AddEventComponent, {
+      data: null,
+      width: '600px'
+    });
   }
 }

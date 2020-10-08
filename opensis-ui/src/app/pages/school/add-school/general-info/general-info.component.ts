@@ -16,7 +16,6 @@ import { schoolClassification } from '../../../../enums/school_classification.en
 import { gender } from '../../../../enums/gender.enum';
 import { WashInfoEnum } from '../../../../enums/wash-info.enum';
 import { status } from '../../../../enums/wash-info.enum';
-import { highestGradeLevel } from '../../../../enums/highest_grade_level.enum';
 import { MY_FORMATS } from '../../../shared/format-datepicker';
 import { ValidationService } from '../../../shared/validation.service';
 import { LoaderService } from 'src/app/services/loader.service';
@@ -28,6 +27,7 @@ import { CityModel } from '../../../../models/cityModel';
 import { CommonService } from '../../../../services/common.service';
 import { SharedFunction } from '../../../shared/shared-function';
 import { ImageCropperService } from '../../../../services/image-cropper.service';
+
 
 const moment = _rollupMoment || _moment;
 
@@ -63,9 +63,9 @@ export class GeneralInfoComponent implements OnInit {
   public schoolClassificationOptions = [];
   private genders = gender;
   public genderOptions = [];  
-  private highestGradeLevels = highestGradeLevel;
-  public highestGradeLevelsOption = [];
-  public tenant = "opensisv2";
+  
+  
+  
   form: FormGroup;
   schoolAddViewModel: SchoolAddViewModel = new SchoolAddViewModel();
   countryModel: CountryModel = new CountryModel();
@@ -82,7 +82,31 @@ export class GeneralInfoComponent implements OnInit {
   dateCreated=Date();
   generalInfo=WashInfoEnum;
   statusInfo=status;
-city:number;
+  city:number;
+  gradeLevel= [
+    {id : 'PK', title : "PK"},
+    {id : 'K', title : "K"},
+    {id : '1', title : "1"},
+    {id : '2', title : "2"},
+    {id : '3', title : "3"},
+    {id : '4', title : "4"},
+    {id : '5', title : "5"},
+    {id : '6', title : "6"},
+    {id : '7', title : "7"},
+    {id : '8', title : "8"},
+    {id : '9', title : "9"},
+    {id : '10', title : "10"},
+    {id : '11', title : "11"},
+    {id : '12', title : "12"},
+    {id : '13', title : "13"},
+    {id : '14', title : "14"},
+    {id : '15', title : "15"},
+    {id : '16', title : "16"},
+    {id : '17', title : "17"},
+    {id : '18', title : "18"},
+    {id : '19', title : "19"},
+    {id : '20', title : "20"},
+  ];
   constructor(private fb: FormBuilder,
     private generalInfoService: SchoolService,
     private snackbar: MatSnackBar,    
@@ -90,10 +114,11 @@ city:number;
     private loaderService: LoaderService,
     private commonService: CommonService,
     private commonFunction:SharedFunction,
-    private _ImageCropperService:ImageCropperService) {
+    private _ImageCropperService:ImageCropperService,
+    ) {
 
-    translateService.use('en');    
-    this.loaderService.isLoading.subscribe((val) => {
+      translateService.use('en');    
+      this.loaderService.isLoading.subscribe((val) => {
       this.loading = val;
     });
 
@@ -117,7 +142,7 @@ city:number;
         associations: [''],
         lowest_grade_level: ['', Validators.required],
         highest_grade_level: ['', Validators.required],
-        date_school_opened: [''],
+        date_school_opened: ['',Validators.required],
         date_school_closed: [''],
         code: ['',Validators.maxLength(100)],
         gender: ['',Validators.maxLength(6)],
@@ -152,7 +177,7 @@ city:number;
     this.schoolLevelOptions = Object.keys(this.schoolLevels);
     this.schoolClassificationOptions = Object.keys(this.schoolClassifications);
     this.genderOptions = Object.keys(this.genders);   
-    this.highestGradeLevelsOption = Object.keys(this.highestGradeLevels);
+   
     
     if (this.commonFunction.checkEmptyObject(this.dataOfgeneralInfoFromView) === true) {
       this.schoolAddViewModel = this.dataOfgeneralInfoFromView;
@@ -185,15 +210,14 @@ city:number;
       this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolOpened=this.commonFunction.formatDateInEditMode(this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolOpened);      
       this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolClosed=this.commonFunction.formatDateInEditMode(this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolClosed);
       
-    }else{
-
-      
+    }else{     
       this.schoolAddViewModel.schoolMaster.createdBy = sessionStorage.getItem('email');
       this.schoolAddViewModel.schoolMaster.dateCreated = this.dateCreated;     
     }
 
     this.schoolAddViewModel.schoolMaster.schoolLevel = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolLevel);
     this.schoolAddViewModel.schoolMaster.schoolClassification = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolClassification) ;
+    
     this.schoolAddViewModel.schoolMaster.schoolDetail[0].lowestGradeLevel = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolDetail[0].lowestGradeLevel);
     this.schoolAddViewModel.schoolMaster.schoolDetail[0].highestGradeLevel = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolDetail[0].highestGradeLevel);
     this.schoolAddViewModel.schoolMaster.schoolDetail[0].gender = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolDetail[0].gender);
@@ -231,9 +255,7 @@ city:number;
     }
 
   }
- getAllCountry(){
-  this.countryModel._tenantName = this.tenant;
-  this.countryModel._token = sessionStorage.getItem("token");
+ getAllCountry(){  
   this.commonService.GetAllCountry(this.countryModel).subscribe(data => {
     if (typeof (data) == 'undefined') {
       this.countryListArr=[];
@@ -250,76 +272,111 @@ city:number;
 
  }
 
- getAllStateByCountry(data){
+ getAllStateByCountry(data){   
    
-   if (data.value === undefined)
-   {
-    this.stateModel.countryId= data;
-    this.countryName = data.toString();
-
-   }else{
-    this.stateModel.countryId= data.value;
-    this.countryName = data.value.toString();
-   }
-  this.stateModel._tenantName = this.tenant;
-  this.stateModel._token = sessionStorage.getItem("token");
- 
-  this.commonService.GetAllState(this.stateModel).subscribe(data => {
-    if (typeof (data) == 'undefined') {
+    if ((this.commonFunction.checkEmptyObject(this.dataOfwashInfoFromGeneral) === true)
+    || (this.commonFunction.checkEmptyObject(this.dataOfgeneralInfoFromView) === true) 
+    || (this.commonFunction.checkEmptyObject(this.dataOfgeneralInfoFromWash) === true)){
+    
+     if(data.value === ""){     
+      this.stateModel.countryId= 0;
+      this.countryName = '';
+      this.cityListArr=[];
       this.stateListArr=[];
-    }
-    else {
-      if (data._failure) {
-        this.stateListArr=[];
-       
-      } else {
-        this.cityListArr=[];
-        this.stateListArr=data.tableState;      
-       
-      }
-    }
-
-  })
- }
- getAllCitiesByState(data){
-
-  if (data.value === undefined)
-   {
-    this.cityModel.stateId= data;
-    this.stateName = data.toString();
-
-   }else{
-    this.cityModel.stateId= data.value;
-    this.stateName = data.value.toString();
+     }else{ 
+       if(data.value === undefined && data){       
+        this.stateModel.countryId= data;
+        this.countryName = data.toString();
+       }else{
+        this.stateModel.countryId= data.value;
+        this.countryName = data.value.toString();
+       }     
+    }          
+  }else{
+    if(data.value === ""){     
+      this.stateModel.countryId= 0;
+      this.countryName = '';
+      this.cityListArr=[];
+      this.stateListArr=[];
+     }else{     
+        this.stateModel.countryId= data.value;
+        this.countryName = data.value.toString();           
+    }    
   }
   
+    if(this.stateModel.countryId !== 0){
+     
+      this.commonService.GetAllState(this.stateModel).subscribe(data => {
+        if (typeof (data) == 'undefined') {
+          this.stateListArr=[];
+        }
+        else {
+          if (data._failure) {
+            this.stateListArr=[];
+           
+          } else {
+            this.cityListArr=[];
+            this.stateListArr=data.tableState;      
+           
+          }
+        }
+    
+      })
+    } 
+ }
+ getAllCitiesByState(data){
+  if ((this.commonFunction.checkEmptyObject(this.dataOfwashInfoFromGeneral) === true)
+    || (this.commonFunction.checkEmptyObject(this.dataOfgeneralInfoFromView) === true) 
+    || (this.commonFunction.checkEmptyObject(this.dataOfgeneralInfoFromWash) === true)){
+      if(data.value === ""){     
+        this.cityModel.stateId= 0;
+        this.stateName = '';
+        this.cityListArr=[];       
+       }else{ 
+         if(data.value === undefined && data){       
+          this.cityModel.stateId= data;
+          this.stateName = data.toString();
+         }else{
+          this.cityModel.stateId= data.value;
+          this.stateName = data.value.toString();
+         }     
+      }            
+    }else{
+      if(data.value === ""){     
+        this.cityModel.stateId= 0;
+        this.stateName = '';
+        this.cityListArr=[];       
+       }else{        
+        this.cityModel.stateId= data.value;
+        this.stateName = data.value.toString();           
+      }    
+    }
+    
+
+  if (this.cityModel.stateId !== 0)
+  {   
+   
   
-  this.cityModel._tenantName = this.tenant;
-  this.cityModel._token = sessionStorage.getItem("token");
-
-  this.commonService.GetAllCity(this.cityModel).subscribe(val => {
-    if (typeof (val) == 'undefined') {
-      this.cityListArr=[];
-    }
-    else {
-      if (val._failure) {
+    this.commonService.GetAllCity(this.cityModel).subscribe(val => {
+      if (typeof (val) == 'undefined') {
         this.cityListArr=[];
-      } else {
-        this.cityListArr=val.tableCity;    
       }
-    }
-
-  }) 
-
+      else {
+        if (val._failure) {
+          this.cityListArr=[];
+        } else {
+          this.cityListArr=val.tableCity;    
+        }
+      }
+  
+    }) 
+  }
  }
   submit() {
     
-    if (this.form.valid) {
-      this.schoolAddViewModel._tenantName = this.tenant;
-      this.schoolAddViewModel._token = sessionStorage.getItem("token");
+    if (this.form.valid) { 
       
-      this.schoolAddViewModel.schoolMaster.schoolDetail[0].schoolLogo = this.image;
-     
+      this.schoolAddViewModel.schoolMaster.schoolDetail[0].schoolLogo = this.image;     
       if ((this.commonFunction.checkEmptyObject(this.dataOfwashInfoFromGeneral) === true)
      || (this.commonFunction.checkEmptyObject(this.dataOfgeneralInfoFromView) === true) 
      || (this.commonFunction.checkEmptyObject(this.dataOfgeneralInfoFromWash) === true)){
@@ -328,7 +385,7 @@ city:number;
       this.schoolAddViewModel.schoolMaster.state = this.stateName;
       this.schoolAddViewModel.schoolMaster.city = this.schoolAddViewModel.schoolMaster.city.toString();
 
-        this.generalInfoService.UpdateGeneralInfo(this.schoolAddViewModel).subscribe(data => {
+        this.generalInfoService.UpdateSchool(this.schoolAddViewModel).subscribe(data => {
           if (typeof (data) == 'undefined') {
             this.snackbar.open('General Info Updation failed. ' + sessionStorage.getItem("httpError"), '', {
               duration: 10000
@@ -356,7 +413,7 @@ city:number;
       this.schoolAddViewModel.schoolMaster.state = this.stateName;
       this.schoolAddViewModel.schoolMaster.city = this.schoolAddViewModel.schoolMaster.city.toString();
         
-        this.generalInfoService.SaveGeneralInfo(this.schoolAddViewModel).subscribe(data => {
+        this.generalInfoService.AddSchool(this.schoolAddViewModel).subscribe(data => {
           if (typeof (data) == 'undefined') {
             this.snackbar.open('General Info Submission failed. ' + sessionStorage.getItem("httpError"), '', {
               duration: 10000
@@ -372,6 +429,7 @@ city:number;
               this.snackbar.open('General Info Submission Successful.', '', {
                 duration: 10000
               });
+              this.generalInfoService.changeMessage(true);
               this.parentShowWash.emit(this.isEditMode);
               this.dataOfgeneralInfo.emit(data);
             }

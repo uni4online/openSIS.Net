@@ -22,6 +22,8 @@ export class CityModel extends CommonField {
     public stateId:number;
     constructor() {
         super();
+        this._tenantName=sessionStorage.getItem('tenant');
+        this._token=sessionStorage.getItem('token');
        
     }
 }

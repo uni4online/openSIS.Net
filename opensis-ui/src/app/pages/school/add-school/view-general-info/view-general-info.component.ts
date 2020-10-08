@@ -26,8 +26,7 @@ export class ViewGeneralInfoComponent implements OnInit {
   @Input() generalAndWashInfoData:SchoolAddViewModel; //This is coming from AddSchool on API Call. 
   @Output() parentShowWash :EventEmitter<object> = new EventEmitter<object>();
   @Output("dataOfgeneralInfoFromView") dataOfgeneralInfoFromView: EventEmitter<object> =   new EventEmitter();
-  icEdit = icEdit;
-  //public tenant = "opensisv2";
+  icEdit = icEdit;  
   public internet="";
   public electricity="";
   public status="";
@@ -60,8 +59,7 @@ export class ViewGeneralInfoComponent implements OnInit {
     this.dataOfgeneralInfoFromView.emit(this.schoolAddViewModel);
   }
   getAllCountry(){
-    this.countryModel._tenantName = sessionStorage.getItem("tenant");
-    this.countryModel._token = sessionStorage.getItem("token");
+    
     this.commonService.GetAllCountry(this.countryModel).subscribe(data => {
       if (typeof (data) == 'undefined') {
         this.countryListArr=[];
@@ -87,10 +85,7 @@ export class ViewGeneralInfoComponent implements OnInit {
    }
    getAllStateByCountry(data){   
    
-    this.stateModel.countryId= data;   
-    this.stateModel._tenantName = sessionStorage.getItem("tenant");
-    this.stateModel._token = sessionStorage.getItem("token");
-  
+    this.stateModel.countryId= data;  
    this.commonService.GetAllState(this.stateModel).subscribe(data => {
      if (typeof (data) == 'undefined') {
        this.stateListArr=[];
@@ -114,10 +109,7 @@ export class ViewGeneralInfoComponent implements OnInit {
    })
   }
   getAllCitiesByState(data){   
-    this.cityModel.stateId= data; 
-    this.cityModel._tenantName = sessionStorage.getItem("tenant");
-    this.cityModel._token = sessionStorage.getItem("token");
-  
+    this.cityModel.stateId= data;  
     this.commonService.GetAllCity(this.cityModel).subscribe(val => {
       if (typeof (val) == 'undefined') {
         this.cityListArr=[];

@@ -110,11 +110,21 @@ namespace opensis.data.Repository
         {
             try
             {
-                var GradeLevel = this.context?.Gradelevels.FirstOrDefault(x => x.TenantId == gradelevel.tblGradelevel.TenantId && x.SchoolId == gradelevel.tblGradelevel.SchoolId && x.GradeId == gradelevel.tblGradelevel.GradeId);
-                this.context?.Gradelevels.Remove(GradeLevel);
-                this.context?.SaveChanges();
-                gradelevel._failure = false;
-                gradelevel._message = "Deleted";
+                var LinkedGradeLevels = this.context?.Gradelevels.Where(x => x.TenantId == gradelevel.tblGradelevel.TenantId && x.SchoolId == gradelevel.tblGradelevel.SchoolId && x.NextGradeId == gradelevel.tblGradelevel.GradeId).ToList();
+                if (LinkedGradeLevels.Count>0)
+                {
+                    gradelevel.tblGradelevel = null;
+                    gradelevel._failure = true;
+                    gradelevel._message = "Can not be deleted";
+                }
+                else
+                {
+                    var GradeLevel = this.context?.Gradelevels.FirstOrDefault(x => x.TenantId == gradelevel.tblGradelevel.TenantId && x.SchoolId == gradelevel.tblGradelevel.SchoolId && x.GradeId == gradelevel.tblGradelevel.GradeId);
+                    this.context?.Gradelevels.Remove(GradeLevel);
+                    this.context?.SaveChanges();
+                    gradelevel._failure = false;
+                    gradelevel._message = "Deleted";
+                }
             }
             catch (Exception es)
             {
@@ -130,8 +140,25 @@ namespace opensis.data.Repository
             try
             {
 
-                var gradelevels = this.context?.Gradelevels.Where(x => x.TenantId == gradelevelList.TenantId && x.SchoolId==gradelevelList.SchoolId).OrderBy(x=>x.SortOrder).ToList();
-                gradelevelListModel.TableGradelevelList = gradelevels;
+                var gradelevelsList = this.context?.Gradelevels.Where(x => x.TenantId == gradelevelList.TenantId && x.SchoolId==gradelevelList.SchoolId).OrderBy(x=>x.SortOrder).ToList();
+
+
+                var gradeLevels = from gradelevel in gradelevelsList
+                                 select new GradeLevelView()
+                                 {
+                                     GradeId= gradelevel.GradeId,
+                                     LastUpdated= gradelevel.LastUpdated,
+                                     NextGrade= this.context?.Gradelevels.FirstOrDefault(x=>x.GradeId== gradelevel.NextGradeId)?.Title,
+                                     SchoolId= gradelevel.SchoolId,
+                                     Title= gradelevel.Title,
+                                     ShortName= gradelevel.ShortName,
+                                     SortOrder= gradelevel.SortOrder,
+                                     TenantId= gradelevel.TenantId,
+                                     UpdatedBy= gradelevel.UpdatedBy
+                                 };
+
+
+                gradelevelListModel.TableGradelevelList = gradeLevels.ToList();
                 gradelevelListModel._tenantName = gradelevelList._tenantName;
                 gradelevelListModel._token = gradelevelList._token;
                 gradelevelListModel._failure = false;

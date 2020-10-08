@@ -5,6 +5,7 @@ import { HttpClient} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { LanguageModel } from '../models/languageModel';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -12,7 +13,6 @@ export class CommonService {
   apiUrl:string = environment.apiURL;
   constructor(private http: HttpClient) { }
   GetAllCountry(obj: CountryModel){  
-  
     let apiurl = this.apiUrl + obj._tenantName+ "/Common/getAllCountries"; 
     return this.http.post<CountryModel>(apiurl,obj)
   }  
@@ -31,4 +31,7 @@ export class CommonService {
     let apiurl = this.apiUrl + obj._tenantName+ "/Common/getAllLanguage"; 
     return this.http.post<LanguageModel>(apiurl,obj)
   }  
+
+ 
+
 }

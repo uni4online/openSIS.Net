@@ -47,6 +47,8 @@ export class SchoolAddViewModel extends CommonField {
       this.schoolMaster= new SchoolMasterModel();
       this.schoolMaster.latitude=null;
       this.schoolMaster.longitude=null;
+      this._tenantName=sessionStorage.getItem('tenant');
+      this._token=sessionStorage.getItem('token');
   }
 }
 

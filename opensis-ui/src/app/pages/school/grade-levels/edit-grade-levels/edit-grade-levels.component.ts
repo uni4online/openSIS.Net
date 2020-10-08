@@ -79,7 +79,7 @@ export class EditGradeLevelsComponent implements OnInit {
   }
 
   AddGradeLevel(){
-    this.addGradeLevel.tblGradelevel.schoolId=+sessionStorage.getItem("selectedId");;
+    this.addGradeLevel.tblGradelevel.schoolId=+sessionStorage.getItem("selectedSchoolId");;
     this.addGradeLevel.tblGradelevel.title = this.form.value.title;
     if(this.form.value.nextGradeId=="null"){
       this.addGradeLevel.tblGradelevel.nextGradeId = null;

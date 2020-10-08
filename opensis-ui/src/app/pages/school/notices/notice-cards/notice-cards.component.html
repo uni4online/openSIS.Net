@@ -10,11 +10,11 @@
 
         <mat-menu #addNewMenu="matMenu" [overlapTrigger]="false" xPosition="before" yPosition="below">
             <button mat-menu-item>
-                <span (click)="editNoticeById(noticeId)">{{'editItem' |translate }}</span>
+                <span (click)="editNotice(noticeId)">{{'editItem' |translate }}</span>
             </button>
 
             <button mat-menu-item>
-                <span (click)="deleteNoticeById(noticeId)">{{'deleteItem' |translate}}</span>
+                <span (click)="deleteNoticeConfirm(noticeId)">{{'deleteItem' |translate}}</span>
             </button>
         </mat-menu>
     </div>

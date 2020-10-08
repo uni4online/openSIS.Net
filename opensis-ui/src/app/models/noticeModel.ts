@@ -11,9 +11,10 @@ export class NoticeModel {
     public validTo: string;
     public createdBy: string;
     constructor() {
-        this.schoolId = 1;
+        this.schoolId =  + sessionStorage.getItem('selectedSchoolId');
         this.tenantId = sessionStorage.getItem("tenantId");
-        this.createdBy = "Souvik";
+        this.createdBy = sessionStorage.getItem("email");
+       
     }
 }
 
@@ -22,15 +23,23 @@ export class NoticeAddViewModel extends CommonField {
     constructor() {
         super();
         this.notice = new NoticeModel();
+        this._tenantName = sessionStorage.getItem('tenant');
+        this._token= sessionStorage.getItem("token");
     }
 }
 
 
 export class NoticeListViewModel extends CommonField {
     public noticeList: NoticeModel[];
+    public tenantId: string;
+    public schoolId: number;
     constructor() {
         super();
         this.noticeList = [];
+        this.schoolId = + sessionStorage.getItem('selectedSchoolId');
+        this.tenantId = sessionStorage.getItem("tenantId");
+        this._tenantName = sessionStorage.getItem('tenant');
+        this._token= sessionStorage.getItem("token");
     }
 }
 

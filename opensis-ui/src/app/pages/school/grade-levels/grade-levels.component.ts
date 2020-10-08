@@ -92,7 +92,7 @@ export class GradeLevelsComponent implements OnInit {
 
 
   getAllGradeLevel(){
-    this.getAllGradeLevels.schoolId=+sessionStorage.getItem("selectedId");
+    this.getAllGradeLevels.schoolId=+sessionStorage.getItem("selectedSchoolId");
     this.getAllGradeLevels._tenantName=sessionStorage.getItem("tenant");
     this.getAllGradeLevels._token=sessionStorage.getItem("token");
     this.gradeLevelService.GetGradeLevels(this.getAllGradeLevels).subscribe((res)=>{

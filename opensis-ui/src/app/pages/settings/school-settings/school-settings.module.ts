@@ -19,11 +19,14 @@ import { MatSelectModule } from '@angular/material/select';
 import { TranslateModule } from '@ngx-translate/core';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {  RouterModule } from '@angular/router';
 
+import { MatTableModule } from '@angular/material/table';
 import { GradeLevelsComponent } from '../../school/grade-levels/grade-levels.component';
 import { SectionsComponent } from '../../school/sections/sections.component';
 import { RoomsComponent } from '../../school/rooms/rooms.component';
-import { MatTableModule } from '@angular/material/table';
+import { SchoolFieldsComponent } from '../../school/school-fields/school-fields.component';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -31,7 +34,7 @@ import {MatSortModule} from '@angular/material/sort';
 import { SharedModuleModule } from '../../../pages/shared-module/shared-module.module';
 
 @NgModule({
-  declarations: [SchoolSettingsComponent,GradeLevelsComponent,SectionsComponent, RoomsComponent],
+  declarations: [SchoolSettingsComponent,GradeLevelsComponent,SectionsComponent, RoomsComponent, SchoolFieldsComponent],
   imports: [
     CommonModule,
     MatIconModule,
@@ -53,12 +56,16 @@ import { SharedModuleModule } from '../../../pages/shared-module/shared-module.m
     BrowserAnimationsModule,
     ReactiveFormsModule,
     FormsModule,
+    RouterModule,
     MatTableModule,
-    MatMenuModule,
-    MatCheckboxModule,
     MatPaginatorModule,
     MatSortModule,
-    SharedModuleModule
+    SharedModuleModule,
+    MatDialogModule,
+    MatMenuModule,
+    MatSortModule,
+    MatCheckboxModule,
+    MatPaginatorModule
   ]
 })
 export class SchoolSettingsModule { }

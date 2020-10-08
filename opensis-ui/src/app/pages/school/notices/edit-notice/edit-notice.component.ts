@@ -5,15 +5,16 @@ import icClose from '@iconify/icons-ic/twotone-close';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
 import { EditorChangeContent, EditorChangeSelection } from 'ngx-quill';
-import { GetAllMembersList, GetAllMembers } from 'src/app/models/MembershipNameModel';
+import { GetAllMembersList, Membership } from '../../../../../app/models/membershipModel';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, ThemePalette } from '@angular/material/core';
-import { NoticeService } from 'src/app/services/notice.service';
+import { NoticeService } from '../../../../../app/services/notice.service';
 import { TranslateService } from '@ngx-translate/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NoticeAddViewModel } from 'src/app/models/noticeModel';
+import { NoticeAddViewModel } from '../../../../../app/models/noticeModel';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { MY_FORMATS } from '../../../../pages/shared/format-datepicker';
+import { MembershipService } from '../../../../../app/services/membership.service';
 
 @Component({
   selector: 'vex-edit-notice',
@@ -32,28 +33,28 @@ import { MY_FORMATS } from '../../../../pages/shared/format-datepicker';
 })
 export class EditNoticeComponent implements OnInit {
   AddOrEditNotice: string;
-  @Output() afterAllClosed = new EventEmitter<any>();
+  @Output() afterClosed = new EventEmitter<boolean>();
   getAllMembersList: GetAllMembersList = new GetAllMembersList();
   icClose = icClose;
   body: string = null;
   noticeAddViewModel = new NoticeAddViewModel();
   memberArray: number[] = [];
   form: FormGroup;
-  tenant: string;
-  constructor(private dialogRef: MatDialogRef<EditNoticeComponent>, private router: Router, private Activeroute: ActivatedRoute, private fb: FormBuilder, private _noticeService: NoticeService, public translateService: TranslateService, private snackbar: MatSnackBar) {
+ 
+  constructor(private dialogRef: MatDialogRef<EditNoticeComponent>, private router: Router, private Activeroute: ActivatedRoute, private fb: FormBuilder, private _noticeService: NoticeService,private _membershipService: MembershipService, public translateService: TranslateService, private snackbar: MatSnackBar) {
     translateService.use('en');
-    this.Activeroute.params.subscribe(params => { this.tenant = params.id || 'opensisv2'; });
+    
   }
 
   ngOnInit(): void {
 
     var noticeId = localStorage.getItem('noticeId');
-    this.noticeAddViewModel._tenantName = this.tenant;
-    this.noticeAddViewModel.notice.noticeId = Number(noticeId);
-    this.noticeAddViewModel._token = sessionStorage.getItem("token");
+    //this.noticeAddViewModel._tenantName = this.tenant;
+    this.noticeAddViewModel.notice.noticeId = +noticeId;
+   // this.noticeAddViewModel._token = sessionStorage.getItem("token");
     if (this.noticeAddViewModel.notice.noticeId > 0) {
       this.AddOrEditNotice = "editNotice";
-      this._noticeService.editNoticeById(this.noticeAddViewModel).subscribe((res) => {
+      this._noticeService.viewNotice(this.noticeAddViewModel).subscribe((res) => {
         this.noticeAddViewModel = res;
         if (this.noticeAddViewModel.notice.targetMembershipIds != null) {
           var membershipIds = this.noticeAddViewModel.notice.targetMembershipIds.split(',');
@@ -66,12 +67,12 @@ export class EditNoticeComponent implements OnInit {
       this.AddOrEditNotice = "Add Notice";
     }
 
-    this.getAllMembersList._tenantName = this.tenant;
-    this.getAllMembersList._token = sessionStorage.getItem("token");
-    this._noticeService.getAllMembers(this.getAllMembersList).subscribe((res) => {
+    //this.getAllMembersList._tenantName = this.tenant;
+    //this.getAllMembersList._token = sessionStorage.getItem("token");
+    this._membershipService.getAllMembers(this.getAllMembersList).subscribe((res) => {
 
       this.getAllMembersList = res;
-
+     
     });
 
 
@@ -95,8 +96,8 @@ export class EditNoticeComponent implements OnInit {
     this.noticeAddViewModel.notice.validFrom = this.form.value.valid_from;
     this.noticeAddViewModel.notice.validTo = this.form.value.valid_to;
     this.noticeAddViewModel.notice.targetMembershipIds = this.memberArray.toString();
-    this.noticeAddViewModel._tenantName = this.tenant;
-    this.noticeAddViewModel._token = sessionStorage.getItem("token");
+   // this.noticeAddViewModel._tenantName = this.tenant;
+    //this.noticeAddViewModel._token = sessionStorage.getItem("token");
     if (this.form.valid) {
       if (this.noticeAddViewModel.notice.noticeId > 0) {
         this._noticeService.updateNotice(this.noticeAddViewModel).subscribe(data => {
@@ -105,7 +106,7 @@ export class EditNoticeComponent implements OnInit {
               duration: 10000
             });
           } else {
-            this.snackbar.open('Notice updated successful. ' + data._message,'', {
+            this.snackbar.open('Notice updated successful. ','', {
               duration: 10000
             });
           }
@@ -113,19 +114,19 @@ export class EditNoticeComponent implements OnInit {
         });
       }
       else {
-        this._noticeService.saveNotice(this.noticeAddViewModel).subscribe(data => {
+        this._noticeService.addNotice(this.noticeAddViewModel).subscribe(data => {
           if (data._failure) {
             this.snackbar.open('Notice saving failed. ' + data._message, '', {
               duration: 10000
             });
           } else {
-            this.snackbar.open('Notice saved successful. ' + data._message, '', {
+            this.snackbar.open('Notice saved successful. ' ,'', {
               duration: 10000
             });
           }
         });
       }
-      this.afterAllClosed.emit();
+      this.afterClosed.emit(true);
       this.dialogRef.close();
     }
   }
@@ -147,7 +148,6 @@ export class EditNoticeComponent implements OnInit {
       }
     }
 
-    console.log(this.memberArray);
   }
   selectChildren(event, id) {
     event.preventDefault();

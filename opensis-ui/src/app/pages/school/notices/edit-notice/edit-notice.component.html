@@ -51,7 +51,7 @@
 
         <ul class="md:grid md:grid-cols-3 md:col-gap-10 md:row-gap-3">
             <li *ngFor="let member of getAllMembersList.getAllMemberList">
-                <mat-checkbox [checked]="memberArray.indexOf(member.membership_id) != -1" (click)="selectChildren($event,member.membership_id)" color="primary">
+                <mat-checkbox [checked]="memberArray.indexOf(member.membershipId) != -1" (click)="selectChildren($event,member.membershipId)" color="primary">
                     {{member.profile}}</mat-checkbox>
             </li>
 

@@ -1,0 +1,31 @@
+<div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
+    <h2 class="headline m-0" fxFlex="auto">{{'addEvent' | translate}}</h2>
+
+    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+        <mat-icon [icIcon]="icClose"></mat-icon>
+    </button>
+</div>
+<mat-divider class="-mx-6 text-border"></mat-divider>
+
+<mat-dialog-content>
+    <div fxLayout="column">
+        <mat-form-field class="mt-6" appearance="outline" color="primary">
+            <mat-label>{{'title' | translate}}</mat-label>
+            <input cdkFocusInitial matInput required>
+        </mat-form-field>
+        
+        <mat-form-field class="mt-6" appearance="outline" color="primary">
+            <mat-label>{{'notes' | translate}}</mat-label>
+            <textarea cdkFocusInitial matInput required></textarea>
+        </mat-form-field>
+
+        <div class="mb-4">
+            <mat-checkbox [checked]="false" color="primary">{{'showEventsSystemWide' | translate}}</mat-checkbox>
+        </div>
+    </div>
+</mat-dialog-content>
+
+<mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" class="py-6">
+    <button mat-button mat-dialog-close type="button">{{'cancel' | translate}}</button>
+    <button mat-raised-button color="primary" type="submit">{{'submit' | translate}}</button>
+</mat-dialog-actions>

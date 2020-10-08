@@ -30,7 +30,8 @@ using opensis.core.Room.Interfaces;
 using opensis.core.Room.Services;
 using opensis.core.Section.Interfaces;
 using opensis.core.Section.Services;
-
+using opensis.core.MarkingPeriods.Interfaces;
+using opensis.core.MarkingPeriods.Services;
 
 namespace opensisAPI
 {
@@ -64,6 +65,8 @@ namespace opensisAPI
             services.AddScoped<IRoomRegisterService, RoomRegister>();
             services.AddScoped<ISectionRepositiory, SectionRepository>();
             services.AddScoped<ISectionService, SectionService>();
+            services.AddScoped<IMarkingperiodRepository, MarkingperiodRepository>();
+            services.AddScoped<IMarkingPeriodService, MarkingPeriodService>();
 
 
 

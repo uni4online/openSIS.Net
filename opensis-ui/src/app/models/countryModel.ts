@@ -23,6 +23,7 @@ export class CountryModel extends CommonField {
     constructor() {
         super();
         this.tableCountry= null;
-        
+        this._tenantName=sessionStorage.getItem('tenant');
+        this._token=sessionStorage.getItem('token');
     }
 }

@@ -16,12 +16,12 @@ export class TableStateModel {
 }
 
 
-export class StateModel extends CommonField {
-    
+export class StateModel extends CommonField {    
     public tableState : [TableStateModel];
     public countryId:number;
     constructor() {
         super();
-       
+        this._tenantName=sessionStorage.getItem('tenant');
+        this._token=sessionStorage.getItem('token');
     }
 }

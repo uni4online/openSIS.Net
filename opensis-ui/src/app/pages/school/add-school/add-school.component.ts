@@ -7,14 +7,14 @@ import { ActivatedRoute } from '@angular/router';
 import { SchoolService } from '../../../services/school.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SharedFunction } from '../../../pages/shared/shared-function';
+import { CommonService } from '../../../services/common.service';
 @Component({
+  
   selector: 'vex-add-school',
   templateUrl: './add-school.component.html',
   styleUrls: ['./add-school.component.scss'],
-  animations: [
-  
-    fadeInRight400ms
-    
+  animations: [  
+    fadeInRight400ms    
   ]
 })
 export class AddSchoolComponent implements OnInit,OnDestroy {
@@ -42,38 +42,32 @@ export class AddSchoolComponent implements OnInit,OnDestroy {
   getImageResponse="";
   imageObj;
   enableCropTool;
-  //public tenant = "";
+  message:string;
   schoolAddViewModel: SchoolAddViewModel = new SchoolAddViewModel();
   generalAndWashInfoData: SchoolAddViewModel = new SchoolAddViewModel();;
   constructor(private imageCropperService:ImageCropperService,
     private Activeroute: ActivatedRoute,
     private generalInfoService:SchoolService,
      private snackbar: MatSnackBar,
-     private commonFunction:SharedFunction) { 
-   // this.Activeroute.params.subscribe(params => { this.tenant ='opensisv2'; });
-
-    this.clickEventSubscriptionForCrop=this.imageCropperService.getCroppedEvent().subscribe((res)=>{
-     
-        this.image=res;
-      });
+     private commonFunction:SharedFunction,
+     private data: CommonService) {
+      this.clickEventSubscriptionForCrop=this.imageCropperService.getCroppedEvent().subscribe((res)=>{
+      this.image=res;
+    });
     
-    this.clickEventSubscriptionForUnCrop=this.imageCropperService.getUncroppedEvent().subscribe((res)=>{
-     
+    this.clickEventSubscriptionForUnCrop=this.imageCropperService.getUncroppedEvent().subscribe((res)=>{    
       //this.image='data:image/png;base64,'+btoa(res.target.result);
-      this.image=btoa(res.target.result);
-      
-
-     
-        });
-
-
+      this.image=btoa(res.target.result);    
+    });
   }
 
-  ngOnInit() { 
-    debugger
+  ngOnInit() {   
     this.id = sessionStorage.getItem("id")
-    this.schoolId=+this.id;   
-    this.getSchoolGeneralandWashInfoDetails();
+    this.schoolId=+this.id;    
+    
+    if(this.schoolId !== 0){
+      this.getSchoolGeneralandWashInfoDetails();
+    }    
    }
 
   getDataOfgeneralInfo(data){   
@@ -81,6 +75,7 @@ export class AddSchoolComponent implements OnInit,OnDestroy {
   }
 
   getDataOfgeneralInfoFromView(data){  
+   
     if(this.commonFunction.checkEmptyObject(data) === true){
       this.dataOfgeneralInfoFromView=data; 
       this.responseImage = this.generalAndWashInfoData.schoolMaster.schoolDetail[0]?.schoolLogo;
@@ -89,12 +84,13 @@ export class AddSchoolComponent implements OnInit,OnDestroy {
     
   }
 
-  getDataOfWashInfoFromView(data){    
+  getDataOfWashInfoFromView(data){   
     this.dataOfWashInfoFromView=data;   
   }
   
   
-  showGeneralEdit(){  
+  showGeneralEdit(){ 
+    
     if(this.isAddMode){
       this.isEditMode=false; 
     }else{
@@ -113,7 +109,7 @@ export class AddSchoolComponent implements OnInit,OnDestroy {
   }
 
   showWashEdit(data){ 
-    
+   
     if(data){     
       this.isViewMode=false;
     }  
@@ -130,7 +126,8 @@ export class AddSchoolComponent implements OnInit,OnDestroy {
       this.responseImage = this.generalAndWashInfoData.schoolMaster.schoolDetail[0]?.schoolLogo;
     }    
   }
-  showViewGeneralInfo(){     
+  showViewGeneralInfo(){ 
+     
     this.displayGeneral = false;
     this.displayWash = false;
     this.generalFlag = true;
@@ -138,9 +135,11 @@ export class AddSchoolComponent implements OnInit,OnDestroy {
     this.isEditMode=false; 
     this.displayViewWash=false;
     this.displayViewGeneral=true;    
+    this.disabledWashInfo= false;
     this.imageCropperService.nextMessage(true);
   }
-  showViewWashInfo(){   
+  showViewWashInfo(){  
+      
     this.displayGeneral = false;
     this.displayWash = false;
     this.generalFlag = false;
@@ -151,20 +150,12 @@ export class AddSchoolComponent implements OnInit,OnDestroy {
     this.imageCropperService.nextMessage(true);
   }
 
-  getSchoolGeneralandWashInfoDetails(){
-    
-    this.schoolAddViewModel._tenantName=sessionStorage.getItem("tenant"); 
-    this.schoolAddViewModel._token=sessionStorage.getItem("token");
-    //this.schoolAddViewModel.tblSchoolMaster.tableSchoolDetail[0].tenantId=sessionStorage.getItem("tenantId");
+  getSchoolGeneralandWashInfoDetails(){   
+   
     this.schoolAddViewModel.schoolMaster.schoolDetail[0].schoolId=this.schoolId;
     this.schoolAddViewModel.schoolMaster.schoolId=this.schoolId;
-    //this.schoolAddViewModel.tblSchoolMaster.tenantId=sessionStorage.getItem("tenantId");
-
-    this.generalInfoService.GetGeneralInfoById(this.schoolAddViewModel).subscribe(data => {
-     
-     console.log(data)
-      this.generalAndWashInfoData = data; 
-     
+    this.generalInfoService.ViewSchool(this.schoolAddViewModel).subscribe(data => {    
+      this.generalAndWashInfoData = data;     
       if(this.id === null){
         this.isAddMode=true;
         this.showGeneralEdit();
@@ -172,15 +163,13 @@ export class AddSchoolComponent implements OnInit,OnDestroy {
         this.isViewMode=true;
         this.responseImage = this.generalAndWashInfoData.schoolMaster.schoolDetail[0]?.schoolLogo;
         this.showViewGeneralInfo();        
-      }
-      
+      }      
       this.getDataOfgeneralInfo(this.dataOfgeneralInfo);
       this.getDataOfgeneralInfoFromView(this.dataOfgeneralInfoFromView);
       this.getDataOfWashInfoFromView(this.dataOfgeneralInfoFromView);
       this.imageResponse(this.imageObj);
     })
   }
-
   ngOnDestroy(){
     sessionStorage.removeItem("id") 
   }

@@ -31,12 +31,9 @@ export class WashInfoComponent implements OnInit {
   
   
   form:FormGroup
-  washinfo= WashInfoEnum;  
-  //public tenant = "opensisv2";  
+  washinfo= WashInfoEnum;
   schoolAddViewModel: SchoolAddViewModel = new SchoolAddViewModel();  
-  loading;
-  
-  
+  loading;  
    
   constructor( private fb: FormBuilder,
     private generalInfoService:SchoolService,
@@ -95,19 +92,16 @@ export class WashInfoComponent implements OnInit {
     this.schoolAddViewModel.schoolMaster.schoolDetail[0].maleToiletAccessibility = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolDetail[0].maleToiletAccessibility);  
     this.schoolAddViewModel.schoolMaster.schoolDetail[0].maleToiletType = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolDetail[0].maleToiletType) ;
     this.schoolAddViewModel.schoolMaster.schoolDetail[0].femaleToiletAccessibility = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolDetail[0].femaleToiletAccessibility) ;     
-    this.schoolAddViewModel.schoolMaster.schoolDetail[0].femaleToiletType=this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolDetail[0].femaleToiletType) ;
-    
+    this.schoolAddViewModel.schoolMaster.schoolDetail[0].femaleToiletType=this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolDetail[0].femaleToiletType) ;  
 
       
-     }
+}
 
 
      
-     submit() {    
-        this.schoolAddViewModel._tenantName = sessionStorage.getItem("tenant"); 
-        this.schoolAddViewModel._token = sessionStorage.getItem("token");               
+     submit() {                  
 
-        this.generalInfoService.UpdateGeneralInfo(this.schoolAddViewModel).subscribe(data => {
+        this.generalInfoService.UpdateSchool(this.schoolAddViewModel).subscribe(data => {
           if(typeof(data)=='undefined')
           {
             this.snackbar.open('Wash Info Submission failed. ' + sessionStorage.getItem("httpError"), '', {

@@ -10,6 +10,7 @@ import { NoticeAddViewModel, NoticeListViewModel } from 'src/app/models/noticeMo
 import { MatDialog } from '@angular/material/dialog';
 import { EditNoticeComponent } from '../edit-notice/edit-notice.component';
 import { TranslateService } from '@ngx-translate/core';
+import { ConfirmDialogComponent } from 'src/app/pages/shared-module/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'vex-notice-cards',
@@ -28,38 +29,57 @@ export class NoticeCardsComponent implements OnInit {
   @Input() imageUrl: string;
   @Input() visibleFrom: string;
   @Input() visibleTo: number;
-  tenant: string;
+  //tenant: string;
 
   constructor(private dialog: MatDialog,private _noticeService: NoticeService,public translateService: TranslateService, private Activeroute: ActivatedRoute, private snackbar: MatSnackBar) {
-    this.Activeroute.params.subscribe(params => { this.tenant = params.id || 'opensisv2'; });
+    //this.tenant = sessionStorage.getItem('tenant');
     translateService.use('en');
   }
 
   ngOnInit(): void {
   }
 
-  deleteNoticeById(id :number = 0) {
-    this.noticeDeleteModel._tenantName = this.tenant;
-    this.noticeDeleteModel.NoticeId= Number(id);
-    this.noticeDeleteModel._token = sessionStorage.getItem("token");
-    this._noticeService.deleteNoticeById(this.noticeDeleteModel).subscribe((res) => {
-      if (res._failure) {
-        this.snackbar.open('Notice Deletion failed. ' + res._message, 'LOL THANKS', {
-          duration: 10000
-        });
-      } else {
-        this.noticeListViewModel._tenantName = this.tenant;
-        this.noticeListViewModel._token = sessionStorage.getItem("token");
-         this._noticeService.getAllNotice(this.noticeListViewModel).subscribe((res) => {
-           this.noticeListViewModel = res;
-         });
-        this.snackbar.open('Notice Deleted Successful.', '', {
-          duration: 10000
-        });
-      }
+  deleteNoticeConfirm(id) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      maxWidth: "400px",
+      data: {
+          title: "Are you sure?",
+          message: "You are about to delete this notice."}
     });
+    // listen to response
+    dialogRef.afterClosed().subscribe(dialogResult => {
+      // if user pressed yes dialogResult will be true, 
+      // if user pressed no - it will be false
+      if(dialogResult){
+        this.deleteNotice(id);
+      }
+   });
   }
-  editNoticeById(noticeId: number) {
+
+deleteNotice(id){
+  this.noticeDeleteModel._tenantName = sessionStorage.getItem("tenant");
+  this.noticeDeleteModel.NoticeId= +id;
+  this.noticeDeleteModel._token = sessionStorage.getItem("token");
+  this._noticeService.deleteNotice(this.noticeDeleteModel).subscribe((res) => {
+    if (res._failure) {
+      this.snackbar.open('Notice Deletion failed. ' + res._message, 'LOL THANKS', {
+        duration: 10000
+      });
+    } else {
+      // this.noticeListViewModel._tenantName = this.tenant;
+      // this.noticeListViewModel._token = sessionStorage.getItem("token");
+       this._noticeService.getAllNotice(this.noticeListViewModel).subscribe((res) => {
+         this.noticeListViewModel = res;
+       });
+      this.snackbar.open('Notice Deleted Successful.', '', {
+        duration: 10000
+      });
+    }
+  });
+}
+
+    
+editNotice(noticeId: number) {
     localStorage.setItem('noticeId',noticeId.toString());
     this.dialog.open(EditNoticeComponent, {
       data: null,

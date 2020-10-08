@@ -29,6 +29,6 @@ namespace opensis.data.Models
             }
         }
 
-        public SortingModel SoertingModel { get; set; }
+        public SortingModel SortingModel { get; set; }
     }
 }

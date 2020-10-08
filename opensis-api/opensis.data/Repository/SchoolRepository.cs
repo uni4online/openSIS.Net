@@ -47,13 +47,13 @@ namespace opensis.data.Repository
                 IQueryable<SchoolMaster> transactionIQ = this.context?.SchoolMaster
                     .Include(d => d.SchoolDetail)
                     .Where(x => x.TenantId == pageResult.TenantId);
-                if (pageResult.SoertingModel != null)
+                if (pageResult.SortingModel != null)
                 {
-                    switch (pageResult.SoertingModel.SortColumn)
+                    switch (pageResult.SortingModel.SortColumn.ToLower())
                     {
-                        case "NameOfPrincipal":
+                        case "nameofprincipal":
 
-                            if (pageResult.SoertingModel.SortDirection.ToLower() == "asc")
+                            if (pageResult.SortingModel.SortDirection.ToLower() == "asc")
                             {
 
                                 transactionIQ = transactionIQ.OrderBy(a => a.SchoolDetail.FirstOrDefault().NameOfPrincipal);
@@ -65,7 +65,7 @@ namespace opensis.data.Repository
                             break;
 
                         default:
-                            transactionIQ = Utility.Sort(transactionIQ, pageResult.SoertingModel.SortColumn, pageResult.SoertingModel.SortDirection.ToLower());
+                            transactionIQ = Utility.Sort(transactionIQ, pageResult.SortingModel.SortColumn, pageResult.SortingModel.SortDirection.ToLower());
                             break;
                     }
 
@@ -75,12 +75,12 @@ namespace opensis.data.Repository
                 transactionIQ = transactionIQ.Skip((pageResult.PageNumber - 1) * pageResult.PageSize).Take(pageResult.PageSize);
                 var schoollist = transactionIQ.AsNoTracking().Select(s => new GetSchoolForView
                 {
-                    School_Id = s.SchoolId,
-                    School_Name = s.SchoolName,
-                    Tenant_Id = s.TenantId,
-                    Phone = s.SchoolDetail.FirstOrDefault().Telephone == null ? string.Empty : s.SchoolDetail.FirstOrDefault().Telephone.Trim(),
-                    Principle = s.SchoolDetail.FirstOrDefault().NameOfPrincipal == null ? string.Empty : s.SchoolDetail.FirstOrDefault().NameOfPrincipal.Trim(),
-                    School_Address = ToFullAddress(s.StreetAddress1, s.StreetAddress2,
+                    SchoolId = s.SchoolId,
+                    SchoolName = s.SchoolName,
+                    TenantId = s.TenantId,
+                    Telephone = s.SchoolDetail.FirstOrDefault().Telephone == null ? string.Empty : s.SchoolDetail.FirstOrDefault().Telephone.Trim(),
+                    NameOfPrincipal = s.SchoolDetail.FirstOrDefault().NameOfPrincipal == null ? string.Empty : s.SchoolDetail.FirstOrDefault().NameOfPrincipal.Trim(),
+                    StreetAddress1 = ToFullAddress(s.StreetAddress1, s.StreetAddress2,
                     //(!string.IsNullOrEmpty(s.City)?this.context.TableCity.Where(x => x.Id == int.Parse(s.City)).FirstOrDefault().Name: string.Empty),
                     this.context.City.Where(x => x.Id == Convert.ToInt32(s.City)).FirstOrDefault().Name,
                     this.context.State.Where(x => x.Id == Convert.ToInt32(s.State)).FirstOrDefault().Name,
@@ -116,7 +116,7 @@ namespace opensis.data.Repository
             try
             {
 
-                var schoolList = this.context?.SchoolMaster.Where(x => x.TenantId == school.TenantId).OrderBy(x => x.SchoolName).Select(x=> new GetSchoolForView() { School_Id=x.SchoolId,Tenant_Id=x.TenantId,School_Name=x.SchoolName.Trim(),Phone=null,Principle=null,School_Address=null,Status=null}).ToList();
+                var schoolList = this.context?.SchoolMaster.Where(x => x.TenantId == school.TenantId).OrderBy(x => x.SchoolName).Select(x=> new GetSchoolForView() { SchoolId=x.SchoolId,TenantId=x.TenantId,SchoolName=x.SchoolName.Trim(),Telephone=null,NameOfPrincipal=null,StreetAddress1=null,Status=null}).ToList();
                 schoolListModel.GetSchoolForView = schoolList;
                 schoolListModel.PageNumber = null;
                 schoolListModel._pageSize = null;

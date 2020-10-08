@@ -97,8 +97,8 @@
                     <mat-label>{{'lowestGradeLevel'|translate}}</mat-label>
                     <mat-select formControlName="lowest_grade_level" [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].lowestGradeLevel" name="lowest_grade_level" required>
                         <mat-option></mat-option>
-                        <mat-option *ngFor="let key of highestGradeLevelsOption" [value]="key" [disabled]="key==schoolAddViewModel.schoolMaster.schoolDetail[0].highestGradeLevel">
-                            {{key}}
+                        <mat-option *ngFor="let lowestGradeLevel of gradeLevel" [value]="lowestGradeLevel.id" [disabled]="lowestGradeLevel.id==schoolAddViewModel.schoolMaster.schoolDetail[0].highestGradeLevel">
+                            {{lowestGradeLevel.title}}
                            </mat-option>
                     </mat-select>
                     <mat-error *ngIf="form.get('lowest_grade_level').hasError('required')">{{'lowestGradeLevelIsRequired'|translate}}</mat-error>
@@ -109,8 +109,8 @@
                     <mat-label>{{'highestGradeLevel'|translate}}</mat-label>
                     <mat-select formControlName="highest_grade_level" [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].highestGradeLevel"  name="highest_grade_level" required>
                         <mat-option></mat-option>
-                        <mat-option *ngFor="let key of highestGradeLevelsOption" [value]="key" [disabled]="key==schoolAddViewModel.schoolMaster.schoolDetail[0].lowestGradeLevel">
-                            {{key}}
+                        <mat-option *ngFor="let highestGradeLevel of gradeLevel" [value]="highestGradeLevel.id" [disabled]="highestGradeLevel.id==schoolAddViewModel.schoolMaster.schoolDetail[0].lowestGradeLevel">
+                            {{highestGradeLevel.title}}
                            </mat-option>
                     </mat-select>
                     <mat-error *ngIf="form.get('highest_grade_level').hasError('required')">{{'highestGradeLevelIsRequired'|translate}}</mat-error>
@@ -121,10 +121,11 @@
             <div class="flex flex-1 mx-4 md:w-1/2">
                 <mat-form-field class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'dateSchoolOpened'|translate}}</mat-label>
-                    <input formControlName="date_school_opened" [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolOpened" name="date_school_opened"  [matDatepicker]="datepickerRef" matInput>
+                    <input formControlName="date_school_opened" [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolOpened" name="date_school_opened"  [matDatepicker]="datepickerRef" matInput required>
                     <mat-datepicker-toggle [for]="datepickerRef" matSuffix></mat-datepicker-toggle>
                     <mat-datepicker #datepickerRef></mat-datepicker>
-                    <mat-error *ngIf="form.get('date_school_closed').hasError('invalidDateComparison')"></mat-error>
+                    <mat-error *ngIf="form.get('date_school_opened').hasError('required')">{{'dateSchoolOpenedIsRequired'|translate}}</mat-error>
+                    <mat-error *ngIf="!form.get('date_school_opened').hasError('required') && form.get('date_school_opened').hasError('invalidDateComparison')"></mat-error>
                 </mat-form-field>
             </div>
             <div class="flex flex-1 mx-4 md:w-1/2">
@@ -225,7 +226,7 @@
                 <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'country'|translate}}</mat-label>
                     <mat-select formControlName="country" (selectionChange)="getAllStateByCountry($event)" [(ngModel)]="schoolAddViewModel.schoolMaster.country" name="country" required>
-                        <mat-option></mat-option>
+                        <mat-option value=""></mat-option>
                         <mat-option *ngFor="let country of countryListArr" [value]= 'country.id' >
                             {{country.name}}
                            </mat-option>
@@ -238,7 +239,7 @@
                 <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'stateRegionProvince'|translate}}</mat-label>
                     <mat-select formControlName="state" (selectionChange)="getAllCitiesByState($event)"  [(ngModel)]="schoolAddViewModel.schoolMaster.state" name="state" >
-                        <mat-option></mat-option>
+                        <mat-option value=""></mat-option>
                         <mat-option *ngFor="let state of stateListArr" [value]= 'state.id' >
                             {{state.name}}
                            </mat-option>

@@ -97,11 +97,14 @@
     "addSection": "Add Section",
     "addNewSection": "Add New Section",
     "addRoom": "Add Room",
+    "editRoom":"Edit Room",
     "addNewRoom": "Add New Room",
     "title": "Title",
     "capacity": "Capacity",
+    "capacityIsRequired":"Capacity Is Required",
     "description": "Description",
     "sortOrder": "Sort Order",
+    "sortorderIsRequired":"Sort Order Is Required",
     "action": "Action",
     "addMarkingPeriod": "Add Marking Period",
     "clickAnItemToViewDetailsOnTheRightSide": "Click an Item to View Details on the Right Side",
@@ -139,9 +142,21 @@
     "visibleTo" :"Visible to",
     "editInformation":"Edit Information",
     "no":"No",
-    "yes":"Yes"
-   
-    
-   
-
+    "yes":"Yes",
+    "addNewEvent":"Add New Event",
+    "addNewCalendar":"Add New Calendar",
+    "addCalendar":"Add Calendar",
+    "weekdays":"Weekdays",
+    "selectAll":"Select All",
+    "sunday":"Sunday",
+    "monday":"Monday",
+    "tuesday":"Tuesday",
+    "wednesday":"Wednesday",
+    "thursday":"Thursday",
+    "friday":"Friday",
+    "saturday":"Saturday",
+    "startDate":"Start Date",
+    "endDate":"End Date",
+    "defaultCalendarForThisSchool":"Default Calendar for This School",
+    "dateSchoolOpenedIsRequired":"Date School Opened is Required"
 }

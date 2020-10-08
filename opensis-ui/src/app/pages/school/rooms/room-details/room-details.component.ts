@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import icClose from '@iconify/icons-ic/twotone-close';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
@@ -16,10 +16,16 @@ import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
 export class RoomDetailsComponent implements OnInit {
 
   icClose = icClose;
+  roomDetails;
 
-  constructor(private dialogRef: MatDialogRef<RoomDetailsComponent>) { }
+  constructor(private dialogRef: MatDialogRef<RoomDetailsComponent>,
+    @Inject(MAT_DIALOG_DATA) public data:any,
+    ) {
+    this.roomDetails=data;
+   }
 
   ngOnInit(): void {
   }
+  
 
 }

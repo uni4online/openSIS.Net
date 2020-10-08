@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { fadeInUp400ms } from '../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../@vex/animations/stagger.animation';
@@ -9,6 +9,15 @@ import icAdd from '@iconify/icons-ic/twotone-add';
 import icFilterList from '@iconify/icons-ic/twotone-filter-list';
 import { EditRoomComponent } from '../rooms/edit-room/edit-room.component';
 import { RoomDetailsComponent } from '../rooms/room-details/room-details.component';
+
+import { RoomAddView,RoomListViewModel } from '../../../models/roomModel'
+import { RoomService } from '../../../services/room.service';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { TranslateService } from '@ngx-translate/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'vex-rooms',
@@ -26,24 +35,120 @@ export class RoomsComponent implements OnInit {
   icSearch = icSearch;
   icAdd = icAdd;
   icFilterList = icFilterList;
-
-  constructor(private dialog: MatDialog) { }
+  roomaddviewmodel:RoomAddView= new RoomAddView();
+  roomListViewModel:RoomListViewModel = new RoomListViewModel()
+  roomDetails: any;
+  constructor(private dialog: MatDialog,
+    private roomService:RoomService,
+    private snackbar: MatSnackBar,
+    private translateService : TranslateService) {
+      translateService.use('en')
+     }
+  roomModelList: MatTableDataSource<any>;
+  @ViewChild(MatPaginator) paginator:MatPaginator
+  @ViewChild(MatSort) sort: MatSort;
+  columns = [
+    { label:'roomId',property:'roomId',type:'hidden',visible:false},
+    { label: 'title', property: 'title', type: 'text', visible: true },
+    { label: 'capacity', property: 'capacity', type: 'text', visible: true, cssClasses: ['font-medium'] },
+    { label: 'description', property: 'description', type: 'text', visible: true },
+    { label: 'sortOrder', property: 'sortOrder', type: 'text', visible: true, cssClasses: ['text-secondary', 'font-medium'] },
+    { label: 'action', property: 'action', type: 'text', visible: true },
+  ];
 
   ngOnInit(): void {
+    this.roomListViewModel.schoolId=+sessionStorage.getItem("selectedSchoolId")
+    this.getAllRooms()
+  }
+  getAllRooms(){
+    this.roomService.getAllRoom(this.roomListViewModel).subscribe(
+      (res:RoomListViewModel)=>{
+        if(typeof(res)=='undefined'){
+          this.snackbar.open('Room list failed. ' + sessionStorage.getItem("httpError"), '', {
+            duration: 10000
+          });
+        }
+        else{
+          if (res._failure) {     
+            this.snackbar.open('Room list failed. ' + res._message, 'LOL THANKS', {
+              duration: 10000
+            });
+          } 
+          else { 
+            this.roomModelList=new MatTableDataSource(res.tableroomList) ;
+            this.roomModelList.sort=this.sort;         
+          }
+        }
+      })
   }
 
   openAddNew() {
     this.dialog.open(EditRoomComponent, {
       data: null,
       width: '800px'
-    });
+    }).afterClosed().subscribe(data => {
+        if(data==='submited'){
+          this.getAllRooms();
+        }
+      });
   }
 
-  openViewDetails() {
+  openViewDetails(element) {
     this.dialog.open(RoomDetailsComponent, {
-      data: null,
+      data: {info:element},
       width: '600px'
     });
   }
-
+  filter(event:string){
+    this.roomModelList.filter=event.trim().toLowerCase();
+  }
+  
+  get visibleColumns() {
+    return this.columns.filter(column => column.visible).map(column => column.property);
+  }
+  openEditdata(element){
+    this.dialog.open(EditRoomComponent, {
+      data: element,
+        width: '800px'
+    }).afterClosed().subscribe((data)=>{
+      if(data==='submited'){
+        this.getAllRooms()
+      }
+    })
+  }
+  deleteRoomdata(element){
+    this.roomaddviewmodel.tableRoom=element
+    this.roomService.deleteRoom(this.roomaddviewmodel).subscribe(
+      (res:RoomAddView)=>{
+        if(typeof(res)=='undefined'){
+          this.snackbar.open('Room Delete failed. ' + sessionStorage.getItem("httpError"), '', {
+            duration: 10000
+          });
+        }
+        else{
+          if (res._failure) {
+            this.snackbar.open('Room Delete failed. ' + res._message, 'LOL THANKS', {
+              duration: 10000
+            });
+          } 
+          else { 
+            this.getAllRooms()
+          }
+        }
+      }
+    )
+  }
+  confirmDelete(element){
+      const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        maxWidth: "400px",
+        data: {
+            title: "Are you sure?",
+            message: "You are about to delete "+element.title+"."}
+      });
+      dialogRef.afterClosed().subscribe(dialogResult => {
+        if(dialogResult){
+          this.deleteRoomdata(element);
+        }
+     });
+  }
 }

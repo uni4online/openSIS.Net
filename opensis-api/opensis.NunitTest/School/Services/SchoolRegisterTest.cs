@@ -33,7 +33,20 @@ namespace opensis.NunitTest.School.Services
             //schools.school_name = schoolname;
             //Assert.AreEqual(expectedresult, srg.IsMandatoryFieldsArePresent(schools));
         }
-
+        [Test]
+        public void Test_GetAllSchoolList()
+        {
+            SchoolRegister srg = new SchoolRegister();
+            PageResult pr = new PageResult();
+            pr.PageSize = 10;
+            pr.PageNumber = 0;
+            pr.TenantId =Guid.Parse("1e93c7bf-0fae-42bb-9e09-a1cedc8c0355");
+            pr._tenantName = "opensisv2";
+            pr._token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6Im9wZW5zaXN2MiIsIm5iZiI6MTYwMTgxNDIwOCwiZXhwIjoxNjAxODE2MDA4LCJpYXQiOjE2MDE4MTQyMDh9.ZHsm4jMC6S2yQvC9JejYhJCOOCQvwkxfed-mQMH9GAI";
+            var data = srg.GetAllSchoolList(pr);
+            Assert.AreEqual(true, data._failure);
+           // Assert.AreEqual(true, srg.GetAllSchoolList(pr));
+        }
 
     }
 }

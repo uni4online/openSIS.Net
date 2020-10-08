@@ -1,0 +1,70 @@
+<div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
+    <h2 class="headline m-0" fxFlex="auto">{{'addCalendar' | translate}}</h2>
+
+    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+        <mat-icon [icIcon]="icClose"></mat-icon>
+    </button>
+</div>
+<mat-divider class="-mx-6 text-border"></mat-divider>
+
+<mat-dialog-content>
+    <div fxLayout="column">
+        <mat-form-field class="mt-6" appearance="outline" color="primary">
+            <mat-label>{{'title' | translate}}</mat-label>
+            <input cdkFocusInitial matInput required>
+        </mat-form-field>
+
+        <div class="mb-4">
+            <mat-checkbox [checked]="false" color="primary">{{'defaultCalendarForThisSchool' | translate}}</mat-checkbox>
+        </div>
+
+        <div class="mb-2 md:flex md:flex-wrap -mx-6">
+            <div class="flex flex-1 mx-6 md:w-1/2">
+                <mat-form-field class="w-full" appearance="outline" color="primary">
+                    <mat-label>{{'startDate' | translate}}</mat-label>
+                    <input [matDatepicker]="begins" matInput>
+                    <mat-datepicker-toggle [for]="begins" matSuffix></mat-datepicker-toggle>
+                    <mat-datepicker #begins></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div class="flex flex-1 mx-6 md:w-1/2">
+                <mat-form-field class="w-full" appearance="outline" color="primary">
+                    <mat-label>{{'endDate' | translate}}</mat-label>
+                    <input [matDatepicker]="ends" matInput>
+                    <mat-datepicker-toggle [for]="ends" matSuffix></mat-datepicker-toggle>
+                    <mat-datepicker #ends></mat-datepicker>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <h6>{{'weekdays' | translate}}</h6>
+        <ul class="md:grid md:grid-cols-3 md:col-gap-8 md:row-gap-2 mt-2 mb-6">
+            <li><mat-checkbox [checked]="false" color="primary">{{'sunday' | translate}}</mat-checkbox></li>
+            <li><mat-checkbox [checked]="false" color="primary">{{'monday' | translate}}</mat-checkbox></li>
+            <li><mat-checkbox [checked]="false" color="primary">{{'tuesday' | translate}}</mat-checkbox></li>
+            <li><mat-checkbox [checked]="false" color="primary">{{'wednesday' | translate}}</mat-checkbox></li>
+            <li><mat-checkbox [checked]="false" color="primary">{{'thursday' | translate}}</mat-checkbox></li>
+            <li><mat-checkbox [checked]="false" color="primary">{{'friday' | translate}}</mat-checkbox></li>
+            <li><mat-checkbox [checked]="false" color="primary">{{'saturday' | translate}}</mat-checkbox></li>
+        </ul>
+
+        <h6>{{'visibleTo' | translate}}</h6>
+        <div class="mt-2">
+            <mat-checkbox [checked]="false" color="primary">{{'selectAll' | translate}}</mat-checkbox>
+        </div>
+        <ul class="md:grid md:grid-cols-3 md:col-gap-8 md:row-gap-2 mt-2 mb-6">
+            <li><mat-checkbox [checked]="false" color="primary">{{'administrator' | translate}}</mat-checkbox></li>
+            <li><mat-checkbox [checked]="false" color="primary">{{'monday' | translate}}</mat-checkbox></li>
+            <li><mat-checkbox [checked]="false" color="primary">{{'tuesday' | translate}}</mat-checkbox></li>
+            <li><mat-checkbox [checked]="false" color="primary">{{'wednesday' | translate}}</mat-checkbox></li>
+            <li><mat-checkbox [checked]="false" color="primary">{{'thursday' | translate}}</mat-checkbox></li>
+            <li><mat-checkbox [checked]="false" color="primary">{{'friday' | translate}}</mat-checkbox></li>
+            <li><mat-checkbox [checked]="false" color="primary">{{'saturday' | translate}}</mat-checkbox></li>
+        </ul>
+    </div>
+</mat-dialog-content>
+
+<mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" class="py-6">
+    <button mat-button mat-dialog-close type="button">{{'cancel' | translate}}</button>
+    <button color="primary" mat-raised-button type="submit">{{'submit' | translate}}</button>
+</mat-dialog-actions>
