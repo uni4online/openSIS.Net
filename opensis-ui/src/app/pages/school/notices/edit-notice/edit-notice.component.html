@@ -37,12 +37,11 @@
                 </mat-form-field>
             </div>
         </div>
-
-        <h6 class="text-primary mb-3">{{'visibleToProfile' |translate }}</h6>
+        
+        <h6 class="text-primary mb-3" [hidden]="membercount==0">{{'visibleToProfile' |translate }}</h6>
 
         <div class="mb-3">
-            <!-- <mat-checkbox [checked]="false" color="accent">Check All</mat-checkbox> -->
-            <mat-checkbox (click)="updateCheck($event)" class="example-margin">
+            <mat-checkbox (click)="updateCheck($event)"  [hidden]="membercount==0" class="example-margin">
                 Select All
             </mat-checkbox>
         </div>
@@ -51,6 +50,7 @@
 
         <ul class="md:grid md:grid-cols-3 md:col-gap-10 md:row-gap-3">
             <li *ngFor="let member of getAllMembersList.getAllMemberList">
+                
                 <mat-checkbox [checked]="memberArray.indexOf(member.membershipId) != -1" (click)="selectChildren($event,member.membershipId)" color="primary">
                     {{member.profile}}</mat-checkbox>
             </li>

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import icPreview from '@iconify/icons-ic/round-preview';
 import icPeople from '@iconify/icons-ic/twotone-people';
 import icMoreVert from '@iconify/icons-ic/more-vert';
@@ -11,7 +11,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { EditNoticeComponent } from '../edit-notice/edit-notice.component';
 import { TranslateService } from '@ngx-translate/core';
 import { ConfirmDialogComponent } from 'src/app/pages/shared-module/confirm-dialog/confirm-dialog.component';
-
 @Component({
   selector: 'vex-notice-cards',
   templateUrl: './notice-cards.component.html',
@@ -23,16 +22,17 @@ export class NoticeCardsComponent implements OnInit {
   icPreview = icPreview;
   icPeople = icPeople;
   icMoreVert = icMoreVert;
+  
   noticeDeleteModel = new NoticeDeleteModel();
   @Input() title: string;
+  @Input() notice;
   @Input() noticeId: number;
   @Input() imageUrl: string;
   @Input() visibleFrom: string;
   @Input() visibleTo: number;
-  //tenant: string;
+  @Input() getAllMembersList;
 
   constructor(private dialog: MatDialog,private _noticeService: NoticeService,public translateService: TranslateService, private Activeroute: ActivatedRoute, private snackbar: MatSnackBar) {
-    //this.tenant = sessionStorage.getItem('tenant');
     translateService.use('en');
   }
 
@@ -57,33 +57,31 @@ export class NoticeCardsComponent implements OnInit {
   }
 
 deleteNotice(id){
-  this.noticeDeleteModel._tenantName = sessionStorage.getItem("tenant");
   this.noticeDeleteModel.NoticeId= +id;
-  this.noticeDeleteModel._token = sessionStorage.getItem("token");
-  this._noticeService.deleteNotice(this.noticeDeleteModel).subscribe((res) => {
+  this._noticeService.deleteNotice(this.noticeDeleteModel).subscribe(
+    (res) => {
     if (res._failure) {
       this.snackbar.open('Notice Deletion failed. ' + res._message, 'LOL THANKS', {
         duration: 10000
       });
     } else {
-      // this.noticeListViewModel._tenantName = this.tenant;
-      // this.noticeListViewModel._token = sessionStorage.getItem("token");
        this._noticeService.getAllNotice(this.noticeListViewModel).subscribe((res) => {
          this.noticeListViewModel = res;
        });
       this.snackbar.open('Notice Deleted Successful.', '', {
         duration: 10000
       });
+      this._noticeService.changeNotice(true)      
     }
   });
 }
 
     
-editNotice(noticeId: number) {
-    localStorage.setItem('noticeId',noticeId.toString());
+  editNotice(noticeId: number) 
+  {
     this.dialog.open(EditNoticeComponent, {
-      data: null,
+      data: {allMembers:this.getAllMembersList,notice:this.notice,membercount:this.getAllMembersList.getAllMemberList.length},
       width: '800px'
-    });
+    })    
   }
 }

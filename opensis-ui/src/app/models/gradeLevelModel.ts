@@ -20,13 +20,20 @@ class tblGradelevel {
     public gradeId: number;
     public shortName: string;
     public title: string;
-    public nextGradeId: number;
+    public gradeLevelEquivalency: string;
+    public ageRange: string;
+    public educationalStage: string;
+    public nextGrade: string;
+    public nextGradeId:number;
     public sortOrder: number;
     public lastUpdated: string;
     public updatedBy: string
 
     constructor(){
         this.tenantId = sessionStorage.getItem("tenantId");
+        this.gradeLevelEquivalency=null;
+        this.ageRange=null;
+        this.educationalStage=null;
         this.updatedBy = "Souvik";
     }
 }

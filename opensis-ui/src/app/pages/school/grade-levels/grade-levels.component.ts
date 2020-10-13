@@ -48,7 +48,7 @@ export class GradeLevelsComponent implements OnInit {
     { label: 'Title', property: 'title', type: 'text', visible: true },
     { label: 'Short Name', property: 'shortName', type: 'text', visible: true },
     { label: 'Sort Order', property: 'sortOrder', type: 'number', visible: true},
-    { label: 'Next Grade', property: 'nextGradeId', type: 'number', visible: true},
+    { label: 'Next Grade', property: 'nextGrade', type: 'text', visible: true},
     { label: 'Action', property: 'action', type: 'text', visible: true }
   ];
   constructor(private dialog: MatDialog,
@@ -60,15 +60,9 @@ export class GradeLevelsComponent implements OnInit {
     this.loaderService.isLoading.subscribe((val) => {
       this.loading = val;
     }); 
-
-    this.gradeLevelService.sharedMessage.subscribe((res)=>{
-      if(res){
-      this.getAllGradeLevel();
-      }
-    })
   }
     ngOnInit(): void {
-      this.getAllGradeLevel();
+      this.GetAllGradeLevel();
     }
 
   openAddNew() {
@@ -76,6 +70,10 @@ export class GradeLevelsComponent implements OnInit {
     this.dialog.open(EditGradeLevelsComponent, {
       data: {editMode:this.editMode,gradeLevels:this.sendGradeLevelsToDialog},
       width: '600px'
+    }).afterClosed().subscribe((res) => {
+      if(res){
+        this.GetAllGradeLevel();
+      }            
     });
   }
 
@@ -85,17 +83,22 @@ export class GradeLevelsComponent implements OnInit {
       data:{
         editMode:this.editMode,
         editDetails:editDetails,
-        gradeLevels:this.sendGradeLevelsToDialog},
+        gradeLevels:this.sendGradeLevelsToDialog
+      },
       width:'600px'
+    }).afterClosed().subscribe((res) => {
+      if(res){
+        this.GetAllGradeLevel();
+      }            
     });
   }
 
 
-  getAllGradeLevel(){
+  GetAllGradeLevel(){
     this.getAllGradeLevels.schoolId=+sessionStorage.getItem("selectedSchoolId");
     this.getAllGradeLevels._tenantName=sessionStorage.getItem("tenant");
     this.getAllGradeLevels._token=sessionStorage.getItem("token");
-    this.gradeLevelService.GetGradeLevels(this.getAllGradeLevels).subscribe((res)=>{
+    this.gradeLevelService.getAllGradeLevels(this.getAllGradeLevels).subscribe((res)=>{
         this.gradeLevelList = new MatTableDataSource(res.tableGradelevelList);
         this.gradeLevelList.sort = this.sort;
         this.sendGradeLevelsToDialog=res.tableGradelevelList;
@@ -116,7 +119,6 @@ export class GradeLevelsComponent implements OnInit {
   }
 
   confirmDelete(deleteDetails){
-  console.log(deleteDetails);
     // call our modal window
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       maxWidth: "400px",
@@ -140,9 +142,14 @@ export class GradeLevelsComponent implements OnInit {
     this.deleteGradeLevel._tenantName=sessionStorage.getItem("tenant");
     this.deleteGradeLevel._token=sessionStorage.getItem("token");
     console.log(this.deleteGradeLevel)
-    this.gradeLevelService.DeleteGradeLevel(this.deleteGradeLevel).subscribe((res)=>{
-      if (res._failure) {
-        this.snackbar.open('Failed to Delete Grade Level ' + res._message, 'LOL THANKS', {
+    this.gradeLevelService.deleteGradelevel(this.deleteGradeLevel).subscribe((res)=>{
+      if (typeof (res) == 'undefined') {
+        this.snackbar.open('Grade Level Deletion failed. ' + sessionStorage.getItem("httpError"), '', {
+          duration: 10000
+        });
+      }else if (res._failure) {
+      console.log(res);
+        this.snackbar.open(res._message, 'LOL THANKS', {
           duration: 10000
         });
       } else {
@@ -150,7 +157,7 @@ export class GradeLevelsComponent implements OnInit {
           duration: 10000
         });
         console.log(res)
-        this.getAllGradeLevel();
+        this.GetAllGradeLevel();
       }
     })
   }

@@ -5,6 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import {fadeInRight400ms} from '../../../../@vex/animations/fade-in-right.animation';
 import icCrop from '@iconify/icons-ic/crop';
 import { ImageCropperService } from '../../../services/image-cropper.service';
+import { SchoolService } from '../../../services/school.service';
 
 @Component({
   selector: 'vex-profile-image',
@@ -29,31 +30,18 @@ export class ProfileImageComponent implements OnInit {
   // afterConvertingBase64toFile;
   fileUploader:any;
   hideCropperToolButton:Boolean=true;
-  @Input() enableUpload:boolean;
+  enableUpload:boolean;
   inputType:string="file";
   @Input() enableCropTool=true;
-  @Input() responseImage;
+  @Input() responseImage; 
+  @Input() mode; 
 
 
   
   constructor(private dialog:MatDialog,
     private _ImageCropperService:ImageCropperService,
-    private snackbar: MatSnackBar) {
-      this._ImageCropperService.sharedMessage.subscribe((message) => {
-        this.enableUpload = message
-        let id = sessionStorage.getItem("id")
-        if(this.enableUpload){
-          this.inputType ="none";
-          if(id!=null){
-            this.inputType ="none";
-          }
-          if(id==null && this.enableUpload){
-            this.inputType="file"
-          }
-        }else if(!this.enableUpload){
-          this.inputType="file"
-        }
-      })
+    private snackbar: MatSnackBar,
+    private schoolService:SchoolService) {
      }
 
      
@@ -100,6 +88,7 @@ export class ProfileImageComponent implements OnInit {
         var img = new Image();
         img.onload = () => {
           if (this.enableCropTool) {
+            console.log("Im Here!!")
             this.croppedImage
             // console.log("This is Cropped Image"+this.croppedImage);
             this.imageChangedEvent = event;
@@ -139,6 +128,26 @@ export class ProfileImageComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if(this.mode){
+      this._ImageCropperService.sharedMessage.subscribe((message) => {
+        this.enableUpload = message
+        let id;
+        
+        id=this.schoolService.getSchoolId();
+        
+        if(this.enableUpload){
+          this.inputType ="none";
+          if(id!=null){
+            this.inputType ="none";
+          }
+          if(id==null && this.enableUpload){
+            this.inputType="file"
+          }
+        }else if(!this.enableUpload){
+          this.inputType="file"
+        }
+      });
+    }
    
   }
 

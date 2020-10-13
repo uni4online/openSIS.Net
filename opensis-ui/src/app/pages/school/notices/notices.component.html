@@ -27,7 +27,7 @@
             <div class="flex flex-col sm:flex-row">
                 <div class="flex-1" *ngFor="let list of noticeList">
                     <div class="sm:pr-4">
-                        <vex-notice-cards noticeId = {{list.noticeId}} title= {{list.title}}
+                        <vex-notice-cards [getAllMembersList]='getAllMembersList' [notice]='list' noticeId = {{list.noticeId}} title= {{list.title}}
                             visibleFrom="{{list.validFrom | date }} - {{list.validTo | date }}"
                             visibleTo={{list.targetMembershipIds}}>
                             <div class="px-gutter pt-4 pb-6">
@@ -37,6 +37,7 @@
                     </div>
                 </div>
             </div>
+            
         </mat-drawer-container>
     </div>
 

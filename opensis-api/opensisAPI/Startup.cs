@@ -32,6 +32,12 @@ using opensis.core.Section.Interfaces;
 using opensis.core.Section.Services;
 using opensis.core.MarkingPeriods.Interfaces;
 using opensis.core.MarkingPeriods.Services;
+using opensis.core.SchoolPeriod.Interfaces;
+using opensis.core.SchoolPeriod.Services;
+using opensis.core.Calender.Services;
+using opensis.core.Calender.Interfaces;
+using opensis.core.CalendarEvents.Interfaces;
+using opensis.core.CalendarEvents.Services;
 
 namespace opensisAPI
 {
@@ -67,6 +73,12 @@ namespace opensisAPI
             services.AddScoped<ISectionService, SectionService>();
             services.AddScoped<IMarkingperiodRepository, MarkingperiodRepository>();
             services.AddScoped<IMarkingPeriodService, MarkingPeriodService>();
+            services.AddScoped<ISchoolPeriodService, SchoolPeriodService>();
+            services.AddScoped<ISchoolPeriodRepository, SchoolPeriodRepository>();
+            services.AddScoped<ICalendarRepository, CalendarRepository>();
+            services.AddScoped<ICalendarService, CalendarService>();
+            services.AddScoped<ICalendarEventRepository, CalendarEventRepository>();
+            services.AddScoped<ICalendarEventService, CalendarEventService>();
 
 
 

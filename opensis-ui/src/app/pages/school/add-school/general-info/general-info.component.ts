@@ -199,12 +199,16 @@ export class GeneralInfoComponent implements OnInit {
      || (this.commonFunction.checkEmptyObject(this.dataOfgeneralInfoFromWash) === true))
      {
       this._ImageCropperService.nextMessage(false);      
-      this.schoolAddViewModel.schoolMaster.city = +this.schoolAddViewModel.schoolMaster.city;
-      this.schoolAddViewModel.schoolMaster.state = +this.schoolAddViewModel.schoolMaster.state;
+      // this.schoolAddViewModel.schoolMaster.city = +this.schoolAddViewModel.schoolMaster.city;
+      // this.schoolAddViewModel.schoolMaster.state = +this.schoolAddViewModel.schoolMaster.state;
+
+      this.schoolAddViewModel.schoolMaster.city = this.schoolAddViewModel.schoolMaster.city;
+      this.schoolAddViewModel.schoolMaster.state = this.schoolAddViewModel.schoolMaster.state;
+
       this.schoolAddViewModel.schoolMaster.country = +this.schoolAddViewModel.schoolMaster.country;
    
-      this.getAllStateByCountry(this.schoolAddViewModel.schoolMaster.country);
-      this.getAllCitiesByState(this.schoolAddViewModel.schoolMaster.state);
+      // this.getAllStateByCountry(this.schoolAddViewModel.schoolMaster.country);
+      // this.getAllCitiesByState(this.schoolAddViewModel.schoolMaster.state);
       this.schoolAddViewModel.schoolMaster.modifiedBy = sessionStorage.getItem('email');
       this.schoolAddViewModel.schoolMaster.dateModifed = this.dateCreated;
       this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolOpened=this.commonFunction.formatDateInEditMode(this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolOpened);      
@@ -382,7 +386,9 @@ export class GeneralInfoComponent implements OnInit {
      || (this.commonFunction.checkEmptyObject(this.dataOfgeneralInfoFromWash) === true)){
 
       this.schoolAddViewModel.schoolMaster.country = this.countryName;
-      this.schoolAddViewModel.schoolMaster.state = this.stateName;
+      // this.schoolAddViewModel.schoolMaster.state = this.stateName;
+      this.schoolAddViewModel.schoolMaster.state = this.schoolAddViewModel.schoolMaster.state.toString();
+
       this.schoolAddViewModel.schoolMaster.city = this.schoolAddViewModel.schoolMaster.city.toString();
 
         this.generalInfoService.UpdateSchool(this.schoolAddViewModel).subscribe(data => {
@@ -410,7 +416,9 @@ export class GeneralInfoComponent implements OnInit {
       }else{
 
         this.schoolAddViewModel.schoolMaster.country = this.countryName;
-      this.schoolAddViewModel.schoolMaster.state = this.stateName;
+      // this.schoolAddViewModel.schoolMaster.state = this.stateName;
+      this.schoolAddViewModel.schoolMaster.state = this.schoolAddViewModel.schoolMaster.state.toString();
+
       this.schoolAddViewModel.schoolMaster.city = this.schoolAddViewModel.schoolMaster.city.toString();
         
         this.generalInfoService.AddSchool(this.schoolAddViewModel).subscribe(data => {

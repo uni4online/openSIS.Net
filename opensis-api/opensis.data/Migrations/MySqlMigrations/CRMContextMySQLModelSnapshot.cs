@@ -17,6 +17,144 @@ namespace opensis.data.Migrations.MySqlMigrations
                 .HasAnnotation("ProductVersion", "3.1.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
+            modelBuilder.Entity("opensis.data.Models.AttendanceCode", b =>
+                {
+                    b.Property<Guid>("TenantId")
+                        .HasColumnName("tenant_id")
+                        .HasColumnType("char(36)");
+
+                    b.Property<int>("SchoolId")
+                        .HasColumnName("school_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AttendanceCode1")
+                        .HasColumnName("attendance_code")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("AcademicYear")
+                        .HasColumnName("academic_year")
+                        .HasColumnType("decimal(4, 0)");
+
+                    b.Property<string>("AllowEntryBy")
+                        .HasColumnName("allow_entry_by")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<bool?>("DefaultCode")
+                        .HasColumnName("default_code")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime?>("LastUpdated")
+                        .HasColumnName("last_updated")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("ShortName")
+                        .HasColumnName("short_name")
+                        .HasColumnType("varchar(10) CHARACTER SET utf8mb4")
+                        .HasMaxLength(10)
+                        .IsUnicode(false);
+
+                    b.Property<int?>("SortOrder")
+                        .HasColumnName("sort_order")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StateCode")
+                        .HasColumnName("state_code")
+                        .HasColumnType("varchar(1) CHARACTER SET utf8mb4")
+                        .HasMaxLength(1)
+                        .IsUnicode(false);
+
+                    b.Property<string>("Title")
+                        .HasColumnName("title")
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
+                        .HasMaxLength(100)
+                        .IsUnicode(false);
+
+                    b.Property<string>("Type")
+                        .HasColumnName("type")
+                        .HasColumnType("varchar(10) CHARACTER SET utf8mb4")
+                        .HasMaxLength(10)
+                        .IsUnicode(false);
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnName("updated_by")
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
+                        .HasMaxLength(100)
+                        .IsUnicode(false);
+
+                    b.HasKey("TenantId", "SchoolId", "AttendanceCode1");
+
+                    b.ToTable("attendance_code");
+                });
+
+            modelBuilder.Entity("opensis.data.Models.CalendarEvents", b =>
+                {
+                    b.Property<Guid>("TenantId")
+                        .HasColumnName("tenant_id")
+                        .HasColumnType("char(36)");
+
+                    b.Property<int>("SchoolId")
+                        .HasColumnName("school_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CalendarId")
+                        .HasColumnName("calendar_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EventId")
+                        .HasColumnName("event_id")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("AcademicYear")
+                        .HasColumnName("academic_year")
+                        .HasColumnType("decimal(4, 0)");
+
+                    b.Property<string>("Description")
+                        .HasColumnName("description")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4")
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnName("end_date")
+                        .HasColumnType("date");
+
+                    b.Property<DateTime?>("LastUpdated")
+                        .HasColumnName("last_updated")
+                        .HasColumnType("datetime");
+
+                    b.Property<DateTime?>("SchoolDate")
+                        .HasColumnName("school_date")
+                        .HasColumnType("date");
+
+                    b.Property<DateTime?>("StartDate")
+                        .HasColumnName("start_date")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Title")
+                        .HasColumnName("title")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnName("updated_by")
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
+                        .HasMaxLength(100)
+                        .IsUnicode(false);
+
+                    b.Property<string>("VisibleToMembershipId")
+                        .HasColumnName("visible_to_membership_id")
+                        .HasColumnType("varchar(30) CHARACTER SET utf8mb4")
+                        .HasComment("membershipids separated by comma")
+                        .HasMaxLength(30)
+                        .IsUnicode(false);
+
+                    b.HasKey("TenantId", "SchoolId", "CalendarId", "EventId");
+
+                    b.ToTable("calendar_events");
+                });
+
             modelBuilder.Entity("opensis.data.Models.City", b =>
                 {
                     b.Property<int>("Id")
@@ -35,57 +173,9 @@ namespace opensis.data.Migrations.MySqlMigrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("City");
+                    b.HasIndex("StateId");
 
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Eshkashem",
-                            StateId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Bala Murghab",
-                            StateId = 2
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Tirana",
-                            StateId = 3
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "kraste",
-                            StateId = 4
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Name = "Albani",
-                            StateId = 5
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Name = "Aïn Bénian",
-                            StateId = 6
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Name = "Lucknow",
-                            StateId = 7
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Name = "Kolkata",
-                            StateId = 8
-                        });
+                    b.ToTable("city");
                 });
 
             modelBuilder.Entity("opensis.data.Models.Country", b =>
@@ -108,33 +198,1519 @@ namespace opensis.data.Migrations.MySqlMigrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Country");
+                    b.ToTable("country");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            CountryCode = "001",
+                            CountryCode = "AF",
                             Name = "Afghanistan"
                         },
                         new
                         {
                             Id = 2,
-                            CountryCode = "002",
-                            Name = "India"
+                            CountryCode = "AL",
+                            Name = "Albania"
                         },
                         new
                         {
                             Id = 3,
-                            CountryCode = "003",
-                            Name = "India"
+                            CountryCode = "DZ",
+                            Name = "Algeria"
                         },
                         new
                         {
                             Id = 4,
-                            CountryCode = "004",
+                            CountryCode = "AS",
+                            Name = "American Samoa"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CountryCode = "AD",
+                            Name = "Andorra"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CountryCode = "AO",
+                            Name = "Angola"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            CountryCode = "AI",
+                            Name = "Anguilla"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            CountryCode = "AQ",
+                            Name = "Antarctica"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            CountryCode = "AG",
+                            Name = "Antigua And Barbuda"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            CountryCode = "AR",
+                            Name = "Argentina"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            CountryCode = "AM",
+                            Name = "Armenia"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            CountryCode = "AW",
+                            Name = "Aruba"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            CountryCode = "AU",
+                            Name = "Australia"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            CountryCode = "AT",
+                            Name = "Austria"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            CountryCode = "AZ",
+                            Name = "Azerbaijan"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            CountryCode = "BS",
+                            Name = "Bahamas The"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            CountryCode = "BH",
+                            Name = "Bahrain"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            CountryCode = "BD",
+                            Name = "Bangladesh"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            CountryCode = "BB",
+                            Name = "Barbados"
+                        },
+                        new
+                        {
+                            Id = 20,
+                            CountryCode = "BY",
+                            Name = "Belarus"
+                        },
+                        new
+                        {
+                            Id = 21,
+                            CountryCode = "BE",
+                            Name = "Belgium"
+                        },
+                        new
+                        {
+                            Id = 22,
+                            CountryCode = "BZ",
+                            Name = "Belize"
+                        },
+                        new
+                        {
+                            Id = 23,
+                            CountryCode = "BJ",
+                            Name = "Benin"
+                        },
+                        new
+                        {
+                            Id = 24,
+                            CountryCode = "BM",
+                            Name = "Bermuda"
+                        },
+                        new
+                        {
+                            Id = 25,
+                            CountryCode = "BT",
+                            Name = "Bhutan"
+                        },
+                        new
+                        {
+                            Id = 26,
+                            CountryCode = "BO",
+                            Name = "Bolivia"
+                        },
+                        new
+                        {
+                            Id = 27,
+                            CountryCode = "BA",
+                            Name = "Bosnia and Herzegovina"
+                        },
+                        new
+                        {
+                            Id = 28,
+                            CountryCode = "BW",
+                            Name = "Botswana"
+                        },
+                        new
+                        {
+                            Id = 29,
+                            CountryCode = "BV",
+                            Name = "Bouvet Island"
+                        },
+                        new
+                        {
+                            Id = 30,
+                            CountryCode = "BR",
+                            Name = "Brazil"
+                        },
+                        new
+                        {
+                            Id = 31,
+                            CountryCode = "IO",
+                            Name = "British Indian Ocean Territory"
+                        },
+                        new
+                        {
+                            Id = 32,
+                            CountryCode = "BN",
+                            Name = "Brunei"
+                        },
+                        new
+                        {
+                            Id = 33,
+                            CountryCode = "BG",
+                            Name = "Bulgaria"
+                        },
+                        new
+                        {
+                            Id = 34,
+                            CountryCode = "BF",
+                            Name = "Burkina Faso"
+                        },
+                        new
+                        {
+                            Id = 35,
+                            CountryCode = "BI",
+                            Name = "Burundi"
+                        },
+                        new
+                        {
+                            Id = 36,
+                            CountryCode = "KH",
+                            Name = "Cambodia"
+                        },
+                        new
+                        {
+                            Id = 37,
+                            CountryCode = "CM",
+                            Name = "Cameroon"
+                        },
+                        new
+                        {
+                            Id = 38,
+                            CountryCode = "CA",
+                            Name = "Canada"
+                        },
+                        new
+                        {
+                            Id = 39,
+                            CountryCode = "CV",
+                            Name = "Cape Verde"
+                        },
+                        new
+                        {
+                            Id = 40,
+                            CountryCode = "KY",
+                            Name = "Cayman Islands"
+                        },
+                        new
+                        {
+                            Id = 41,
+                            CountryCode = "CF",
+                            Name = "Central African Republic"
+                        },
+                        new
+                        {
+                            Id = 42,
+                            CountryCode = "TD",
+                            Name = "Chad"
+                        },
+                        new
+                        {
+                            Id = 43,
+                            CountryCode = "CL",
+                            Name = "Chile"
+                        },
+                        new
+                        {
+                            Id = 44,
+                            CountryCode = "CN",
+                            Name = "China"
+                        },
+                        new
+                        {
+                            Id = 45,
+                            CountryCode = "CX",
+                            Name = "Christmas Island"
+                        },
+                        new
+                        {
+                            Id = 46,
+                            CountryCode = "CC",
+                            Name = "Cocos (Keeling) Islands"
+                        },
+                        new
+                        {
+                            Id = 47,
+                            CountryCode = "CO",
+                            Name = "Colombia"
+                        },
+                        new
+                        {
+                            Id = 48,
+                            CountryCode = "KM",
+                            Name = "Comoros"
+                        },
+                        new
+                        {
+                            Id = 49,
+                            CountryCode = "CG",
+                            Name = "Congo"
+                        },
+                        new
+                        {
+                            Id = 50,
+                            CountryCode = "CD",
+                            Name = "Congo The Democratic Republic Of The"
+                        },
+                        new
+                        {
+                            Id = 51,
+                            CountryCode = "CK",
+                            Name = "Cook Islands"
+                        },
+                        new
+                        {
+                            Id = 52,
+                            CountryCode = "CR",
+                            Name = "Costa Rica"
+                        },
+                        new
+                        {
+                            Id = 53,
+                            CountryCode = "CI",
+                            Name = "Cote D'Ivoire (Ivory Coast)"
+                        },
+                        new
+                        {
+                            Id = 54,
+                            CountryCode = "HR",
+                            Name = "Croatia (Hrvatska)"
+                        },
+                        new
+                        {
+                            Id = 55,
+                            CountryCode = "CU",
+                            Name = "Cuba"
+                        },
+                        new
+                        {
+                            Id = 56,
+                            CountryCode = "CY",
+                            Name = "Cyprus"
+                        },
+                        new
+                        {
+                            Id = 57,
+                            CountryCode = "CZ",
+                            Name = "Czech Republic"
+                        },
+                        new
+                        {
+                            Id = 58,
+                            CountryCode = "DK",
+                            Name = "Denmark"
+                        },
+                        new
+                        {
+                            Id = 59,
+                            CountryCode = "DJ",
+                            Name = "Djibouti"
+                        },
+                        new
+                        {
+                            Id = 60,
+                            CountryCode = "DM",
+                            Name = "Dominica"
+                        },
+                        new
+                        {
+                            Id = 61,
+                            CountryCode = "DO",
+                            Name = "Dominican Republic"
+                        },
+                        new
+                        {
+                            Id = 62,
+                            CountryCode = "TP",
+                            Name = "East Timor"
+                        },
+                        new
+                        {
+                            Id = 63,
+                            CountryCode = "EC",
+                            Name = "Ecuador"
+                        },
+                        new
+                        {
+                            Id = 64,
+                            CountryCode = "EG",
+                            Name = "Egypt"
+                        },
+                        new
+                        {
+                            Id = 65,
+                            CountryCode = "SV",
+                            Name = "El Salvador"
+                        },
+                        new
+                        {
+                            Id = 66,
+                            CountryCode = "GQ",
+                            Name = "Equatorial Guinea"
+                        },
+                        new
+                        {
+                            Id = 67,
+                            CountryCode = "ER",
+                            Name = "Eritrea"
+                        },
+                        new
+                        {
+                            Id = 68,
+                            CountryCode = "EE",
+                            Name = "Estonia"
+                        },
+                        new
+                        {
+                            Id = 69,
+                            CountryCode = "ET",
+                            Name = "Ethiopia"
+                        },
+                        new
+                        {
+                            Id = 70,
+                            CountryCode = "XA",
+                            Name = "External Territories of Australia"
+                        },
+                        new
+                        {
+                            Id = 71,
+                            CountryCode = "FK",
+                            Name = "Falkland Islands"
+                        },
+                        new
+                        {
+                            Id = 72,
+                            CountryCode = "FO",
+                            Name = "Faroe Islands"
+                        },
+                        new
+                        {
+                            Id = 73,
+                            CountryCode = "FJ",
+                            Name = "Fiji Islands"
+                        },
+                        new
+                        {
+                            Id = 74,
+                            CountryCode = "FI",
+                            Name = "Finland"
+                        },
+                        new
+                        {
+                            Id = 75,
+                            CountryCode = "FR",
+                            Name = "France"
+                        },
+                        new
+                        {
+                            Id = 76,
+                            CountryCode = "GF",
+                            Name = "French Guiana"
+                        },
+                        new
+                        {
+                            Id = 77,
+                            CountryCode = "PF",
+                            Name = "French Polynesia"
+                        },
+                        new
+                        {
+                            Id = 78,
+                            CountryCode = "TF",
+                            Name = "French Southern Territories"
+                        },
+                        new
+                        {
+                            Id = 79,
+                            CountryCode = "GA",
+                            Name = "Gabon"
+                        },
+                        new
+                        {
+                            Id = 80,
+                            CountryCode = "GM",
+                            Name = "Gambia The"
+                        },
+                        new
+                        {
+                            Id = 81,
+                            CountryCode = "GE",
+                            Name = "Georgia"
+                        },
+                        new
+                        {
+                            Id = 82,
+                            CountryCode = "DE",
+                            Name = "Germany"
+                        },
+                        new
+                        {
+                            Id = 83,
+                            CountryCode = "GH",
+                            Name = "Ghana"
+                        },
+                        new
+                        {
+                            Id = 84,
+                            CountryCode = "GI",
+                            Name = "Gibraltar"
+                        },
+                        new
+                        {
+                            Id = 85,
+                            CountryCode = "GR",
+                            Name = "Greece"
+                        },
+                        new
+                        {
+                            Id = 86,
+                            CountryCode = "GL",
+                            Name = "Greenland"
+                        },
+                        new
+                        {
+                            Id = 87,
+                            CountryCode = "GD",
+                            Name = "Grenada"
+                        },
+                        new
+                        {
+                            Id = 88,
+                            CountryCode = "GP",
+                            Name = "Guadeloupe"
+                        },
+                        new
+                        {
+                            Id = 89,
+                            CountryCode = "GU",
+                            Name = "Guam"
+                        },
+                        new
+                        {
+                            Id = 90,
+                            CountryCode = "GT",
+                            Name = "Guatemala"
+                        },
+                        new
+                        {
+                            Id = 91,
+                            CountryCode = "XU",
+                            Name = "Guernsey and Alderney"
+                        },
+                        new
+                        {
+                            Id = 92,
+                            CountryCode = "GN",
+                            Name = "Guinea"
+                        },
+                        new
+                        {
+                            Id = 93,
+                            CountryCode = "GW",
+                            Name = "Guinea-Bissau"
+                        },
+                        new
+                        {
+                            Id = 94,
+                            CountryCode = "GY",
+                            Name = "Guyana"
+                        },
+                        new
+                        {
+                            Id = 95,
+                            CountryCode = "HT",
+                            Name = "Haiti"
+                        },
+                        new
+                        {
+                            Id = 96,
+                            CountryCode = "HM",
+                            Name = "Heard and McDonald Islands"
+                        },
+                        new
+                        {
+                            Id = 97,
+                            CountryCode = "HN",
+                            Name = "Honduras"
+                        },
+                        new
+                        {
+                            Id = 98,
+                            CountryCode = "HK",
+                            Name = "Hong Kong S.A.R."
+                        },
+                        new
+                        {
+                            Id = 99,
+                            CountryCode = "HU",
+                            Name = "Hungary"
+                        },
+                        new
+                        {
+                            Id = 100,
+                            CountryCode = "IS",
+                            Name = "Iceland"
+                        },
+                        new
+                        {
+                            Id = 101,
+                            CountryCode = "IN",
                             Name = "India"
+                        },
+                        new
+                        {
+                            Id = 102,
+                            CountryCode = "ID",
+                            Name = "Indonesia"
+                        },
+                        new
+                        {
+                            Id = 103,
+                            CountryCode = "IR",
+                            Name = "Iran"
+                        },
+                        new
+                        {
+                            Id = 104,
+                            CountryCode = "IQ",
+                            Name = "Iraq"
+                        },
+                        new
+                        {
+                            Id = 105,
+                            CountryCode = "IE",
+                            Name = "Ireland"
+                        },
+                        new
+                        {
+                            Id = 106,
+                            CountryCode = "IL",
+                            Name = "Israel"
+                        },
+                        new
+                        {
+                            Id = 107,
+                            CountryCode = "IT",
+                            Name = "Italy"
+                        },
+                        new
+                        {
+                            Id = 108,
+                            CountryCode = "JM",
+                            Name = "Jamaica"
+                        },
+                        new
+                        {
+                            Id = 109,
+                            CountryCode = "JP",
+                            Name = "Japan"
+                        },
+                        new
+                        {
+                            Id = 110,
+                            CountryCode = "XJ",
+                            Name = "Jersey"
+                        },
+                        new
+                        {
+                            Id = 111,
+                            CountryCode = "JO",
+                            Name = "Jordan"
+                        },
+                        new
+                        {
+                            Id = 112,
+                            CountryCode = "KZ",
+                            Name = "Kazakhstan"
+                        },
+                        new
+                        {
+                            Id = 113,
+                            CountryCode = "KE",
+                            Name = "Kenya"
+                        },
+                        new
+                        {
+                            Id = 114,
+                            CountryCode = "KI",
+                            Name = "Kiribati"
+                        },
+                        new
+                        {
+                            Id = 115,
+                            CountryCode = "KP",
+                            Name = "Korea North"
+                        },
+                        new
+                        {
+                            Id = 116,
+                            CountryCode = "KR",
+                            Name = "Korea South"
+                        },
+                        new
+                        {
+                            Id = 117,
+                            CountryCode = "KW",
+                            Name = "Kuwait"
+                        },
+                        new
+                        {
+                            Id = 118,
+                            CountryCode = "KG",
+                            Name = "Kyrgyzstan"
+                        },
+                        new
+                        {
+                            Id = 119,
+                            CountryCode = "LA",
+                            Name = "Laos"
+                        },
+                        new
+                        {
+                            Id = 120,
+                            CountryCode = "LV",
+                            Name = "Latvia"
+                        },
+                        new
+                        {
+                            Id = 121,
+                            CountryCode = "LB",
+                            Name = "Lebanon"
+                        },
+                        new
+                        {
+                            Id = 122,
+                            CountryCode = "LS",
+                            Name = "Lesotho"
+                        },
+                        new
+                        {
+                            Id = 123,
+                            CountryCode = "LR",
+                            Name = "Liberia"
+                        },
+                        new
+                        {
+                            Id = 124,
+                            CountryCode = "LY",
+                            Name = "Libya"
+                        },
+                        new
+                        {
+                            Id = 125,
+                            CountryCode = "LI",
+                            Name = "Liechtenstein"
+                        },
+                        new
+                        {
+                            Id = 126,
+                            CountryCode = "LT",
+                            Name = "Lithuania"
+                        },
+                        new
+                        {
+                            Id = 127,
+                            CountryCode = "LU",
+                            Name = "Luxembourg"
+                        },
+                        new
+                        {
+                            Id = 128,
+                            CountryCode = "MO",
+                            Name = "Macau S.A.R."
+                        },
+                        new
+                        {
+                            Id = 129,
+                            CountryCode = "MK",
+                            Name = "Macedonia"
+                        },
+                        new
+                        {
+                            Id = 130,
+                            CountryCode = "MG",
+                            Name = "Madagascar"
+                        },
+                        new
+                        {
+                            Id = 131,
+                            CountryCode = "MW",
+                            Name = "Malawi"
+                        },
+                        new
+                        {
+                            Id = 132,
+                            CountryCode = "MY",
+                            Name = "Malaysia"
+                        },
+                        new
+                        {
+                            Id = 133,
+                            CountryCode = "MV",
+                            Name = "Maldives"
+                        },
+                        new
+                        {
+                            Id = 134,
+                            CountryCode = "ML",
+                            Name = "Mali"
+                        },
+                        new
+                        {
+                            Id = 135,
+                            CountryCode = "MT",
+                            Name = "Malta"
+                        },
+                        new
+                        {
+                            Id = 136,
+                            CountryCode = "XM",
+                            Name = "Man (Isle of)"
+                        },
+                        new
+                        {
+                            Id = 137,
+                            CountryCode = "MH",
+                            Name = "Marshall Islands"
+                        },
+                        new
+                        {
+                            Id = 138,
+                            CountryCode = "MQ",
+                            Name = "Martinique"
+                        },
+                        new
+                        {
+                            Id = 139,
+                            CountryCode = "MR",
+                            Name = "Mauritania"
+                        },
+                        new
+                        {
+                            Id = 140,
+                            CountryCode = "MU",
+                            Name = "Mauritius"
+                        },
+                        new
+                        {
+                            Id = 141,
+                            CountryCode = "YT",
+                            Name = "Mayotte"
+                        },
+                        new
+                        {
+                            Id = 142,
+                            CountryCode = "MX",
+                            Name = "Mexico"
+                        },
+                        new
+                        {
+                            Id = 143,
+                            CountryCode = "FM",
+                            Name = "Micronesia"
+                        },
+                        new
+                        {
+                            Id = 144,
+                            CountryCode = "MD",
+                            Name = "Moldova"
+                        },
+                        new
+                        {
+                            Id = 145,
+                            CountryCode = "MC",
+                            Name = "Monaco"
+                        },
+                        new
+                        {
+                            Id = 146,
+                            CountryCode = "MN",
+                            Name = "Mongolia"
+                        },
+                        new
+                        {
+                            Id = 147,
+                            CountryCode = "MS",
+                            Name = "Montserrat"
+                        },
+                        new
+                        {
+                            Id = 148,
+                            CountryCode = "MA",
+                            Name = "Morocco"
+                        },
+                        new
+                        {
+                            Id = 149,
+                            CountryCode = "MZ",
+                            Name = "Mozambique"
+                        },
+                        new
+                        {
+                            Id = 150,
+                            CountryCode = "MM",
+                            Name = "Myanmar"
+                        },
+                        new
+                        {
+                            Id = 151,
+                            CountryCode = "NA",
+                            Name = "Namibia"
+                        },
+                        new
+                        {
+                            Id = 152,
+                            CountryCode = "NR",
+                            Name = "Nauru"
+                        },
+                        new
+                        {
+                            Id = 153,
+                            CountryCode = "NP",
+                            Name = "Nepal"
+                        },
+                        new
+                        {
+                            Id = 154,
+                            CountryCode = "AN",
+                            Name = "Netherlands Antilles"
+                        },
+                        new
+                        {
+                            Id = 155,
+                            CountryCode = "NL",
+                            Name = "Netherlands The"
+                        },
+                        new
+                        {
+                            Id = 156,
+                            CountryCode = "NC",
+                            Name = "New Caledonia"
+                        },
+                        new
+                        {
+                            Id = 157,
+                            CountryCode = "NZ",
+                            Name = "New Zealand"
+                        },
+                        new
+                        {
+                            Id = 158,
+                            CountryCode = "NI",
+                            Name = "Nicaragua"
+                        },
+                        new
+                        {
+                            Id = 159,
+                            CountryCode = "NE",
+                            Name = "Niger"
+                        },
+                        new
+                        {
+                            Id = 160,
+                            CountryCode = "NG",
+                            Name = "Nigeria"
+                        },
+                        new
+                        {
+                            Id = 161,
+                            CountryCode = "NU",
+                            Name = "Niue"
+                        },
+                        new
+                        {
+                            Id = 162,
+                            CountryCode = "NF",
+                            Name = "Norfolk Island"
+                        },
+                        new
+                        {
+                            Id = 163,
+                            CountryCode = "MP",
+                            Name = "Northern Mariana Islands"
+                        },
+                        new
+                        {
+                            Id = 164,
+                            CountryCode = "NO",
+                            Name = "Norway"
+                        },
+                        new
+                        {
+                            Id = 165,
+                            CountryCode = "OM",
+                            Name = "Oman"
+                        },
+                        new
+                        {
+                            Id = 166,
+                            CountryCode = "PK",
+                            Name = "Pakistan"
+                        },
+                        new
+                        {
+                            Id = 167,
+                            CountryCode = "PW",
+                            Name = "Palau"
+                        },
+                        new
+                        {
+                            Id = 168,
+                            CountryCode = "PS",
+                            Name = "Palestinian Territory Occupied"
+                        },
+                        new
+                        {
+                            Id = 169,
+                            CountryCode = "PA",
+                            Name = "Panama"
+                        },
+                        new
+                        {
+                            Id = 170,
+                            CountryCode = "PG",
+                            Name = "Papua new Guinea"
+                        },
+                        new
+                        {
+                            Id = 171,
+                            CountryCode = "PY",
+                            Name = "Paraguay"
+                        },
+                        new
+                        {
+                            Id = 172,
+                            CountryCode = "PE",
+                            Name = "Peru"
+                        },
+                        new
+                        {
+                            Id = 173,
+                            CountryCode = "PH",
+                            Name = "Philippines"
+                        },
+                        new
+                        {
+                            Id = 174,
+                            CountryCode = "PN",
+                            Name = "Pitcairn Island"
+                        },
+                        new
+                        {
+                            Id = 175,
+                            CountryCode = "PL",
+                            Name = "Poland"
+                        },
+                        new
+                        {
+                            Id = 176,
+                            CountryCode = "PT",
+                            Name = "Portugal"
+                        },
+                        new
+                        {
+                            Id = 177,
+                            CountryCode = "PR",
+                            Name = "Puerto Rico"
+                        },
+                        new
+                        {
+                            Id = 178,
+                            CountryCode = "QA",
+                            Name = "Qatar"
+                        },
+                        new
+                        {
+                            Id = 179,
+                            CountryCode = "RE",
+                            Name = "Reunion"
+                        },
+                        new
+                        {
+                            Id = 180,
+                            CountryCode = "RO",
+                            Name = "Romania"
+                        },
+                        new
+                        {
+                            Id = 181,
+                            CountryCode = "RU",
+                            Name = "Russia"
+                        },
+                        new
+                        {
+                            Id = 182,
+                            CountryCode = "RW",
+                            Name = "Rwanda"
+                        },
+                        new
+                        {
+                            Id = 183,
+                            CountryCode = "SH",
+                            Name = "Saint Helena"
+                        },
+                        new
+                        {
+                            Id = 184,
+                            CountryCode = "KN",
+                            Name = "Saint Kitts And Nevis"
+                        },
+                        new
+                        {
+                            Id = 185,
+                            CountryCode = "LC",
+                            Name = "Saint Lucia"
+                        },
+                        new
+                        {
+                            Id = 186,
+                            CountryCode = "PM",
+                            Name = "Saint Pierre and Miquelon"
+                        },
+                        new
+                        {
+                            Id = 187,
+                            CountryCode = "VC",
+                            Name = "Saint Vincent And The Grenadines"
+                        },
+                        new
+                        {
+                            Id = 188,
+                            CountryCode = "WS",
+                            Name = "Samoa"
+                        },
+                        new
+                        {
+                            Id = 189,
+                            CountryCode = "SM",
+                            Name = "San Marino"
+                        },
+                        new
+                        {
+                            Id = 190,
+                            CountryCode = "ST",
+                            Name = "Sao Tome and Principe"
+                        },
+                        new
+                        {
+                            Id = 191,
+                            CountryCode = "SA",
+                            Name = "Saudi Arabia"
+                        },
+                        new
+                        {
+                            Id = 192,
+                            CountryCode = "SN",
+                            Name = "Senegal"
+                        },
+                        new
+                        {
+                            Id = 193,
+                            CountryCode = "RS",
+                            Name = "Serbia"
+                        },
+                        new
+                        {
+                            Id = 194,
+                            CountryCode = "SC",
+                            Name = "Seychelles"
+                        },
+                        new
+                        {
+                            Id = 195,
+                            CountryCode = "SL",
+                            Name = "Sierra Leone"
+                        },
+                        new
+                        {
+                            Id = 196,
+                            CountryCode = "SG",
+                            Name = "Singapore"
+                        },
+                        new
+                        {
+                            Id = 197,
+                            CountryCode = "SK",
+                            Name = "Slovakia"
+                        },
+                        new
+                        {
+                            Id = 198,
+                            CountryCode = "SI",
+                            Name = "Slovenia"
+                        },
+                        new
+                        {
+                            Id = 199,
+                            CountryCode = "XG",
+                            Name = "Smaller Territories of the UK"
+                        },
+                        new
+                        {
+                            Id = 200,
+                            CountryCode = "SB",
+                            Name = "Solomon Islands"
+                        },
+                        new
+                        {
+                            Id = 201,
+                            CountryCode = "SO",
+                            Name = "Somalia"
+                        },
+                        new
+                        {
+                            Id = 202,
+                            CountryCode = "ZA",
+                            Name = "South Africa"
+                        },
+                        new
+                        {
+                            Id = 203,
+                            CountryCode = "GS",
+                            Name = "South Georgia"
+                        },
+                        new
+                        {
+                            Id = 204,
+                            CountryCode = "SS",
+                            Name = "South Sudan"
+                        },
+                        new
+                        {
+                            Id = 205,
+                            CountryCode = "ES",
+                            Name = "Spain"
+                        },
+                        new
+                        {
+                            Id = 206,
+                            CountryCode = "LK",
+                            Name = "Sri Lanka"
+                        },
+                        new
+                        {
+                            Id = 207,
+                            CountryCode = "SD",
+                            Name = "Sudan"
+                        },
+                        new
+                        {
+                            Id = 208,
+                            CountryCode = "SR",
+                            Name = "Suriname"
+                        },
+                        new
+                        {
+                            Id = 209,
+                            CountryCode = "SJ",
+                            Name = "Svalbard And Jan Mayen Islands"
+                        },
+                        new
+                        {
+                            Id = 210,
+                            CountryCode = "SZ",
+                            Name = "Swaziland"
+                        },
+                        new
+                        {
+                            Id = 211,
+                            CountryCode = "SE",
+                            Name = "Sweden"
+                        },
+                        new
+                        {
+                            Id = 212,
+                            CountryCode = "CH",
+                            Name = "Switzerland"
+                        },
+                        new
+                        {
+                            Id = 213,
+                            CountryCode = "SY",
+                            Name = "Syria"
+                        },
+                        new
+                        {
+                            Id = 214,
+                            CountryCode = "TW",
+                            Name = "Taiwan"
+                        },
+                        new
+                        {
+                            Id = 215,
+                            CountryCode = "TJ",
+                            Name = "Tajikistan"
+                        },
+                        new
+                        {
+                            Id = 216,
+                            CountryCode = "TZ",
+                            Name = "Tanzania"
+                        },
+                        new
+                        {
+                            Id = 217,
+                            CountryCode = "TH",
+                            Name = "Thailand"
+                        },
+                        new
+                        {
+                            Id = 218,
+                            CountryCode = "TG",
+                            Name = "Togo"
+                        },
+                        new
+                        {
+                            Id = 219,
+                            CountryCode = "TK",
+                            Name = "Tokelau"
+                        },
+                        new
+                        {
+                            Id = 220,
+                            CountryCode = "TO",
+                            Name = "Tonga"
+                        },
+                        new
+                        {
+                            Id = 221,
+                            CountryCode = "TT",
+                            Name = "Trinidad And Tobago"
+                        },
+                        new
+                        {
+                            Id = 222,
+                            CountryCode = "TN",
+                            Name = "Tunisia"
+                        },
+                        new
+                        {
+                            Id = 223,
+                            CountryCode = "TR",
+                            Name = "Turkey"
+                        },
+                        new
+                        {
+                            Id = 224,
+                            CountryCode = "TM",
+                            Name = "Turkmenistan"
+                        },
+                        new
+                        {
+                            Id = 225,
+                            CountryCode = "TC",
+                            Name = "Turks And Caicos Islands"
+                        },
+                        new
+                        {
+                            Id = 226,
+                            CountryCode = "TV",
+                            Name = "Tuvalu"
+                        },
+                        new
+                        {
+                            Id = 227,
+                            CountryCode = "UG",
+                            Name = "Uganda"
+                        },
+                        new
+                        {
+                            Id = 228,
+                            CountryCode = "UA",
+                            Name = "Ukraine"
+                        },
+                        new
+                        {
+                            Id = 229,
+                            CountryCode = "AE",
+                            Name = "United Arab Emirates"
+                        },
+                        new
+                        {
+                            Id = 230,
+                            CountryCode = "GB",
+                            Name = "United Kingdom"
+                        },
+                        new
+                        {
+                            Id = 231,
+                            CountryCode = "US",
+                            Name = "United States"
+                        },
+                        new
+                        {
+                            Id = 232,
+                            CountryCode = "UM",
+                            Name = "United States Minor Outlying Islands"
+                        },
+                        new
+                        {
+                            Id = 233,
+                            CountryCode = "UY",
+                            Name = "Uruguay"
+                        },
+                        new
+                        {
+                            Id = 234,
+                            CountryCode = "UZ",
+                            Name = "Uzbekistan"
+                        },
+                        new
+                        {
+                            Id = 235,
+                            CountryCode = "VU",
+                            Name = "Vanuatu"
+                        },
+                        new
+                        {
+                            Id = 236,
+                            CountryCode = "VA",
+                            Name = "Vatican City State (Holy See)"
+                        },
+                        new
+                        {
+                            Id = 237,
+                            CountryCode = "VE",
+                            Name = "Venezuela"
+                        },
+                        new
+                        {
+                            Id = 238,
+                            CountryCode = "VN",
+                            Name = "Vietnam"
+                        },
+                        new
+                        {
+                            Id = 239,
+                            CountryCode = "VG",
+                            Name = "Virgin Islands (British)"
+                        },
+                        new
+                        {
+                            Id = 240,
+                            CountryCode = "VI",
+                            Name = "Virgin Islands (US)"
+                        },
+                        new
+                        {
+                            Id = 241,
+                            CountryCode = "WF",
+                            Name = "Wallis And Futuna Islands"
+                        },
+                        new
+                        {
+                            Id = 242,
+                            CountryCode = "EH",
+                            Name = "Western Sahara"
+                        },
+                        new
+                        {
+                            Id = 243,
+                            CountryCode = "YE",
+                            Name = "Yemen"
+                        },
+                        new
+                        {
+                            Id = 244,
+                            CountryCode = "YU",
+                            Name = "Yugoslavia"
+                        },
+                        new
+                        {
+                            Id = 245,
+                            CountryCode = "ZM",
+                            Name = "Zambia"
+                        },
+                        new
+                        {
+                            Id = 246,
+                            CountryCode = "ZW",
+                            Name = "Zimbabwe"
                         });
+                });
+
+            modelBuilder.Entity("opensis.data.Models.GradeEquivalency", b =>
+                {
+                    b.Property<string>("AgeRange")
+                        .HasColumnName("age_range")
+                        .HasColumnType("varchar(5) CHARACTER SET utf8mb4")
+                        .HasMaxLength(5)
+                        .IsUnicode(false);
+
+                    b.Property<string>("Country")
+                        .HasColumnName("country")
+                        .HasColumnType("char(30) CHARACTER SET utf8mb4")
+                        .IsFixedLength(true)
+                        .HasMaxLength(30)
+                        .IsUnicode(false);
+
+                    b.Property<string>("EducationalStage")
+                        .HasColumnName("educational_stage")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("GradeDescription")
+                        .HasColumnName("grade_description")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<int?>("IscedGradeLevel")
+                        .HasColumnName("isced_grade_level")
+                        .HasColumnType("int");
+
+                    b.ToTable("grade_equivalency");
                 });
 
             modelBuilder.Entity("opensis.data.Models.Gradelevels", b =>
@@ -150,6 +1726,24 @@ namespace opensis.data.Migrations.MySqlMigrations
                     b.Property<int>("GradeId")
                         .HasColumnName("grade_id")
                         .HasColumnType("int");
+
+                    b.Property<string>("AgeRange")
+                        .HasColumnName("age_range")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("EducationalStage")
+                        .HasColumnName("educational_stage")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("GradeLevelEquivalency")
+                        .HasColumnName("grade_level_equivalency")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
 
                     b.Property<DateTime?>("LastUpdated")
                         .HasColumnName("last_updated")
@@ -182,9 +1776,9 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .IsUnicode(false);
 
                     b.HasKey("TenantId", "SchoolId", "GradeId")
-                        .HasName("PK_Table_Gradelevels");
+                        .HasName("pk_gradelevels");
 
-                    b.ToTable("Gradelevels");
+                    b.ToTable("gradelevels");
                 });
 
             modelBuilder.Entity("opensis.data.Models.Language", b =>
@@ -212,9 +1806,1152 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasMaxLength(50);
 
                     b.HasKey("LangId")
-                        .HasName("PK_Table_Language");
+                        .HasName("pk_table_language");
 
-                    b.ToTable("Language");
+                    b.ToTable("language");
+
+                    b.HasData(
+                        new
+                        {
+                            LangId = 1,
+                            LanguageCode = "af",
+                            Lcid = "af",
+                            Locale = "Afrikaans"
+                        },
+                        new
+                        {
+                            LangId = 2,
+                            LanguageCode = "sq",
+                            Lcid = "sq",
+                            Locale = "Albanian"
+                        },
+                        new
+                        {
+                            LangId = 3,
+                            LanguageCode = "am",
+                            Lcid = "am",
+                            Locale = "Amharic"
+                        },
+                        new
+                        {
+                            LangId = 4,
+                            LanguageCode = "ar",
+                            Lcid = "ar-dz",
+                            Locale = "Arabic - Algeria"
+                        },
+                        new
+                        {
+                            LangId = 5,
+                            LanguageCode = "ar",
+                            Lcid = "ar-bh",
+                            Locale = "Arabic - Bahrain"
+                        },
+                        new
+                        {
+                            LangId = 6,
+                            LanguageCode = "ar",
+                            Lcid = "ar-eg",
+                            Locale = "Arabic - Egypt"
+                        },
+                        new
+                        {
+                            LangId = 7,
+                            LanguageCode = "ar",
+                            Lcid = "ar-iq",
+                            Locale = "Arabic - Iraq"
+                        },
+                        new
+                        {
+                            LangId = 8,
+                            LanguageCode = "ar",
+                            Lcid = "ar-jo",
+                            Locale = "Arabic - Jordan"
+                        },
+                        new
+                        {
+                            LangId = 9,
+                            LanguageCode = "ar",
+                            Lcid = "ar-kw",
+                            Locale = "Arabic - Kuwait"
+                        },
+                        new
+                        {
+                            LangId = 10,
+                            LanguageCode = "ar",
+                            Lcid = "ar-lb",
+                            Locale = "Arabic - Lebanon"
+                        },
+                        new
+                        {
+                            LangId = 11,
+                            LanguageCode = "ar",
+                            Lcid = "ar-ly",
+                            Locale = "Arabic - Libya"
+                        },
+                        new
+                        {
+                            LangId = 12,
+                            LanguageCode = "ar",
+                            Lcid = "ar-ma",
+                            Locale = "Arabic - Morocco"
+                        },
+                        new
+                        {
+                            LangId = 13,
+                            LanguageCode = "ar",
+                            Lcid = "ar-om",
+                            Locale = "Arabic - Oman"
+                        },
+                        new
+                        {
+                            LangId = 14,
+                            LanguageCode = "ar",
+                            Lcid = "ar-qa",
+                            Locale = "Arabic - Qatar"
+                        },
+                        new
+                        {
+                            LangId = 15,
+                            LanguageCode = "ar",
+                            Lcid = "ar-sa",
+                            Locale = "Arabic - Saudi Arabia"
+                        },
+                        new
+                        {
+                            LangId = 16,
+                            LanguageCode = "ar",
+                            Lcid = "ar-sy",
+                            Locale = "Arabic - Syria"
+                        },
+                        new
+                        {
+                            LangId = 17,
+                            LanguageCode = "ar",
+                            Lcid = "ar-tn",
+                            Locale = "Arabic - Tunisia"
+                        },
+                        new
+                        {
+                            LangId = 18,
+                            LanguageCode = "ar",
+                            Lcid = "ar-ae",
+                            Locale = "Arabic - United Arab Emirates"
+                        },
+                        new
+                        {
+                            LangId = 19,
+                            LanguageCode = "ar",
+                            Lcid = "ar-ye",
+                            Locale = "Arabic - Yemen"
+                        },
+                        new
+                        {
+                            LangId = 20,
+                            LanguageCode = "hy",
+                            Lcid = "hy",
+                            Locale = "Armenian"
+                        },
+                        new
+                        {
+                            LangId = 21,
+                            LanguageCode = "as",
+                            Lcid = "as",
+                            Locale = "Assamese"
+                        },
+                        new
+                        {
+                            LangId = 22,
+                            LanguageCode = "az",
+                            Lcid = "az-az",
+                            Locale = "Azeri - Cyrillic"
+                        },
+                        new
+                        {
+                            LangId = 23,
+                            LanguageCode = "az",
+                            Lcid = "az-az",
+                            Locale = "Azeri - Latin"
+                        },
+                        new
+                        {
+                            LangId = 24,
+                            LanguageCode = "eu",
+                            Lcid = "eu",
+                            Locale = "Basque"
+                        },
+                        new
+                        {
+                            LangId = 25,
+                            LanguageCode = "be",
+                            Lcid = "be",
+                            Locale = "Belarusian"
+                        },
+                        new
+                        {
+                            LangId = 26,
+                            LanguageCode = "bn",
+                            Lcid = "bn",
+                            Locale = "Bengali - Bangladesh"
+                        },
+                        new
+                        {
+                            LangId = 27,
+                            LanguageCode = "bn",
+                            Lcid = "bn",
+                            Locale = "Bengali - India"
+                        },
+                        new
+                        {
+                            LangId = 28,
+                            LanguageCode = "bs",
+                            Lcid = "bs",
+                            Locale = "Bosnian"
+                        },
+                        new
+                        {
+                            LangId = 29,
+                            LanguageCode = "bg",
+                            Lcid = "bg",
+                            Locale = "Bulgarian"
+                        },
+                        new
+                        {
+                            LangId = 30,
+                            LanguageCode = "my",
+                            Lcid = "my",
+                            Locale = "Burmese"
+                        },
+                        new
+                        {
+                            LangId = 31,
+                            LanguageCode = "ca",
+                            Lcid = "ca",
+                            Locale = "Catalan"
+                        },
+                        new
+                        {
+                            LangId = 32,
+                            LanguageCode = "zh",
+                            Lcid = "zh-cn",
+                            Locale = "Chinese - China"
+                        },
+                        new
+                        {
+                            LangId = 33,
+                            LanguageCode = "zh",
+                            Lcid = "zh-hk",
+                            Locale = "Chinese - Hong Kong SAR"
+                        },
+                        new
+                        {
+                            LangId = 34,
+                            LanguageCode = "zh",
+                            Lcid = "zh-mo",
+                            Locale = "Chinese - Macau SAR"
+                        },
+                        new
+                        {
+                            LangId = 35,
+                            LanguageCode = "zh",
+                            Lcid = "zh-sg",
+                            Locale = "Chinese - Singapore"
+                        },
+                        new
+                        {
+                            LangId = 36,
+                            LanguageCode = "zh",
+                            Lcid = "zh-tw",
+                            Locale = "Chinese - Taiwan"
+                        },
+                        new
+                        {
+                            LangId = 37,
+                            LanguageCode = "hr",
+                            Lcid = "hr",
+                            Locale = "Croatian"
+                        },
+                        new
+                        {
+                            LangId = 38,
+                            LanguageCode = "cs",
+                            Lcid = "cs",
+                            Locale = "Czech"
+                        },
+                        new
+                        {
+                            LangId = 39,
+                            LanguageCode = "da",
+                            Lcid = "da",
+                            Locale = "Danish"
+                        },
+                        new
+                        {
+                            LangId = 40,
+                            LanguageCode = "Dhivehi",
+                            Lcid = "Maldivian",
+                            Locale = "Divehi"
+                        },
+                        new
+                        {
+                            LangId = 41,
+                            LanguageCode = "nl",
+                            Lcid = "nl-be",
+                            Locale = "Dutch - Belgium"
+                        },
+                        new
+                        {
+                            LangId = 42,
+                            LanguageCode = "nl",
+                            Lcid = "nl-nl",
+                            Locale = "Dutch - Netherlands"
+                        },
+                        new
+                        {
+                            LangId = 43,
+                            LanguageCode = "en",
+                            Lcid = "en-au",
+                            Locale = "English - Australia"
+                        },
+                        new
+                        {
+                            LangId = 44,
+                            LanguageCode = "en",
+                            Lcid = "en-bz",
+                            Locale = "English - Belize"
+                        },
+                        new
+                        {
+                            LangId = 45,
+                            LanguageCode = "en",
+                            Lcid = "en-ca",
+                            Locale = "English - Canada"
+                        },
+                        new
+                        {
+                            LangId = 46,
+                            LanguageCode = "en",
+                            Lcid = "en-cb",
+                            Locale = "English - Caribbean"
+                        },
+                        new
+                        {
+                            LangId = 47,
+                            LanguageCode = "en",
+                            Lcid = "en-gb",
+                            Locale = "English - Great Britain"
+                        },
+                        new
+                        {
+                            LangId = 48,
+                            LanguageCode = "en",
+                            Lcid = "en-in",
+                            Locale = "English - India"
+                        },
+                        new
+                        {
+                            LangId = 49,
+                            LanguageCode = "en",
+                            Lcid = "en-ie",
+                            Locale = "English - Ireland"
+                        },
+                        new
+                        {
+                            LangId = 50,
+                            LanguageCode = "en",
+                            Lcid = "en-jm",
+                            Locale = "English - Jamaica"
+                        },
+                        new
+                        {
+                            LangId = 51,
+                            LanguageCode = "en",
+                            Lcid = "en-nz",
+                            Locale = "English - New Zealand"
+                        },
+                        new
+                        {
+                            LangId = 52,
+                            LanguageCode = "en",
+                            Lcid = "en-ph",
+                            Locale = "English - Philippines"
+                        },
+                        new
+                        {
+                            LangId = 53,
+                            LanguageCode = "en",
+                            Lcid = "en-za",
+                            Locale = "English - Southern Africa"
+                        },
+                        new
+                        {
+                            LangId = 54,
+                            LanguageCode = "en",
+                            Lcid = "en-tt",
+                            Locale = "English - Trinidad"
+                        },
+                        new
+                        {
+                            LangId = 55,
+                            LanguageCode = "en",
+                            Lcid = "en-us",
+                            Locale = "English - United States"
+                        },
+                        new
+                        {
+                            LangId = 56,
+                            LanguageCode = "et",
+                            Lcid = "et",
+                            Locale = "Estonian"
+                        },
+                        new
+                        {
+                            LangId = 57,
+                            LanguageCode = "mk",
+                            Lcid = "mk",
+                            Locale = "FYRO Macedonia"
+                        },
+                        new
+                        {
+                            LangId = 58,
+                            LanguageCode = "fo",
+                            Lcid = "fo",
+                            Locale = "Faroese"
+                        },
+                        new
+                        {
+                            LangId = 59,
+                            LanguageCode = "fa",
+                            Lcid = "fa",
+                            Locale = "Farsi - Persian"
+                        },
+                        new
+                        {
+                            LangId = 60,
+                            LanguageCode = "fi",
+                            Lcid = "fi",
+                            Locale = "Finnish"
+                        },
+                        new
+                        {
+                            LangId = 61,
+                            LanguageCode = "fr",
+                            Lcid = "fr-be",
+                            Locale = "French - Belgium"
+                        },
+                        new
+                        {
+                            LangId = 62,
+                            LanguageCode = "fr",
+                            Lcid = "fr-ca",
+                            Locale = "French - Canada"
+                        },
+                        new
+                        {
+                            LangId = 63,
+                            LanguageCode = "fr",
+                            Lcid = "fr-fr",
+                            Locale = "French - France"
+                        },
+                        new
+                        {
+                            LangId = 64,
+                            LanguageCode = "fr",
+                            Lcid = "fr-lu",
+                            Locale = "French - Luxembourg"
+                        },
+                        new
+                        {
+                            LangId = 65,
+                            LanguageCode = "fr",
+                            Lcid = "fr-ch",
+                            Locale = "French - Switzerland"
+                        },
+                        new
+                        {
+                            LangId = 66,
+                            LanguageCode = "gd",
+                            Lcid = "gd-ie",
+                            Locale = "Gaelic - Ireland"
+                        },
+                        new
+                        {
+                            LangId = 67,
+                            LanguageCode = "gd",
+                            Lcid = "gd",
+                            Locale = "Gaelic - Scotland"
+                        },
+                        new
+                        {
+                            LangId = 68,
+                            LanguageCode = "de",
+                            Lcid = "de-at",
+                            Locale = "German - Austria"
+                        },
+                        new
+                        {
+                            LangId = 69,
+                            LanguageCode = "de",
+                            Lcid = "de-de",
+                            Locale = "German - Germany"
+                        },
+                        new
+                        {
+                            LangId = 70,
+                            LanguageCode = "de",
+                            Lcid = "de-li",
+                            Locale = "German - Liechtenstein"
+                        },
+                        new
+                        {
+                            LangId = 71,
+                            LanguageCode = "de",
+                            Lcid = "de-lu",
+                            Locale = "German - Luxembourg"
+                        },
+                        new
+                        {
+                            LangId = 72,
+                            LanguageCode = "de",
+                            Lcid = "de-ch",
+                            Locale = "German - Switzerland"
+                        },
+                        new
+                        {
+                            LangId = 73,
+                            LanguageCode = "el",
+                            Lcid = "el",
+                            Locale = "Greek"
+                        },
+                        new
+                        {
+                            LangId = 74,
+                            LanguageCode = "gn",
+                            Lcid = "gn",
+                            Locale = "Guarani - Paraguay"
+                        },
+                        new
+                        {
+                            LangId = 75,
+                            LanguageCode = "gu",
+                            Lcid = "gu",
+                            Locale = "Gujarati"
+                        },
+                        new
+                        {
+                            LangId = 76,
+                            LanguageCode = "he",
+                            Lcid = "he",
+                            Locale = "Hebrew"
+                        },
+                        new
+                        {
+                            LangId = 77,
+                            LanguageCode = "hi",
+                            Lcid = "hi",
+                            Locale = "Hindi"
+                        },
+                        new
+                        {
+                            LangId = 78,
+                            LanguageCode = "hu",
+                            Lcid = "hu",
+                            Locale = "Hungarian"
+                        },
+                        new
+                        {
+                            LangId = 79,
+                            LanguageCode = "is",
+                            Lcid = "is",
+                            Locale = "Icelandic"
+                        },
+                        new
+                        {
+                            LangId = 80,
+                            LanguageCode = "id",
+                            Lcid = "id",
+                            Locale = "Indonesian"
+                        },
+                        new
+                        {
+                            LangId = 81,
+                            LanguageCode = "it",
+                            Lcid = "it-it",
+                            Locale = "Italian - Italy"
+                        },
+                        new
+                        {
+                            LangId = 82,
+                            LanguageCode = "it",
+                            Lcid = "it-ch",
+                            Locale = "Italian - Switzerland"
+                        },
+                        new
+                        {
+                            LangId = 83,
+                            LanguageCode = "ja",
+                            Lcid = "ja",
+                            Locale = "Japanese"
+                        },
+                        new
+                        {
+                            LangId = 84,
+                            LanguageCode = "kn",
+                            Lcid = "kn",
+                            Locale = "Kannada"
+                        },
+                        new
+                        {
+                            LangId = 85,
+                            LanguageCode = "ks",
+                            Lcid = "ks",
+                            Locale = "Kashmiri"
+                        },
+                        new
+                        {
+                            LangId = 86,
+                            LanguageCode = "kk",
+                            Lcid = "kk",
+                            Locale = "Kazakh"
+                        },
+                        new
+                        {
+                            LangId = 87,
+                            LanguageCode = "km",
+                            Lcid = "km",
+                            Locale = "Khmer"
+                        },
+                        new
+                        {
+                            LangId = 88,
+                            LanguageCode = "ko",
+                            Lcid = "ko",
+                            Locale = "Korean"
+                        },
+                        new
+                        {
+                            LangId = 89,
+                            LanguageCode = "lo",
+                            Lcid = "lo",
+                            Locale = "Lao"
+                        },
+                        new
+                        {
+                            LangId = 90,
+                            LanguageCode = "la",
+                            Lcid = "la",
+                            Locale = "Latin"
+                        },
+                        new
+                        {
+                            LangId = 91,
+                            LanguageCode = "lv",
+                            Lcid = "lv",
+                            Locale = "Latvian"
+                        },
+                        new
+                        {
+                            LangId = 92,
+                            LanguageCode = "lt",
+                            Lcid = "lt",
+                            Locale = "Lithuanian"
+                        },
+                        new
+                        {
+                            LangId = 93,
+                            LanguageCode = "ms",
+                            Lcid = "ms-bn",
+                            Locale = "Malay - Brunei"
+                        },
+                        new
+                        {
+                            LangId = 94,
+                            LanguageCode = "ms",
+                            Lcid = "ms-my",
+                            Locale = "Malay - Malaysia"
+                        },
+                        new
+                        {
+                            LangId = 95,
+                            LanguageCode = "ml",
+                            Lcid = "ml",
+                            Locale = "Malayalam"
+                        },
+                        new
+                        {
+                            LangId = 96,
+                            LanguageCode = "mt",
+                            Lcid = "mt",
+                            Locale = "Maltese"
+                        },
+                        new
+                        {
+                            LangId = 97,
+                            LanguageCode = "mi",
+                            Lcid = "mi",
+                            Locale = "Maori"
+                        },
+                        new
+                        {
+                            LangId = 98,
+                            LanguageCode = "mr",
+                            Lcid = "mr",
+                            Locale = "Marathi"
+                        },
+                        new
+                        {
+                            LangId = 99,
+                            LanguageCode = "mn",
+                            Lcid = "mn",
+                            Locale = "Mongolian"
+                        },
+                        new
+                        {
+                            LangId = 100,
+                            LanguageCode = "mn",
+                            Lcid = "mn",
+                            Locale = "Mongolian"
+                        },
+                        new
+                        {
+                            LangId = 101,
+                            LanguageCode = "ne",
+                            Lcid = "ne",
+                            Locale = "Nepali"
+                        },
+                        new
+                        {
+                            LangId = 102,
+                            LanguageCode = "nb",
+                            Lcid = "no-no",
+                            Locale = "Norwegian - Bokml"
+                        },
+                        new
+                        {
+                            LangId = 103,
+                            LanguageCode = "nn",
+                            Lcid = "no-no",
+                            Locale = "Norwegian - Nynorsk"
+                        },
+                        new
+                        {
+                            LangId = 104,
+                            LanguageCode = "or",
+                            Lcid = "or",
+                            Locale = "Oriya"
+                        },
+                        new
+                        {
+                            LangId = 105,
+                            LanguageCode = "pl",
+                            Lcid = "pl",
+                            Locale = "Polish"
+                        },
+                        new
+                        {
+                            LangId = 106,
+                            LanguageCode = "pt",
+                            Lcid = "pt-br",
+                            Locale = "Portuguese - Brazil"
+                        },
+                        new
+                        {
+                            LangId = 107,
+                            LanguageCode = "pt",
+                            Lcid = "pt-pt",
+                            Locale = "Portuguese - Portugal"
+                        },
+                        new
+                        {
+                            LangId = 108,
+                            LanguageCode = "pa",
+                            Lcid = "pa",
+                            Locale = "Punjabi"
+                        },
+                        new
+                        {
+                            LangId = 109,
+                            LanguageCode = "rm",
+                            Lcid = "rm",
+                            Locale = "Raeto-Romance"
+                        },
+                        new
+                        {
+                            LangId = 110,
+                            LanguageCode = "ro",
+                            Lcid = "ro-mo",
+                            Locale = "Romanian - Moldova"
+                        },
+                        new
+                        {
+                            LangId = 111,
+                            LanguageCode = "ro",
+                            Lcid = "ro",
+                            Locale = "Romanian - Romania"
+                        },
+                        new
+                        {
+                            LangId = 112,
+                            LanguageCode = "ru",
+                            Lcid = "ru",
+                            Locale = "Russian"
+                        },
+                        new
+                        {
+                            LangId = 113,
+                            LanguageCode = "ru",
+                            Lcid = "ru-mo",
+                            Locale = "Russian - Moldova"
+                        },
+                        new
+                        {
+                            LangId = 114,
+                            LanguageCode = "sa",
+                            Lcid = "sa",
+                            Locale = "Sanskrit"
+                        },
+                        new
+                        {
+                            LangId = 115,
+                            LanguageCode = "sr",
+                            Lcid = "sr-sp",
+                            Locale = "Serbian - Cyrillic"
+                        },
+                        new
+                        {
+                            LangId = 116,
+                            LanguageCode = "sr",
+                            Lcid = "sr-sp",
+                            Locale = "Serbian - Latin"
+                        },
+                        new
+                        {
+                            LangId = 117,
+                            LanguageCode = "tn",
+                            Lcid = "tn",
+                            Locale = "Setsuana"
+                        },
+                        new
+                        {
+                            LangId = 118,
+                            LanguageCode = "sd",
+                            Lcid = "sd",
+                            Locale = "Sindhi"
+                        },
+                        new
+                        {
+                            LangId = 119,
+                            LanguageCode = "Sinhalese",
+                            Lcid = "si",
+                            Locale = "Sinhala"
+                        },
+                        new
+                        {
+                            LangId = 120,
+                            LanguageCode = "sk",
+                            Lcid = "sk",
+                            Locale = "Slovak"
+                        },
+                        new
+                        {
+                            LangId = 121,
+                            LanguageCode = "sl",
+                            Lcid = "sl",
+                            Locale = "Slovenian"
+                        },
+                        new
+                        {
+                            LangId = 122,
+                            LanguageCode = "so",
+                            Lcid = "so",
+                            Locale = "Somali"
+                        },
+                        new
+                        {
+                            LangId = 123,
+                            LanguageCode = "sb",
+                            Lcid = "sb",
+                            Locale = "Sorbian"
+                        },
+                        new
+                        {
+                            LangId = 124,
+                            LanguageCode = "es",
+                            Lcid = "es-ar",
+                            Locale = "Spanish - Argentina"
+                        },
+                        new
+                        {
+                            LangId = 125,
+                            LanguageCode = "es",
+                            Lcid = "es-bo",
+                            Locale = "Spanish - Bolivia"
+                        },
+                        new
+                        {
+                            LangId = 126,
+                            LanguageCode = "es",
+                            Lcid = "es-cl",
+                            Locale = "Spanish - Chile"
+                        },
+                        new
+                        {
+                            LangId = 127,
+                            LanguageCode = "es",
+                            Lcid = "es-co",
+                            Locale = "Spanish - Colombia"
+                        },
+                        new
+                        {
+                            LangId = 128,
+                            LanguageCode = "es",
+                            Lcid = "es-cr",
+                            Locale = "Spanish - Costa Rica"
+                        },
+                        new
+                        {
+                            LangId = 129,
+                            LanguageCode = "es",
+                            Lcid = "es-do",
+                            Locale = "Spanish - Dominican Republic"
+                        },
+                        new
+                        {
+                            LangId = 130,
+                            LanguageCode = "es",
+                            Lcid = "es-ec",
+                            Locale = "Spanish - Ecuador"
+                        },
+                        new
+                        {
+                            LangId = 131,
+                            LanguageCode = "es",
+                            Lcid = "es-sv",
+                            Locale = "Spanish - El Salvador"
+                        },
+                        new
+                        {
+                            LangId = 132,
+                            LanguageCode = "es",
+                            Lcid = "es-gt",
+                            Locale = "Spanish - Guatemala"
+                        },
+                        new
+                        {
+                            LangId = 133,
+                            LanguageCode = "es",
+                            Lcid = "es-hn",
+                            Locale = "Spanish - Honduras"
+                        },
+                        new
+                        {
+                            LangId = 134,
+                            LanguageCode = "es",
+                            Lcid = "es-mx",
+                            Locale = "Spanish - Mexico"
+                        },
+                        new
+                        {
+                            LangId = 135,
+                            LanguageCode = "es",
+                            Lcid = "es-ni",
+                            Locale = "Spanish - Nicaragua"
+                        },
+                        new
+                        {
+                            LangId = 136,
+                            LanguageCode = "es",
+                            Lcid = "es-pa",
+                            Locale = "Spanish - Panama"
+                        },
+                        new
+                        {
+                            LangId = 137,
+                            LanguageCode = "es",
+                            Lcid = "es-py",
+                            Locale = "Spanish - Paraguay"
+                        },
+                        new
+                        {
+                            LangId = 138,
+                            LanguageCode = "es",
+                            Lcid = "es-pe",
+                            Locale = "Spanish - Peru"
+                        },
+                        new
+                        {
+                            LangId = 139,
+                            LanguageCode = "es",
+                            Lcid = "es-pr",
+                            Locale = "Spanish - Puerto Rico"
+                        },
+                        new
+                        {
+                            LangId = 140,
+                            LanguageCode = "es",
+                            Lcid = "es-es",
+                            Locale = "Spanish - Spain (Traditional)"
+                        },
+                        new
+                        {
+                            LangId = 141,
+                            LanguageCode = "es",
+                            Lcid = "es-uy",
+                            Locale = "Spanish - Uruguay"
+                        },
+                        new
+                        {
+                            LangId = 142,
+                            LanguageCode = "es",
+                            Lcid = "es-ve",
+                            Locale = "Spanish - Venezuela"
+                        },
+                        new
+                        {
+                            LangId = 143,
+                            LanguageCode = "sw",
+                            Lcid = "sw",
+                            Locale = "Swahili"
+                        },
+                        new
+                        {
+                            LangId = 144,
+                            LanguageCode = "sv",
+                            Lcid = "sv-fi",
+                            Locale = "Swedish - Finland"
+                        },
+                        new
+                        {
+                            LangId = 145,
+                            LanguageCode = "sv",
+                            Lcid = "sv-se",
+                            Locale = "Swedish - Sweden"
+                        },
+                        new
+                        {
+                            LangId = 146,
+                            LanguageCode = "tg",
+                            Lcid = "tg",
+                            Locale = "Tajik"
+                        },
+                        new
+                        {
+                            LangId = 147,
+                            LanguageCode = "ta",
+                            Lcid = "ta",
+                            Locale = "Tamil"
+                        },
+                        new
+                        {
+                            LangId = 148,
+                            LanguageCode = "tt",
+                            Lcid = "tt",
+                            Locale = "Tatar"
+                        },
+                        new
+                        {
+                            LangId = 149,
+                            LanguageCode = "te",
+                            Lcid = "te",
+                            Locale = "Telugu"
+                        },
+                        new
+                        {
+                            LangId = 150,
+                            LanguageCode = "th",
+                            Lcid = "th",
+                            Locale = "Thai"
+                        },
+                        new
+                        {
+                            LangId = 151,
+                            LanguageCode = "bo",
+                            Lcid = "bo",
+                            Locale = "Tibetan"
+                        },
+                        new
+                        {
+                            LangId = 152,
+                            LanguageCode = "ts",
+                            Lcid = "ts",
+                            Locale = "Tsonga"
+                        },
+                        new
+                        {
+                            LangId = 153,
+                            LanguageCode = "tr",
+                            Lcid = "tr",
+                            Locale = "Turkish"
+                        },
+                        new
+                        {
+                            LangId = 154,
+                            LanguageCode = "tk",
+                            Lcid = "tk",
+                            Locale = "Turkmen"
+                        },
+                        new
+                        {
+                            LangId = 155,
+                            LanguageCode = "uk",
+                            Lcid = "uk",
+                            Locale = "Ukrainian"
+                        },
+                        new
+                        {
+                            LangId = 157,
+                            LanguageCode = "ur",
+                            Lcid = "ur",
+                            Locale = "Urdu"
+                        },
+                        new
+                        {
+                            LangId = 158,
+                            LanguageCode = "uz",
+                            Lcid = "uz-uz",
+                            Locale = "Uzbek - Cyrillic"
+                        },
+                        new
+                        {
+                            LangId = 159,
+                            LanguageCode = "uz",
+                            Lcid = "uz-uz",
+                            Locale = "Uzbek - Latin"
+                        },
+                        new
+                        {
+                            LangId = 160,
+                            LanguageCode = "vi",
+                            Lcid = "vi",
+                            Locale = "Vietnamese"
+                        },
+                        new
+                        {
+                            LangId = 161,
+                            LanguageCode = "cy",
+                            Lcid = "cy",
+                            Locale = "Welsh"
+                        },
+                        new
+                        {
+                            LangId = 162,
+                            LanguageCode = "xh",
+                            Lcid = "xh",
+                            Locale = "Xhosa"
+                        },
+                        new
+                        {
+                            LangId = 163,
+                            LanguageCode = "yi",
+                            Lcid = "yi",
+                            Locale = "Yiddish"
+                        },
+                        new
+                        {
+                            LangId = 164,
+                            LanguageCode = "zu",
+                            Lcid = "zu",
+                            Locale = "Zulu"
+                        });
                 });
 
             modelBuilder.Entity("opensis.data.Models.Membership", b =>
@@ -271,7 +3008,7 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasDefaultValueSql("((0))");
 
                     b.HasKey("TenantId", "SchoolId", "MembershipId")
-                        .HasName("PK_Table_membership_1");
+                        .HasName("pk_table_membership_1");
 
                     b.ToTable("membership");
                 });
@@ -334,9 +3071,9 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasColumnType("date");
 
                     b.HasKey("TenantId", "SchoolId", "NoticeId")
-                        .HasName("PK_Table_Notice");
+                        .HasName("pk_table_notice");
 
-                    b.ToTable("Notice");
+                    b.ToTable("notice");
                 });
 
             modelBuilder.Entity("opensis.data.Models.Plans", b =>
@@ -368,9 +3105,9 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .IsUnicode(false);
 
                     b.HasKey("TenantId", "SchoolId", "PlanId")
-                        .HasName("PK_Table_Plans");
+                        .HasName("pk_table_plans");
 
-                    b.ToTable("Plans");
+                    b.ToTable("plans");
                 });
 
             modelBuilder.Entity("opensis.data.Models.ProgressPeriods", b =>
@@ -454,7 +3191,7 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .IsUnicode(false);
 
                     b.HasKey("TenantId", "SchoolId", "MarkingPeriodId", "AcademicYear", "QuarterId")
-                        .HasName("PK_Table_Progress_periods");
+                        .HasName("pk_table_progress_periods");
 
                     b.HasIndex("TenantId", "SchoolId", "QuarterId");
 
@@ -542,11 +3279,11 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .IsUnicode(false);
 
                     b.HasKey("TenantId", "SchoolId", "MarkingPeriodId")
-                        .HasName("PK_Table_Quarters");
+                        .HasName("pk_table_quarters");
 
                     b.HasIndex("TenantId", "SchoolId", "SemesterId");
 
-                    b.ToTable("Quarters");
+                    b.ToTable("quarters");
                 });
 
             modelBuilder.Entity("opensis.data.Models.Rooms", b =>
@@ -571,6 +3308,10 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasColumnName("description")
                         .HasColumnType("text");
 
+                    b.Property<bool?>("IsActive")
+                        .HasColumnName("isactive")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<DateTime?>("LastUpdated")
                         .HasColumnName("last_updated")
                         .HasColumnType("datetime");
@@ -592,9 +3333,9 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .IsUnicode(false);
 
                     b.HasKey("TenantId", "SchoolId", "RoomId")
-                        .HasName("PK_Table_Rooms");
+                        .HasName("pk_table_rooms");
 
-                    b.ToTable("Rooms");
+                    b.ToTable("rooms");
                 });
 
             modelBuilder.Entity("opensis.data.Models.SchoolCalendars", b =>
@@ -625,6 +3366,10 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasColumnName("default_calender")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnName("end_date")
+                        .HasColumnType("date");
+
                     b.Property<DateTime?>("LastUpdated")
                         .HasColumnName("last_updated")
                         .HasColumnType("datetime");
@@ -632,6 +3377,10 @@ namespace opensis.data.Migrations.MySqlMigrations
                     b.Property<int?>("RolloverId")
                         .HasColumnName("rollover_id")
                         .HasColumnType("int");
+
+                    b.Property<DateTime?>("StartDate")
+                        .HasColumnName("start_date")
+                        .HasColumnType("date");
 
                     b.Property<string>("Title")
                         .HasColumnName("title")
@@ -645,8 +3394,14 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasMaxLength(100)
                         .IsUnicode(false);
 
+                    b.Property<string>("VisibleToMembershipId")
+                        .HasColumnName("visible_to_membership_id")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
                     b.HasKey("TenantId", "SchoolId", "CalenderId")
-                        .HasName("PK_Table_School_Calendars");
+                        .HasName("pk_table_school_calendars");
 
                     b.ToTable("school_calendars");
                 });
@@ -694,6 +3449,7 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasColumnType("date");
 
                     b.Property<bool?>("Electricity")
+                        .HasColumnName("electricity")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Email")
@@ -755,6 +3511,7 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasMaxLength(100);
 
                     b.Property<bool?>("Internet")
+                        .HasColumnName("internet")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("LinkedIn")
@@ -770,7 +3527,7 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasMaxLength(100);
 
                     b.Property<string>("LowestGradeLevel")
-                        .HasColumnName("lowestgradelevel")
+                        .HasColumnName("lowest_grade_level")
                         .HasColumnType("char(100) CHARACTER SET utf8mb4")
                         .IsFixedLength(true)
                         .HasMaxLength(100);
@@ -815,14 +3572,14 @@ namespace opensis.data.Migrations.MySqlMigrations
 
                     b.Property<byte[]>("SchoolLogo")
                         .HasColumnName("school_logo")
-                        .HasColumnType("varbinary(50)")
-                        .HasMaxLength(50);
+                        .HasColumnType("longblob");
 
                     b.Property<bool?>("SoapAndWaterAvailable")
                         .HasColumnName("soap_and_water_available")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<bool?>("Status")
+                        .HasColumnName("status")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Telephone")
@@ -959,9 +3716,11 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .IsUnicode(false);
 
                     b.Property<double?>("Latitude")
+                        .HasColumnName("latitude")
                         .HasColumnType("double");
 
                     b.Property<double?>("Longitude")
+                        .HasColumnName("longitude")
                         .HasColumnType("double");
 
                     b.Property<int?>("MaxApiChecks")
@@ -1044,7 +3803,7 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasMaxLength(10);
 
                     b.HasKey("TenantId", "SchoolId")
-                        .HasName("PK_Table_School_Master");
+                        .HasName("pk_table_school_master");
 
                     b.HasIndex("TenantId", "SchoolId", "PlanId");
 
@@ -1097,9 +3856,9 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasColumnName("length")
                         .HasColumnType("decimal(10, 0)");
 
-                    b.Property<decimal?>("RolloverId")
+                    b.Property<int?>("RolloverId")
                         .HasColumnName("rollover_id")
-                        .HasColumnType("decimal(10, 0)");
+                        .HasColumnType("int");
 
                     b.Property<string>("ShortName")
                         .HasColumnName("short_name")
@@ -1107,9 +3866,9 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasMaxLength(10)
                         .IsUnicode(false);
 
-                    b.Property<decimal?>("SortOrder")
+                    b.Property<int?>("SortOrder")
                         .HasColumnName("sort_order")
-                        .HasColumnType("decimal(10, 0)");
+                        .HasColumnType("int");
 
                     b.Property<TimeSpan?>("StartTime")
                         .HasColumnName("start_time")
@@ -1128,7 +3887,7 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .IsUnicode(false);
 
                     b.HasKey("TenantId", "SchoolId", "PeriodId")
-                        .HasName("PK_Table_School_Periods");
+                        .HasName("pk_table_school_periods");
 
                     b.ToTable("school_periods");
                 });
@@ -1210,7 +3969,7 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .IsUnicode(false);
 
                     b.HasKey("TenantId", "SchoolId", "MarkingPeriodId")
-                        .HasName("PK_Table_School_Years");
+                        .HasName("pk_table_school_years");
 
                     b.ToTable("school_years");
                 });
@@ -1250,9 +4009,9 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .IsUnicode(false);
 
                     b.HasKey("TenantId", "SchoolId", "SectionId")
-                        .HasName("PK_Table_Sections");
+                        .HasName("pk_table_sections");
 
-                    b.ToTable("Sections");
+                    b.ToTable("sections");
                 });
 
             modelBuilder.Entity("opensis.data.Models.Semesters", b =>
@@ -1336,11 +4095,11 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasColumnType("int");
 
                     b.HasKey("TenantId", "SchoolId", "MarkingPeriodId")
-                        .HasName("PK_Table_Semesters");
+                        .HasName("pk_table_semesters");
 
                     b.HasIndex("TenantId", "SchoolId", "YearId");
 
-                    b.ToTable("Semesters");
+                    b.ToTable("semesters");
                 });
 
             modelBuilder.Entity("opensis.data.Models.State", b =>
@@ -1361,57 +4120,134 @@ namespace opensis.data.Migrations.MySqlMigrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("State");
+                    b.HasIndex("CountryId");
 
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CountryId = 1,
-                            Name = "Badakhshan"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CountryId = 1,
-                            Name = "Badghis"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CountryId = 2,
-                            Name = "Berat"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            CountryId = 2,
-                            Name = "Bulqize"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            CountryId = 3,
-                            Name = "Adrar"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            CountryId = 3,
-                            Name = "Ain Defla"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            CountryId = 4,
-                            Name = "Uttar Pradesh"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            CountryId = 4,
-                            Name = "West Bengal"
-                        });
+                    b.ToTable("state");
+                });
+
+            modelBuilder.Entity("opensis.data.Models.StudentEnrollment", b =>
+                {
+                    b.Property<Guid>("TenantId")
+                        .HasColumnName("tenant_id")
+                        .HasColumnType("char(36)");
+
+                    b.Property<int>("SchoolId")
+                        .HasColumnName("school_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StudentId")
+                        .HasColumnName("student_id")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CalendarId")
+                        .HasColumnName("calendar_id")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("DropCode")
+                        .HasColumnName("drop_code")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnName("end_date")
+                        .HasColumnType("date");
+
+                    b.Property<int?>("EnrollmentCode")
+                        .HasColumnName("enrollment_code")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("EnrollmentId")
+                        .HasColumnName("enrollment_id")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("GradeId")
+                        .HasColumnName("grade_id")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("LastSchool")
+                        .HasColumnName("last_school")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("LastUpdated")
+                        .HasColumnName("last_updated")
+                        .HasColumnType("datetime");
+
+                    b.Property<int?>("NextSchool")
+                        .HasColumnName("next_school")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SectionId")
+                        .HasColumnName("section_id")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("StartDate")
+                        .HasColumnName("start_date")
+                        .HasColumnType("date");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnName("updated_by")
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
+                        .HasMaxLength(100)
+                        .IsUnicode(false);
+
+                    b.HasKey("TenantId", "SchoolId", "StudentId");
+
+                    b.ToTable("student_enrollment");
+                });
+
+            modelBuilder.Entity("opensis.data.Models.StudentEnrollmentCode", b =>
+                {
+                    b.Property<Guid>("TenantId")
+                        .HasColumnName("tenant_id")
+                        .HasColumnType("char(36)");
+
+                    b.Property<int>("SchoolId")
+                        .HasColumnName("school_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EnrollmentCode")
+                        .HasColumnName("enrollment_code")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("AcademicYear")
+                        .HasColumnName("academic_year")
+                        .HasColumnType("decimal(4, 0)");
+
+                    b.Property<DateTime?>("LastUpdated")
+                        .HasColumnName("last_updated")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("ShortName")
+                        .HasColumnName("short_name")
+                        .HasColumnType("char(10) CHARACTER SET utf8mb4")
+                        .IsFixedLength(true)
+                        .HasMaxLength(10);
+
+                    b.Property<int?>("SortOrder")
+                        .HasColumnName("sort_order")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .HasColumnName("title")
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
+                        .HasMaxLength(100)
+                        .IsUnicode(false);
+
+                    b.Property<string>("Type")
+                        .HasColumnName("type")
+                        .HasColumnType("varchar(20) CHARACTER SET utf8mb4")
+                        .HasMaxLength(20)
+                        .IsUnicode(false);
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnName("updated_by")
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
+                        .HasMaxLength(100)
+                        .IsUnicode(false);
+
+                    b.HasKey("TenantId", "SchoolId", "EnrollmentCode")
+                        .HasName("PK_student_enrollment_codes");
+
+                    b.ToTable("student_enrollment_code");
                 });
 
             modelBuilder.Entity("opensis.data.Models.UserMaster", b =>
@@ -1445,7 +4281,7 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasColumnName("last_updated")
                         .HasColumnType("datetime");
 
-                    b.Property<int?>("MembershipId")
+                    b.Property<int>("MembershipId")
                         .HasColumnName("membership_id")
                         .HasColumnType("int");
 
@@ -1470,7 +4306,7 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .IsUnicode(false);
 
                     b.HasKey("TenantId", "SchoolId", "UserId")
-                        .HasName("PK_Table_User_Master_1");
+                        .HasName("PK_user_master");
 
                     b.HasIndex("LangId");
 
@@ -1479,12 +4315,20 @@ namespace opensis.data.Migrations.MySqlMigrations
                     b.ToTable("user_master");
                 });
 
+            modelBuilder.Entity("opensis.data.Models.City", b =>
+                {
+                    b.HasOne("opensis.data.Models.State", "State")
+                        .WithMany("City")
+                        .HasForeignKey("StateId")
+                        .HasConstraintName("FK_city_state");
+                });
+
             modelBuilder.Entity("opensis.data.Models.Membership", b =>
                 {
                     b.HasOne("opensis.data.Models.SchoolMaster", "SchoolMaster")
                         .WithMany("Membership")
                         .HasForeignKey("TenantId", "SchoolId")
-                        .HasConstraintName("FK_Table_membership_Table_School_Master")
+                        .HasConstraintName("fk_table_membership_table_school_master")
                         .IsRequired();
                 });
 
@@ -1493,7 +4337,7 @@ namespace opensis.data.Migrations.MySqlMigrations
                     b.HasOne("opensis.data.Models.Quarters", "Quarters")
                         .WithMany("ProgressPeriods")
                         .HasForeignKey("TenantId", "SchoolId", "QuarterId")
-                        .HasConstraintName("FK_Table_Progress_periods_Table_Quarters")
+                        .HasConstraintName("FK_progress_periods_quarters")
                         .IsRequired();
                 });
 
@@ -1502,13 +4346,13 @@ namespace opensis.data.Migrations.MySqlMigrations
                     b.HasOne("opensis.data.Models.SchoolMaster", "SchoolMaster")
                         .WithMany("Quarters")
                         .HasForeignKey("TenantId", "SchoolId")
-                        .HasConstraintName("FK_Table_Quarters_Table_School_Master")
+                        .HasConstraintName("FK_quarters_school_master")
                         .IsRequired();
 
                     b.HasOne("opensis.data.Models.Semesters", "Semesters")
                         .WithMany("Quarters")
                         .HasForeignKey("TenantId", "SchoolId", "SemesterId")
-                        .HasConstraintName("FK_Table_Quarters_Table_Semesters");
+                        .HasConstraintName("FK_quarters_semesters");
                 });
 
             modelBuilder.Entity("opensis.data.Models.SchoolCalendars", b =>
@@ -1516,7 +4360,7 @@ namespace opensis.data.Migrations.MySqlMigrations
                     b.HasOne("opensis.data.Models.SchoolMaster", "SchoolMaster")
                         .WithMany("SchoolCalendars")
                         .HasForeignKey("TenantId", "SchoolId")
-                        .HasConstraintName("FK_Table_School_Calendars_Table_School_Master")
+                        .HasConstraintName("FK_school_calendars_school_master")
                         .IsRequired();
                 });
 
@@ -1525,7 +4369,7 @@ namespace opensis.data.Migrations.MySqlMigrations
                     b.HasOne("opensis.data.Models.SchoolMaster", "SchoolMaster")
                         .WithMany("SchoolDetail")
                         .HasForeignKey("TenantId", "SchoolId")
-                        .HasConstraintName("FK_Table_School_Detail_Table_School_Master");
+                        .HasConstraintName("FK_school_detail_school_master");
                 });
 
             modelBuilder.Entity("opensis.data.Models.SchoolMaster", b =>
@@ -1533,7 +4377,7 @@ namespace opensis.data.Migrations.MySqlMigrations
                     b.HasOne("opensis.data.Models.Plans", "Plans")
                         .WithMany("SchoolMaster")
                         .HasForeignKey("TenantId", "SchoolId", "PlanId")
-                        .HasConstraintName("FK_Table_School_Master_Table_Plans");
+                        .HasConstraintName("FK_school_master_plans");
                 });
 
             modelBuilder.Entity("opensis.data.Models.SchoolPeriods", b =>
@@ -1541,7 +4385,7 @@ namespace opensis.data.Migrations.MySqlMigrations
                     b.HasOne("opensis.data.Models.SchoolMaster", "SchoolMaster")
                         .WithMany("SchoolPeriods")
                         .HasForeignKey("TenantId", "SchoolId")
-                        .HasConstraintName("FK_Table_School_Periods_Table_School_Master")
+                        .HasConstraintName("FK_school_periods_school_master")
                         .IsRequired();
                 });
 
@@ -1550,7 +4394,7 @@ namespace opensis.data.Migrations.MySqlMigrations
                     b.HasOne("opensis.data.Models.SchoolMaster", "SchoolMaster")
                         .WithMany("SchoolYears")
                         .HasForeignKey("TenantId", "SchoolId")
-                        .HasConstraintName("FK_Table_School_Years_Table_School_Master")
+                        .HasConstraintName("FK_school_years_school_master")
                         .IsRequired();
                 });
 
@@ -1559,13 +4403,21 @@ namespace opensis.data.Migrations.MySqlMigrations
                     b.HasOne("opensis.data.Models.SchoolMaster", "SchoolMaster")
                         .WithMany("Semesters")
                         .HasForeignKey("TenantId", "SchoolId")
-                        .HasConstraintName("FK_Table_Semesters_Table_School_Master")
+                        .HasConstraintName("FK_semesters_school_master")
                         .IsRequired();
 
                     b.HasOne("opensis.data.Models.SchoolYears", "SchoolYears")
                         .WithMany("Semesters")
                         .HasForeignKey("TenantId", "SchoolId", "YearId")
-                        .HasConstraintName("FK_Table_Semesters_Table_School_Years");
+                        .HasConstraintName("FK_semesters_school_years");
+                });
+
+            modelBuilder.Entity("opensis.data.Models.State", b =>
+                {
+                    b.HasOne("opensis.data.Models.Country", "Country")
+                        .WithMany("State")
+                        .HasForeignKey("CountryId")
+                        .HasConstraintName("FK_state_country");
                 });
 
             modelBuilder.Entity("opensis.data.Models.UserMaster", b =>
@@ -1573,13 +4425,14 @@ namespace opensis.data.Migrations.MySqlMigrations
                     b.HasOne("opensis.data.Models.Language", "Lang")
                         .WithMany("UserMaster")
                         .HasForeignKey("LangId")
-                        .HasConstraintName("FK_Table_User_Master_Table_Language")
+                        .HasConstraintName("FK_user_master_language")
                         .IsRequired();
 
                     b.HasOne("opensis.data.Models.Membership", "Membership")
                         .WithMany("UserMaster")
                         .HasForeignKey("TenantId", "SchoolId", "MembershipId")
-                        .HasConstraintName("FK_Table_User_Master_Table_Membership");
+                        .HasConstraintName("FK_user_master_membership")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

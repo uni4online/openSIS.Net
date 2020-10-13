@@ -12,12 +12,12 @@ export interface YEAR {
   
   /** list of years */
   export const YEARS: YEAR[] = [
-    {name: '2020-2021', id: 'E'},
+    {name: 'NA', id:'1'},
   ];
 
    /** list of parts */
    export const PARTS: PART[] = [
-    {name: 'Full Year', id: 'A'},
+    {name: 'NA', id:'1'},
     // {name: 'Semester 1', id: 'B'},
     // {name: 'Semester 2', id: 'C'},
     // {name: 'Quarter 1', id: 'D'},

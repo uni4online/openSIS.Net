@@ -238,12 +238,13 @@
             <div class="flex flex-1 mx-4 md:w-1/2">
                 <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'stateRegionProvince'|translate}}</mat-label>
-                    <mat-select formControlName="state" (selectionChange)="getAllCitiesByState($event)"  [(ngModel)]="schoolAddViewModel.schoolMaster.state" name="state" >
+                    <!-- <mat-select formControlName="state" (selectionChange)="getAllCitiesByState($event)"  [(ngModel)]="schoolAddViewModel.schoolMaster.state" name="state" >
                         <mat-option value=""></mat-option>
                         <mat-option *ngFor="let state of stateListArr" [value]= 'state.id' >
                             {{state.name}}
                            </mat-option>
-                    </mat-select>
+                    </mat-select> -->
+                    <input formControlName="state" [(ngModel)]="schoolAddViewModel.schoolMaster.state" name="state" matInput>
                 </mat-form-field>
             </div>
         </div>
@@ -251,12 +252,14 @@
             <div class="flex flex-1 mx-4 md:w-1/2">
                 <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'city'|translate}}</mat-label>
-                    <mat-select formControlName="city" [(ngModel)]="this.schoolAddViewModel.schoolMaster.city" name="city" required>
+                    <!-- <mat-select formControlName="city" [(ngModel)]="this.schoolAddViewModel.schoolMaster.city" name="city" required>
                         <mat-option></mat-option>
                         <mat-option *ngFor="let city of cityListArr" [value]= 'city.id' >
                             {{city.name}}
                            </mat-option>
-                    </mat-select>
+                    </mat-select> -->
+                    <input formControlName="city" [(ngModel)]="this.schoolAddViewModel.schoolMaster.city" name="city" matInput required>
+
                     <mat-error *ngIf="form.get('city').hasError('required')">{{'cityIsRequired'|translate}}</mat-error>
                 </mat-form-field>
             </div>

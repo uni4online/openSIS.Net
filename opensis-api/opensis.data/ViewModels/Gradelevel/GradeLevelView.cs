@@ -12,6 +12,8 @@ namespace opensis.data.ViewModels.Gradelevel
         public string ShortName { get; set; }
         public string Title { get; set; }
         public string NextGrade { get; set; }
+
+        public int? NextGradeId { get; set; }
         public int? SortOrder { get; set; }
         public DateTime? LastUpdated { get; set; }
         public string UpdatedBy { get; set; }

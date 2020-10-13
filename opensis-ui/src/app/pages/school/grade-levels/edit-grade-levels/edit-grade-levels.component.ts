@@ -43,27 +43,28 @@ export class EditGradeLevelsComponent implements OnInit {
         title: ['',Validators.required],
         shortName: ['',Validators.required],
         sortOrder: ['',Validators.required],
-        nextGradeId: ['null',Validators.required],
+        nextGradeId: ["null",Validators.required],
       });
     }
 
   ngOnInit(): void {
     if(this.editMode){
-      this.callGradeLevelView();
+      this.CallGradeLevelView();
     }
   }
 
-  callGradeLevelView(){
-      if(this.editDetails.nextGradeId!=null){
-      this.nextGradeIdInString = this.editDetails.nextGradeId.toString();
-        }else{
-          this.nextGradeIdInString="null";
-        }
+  CallGradeLevelView(){
+    let nextGrade=this.editDetails.nextGradeId;
+    if(this.editDetails.nextGrade==null){
+      nextGrade="null"
+    }else{
+    nextGrade=this.editDetails.nextGradeId.toString(); 
+    }
       this.form.patchValue({
         title:this.editDetails.title,
         shortName:this.editDetails.shortName,
         sortOrder:this.editDetails.sortOrder,
-        nextGradeId:this.nextGradeIdInString
+        nextGradeId:nextGrade
       })
    
   }
@@ -81,8 +82,8 @@ export class EditGradeLevelsComponent implements OnInit {
   AddGradeLevel(){
     this.addGradeLevel.tblGradelevel.schoolId=+sessionStorage.getItem("selectedSchoolId");;
     this.addGradeLevel.tblGradelevel.title = this.form.value.title;
-    if(this.form.value.nextGradeId=="null"){
-      this.addGradeLevel.tblGradelevel.nextGradeId = null;
+    if(this.form.value.nextGrade=="null"){
+      this.addGradeLevel.tblGradelevel.nextGrade = null;
     }else{
       this.addGradeLevel.tblGradelevel.nextGradeId = +this.form.value.nextGradeId;
     }
@@ -90,7 +91,12 @@ export class EditGradeLevelsComponent implements OnInit {
     this.addGradeLevel.tblGradelevel.sortOrder=this.form.value.sortOrder;
     this.addGradeLevel._token=sessionStorage.getItem("token");
     this.addGradeLevel._tenantName=sessionStorage.getItem("tenant");
-    this.gradeLevelService.AddGradeLevel(this.addGradeLevel).subscribe((res)=>{
+    this.gradeLevelService.addGradelevel(this.addGradeLevel).subscribe((res)=>{
+      if (typeof (res) == 'undefined') {
+        this.snackbar.open('Failed to Add Grade Level ' + sessionStorage.getItem("httpError"), '', {
+          duration: 10000
+        });
+      }else
       if (res._failure) {
         this.snackbar.open('Failed to Add Grade Level ' + res._message, 'LOL THANKS', {
           duration: 10000
@@ -99,8 +105,7 @@ export class EditGradeLevelsComponent implements OnInit {
         this.snackbar.open('Grade Level Added Successfully.', '', {
           duration: 10000
         });
-        this.dialogRef.close()
-        this.gradeLevelService.updateGradeLevelTable(true);
+        this.dialogRef.close(true);
       }
     })
   }
@@ -114,12 +119,16 @@ export class EditGradeLevelsComponent implements OnInit {
     this.updateGradeLevel.tblGradelevel.shortName=this.form.value.shortName;
     this.updateGradeLevel.tblGradelevel.sortOrder=this.form.value.sortOrder;
     if(this.form.value.nextGradeId=="null"){
-      this.updateGradeLevel.tblGradelevel.nextGradeId = null;
+      this.updateGradeLevel.tblGradelevel.nextGrade = null;
     }else{
       this.updateGradeLevel.tblGradelevel.nextGradeId=+this.form.value.nextGradeId;
     }
-    this.gradeLevelService.UpdateGradeLevel(this.updateGradeLevel).subscribe((res)=>{
-      if (res._failure) {
+    this.gradeLevelService.updateGradelevel(this.updateGradeLevel).subscribe((res)=>{
+      if (typeof (res) == 'undefined') {
+        this.snackbar.open('Failed to Update Grade Level ' + sessionStorage.getItem("httpError"), '', {
+          duration: 10000
+        });
+      }else if(res._failure) {
         this.snackbar.open('Failed to Update Grade Level ' + res._message, 'LOL THANKS', {
           duration: 10000
         });
@@ -128,8 +137,7 @@ export class EditGradeLevelsComponent implements OnInit {
           duration: 10000
         }
         );
-        this.dialogRef.close();
-        this.gradeLevelService.updateGradeLevelTable(true);
+        this.dialogRef.close(true);
       }
     })
   }

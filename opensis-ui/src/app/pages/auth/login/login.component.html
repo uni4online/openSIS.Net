@@ -33,7 +33,7 @@
             
             <mat-form-field appearance="outline" class="vex-flex-form-field" color="primary">
               <mat-label>{{'password'|translate}}</mat-label>
-              <input [type]="inputType" formControlName="password" [(ngModel)]="UserModel.password" name="user_password"   matInput required>
+              <input [type]="inputType" formControlName="password" name="user_password"   matInput required>
               <button (click)="toggleVisibility()" mat-icon-button matSuffix matTooltip="Toggle Visibility" type="button">
                 <mat-icon *ngIf="visible" [icIcon]="icVisibility"></mat-icon>
                 <mat-icon *ngIf="!visible" [icIcon]="icVisibilityOff"></mat-icon>
@@ -43,12 +43,11 @@
 
           <mat-form-field appearance="outline" class="vex-flex-form-field" color="primary">
             <mat-label>{{'language'|translate}}</mat-label>
-            <select matNativeControl required #selectedLang (change)="switchLang(selectedLang.value)">
-              <option *ngFor="let language of translate.getLangs()" [value]="language"
-                [selected]="language === translate.currentLang">
-                {{ language|translate }}
-              </option>
-            </select>
+            <mat-select [value]="selectedLanguage" matNativeControl required #selectedLang (selectionChange)="switchLang(selectedLang.value)">
+              <mat-option *ngFor="let language of languageList" [value]="language.lcid">
+                {{language.locale}}
+              </mat-option>
+            </mat-select>
           </mat-form-field>
         </div>
   

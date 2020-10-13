@@ -15,7 +15,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { SharedModuleModule } from '../../shared-module/shared-module.module';
-
+import {MatSelectModule} from '@angular/material/select';
 @NgModule({
   declarations: [LoginComponent],
   imports: [
@@ -32,7 +32,8 @@ import { SharedModuleModule } from '../../shared-module/shared-module.module';
     MatCheckboxModule,   
     TranslateModule,
     MatProgressBarModule,
-    SharedModuleModule
+    SharedModuleModule,
+    MatSelectModule
   ]
 })
 export class LoginModule {

@@ -1,12 +1,12 @@
 <div class="text-right" *ngIf="schoolCtrl">
   <mat-form-field >
-    <mat-select [formControl]="schoolCtrl" placeholder="School Name" (selectionChange)="changeSchool($event.value.school_Name,$event.value.school_Id)">
+    <mat-select [formControl]="schoolCtrl" placeholder="School Name" (selectionChange)="changeSchool($event.value.schoolName,$event.value.schoolId)">
       <mat-option>
         <ngx-mat-select-search  [formControl]="schoolFilterCtrl" ngxMatSelectSearchClear noEntriesFoundLabel="No matching school found" placeholderLabel="Find School..."></ngx-mat-select-search>
       </mat-option>
 
       <mat-option *ngFor="let school of filteredSchools | async" [value]="school" >
-        {{school.school_Name}}
+        {{school.schoolName}}
       </mat-option>
     </mat-select>
   </mat-form-field>

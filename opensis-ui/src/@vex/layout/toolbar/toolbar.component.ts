@@ -19,9 +19,8 @@ import icAdd from '@iconify/icons-ic/twotone-add';
 import { NavigationService } from '../../services/navigation.service';
 import { PopoverService } from '../../components/popover/popover.service';
 import { MegaMenuComponent } from '../../components/mega-menu/mega-menu.component';
-import { fadeInUp400ms } from 'src/@vex/animations/fade-in-up.animation';
-import { stagger40ms } from 'src/@vex/animations/stagger.animation';
-
+import { fadeInUp400ms } from '../../../@vex/animations/fade-in-up.animation';
+import { stagger40ms } from '../../../@vex/animations/stagger.animation';
 @Component({
   selector: 'vex-toolbar',
   templateUrl: './toolbar.component.html',

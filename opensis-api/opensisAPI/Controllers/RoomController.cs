@@ -14,7 +14,7 @@ using opensis.data.ViewModels.School;
 namespace opensisAPI.Controllers
 {
     [EnableCors("AllowOrigin")]
-    [Route("{tenant}/School")]
+    [Route("{tenant}/Room")]
     [ApiController]
     public class RoomController : ControllerBase
     {

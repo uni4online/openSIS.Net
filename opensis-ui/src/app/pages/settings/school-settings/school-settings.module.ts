@@ -34,7 +34,7 @@ import {MatSortModule} from '@angular/material/sort';
 import { SharedModuleModule } from '../../../pages/shared-module/shared-module.module';
 
 @NgModule({
-  declarations: [SchoolSettingsComponent,GradeLevelsComponent,SectionsComponent, RoomsComponent, SchoolFieldsComponent],
+  declarations: [SchoolSettingsComponent,GradeLevelsComponent,SectionsComponent, RoomsComponent,SchoolFieldsComponent],
   imports: [
     CommonModule,
     MatIconModule,

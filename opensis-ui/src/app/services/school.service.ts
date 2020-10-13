@@ -4,10 +4,12 @@ import { HttpClient} from '@angular/common/http';
 import { SchoolAddViewModel } from '../models/schoolMasterModel';
 import { AllSchoolListModel, GetAllSchoolModel, OnlySchoolListModel } from '../models/getAllSchoolModel';
 import { BehaviorSubject } from 'rxjs';
+
 @Injectable({
   providedIn: 'root'
 })
 export class SchoolService {
+  private schoolId;
   private messageSource = new BehaviorSubject(false);
   currentMessage = this.messageSource.asObservable();
   apiUrl:string = environment.apiURL;
@@ -51,8 +53,19 @@ export class SchoolService {
     return this.http.put<SchoolAddViewModel>(apiurl,obj)
   }  
 
+   setSchoolId(id: number) {
+     this.schoolId=id
+   }
+   getSchoolId(){
+    return this.schoolId;
+    }
+
   changeMessage(message: boolean) {
     this.messageSource.next(message)
   } 
+  
+
+
+
   
 }

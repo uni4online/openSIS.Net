@@ -53,6 +53,7 @@ export class RoomsComponent implements OnInit {
     { label: 'capacity', property: 'capacity', type: 'text', visible: true, cssClasses: ['font-medium'] },
     { label: 'description', property: 'description', type: 'text', visible: true },
     { label: 'sortOrder', property: 'sortOrder', type: 'text', visible: true, cssClasses: ['text-secondary', 'font-medium'] },
+    { label: 'isActive', property: 'isActive', type: 'text', visible: true, cssClasses: ['text-secondary', 'font-medium'] },
     { label: 'action', property: 'action', type: 'text', visible: true },
   ];
 

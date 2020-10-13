@@ -39,6 +39,7 @@ namespace opensis.data.Repository
         /// <returns></returns>
         public SchoolListModel GetAllSchoolList(PageResult pageResult)
         {
+            int resultData;
             SchoolListModel schoolListModel = new SchoolListModel();
             try
             {
@@ -81,14 +82,16 @@ namespace opensis.data.Repository
                     Telephone = s.SchoolDetail.FirstOrDefault().Telephone == null ? string.Empty : s.SchoolDetail.FirstOrDefault().Telephone.Trim(),
                     NameOfPrincipal = s.SchoolDetail.FirstOrDefault().NameOfPrincipal == null ? string.Empty : s.SchoolDetail.FirstOrDefault().NameOfPrincipal.Trim(),
                     StreetAddress1 = ToFullAddress(s.StreetAddress1, s.StreetAddress2,
-                    //(!string.IsNullOrEmpty(s.City)?this.context.TableCity.Where(x => x.Id == int.Parse(s.City)).FirstOrDefault().Name: string.Empty),
-                    this.context.City.Where(x => x.Id == Convert.ToInt32(s.City)).FirstOrDefault().Name,
-                    this.context.State.Where(x => x.Id == Convert.ToInt32(s.State)).FirstOrDefault().Name,
+                    //this.context.City.Where(x => x.Id == Convert.ToInt32(s.City)).FirstOrDefault().Name,
+                    //this.context.State.Where(x => x.Id == Convert.ToInt32(s.State)).FirstOrDefault().Name,
+                    int.TryParse(s.City, out resultData) == true ? this.context.City.Where(x => x.Id == Convert.ToInt32(s.City)).FirstOrDefault().Name : s.City,
+                    int.TryParse(s.State, out resultData) == true ? this.context.State.Where(x => x.Id == Convert.ToInt32(s.State)).FirstOrDefault().Name : s.State,
                     this.context.Country.Where(x => x.Id == Convert.ToInt32(s.Country)).FirstOrDefault().Name, s.Zip),
                     Status = s.SchoolDetail.FirstOrDefault().Status == null ? false : s.SchoolDetail.FirstOrDefault().Status
                 }).ToList();
 
                 schoolListModel.GetSchoolForView = schoollist;
+                schoolListModel.TotalCount = totalCount;
                 schoolListModel.PageNumber = pageResult.PageNumber;
                 schoolListModel._pageSize = pageResult.PageSize;
                 schoolListModel._tenantName = pageResult._tenantName;

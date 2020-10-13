@@ -13,5 +13,12 @@ namespace opensis.data.ViewModels.MarkingPeriods
         public string ShortName { get; set; }
         public bool IsParent { get; set; }
         public int QuarterId { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        public DateTime? PostStartDate { get; set; }
+        public DateTime? PostEndDate { get; set; }
+        public bool? DoesGrades { get; set; }
+        public bool? DoesExam { get; set; }
+        public bool? DoesComments { get; set; }
     }
 }

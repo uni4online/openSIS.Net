@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { UserViewModel } from '../models/userModel';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { CryptoService } from '../services/Crypto.service';
+import { LanguageModel } from '../models/languageModel';
 @Injectable({
   providedIn: 'root'
 })
@@ -13,6 +14,10 @@ export class LoginService {
     public jwtHelper: JwtHelperService,
     private cryptoService: CryptoService) { }
 
+  getAllLanguage(obj: LanguageModel) {
+    let apiurl = this.apiUrl + obj._tenantName + "/Common/getAllLanguage";
+    return this.http.post<LanguageModel>(apiurl, obj)
+  }
 
   ValidateLogin(obj: UserViewModel) {
     obj.password = this.cryptoService.encrypt(obj.password);

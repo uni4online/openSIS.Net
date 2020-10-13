@@ -38,20 +38,21 @@ export class SelectBarComponent implements OnInit {
       private router:Router,
       
     ) {
-   this._schoolService.currentMessage.subscribe((res)=>{
-     if(res){
-      this.callAllSchoolList();
+      this._schoolService.currentMessage.subscribe((res)=>{
+        if(res){
+         this.CallAllSchool();
+        }
+      })
+      this.CallAllSchool();
      }
-   })
-   this.callAllSchoolList();
-  }
 
-  callAllSchoolList(){
-    this.getSchoolList.tenantId = sessionStorage.getItem("tenantId");
+  CallAllSchool(){
+   this.getSchoolList.tenantId = sessionStorage.getItem("tenantId");
     this.getSchoolList._tenantName = sessionStorage.getItem("tenant");
     this.getSchoolList._token = sessionStorage.getItem("token");
    
       this._schoolService.GetAllSchools(this.getSchoolList).subscribe((data) => {
+
         this.schools = data.getSchoolForView;
         /** control for the selected School */
         this.schoolCtrl = new FormControl();
@@ -69,11 +70,11 @@ export class SelectBarComponent implements OnInit {
           // Beacause of Reload in Setting, we have to check the existing id to retrieve
           // school name from dropdown.
           if(!sessionStorage.getItem("selectedSchoolId")){
-            sessionStorage.setItem("selectedSchoolId",this.schools[0].school_Id);
+            sessionStorage.setItem("selectedSchoolId",this.schools[0].schoolId);
           }else{
             let id = parseInt(sessionStorage.getItem("selectedSchoolId"));
             let index = this.schools.findIndex((x) => {
-              return x.school_Id === id
+              return x.schoolId === id
             });
             if(index!=-1){
               this.schoolCtrl.setValue(this.schools[index]);
@@ -115,7 +116,7 @@ export class SelectBarComponent implements OnInit {
     }
     // filter the school
     this.filteredSchools.next(
-      this.schools.filter(school => school.school_Name.toLowerCase().indexOf(search) > -1)
+      this.schools.filter(school => school.schoolName.toLowerCase().indexOf(search) > -1)
     );
   }
 }

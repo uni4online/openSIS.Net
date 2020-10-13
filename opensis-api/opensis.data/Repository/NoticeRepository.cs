@@ -29,26 +29,17 @@ namespace opensis.data.Repository
             try
             {
                 int? noticeId = Utility.GetMaxPK(this.context, new Func<Notice, int>(x => x.NoticeId));
-
                 notice.Notice.NoticeId = (int)noticeId;
-
                 notice.Notice.TenantId = notice.Notice.TenantId;
-
                 notice.Notice.Isactive = true;
-
                 notice.Notice.ValidFrom = notice.Notice.ValidFrom;
-
                 notice.Notice.ValidTo = notice.Notice.ValidTo;
-
                 notice.Notice.CreatedTime = DateTime.UtcNow;
-
                 this.context?.Notice.Add(notice.Notice);
-
                 this.context?.SaveChanges();
                 notice._failure = false;
-
+                
                 return notice;
-
             }
             catch (Exception ex)
             {
@@ -172,11 +163,14 @@ namespace opensis.data.Repository
                 var noticeRepository = this.context?.Notice.OrderBy(x => x.ValidFrom).Where(x => x.TenantId == noticeList.TenantId && x.SchoolId == noticeList.SchoolId && x.Isactive == true).ToList();
                 foreach (var notice in noticeRepository)
                 {
-                    string[] membersList = notice.TargetMembershipIds.Split(",");
-                    int[] memberIds = Array.ConvertAll(membersList, s => int.Parse(s));
-                    var profiles = this.context?.Membership.Where(t => memberIds.Contains(t.MembershipId)).Select(t => t.Profile).ToArray();
-                    var mebershipIds = string.Join(",", profiles);
-                    notice.TargetMembershipIds = mebershipIds;
+                    if(!string.IsNullOrEmpty(notice.TargetMembershipIds))
+                    {
+                        string[] membersList = notice.TargetMembershipIds.Split(",");
+                        int[] memberIds = Array.ConvertAll(membersList, s => int.Parse(s));
+                        var profiles = this.context?.Membership.Where(t => memberIds.Contains(t.MembershipId)).Select(t => t.Profile).ToArray();
+                        var mebershipIds = string.Join(",", profiles);
+                        notice.TargetMembershipIds = mebershipIds;
+                    }                    
                 }
 
                 getAllNoticeList.NoticeList = noticeRepository;

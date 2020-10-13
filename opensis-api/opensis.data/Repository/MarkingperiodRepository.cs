@@ -35,12 +35,19 @@ namespace opensis.data.Repository
                     Title = x.Title,
                     TenantId = x.TenantId,
                     IsParent = true,
+                    DoesComments=x.DoesComments,
+                    DoesExam=x.DoesExam,
+                    DoesGrades=x.DoesGrades,
+                    EndDate=x.EndDate,
+                    PostStartDate=x.PostStartDate,
+                    PostEndDate=x.PostEndDate,
+                    StartDate=x.StartDate,
                     Children = this.context.Semesters.Where(y => y.YearId == x.MarkingPeriodId).Select(y => new SchoolSemesterView()
-                    { TenantId = y.TenantId, Title = y.Title, SchoolId = y.SchoolId, YearId = (int)y.YearId, MarkingPeriodId = y.MarkingPeriodId, IsParent = false, ShortName = y.ShortName,
+                    { TenantId = y.TenantId,DoesComments=y.DoesComments,DoesExam=y.DoesExam,DoesGrades=y.DoesGrades,StartDate=y.StartDate,EndDate=y.EndDate,PostStartDate=y.PostStartDate,PostEndDate=y.PostEndDate, Title = y.Title, SchoolId = y.SchoolId, YearId = (int)y.YearId, MarkingPeriodId = y.MarkingPeriodId, IsParent = false, ShortName = y.ShortName,
                     Children=this.context.Quarters.Where(z=>z.SemesterId==y.MarkingPeriodId).Select(z=> new SchoolQuarterView() {MarkingPeriodId=z.MarkingPeriodId,SemesterId=(int)z.SemesterId,IsParent=false,SchoolId=z.SchoolId,
-                    Title=z.Title,ShortName=z.ShortName,TenantId=z.TenantId,
+                    Title=z.Title,ShortName=z.ShortName,TenantId=z.TenantId,DoesComments=z.DoesComments,DoesExam=z.DoesExam,DoesGrades=z.DoesGrades,StartDate=z.StartDate,EndDate=z.EndDate,PostStartDate=z.PostStartDate,PostEndDate=z.PostEndDate,
                     Children=this.context.ProgressPeriods.Where(a=>a.QuarterId==z.MarkingPeriodId).Select(a=> new SchoolProgressPeriodView() {IsParent=false,MarkingPeriodId=a.MarkingPeriodId,SchoolId=a.SchoolId,
-                    QuarterId=a.QuarterId,ShortName=a.ShortName,TenantId=a.TenantId,Title=a.Title}).ToList() }).ToList() }).ToList() }).ToList();
+                    QuarterId=a.QuarterId,ShortName=a.ShortName,TenantId=a.TenantId,Title=a.Title,DoesComments=a.DoesComments,DoesExam=a.DoesExam,DoesGrades=a.DoesGrades,StartDate=a.StartDate,EndDate=a.EndDate,PostStartDate=a.PostStartDate,PostEndDate=a.PostEndDate}).ToList() }).ToList() }).ToList() }).ToList();
                 markingPeriodModel.schoolYearsView = MarkingperiodViews;
                 markingPeriodModel._tenantName = markingPeriod._tenantName;
                 markingPeriodModel._token = markingPeriod._token;
@@ -360,10 +367,20 @@ namespace opensis.data.Repository
             try
             {
                 var deleteSchoolYear = this.context?.SchoolYears.FirstOrDefault(x => x.TenantId == schoolYears.tableSchoolYears.TenantId && x.SchoolId == schoolYears.tableSchoolYears.SchoolId && x.MarkingPeriodId == schoolYears.tableSchoolYears.MarkingPeriodId);
-                this.context?.SchoolYears.Remove(deleteSchoolYear);
-                this.context?.SaveChanges();
-                schoolYears._failure = false;
-                schoolYears._message = "Deleted";
+                var semester = this.context?.Semesters.FirstOrDefault(z => z.TenantId == deleteSchoolYear.TenantId && z.SchoolId == deleteSchoolYear.SchoolId && z.YearId == deleteSchoolYear.MarkingPeriodId);
+                if(semester!=null)
+                {
+                    schoolYears.tableSchoolYears = null;
+                    schoolYears._message = "SchoolYear Cannot Be Deleted Because It Has Relation With Semester";
+                    schoolYears._failure = true;
+                }
+                else
+                {
+                    this.context?.SchoolYears.Remove(deleteSchoolYear);
+                    this.context?.SaveChanges();
+                    schoolYears._failure = false;
+                    schoolYears._message = "Deleted";
+                }                
             }
             catch (Exception es)
             {
@@ -476,11 +493,21 @@ namespace opensis.data.Repository
         {
             try
             {
-                var Quarter = this.context?.Quarters.FirstOrDefault(x => x.TenantId == quarter.tableQuarter.TenantId && x.SchoolId == quarter.tableQuarter.SchoolId && x.MarkingPeriodId == quarter.tableQuarter.MarkingPeriodId);
-                this.context?.Quarters.Remove(Quarter);
-                this.context?.SaveChanges();
-                quarter._failure = false;
-                quarter._message = "Deleted";
+                var quarterDelete = this.context?.Quarters.FirstOrDefault(x => x.TenantId == quarter.tableQuarter.TenantId && x.SchoolId == quarter.tableQuarter.SchoolId && x.MarkingPeriodId == quarter.tableQuarter.MarkingPeriodId);
+                var progressPeriod = this.context?.ProgressPeriods.FirstOrDefault(z => z.TenantId == quarterDelete.TenantId && z.SchoolId == quarterDelete.SchoolId && z.QuarterId == quarterDelete.MarkingPeriodId);
+                if(progressPeriod != null)
+                {
+                    quarter.tableQuarter = null;
+                    quarter._message = "Quater Cannot Be Deleted Because It Has Relation With Semester";
+                    quarter._failure = true;
+                }
+                else
+                {
+                    this.context?.Quarters.Remove(quarterDelete);
+                    this.context?.SaveChanges();
+                    quarter._failure = false;
+                    quarter._message = "Deleted";
+                }
             }
             catch (Exception es)
             {

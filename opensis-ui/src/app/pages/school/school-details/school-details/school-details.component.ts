@@ -5,8 +5,7 @@ import icSearch from '@iconify/icons-ic/search';
 import icFilterList from '@iconify/icons-ic/filter-list';
 import { HttpClient } from 'selenium-webdriver/http';
 import { SchoolService } from '../../../../services/school.service';
-import { SchoolViewModel, SchoolListViewModel } from 'src/app/models/schoolModel';
-import { GetAllSchoolModel,AllSchoolListModel } from 'src/app/models/getAllSchoolModel';
+import { GetAllSchoolModel,AllSchoolListModel } from '../../../../models/getAllSchoolModel';
 
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router} from '@angular/router';
@@ -32,16 +31,15 @@ import { LoaderService } from '../../../../services/loader.service';
 export class SchoolDetailsComponent implements OnInit {
   @Input()
   columns = [
-    { label: 'Checkbox', property: 'checkbox', type: 'checkbox', visible: true },
-    { label: 'Name', property: 'school_Name', type: 'text', visible: true },
-    { label: 'Address', property: 'school_Address', type: 'text', visible: true, cssClasses: ['font-medium'] },
-    { label: 'Principle', property: 'principle', type: 'text', visible: true },
-    { label: 'Phone', property: 'phone', type: 'text', visible: true, cssClasses: ['text-secondary', 'font-medium'] },
+    { label: 'Name', property: 'schoolName', type: 'text', visible: true },
+    { label: 'Address', property: 'streetAddress1', type: 'text', visible: true, cssClasses: ['font-medium'] },
+    { label: 'Principal', property: 'nameOfPrincipal', type: 'text', visible: true },
+    { label: 'Phone', property: 'telephone', type: 'text', visible: true, cssClasses: ['text-secondary', 'font-medium'] },
     { label: 'Status', property: 'status', type: 'text', visible: true }
   ];
 
   selection = new SelectionModel<any>(true, []);
-  totalCount:Number;pageNumber:Number;pageSize:Number;
+  totalCount:number=0;pageNumber:number;pageSize:number;
   icMoreVert = icMoreVert;
   icAdd = icAdd;
   icSearch = icSearch;
@@ -53,7 +51,7 @@ export class SchoolDetailsComponent implements OnInit {
   SchoolModelList: MatTableDataSource<AllSchoolListModel>;
   
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator; 
-  
+  @ViewChild(MatSort) sort:MatSort
 
   constructor(private schoolService: SchoolService,
     private snackbar: MatSnackBar,
@@ -64,39 +62,52 @@ export class SchoolDetailsComponent implements OnInit {
      this.loaderService.isLoading.subscribe((val) => {
         this.loading = val;
       });
-     this.getSchooldetails();
+      this.callAllSchool();
   }
 
   ngOnInit(): void {
-    
   }
-  goToAdd(){
-   
-    this.router.navigate(["school/schoolinfo/add-school"]);
-  }  
-  getSchooldetails()
-  {
-    this.getAllSchool._tenantName=sessionStorage.getItem("tenant");
-    this.getAllSchool._token=sessionStorage.getItem("token");
-    this.callAllSchool(this.getAllSchool);
+  ngAfterViewInit() {
+    this.getAllSchool=new GetAllSchoolModel();
+    this.sort.sortChange.subscribe((res) => {
+      this.getAllSchool.pageNumber=this.pageNumber
+      this.getAllSchool.pageSize=this.pageSize;
+      this.getAllSchool.sortingModel.sortColumn=res.active;
+      if(res.direction==""){
+       this.getAllSchool.sortingModel=null;
+      this.callAllSchool();
+      this.getAllSchool=new GetAllSchoolModel();
+      this.getAllSchool.sortingModel=null;
+      }else{
+      this.getAllSchool.sortingModel.sortDirection=res.direction;
+    this.callAllSchool();
+      }
+    });
   }
 
+  goToAdd(){
+    this.schoolService.setSchoolId(null)
+    this.router.navigate(["school/schoolinfo/add-school"]);
+  }  
+
   getPageEvent(event){
-    
+    if(this.sort.active!=undefined && this.sort.direction!=""){
+      this.getAllSchool.sortingModel.sortColumn=this.sort.active;
+      this.getAllSchool.sortingModel.sortDirection=this.sort.direction;
+    }
     this.getAllSchool.pageNumber=event.pageIndex+1;
     this.getAllSchool.pageSize=event.pageSize;
-    this.callAllSchool(this.getAllSchool);
+    this.callAllSchool();
   }
-  viewGeneralInfo(data:any){    
-   
-    var sessionId = sessionStorage.getItem("id");
-    if(sessionId === null){
-      sessionStorage.setItem("id",data);
+  
+  viewGeneralInfo(id:number){    
+    this.schoolService.setSchoolId(id)
+    this.router.navigate(["school/schoolinfo/add-school/"]); 
+  }
+  callAllSchool(){
+    if(this.getAllSchool.sortingModel?.sortColumn==""){
+      this.getAllSchool.sortingModel=null
     }
-    this.router.navigate(["school/schoolinfo/add-school/"]);
-    
-  }
-  callAllSchool(getAllSchool){
     this.schoolService.GetAllSchoolList(this.getAllSchool).subscribe(data => {
       if(data._failure){
         this.snackbar.open('School information failed. '+ data._message, 'LOL THANKS', {
@@ -107,6 +118,7 @@ export class SchoolDetailsComponent implements OnInit {
         this.pageNumber = data.pageNumber;
         this.pageSize = data._pageSize;
         this.SchoolModelList = new MatTableDataSource(data.getSchoolForView);
+        this.getAllSchool=new GetAllSchoolModel();
       }
     });
   }
@@ -128,19 +140,5 @@ export class SchoolDetailsComponent implements OnInit {
     event.stopPropagation();
     event.stopImmediatePropagation();
     column.visible = !column.visible;
-  }
-
-  /** Whether the number of selected elements matches the total number of rows. */
-  isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.SchoolModelList.data.length;
-    return numSelected === numRows;
-  }
-
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
-  masterToggle() {
-    this.isAllSelected() ?
-      this.selection.clear() :
-      this.SchoolModelList.data.forEach(row => this.selection.select(row));
   }
 }

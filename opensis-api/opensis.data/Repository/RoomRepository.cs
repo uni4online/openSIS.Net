@@ -33,6 +33,7 @@ namespace opensis.data.Repository
             rooms.tableRoom.RoomId = (int)RoomlId;
             rooms.tableRoom.LastUpdated = DateTime.UtcNow;
             rooms.tableRoom.TenantId = rooms.tableRoom.TenantId;
+            rooms.tableRoom.IsActive = rooms.tableRoom.IsActive;
             this.context?.Rooms.Add(rooms.tableRoom);
             this.context?.SaveChanges();
 
@@ -85,6 +86,7 @@ namespace opensis.data.Repository
                 roomMaster.Capacity = room.tableRoom.Capacity;
                 roomMaster.Description = room.tableRoom.Description;
                 roomMaster.SortOrder = room.tableRoom.SortOrder;
+                roomMaster.IsActive = room.tableRoom.IsActive;
                 room.tableRoom.LastUpdated = DateTime.UtcNow;
                 roomMaster.UpdatedBy = room.tableRoom.UpdatedBy;
                 this.context?.SaveChanges();

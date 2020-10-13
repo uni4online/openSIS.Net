@@ -8,5 +8,6 @@ namespace opensis.data.ViewModels.CommonModel
     public class CountryListModel : CommonFields
     {
         public List<Country> TableCountry { get; set; }
+        public int? StateCount { get; set; }
     }
 }

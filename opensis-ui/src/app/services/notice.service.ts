@@ -1,14 +1,16 @@
 import { Injectable } from '@angular/core';
-import { environment } from 'src/environments/environment';
+import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of, Subject } from 'rxjs';
-import { GetAllMembersList, Membership } from '../models/membershipModel';
+import { BehaviorSubject } from 'rxjs';
 import { NoticeAddViewModel, NoticeListViewModel } from '../models/noticeModel';
 import { NoticeDeleteModel } from '../models/noticeDeleteModel';
+
 @Injectable({
   providedIn: 'root'
 })
 export class NoticeService {
+  private noticeSource = new BehaviorSubject(false);
+  currentNotice = this.noticeSource.asObservable();
 
   apiUrl: string = environment.apiURL;
   constructor(private http: HttpClient) { }
@@ -33,4 +35,7 @@ export class NoticeService {
     let apiurl = this.apiUrl + notice._tenantName + "/Notice/viewNotice";
     return this.http.post<NoticeAddViewModel>(apiurl, notice)
   }
+  changeNotice(message: boolean) {
+    this.noticeSource.next(message)
+  } 
 }

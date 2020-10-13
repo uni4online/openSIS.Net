@@ -75,7 +75,9 @@ namespace opensis.data.Repository
                 var CountryList = this.context?.Country.ToList();
                 if (CountryList.Count > 0)
                 {
+                    int? StateCount = this.context?.State.Count();
                     countryListModel.TableCountry = CountryList;
+                    countryListModel.StateCount = StateCount;
                 }
                 countryListModel._tenantName = country._tenantName;
                 countryListModel._token = country._token;

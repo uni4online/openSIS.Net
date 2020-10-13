@@ -50,42 +50,18 @@
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'sortOrder' | translate}} </th>
                     <td mat-cell *matCellDef="let element"> {{element.sortOrder}}</td>
                 </ng-container>
+                
+                <ng-container matColumnDef="isActive">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'active' | translate}} </th>
+                    <td mat-cell *matCellDef="let element"> {{element.isActive|EmtyBooleanCheckPipe}}</td>
+                </ng-container>
                 <ng-container matColumnDef="action">
                     <th mat-header-cell *matHeaderCellDef width="160">{{'action' | translate}}</th>
-                   <!--  <td mat-cell *matCellDef="let element"> 
-                      <span *ngIf="element.status">Active</span>
-                      <span *ngIf="!element.status">Inactive</span>
-  
-                    </td> -->
                     <td mat-cell *matCellDef="let element">
                         <a href="javascript:void(0)" (click)="openEditdata(element)" class="mr-3"><mat-icon [icIcon]="icEdit"></mat-icon></a>
                         <a href="javascript:void(0)" (click)="confirmDelete(element)" ><mat-icon [icIcon]="icDelete"></mat-icon></a></td>
                   </ng-container>
                 <tr mat-header-row *matHeaderRowDef="visibleColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: visibleColumns;"></tr>
-               <!--  <mat-footer-row *matFooterRowDef="['loading']" [class.hide]="!loading"></mat-footer-row> -->
-             <!--    <thead>
-                    <tr style="text-align: left">
-                        <th>{{'title' | translate}}</th>
-                        <th>{{'capacity' | translate}}</th>
-                        <th>{{'description' | translate}}</th>
-                        <th>{{'sortOrder' | translate}}</th>
-                        <th>{{'active' | translate}}</th>
-                        <th width="160">{{'action' | translate}}</th>
-                    </tr>
-                </thead> -->
-                <!-- <tbody>
-                    <tr *ngFor="let room of rooms">
-                        <td>
-                            <a href="javascript:void(0)" (click)="openViewDetails()" class="text-blue">{{room.title}}</a>
-                        </td>
-                        <td>{{room.capacity}}</td>
-                        <td>{{room.description}}</td>
-                        <td>{{room.sort_order}}</td>
-                        <td>{{room.active}}</td>
-                        <td>
-                            <a [routerLink]="['/']" routerLinkActive="router-link-active"  class="mr-3"><mat-icon [icIcon]="icEdit"></mat-icon></a>
-                            <a [routerLink]="['/']" routerLinkActive="router-link-active" ><mat-icon [icIcon]="icDelete"></mat-icon></a></td>
-                    </tr>
-                </tbody> -->
+            
 </table>

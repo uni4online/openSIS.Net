@@ -37,6 +37,7 @@ export class EditRoomComponent implements OnInit {
         capacity:[,[Validators.required]],
         sortorder:[,[Validators.required]],
         description:[],
+        isActive:[]
   
       })
       if(data==null){
@@ -50,6 +51,7 @@ export class EditRoomComponent implements OnInit {
         this.form.controls.capacity.patchValue(data.capacity)
         this.form.controls.sortorder.patchValue(data.sortOrder)
         this.form.controls.description.patchValue(data.description)
+        this.form.controls.isActive.patchValue(data.isActive)
       }    
 
    }
@@ -63,6 +65,7 @@ export class EditRoomComponent implements OnInit {
       this.roomAddViewModel.tableRoom.capacity=this.form.controls.capacity.value
       this.roomAddViewModel.tableRoom.sortOrder=this.form.controls.sortorder.value
       this.roomAddViewModel.tableRoom.description=this.form.controls.description.value
+      this.roomAddViewModel.tableRoom.isActive=this.form.controls.isActive.value
       this.roomService.addRoom(this.roomAddViewModel).subscribe(
         (res)=>{
           if(typeof(res)=='undefined'){
@@ -90,6 +93,7 @@ export class EditRoomComponent implements OnInit {
       this.roomAddViewModel.tableRoom.capacity=this.form.controls.capacity.value
       this.roomAddViewModel.tableRoom.sortOrder=this.form.controls.sortorder.value
       this.roomAddViewModel.tableRoom.description=this.form.controls.description.value
+      this.roomAddViewModel.tableRoom.isActive=this.form.controls.isActive.value
       this.roomService.updateRoom(this.roomAddViewModel).subscribe(
         (res)=>{
           if(typeof(res)=='undefined'){

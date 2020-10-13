@@ -39,6 +39,7 @@
                 {{nextLevel.title}}
                </mat-option>
         </mat-select>
+        <mat-error *ngIf="form.get('nextGradeId').hasError('required')">{{'nextGradeIsRequired'|translate}}</mat-error>
     </mat-form-field>
 
 

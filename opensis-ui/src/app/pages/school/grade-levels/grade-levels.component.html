@@ -58,19 +58,18 @@
       </td>
 </ng-container>
 
-<ng-container matColumnDef="nextGradeId" >
+<ng-container matColumnDef="nextGrade" >
 <th mat-header-cell *matHeaderCellDef mat-sort-header>Next Grade</th>
      <td mat-cell *matCellDef="let element"> 
-     <span *ngIf="element.nextGradeId==null">N/A</span>
-     <span *ngIf="element.nextGradeId!=null">{{element.nextGradeId}}</span>              
+   {{element.nextGrade==null?'NA':element.nextGrade}}            
       </td>
 </ng-container>
 
 <ng-container matColumnDef="action" >
 <th mat-header-cell *matHeaderCellDef>Action</th>
      <td mat-cell *matCellDef="let element">               
-        <a (click)="openEdit(element)" class="mr-3"><mat-icon [icIcon]="icEdit"></mat-icon></a>
-        <a (click)="confirmDelete(element)" class="mr-3"><mat-icon [icIcon]="icDelete"></mat-icon></a>
+        <a (click)="openEdit(element)" class="mr-3 cursor-pointer"><mat-icon [icIcon]="icEdit"></mat-icon></a>
+        <a (click)="confirmDelete(element)" class="mr-3 cursor-pointer"><mat-icon [icIcon]="icDelete"></mat-icon></a>
       </td>
 </ng-container>
 

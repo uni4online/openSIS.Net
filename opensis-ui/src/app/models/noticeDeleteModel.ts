@@ -5,5 +5,7 @@ export class NoticeDeleteModel extends CommonField {
     constructor() {
         super();
         this.NoticeId = 0;
+        this._tenantName=sessionStorage.getItem('tenant')
+        this._token=sessionStorage.getItem('token')
     }
 }

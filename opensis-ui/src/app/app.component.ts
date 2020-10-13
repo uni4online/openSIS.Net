@@ -187,7 +187,7 @@ export class AppComponent {
         ]
       },
       { type: 'dropdown',
-        label: 'Extracueeicular',
+        label: 'Extracurricular',
         icon: icactivity,
         children: [
           {

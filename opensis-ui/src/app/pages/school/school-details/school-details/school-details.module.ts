@@ -21,6 +21,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { SharedModuleModule } from '../../../shared-module/shared-module.module';
 import { CalendarModule as AngularCalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import {MatSortModule} from '@angular/material/sort';
 
 @NgModule({
   declarations: [SchoolDetailsComponent],
@@ -45,6 +46,7 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
     MatMenuModule,
     MatButtonToggleModule,
     SharedModuleModule,
+    MatSortModule,
     AngularCalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory

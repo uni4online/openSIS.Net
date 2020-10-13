@@ -149,6 +149,7 @@ namespace opensis.data.Repository
                                      GradeId= gradelevel.GradeId,
                                      LastUpdated= gradelevel.LastUpdated,
                                      NextGrade= this.context?.Gradelevels.FirstOrDefault(x=>x.GradeId== gradelevel.NextGradeId)?.Title,
+                                     NextGradeId=gradelevel.NextGradeId,
                                      SchoolId= gradelevel.SchoolId,
                                      Title= gradelevel.Title,
                                      ShortName= gradelevel.ShortName,

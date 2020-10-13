@@ -16,6 +16,7 @@ import { PageLayoutModule } from '../../../@vex/components/page-layout/page-layo
 import { ContainerModule } from '../../../@vex/directives/container/container.module';
 import { MatMenuModule } from '@angular/material/menu';
 import { TranslateModule } from '@ngx-translate/core';
+import { RouterModule } from '@angular/router';
 
 
 
@@ -36,7 +37,8 @@ import { TranslateModule } from '@ngx-translate/core';
     PageLayoutModule,
     ContainerModule,
     MatMenuModule,
-    TranslateModule
+    TranslateModule,
+    RouterModule,
   ]
 })
 export class SettingsModule { }

@@ -11,6 +11,7 @@ export class RoomModel  {
      capacity : number
      description: string
      sortOrder: number
+     isActive:boolean
      lastUpdated: string
      updatedBy: string
     constructor() {
@@ -22,8 +23,10 @@ export class RoomModel  {
         this.capacity=null;
         this.description=null;
         this.sortOrder=null;
+        this.isActive=null;
         this.lastUpdated=null;
         this.updatedBy=null;
+
     }
 }
 export class RoomAddView extends CommonField{

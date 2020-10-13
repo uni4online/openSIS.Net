@@ -5,7 +5,8 @@ import icEdit from '@iconify/icons-ic/twotone-edit';
 import {SchoolAddViewModel } from '../../../../models/schoolMasterModel';
 import { SchoolService } from '../../../../services/school.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import {fadeInRight400ms} from 'src/@vex/animations/fade-in-right.animation';
+import {fadeInRight400ms} from '../../../../../@vex/animations/fade-in-right.animation';
+
 import { TranslateService } from '@ngx-translate/core';
 import { SharedFunction } from '../../../shared/shared-function';
 import { CountryModel } from '../../../../models/countryModel';
@@ -51,8 +52,10 @@ export class ViewGeneralInfoComponent implements OnInit {
   ngOnInit(): void {
     this.getSchoolGeneralInfoDetails();
     this.getAllCountry();
-    this.getAllStateByCountry(+this.schoolAddViewModel.schoolMaster.country);
-    this.getAllCitiesByState(+this.schoolAddViewModel.schoolMaster.state);
+    this.cityName= this.schoolAddViewModel.schoolMaster.city; 
+    this.stateName=this.schoolAddViewModel.schoolMaster.state;
+    // this.getAllStateByCountry(+this.schoolAddViewModel.schoolMaster.country);
+    // this.getAllCitiesByState(+this.schoolAddViewModel.schoolMaster.state);
   }
   editGeneralInfo(){
     this.parentShowWash.emit(this.schoolAddViewModel);    
@@ -137,7 +140,7 @@ export class ViewGeneralInfoComponent implements OnInit {
         this.snackbar.open('School information failed. '+ this.generalAndWashInfoData._message, 'LOL THANKS', {
         duration: 10000
         });      
-      }else{      
+      }else{   
         this.schoolAddViewModel=this.generalAndWashInfoData;         
         this.status= this.schoolAddViewModel.schoolMaster.schoolDetail[0].status?'Active':'Inactive';
         this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolOpened= this.commonFunction.formatDate(this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolOpened);

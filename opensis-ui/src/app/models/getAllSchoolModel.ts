@@ -1,20 +1,22 @@
 export class GetAllSchoolModel {
-        tenantId:string;
-        pageNumber: number;
-        pageSize: number;
-        _tenantName: string;
-        _token: string;
-        _failure: boolean;
-        _message: string;
-    constructor() {
-        this.tenantId= sessionStorage.getItem("tenantId");
-        this.pageNumber=1;
-        this.pageSize=10;
-        this._tenantName="";
-        this._token="";
-        this._failure=false;
-        this._message="";
-    }
+    tenantId:string;
+    pageNumber: number;
+    pageSize: number;
+    sortingModel:sorting;
+    _tenantName: string;
+    _token: string;
+    _failure: boolean;
+    _message: string;
+constructor() {
+    this.tenantId= sessionStorage.getItem("tenantId");
+    this.pageNumber=1;
+    this.pageSize=10;
+    this.sortingModel=new sorting();
+    this._tenantName=sessionStorage.getItem("tenant");
+    this._token=sessionStorage.getItem("token");
+    this._failure=false;
+    this._message="";
+}
 }
 
 export class AllSchoolListModel{
@@ -50,6 +52,15 @@ export class OnlySchoolListModel{
         this._failure=false;
         this._message="";
       }
+}
+
+class sorting{
+    sortColumn:string;
+    sortDirection:string;
+    constructor(){
+        this.sortColumn="";
+        this.sortDirection="";
+    }
 }
 
 

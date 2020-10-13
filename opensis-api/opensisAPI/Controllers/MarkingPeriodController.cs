@@ -15,7 +15,7 @@ using opensis.data.ViewModels.Semester;
 namespace opensisAPI.Controllers
 {
     [EnableCors("AllowOrigin")]
-    [Route("{tenant}/School")]
+    [Route("{tenant}/MarkingPeriod")]
     [ApiController]
     public class MarkingPeriodController : ControllerBase
     {

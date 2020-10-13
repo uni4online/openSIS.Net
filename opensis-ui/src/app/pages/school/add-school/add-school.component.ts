@@ -1,7 +1,8 @@
-import { Component, OnInit, OnDestroy} from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { Subscription } from 'rxjs';
 import {fadeInRight400ms} from '../../../../@vex/animations/fade-in-right.animation';
-import { ImageCropperService } from 'src/app/services/image-cropper.service';
+import { ImageCropperService } from '../../../services/image-cropper.service';
+
 import { SchoolAddViewModel } from '../../../models/schoolMasterModel';
 import { ActivatedRoute } from '@angular/router';
 import { SchoolService } from '../../../services/school.service';
@@ -17,7 +18,7 @@ import { CommonService } from '../../../services/common.service';
     fadeInRight400ms    
   ]
 })
-export class AddSchoolComponent implements OnInit,OnDestroy {
+export class AddSchoolComponent implements OnInit {
   clickEventSubscriptionForCrop:Subscription;
   clickEventSubscriptionForUnCrop:Subscription;  
   responseImage:string;
@@ -41,19 +42,22 @@ export class AddSchoolComponent implements OnInit,OnDestroy {
   isAddMode:boolean=false;
   getImageResponse="";
   imageObj;
-  enableCropTool;
+  enableCropTool=false;
+  modeForImage=true;
   message:string;
   schoolAddViewModel: SchoolAddViewModel = new SchoolAddViewModel();
   generalAndWashInfoData: SchoolAddViewModel = new SchoolAddViewModel();;
   constructor(private imageCropperService:ImageCropperService,
     private Activeroute: ActivatedRoute,
-    private generalInfoService:SchoolService,
      private snackbar: MatSnackBar,
-     private commonFunction:SharedFunction,
-     private data: CommonService) {
-      this.clickEventSubscriptionForCrop=this.imageCropperService.getCroppedEvent().subscribe((res)=>{
-      this.image=res;
-    });
+     private schoolService:SchoolService,
+     private commonFunction:SharedFunction) { 
+   // this.Activeroute.params.subscribe(params => { this.tenant ='opensisv2'; });
+
+    this.clickEventSubscriptionForCrop=this.imageCropperService.getCroppedEvent().subscribe((res)=>{
+     
+        this.image=res;
+      });
     
     this.clickEventSubscriptionForUnCrop=this.imageCropperService.getUncroppedEvent().subscribe((res)=>{    
       //this.image='data:image/png;base64,'+btoa(res.target.result);
@@ -61,13 +65,12 @@ export class AddSchoolComponent implements OnInit,OnDestroy {
     });
   }
 
-  ngOnInit() {   
-    this.id = sessionStorage.getItem("id")
-    this.schoolId=+this.id;    
-    
-    if(this.schoolId !== 0){
-      this.getSchoolGeneralandWashInfoDetails();
-    }    
+  ngOnInit() { 
+    this.modeForImage=true;
+    this.schoolId=this.schoolService.getSchoolId();
+    if(this.schoolId!=null){
+    this.getSchoolGeneralandWashInfoDetails();
+    }
    }
 
   getDataOfgeneralInfo(data){   
@@ -153,8 +156,8 @@ export class AddSchoolComponent implements OnInit,OnDestroy {
   getSchoolGeneralandWashInfoDetails(){   
    
     this.schoolAddViewModel.schoolMaster.schoolDetail[0].schoolId=this.schoolId;
-    this.schoolAddViewModel.schoolMaster.schoolId=this.schoolId;
-    this.generalInfoService.ViewSchool(this.schoolAddViewModel).subscribe(data => {    
+    this.schoolAddViewModel.schoolMaster.schoolId=this.schoolId;     
+    this.schoolService.ViewSchool(this.schoolAddViewModel).subscribe(data => {    
       this.generalAndWashInfoData = data;     
       if(this.id === null){
         this.isAddMode=true;
@@ -169,8 +172,5 @@ export class AddSchoolComponent implements OnInit,OnDestroy {
       this.getDataOfWashInfoFromView(this.dataOfgeneralInfoFromView);
       this.imageResponse(this.imageObj);
     })
-  }
-  ngOnDestroy(){
-    sessionStorage.removeItem("id") 
   }
 }

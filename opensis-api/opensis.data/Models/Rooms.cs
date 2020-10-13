@@ -14,5 +14,7 @@ namespace opensis.data.Models
         public int? SortOrder { get; set; }
         public DateTime? LastUpdated { get; set; }
         public string UpdatedBy { get; set; }
+
+        public bool? IsActive { get; set; }
     }
 }

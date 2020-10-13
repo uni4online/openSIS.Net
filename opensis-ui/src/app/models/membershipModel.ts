@@ -5,8 +5,8 @@ import { UserViewModel } from './userModel';
 export class Membership {
     public tenantId: string;
     public schoolId: number;
-    public MembershipId: number;
-    public Profile: string;
+    public membershipId: number;
+    public profile: string;
     public Title: string;
     public Access: string;
     public WeeklyUpdate: boolean;
