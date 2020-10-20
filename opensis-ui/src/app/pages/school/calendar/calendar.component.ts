@@ -1,7 +1,7 @@
-import { Component, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
-import { Subject } from 'rxjs';
-import { CalendarEvent, CalendarEventAction, CalendarEventTimesChangedEvent, CalendarView } from 'angular-calendar';
-import { addDays, addHours, endOfDay, endOfMonth, isSameDay, isSameMonth, startOfDay, subDays } from 'date-fns';
+import { Component, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
+import { CalendarEvent, CalendarEventAction, CalendarEventTimesChangedEvent, CalendarMonthViewBeforeRenderEvent, CalendarMonthViewDay, CalendarView, DAYS_OF_WEEK } from 'angular-calendar';
+import { addDays, addHours, endOfDay, endOfMonth, endOfWeek, format, isSameDay, isSameMonth, startOfDay, startOfMonth, startOfWeek, subDays } from 'date-fns';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CalendarEditComponent } from './calendar-edit/calendar-edit.component';
@@ -9,8 +9,21 @@ import { AddCalendarComponent } from './add-calendar/add-calendar.component';
 import { AddEventComponent } from './add-event/add-event.component';
 import icAdd from '@iconify/icons-ic/add';
 import icEdit from '@iconify/icons-ic/edit';
+import icDelete from '@iconify/icons-ic/delete';
 import icChevronLeft from '@iconify/icons-ic/twotone-chevron-left';
 import icChevronRight from '@iconify/icons-ic/twotone-chevron-right';
+import { FormControl } from '@angular/forms';
+import { CalendarService } from '../../../services/calendar.service';
+import { CalendarAddViewModel, CalendarListModel, CalendarModel } from '../../../models/calendarModel';
+import { GetAllMembersList } from '../../../models/membershipModel';
+import { MembershipService } from '../../../services/membership.service';
+import { CalendarEventService } from '../../../services/calendar-event.service';
+import { CalendarEventAddViewModel, CalendarEventListViewModel, CalendarEventModel } from '../../../models/calendarEventModel';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { map } from 'rxjs/operators';
+import { TranslateService } from '@ngx-translate/core';
+import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confirm-dialog.component';
+import * as moment from 'moment';
 
 const colors: any = {
   blue: {
@@ -31,164 +44,270 @@ const colors: any = {
   selector: 'vex-calendar',
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss'],
+  styles: [
+    `
+     .cal-month-view .bg-aqua,
+      .cal-week-view .cal-day-columns .bg-aqua,
+      .cal-day-view .bg-aqua {
+        background-color: #ffdee4 !important;
+      }
+    `,
+  ],
   encapsulation: ViewEncapsulation.None
 })
-export class CalendarComponent {
 
+export class CalendarComponent implements OnInit {
   @ViewChild('modalContent', { static: true }) modalContent: TemplateRef<any>;
-
+  getCalendarList: CalendarListModel = new CalendarListModel();
+  getAllMembersList: GetAllMembersList = new GetAllMembersList();
+  getAllCalendarEventList: CalendarEventListViewModel = new CalendarEventListViewModel();
+  calendarAddViewModel = new CalendarAddViewModel();
+  calendarEventAddViewModel = new CalendarEventAddViewModel();
   view: CalendarView = CalendarView.Month;
-
+  calendars: CalendarModel[];
+  activeDayIsOpen = true;
+  weekendDays: number[];
+  filterDays = [];
   CalendarView = CalendarView;
-
   viewDate: Date = new Date();
+  selectedCalendar = new CalendarModel();
   icChevronLeft = icChevronLeft;
   icChevronRight = icChevronRight;
   icAdd = icAdd;
   icEdit = icEdit;
-
-  modalData: {
-    action: string;
-    event: CalendarEvent;
-  };
+  icDelete = icDelete;
+  events$: Observable<CalendarEvent<{ calendar: CalendarEventModel }>[]>;
   refresh: Subject<any> = new Subject();
-  actions: CalendarEventAction[] = [
-    {
-      label: '<i class="fa fa-fw fa-pencil"></i>',
-      onClick: ({ event }: { event: CalendarEvent }): void => {
-        this.handleEvent('Edited', event);
-      }
-    },
-    {
-      label: '<i class="fa fa-fw fa-times"></i>',
-      onClick: ({ event }: { event: CalendarEvent }): void => {
-        this.events = this.events.filter(iEvent => iEvent !== event);
-        this.handleEvent('Deleted', event);
-      }
-    }
-  ];
-  events: CalendarEvent[] = [
-    {
-      start: subDays(startOfDay(new Date()), 1),
-      end: addDays(new Date(), 1),
-      title: 'A 3 day event',
-      color: colors.primary,
-      actions: this.actions,
-      allDay: true,
-      resizable: {
-        beforeStart: true,
-        afterEnd: true
-      },
-      draggable: true
-    },
-    {
-      start: startOfDay(new Date()),
-      title: 'An event with no end date',
-      color: colors.yellow,
-      actions: this.actions
-    },
-    {
-      start: subDays(endOfMonth(new Date()), 3),
-      end: addDays(endOfMonth(new Date()), 3),
-      title: 'A long event that spans 2 months',
-      color: colors.primary,
-      allDay: true
-    },
-    {
-      start: addHours(startOfDay(new Date()), 2),
-      end: new Date(),
-      title: 'A draggable and resizable event',
-      color: colors.red,
-      actions: this.actions,
-      resizable: {
-        beforeStart: true,
-        afterEnd: true
-      },
-      draggable: true
-    }
-  ];
-  activeDayIsOpen = true;
-
-  constructor(private dialog: MatDialog,
-              private snackbar: MatSnackBar) {}
-
-  dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
-    if (isSameMonth(date, this.viewDate)) {
-      this.activeDayIsOpen = !((isSameDay(this.viewDate, date) && this.activeDayIsOpen === true) || events.length === 0);
-      this.viewDate = date;
-    }
-  }
-
-  eventTimesChanged({ event, newStart, newEnd }: CalendarEventTimesChangedEvent): void {
-    this.events = this.events.map(iEvent => {
-      if (iEvent === event) {
-        return {
-          ...event,
-          start: newStart,
-          end: newEnd
-        };
-      }
-      return iEvent;
-    });
-    this.handleEvent('Dropped or resized', event);
-  }
-
-  handleEvent(action: string, event: CalendarEvent): void {
-    console.log(event);
-
-    const dialogRef = this.dialog.open(CalendarEditComponent, {
-      data: event
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        event = result;
-        this.snackbar.open('Updated Event: ' + event.title);
-        this.refresh.next();
-      }
-    });
-  }
-
-  addEvent(): void {
-    this.events = [
-      ...this.events,
-      {
-        title: 'New event',
-        start: startOfDay(new Date()),
-        end: endOfDay(new Date()),
-        color: colors.red,
-        draggable: true,
-        resizable: {
-          beforeStart: true,
-          afterEnd: true
+  calendarFrom: FormControl;
+  cssClass: string;
+  constructor(private http: HttpClient, private dialog: MatDialog,
+    private snackbar: MatSnackBar, public translate: TranslateService, private _membershipService: MembershipService,
+    private _calendarEventService: CalendarEventService, private _calendarService: CalendarService) {
+    this.translate.setDefaultLang('en');
+    this._calendarEventService.currentEvent.subscribe(
+      res => {
+        if (res) {
+          this.getAllCalendarEvent();
         }
       }
-    ];
+    )
   }
 
-  deleteEvent(eventToDelete: CalendarEvent) {
-    this.events = this.events.filter(event => event !== eventToDelete);
+  changeCalendar(event) {
+    this.getDays(event.days);
+    this._calendarService.setCalendarId(event.calenderId);
+    this.getAllCalendarEvent();
   }
 
-  setView(view: CalendarView) {
-    this.view = view;
+  //Show all members
+  getAllMemberList() {
+    this._membershipService.getAllMembers(this.getAllMembersList).subscribe(
+      (res) => {
+        if (typeof (res) == 'undefined') {
+          this.snackbar.open('No Member Found. ' + sessionStorage.getItem("httpError"), '', {
+            duration: 10000
+          });
+        }
+        else {
+          if (res._failure) {
+            this.snackbar.open('No Member Found. ' + res._message, 'LOL THANKS', {
+              duration: 10000
+            });
+          }
+          else {
+            this.getAllMembersList = res;
+          }
+        }
+      });
+  }
+  //Show all calendar
+  getAllCalendar() {
+    this._calendarService.getAllCalendar(this.getCalendarList).subscribe((data) => {
+      this.calendars = data.calendarList;
+      if (this.calendars.length !== 0) {
+        const defaultCalender = this.calendars.find(element => element.defaultCalender === true);
+        if (defaultCalender != null) {
+          this.selectedCalendar = defaultCalender;
+          this._calendarService.setCalendarId(this.selectedCalendar.calenderId);
+          this.getDays(this.selectedCalendar.days);
+          this.getAllCalendarEvent();
+        }
+      }
+    });
+    this.refresh.next();
   }
 
-  closeOpenMonthViewDay() {
-    this.activeDayIsOpen = false;
+  // Rendar all events in calendar
+  getAllCalendarEvent() {
+    this.getAllCalendarEventList.calendarId = this._calendarService.getCalendarId();
+    this.events$ = this._calendarEventService.getAllCalendarEvent(this.getAllCalendarEventList).pipe(
+      map(({ calendarEventList }: { calendarEventList: CalendarEventModel[] }) => {
+        return calendarEventList.map((calendar: CalendarEventModel) => {
+
+          return {
+            id: calendar.eventId,
+            title: calendar.title,
+            start: new Date(calendar.startDate),
+            end: new Date(calendar.endDate),
+            allDay: true,
+            meta: {
+              calendar,
+            },
+            draggable: true
+          };
+        });
+      })
+    );
+    this.refresh.next();
+
   }
 
+  getDays(days: string) {
+    const calendarDays = days;
+    var allDays = [0, 1, 2, 3, 4, 5, 6];
+    var splitDays = calendarDays.split('').map(x => +x);
+    this.filterDays = allDays.filter(f => !splitDays.includes(f));
+    this.weekendDays = this.filterDays;
+    this.cssClass = 'bg-aqua';
+    this.refresh.next();
+  }
+
+  //for rendar weekends
+  beforeMonthViewRender(renderEvent: CalendarMonthViewBeforeRenderEvent): void {
+    renderEvent.body.forEach((day) => {
+      const dayOfMonth = day.date.getDay();
+      if (this.filterDays.includes(dayOfMonth)) {
+        day.cssClass = this.cssClass;
+      }
+    });
+  }
+
+  ngOnInit(): void {
+    this.getAllCalendar();
+    this.getAllMemberList();
+  }
+
+  //open event modal for view
+  viewEvent(eventData) {
+    this.dialog.open(AddEventComponent, {
+      data: { allMembers: this.getAllMembersList, membercount: this.getAllMembersList.getAllMemberList.length, calendarEvent: eventData },
+      width: '600px'
+    }).afterClosed().subscribe(data => {
+      if (data === 'submitedEvent') {
+        this.getAllCalendarEvent();
+      }
+    });
+
+  }
+  private formatDate(date: Date): string {
+    if (date === undefined || date === null) {
+      return undefined;
+    } else {
+      return moment(date).format('YYYY-MM-DDTHH:mm:ss.SSS');
+    }
+  }
+
+  //drag and drop event
+  eventTimesChanged({ event, newStart, newEnd, }: CalendarEventTimesChangedEvent): void {
+    event.start = newStart;
+    event.end = newEnd;
+    this.calendarEventAddViewModel.schoolCalendarEvent = event.meta.calendar;
+    this.calendarEventAddViewModel.schoolCalendarEvent.startDate = this.formatDate(newEnd);
+    this.calendarEventAddViewModel.schoolCalendarEvent.endDate = this.formatDate(newStart);
+    this._calendarEventService.updateCalendarEvent(this.calendarEventAddViewModel).subscribe(data => {
+      if (data._failure) {
+        this.snackbar.open('Event dragging failed. ' + data._message, '', {
+          duration: 10000
+        });
+      } else {
+        this.snackbar.open('Event dragged successfully. ', '', {
+          duration: 10000
+        });
+
+      }
+
+    });
+    this.refresh.next();
+  }
+
+  //Open modal for add new calendar
   openAddNewCalendar() {
     this.dialog.open(AddCalendarComponent, {
-      data: null,
+      data: { allMembers: this.getAllMembersList, membercount: this.getAllMembersList.getAllMemberList.length },
       width: '600px'
+    }).afterClosed().subscribe(data => {
+      if (data === 'submited') {
+        this.getAllCalendar();
+      }
     });
   }
 
-  openAddNewEvent(){
-    this.dialog.open(AddEventComponent, {
-      data: null,
-      width: '600px'
+  // Open calendar confirm modal
+  deleteCalendarConfirm(event) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      maxWidth: "400px",
+      data: {
+        title: "Are you sure?",
+        message: "You are about to delete " + event.title
+      }
     });
+    // listen to response
+    dialogRef.afterClosed().subscribe(dialogResult => {
+      // if user pressed yes dialogResult will be true, 
+      // if user pressed no - it will be false
+      if (dialogResult) {
+        this.deleteCalendar(event.calenderId);
+      }
+    });
+  }
+
+  deleteCalendar(id: number) {
+    this.calendarAddViewModel.schoolCalendar.calenderId = id;
+    this._calendarService.deleteCalendar(this.calendarAddViewModel).subscribe(
+      (res) => {
+        if (res._failure) {
+          this.snackbar.open('Calendar Deletion failed. ' + res._message, '', {
+            duration: 10000
+          });
+        } else {
+          this.snackbar.open('Calendar Deleted Successfully. ', '', {
+            duration: 10000
+          });
+          this.getAllCalendar();
+        }
+      });
+
+  };
+
+  // Edit calendar which is selected in dropdown
+  openEditCalendar(event) {
+    this.dialog.open(AddCalendarComponent, {
+      data: { allMembers: this.getAllMembersList, membercount: this.getAllMembersList.getAllMemberList.length, calendar: event },
+      width: '600px'
+    }).afterClosed().subscribe(data => {
+      if (data === 'submited') {
+        this.getAllCalendar();
+      }
+    });
+  }
+
+  // Open add new event by clicking calendar day
+  openAddNewEvent(event) {
+    if (!event.isWeekend) {
+      this.dialog.open(AddEventComponent, {
+        data: { allMembers: this.getAllMembersList, membercount: this.getAllMembersList.getAllMemberList.length, day: event },
+        width: '600px'
+      }).afterClosed().subscribe(data => {
+        if (data === 'submitedEvent') {
+          this.getAllCalendarEvent();
+        }
+      });
+    }
+    else {
+      this.snackbar.open('Cannot add event in weekend', '', {
+        duration: 2000
+      });
+
+    }
   }
 }

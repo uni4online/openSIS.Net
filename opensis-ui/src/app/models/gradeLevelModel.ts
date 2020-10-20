@@ -20,9 +20,7 @@ class tblGradelevel {
     public gradeId: number;
     public shortName: string;
     public title: string;
-    public gradeLevelEquivalency: string;
-    public ageRange: string;
-    public educationalStage: string;
+    public iscedGradeLevel:string;
     public nextGrade: string;
     public nextGradeId:number;
     public sortOrder: number;
@@ -31,9 +29,6 @@ class tblGradelevel {
 
     constructor(){
         this.tenantId = sessionStorage.getItem("tenantId");
-        this.gradeLevelEquivalency=null;
-        this.ageRange=null;
-        this.educationalStage=null;
         this.updatedBy = "Souvik";
     }
 }
@@ -44,4 +39,21 @@ export class AddGradeLevelModel extends CommonField{
             this.tblGradelevel = new tblGradelevel();
         }
 
+}
+
+
+class gradeEquivalencyList{
+    iscedGradeLevel: string;
+    gradeDescription: string;
+    ageRange: string;
+    gradelevels:[]
+}
+
+export class GelAllGradeEquivalencyModel extends CommonField{
+    gradeEquivalencyList:gradeEquivalencyList;
+      constructor(){
+        super();
+        this._tenantName=sessionStorage.getItem("tenant");
+        this._token=sessionStorage.getItem("token");
+      }
 }

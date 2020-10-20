@@ -31,7 +31,18 @@ namespace opensisAPI.Controllers
             MarkingPeriod markingPeriodModel = new MarkingPeriod();
             try
             {
-                markingPeriodModel = _markingPeriodService.GetMarkingPeriod(markingPeriod);
+                if (markingPeriod.SchoolId>0)
+                {
+                    markingPeriodModel = _markingPeriodService.GetMarkingPeriod(markingPeriod);
+                }
+                else
+                {
+                    markingPeriodModel.TenantId = markingPeriod.TenantId;
+                    markingPeriodModel._token = markingPeriod._token;
+                    markingPeriodModel._tenantName = markingPeriod._tenantName;
+                    markingPeriodModel._failure = true;
+                    markingPeriodModel._message = "Please enter valid scholl id";
+                }
             }
             catch (Exception es)
             {
@@ -46,7 +57,17 @@ namespace opensisAPI.Controllers
             SchoolYearsAddViewModel schoolYearAdd = new SchoolYearsAddViewModel();
             try
             {
-                schoolYearAdd = _markingPeriodService.SaveSchoolYear(schoolYear);
+                if (schoolYear.tableSchoolYears.SchoolId > 0)
+                {
+                    schoolYearAdd = _markingPeriodService.SaveSchoolYear(schoolYear);
+                }
+                else
+                {
+                    schoolYearAdd._token = schoolYear._token;
+                    schoolYearAdd._tenantName = schoolYear._tenantName;
+                    schoolYearAdd._failure = true;
+                    schoolYearAdd._message = "Please enter valid scholl id";
+                }
             }
             catch (Exception es)
             {
@@ -62,7 +83,17 @@ namespace opensisAPI.Controllers
             SchoolYearsAddViewModel SchoolYearsView = new SchoolYearsAddViewModel();
             try
             {
-                SchoolYearsView = _markingPeriodService.ViewSchoolYear(schoolYear);
+                if (schoolYear.tableSchoolYears.SchoolId > 0)
+                {
+                    SchoolYearsView = _markingPeriodService.ViewSchoolYear(schoolYear);
+                }
+                else
+                {
+                    SchoolYearsView._token = schoolYear._token;
+                    SchoolYearsView._tenantName = schoolYear._tenantName;
+                    SchoolYearsView._failure = true;
+                    SchoolYearsView._message = "Please enter valid scholl id";
+                }
             }
             catch (Exception es)
             {
@@ -78,7 +109,17 @@ namespace opensisAPI.Controllers
             SchoolYearsAddViewModel SchoolYearsUpdate = new SchoolYearsAddViewModel();
             try
             {
-                SchoolYearsUpdate = _markingPeriodService.UpdateSchoolYear(schoolYear);
+                if (schoolYear.tableSchoolYears.SchoolId > 0)
+                {
+                    SchoolYearsUpdate = _markingPeriodService.UpdateSchoolYear(schoolYear);
+                }
+                else
+                {
+                    SchoolYearsUpdate._token = schoolYear._token;
+                    SchoolYearsUpdate._tenantName = schoolYear._tenantName;
+                    SchoolYearsUpdate._failure = true;
+                    SchoolYearsUpdate._message = "Please enter valid scholl id";
+                }
             }
             catch (Exception es)
             {
@@ -94,7 +135,17 @@ namespace opensisAPI.Controllers
             SchoolYearsAddViewModel schoolYearlDelete = new SchoolYearsAddViewModel();
             try
             {
-                schoolYearlDelete = _markingPeriodService.DeleteSchoolYear(schoolYear);
+                if (schoolYear.tableSchoolYears.SchoolId > 0)
+                {
+                    schoolYearlDelete = _markingPeriodService.DeleteSchoolYear(schoolYear);
+                }
+                else
+                {
+                    schoolYearlDelete._token = schoolYear._token;
+                    schoolYearlDelete._tenantName = schoolYear._tenantName;
+                    schoolYearlDelete._failure = true;
+                    schoolYearlDelete._message = "Please enter valid scholl id";
+                }
             }
             catch (Exception es)
             {
@@ -109,7 +160,17 @@ namespace opensisAPI.Controllers
             QuarterAddViewModel quarterAdd = new QuarterAddViewModel();
             try
             {
-                quarterAdd = _markingPeriodService.SaveQuarter(quarter);
+                if (quarter.tableQuarter.SchoolId > 0)
+                {
+                    quarterAdd = _markingPeriodService.SaveQuarter(quarter);
+                }
+                else
+                {
+                    quarterAdd._token = quarter._token;
+                    quarterAdd._tenantName = quarter._tenantName;
+                    quarterAdd._failure = true;
+                    quarterAdd._message = "Please enter valid scholl id";
+                }
             }
             catch (Exception es)
             {
@@ -126,7 +187,17 @@ namespace opensisAPI.Controllers
             QuarterAddViewModel quarterAdd = new QuarterAddViewModel();
             try
             {
-                quarterAdd = _markingPeriodService.ViewQuarter(quarter);
+                if (quarter.tableQuarter.SchoolId > 0)
+                {
+                    quarterAdd = _markingPeriodService.ViewQuarter(quarter);
+                }
+                else
+                {
+                    quarterAdd._token = quarter._token;
+                    quarterAdd._tenantName = quarter._tenantName;
+                    quarterAdd._failure = true;
+                    quarterAdd._message = "Please enter valid scholl id";
+                }
             }
             catch (Exception es)
             {
@@ -143,7 +214,17 @@ namespace opensisAPI.Controllers
             QuarterAddViewModel quarterAdd = new QuarterAddViewModel();
             try
             {
-                quarterAdd = _markingPeriodService.UpdateQuarter(quarter);
+                if (quarter.tableQuarter.SchoolId > 0)
+                {
+                    quarterAdd = _markingPeriodService.UpdateQuarter(quarter);
+                }
+                else
+                {
+                    quarterAdd._token = quarter._token;
+                    quarterAdd._tenantName = quarter._tenantName;
+                    quarterAdd._failure = true;
+                    quarterAdd._message = "Please enter valid scholl id";
+                }
             }
             catch (Exception es)
             {
@@ -160,7 +241,17 @@ namespace opensisAPI.Controllers
             QuarterAddViewModel quarterlDelete = new QuarterAddViewModel();
             try
             {
-                quarterlDelete = _markingPeriodService.DeleteQuarter(quarter);
+                if (quarter.tableQuarter.SchoolId > 0)
+                {
+                    quarterlDelete = _markingPeriodService.DeleteQuarter(quarter);
+                }
+                else
+                {
+                    quarterlDelete._token = quarter._token;
+                    quarterlDelete._tenantName = quarter._tenantName;
+                    quarterlDelete._failure = true;
+                    quarterlDelete._message = "Please enter valid scholl id";
+                }
             }
             catch (Exception es)
             {
@@ -175,7 +266,17 @@ namespace opensisAPI.Controllers
             SemesterAddViewModel semesterAdd = new SemesterAddViewModel();
             try
             {
-                semesterAdd = _markingPeriodService.SaveSemester(semester);
+                if (semester.tableSemesters.SchoolId > 0)
+                {
+                    semesterAdd = _markingPeriodService.SaveSemester(semester);
+                }
+                else
+                {
+                    semesterAdd._token = semester._token;
+                    semesterAdd._tenantName = semester._tenantName;
+                    semesterAdd._failure = true;
+                    semesterAdd._message = "Please enter valid scholl id";
+                }
             }
             catch (Exception es)
             {
@@ -192,7 +293,17 @@ namespace opensisAPI.Controllers
             SemesterAddViewModel semesterUpdate = new SemesterAddViewModel();
             try
             {
-                semesterUpdate = _markingPeriodService.UpdateSemester(semester);
+                if (semester.tableSemesters.SchoolId > 0)
+                {
+                    semesterUpdate = _markingPeriodService.UpdateSemester(semester);
+                }
+                else
+                {
+                    semesterUpdate._token = semester._token;
+                    semesterUpdate._tenantName = semester._tenantName;
+                    semesterUpdate._failure = true;
+                    semesterUpdate._message = "Please enter valid scholl id";
+                }
             }
             catch (Exception es)
             {
@@ -210,7 +321,17 @@ namespace opensisAPI.Controllers
             SemesterAddViewModel semesterView = new SemesterAddViewModel();
             try
             {
-                semesterView = _markingPeriodService.ViewSemester(semester);
+                if (semester.tableSemesters.SchoolId > 0)
+                {
+                    semesterView = _markingPeriodService.ViewSemester(semester);
+                }
+                else
+                {
+                    semesterView._token = semester._token;
+                    semesterView._tenantName = semester._tenantName;
+                    semesterView._failure = true;
+                    semesterView._message = "Please enter valid scholl id";
+                }
             }
             catch (Exception es)
             {
@@ -227,7 +348,17 @@ namespace opensisAPI.Controllers
             SemesterAddViewModel semesterDelete = new SemesterAddViewModel();
             try
             {
-                semesterDelete = _markingPeriodService.DeleteSemester(semester);
+                if (semester.tableSemesters.SchoolId > 0)
+                {
+                    semesterDelete = _markingPeriodService.DeleteSemester(semester);
+                }
+                else
+                {
+                    semesterDelete._token = semester._token;
+                    semesterDelete._tenantName = semester._tenantName;
+                    semesterDelete._failure = true;
+                    semesterDelete._message = "Please enter valid scholl id";
+                }
             }
             catch (Exception es)
             {
@@ -243,7 +374,17 @@ namespace opensisAPI.Controllers
             ProgressPeriodAddViewModel progressPeriodAdd = new ProgressPeriodAddViewModel();
             try
             {
-                progressPeriodAdd = _markingPeriodService.SaveProgressPeriod(progressPeriod);
+                if (progressPeriod.tableProgressPeriods.SchoolId > 0)
+                {
+                    progressPeriodAdd = _markingPeriodService.SaveProgressPeriod(progressPeriod);
+                }
+                else
+                {
+                    progressPeriodAdd._token = progressPeriod._token;
+                    progressPeriodAdd._tenantName = progressPeriod._tenantName;
+                    progressPeriodAdd._failure = true;
+                    progressPeriodAdd._message = "Please enter valid scholl id";
+                }
             }
             catch (Exception es)
             {
@@ -260,7 +401,17 @@ namespace opensisAPI.Controllers
             ProgressPeriodAddViewModel progressUpdate = new ProgressPeriodAddViewModel();
             try
             {
-                progressUpdate = _markingPeriodService.UpdateProgressPeriod(progressPeriod);
+                if (progressPeriod.tableProgressPeriods.SchoolId > 0)
+                {
+                    progressUpdate = _markingPeriodService.UpdateProgressPeriod(progressPeriod);
+                }
+                else
+                {
+                    progressUpdate._token = progressPeriod._token;
+                    progressUpdate._tenantName = progressPeriod._tenantName;
+                    progressUpdate._failure = true;
+                    progressUpdate._message = "Please enter valid scholl id";
+                }
             }
             catch (Exception es)
             {
@@ -277,7 +428,17 @@ namespace opensisAPI.Controllers
             ProgressPeriodAddViewModel progressPeriodView = new ProgressPeriodAddViewModel();
             try
             {
-                progressPeriodView = _markingPeriodService.ViewProgressPeriod(progressPeriod);
+                if (progressPeriod.tableProgressPeriods.SchoolId > 0)
+                {
+                    progressPeriodView = _markingPeriodService.ViewProgressPeriod(progressPeriod);
+                }
+                else
+                {
+                    progressPeriodView._token = progressPeriod._token;
+                    progressPeriodView._tenantName = progressPeriod._tenantName;
+                    progressPeriodView._failure = true;
+                    progressPeriodView._message = "Please enter valid scholl id";
+                }
             }
             catch (Exception es)
             {
@@ -294,7 +455,17 @@ namespace opensisAPI.Controllers
             ProgressPeriodAddViewModel progressPeriodDelete = new ProgressPeriodAddViewModel();
             try
             {
-                progressPeriodDelete = _markingPeriodService.DeleteProgressPeriod(progressPeriod);
+                if (progressPeriod.tableProgressPeriods.SchoolId > 0)
+                {
+                    progressPeriodDelete = _markingPeriodService.DeleteProgressPeriod(progressPeriod);
+                }
+                else
+                {
+                    progressPeriodDelete._token = progressPeriod._token;
+                    progressPeriodDelete._tenantName = progressPeriod._tenantName;
+                    progressPeriodDelete._failure = true;
+                    progressPeriodDelete._message = "Please enter valid scholl id";
+                }
             }
             catch (Exception es)
             {
@@ -304,5 +475,57 @@ namespace opensisAPI.Controllers
             return progressPeriodDelete;
         }
 
+        [HttpPost("getAcademicYearList")]
+
+        public ActionResult<DropDownViewModel> GetAcademicYearList(DropDownViewModel downViewModel)
+        {
+            DropDownViewModel dropDownViewModel = new DropDownViewModel();
+            try
+            {
+                if (downViewModel.SchoolId > 0)
+                {
+                    dropDownViewModel = _markingPeriodService.GetAcademicYearList(downViewModel);
+                }
+                else
+                {
+                    dropDownViewModel._token = downViewModel._token;
+                    dropDownViewModel._tenantName = downViewModel._tenantName;
+                    dropDownViewModel._failure = true;
+                    dropDownViewModel._message = "Please enter valid scholl id";
+                }
+            }
+            catch (Exception es)
+            {
+                dropDownViewModel._failure = true;
+                dropDownViewModel._message = es.Message;
+            }
+            return dropDownViewModel;
+        }
+        [HttpPost("getMarkingPeriodTitleList")]
+
+        public ActionResult<PeriodViewModel> GetMarkingPeriodTitleList(PeriodViewModel downViewModel)
+        {
+            PeriodViewModel dropDownViewModel = new PeriodViewModel();
+            try
+            {
+                if (downViewModel.SchoolId > 0)
+                {
+                    dropDownViewModel = _markingPeriodService.GetMarkingPeriodTitleList(downViewModel);
+                }
+                else
+                {
+                    dropDownViewModel._token = downViewModel._token;
+                    dropDownViewModel._tenantName = downViewModel._tenantName;
+                    dropDownViewModel._failure = true;
+                    dropDownViewModel._message = "Please enter valid scholl id";
+                }
+            }
+            catch (Exception es)
+            {
+                dropDownViewModel._failure = true;
+                dropDownViewModel._message = es.Message;
+            }
+            return dropDownViewModel;
+        }
     }
 }

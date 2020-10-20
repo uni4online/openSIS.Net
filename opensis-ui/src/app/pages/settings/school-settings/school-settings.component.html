@@ -1,43 +1,12 @@
 <vex-page-layout>
     <vex-page-layout-header class="pb-16" fxLayout="column" fxLayoutAlign="center start">        
-        <vex-secondary-toolbar current={{pageTitle}} class="w-full">
+        <vex-secondary-toolbar current={{pageTitle}} [schoolSettings]="schoolSettings" [pages]="pages" (selectedPage)="getSelectedPage($event)" class="w-full">
             <vex-breadcrumbs [crumbs]="['Settings','School Settings']" class="flex-auto"></vex-breadcrumbs>
         </vex-secondary-toolbar>
     </vex-page-layout-header>    
     <vex-page-layout-content class="-mt-6">
         <mat-drawer-container class="bg-transparent flex-auto flex -mt-16">
             <mat-drawer-content class="flex-auto flex items-start">
-                <div class="hidden sm:block mr-6 ng-tns-c284-386 ng-star-inserted w-1/6">
-                    <div class="max-w-xxxs w-full">
-                        <div class="h-14 mb-6 flex items-center px-0 md:px-3" fxLayout="row" fxLayoutAlign="start center">
-                            <h4 class="font-bold">School Settings</h4>
-                        </div>
-
-                        <div class="px-gutter sm:px-0">
-                            <a @fadeInRight [ngClass]=" periodFlag ? 'list-item mt-2 no-underline flex items-center bg-primary hover:bg-primary text-white' : 'list-item mt-2 no-underline flex items-center'" (click) = "showPage('Period')" matRipple>
-                                <span>Period</span>
-                            </a>
-                            <a @fadeInRight [ngClass]=" gradeLevelsFlag ? 'list-item mt-2 no-underline flex items-center bg-primary hover:bg-primary text-white' : 'list-item mt-2 no-underline flex items-center'" (click) = "showPage('Grade Levels')" matRipple>
-                                <span>Grade Levels</span>
-                            </a>
-                            <a @fadeInRight [ngClass]=" sectionsFlag ? 'list-item mt-2 no-underline flex items-center bg-primary hover:bg-primary text-white' : 'list-item mt-2 no-underline flex items-center'" (click) = "showPage('Sections')" matRipple>
-                                <span>Sections</span>
-                            </a>
-                            <a @fadeInRight [ngClass]=" roomsFlag ? 'list-item mt-2 no-underline flex items-center bg-primary hover:bg-primary text-white' : 'list-item mt-2 no-underline flex items-center'" (click) = "showPage('Rooms')" matRipple>
-                                <span>Rooms</span>
-                            </a>
-                            <a @fadeInRight [ngClass]=" schoolFieldsFlag ? 'list-item mt-2 no-underline flex items-center bg-primary hover:bg-primary text-white' : 'list-item mt-2 no-underline flex items-center'" (click) = "showPage('School Fields')" matRipple>
-                                <span>School Fields</span>
-                            </a>
-                            <a @fadeInRight [ngClass]=" hierarchyFlag ? 'list-item mt-2 no-underline flex items-center bg-primary hover:bg-primary text-white' : 'list-item mt-2 no-underline flex items-center'" (click) = "showPage('Hierarchy')" matRipple>
-                                <span>Hierarchy</span>
-                            </a>
-                            <a @fadeInRight [ngClass]=" preferenceFlag ? 'list-item mt-2 no-underline flex items-center bg-primary hover:bg-primary text-white' : 'list-item mt-2 no-underline flex items-center'" (click) = "showPage('Preference')" matRipple>
-                                <span>Preference</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
                 <mat-card  class="w-full p-0" fxFlex="auto">
                     <div *ngIf="displayGradeLevels">
                         <vex-grade-levels></vex-grade-levels>

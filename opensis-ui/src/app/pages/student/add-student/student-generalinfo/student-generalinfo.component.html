@@ -1,0 +1,249 @@
+<mat-card class="w-full">
+
+    <mat-card-header>
+        <mat-card-title>{{'generalInformation'|translate}}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+
+        <div @stagger fxLayout="column">
+            <h4 class="text-primary pt-6 pb-2 px-4">{{'identificationInformation'|translate}}</h4>
+            <div class="mb-2 md:flex md:flex-wrap">
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'studentID'|translate}}</mat-label>
+                        <input name="student_id" matInput required>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'alternateID'|translate}}</mat-label>
+                        <input name="alternate_id" matInput>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="mb-2 md:flex md:flex-wrap">
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'districtID'|translate}}</mat-label>
+                        <input name="district_id" matInput>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'stateID'|translate}}</mat-label>
+                        <input name="state_id" matInput>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="mb-2 md:flex md:flex-wrap">
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'admissionNumber'|translate}}</mat-label>
+                        <input name="admission_number" matInput>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'rollNumber'|translate}}</mat-label>
+                        <input name="roll_number" matInput>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="mb-2 md:flex md:flex-wrap">
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'salutation'|translate}}</mat-label>
+                        <mat-select name="salutation">
+                            <mat-option value="Mr.">Mr.</mat-option>
+                            <mat-option value="Miss.">Miss.</mat-option>
+                            <mat-option value="Mrs.">Mrs.</mat-option>
+                            <mat-option value="Ms.">Ms.</mat-option>
+                            <mat-option value="Dr.">Dr.</mat-option>
+                            <mat-option value="Rev.">Rev.</mat-option>
+                            <mat-option value="Prof.">Prof.</mat-option>
+                            <mat-option value="Sir.">Sir.</mat-option>
+                            <mat-option value="Lord">Lord</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'suffix'|translate}}</mat-label>
+                        <mat-select name="suffix">
+                            <mat-option value="Jr.">Jr.</mat-option>
+                            <mat-option value="Sr.">Sr.</mat-option>
+                            <mat-option value="II">II</mat-option>
+                            <mat-option value="III">III</mat-option>
+                            <mat-option value="IV">IV</mat-option>
+                            <mat-option value="V">V</mat-option>
+                            <mat-option value="PhD">PhD</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="mb-2 md:flex md:flex-wrap">
+                <div class="flex flex-1 mx-4 w-1/2 md:w-1/2">
+                    <div class="flex flex-1 mr-4 w-1/4 md:w-1/4">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'firstGivenName'|translate}}</mat-label>
+                        <input name="first_given_name" matInput required>
+                    </mat-form-field>
+                </div>
+                    <div class="flex flex-1 ml-4 w-1/4 md:w-1/4">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'middleName'|translate}}</mat-label>
+                        <input name="middle_name" matInput>
+                    </mat-form-field>
+                </div>
+                </div>
+                <div class="flex flex-1 mx-4 w-1/2 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'lastFamilyName'|translate}}</mat-label>
+                        <input name="last_name" matInput required>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="mb-2 md:flex md:flex-wrap">
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'preferredName'|translate}}</mat-label>
+                        <input name="preferred_name" matInput>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'previousName'|translate}}</mat-label>
+                        <input name="previous_name" matInput>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="mb-2 md:flex md:flex-wrap">
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'socialSecurityNumber'|translate}}</mat-label>
+                        <input name="preferred_name" matInput>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'otherGovtIssuedNumber'|translate}}</mat-label>
+                        <input name="other_govt_issued_number" matInput>
+                    </mat-form-field>
+                </div>
+            </div>
+            <h4 class="text-primary pt-6 pb-2 px-4">{{'demographicInformation'|translate}}</h4>
+            <div class="mb-2 md:flex md:flex-wrap">
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'dateOfBirth'|translate}}</mat-label>
+                        <input name="date_of_birth" matInput>
+                        <mat-datepicker-toggle [for]="datepickerRef" matSuffix></mat-datepicker-toggle>
+                        <mat-datepicker #datepickerRef></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'gender'|translate}}</mat-label>
+                        <mat-select name="gender">
+                            <mat-option value="">Male</mat-option>
+                            <mat-option value="">Female</mat-option>
+                            <mat-option value="">Other</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="mb-2 md:flex md:flex-wrap">
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'race'|translate}}</mat-label>
+                        <mat-select name="race">
+                            <mat-option value="">List of Values will be provided</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'ethnicity'|translate}}</mat-label>
+                        <mat-select name="ethnicity">
+                            <mat-option value="">N/A</mat-option>
+                            <mat-option value="White, Non-Hispanic">White, Non-Hispanic</mat-option>
+                            <mat-option value="Black, Non-Hispanic">Black, Non-Hispanic</mat-option>
+                            <mat-option value="Hispanic">Hispanic</mat-option>
+                            <mat-option value="American Indian or Native Alaskan">American Indian or Native Alaskan
+                            </mat-option>
+                            <mat-option value="Pacific Islander">Pacific Islander</mat-option>
+                            <mat-option value="Asian">Asian</mat-option>
+                            <mat-option value="Indian">Indian</mat-option>
+                            <mat-option value="Middle Eastern">Middle Eastern</mat-option>
+                            <mat-option value="African">African</mat-option>
+                            <mat-option value="Mixed Race">Mixed Race</mat-option>
+                            <mat-option value="Other">Other</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="mb-2 md:flex md:flex-wrap">
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'maritalStatus'|translate}}</mat-label>
+                        <mat-select name="marital_status">
+                            <mat-option value="">Single</mat-option>
+                            <mat-option value="">Married</mat-option>
+                            <mat-option value="">Partnered</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'countryOfBirth'|translate}}</mat-label>
+                        <mat-select name="country_of_birth">
+                            <mat-option value="">Provide Country List</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="mb-2 md:flex md:flex-wrap">
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'nationality'|translate}}</mat-label>
+                        <mat-select name="nationality">
+                            <mat-option value="">Provide Country List</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'firstLanguage'|translate}}</mat-label>
+                        <mat-select name="first_language">
+                            <mat-option value="">List of Values will be provided</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="mb-2 md:flex md:flex-wrap">
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'secondLanguage'|translate}}</mat-label>
+                        <mat-select name="second_language">
+                            <mat-option value="">List of Values will be provided</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'thirdLanguage'|translate}}</mat-label>
+                        <mat-select name="third_language">
+                            <mat-option value="">List of Values will be provided</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+    </mat-card-content>
+    <mat-card-actions>
+        <div class="px-4 mb-2 text-right">
+            <button color="primary" mat-raised-button>{{'submit'|translate}}</button>
+        </div>
+    </mat-card-actions>
+
+</mat-card>

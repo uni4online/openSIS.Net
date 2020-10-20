@@ -5,18 +5,18 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using opensis.core.Gradelevel.Interfaces;
-using opensis.data.ViewModels.Gradelevel;
+using opensis.core.GradeLevel.Interfaces;
+using opensis.data.ViewModels.GradeLevel;
 
 namespace opensisAPI.Controllers
 {
     [EnableCors("AllowOrigin")]
     [Route("{tenant}/Gradelevel")]
     [ApiController]
-    public class GradelevelController : ControllerBase
+    public class GradeLevelController : ControllerBase
     {
         private IGradelevelService _gradelevelService;
-        public GradelevelController(IGradelevelService gradelevelService)
+        public GradeLevelController(IGradelevelService gradelevelService)
         {
             _gradelevelService = gradelevelService;
         }
@@ -27,7 +27,17 @@ namespace opensisAPI.Controllers
             GradelevelViewModel gradelevelView = new GradelevelViewModel();
             try
             {
-                gradelevelView = _gradelevelService.AddGradelevel(gradelevel);
+                if (gradelevel.tblGradelevel.SchoolId > 0)
+                {
+                    gradelevelView = _gradelevelService.AddGradelevel(gradelevel);
+                }
+                else
+                {
+                    gradelevelView._token = gradelevel._token;
+                    gradelevelView._tenantName = gradelevel._tenantName;
+                    gradelevelView._failure = true;
+                    gradelevelView._message = "Please enter valid scholl id";
+                }
             }
             catch (Exception es)
             {
@@ -43,7 +53,17 @@ namespace opensisAPI.Controllers
             GradelevelViewModel gradelevelView = new GradelevelViewModel();
             try
             {
-                gradelevelView = _gradelevelService.ViewGradelevel(gradelevel);
+                if (gradelevel.tblGradelevel.SchoolId > 0)
+                {
+                    gradelevelView = _gradelevelService.ViewGradelevel(gradelevel);
+                }
+                else
+                {
+                    gradelevelView._token = gradelevel._token;
+                    gradelevelView._tenantName = gradelevel._tenantName;
+                    gradelevelView._failure = true;
+                    gradelevelView._message = "Please enter valid scholl id";
+                }
             }
             catch (Exception es)
             {
@@ -60,7 +80,17 @@ namespace opensisAPI.Controllers
             GradelevelViewModel gradelevelUpdate = new GradelevelViewModel();
             try
             {
-                gradelevelUpdate = _gradelevelService.UpdateGradelevel(gradelevel);
+                if (gradelevel.tblGradelevel.SchoolId > 0)
+                {
+                    gradelevelUpdate = _gradelevelService.UpdateGradelevel(gradelevel);
+                }
+                else
+                {
+                    gradelevelUpdate._token = gradelevel._token;
+                    gradelevelUpdate._tenantName = gradelevel._tenantName;
+                    gradelevelUpdate._failure = true;
+                    gradelevelUpdate._message = "Please enter valid scholl id";
+                }
             }
             catch (Exception es)
             {
@@ -77,7 +107,17 @@ namespace opensisAPI.Controllers
             GradelevelListViewModel gradelevelList = new GradelevelListViewModel();
             try
             {
-                gradelevelList = _gradelevelService.GetAllGradeLevels(gradelevel);
+                if (gradelevel.SchoolId > 0)
+                {
+                    gradelevelList = _gradelevelService.GetAllGradeLevels(gradelevel);
+                }
+                else
+                {
+                    gradelevelList._token = gradelevel._token;
+                    gradelevelList._tenantName = gradelevel._tenantName;
+                    gradelevelList._failure = true;
+                    gradelevelList._message = "Please enter valid scholl id";
+                }
             }
             catch (Exception es)
             {
@@ -93,7 +133,17 @@ namespace opensisAPI.Controllers
             GradelevelViewModel gradelevelDelete = new GradelevelViewModel();
             try
             {
-                gradelevelDelete = _gradelevelService.DeleteGradelevel(gradelevel);
+                if (gradelevel.tblGradelevel.SchoolId > 0)
+                {
+                    gradelevelDelete = _gradelevelService.DeleteGradelevel(gradelevel);
+                }
+                else
+                {
+                    gradelevelDelete._token = gradelevel._token;
+                    gradelevelDelete._tenantName = gradelevel._tenantName;
+                    gradelevelDelete._failure = true;
+                    gradelevelDelete._message = "Please enter valid scholl id";
+                }
             }
             catch (Exception es)
             {
@@ -101,6 +151,22 @@ namespace opensisAPI.Controllers
                 gradelevelDelete._message = es.Message;
             }
             return gradelevelDelete;
+        }
+        [HttpPost("getAllGradeEquivalency")]
+
+        public ActionResult<GradeEquivalencyListViewModel> GetAllGradeEquivalency(GradeEquivalencyListViewModel gradeEquivalencyList)
+        {
+            GradeEquivalencyListViewModel GradeEquivalencyList = new GradeEquivalencyListViewModel();
+            try
+            {
+                GradeEquivalencyList = _gradelevelService.GetAllGradeEquivalency(gradeEquivalencyList);
+            }
+            catch (Exception es)
+            {
+                GradeEquivalencyList._failure = true;
+                GradeEquivalencyList._message = es.Message;
+            }
+            return GradeEquivalencyList;
         }
     }
 }

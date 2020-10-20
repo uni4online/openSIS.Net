@@ -57,9 +57,11 @@ export class EditSectionComponent implements OnInit {
   submit() {
     
     if (this.form.valid) {
-    
+        this.sectionAddModel.tableSections.schoolId=+sessionStorage.getItem("selectedSchoolId");
       if (this.data && (Object.keys(this.data).length !== 0 || Object.keys(this.data).length > 0) ){
+
         this.sectionAddModel.tableSections.sectionId = this.data.editDetails.sectionId;
+        console.log(this.sectionAddModel)
         this.sectionService.UpdateSection(this.sectionAddModel).subscribe(data => {
           if (typeof (data) == 'undefined') {
             this.snackbar.open('Section Updation failed. ' + sessionStorage.getItem("httpError"), '', {
@@ -95,7 +97,7 @@ export class EditSectionComponent implements OnInit {
                 duration: 10000
               });
             } else {
-              
+              console.log(data)
               this.snackbar.open('Section Submission Successful.', '', {
                 duration: 10000
               });              

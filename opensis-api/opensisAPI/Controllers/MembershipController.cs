@@ -30,7 +30,17 @@ namespace opensisAPI.Controllers
             GetAllMembersList getAllMembers = new GetAllMembersList();
             try
             {
-                getAllMembers = _membershipService.GetAllMembersForNotice(allMembersList);
+                if (allMembersList.SchoolId > 0)
+                {
+                    getAllMembers = _membershipService.GetAllMembersForNotice(allMembersList);
+                }
+                else
+                {
+                    getAllMembers._token = allMembersList._token;
+                    getAllMembers._tenantName = allMembersList._tenantName;
+                    getAllMembers._failure = true;
+                    getAllMembers._message = "Please enter valid scholl id";
+                }
             }
             catch (Exception es)
             {

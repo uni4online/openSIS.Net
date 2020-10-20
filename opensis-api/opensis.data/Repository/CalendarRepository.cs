@@ -28,14 +28,19 @@ namespace opensis.data.Repository
         {
             int? calenderId = Utility.GetMaxPK(this.context, new Func<SchoolCalendars, int>(x => x.CalenderId));
             calendar.schoolCalendar.CalenderId = (int)calenderId;
-
+            calendar.schoolCalendar.LastUpdated = DateTime.UtcNow;
+            var checkDefaultCalendar = this.context?.SchoolCalendars.Where(x => x.AcademicYear == calendar.schoolCalendar.AcademicYear && x.TenantId == calendar.schoolCalendar.TenantId && x.SchoolId == calendar.schoolCalendar.SchoolId).ToList().Find(x => x.DefaultCalender == true);
+            if (checkDefaultCalendar == null)
+            {
+                calendar.schoolCalendar.DefaultCalender = true;
+            }
             if (calendar.schoolCalendar.DefaultCalender == true)
             {
                 (from p in this.context?.SchoolCalendars
-                 where p.TenantId == calendar.schoolCalendar.TenantId && p.SchoolId == calendar.schoolCalendar.SchoolId
+                 where p.TenantId == calendar.schoolCalendar.TenantId && p.SchoolId == calendar.schoolCalendar.SchoolId && p.AcademicYear == calendar.schoolCalendar.AcademicYear
                  select p).ToList().ForEach(x => x.DefaultCalender = false);
             }
-            calendar.schoolCalendar.DefaultCalender = calendar.schoolCalendar.DefaultCalender;
+
             this.context?.SchoolCalendars.Add(calendar.schoolCalendar);
             this.context?.SaveChanges();
 
@@ -77,7 +82,7 @@ namespace opensis.data.Repository
         /// <summary>
         /// Update Calendar
         /// </summary>
-        /// <param name="room"></param>
+        /// <param name="calendar"></param>
         /// <returns></returns>
         public CalendarAddViewModel UpdateCalendar(CalendarAddViewModel calendar)
         {
@@ -88,20 +93,29 @@ namespace opensis.data.Repository
                 calendarRepository.TenantId = calendar.schoolCalendar.TenantId;
                 calendarRepository.Title = calendar.schoolCalendar.Title;
                 calendarRepository.AcademicYear = calendar.schoolCalendar.AcademicYear;
+                var checkDefaultCalendar = this.context?.SchoolCalendars.Where(x => x.AcademicYear == calendar.schoolCalendar.AcademicYear && x.TenantId == calendar.schoolCalendar.TenantId && x.SchoolId == calendar.schoolCalendar.SchoolId && x.CalenderId != calendar.schoolCalendar.CalenderId).ToList().Find(x => x.DefaultCalender == true);
+                if (checkDefaultCalendar == null)
+                {
+                    calendarRepository.DefaultCalender = true;
+                }
+                else
+                {
+                    calendarRepository.DefaultCalender = calendar.schoolCalendar.DefaultCalender;
+                }
                 if (calendar.schoolCalendar.DefaultCalender == true)
                 {
                     (from p in this.context?.SchoolCalendars
-                     where p.CalenderId != calendarRepository.CalenderId && p.TenantId == calendar.schoolCalendar.TenantId && p.SchoolId == calendar.schoolCalendar.SchoolId
+                     where p.CalenderId != calendarRepository.CalenderId && p.AcademicYear == calendar.schoolCalendar.AcademicYear && p.TenantId == calendar.schoolCalendar.TenantId && p.SchoolId == calendar.schoolCalendar.SchoolId
                      select p).ToList().ForEach(x => x.DefaultCalender = false);
 
                 }
-                calendarRepository.DefaultCalender = calendar.schoolCalendar.DefaultCalender;
+
                 calendarRepository.Days = calendar.schoolCalendar.Days;
                 calendarRepository.LastUpdated = DateTime.UtcNow;
                 calendarRepository.VisibleToMembershipId = calendar.schoolCalendar.VisibleToMembershipId;
                 calendarRepository.UpdatedBy = calendar.schoolCalendar.UpdatedBy;
                 calendarRepository.StartDate = calendar.schoolCalendar.StartDate;
-                calendarRepository.StartDate = calendar.schoolCalendar.EndDate;
+                calendarRepository.EndDate = calendar.schoolCalendar.EndDate;
                 this.context?.SaveChanges();
                 calendar._failure = false;
                 return calendar;
@@ -138,6 +152,44 @@ namespace opensis.data.Repository
                 calendarListModel._token = calendarList._token;
             }
             return calendarListModel;
+
+        }
+
+
+        /// <summary>
+        /// Delete Calendar
+        /// </summary>
+        /// <param name="calendar"></param>
+        /// <returns></returns>
+        public CalendarAddViewModel DeleteCalendar(CalendarAddViewModel calendar)
+        {
+            try
+            {
+                var calendarRepository = this.context?.SchoolCalendars.Where(x => x.CalenderId == calendar.schoolCalendar.CalenderId).ToList().OrderBy(x => x.CalenderId).LastOrDefault();
+                if (calendarRepository != null)
+                {
+                    var eventsExist = this.context?.CalendarEvents.FirstOrDefault(x => x.TenantId == calendarRepository.TenantId && x.SchoolId == calendarRepository.SchoolId && x.CalendarId == calendarRepository.CalenderId);
+                    if (eventsExist != null)
+                    {
+                        calendar._message = "Calendar cannot deleted because it has event.";
+                        calendar._failure = true;
+                    }
+                    else
+                    {
+                        this.context?.SchoolCalendars.Remove(calendarRepository);
+                        this.context?.SaveChanges();
+                        calendar._failure = false;
+                        calendar._message = "Deleted";
+                    }
+                }
+
+                return calendar;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
 
         }
     }

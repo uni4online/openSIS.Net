@@ -6,10 +6,15 @@ namespace opensis.data.Models
 {
    public partial class GradeEquivalency
     {
-        public string Country { get; set; }
-        public int? IscedGradeLevel { get; set; }
+        public GradeEquivalency()
+        {
+            Gradelevels = new HashSet<Gradelevels>();
+        }
+
+        public string IscedGradeLevel { get; set; }
         public string GradeDescription { get; set; }
         public string AgeRange { get; set; }
-        public string EducationalStage { get; set; }
+
+        public virtual ICollection<Gradelevels> Gradelevels { get; set; }
     }
 }

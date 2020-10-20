@@ -71,6 +71,7 @@ export class AddSchoolComponent implements OnInit {
     if(this.schoolId!=null){
     this.getSchoolGeneralandWashInfoDetails();
     }
+    this.disabledWashInfo= true;   
    }
 
   getDataOfgeneralInfo(data){   

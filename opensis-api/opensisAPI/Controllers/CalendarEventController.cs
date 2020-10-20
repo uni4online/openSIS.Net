@@ -22,7 +22,7 @@ namespace opensisAPI.Controllers
 
 
         [HttpPost("addCalendarEvent")]
-        public ActionResult<CalendarEventAddViewModel> AddCalendar(CalendarEventAddViewModel calendarEvent)
+        public ActionResult<CalendarEventAddViewModel> AddCalendarEvent(CalendarEventAddViewModel calendarEvent)
         {
             CalendarEventAddViewModel calendarEventAdd = new CalendarEventAddViewModel();
             try
@@ -38,12 +38,12 @@ namespace opensisAPI.Controllers
         }
 
         [HttpPost("viewCalendarEvent")]
-        public ActionResult<CalendarEventAddViewModel> ViewCalendar(CalendarEventAddViewModel room)
+        public ActionResult<CalendarEventAddViewModel> ViewCalendarEvent(CalendarEventAddViewModel calendarEvent)
         {
             CalendarEventAddViewModel viewCalendar = new CalendarEventAddViewModel();
             try
             {
-                viewCalendar = _calendarEventService.ViewCalendarEvent(room);
+                viewCalendar = _calendarEventService.ViewCalendarEvent(calendarEvent);
             }
             catch (Exception es)
             {
@@ -54,7 +54,7 @@ namespace opensisAPI.Controllers
         }
 
         [HttpPut("updateCalendarEvent")]
-        public ActionResult<CalendarEventAddViewModel> UpdateCalendar(CalendarEventAddViewModel calendar)
+        public ActionResult<CalendarEventAddViewModel> UpdateCalendarEvent(CalendarEventAddViewModel calendar)
         {
             CalendarEventAddViewModel calendarEventUpdate = new CalendarEventAddViewModel();
             try
@@ -83,6 +83,22 @@ namespace opensisAPI.Controllers
                 calendarEventListModel._failure = true;
             }
             return calendarEventListModel;
+        }
+
+        [HttpPost("deleteCalendarEvent")]
+        public ActionResult<CalendarEventAddViewModel> DeleteCalendarEvent(CalendarEventAddViewModel calendarEvent)
+        {
+            CalendarEventAddViewModel deleteCalendarEvent = new CalendarEventAddViewModel();
+            try
+            {
+                deleteCalendarEvent = _calendarEventService.DeleteCalendarEvent(calendarEvent);
+            }
+            catch (Exception es)
+            {
+                deleteCalendarEvent._failure = true;
+                deleteCalendarEvent._message = es.Message;
+            }
+            return deleteCalendarEvent;
         }
     }
 }

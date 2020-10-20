@@ -130,6 +130,12 @@ namespace opensis.data.Models
                     .HasColumnName("end_date")
                     .HasColumnType("date");
 
+                entity.Property(e => e.EventColor)
+                    .HasColumnName("event_color")
+                    .HasMaxLength(7)
+                    .IsUnicode(false)
+                    .HasComment("will contain HEX code e.g. #5175bc.");
+
                 entity.Property(e => e.LastUpdated)
                     .HasColumnName("last_updated")
                     .HasColumnType("datetime");
@@ -193,32 +199,28 @@ namespace opensis.data.Models
 
             modelBuilder.Entity<GradeEquivalency>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => e.IscedGradeLevel);
+
 
                 entity.ToTable("grade_equivalency");
+                entity.Property(e => e.IscedGradeLevel)
+                    .HasColumnName("isced_grade_level")
+                    .HasMaxLength(8)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.AgeRange)
                     .HasColumnName("age_range")
                     .HasMaxLength(5)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Country)
-                    .HasColumnName("country")
-                    .HasMaxLength(30)
-                    .IsUnicode(false)
-                    .IsFixedLength();
-
-                entity.Property(e => e.EducationalStage)
-                    .HasColumnName("educational_stage")
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+               
 
                 entity.Property(e => e.GradeDescription)
                     .HasColumnName("grade_description")
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.IscedGradeLevel).HasColumnName("isced_grade_level");
+                
             });
             modelBuilder.Entity<Gradelevels>(entity =>
             {
@@ -232,20 +234,12 @@ namespace opensis.data.Models
 
                 entity.Property(e => e.GradeId).HasColumnName("grade_id");
 
-                entity.Property(e => e.AgeRange)
-                   .HasColumnName("age_range")
-                   .HasMaxLength(50)
-                   .IsUnicode(false);
+                entity.Property(e => e.IscedGradeLevel)
+                     .HasColumnName("isced_grade_level")
+                     .HasMaxLength(8)
+                     .IsUnicode(false);
 
-                entity.Property(e => e.EducationalStage)
-                    .HasColumnName("educational_stage")
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.GradeLevelEquivalency)
-                    .HasColumnName("grade_level_equivalency")
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+                
 
 
                 entity.Property(e => e.LastUpdated)
@@ -270,6 +264,12 @@ namespace opensis.data.Models
                     .HasColumnName("updated_by")
                     .HasMaxLength(100)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.IscedGradeLevelNavigation)
+                    .WithMany(p => p.Gradelevels)
+                    .HasForeignKey(d => d.IscedGradeLevel)
+                    .HasConstraintName("FK_gradelevels_grade_equivalency");
+
             });
 
             modelBuilder.Entity<Language>(entity =>
@@ -1404,7 +1404,7 @@ namespace opensis.data.Models
 
             LanguageSeedData(modelBuilder);
             CountrySeedData(modelBuilder);
-            //GradeEquivalencySeedData(modelBuilder);
+            GradeEquivalencySeedData(modelBuilder);
            // StateSeedData(modelBuilder);
            //CitySeedData(modelBuilder);
            //DemoRegisterData(modelBuilder);
@@ -1839,7 +1839,7 @@ namespace opensis.data.Models
         //    var states = JsonConvert.DeserializeObject<List<State>>(statejsonList);
         //    mb.Entity<State>().HasData(states);
         //}
-        
+
         //private void CitySeedData(ModelBuilder mb)
         //{
         //    //var dataText = System.IO.File.ReadAllText(@"weatherdataseed.json");
@@ -1847,22 +1847,24 @@ namespace opensis.data.Models
         //    var cities = JsonConvert.DeserializeObject<List<City>>(cityjsonList);
         //    mb.Entity<City>().HasData(cities);
         //}
-        
-        
-        //private void GradeEquivalencySeedData(ModelBuilder mb)
-        //{
 
-        //    mb.Entity<GradeEquivalency>().HasData(new GradeEquivalency { Country = "US", IscedGradeLevel = 0, GradeDescription = "01 Early childhood educational development", AgeRange = "1-3", EducationalStage= "None" },
-        //        new GradeEquivalency { Country = "US", IscedGradeLevel = 0, GradeDescription = "02 Pre-primary education", AgeRange = "3-5", EducationalStage = "Pre-primary education" },
-        //        new GradeEquivalency { Country = "US", IscedGradeLevel = 1, GradeDescription = "Primary education", AgeRange = "5-6", EducationalStage = "Primary education" },
-        //        new GradeEquivalency { Country = "US", IscedGradeLevel = 2, GradeDescription = "Lower secondary education", AgeRange = "5-6", EducationalStage = "Lower secondary education" },
-        //        new GradeEquivalency { Country = "US", IscedGradeLevel = 3, GradeDescription = "Upper secondary education", AgeRange = "5-6", EducationalStage = "Upper secondary education" },
-        //        new GradeEquivalency { Country = "US", IscedGradeLevel = 4, GradeDescription = "Post-secondary non-tertiary education", AgeRange = "5-6", EducationalStage = "Post-secondary non-tertiary education" },
-        //        new GradeEquivalency { Country = "US", IscedGradeLevel = 5, GradeDescription = "Short-cycle tertiary education", AgeRange = "5-6", EducationalStage = "Short-cycle tertiary education" },
-        //        new GradeEquivalency { Country = "US", IscedGradeLevel = 6, GradeDescription = "Bachelor or equivalent", AgeRange = "5-6", EducationalStage = "Bachelor or equivalent" },
-        //        new GradeEquivalency { Country = "US", IscedGradeLevel = 7, GradeDescription = "Master or equivalent", AgeRange = "5-6", EducationalStage = "Master or equivalent" }
-        //        );
-        //}
+
+        private void GradeEquivalencySeedData(ModelBuilder mb)
+        {
+
+            mb.Entity<GradeEquivalency>().HasData(
+                new GradeEquivalency { IscedGradeLevel = "ISCED 01", GradeDescription = "Early childhood education", AgeRange = "0-2" },
+                new GradeEquivalency { IscedGradeLevel = "ISCED 02", GradeDescription = "Pre-primary education", AgeRange = "0-2"},
+                new GradeEquivalency { IscedGradeLevel = "ISCED 1", GradeDescription = "Primary education", AgeRange = "5-7" },
+                new GradeEquivalency {  IscedGradeLevel = "ISCED 2", GradeDescription = "Lower secondary education", AgeRange = "6-10" },
+                new GradeEquivalency { IscedGradeLevel = "ISCED 3", GradeDescription = "Upper secondary education", AgeRange = "9-12" },
+                new GradeEquivalency { IscedGradeLevel = "ISCED 4", GradeDescription = "Post-secondary non-tertiary education", AgeRange = "10-11" },
+                new GradeEquivalency { IscedGradeLevel = "ISCED 5", GradeDescription = "Short-cycle tertiary education", AgeRange = "14-16"},
+                new GradeEquivalency { IscedGradeLevel = "ISCED 6", GradeDescription = "Bachelor's or equivalent", AgeRange = "17-23" },
+                new GradeEquivalency {  IscedGradeLevel = "ISCED 7", GradeDescription = "Master's or equivalent", AgeRange = "21-25" },
+                new GradeEquivalency { IscedGradeLevel = "ISCED 8", GradeDescription = "Doctoral or equivalent level", AgeRange = "22-28" }
+                );
+        }
 
 
 

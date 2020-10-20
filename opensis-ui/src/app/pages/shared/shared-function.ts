@@ -18,9 +18,9 @@ export class SharedFunction {
         }
          
     }
-
-    formatDate(date){
-        if(date !== "" && date !== null){
+   
+    formatDate(date){      
+        if(date !== "" && date !== null && date!== undefined && date !="-"){
           var formattedDate = date.split('T');  
           var formattedDateAfterConversion = moment(formattedDate[0]).format('MMM D, YYYY');
            return formattedDateAfterConversion;
@@ -29,8 +29,7 @@ export class SharedFunction {
         }
         
       }
-      formatDateInEditMode(date){
-       
+      formatDateInEditMode(date){       
        if(date !== "" && date !== null && date != "-"){
           var formattedDate =new Date(date);
           return moment(formattedDate).format('YYYY-MM-DD');
@@ -46,4 +45,5 @@ export class SharedFunction {
         return false;
       }
     }
+    
 }

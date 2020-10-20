@@ -43,11 +43,14 @@ export class GradeLevelsComponent implements OnInit {
   sendDetailsToEditComponent:[];
   loading:boolean=false;
   searchKey:string;
-  deleteGradeLevel:AddGradeLevelModel=new AddGradeLevelModel();
+  deleteGradeLevelData:AddGradeLevelModel=new AddGradeLevelModel();
   columns = [
     { label: 'Title', property: 'title', type: 'text', visible: true },
     { label: 'Short Name', property: 'shortName', type: 'text', visible: true },
     { label: 'Sort Order', property: 'sortOrder', type: 'number', visible: true},
+    { label: 'Grade Level Equivalency', property: 'gradeDescription', type: 'text', visible: true},
+    // { label: 'Age Range', property: 'ageRange', type: 'text', visible: false},
+    // { label: 'Educational Stage', property: 'educationalStage', type: 'text', visible: false},
     { label: 'Next Grade', property: 'nextGrade', type: 'text', visible: true},
     { label: 'Action', property: 'action', type: 'text', visible: true }
   ];
@@ -62,7 +65,7 @@ export class GradeLevelsComponent implements OnInit {
     }); 
   }
     ngOnInit(): void {
-      this.GetAllGradeLevel();
+      this.getAllGradeLevel();
     }
 
   openAddNew() {
@@ -72,7 +75,7 @@ export class GradeLevelsComponent implements OnInit {
       width: '600px'
     }).afterClosed().subscribe((res) => {
       if(res){
-        this.GetAllGradeLevel();
+        this.getAllGradeLevel();
       }            
     });
   }
@@ -88,13 +91,13 @@ export class GradeLevelsComponent implements OnInit {
       width:'600px'
     }).afterClosed().subscribe((res) => {
       if(res){
-        this.GetAllGradeLevel();
+        this.getAllGradeLevel();
       }            
     });
   }
 
 
-  GetAllGradeLevel(){
+  getAllGradeLevel(){
     this.getAllGradeLevels.schoolId=+sessionStorage.getItem("selectedSchoolId");
     this.getAllGradeLevels._tenantName=sessionStorage.getItem("tenant");
     this.getAllGradeLevels._token=sessionStorage.getItem("token");
@@ -118,6 +121,12 @@ export class GradeLevelsComponent implements OnInit {
     return this.columns.filter(column => column.visible).map(column => column.property);
   }
 
+  toggleColumnVisibility(column, event) {
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+    column.visible = !column.visible;
+  }
+
   confirmDelete(deleteDetails){
     // call our modal window
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
@@ -131,24 +140,22 @@ export class GradeLevelsComponent implements OnInit {
       // if user pressed yes dialogResult will be true, 
       // if user pressed no - it will be false
       if(dialogResult){
-        this.DeleteGradeLevel(deleteDetails);
+        this.deleteGradeLevel(deleteDetails);
       }
    });
   }
 
-  DeleteGradeLevel(deleteDetails){
-    this.deleteGradeLevel.tblGradelevel.schoolId = deleteDetails.schoolId;
-    this.deleteGradeLevel.tblGradelevel.gradeId = deleteDetails.gradeId;
-    this.deleteGradeLevel._tenantName=sessionStorage.getItem("tenant");
-    this.deleteGradeLevel._token=sessionStorage.getItem("token");
-    console.log(this.deleteGradeLevel)
-    this.gradeLevelService.deleteGradelevel(this.deleteGradeLevel).subscribe((res)=>{
+  deleteGradeLevel(deleteDetails){
+    this.deleteGradeLevelData.tblGradelevel.schoolId = deleteDetails.schoolId;
+    this.deleteGradeLevelData.tblGradelevel.gradeId = deleteDetails.gradeId;
+    this.deleteGradeLevelData._tenantName=sessionStorage.getItem("tenant");
+    this.deleteGradeLevelData._token=sessionStorage.getItem("token");
+    this.gradeLevelService.deleteGradelevel(this.deleteGradeLevelData).subscribe((res)=>{
       if (typeof (res) == 'undefined') {
         this.snackbar.open('Grade Level Deletion failed. ' + sessionStorage.getItem("httpError"), '', {
           duration: 10000
         });
       }else if (res._failure) {
-      console.log(res);
         this.snackbar.open(res._message, 'LOL THANKS', {
           duration: 10000
         });
@@ -156,8 +163,7 @@ export class GradeLevelsComponent implements OnInit {
         this.snackbar.open('Grade Level Deleted Successfully.', '', {
           duration: 10000
         });
-        console.log(res)
-        this.GetAllGradeLevel();
+        this.getAllGradeLevel();
       }
     })
   }

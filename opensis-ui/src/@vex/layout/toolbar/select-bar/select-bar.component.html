@@ -1,6 +1,6 @@
 <div class="text-right" *ngIf="schoolCtrl">
   <mat-form-field >
-    <mat-select [formControl]="schoolCtrl" placeholder="School Name" (selectionChange)="changeSchool($event.value.schoolName,$event.value.schoolId)">
+    <mat-select [formControl]="schoolCtrl" placeholder="School Name" (selectionChange)="changeSchool($event.value.schoolId)">
       <mat-option>
         <ngx-mat-select-search  [formControl]="schoolFilterCtrl" ngxMatSelectSearchClear noEntriesFoundLabel="No matching school found" placeholderLabel="Find School..."></ngx-mat-select-search>
       </mat-option>
@@ -11,18 +11,20 @@
     </mat-select>
   </mat-form-field>
 
-  <mat-form-field style="width: 20%;">
-    <mat-select [formControl]="yearCtrl" placeholder="Year">
-      <mat-option *ngFor="let year of years" [value]="year">
-        {{year.name}}
+  <mat-form-field>
+    <mat-select [formControl]="academicYearsCtrl" placeholder="Year" (selectionChange)="changeYear($event)">
+      <mat-option *ngIf="this.academicYears?.length==0" [value]=nullValueForDropdown>{{nullValueForDropdown}}</mat-option>
+      <mat-option *ngFor="let year of academicYears" [value]="year.academyYear">
+        {{year.year}}
       </mat-option>
     </mat-select>
   </mat-form-field>
 
-  <mat-form-field style="width: 17%;">
-    <mat-select [formControl]="partCtrl" placeholder="Parts">
-      <mat-option *ngFor="let part of parts" [value]="part">
-        {{part.name}}
+  <mat-form-field>
+    <mat-select [formControl]="periodCtrl" placeholder="Period Title" (selectionChange)="changePeriod($event)">
+      <mat-option *ngIf="this.periods?.length==0" [value]=nullValueForDropdown>{{nullValueForDropdown}}</mat-option>
+      <mat-option *ngFor="let period of periods" [value]="period.periodTitle">
+        {{period.periodTitle}}
       </mat-option>
     </mat-select>
   </mat-form-field>

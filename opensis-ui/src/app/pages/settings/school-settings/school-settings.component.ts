@@ -10,7 +10,8 @@ import { fadeInRight400ms } from '../../../../@vex/animations/fade-in-right.anim
   ]
 })
 export class SchoolSettingsComponent implements OnInit {
-
+  pages=['Period', 'Grade Levels', 'Sections', 'Rooms','School Fields','Hierarchy','Preference']
+  schoolSettings=true;
   pageTitle = 'Grade Levels';
   pageId: string = '';
   displayPeriod = false;
@@ -34,6 +35,10 @@ export class SchoolSettingsComponent implements OnInit {
   ngOnInit(): void {
     this.pageId = localStorage.getItem("pageId");
     this.showPage(this.pageId);
+  }
+
+  getSelectedPage(event){
+    this.showPage(event);
   }
 
   showPage(pageId = 'Period') {

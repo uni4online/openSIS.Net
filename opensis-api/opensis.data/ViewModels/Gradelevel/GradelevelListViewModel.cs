@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace opensis.data.ViewModels.Gradelevel
+namespace opensis.data.ViewModels.GradeLevel
 {
     public class GradelevelListViewModel : CommonFields
     {

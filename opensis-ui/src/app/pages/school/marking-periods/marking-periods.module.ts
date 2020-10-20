@@ -6,7 +6,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-
 import { IconModule } from '@visurel/iconify-angular';
 import { MatCardModule } from '@angular/material/card';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -20,7 +19,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatMenuModule } from '@angular/material/menu';
 import { TranslateModule } from '@ngx-translate/core';
-
+import { SharedModuleModule } from '../../shared-module/shared-module.module';
+import { MarkingPeriodsRoutingModule } from './marking-periods-routing-module';
 
 
 @NgModule({
@@ -44,7 +44,9 @@ import { TranslateModule } from '@ngx-translate/core';
     MatNativeDateModule,
     MatMenuModule,
     EditMarkingPeriodModule,
-    TranslateModule
+    TranslateModule,
+    SharedModuleModule,
+    MarkingPeriodsRoutingModule
   ]
 })
 export class MarkingPeriodsModule { }

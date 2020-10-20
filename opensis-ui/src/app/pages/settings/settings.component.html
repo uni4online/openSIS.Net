@@ -13,8 +13,17 @@
                     <div class="flex">
                         <mat-icon [icIcon]="icSchool" size="30px" class="text-primary"></mat-icon>
                         <div class="ml-8">
-                            <h4 class="font-bold"><a routerLink="/settings/school-settings">School</a></h4>
-                            <p><a (click) = "setPageId('Period')" [routerLink]="['/settings/school-settings']" class="hover:text-primary hover:underline">Periods</a>, <a (click) = "setPageId('Grade Levels')" routerLink="/settings/school-settings" class="hover:text-primary hover:underline">Grade Levels</a>, <a (click) = "setPageId('Sections')" routerLink="/settings/school-settings" class="hover:text-primary hover:underline">Sections</a>, <a (click) = "setPageId('Rooms')" routerLink="/settings/school-settings" class="hover:text-primary hover:underline">Rooms</a>, <a (click) = "setPageId('School Fields')" routerLink="/settings/school-settings" class="hover:text-primary hover:underline">School Fields</a>, <a (click) = "setPageId('Hierarchy')" routerLink="/settings/school-settings" class="hover:text-primary hover:underline">Hierarchy</a>, <a (click) = "setPageId('Preference')" routerLink="/settings/school-settings" class="hover:text-primary hover:underline">Preference</a></p>
+                            <h4 class="font-bold">
+                                <a (click) = "setPageId('Period')" routerLink="/school/settings/school-settings">School</a></h4>
+                            <p>
+                                <a (click) = "setPageId('Period')" routerLink="/school/settings/school-settings" class="hover:text-primary hover:underline">Periods</a>,
+                                <a (click) = "setPageId('Grade Levels')" routerLink="/school/settings/school-settings" class="hover:text-primary hover:underline">Grade Levels</a>, 
+                                <a (click) = "setPageId('Sections')" routerLink="/school/settings/school-settings" class="hover:text-primary hover:underline">Sections</a>,
+                                <a (click) = "setPageId('Rooms')" routerLink="/school/settings/school-settings" class="hover:text-primary hover:underline">Rooms</a>,
+                                <a (click) = "setPageId('School Fields')" routerLink="/school/settings/school-settings" class="hover:text-primary hover:underline">School Fields</a>,
+                                <a (click) = "setPageId('Hierarchy')" routerLink="/school/settings/school-settings" class="hover:text-primary hover:underline">Hierarchy</a>,
+                                <a (click) = "setPageId('Preference')" routerLink="/school/settings/school-settings" class="hover:text-primary hover:underline">Preference</a>
+                            </p>
                         </div>
                     </div>
                 </li>
@@ -22,8 +31,12 @@
                     <div class="flex">
                         <mat-icon [icIcon]="icStudents" size="30px" class="text-primary"></mat-icon>
                         <div class="ml-8">
-                            <h4 class="font-bold"><a href="">Student</a></h4>
-                            <p><a href="" class="hover:text-primary hover:underline">Student Fields</a>, <a href="" class="hover:text-primary hover:underline">Enrollment Codes</a></p>
+                            <h4 class="font-bold">
+                                <a (click)="setPageId('Student Fields')" routerLink="/school/settings/student-settings">Student</a></h4>
+                            <p>
+                                <a (click)="setPageId('Student Fields')" routerLink="/school/settings/student-settings" class="hover:text-primary hover:underline">Student Fields</a>,
+                                <a (click)="setPageId('Enrollment Codes')" routerLink="/school/settings/student-settings" class="hover:text-primary hover:underline">Enrollment Codes</a>
+                            </p>
                         </div>
                     </div>
                 </li>
@@ -40,8 +53,9 @@
                     <div class="flex">
                         <mat-icon [icIcon]="icAttendance" size="30px" class="text-primary"></mat-icon>
                         <div class="ml-8">
-                            <h4 class="font-bold"><a href="">Attendance</a></h4>
-                            <p><a href="" class="hover:text-primary hover:underline">Attendance Codes</a></p>
+                            <h4 class="font-bold">
+                                <a (click)="setPageId('Attendance Codes')" routerLink="/school/settings/attendance-settings">Attendance</a></h4>
+                            <p><a (click)="setPageId('Attendance Codes')" routerLink="/school/settings/attendance-settings" class="hover:text-primary hover:underline">Attendance Codes</a></p>
                         </div>
                     </div>
                 </li>

@@ -2,8 +2,10 @@
 using opensis.data.Helper;
 using opensis.data.Interface;
 using opensis.data.Models;
+using opensis.data.ViewModels;
 using opensis.data.ViewModels.School;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace opensis.data.Repository
@@ -89,9 +91,25 @@ namespace opensis.data.Repository
                     this.context.Country.Where(x => x.Id == Convert.ToInt32(s.Country)).FirstOrDefault().Name, s.Zip),
                     Status = s.SchoolDetail.FirstOrDefault().Status == null ? false : s.SchoolDetail.FirstOrDefault().Status
                 }).ToList();
+                if (pageResult.FilterParams == null || pageResult.FilterParams.Count == 0)
+                {
+                    schoolListModel.GetSchoolForView = schoollist;
+                }
+                else
+                {
+                    if (pageResult.FilterParams != null && pageResult.FilterParams.ElementAt(0).ColumnName == null && pageResult.FilterParams.Count == 1)
+                    {
+                        string Columnvalue = pageResult.FilterParams.ElementAt(0).FilterValue;
+                        schoolListModel.GetSchoolForView = schoollist.Where(x => x.SchoolName.Contains(Columnvalue) || x.Telephone.Contains(Columnvalue) ||x.StreetAddress1.Contains(Columnvalue) || x.NameOfPrincipal.Contains(Columnvalue)).ToList();
+                    }
+                    else
+                    {
+                        schoolListModel.GetSchoolForView = Utility.FilteredData(pageResult.FilterParams, schoollist).ToList();
+                    }
+                }
+                
 
-                schoolListModel.GetSchoolForView = schoollist;
-                schoolListModel.TotalCount = totalCount;
+                schoolListModel.TotalCount = schoolListModel.GetSchoolForView.Count();
                 schoolListModel.PageNumber = pageResult.PageNumber;
                 schoolListModel._pageSize = pageResult.PageSize;
                 schoolListModel._tenantName = pageResult._tenantName;
@@ -284,6 +302,7 @@ namespace opensis.data.Repository
             try
             {
                 int? MasterSchoolId = Utility.GetMaxPK(this.context, new Func<SchoolMaster, int>(x => x.SchoolId));
+                int? MemberShipId = Utility.GetMaxPK(this.context, new Func<Membership, int>(x => x.MembershipId));
                 school.schoolMaster.SchoolId = (int)MasterSchoolId;
                 if (school.schoolMaster.SchoolDetail.ToList().Count>0)
                 {
@@ -291,9 +310,21 @@ namespace opensis.data.Repository
                 }
                 school.schoolMaster.DateCreated = DateTime.UtcNow;
                 school.schoolMaster.TenantId = school.schoolMaster.TenantId;
+                school.schoolMaster.Membership = new List<Membership>() {
+                    new Membership(){LastUpdated=DateTime.UtcNow,UpdatedBy="", TenantId= school.schoolMaster.TenantId,Profile= "Super Administrator",Title= "Super Administrator",MembershipId= (int)MemberShipId},
+                    new Membership(){LastUpdated=DateTime.UtcNow,UpdatedBy="", TenantId= school.schoolMaster.TenantId,Profile= "Administrator",Title= "Administrator",MembershipId= (int)MemberShipId+1 },
+                    new Membership(){LastUpdated=DateTime.UtcNow,UpdatedBy="", TenantId= school.schoolMaster.TenantId,Profile= "Teacher",Title= "Teacher",MembershipId= (int)MemberShipId+2 },
+                    new Membership(){LastUpdated=DateTime.UtcNow,UpdatedBy="", TenantId= school.schoolMaster.TenantId,Profile= "Student",Title= "Student",MembershipId= (int)MemberShipId+3 },
+                    new Membership(){LastUpdated=DateTime.UtcNow,UpdatedBy="", TenantId= school.schoolMaster.TenantId,Profile= "Parent",Title= "Parent",MembershipId= (int)MemberShipId+4 },
+                    new Membership(){LastUpdated=DateTime.UtcNow,UpdatedBy="", TenantId= school.schoolMaster.TenantId,Profile= "Admin Assistant",Title= "Admin Assistant",MembershipId= (int)MemberShipId+5 },
+                    new Membership(){LastUpdated=DateTime.UtcNow,UpdatedBy="", TenantId= school.schoolMaster.TenantId,Profile= "Administrator w/Custom",Title= "Administrator w/Custom",MembershipId= (int)MemberShipId+6 },
+                    new Membership(){LastUpdated=DateTime.UtcNow,UpdatedBy="", TenantId= school.schoolMaster.TenantId,Profile= "Teacher w/Custom",Title= "Teacher w/Custom",MembershipId= (int)MemberShipId+7 },
+                    new Membership(){LastUpdated=DateTime.UtcNow,UpdatedBy="", TenantId= school.schoolMaster.TenantId,Profile= "Parent w/Custom",Title= "Parent w/Custom",MembershipId= (int)MemberShipId+8 },
+                };
                 this.context?.SchoolMaster.Add(school.schoolMaster);
                 this.context?.SaveChanges();
                 school._failure = false;
+                school.schoolMaster.Membership.ToList().ForEach(x=>x.SchoolMaster=null);
                 if (school.schoolMaster.SchoolDetail.ToList().Count>0)
                 {
                     school.schoolMaster.SchoolDetail.FirstOrDefault().SchoolMaster = null;

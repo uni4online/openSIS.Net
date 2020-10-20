@@ -1,7 +1,8 @@
-﻿using opensis.data.Helper;
+﻿using Microsoft.EntityFrameworkCore;
+using opensis.data.Helper;
 using opensis.data.Interface;
 using opensis.data.Models;
-using opensis.data.ViewModels.Gradelevel;
+using opensis.data.ViewModels.GradeLevel;
 using opensis.data.ViewModels.School;
 using System;
 using System.Collections.Generic;
@@ -10,11 +11,11 @@ using System.Text;
 
 namespace opensis.data.Repository
 {
-    public class GradelevelRepository : IGradelevelRepository
+    public class GradeLevelRepository : IGradelevelRepository
     {
         private CRMContext context;
         private static readonly string NORECORDFOUND = "NO RECORD FOUND";
-        public GradelevelRepository(IDbContextFactory dbContextFactory)
+        public GradeLevelRepository(IDbContextFactory dbContextFactory)
         {
             this.context = dbContextFactory.Create();
         }
@@ -29,8 +30,8 @@ namespace opensis.data.Repository
         {
             try
             {
-                int? MasterSchoolId = Utility.GetMaxPK(this.context, new Func<Gradelevels, int>(x => x.GradeId));
-                gradelevel.tblGradelevel.GradeId = (int)MasterSchoolId;
+                int? GradeLevelId = Utility.GetMaxPK(this.context, new Func<Gradelevels, int>(x => x.GradeId));
+                gradelevel.tblGradelevel.GradeId = (int)GradeLevelId;
                 this.context?.Gradelevels.Add(gradelevel.tblGradelevel);
                 this.context?.SaveChanges();
                 gradelevel._failure = false;
@@ -90,6 +91,10 @@ namespace opensis.data.Repository
                 GradeLevel.ShortName = gradelevel.tblGradelevel.ShortName;
                 GradeLevel.SortOrder = gradelevel.tblGradelevel.SortOrder;
                 GradeLevel.UpdatedBy = gradelevel.tblGradelevel.UpdatedBy;
+                GradeLevel.IscedGradeLevel = gradelevel.tblGradelevel.IscedGradeLevel;
+               /* GradeLevel.AgeRange = gradelevel.tblGradelevel.AgeRange;
+                GradeLevel.EducationalStage = gradelevel.tblGradelevel.EducationalStage;
+                GradeLevel.GradeLevelEquivalency = gradelevel.tblGradelevel.GradeLevelEquivalency;*/
                 this.context?.SaveChanges();
                 gradelevel._failure = false;
                 gradelevel._message = "Entity Updated";
@@ -133,14 +138,19 @@ namespace opensis.data.Repository
             }
             return gradelevel;
         }
-
+        /// <summary>
+        /// Get All GradeLevel
+        /// </summary>
+        /// <param name="gradelevelList"></param>
+        /// <returns></returns>
         public GradelevelListViewModel GetAllGradeLevels(GradelevelListViewModel gradelevelList)
         {
             GradelevelListViewModel gradelevelListModel = new GradelevelListViewModel();
             try
             {
 
-                var gradelevelsList = this.context?.Gradelevels.Where(x => x.TenantId == gradelevelList.TenantId && x.SchoolId==gradelevelList.SchoolId).OrderBy(x=>x.SortOrder).ToList();
+                var gradelevelsList = this.context?.Gradelevels.Include(x=>x.IscedGradeLevelNavigation)
+                    .Where(x => x.TenantId == gradelevelList.TenantId && x.SchoolId==gradelevelList.SchoolId).OrderBy(x=>x.SortOrder).ToList();
 
 
                 var gradeLevels = from gradelevel in gradelevelsList
@@ -155,7 +165,12 @@ namespace opensis.data.Repository
                                      ShortName= gradelevel.ShortName,
                                      SortOrder= gradelevel.SortOrder,
                                      TenantId= gradelevel.TenantId,
-                                     UpdatedBy= gradelevel.UpdatedBy
+                                     IscedGradeLevel=gradelevel.IscedGradeLevel,
+                                     GradeDescription= gradelevel.IscedGradeLevelNavigation != null ? gradelevel.IscedGradeLevelNavigation.GradeDescription : null,
+                                     //AgeRange=gradelevel.AgeRange,
+                                     //EducationalStage=gradelevel.EducationalStage,
+                                     //GradeLevelEquivalency=gradelevel.GradeLevelEquivalency,
+                                     UpdatedBy = gradelevel.UpdatedBy
                                  };
 
 
@@ -174,5 +189,36 @@ namespace opensis.data.Repository
             return gradelevelListModel;
 
         }
+        /// <summary>
+        /// Get All GradeEquivalency
+        /// </summary>
+        /// <param name="gradeEquivalencyList"></param>
+        /// <returns></returns>
+        public GradeEquivalencyListViewModel GetAllGradeEquivalency(GradeEquivalencyListViewModel gradeEquivalencyList)
+        {
+            GradeEquivalencyListViewModel gradeEquivalencyListModel = new GradeEquivalencyListViewModel();
+            try
+            {
+                gradeEquivalencyListModel.GradeEquivalencyList = null;
+                var gradeEquivalency = this.context?.GradeEquivalency.ToList();
+                if (gradeEquivalency.Count > 0)
+                {
+                    gradeEquivalencyListModel.GradeEquivalencyList = gradeEquivalency;
+                }
+                gradeEquivalencyListModel._tenantName = gradeEquivalencyList._tenantName;
+                gradeEquivalencyListModel._token = gradeEquivalencyList._token;
+                gradeEquivalencyListModel._failure = false;
+            }
+            catch (Exception es)
+            {
+                gradeEquivalencyListModel._message = es.Message;
+                gradeEquivalencyListModel._failure = true;
+                gradeEquivalencyListModel._tenantName = gradeEquivalencyList._tenantName;
+                gradeEquivalencyListModel._token = gradeEquivalencyList._token;
+            }
+            return gradeEquivalencyListModel;
+
+        }
+
     }
 }

@@ -88,8 +88,9 @@ namespace opensis.data.Repository
                 calendarEventRepository.VisibleToMembershipId = calendarEvent.schoolCalendarEvent.VisibleToMembershipId;
                 calendarEventRepository.SchoolDate = calendarEvent.schoolCalendarEvent.SchoolDate;
                 calendarEventRepository.LastUpdated = DateTime.UtcNow;
+                calendarEventRepository.EventColor = calendarEvent.schoolCalendarEvent.EventColor;
                 calendarEventRepository.StartDate = calendarEvent.schoolCalendarEvent.StartDate;
-                calendarEventRepository.StartDate = calendarEvent.schoolCalendarEvent.EndDate;
+                calendarEventRepository.EndDate = calendarEvent.schoolCalendarEvent.EndDate;
                 calendarEventRepository.UpdatedBy = calendarEvent.schoolCalendarEvent.UpdatedBy;
                 this.context?.SaveChanges();
                 calendarEvent._failure = false;
@@ -128,6 +129,33 @@ namespace opensis.data.Repository
             }
             return calendarEventListViewModel;
 
+        }
+
+
+        /// <summary>
+        /// Delete Calendar Event
+        /// </summary>
+        /// <param name="calendarEvent"></param>
+        /// <returns></returns>
+        public CalendarEventAddViewModel DeleteCalendarEvent(CalendarEventAddViewModel calendarEvent)
+        {
+            try
+            {
+                var calendarEventRepository = this.context?.CalendarEvents.Where(x => x.EventId == calendarEvent.schoolCalendarEvent.EventId).ToList().OrderBy(x => x.EventId).LastOrDefault();
+                if (calendarEventRepository != null)
+                {
+                    this.context?.CalendarEvents.Remove(calendarEventRepository);
+                    this.context?.SaveChanges();
+                    calendarEvent._failure = false;
+                    calendarEvent._message = "Deleted";
+                }
+            }
+            catch (Exception ex)
+            {
+                calendarEvent._message = ex.Message;
+                calendarEvent._failure = true;
+            }
+            return calendarEvent;
         }
 
     }

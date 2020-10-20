@@ -4,188 +4,49 @@
             <vex-breadcrumbs [crumbs]="['School','Marking Period']" class="flex-auto"></vex-breadcrumbs>
         </vex-secondary-toolbar>
     </vex-page-layout-header>
-
+    <vex-mat-spinner-overlay *ngIf="loading"></vex-mat-spinner-overlay>
     <div class="-mt-6 absolute w-full" vexContainer>
-
-        <mat-drawer-container class="bg-transparent flex-auto flex flex -mt-16" vexContainer>
+        <mat-drawer-container class="bg-transparent flex-auto flex flex -mt-16" *ngIf="list.length > 0 ; else noData" vexContainer>
             <mat-drawer [(opened)]="menuOpen" mode="over" class="w-10/12">
                 <mat-card @stagger class="w-full">
                     <div class="flex items-center pl-0 pb-5" fxLayout="row" fxLayoutAlign="center center">
-                        <h6 class="flex-auto"></h6>
+                        <h6 class="flex-auto">{{'clickAnItemToViewDetailsOnTheRightSide' | translate}}</h6>
                         <button (click)="openAddNew()" type="button" color="primary" mat-button><ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 rtl:ml-2 ic-inline" inline="true"></ic-icon></button>
                     </div>
                     <ul class="marking-period-tree">
-                        <li>
-                            <div class="tree-node card flex shadow-none border-solid border ">
-                                <a href="" class="w-full p-3">Full Year</a>
-                                <button [matMenuTriggerFor]="addNewMenu" class="w-10 pt-3" type="button">
-                                    <mat-icon [icIcon]="icArrowDropDown" size="20px"></mat-icon>
-                                </button>
-
-                                <mat-menu #addNewMenu="matMenu" [overlapTrigger]="false" xPosition="before"
-                                    yPosition="below">
-                                    <button mat-menu-item>
-                                        <span>{{'editItem' | translate}}</span>
+                        <ng-template #recursiveList let-list>
+                            <li *ngFor="let item of list;let indexOfelement=index;">                             
+                                <div  [ngClass]= "indexOfelement === 0 && item.isParent? 'tree-node card flex shadow-none border-solid border commonClass active' :'tree-node card flex shadow-none border-solid border commonClass' ">
+                                    <a  (click) = "viewDetails(item,$event.target)"  class="w-full p-3 cursor-pointer"> {{item.title}}</a>
+                                    <button [matMenuTriggerFor]="addNewMenu" class="w-10 pt-3" type="button">
+                                        <mat-icon [icIcon]="icArrowDropDown" size="20px"></mat-icon>
                                     </button>
-
-                                    <button mat-menu-item>
-                                        <span>{{'deleteItem' | translate}}</span>
-                                    </button>
-
-                                    <button mat-menu-item>
-                                        <span>{{'addChildMarkingPeriod' | translate}}</span>
-                                    </button>
-                                </mat-menu>
-                            </div>
-                            <ul>
-                                <li>
-                                    <div class="tree-node card flex shadow-none border-solid border">
-                                        <a href="" class="w-full p-3">Semester 01</a>
-                                        <button [matMenuTriggerFor]="addNewMenu" class="w-10 pt-3" type="button">
-                                            <mat-icon [icIcon]="icArrowDropDown" size="20px"></mat-icon>
+    
+                                    <mat-menu #addNewMenu="matMenu" [overlapTrigger]="false" xPosition="before"
+                                        yPosition="below">
+                                        <button (click) = "editItem(item)" mat-menu-item>
+                                            <span>{{'editItem' | translate}}</span>
                                         </button>
-
-                                        <mat-menu #addNewMenu="matMenu" [overlapTrigger]="false" xPosition="before"
-                                            yPosition="below">
-                                            <button mat-menu-item>
-                                                <span>{{'editItem' | translate}}</span>
-                                            </button>
-
-                                            <button mat-menu-item>
-                                                <span>{{'deleteItem' | translate}}</span>
-                                            </button>
-
-                                            <button mat-menu-item>
+    
+                                        <button (click) = "confirmDelete(item)" mat-menu-item>
+                                            <span>{{'deleteItem' | translate}}</span>
+                                        </button>
+                                        <div *ngIf="item.isParent || (item.semesterId > 0 && item.isParent === false) || (item.semesterId > 0 &&  item.isParent === false) || (item.yearId > 0 && item.isParent === false)">
+                                            <button (click) = "addChildren(item)"  mat-menu-item>
                                                 <span>{{'addChildMarkingPeriod' | translate}}</span>
                                             </button>
-                                        </mat-menu>
-                                    </div>
-                                    <ul>
-                                        <li>
-                                            <div class="tree-node card flex shadow-none border-solid border active">
-                                                <a href="" class="w-full p-3">Quarter 01</a>
-                                                <button [matMenuTriggerFor]="addNewMenu" class="w-10 pt-3"
-                                                    type="button">
-                                                    <mat-icon [icIcon]="icArrowDropDown" size="20px"></mat-icon>
-                                                </button>
-
-                                                <mat-menu #addNewMenu="matMenu" [overlapTrigger]="false"
-                                                    xPosition="before" yPosition="below">
-                                                    <button mat-menu-item>
-                                                        <span>{{'editItem' | translate}}</span>
-                                                    </button>
-
-                                                    <button mat-menu-item>
-                                                        <span>{{'deleteItem' | translate}}</span>
-                                                    </button>
-
-                                                    <button mat-menu-item>
-                                                        <span>{{'addChildMarkingPeriod' | translate}}</span>
-                                                    </button>
-                                                </mat-menu>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="tree-node card flex shadow-none border-solid border">
-                                                <a href="" class="w-full p-3">Quarter 02</a>
-                                                <button [matMenuTriggerFor]="addNewMenu" class="w-10 pt-3"
-                                                    type="button">
-                                                    <mat-icon [icIcon]="icArrowDropDown" size="20px"></mat-icon>
-                                                </button>
-
-                                                <mat-menu #addNewMenu="matMenu" [overlapTrigger]="false"
-                                                    xPosition="before" yPosition="below">
-                                                    <button mat-menu-item>
-                                                        <span>{{'editItem' | translate}}</span>
-                                                    </button>
-
-                                                    <button mat-menu-item>
-                                                        <span>{{'deleteItem' | translate}}</span>
-                                                    </button>
-
-                                                    <button mat-menu-item>
-                                                        <span>{{'addChildMarkingPeriod' | translate}}</span>
-                                                    </button>
-                                                </mat-menu>
-                                            </div>
-                                            <ul>
-                                                <li>
-                                                    <div class="tree-node card flex shadow-none border-solid border">
-                                                        <a href="" class="w-full p-3">Progress Period 01</a>
-                                                        <button [matMenuTriggerFor]="addNewMenu" class="w-10 pt-3"
-                                                            type="button">
-                                                            <mat-icon [icIcon]="icArrowDropDown" size="20px"></mat-icon>
-                                                        </button>
-        
-                                                        <mat-menu #addNewMenu="matMenu" [overlapTrigger]="false"
-                                                            xPosition="before" yPosition="below">
-                                                            <button mat-menu-item>
-                                                                <span>{{'editItem' | translate}}</span>
-                                                            </button>
-        
-                                                            <button mat-menu-item>
-                                                                <span>{{'deleteItem' | translate}}</span>
-                                                            </button>
-        
-                                                            <button mat-menu-item>
-                                                                <span>{{'addChildMarkingPeriod' | translate}}</span>
-                                                            </button>
-                                                        </mat-menu>
-                                                    </div>
-                                        </li>
-                                        <li>
-                                            <div class="tree-node card flex shadow-none border-solid border">
-                                                        <a href="" class="w-full p-3">Progress Period 02</a>
-                                                <button [matMenuTriggerFor]="addNewMenu" class="w-10 pt-3"
-                                                    type="button">
-                                                    <mat-icon [icIcon]="icArrowDropDown" size="20px"></mat-icon>
-                                                </button>
-
-                                                <mat-menu #addNewMenu="matMenu" [overlapTrigger]="false"
-                                                    xPosition="before" yPosition="below">
-                                                    <button mat-menu-item>
-                                                                <span>{{'editItem' | translate}}</span>
-                                                    </button>
-
-                                                    <button mat-menu-item>
-                                                                <span>{{'deleteItem' | translate}}</span>
-                                                    </button>
-
-                                                    <button mat-menu-item>
-                                                                <span>{{'addChildMarkingPeriod' | translate}}</span>
-                                                    </button>
-                                                </mat-menu>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <div class="tree-node card flex shadow-none border-solid border">
-                                        <a href="" class="w-full p-3">Semester 02</a>
-                                        <button [matMenuTriggerFor]="addNewMenu" class="w-10 pt-3" type="button">
-                                            <mat-icon [icIcon]="icArrowDropDown" size="20px"></mat-icon>
-                                        </button>
-
-                                        <mat-menu #addNewMenu="matMenu" [overlapTrigger]="false" xPosition="before"
-                                            yPosition="below">
-                                            <button mat-menu-item>
-                                                <span>{{'editItem' | translate}}</span>
-                                            </button>
-
-                                            <button mat-menu-item>
-                                                <span>{{'deleteItem' | translate}}</span>
-                                            </button>
-
-                                            <button mat-menu-item>
-                                                <span>{{'addChildMarkingPeriod' | translate}}</span>
-                                            </button>
-                                        </mat-menu>
-                                    </div>
-                                </li>
-                            </ul>
-                        </li>
+                                        </div>
+                                        
+                                    </mat-menu>
+                                </div>              
+                                
+                                <ul *ngIf="item.children && item.children.length > 0">
+                                    <ng-container *ngTemplateOutlet="recursiveList; context:{ $implicit: item.children }"></ng-container>
+                                   
+                                </ul>
+                            </li>
+                        </ng-template> 
+                        <ng-container *ngTemplateOutlet="recursiveList; context:{ $implicit: list }"></ng-container>
                     </ul>
                 </mat-card>
             </mat-drawer>
@@ -196,264 +57,143 @@
                         <button (click)="openAddNew()" type="button" color="primary" mat-button><ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2 ic-inline" inline="true"></ic-icon> {{'addMarkingPeriod' | translate}}</button>
                     </div>
                     <ul class="marking-period-tree">
-                        <li>
-                            <div class="tree-node card flex shadow-none border-solid border ">
-                                <a href="" class="w-full p-3">Full Year</a>
-                                <button [matMenuTriggerFor]="addNewMenu" class="w-10 pt-3" type="button">
-                                    <mat-icon [icIcon]="icArrowDropDown" size="20px"></mat-icon>
-                                </button>
-
-                                <mat-menu #addNewMenu="matMenu" [overlapTrigger]="false" xPosition="before"
-                                    yPosition="below">
-                                    <button mat-menu-item>
-                                        <span>{{'editItem' | translate}}</span>
+                        <ng-template #recursiveList let-list>
+                            <li *ngFor="let item of list;let indexOfelement=index;">
+                                <div [ngClass]= "indexOfelement === 0 && item.isParent? 'tree-node card flex shadow-none border-solid border commonClass active' :'tree-node card flex shadow-none border-solid border commonClass' ">
+                                    <a  (click) = "viewDetails(item,$event.target)" class="w-full p-3 cursor-pointer"> {{item.title}}</a>
+                                    <button [matMenuTriggerFor]="addNewMenu" class="w-10 pt-3" type="button">
+                                        <mat-icon [icIcon]="icArrowDropDown" size="20px"></mat-icon>
                                     </button>
-
-                                    <button mat-menu-item>
-                                        <span>{{'deleteItem' | translate}}</span>
-                                    </button>
-
-                                    <button mat-menu-item>
-                                        <span>{{'addChildMarkingPeriod' | translate}}</span>
-                                    </button>
-                                </mat-menu>
-                            </div>
-                            <ul>
-                                <li>
-                                    <div class="tree-node card flex shadow-none border-solid border">
-                                        <a href="" class="w-full p-3">Semester 01</a>
-                                        <button [matMenuTriggerFor]="addNewMenu" class="w-10 pt-3" type="button">
-                                            <mat-icon [icIcon]="icArrowDropDown" size="20px"></mat-icon>
+    
+                                    <mat-menu #addNewMenu="matMenu" [overlapTrigger]="false" xPosition="before"
+                                        yPosition="below">
+                                        <button (click) = "editItem(item)" mat-menu-item>
+                                            <span>{{'editItem' | translate}}</span>
                                         </button>
-
-                                        <mat-menu #addNewMenu="matMenu" [overlapTrigger]="false" xPosition="before"
-                                            yPosition="below">
-                                            <button mat-menu-item>
-                                                <span>{{'editItem' | translate}}</span>
-                                            </button>
-
-                                            <button mat-menu-item>
-                                                <span>{{'deleteItem' | translate}}</span>
-                                            </button>
-
-                                            <button mat-menu-item>
+    
+                                        <button (click) = "confirmDelete(item)" mat-menu-item>
+                                            <span>{{'deleteItem' | translate}}</span>
+                                        </button>
+                                        <div *ngIf="item.isParent || (item.semesterId > 0 && item.isParent === false) || (item.semesterId > 0 &&  item.isParent === false) || (item.yearId > 0 && item.isParent === false)">
+                                            <button (click) = "addChildren(item)"  mat-menu-item>
                                                 <span>{{'addChildMarkingPeriod' | translate}}</span>
                                             </button>
-                                        </mat-menu>
-                                    </div>
-                                    <ul>
-                                        <li>
-                                            <div class="tree-node card flex shadow-none border-solid border active">
-                                                <a href="" class="w-full p-3">Quarter 01</a>
-                                                <button [matMenuTriggerFor]="addNewMenu" class="w-10 pt-3"
-                                                    type="button">
-                                                    <mat-icon [icIcon]="icArrowDropDown" size="20px"></mat-icon>
-                                                </button>
-
-                                                <mat-menu #addNewMenu="matMenu" [overlapTrigger]="false"
-                                                    xPosition="before" yPosition="below">
-                                                    <button mat-menu-item>
-                                                        <span>{{'editItem' | translate}}</span>
-                                                    </button>
-
-                                                    <button mat-menu-item>
-                                                        <span>{{'deleteItem' | translate}}</span>
-                                                    </button>
-
-                                                    <button mat-menu-item>
-                                                        <span>{{'addChildMarkingPeriod' | translate}}</span>
-                                                    </button>
-                                                </mat-menu>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="tree-node card flex shadow-none border-solid border">
-                                                <a href="" class="w-full p-3">Quarter 02</a>
-                                                <button [matMenuTriggerFor]="addNewMenu" class="w-10 pt-3"
-                                                    type="button">
-                                                    <mat-icon [icIcon]="icArrowDropDown" size="20px"></mat-icon>
-                                                </button>
-
-                                                <mat-menu #addNewMenu="matMenu" [overlapTrigger]="false"
-                                                    xPosition="before" yPosition="below">
-                                                    <button mat-menu-item>
-                                                        <span>{{'editItem' | translate}}</span>
-                                                    </button>
-
-                                                    <button mat-menu-item>
-                                                        <span>{{'deleteItem' | translate}}</span>
-                                                    </button>
-
-                                                    <button mat-menu-item>
-                                                        <span>{{'addChildMarkingPeriod' | translate}}</span>
-                                                    </button>
-                                                </mat-menu>
-                                            </div>
-                                            <ul>
-                                                <li>
-                                                    <div class="tree-node card flex shadow-none border-solid border">
-                                                        <a href="" class="w-full p-3">Progress Period 01</a>
-                                                        <button [matMenuTriggerFor]="addNewMenu" class="w-10 pt-3"
-                                                            type="button">
-                                                            <mat-icon [icIcon]="icArrowDropDown" size="20px"></mat-icon>
-                                                        </button>
-        
-                                                        <mat-menu #addNewMenu="matMenu" [overlapTrigger]="false"
-                                                            xPosition="before" yPosition="below">
-                                                            <button mat-menu-item>
-                                                                <span>{{'editItem' | translate}}</span>
-                                                            </button>
-        
-                                                            <button mat-menu-item>
-                                                                <span>{{'deleteItem' | translate}}</span>
-                                                            </button>
-        
-                                                            <button mat-menu-item>
-                                                                <span>{{'addChildMarkingPeriod' | translate}}</span>
-                                                            </button>
-                                                        </mat-menu>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div class="tree-node card flex shadow-none border-solid border">
-                                                        <a href="" class="w-full p-3">Progress Period 02</a>
-                                                        <button [matMenuTriggerFor]="addNewMenu" class="w-10 pt-3"
-                                                            type="button">
-                                                            <mat-icon [icIcon]="icArrowDropDown" size="20px"></mat-icon>
-                                                        </button>
-        
-                                                        <mat-menu #addNewMenu="matMenu" [overlapTrigger]="false"
-                                                            xPosition="before" yPosition="below">
-                                                            <button mat-menu-item>
-                                                                <span>{{'editItem' | translate}}</span>
-                                                            </button>
-        
-                                                            <button mat-menu-item>
-                                                                <span>{{'deleteItem' | translate}}</span>
-                                                            </button>
-        
-                                                            <button mat-menu-item>
-                                                                <span>{{'addChildMarkingPeriod' | translate}}</span>
-                                                            </button>
-                                                        </mat-menu>
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        <li>
-                                            <div class="tree-node card flex shadow-none border-solid border">
-                                                <a href="" class="w-full p-3">Quarter 01</a>
-                                                <button [matMenuTriggerFor]="addNewMenu" class="w-10 pt-3"
-                                                    type="button">
-                                                    <mat-icon [icIcon]="icArrowDropDown" size="20px"></mat-icon>
-                                                </button>
-
-                                                <mat-menu #addNewMenu="matMenu" [overlapTrigger]="false"
-                                                    xPosition="before" yPosition="below">
-                                                    <button mat-menu-item>
-                                                        <span>{{'editItem' | translate}}</span>
-                                                    </button>
-
-                                                    <button mat-menu-item>
-                                                        <span>{{'deleteItem' | translate}}</span>
-                                                    </button>
-
-                                                    <button mat-menu-item>
-                                                        <span>{{'addChildMarkingPeriod' | translate}}</span>
-                                                    </button>
-                                                </mat-menu>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <div class="tree-node card flex shadow-none border-solid border">
-                                        <a href="" class="w-full p-3">Semester 02</a>
-                                        <button [matMenuTriggerFor]="addNewMenu" class="w-10 pt-3" type="button">
-                                            <mat-icon [icIcon]="icArrowDropDown" size="20px"></mat-icon>
-                                        </button>
-
-                                        <mat-menu #addNewMenu="matMenu" [overlapTrigger]="false" xPosition="before"
-                                            yPosition="below">
-                                            <button mat-menu-item>
-                                                <span>{{'editItem' | translate}}</span>
-                                            </button>
-
-                                            <button mat-menu-item>
-                                                <span>{{'deleteItem' | translate}}</span>
-                                            </button>
-
-                                            <button mat-menu-item>
-                                                <span>{{'addChildMarkingPeriod' | translate}}</span>
-                                            </button>
-                                        </mat-menu>
-                                    </div>
-                                </li>
-                            </ul>
-                        </li>
+                                        </div>
+                                        
+                                    </mat-menu>
+                                </div>              
+                                
+                                <ul *ngIf="item.children && item.children.length > 0">
+                                    <ng-container *ngTemplateOutlet="recursiveList; context:{ $implicit: item.children }"></ng-container>
+                                   
+                                </ul>
+                            </li>
+                        </ng-template>                   
+                        <ng-container *ngTemplateOutlet="recursiveList; context:{ $implicit: list }"></ng-container>
                     </ul>
                 </mat-card>
-                <mat-card @fadeInUp class="w-full md:w-7/12 p-0" fxFlex="auto">
+
+                <mat-card @fadeInUp class="w-full md:w-7/12 p-0" fxFlex="auto" >
                     <div class="flex items-center mx-4 py-3 pl-0 md:pl-3" fxLayout="row" fxLayoutAlign="center center">
                         <button (click)="openMenu()" class="md:hidden text-primary" mat-icon-button
                             type="button">
                             <mat-icon [icIcon]="icMenu"></mat-icon>
                         </button>
-                        <h3 class="flex-auto">Quarter 1</h3>
-                        <button [matMenuTriggerFor]="addNewMenu" class="w-10 pt-3" type="button">
+                       
+                        <h3 class="flex-auto" *ngIf="viewFirstChild != undefined">{{viewFirstChild.title}}</h3>
+                        <button [matMenuTriggerFor]="addMenu" class="w-10 pt-3" type="button">
                             <mat-icon [icIcon]="icMoreVert" size="20px"></mat-icon>
                         </button>
-
-                        <mat-menu #addNewMenu="matMenu" [overlapTrigger]="false" xPosition="before" yPosition="below">
-                            <button mat-menu-item>
+                        <mat-menu #addMenu="matMenu" [overlapTrigger]="false" xPosition="before"  yPosition="below">
+                            <button (click) = "editItem(viewFirstChild)" mat-menu-item>
                                 <span>{{'editItem' | translate}}</span>
                             </button>
 
-                            <button mat-menu-item>
+                            <button (click) = "confirmDelete(viewFirstChild)" mat-menu-item>
                                 <span>{{'deleteItem' | translate}}</span>
                             </button>
+                                                               
                         </mat-menu>
                     </div>
                     <mat-card-content>
                         <div class="border-t border-b py-3 px-6">
                             <div class="flex align-items-center mr-6">
-                                <mat-icon [icIcon]="icCheckBox"></mat-icon> <span class="ml-2 mr-6">{{'graded' | translate}}</span>
-                                <mat-icon [icIcon]="icCheckBox"></mat-icon> <span class="ml-2 mr-6">{{'exam' | translate}}</span>
-                                <mat-icon [icIcon]="icCheckBoxOutlineBlank"></mat-icon> <span
-                                    class="ml-2">{{'comments' | translate}}</span>
+                                <div *ngIf="doesGrades;else doesnotGrades">
+                                    <mat-icon [icIcon]="icCheckBox"></mat-icon> <span class="ml-2 mr-6">{{'graded' | translate}}</span>
+                                </div>
+                                <ng-template #doesnotGrades>
+                                    <mat-icon [icIcon]="icCheckBoxOutlineBlank"></mat-icon> <span class="ml-2 mr-6">{{'graded' | translate}}</span>
+                                </ng-template>
+                                <div *ngIf="doesExam;else doesnotExam">
+                                    <mat-icon [icIcon]="icCheckBox"></mat-icon> <span class="ml-2 mr-6">{{'exam' | translate}}</span>
+                                </div>
+                                <ng-template #doesnotExam>
+                                    <mat-icon [icIcon]="icCheckBoxOutlineBlank"></mat-icon><span class="ml-2 mr-6">{{'exam' | translate}}</span>                               
+                                </ng-template>
+                                <div *ngIf="doesComments;else doesnotComments">
+                                    <mat-icon [icIcon]="icCheckBox"></mat-icon> <span class="ml-2">{{'comments' | translate}}</span>
+                                </div>
+                                <ng-template #doesnotComments>
+                                    <mat-icon [icIcon]="icCheckBoxOutlineBlank"></mat-icon><span class="ml-2 mr-6">{{'comments' | translate}}</span>                               
+                                </ng-template>
                             </div>
                         </div>
                         <div class="p-6">
                             <ul class="grid md:grid md:grid-cols-2 md:col-gap-8 row-gap-5 md:row-gap-10">
                                 <li>
                                     <label class="text-sm leading-5 text-gray">{{'title' | translate}}</label>
-                                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Full Year</p>
+                                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2" *ngIf="viewFirstChild != undefined">{{viewFirstChild.title}}</p>
                                 </li>
                                 <li>
                                     <label class="text-sm leading-5 text-gray">{{'shortName' | translate}}</label>
-                                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">FY</p>
+                                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2" *ngIf="viewFirstChild != undefined">{{viewFirstChild.shortName}}</p>
                                 </li>
                                 <li>
                                     <label class="text-sm leading-5 text-gray">{{'begins' | translate}}</label>
-                                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Aug 15, 2019</p>
+                                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2" *ngIf="viewFirstChild != undefined">{{viewFirstChild.startDate}}</p>
                                 </li>
                                 <li>
                                     <label class="text-sm leading-5 text-gray">{{'ends' | translate}}</label>
-                                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">May 29, 2020</p>
+                                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2" *ngIf="viewFirstChild != undefined">{{viewFirstChild.endDate}}</p>
                                 </li>
                                 <li>
                                     <label class="text-sm leading-5 text-gray">{{'gradePostingBegins' | translate}}</label>
-                                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Aug 15, 2019</p>
+                                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2" *ngIf="viewFirstChild != undefined">{{viewFirstChild.postStartDate}}</p>
                                 </li>
                                 <li>
                                     <label class="text-sm leading-5 text-gray">{{'gradePostingEnds' | translate}}</label>
-                                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">May 29, 2020</p>
+                                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2" *ngIf="viewFirstChild != undefined">{{viewFirstChild.postEndDate}}</p>
                                 </li>
                             </ul>
                         </div>
                     </mat-card-content>
-                </mat-card>
+            </mat-card>
+            
             </mat-drawer-content>
         </mat-drawer-container>
+        <ng-template #noData>
+            <mat-drawer-container class="bg-transparent flex-auto flex flex -mt-16" vexContainer>
+                <mat-drawer-content class="flex-auto flex items-start p-gutter">
+                    <mat-card @stagger class="w-full text-center py-20 md:py-32">
+
+                        <div @fadeInUp class="md:flex justify-center w-full items-center">
+                            <div class="w-full md:w-4/12 lg:w-3/12 xl:w-2/12">
+                                <img src="assets/img/unhappy-little-boy.jpg" class="rounded-full inline-block mb-10 md:mb-0 w-2/4 md:w-full">
+                            </div>
+                            <div class="w-full md:w-6/12 lg:w-6/12 xl:w-4/12 text-center md:text-left pl-10">
+                                <h1 class="mb-10 opacity-75">No <span class="font-bold">Marking Period</span> Data Found!</h1>
+                                <button (click)="openAddNew()" class="uppercase" type="button" color="primary" mat-raised-button>
+                                    <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2 ic-inline"
+                                        inline="true">
+                                    </ic-icon> {{'addAFullYearToBegin' | translate}}
+                                </button>
+            </div>
+                        </div>
+
+                    </mat-card>
+                </mat-drawer-content>
+            </mat-drawer-container>
+        </ng-template>
+        
     </div>
 </vex-page-layout>

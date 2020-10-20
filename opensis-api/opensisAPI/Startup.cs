@@ -24,8 +24,8 @@ using opensisAPI.TenantDbMappingMiddleWare;
 using Swashbuckle.AspNetCore.Swagger;
 using opensis.core.Common.Interfaces;
 using opensis.core.Common.Services;
-using opensis.core.Gradelevel.Interfaces;
-using opensis.core.Gradelevel.Services;
+using opensis.core.GradeLevel.Interfaces;
+using opensis.core.GradeLevel.Services;
 using opensis.core.Room.Interfaces;
 using opensis.core.Room.Services;
 using opensis.core.Section.Interfaces;
@@ -38,6 +38,12 @@ using opensis.core.Calender.Services;
 using opensis.core.Calender.Interfaces;
 using opensis.core.CalendarEvents.Interfaces;
 using opensis.core.CalendarEvents.Services;
+using opensis.core.AttendanceCode.Interfaces;
+using opensis.core.AttendanceCode.Services;
+using opensis.core.StudentEnrollmentCodes.Interfaces;
+using opensis.core.StudentEnrollmentCodes.Services;
+using opensis.core.Student.Interfaces;
+using opensis.core.Student.Services;
 
 namespace opensisAPI
 {
@@ -64,14 +70,14 @@ namespace opensisAPI
             services.AddScoped<ICommonService, CommonService>();
             services.AddScoped<ICommonRepository, CommonRepository>();
             services.AddScoped<IGradelevelService, GradelevelService>();
-            services.AddScoped<IGradelevelRepository, GradelevelRepository>();
+            services.AddScoped<IGradelevelRepository, GradeLevelRepository>();
             services.AddScoped<IMembershipRepository, MembershipRepository>();
             services.AddScoped<IMembershipService, MembershipService>();
             services.AddScoped<IRoomRepository, RoomRepository>();
             services.AddScoped<IRoomRegisterService, RoomRegister>();
             services.AddScoped<ISectionRepositiory, SectionRepository>();
             services.AddScoped<ISectionService, SectionService>();
-            services.AddScoped<IMarkingperiodRepository, MarkingperiodRepository>();
+            services.AddScoped<IMarkingperiodRepository, MarkingPeriodRepository>();
             services.AddScoped<IMarkingPeriodService, MarkingPeriodService>();
             services.AddScoped<ISchoolPeriodService, SchoolPeriodService>();
             services.AddScoped<ISchoolPeriodRepository, SchoolPeriodRepository>();
@@ -79,6 +85,13 @@ namespace opensisAPI
             services.AddScoped<ICalendarService, CalendarService>();
             services.AddScoped<ICalendarEventRepository, CalendarEventRepository>();
             services.AddScoped<ICalendarEventService, CalendarEventService>();
+            services.AddScoped<IStudentService, StudentService>();
+            services.AddScoped<IStudentRepository, StudentRepository>();
+            services.AddScoped<IStudentEnrollmentCodeService, StudentEnrollmentCodeService>();
+            services.AddScoped<IStudentEnrollmentCodeRepository, StudentEnrollmentCodeRepository>();
+            services.AddScoped<IAttendanceCodeRegisterService, AttendanceCodeRegister>();
+            services.AddScoped<IAttendanceCodeRepository, AttendanceCodeRepository>();
+
 
 
 

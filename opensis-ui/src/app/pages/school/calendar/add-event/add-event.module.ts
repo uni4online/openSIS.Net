@@ -13,9 +13,11 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatRadioModule } from '@angular/material/radio';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { TranslateModule } from '@ngx-translate/core';
-
+import { SharedModuleModule } from '../../../shared-module/shared-module.module';
+import { MatCardModule } from '@angular/material/card';
 
 
 @NgModule({
@@ -35,7 +37,10 @@ import { TranslateModule } from '@ngx-translate/core';
     MatMenuModule,
     MatFormFieldModule,
     MatCheckboxModule,
-    TranslateModule
+    TranslateModule,
+    MatRadioModule,
+    SharedModuleModule,
+    MatCardModule
   ]
 })
 export class AddEventModule { }

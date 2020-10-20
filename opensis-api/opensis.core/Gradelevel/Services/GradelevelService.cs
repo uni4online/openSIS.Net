@@ -1,12 +1,12 @@
-﻿using opensis.core.Gradelevel.Interfaces;
+﻿using opensis.core.GradeLevel.Interfaces;
 using opensis.core.helper;
 using opensis.data.Interface;
-using opensis.data.ViewModels.Gradelevel;
+using opensis.data.ViewModels.GradeLevel;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace opensis.core.Gradelevel.Services
+namespace opensis.core.GradeLevel.Services
 {
     public class GradelevelService : IGradelevelService
     {
@@ -130,7 +130,11 @@ namespace opensis.core.Gradelevel.Services
 
             return gradelevelDelete;
         }
-
+        /// <summary>
+        /// Get All GradeLevel
+        /// </summary>
+        /// <param name="gradelevel"></param>
+        /// <returns></returns>
         public GradelevelListViewModel GetAllGradeLevels(GradelevelListViewModel gradelevel)
         {
             GradelevelListViewModel gradelevelList = new GradelevelListViewModel();
@@ -153,6 +157,38 @@ namespace opensis.core.Gradelevel.Services
             }
 
             return gradelevelList;
+        }
+        /// <summary>
+        /// Get All GradeEquivalency
+        /// </summary>
+        /// <param name="gradeEquivalencyModel"></param>
+        /// <returns></returns>
+        public GradeEquivalencyListViewModel GetAllGradeEquivalency(GradeEquivalencyListViewModel gradeEquivalencyListModel)
+        {
+            GradeEquivalencyListViewModel gradeEquivalencyListViewModel = new GradeEquivalencyListViewModel();
+            try
+            {
+                //gradeEquivalencyListViewModel = this.gradelevelRepository.GetAllGradeEquivalency(gradeEquivalencyListModel);
+                //return gradeEquivalencyListViewModel;
+                if (TokenManager.CheckToken(gradeEquivalencyListModel._tenantName, gradeEquivalencyListModel._token))
+                {
+                    gradeEquivalencyListViewModel = this.gradelevelRepository.GetAllGradeEquivalency(gradeEquivalencyListModel);
+                }
+                else
+                {
+                    gradeEquivalencyListViewModel._failure = true;
+                    gradeEquivalencyListViewModel._message = TOKENINVALID;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                gradeEquivalencyListViewModel._failure = true;
+                gradeEquivalencyListViewModel._message = null;
+                
+            }
+            return gradeEquivalencyListViewModel;
+
         }
     }
 }

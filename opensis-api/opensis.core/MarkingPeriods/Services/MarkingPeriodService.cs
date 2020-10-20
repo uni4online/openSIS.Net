@@ -372,5 +372,52 @@ namespace opensis.core.MarkingPeriods.Services
 
             return progressPeriodDelete;
         }
+
+        public DropDownViewModel GetAcademicYearList(DropDownViewModel dropdownModel)
+        {
+            DropDownViewModel dropDownViewModel = new DropDownViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(dropdownModel._tenantName, dropdownModel._token))
+                {
+                    dropDownViewModel = this.markingperiodRepository.GetAcademicYearList(dropdownModel);
+                }
+                else
+                {
+                    dropDownViewModel._failure = true;
+                    dropDownViewModel._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                dropDownViewModel._failure = true;
+                dropDownViewModel._message = es.Message;
+            }
+
+            return dropDownViewModel;
+        }
+        public PeriodViewModel GetMarkingPeriodTitleList(PeriodViewModel dropdownModel)
+        {
+            PeriodViewModel dropDownViewModel = new PeriodViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(dropdownModel._tenantName, dropdownModel._token))
+                {
+                    dropDownViewModel = this.markingperiodRepository.GetMarkingPeriodTitleList(dropdownModel);
+                }
+                else
+                {
+                    dropDownViewModel._failure = true;
+                    dropDownViewModel._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                dropDownViewModel._failure = true;
+                dropDownViewModel._message = es.Message;
+            }
+
+            return dropDownViewModel;
+        }
     }
 }

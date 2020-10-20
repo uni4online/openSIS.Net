@@ -17,6 +17,8 @@ import { MY_FORMATS } from '../../../../pages/shared/format-datepicker';
 import { MembershipService } from '../../../../../app/services/membership.service';
 import * as moment from 'moment';
 
+import { ValidationService } from '../../../shared/validation.service';
+
 @Component({
   selector: 'vex-edit-notice',
   templateUrl: './edit-notice.component.html',
@@ -122,6 +124,7 @@ export class EditNoticeComponent implements OnInit {
                 duration: 10000
               });
               this._noticeService.changeNotice(true)
+              this.dialogRef.close();
             }
   
           });
@@ -139,11 +142,11 @@ export class EditNoticeComponent implements OnInit {
               this.snackbar.open('Notice saved successful. ' ,'', {
                 duration: 10000
               });
+      this.dialogRef.close(true);
             }
           });
       }
       this.afterClosed.emit(true);
-      this.dialogRef.close(true);
     }
   }
 
@@ -197,6 +200,17 @@ export class EditNoticeComponent implements OnInit {
     }
     else {
       this.memberArray.push(id);
+    }
+
+  }
+  dateCompare() {
+   
+    let openingDate = this.form.controls.valid_from.value
+    let closingDate = this.form.controls.valid_to.value
+   
+    if (ValidationService.compareValidation(openingDate, closingDate) === false) {
+      this.form.controls.valid_to.setErrors({ compareError: true })
+      
     }
 
   }

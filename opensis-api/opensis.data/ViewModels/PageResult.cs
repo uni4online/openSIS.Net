@@ -30,5 +30,7 @@ namespace opensis.data.Models
         }
 
         public SortingModel SortingModel { get; set; }
+
+        public List<FilterParams> FilterParams { get; set; }
     }
 }

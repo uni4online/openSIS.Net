@@ -18,6 +18,7 @@ import { MatSort } from '@angular/material/sort';
 import { TranslateService } from '@ngx-translate/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confirm-dialog.component';
+import { LoaderService } from '../../../services/loader.service';
 
 @Component({
   selector: 'vex-rooms',
@@ -38,23 +39,28 @@ export class RoomsComponent implements OnInit {
   roomaddviewmodel:RoomAddView= new RoomAddView();
   roomListViewModel:RoomListViewModel = new RoomListViewModel()
   roomDetails: any;
+  loading:boolean;
+  searchKey:string;
   constructor(private dialog: MatDialog,
     private roomService:RoomService,
     private snackbar: MatSnackBar,
-    private translateService : TranslateService) {
+    private translateService : TranslateService,
+    private loaderService:LoaderService) {
       translateService.use('en')
+      this.loaderService.isLoading.subscribe((val) => {
+        this.loading = val;
+      }); 
      }
   roomModelList: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator:MatPaginator
   @ViewChild(MatSort) sort: MatSort;
   columns = [
-    { label:'roomId',property:'roomId',type:'hidden',visible:false},
-    { label: 'title', property: 'title', type: 'text', visible: true },
-    { label: 'capacity', property: 'capacity', type: 'text', visible: true, cssClasses: ['font-medium'] },
-    { label: 'description', property: 'description', type: 'text', visible: true },
-    { label: 'sortOrder', property: 'sortOrder', type: 'text', visible: true, cssClasses: ['text-secondary', 'font-medium'] },
+    { label: 'Title', property: 'title', type: 'text', visible: true },
+    { label: 'Capacity', property: 'capacity', type: 'text', visible: true, cssClasses: ['font-medium'] },
+    { label: 'Description', property: 'description', type: 'text', visible: true },
+    { label: 'Sort Order', property: 'sortOrder', type: 'text', visible: true, cssClasses: ['text-secondary', 'font-medium'] },
     { label: 'isActive', property: 'isActive', type: 'text', visible: true, cssClasses: ['text-secondary', 'font-medium'] },
-    { label: 'action', property: 'action', type: 'text', visible: true },
+    { label: 'Action', property: 'action', type: 'text', visible: true },
   ];
 
   ngOnInit(): void {
@@ -77,7 +83,7 @@ export class RoomsComponent implements OnInit {
           } 
           else { 
             this.roomModelList=new MatTableDataSource(res.tableroomList) ;
-            this.roomModelList.sort=this.sort;         
+            this.roomModelList.sort=this.sort;      
           }
         }
       })
@@ -100,13 +106,26 @@ export class RoomsComponent implements OnInit {
       width: '600px'
     });
   }
-  filter(event:string){
-    this.roomModelList.filter=event.trim().toLowerCase();
+
+  onSearchClear(){
+    this.searchKey="";
+    this.applyFilter();
+  }
+
+  applyFilter(){
+    this.roomModelList.filter = this.searchKey.trim().toLowerCase()
   }
   
   get visibleColumns() {
     return this.columns.filter(column => column.visible).map(column => column.property);
   }
+
+  toggleColumnVisibility(column, event) {
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+    column.visible = !column.visible;
+  }
+
   openEditdata(element){
     this.dialog.open(EditRoomComponent, {
       data: element,

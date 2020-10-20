@@ -11,5 +11,6 @@ namespace opensis.core.Calender.Interfaces
         CalendarAddViewModel ViewCalendar(CalendarAddViewModel calendar);
         CalendarAddViewModel UpdateCalendar(CalendarAddViewModel calendar);
         CalendarListModel GetAllCalendar(CalendarListModel calendarList);
+        CalendarAddViewModel DeleteCalendar(CalendarAddViewModel calendar);
     }
 }

@@ -27,7 +27,17 @@ namespace opensisAPI.Controllers
             SchoolPeriodAddViewModel schoolPeriodAdd = new SchoolPeriodAddViewModel();
             try
             {
-                schoolPeriodAdd = _schoolPeriodService.SaveSchoolPeriod(schoolPeriod);
+                if (schoolPeriod.tableSchoolPeriods.SchoolId > 0)
+                {
+                    schoolPeriodAdd = _schoolPeriodService.SaveSchoolPeriod(schoolPeriod);
+                }
+                else
+                {
+                    schoolPeriodAdd._token = schoolPeriod._token;
+                    schoolPeriodAdd._tenantName = schoolPeriod._tenantName;
+                    schoolPeriodAdd._failure = true;
+                    schoolPeriodAdd._message = "Please enter valid scholl id";
+                }
             }
             catch (Exception es)
             {
@@ -44,7 +54,17 @@ namespace opensisAPI.Controllers
             SchoolPeriodAddViewModel schoolPeriodUpdate = new SchoolPeriodAddViewModel();
             try
             {
-                schoolPeriodUpdate = _schoolPeriodService.UpdateSchoolPeriod(schoolPeriod);
+                if (schoolPeriod.tableSchoolPeriods.SchoolId > 0)
+                {
+                    schoolPeriodUpdate = _schoolPeriodService.UpdateSchoolPeriod(schoolPeriod);
+                }
+                else
+                {
+                    schoolPeriodUpdate._token = schoolPeriod._token;
+                    schoolPeriodUpdate._tenantName = schoolPeriod._tenantName;
+                    schoolPeriodUpdate._failure = true;
+                    schoolPeriodUpdate._message = "Please enter valid scholl id";
+                }
             }
             catch (Exception es)
             {
@@ -61,7 +81,17 @@ namespace opensisAPI.Controllers
             SchoolPeriodAddViewModel schoolPeriodView = new SchoolPeriodAddViewModel();
             try
             {
-                schoolPeriodView = _schoolPeriodService.ViewSchoolPeriod(schoolPeriod);
+                if (schoolPeriod.tableSchoolPeriods.SchoolId > 0)
+                {
+                    schoolPeriodView = _schoolPeriodService.ViewSchoolPeriod(schoolPeriod);
+                }
+                else
+                {
+                    schoolPeriodView._token = schoolPeriod._token;
+                    schoolPeriodView._tenantName = schoolPeriod._tenantName;
+                    schoolPeriodView._failure = true;
+                    schoolPeriodView._message = "Please enter valid scholl id";
+                }
             }
             catch (Exception es)
             {
@@ -78,7 +108,17 @@ namespace opensisAPI.Controllers
             SchoolPeriodAddViewModel schoolPeriodDelete = new SchoolPeriodAddViewModel();
             try
             {
-                schoolPeriodDelete = _schoolPeriodService.DeleteSchoolPeriod(schoolPeriod);
+                if (schoolPeriod.tableSchoolPeriods.SchoolId > 0)
+                {
+                    schoolPeriodDelete = _schoolPeriodService.DeleteSchoolPeriod(schoolPeriod);
+                }
+                else
+                {
+                    schoolPeriodDelete._token = schoolPeriod._token;
+                    schoolPeriodDelete._tenantName = schoolPeriod._tenantName;
+                    schoolPeriodDelete._failure = true;
+                    schoolPeriodDelete._message = "Please enter valid scholl id";
+                }
             }
             catch (Exception es)
             {

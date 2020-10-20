@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { AddGradeLevelModel, GetAllGradeLevelsModel } from '../models/gradeLevelModel';
+import { AddGradeLevelModel, GelAllGradeEquivalencyModel, GetAllGradeLevelsModel } from '../models/gradeLevelModel';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
@@ -30,5 +30,10 @@ export class GradeLevelService {
   deleteGradelevel(obj:AddGradeLevelModel){
     let apiurl = this.apiUrl + obj._tenantName+ "/Gradelevel/deleteGradelevel";
     return this.http.post<AddGradeLevelModel>(apiurl,obj)
+  }
+
+  getAllGradeEquivalency(obj:GelAllGradeEquivalencyModel){
+    let apiurl = this.apiUrl + obj._tenantName+ "/Gradelevel/getAllGradeEquivalency";
+    return this.http.post<GelAllGradeEquivalencyModel>(apiurl,obj)
   }
 }

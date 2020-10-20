@@ -11,5 +11,6 @@ namespace opensis.data.Interface
         CalendarEventAddViewModel ViewCalendarEvent(CalendarEventAddViewModel calendarEvent);
         CalendarEventAddViewModel UpdateCalendarEvent(CalendarEventAddViewModel calendarEvent);
         CalendarEventListViewModel GetAllCalendarEvent(CalendarEventListViewModel calendarEventList);
+        CalendarEventAddViewModel DeleteCalendarEvent(CalendarEventAddViewModel calendarEvent);
     }
 }

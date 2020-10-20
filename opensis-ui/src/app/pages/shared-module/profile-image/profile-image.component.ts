@@ -19,8 +19,6 @@ export class ProfileImageComponent implements OnInit {
   @ViewChild('mytemplate') mytemplate: TemplateRef<any>;
   @ViewChild('modalClickButton') modalClickButton: TemplateRef<any>;
 
-
-    
   icCrop=icCrop;
   preview:String='';originalFileName:String;
   imageChangedEvent: any = '';
@@ -36,14 +34,35 @@ export class ProfileImageComponent implements OnInit {
   @Input() responseImage; 
   @Input() mode; 
 
-
-  
   constructor(private dialog:MatDialog,
     private _ImageCropperService:ImageCropperService,
     private snackbar: MatSnackBar,
     private schoolService:SchoolService) {
      }
 
+     ngOnInit(): void {
+      if(this.mode){
+        this._ImageCropperService.sharedMessage.subscribe((message) => {
+          this.enableUpload = message
+          let id;
+          
+          id=this.schoolService.getSchoolId();
+          
+          if(this.enableUpload){
+            this.inputType ="none";
+            if(id!=null){
+              this.inputType ="none";
+            }
+            if(id==null && this.enableUpload){
+              this.inputType="file"
+            }
+          }else if(!this.enableUpload){
+            this.inputType="file"
+          }
+        });
+      }
+     
+    }
      
   imageCropped(event: ImageCroppedEvent) {
     this.croppedImage = event.base64;
@@ -88,25 +107,9 @@ export class ProfileImageComponent implements OnInit {
         var img = new Image();
         img.onload = () => {
           if (this.enableCropTool) {
-            console.log("Im Here!!")
-            this.croppedImage
-            // console.log("This is Cropped Image"+this.croppedImage);
-            this.imageChangedEvent = event;
-            this.showCropTool = true;
-            this.openModal();
-            return false;
+            this.CallCropper(event);
           } else {
-            const file = (event.target as HTMLInputElement).files[0];
-            if (file) {
-              const reader = new FileReader();
-              reader.onload = this.handleReaderLoaded.bind(this);
-              reader.readAsBinaryString(file);
-            }
-            const reader = new FileReader();
-            reader.onload = () => {
-              this.preview = reader.result as string;
-            }
-            reader.readAsDataURL(file)
+            this.CallUncropper(event);
           }
         }
         img.src = _URL.createObjectURL(files[i]);
@@ -118,37 +121,35 @@ export class ProfileImageComponent implements OnInit {
     }
   }
 
-  handleReaderLoaded(e) {
+  CallCropper(event){
+    this.croppedImage
+    this.imageChangedEvent = event;
+    this.showCropTool = true;
+    this.openModal();
+    return false;
+  }
+
+  CallUncropper(event){
+    const file = (event.target as HTMLInputElement).files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = this.HandleReaderLoaded.bind(this);
+      reader.readAsBinaryString(file);
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.preview = reader.result as string;
+    }
+    reader.readAsDataURL(file)
+  }
+
+  HandleReaderLoaded(e) {
     this.croppedImage='';
     let sendImageData2 =(e)=>{
       this._ImageCropperService.sendUncroppedEvent(e);
       this.fileUploader.value=null;
       }
       sendImageData2(e);
-  }
-
-  ngOnInit(): void {
-    if(this.mode){
-      this._ImageCropperService.sharedMessage.subscribe((message) => {
-        this.enableUpload = message
-        let id;
-        
-        id=this.schoolService.getSchoolId();
-        
-        if(this.enableUpload){
-          this.inputType ="none";
-          if(id!=null){
-            this.inputType ="none";
-          }
-          if(id==null && this.enableUpload){
-            this.inputType="file"
-          }
-        }else if(!this.enableUpload){
-          this.inputType="file"
-        }
-      });
-    }
-   
   }
 
   openModal() {

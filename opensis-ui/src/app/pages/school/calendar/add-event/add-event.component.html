@@ -1,31 +1,131 @@
-<div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
-    <h2 class="headline m-0" fxFlex="auto">{{'addEvent' | translate}}</h2>
+<div *ngIf=" !isEditMode">
+    <div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
+        <h2 class="headline m-0" fxFlex="auto">{{'viewEvent' | translate}}</h2>
+        <button mat-button color="primary" matTooltip="Edit event" (click)="editCalendarEvent()">
+            <mat-icon [icIcon]="icEdit"></mat-icon>{{'editEvent' |translate}}
+        </button>
+        <button mat-button color="primary" matTooltip="Delete event" (click)="deleteCalendarConfirm()">
+            <mat-icon [icIcon]="icDelete"></mat-icon>{{'deleteEvent' |translate}}
+        </button>
 
-    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
-        <mat-icon [icIcon]="icClose"></mat-icon>
-    </button>
-</div>
-<mat-divider class="-mx-6 text-border"></mat-divider>
-
-<mat-dialog-content>
-    <div fxLayout="column">
-        <mat-form-field class="mt-6" appearance="outline" color="primary">
-            <mat-label>{{'title' | translate}}</mat-label>
-            <input cdkFocusInitial matInput required>
-        </mat-form-field>
-        
-        <mat-form-field class="mt-6" appearance="outline" color="primary">
-            <mat-label>{{'notes' | translate}}</mat-label>
-            <textarea cdkFocusInitial matInput required></textarea>
-        </mat-form-field>
-
-        <div class="mb-4">
-            <mat-checkbox [checked]="false" color="primary">{{'showEventsSystemWide' | translate}}</mat-checkbox>
-        </div>
+        <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+            <mat-icon [icIcon]="icClose"></mat-icon>
+        </button>
     </div>
-</mat-dialog-content>
+    <mat-divider class="-mx-6 text-border"></mat-divider>
 
-<mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" class="py-6">
-    <button mat-button mat-dialog-close type="button">{{'cancel' | translate}}</button>
-    <button mat-raised-button color="primary" type="submit">{{'submit' | translate}}</button>
-</mat-dialog-actions>
+    <mat-card-content>
+        <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-4">
+            <div class="my-6">
+                <ul class="md:col-gap-8 md:row-gap-10">
+                    <li>
+                        <p style="font-weight: 400; font-size: 22px;" class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                            {{calendarEventAddViewModel.schoolCalendarEvent.title}}</p>
+                        <p>{{calendarEventAddViewModel.schoolCalendarEvent.startDate | date:'longDate'}} -
+                            {{calendarEventAddViewModel.schoolCalendarEvent.endDate | date:'longDate'}}</p>
+
+                    </li>
+
+                </ul>
+                <ul class="md:col-gap-8 md:row-gap-10">
+                    <li>
+                        <p class="mt-4">{{calendarEventAddViewModel.schoolCalendarEvent.description}}</p>
+                    </li>
+                </ul>
+                <ul class="md:col-gap-8 md:row-gap-10">
+                    <li>
+                        <p class="mt-4">{{memberNames}}</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </mat-card-content>
+</div>
+<div *ngIf="isEditMode">
+    <div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
+        <h2 class="headline m-0" fxFlex="auto">{{calendarEventTitle | translate}}</h2>
+
+        <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+            <mat-icon [icIcon]="icClose"></mat-icon>
+        </button>
+    </div>
+    <mat-divider class="-mx-6 text-border"></mat-divider>
+    <form [formGroup]="form" (ngSubmit)="submitCalendarEvent()">
+        <mat-dialog-content>
+            <div fxLayout="column">
+                <mat-form-field class="mt-6" appearance="outline" color="primary">
+                    <mat-label>{{'title' | translate}}</mat-label>
+                    <input formControlName="title" name="title" cdkFocusInitial matInput required>
+                    <mat-error *ngIf="form.get('title').hasError('required')">
+                        {{'titleIsRequired'|translate}}</mat-error>
+                </mat-form-field>
+                <div class="mb-2 md:flex md:flex-wrap -mx-6">
+                    <div class="flex flex-1 mx-6 md:w-1/2">
+                        <mat-form-field class="w-full" appearance="outline" color="primary">
+                            <mat-label>{{'startDate' | translate}}</mat-label>
+                            <input formControlName="startDate" name="startDate" [matDatepicker]="begins" matInput
+                                required>
+                            <mat-datepicker-toggle [for]="begins" matSuffix></mat-datepicker-toggle>
+                            <mat-datepicker #begins></mat-datepicker>
+                            <mat-error *ngIf="form.get('startDate').hasError('required')">
+                                {{'startDateIsRequired'|translate}}</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="flex flex-1 mx-6 md:w-1/2">
+                        <mat-form-field class="w-full" appearance="outline" color="primary">
+                            <mat-label>{{'endDate' | translate}}</mat-label>
+                            <input formControlName="endDate" name="endDate" (dateChange)="dateCompare()"
+                                [matDatepicker]="ends" matInput required>
+                            <mat-datepicker-toggle [for]="ends" matSuffix></mat-datepicker-toggle>
+                            <mat-datepicker #ends></mat-datepicker>
+                            <mat-error *ngIf="form.get('endDate').hasError('required')">
+                                {{'endDateIsRequired'|translate}}</mat-error>
+                            <mat-error *ngIf="form.get('endDate').hasError('compareError')">
+                                {{'endDateCannotBeEarlierThanStartDate'|translate}}</mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <mat-form-field class="mt-6" appearance="outline" color="primary">
+                    <mat-label>{{'notes' | translate}}</mat-label>
+                    <textarea formControlName="notes" name="notes" cdkFocusInitial matInput required></textarea>
+                    <mat-error *ngIf="form.get('notes').hasError('required')">
+                        {{'notesIsRequired'|translate}}</mat-error>
+                </mat-form-field>
+                <mat-label class="mb-2">{{'eventColor' | translate}}</mat-label>
+                <div class="mb-4">
+                    <label class="md-check" *ngFor="let color of colors">
+                        <input type="radio" name="eventColor" formControlName="eventColor" [value]="color.value">
+                        {{color.name}}
+                    </label>
+                </div>
+
+
+                <h6>{{'visibleTo' | translate}}</h6>
+                <div class="mt-2">
+                    <mat-checkbox (click)="updateCheck($event)" [hidden]="membercount==0">{{'selectAll' | translate}}
+                    </mat-checkbox>
+                </div>
+                <ul class="md:grid md:grid-cols-3 md:col-gap-10 md:row-gap-3">
+                    <li *ngFor="let member of getAllMembersList.getAllMemberList">
+
+                        <mat-checkbox [checked]="memberArray.indexOf(member.membershipId) != -1"
+                            (click)="selectChildren($event,member.membershipId)" color="primary">
+                            {{member.profile}}</mat-checkbox>
+                    </li>
+
+                </ul>
+                <div class="mb-4 mt-4">
+                    <mat-checkbox (click)="updateCheck($event)" [hidden]="membercount==0">
+                        {{'showEventsSystemWide' | translate}}
+                    </mat-checkbox>
+                </div>
+
+            </div>
+        </mat-dialog-content>
+
+        <mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" class="py-6">
+            <button mat-button mat-dialog-close type="button">{{'cancel' | translate}}</button>
+            <button mat-raised-button color="primary" type="submit">{{'submit' | translate}}</button>
+        </mat-dialog-actions>
+    </form>
+</div>

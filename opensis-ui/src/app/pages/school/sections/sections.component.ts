@@ -46,7 +46,7 @@ export class SectionsComponent implements OnInit {
   getAllSection: GetAllSectionModel = new GetAllSectionModel();  
   sectionAddModel:SectionAddModel= new SectionAddModel();
   SectionModelList: MatTableDataSource<any>;
-  
+  searchKey:string;
   @ViewChild(MatSort) sort: MatSort;
   constructor(
     private dialog: MatDialog,
@@ -74,7 +74,11 @@ export class SectionsComponent implements OnInit {
   get visibleColumns() {
     return this.columns.filter(column => column.visible).map(column => column.property);
   }
-
+  toggleColumnVisibility(column, event) {
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+    column.visible = !column.visible;
+  }
   openAddNew() {
     this.dialog.open(EditSectionComponent, {
       data: null,
@@ -94,7 +98,7 @@ export class SectionsComponent implements OnInit {
         duration: 10000
         });
       }else{     
-        this.SectionModelList = new MatTableDataSource(data.tableSectionsList);         
+        this.SectionModelList = new MatTableDataSource(data.tableSectionsList);
         this.SectionModelList.sort=this.sort;      
       }
     });
@@ -132,7 +136,7 @@ export class SectionsComponent implements OnInit {
      });
     }
   deleteSection(deleteDetails){
-  
+    this.sectionAddModel.tableSections.schoolId=+sessionStorage.getItem("selectedSchoolId");
     this.sectionAddModel.tableSections.sectionId = deleteDetails.sectionId;
           
     this.sectionService.deleteSection(this.sectionAddModel).subscribe(data => {
@@ -159,8 +163,13 @@ export class SectionsComponent implements OnInit {
 
     })
   }
-  filter(event:string){
-    this.SectionModelList.filter=event.trim().toLowerCase();
+  onSearchClear(){
+    this.searchKey="";
+    this.applyFilter();
+  }
+
+  applyFilter(){
+    this.SectionModelList.filter = this.searchKey.trim().toLowerCase()
   }
   
 }

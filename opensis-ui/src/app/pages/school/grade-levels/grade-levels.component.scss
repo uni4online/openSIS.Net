@@ -12,7 +12,7 @@ table {
   display:none;
 }
 
-mat-footer-row mat-footer-cell{
-  justify-content: center !important;
-  font-style: italic !important;
+.mat-footer-cell{
+  text-align: center;
+  font-style: italic;
 }

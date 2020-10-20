@@ -1,11 +1,12 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import {ReplaySubject, Subject } from 'rxjs';
+import { ReplaySubject, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { YEAR, YEARS, PART, PARTS } from './year-data';
 import { SchoolService } from '../../../../app/services/school.service';
-import { AllSchoolListModel,OnlySchoolListModel } from 'src/app/models/getAllSchoolModel';
+import { AllSchoolListModel, OnlySchoolListModel } from '../../../../app/models/getAllSchoolModel';
 import { Router } from '@angular/router';
+import { MarkingPeriodService } from '../../../../app/services/marking-period.service';
+import { GetAcademicYearListModel, GetMarkingPeriodTitleListModel } from '../../../../app/models/markingPeriodModel';
 
 
 @Component({
@@ -14,18 +15,20 @@ import { Router } from '@angular/router';
   styleUrls: ['./select-bar.component.scss']
 })
 export class SelectBarComponent implements OnInit {
-  getSchoolList:OnlySchoolListModel = new OnlySchoolListModel();
-  schools;
-  // List of Years
-  public years: YEAR[] = YEARS;
-  // List of Parts
-  public parts: PART[] = PARTS;
+  getSchoolList: OnlySchoolListModel = new OnlySchoolListModel();
+  schools=[];
+  getAcademicYears: GetAcademicYearListModel = new GetAcademicYearListModel();
+  markingPeriodTitleLists: GetMarkingPeriodTitleListModel = new GetMarkingPeriodTitleListModel();
+  academicYears = [];
+  periods = [];
+  checkForAnyNewSchool: boolean = false;
+  nullValueForDropdown="Please Select";
   schoolCtrl: FormControl;
   /** control for the selected Year */
-  public yearCtrl: FormControl = new FormControl();
+  public academicYearsCtrl: FormControl = new FormControl();
   filteredSchoolsForDrop;
   /** control for the selected Part */
-  public partCtrl: FormControl = new FormControl();
+  public periodCtrl: FormControl = new FormControl();
   schoolFilterCtrl: FormControl;
 
   /** list of schools filtered by search keyword */
@@ -35,71 +38,142 @@ export class SelectBarComponent implements OnInit {
   protected _onDestroy = new Subject<void>();
 
   constructor(private _schoolService: SchoolService,
-      private router:Router,
-      
-    ) {
-      this._schoolService.currentMessage.subscribe((res)=>{
-        if(res){
-         this.CallAllSchool();
-        }
-      })
-      this.CallAllSchool();
-     }
+    private router: Router,
+    private markingPeriodService: MarkingPeriodService
+  ) {
+    this._schoolService.currentMessage.subscribe((res) => {
+      if (res) {
+        this.checkForAnyNewSchool = res;
+        this.callAllSchool();
+      }
+    })
 
-  CallAllSchool(){
-   this.getSchoolList.tenantId = sessionStorage.getItem("tenantId");
-    this.getSchoolList._tenantName = sessionStorage.getItem("tenant");
-    this.getSchoolList._token = sessionStorage.getItem("token");
-   
-      this._schoolService.GetAllSchools(this.getSchoolList).subscribe((data) => {
-
-        this.schools = data.getSchoolForView;
-        /** control for the selected School */
-        this.schoolCtrl = new FormControl();
-        this.schoolFilterCtrl= new FormControl();
-        // set initial selection
-        this.schoolCtrl.setValue(this.schools[0]);
-    // load the initial School list
-        this.filteredSchools.next(this.schools.slice());
-        /** control for the MatSelect filter keyword */
-        this.schoolFilterCtrl.valueChanges
-          .pipe(takeUntil(this._onDestroy))
-          .subscribe(() => {
-            this.filterSchools();
-          });
-          // Beacause of Reload in Setting, we have to check the existing id to retrieve
-          // school name from dropdown.
-          if(!sessionStorage.getItem("selectedSchoolId")){
-            sessionStorage.setItem("selectedSchoolId",this.schools[0].schoolId);
-          }else{
-            let id = parseInt(sessionStorage.getItem("selectedSchoolId"));
-            let index = this.schools.findIndex((x) => {
-              return x.schoolId === id
-            });
-            if(index!=-1){
-              this.schoolCtrl.setValue(this.schools[index]);
-            }else{
-              this.schoolCtrl.setValue(this.schools[0]);
-            }
-          }
-      })
-  }
-  changeSchool(name,id){
-    sessionStorage.setItem("selectedSchoolId",id);
-    this.router.navigate(['/school/dashboards']);
+    this.callAllSchool();
   }
 
   ngOnInit() {
-    // set initial selection
-    this.yearCtrl.setValue(this.years[0]);
+    this.callAcademicYearsOnSchoolSelect();
+  }
+  callAllSchool() {
+    this.getSchoolList.tenantId = sessionStorage.getItem("tenantId");
+    this.getSchoolList._tenantName = sessionStorage.getItem("tenant");
+    this.getSchoolList._token = sessionStorage.getItem("token");
 
-    // set initial selection
-    this.partCtrl.setValue(this.parts[0]);
+    this._schoolService.GetAllSchools(this.getSchoolList).subscribe((data) => {
+      this.schools = data.getSchoolForView;
+      /** control for the selected School */
+      this.schoolCtrl = new FormControl();
+      this.schoolFilterCtrl = new FormControl();
+      // set initial selection
+      this.schoolCtrl.setValue(this.schools[0]);
+      // load the initial School list
+      this.filteredSchools.next(this.schools.slice());
+      /** control for the MatSelect filter keyword */
+      this.schoolFilterCtrl.valueChanges
+        .pipe(takeUntil(this._onDestroy))
+        .subscribe(() => {
+          this.filterSchools();
+        });
+      if (this.checkForAnyNewSchool) {
+        this.selectNewSchoolOnAddSchool();
+        this.checkForAnyNewSchool = false;
+      } else {
+        this.selectSchoolOnLoad();
+      }
+
+    });
   }
 
-  ngOnDestroy() {
-    this._onDestroy.next();
-    this._onDestroy.complete();
+  selectSchoolOnLoad() {
+    if (!sessionStorage.getItem("selectedSchoolId")) {
+      sessionStorage.setItem("selectedSchoolId", this.schools[0].schoolId);
+    } else {
+      this.setSchool();
+    }
+  }
+
+  selectNewSchoolOnAddSchool() {
+    this.setSchool();
+  }
+
+  setSchool() {
+    let id = +sessionStorage.getItem("selectedSchoolId");
+    let index = this.schools.findIndex((x) => {
+      return x.schoolId === id
+    });
+    if (index != -1) {
+      this.schoolCtrl.setValue(this.schools[index]);
+    } else {
+      this.schoolCtrl.setValue(this.schools[0]);
+    }
+  }
+
+  changeSchool(id) {
+    sessionStorage.setItem("selectedSchoolId", id);
+    this.callAcademicYearsOnSchoolSelect();
+    this.router.navigate(['/school/dashboards']);
+  }
+
+  callAcademicYearsOnSchoolSelect() {
+    this.getAcademicYears.schoolId = +sessionStorage.getItem("selectedSchoolId");
+    this.markingPeriodService.getAcademicYearList(this.getAcademicYears).subscribe((res) => {
+      this.academicYears = res.academicYears;
+      // set initial selection
+      if (this.academicYears?.length > 0) {
+        this.academicYearsCtrl.setValue(this.academicYears[this.academicYears.length - 1].academyYear);
+      } else {
+        this.academicYearsCtrl.setValue(this.nullValueForDropdown);
+      }
+      if(this.academicYearsCtrl.value==this.nullValueForDropdown){
+        sessionStorage.setItem("academicyear","null");
+         this.periods=[]
+        this.callMarkingPeriodTitleList();
+        }else{
+          sessionStorage.setItem("academicyear", this.academicYearsCtrl.value)
+          this.callMarkingPeriodTitleList();
+        }
+    
+    })
+
+  }
+
+  changeYear(event) {
+    if(event.value==this.nullValueForDropdown){
+    sessionStorage.setItem("academicyear","null");
+    this.callMarkingPeriodTitleList();
+    }else{
+      sessionStorage.setItem("academicyear", event.value);
+      this.callMarkingPeriodTitleList();
+    }
+  }
+
+  callMarkingPeriodTitleList() {
+    if (sessionStorage.getItem("academicyear") !== "null") {
+      this.markingPeriodTitleLists.schoolId = +sessionStorage.getItem("selectedSchoolId");
+      this.markingPeriodTitleLists.academicYear = +sessionStorage.getItem("academicyear");
+      this.markingPeriodService.getMarkingPeriodTitleList(this.markingPeriodTitleLists).subscribe((res) => {
+        this.periods = res.period;
+        if (this.periods?.length > 0) {
+          for (let i = 0; i < this.periods.length; i++) {
+            let today = new Date().setHours(0, 0, 0, 0);
+            let startDate = new Date(this.periods[i]?.startDate).setHours(0, 0, 0, 0);
+            let endDate = new Date(this.periods[i]?.endDate).setHours(0, 0, 0, 0);
+            if (today <= endDate && today >= startDate) {
+              this.periodCtrl.setValue(this.periods[i].periodTitle);
+            } else {
+              this.periodCtrl.setValue(this.periods[0].periodTitle);
+            }
+          }
+        } else {
+          this.periodCtrl.setValue(this.nullValueForDropdown);
+        }
+      })
+    } else {
+      this.periodCtrl.setValue(this.nullValueForDropdown);
+    }
+  }
+
+  changePeriod(event) {
   }
 
   protected filterSchools() {
@@ -118,6 +192,11 @@ export class SelectBarComponent implements OnInit {
     this.filteredSchools.next(
       this.schools.filter(school => school.schoolName.toLowerCase().indexOf(search) > -1)
     );
+  }
+
+  ngOnDestroy() {
+    this._onDestroy.next();
+    this._onDestroy.complete();
   }
 }
 

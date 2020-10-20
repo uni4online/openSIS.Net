@@ -23,7 +23,8 @@ export class EditRoomComponent implements OnInit {
   icClose = icClose;
   roomAddViewModel:RoomAddView= new RoomAddView();
   roomStoreViewModel:RoomAddView= new RoomAddView();
-    form:FormGroup
+    form:FormGroup;
+    editMode=false;
 
   constructor(
     private dialogRef: MatDialogRef<EditRoomComponent>, 
@@ -37,13 +38,14 @@ export class EditRoomComponent implements OnInit {
         capacity:[,[Validators.required]],
         sortorder:[,[Validators.required]],
         description:[],
-        isActive:[]
+        isActive:[false]
   
       })
       if(data==null){
         this.roomTitle="addRoom";
       }
       else{
+        this.editMode=true;
         this.roomTitle="editRoom";
         this.roomAddViewModel.tableRoom=data
         this.form.controls.roomId.patchValue(data.roomId)

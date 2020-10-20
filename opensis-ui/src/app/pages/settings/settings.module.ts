@@ -6,7 +6,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-
 import { IconModule } from '@visurel/iconify-angular';
 import { MatCardModule } from '@angular/material/card';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -17,7 +16,7 @@ import { ContainerModule } from '../../../@vex/directives/container/container.mo
 import { MatMenuModule } from '@angular/material/menu';
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterModule } from '@angular/router';
-
+import { SettingsRoutingModule } from '../settings/settings-routing-module';
 
 
 @NgModule({
@@ -39,6 +38,7 @@ import { RouterModule } from '@angular/router';
     MatMenuModule,
     TranslateModule,
     RouterModule,
+    SettingsRoutingModule
   ]
 })
 export class SettingsModule { }

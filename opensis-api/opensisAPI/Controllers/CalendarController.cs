@@ -83,5 +83,21 @@ namespace opensisAPI.Controllers
             }
             return calendarListModel;
         }
+
+        [HttpPost("deleteCalendar")]
+        public ActionResult<CalendarAddViewModel> DeleteCalendar(CalendarAddViewModel calendar)
+        {
+            CalendarAddViewModel deleteCalendar = new CalendarAddViewModel();
+            try
+            {
+                deleteCalendar = _calendarService.DeleteCalendar(calendar);
+            }
+            catch (Exception es)
+            {
+                deleteCalendar._message = es.Message;
+                deleteCalendar._failure = true;
+            }
+            return deleteCalendar;
+        }
     }
 }

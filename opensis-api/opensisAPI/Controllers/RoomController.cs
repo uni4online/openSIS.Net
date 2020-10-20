@@ -30,7 +30,17 @@ namespace opensisAPI.Controllers
             RoomAddViewModel roomAdd = new RoomAddViewModel();
             try
             {
-                roomAdd = _roomRegisterService.SaveRoom(room);
+                if (room.tableRoom.SchoolId > 0)
+                {
+                    roomAdd = _roomRegisterService.SaveRoom(room);
+                }
+                else
+                {
+                    roomAdd._token = room._token;
+                    roomAdd._tenantName = room._tenantName;
+                    roomAdd._failure = true;
+                    roomAdd._message = "Please enter valid scholl id";
+                }
             }
             catch (Exception es)
             {
@@ -46,7 +56,17 @@ namespace opensisAPI.Controllers
             RoomAddViewModel roomAdd = new RoomAddViewModel();
             try
             {
-                roomAdd = _roomRegisterService.ViewRoom(room);
+                if (room.tableRoom.SchoolId > 0)
+                {
+                    roomAdd = _roomRegisterService.ViewRoom(room);
+                }
+                else
+                {
+                    roomAdd._token = room._token;
+                    roomAdd._tenantName = room._tenantName;
+                    roomAdd._failure = true;
+                    roomAdd._message = "Please enter valid scholl id";
+                }
             }
             catch (Exception es)
             {
@@ -62,7 +82,17 @@ namespace opensisAPI.Controllers
             RoomAddViewModel RoomAdd = new RoomAddViewModel();
             try
             {
-                RoomAdd = _roomRegisterService.UpdateRoom(room);
+                if (room.tableRoom.SchoolId > 0)
+                {
+                    RoomAdd = _roomRegisterService.UpdateRoom(room);
+                }
+                else
+                {
+                    RoomAdd._token = room._token;
+                    RoomAdd._tenantName = room._tenantName;
+                    RoomAdd._failure = true;
+                    RoomAdd._message = "Please enter valid scholl id";
+                }
             }
             catch (Exception es)
             {
@@ -78,7 +108,17 @@ namespace opensisAPI.Controllers
             RoomListModel roomList = new RoomListModel();
             try
             {
-                roomList = _roomRegisterService.GetAllRoom(room);
+                if (room.SchoolId > 0)
+                {
+                    roomList = _roomRegisterService.GetAllRoom(room);
+                }
+                else
+                {
+                    roomList._token = room._token;
+                    roomList._tenantName = room._tenantName;
+                    roomList._failure = true;
+                    roomList._message = "Please enter valid scholl id";
+                }
             }
             catch (Exception es)
             {
@@ -94,7 +134,17 @@ namespace opensisAPI.Controllers
             RoomAddViewModel roomlDelete = new RoomAddViewModel();
             try
             {
-                roomlDelete = _roomRegisterService.DeleteRoom(room);
+                if (room.tableRoom.SchoolId > 0)
+                {
+                    roomlDelete = _roomRegisterService.DeleteRoom(room);
+                }
+                else
+                {
+                    roomlDelete._token = room._token;
+                    roomlDelete._tenantName = room._tenantName;
+                    roomlDelete._failure = true;
+                    roomlDelete._message = "Please enter valid scholl id";
+                }
             }
             catch (Exception es)
             {

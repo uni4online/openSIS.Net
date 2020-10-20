@@ -1,9 +1,9 @@
-﻿using opensis.data.ViewModels.Gradelevel;
+﻿using opensis.data.ViewModels.GradeLevel;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace opensis.core.Gradelevel.Interfaces
+namespace opensis.core.GradeLevel.Interfaces
 {
     public interface IGradelevelService
     {
@@ -12,5 +12,6 @@ namespace opensis.core.Gradelevel.Interfaces
         public GradelevelViewModel UpdateGradelevel(GradelevelViewModel gradelevel);
         public GradelevelViewModel DeleteGradelevel(GradelevelViewModel gradelevel);
         public GradelevelListViewModel GetAllGradeLevels(GradelevelListViewModel gradelevel);
+        public GradeEquivalencyListViewModel GetAllGradeEquivalency(GradeEquivalencyListViewModel gradeEquivalencyListModel);
     }
 }

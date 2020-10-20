@@ -121,6 +121,13 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .HasColumnName("end_date")
                         .HasColumnType("date");
 
+                    b.Property<string>("EventColor")
+                        .HasColumnName("event_color")
+                        .HasColumnType("varchar(7)")
+                        .HasComment("will contain HEX code e.g. #5175bc.")
+                        .HasMaxLength(7)
+                        .IsUnicode(false);
+
                     b.Property<DateTime?>("LastUpdated")
                         .HasColumnName("last_updated")
                         .HasColumnType("datetime");
@@ -1685,23 +1692,16 @@ namespace opensis.data.Migrations.SqlServerMigrations
 
             modelBuilder.Entity("opensis.data.Models.GradeEquivalency", b =>
                 {
+                    b.Property<string>("IscedGradeLevel")
+                        .HasColumnName("isced_grade_level")
+                        .HasColumnType("varchar(8)")
+                        .HasMaxLength(8)
+                        .IsUnicode(false);
+
                     b.Property<string>("AgeRange")
                         .HasColumnName("age_range")
                         .HasColumnType("varchar(5)")
                         .HasMaxLength(5)
-                        .IsUnicode(false);
-
-                    b.Property<string>("Country")
-                        .HasColumnName("country")
-                        .HasColumnType("char(30)")
-                        .IsFixedLength(true)
-                        .HasMaxLength(30)
-                        .IsUnicode(false);
-
-                    b.Property<string>("EducationalStage")
-                        .HasColumnName("educational_stage")
-                        .HasColumnType("varchar(50)")
-                        .HasMaxLength(50)
                         .IsUnicode(false);
 
                     b.Property<string>("GradeDescription")
@@ -1710,11 +1710,71 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .HasMaxLength(50)
                         .IsUnicode(false);
 
-                    b.Property<int?>("IscedGradeLevel")
-                        .HasColumnName("isced_grade_level")
-                        .HasColumnType("int");
+                    b.HasKey("IscedGradeLevel");
 
                     b.ToTable("grade_equivalency");
+
+                    b.HasData(
+                        new
+                        {
+                            IscedGradeLevel = "ISCED 01",
+                            AgeRange = "0-2",
+                            GradeDescription = "Early childhood education"
+                        },
+                        new
+                        {
+                            IscedGradeLevel = "ISCED 02",
+                            AgeRange = "0-2",
+                            GradeDescription = "Pre-primary education"
+                        },
+                        new
+                        {
+                            IscedGradeLevel = "ISCED 1",
+                            AgeRange = "5-7",
+                            GradeDescription = "Primary education"
+                        },
+                        new
+                        {
+                            IscedGradeLevel = "ISCED 2",
+                            AgeRange = "6-10",
+                            GradeDescription = "Lower secondary education"
+                        },
+                        new
+                        {
+                            IscedGradeLevel = "ISCED 3",
+                            AgeRange = "9-12",
+                            GradeDescription = "Upper secondary education"
+                        },
+                        new
+                        {
+                            IscedGradeLevel = "ISCED 4",
+                            AgeRange = "10-11",
+                            GradeDescription = "Post-secondary non-tertiary education"
+                        },
+                        new
+                        {
+                            IscedGradeLevel = "ISCED 5",
+                            AgeRange = "14-16",
+                            GradeDescription = "Short-cycle tertiary education"
+                        },
+                        new
+                        {
+                            IscedGradeLevel = "ISCED 6",
+                            AgeRange = "17-23",
+                            GradeDescription = "Bachelor's or equivalent"
+                        },
+                        new
+                        {
+                            IscedGradeLevel = "ISCED 7",
+                            AgeRange = "21-25",
+                            GradeDescription = "Master's or equivalent"
+                        },
+                        new
+                        {
+                            IscedGradeLevel = "ISCED 8",
+                            AgeRange = "22-28",
+                            GradeDescription = "Doctoral or equivalent level"
+                        });
                 });
 
             modelBuilder.Entity("opensis.data.Models.Gradelevels", b =>
@@ -1731,22 +1791,10 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .HasColumnName("grade_id")
                         .HasColumnType("int");
 
-                    b.Property<string>("AgeRange")
-                        .HasColumnName("age_range")
-                        .HasColumnType("varchar(50)")
-                        .HasMaxLength(50)
-                        .IsUnicode(false);
-
-                    b.Property<string>("EducationalStage")
-                        .HasColumnName("educational_stage")
-                        .HasColumnType("varchar(50)")
-                        .HasMaxLength(50)
-                        .IsUnicode(false);
-
-                    b.Property<string>("GradeLevelEquivalency")
-                        .HasColumnName("grade_level_equivalency")
-                        .HasColumnType("varchar(50)")
-                        .HasMaxLength(50)
+                    b.Property<string>("IscedGradeLevel")
+                        .HasColumnName("isced_grade_level")
+                        .HasColumnType("varchar(8)")
+                        .HasMaxLength(8)
                         .IsUnicode(false);
 
                     b.Property<DateTime?>("LastUpdated")
@@ -1781,6 +1829,8 @@ namespace opensis.data.Migrations.SqlServerMigrations
 
                     b.HasKey("TenantId", "SchoolId", "GradeId")
                         .HasName("pk_gradelevels");
+
+                    b.HasIndex("IscedGradeLevel");
 
                     b.ToTable("gradelevels");
                 });
@@ -4326,6 +4376,14 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .WithMany("City")
                         .HasForeignKey("StateId")
                         .HasConstraintName("FK_city_state");
+                });
+
+            modelBuilder.Entity("opensis.data.Models.Gradelevels", b =>
+                {
+                    b.HasOne("opensis.data.Models.GradeEquivalency", "IscedGradeLevelNavigation")
+                        .WithMany("Gradelevels")
+                        .HasForeignKey("IscedGradeLevel")
+                        .HasConstraintName("FK_gradelevels_grade_equivalency");
                 });
 
             modelBuilder.Entity("opensis.data.Models.Membership", b =>

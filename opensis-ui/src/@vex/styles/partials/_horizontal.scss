@@ -2,7 +2,7 @@
   --navigation-height: 0px;
   --toolbar-width: 100%;
 
-  @screen lg {
+  @screen xl {
     --toolbar-width: calc(100% - var(--sidenav-width));
 
     &.sidenav-collapsed {
@@ -23,7 +23,7 @@
   }
 }
 
-@screen lg {
+@screen xl {
   body:not([dir="rtl"]) {
     .horizontal-layout {
       &.sidenav-collapsed .sidenav-content {

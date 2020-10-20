@@ -119,5 +119,34 @@ namespace opensis.core.Calender.Services
 
             return calendarListModel;
         }
+
+        /// <summary>
+        /// Delete Calendar
+        /// </summary>
+        /// <param name="calendar"></param>
+        /// <returns></returns>
+        public CalendarAddViewModel DeleteCalendar(CalendarAddViewModel calendar)
+        {
+            CalendarAddViewModel calendarDelete = new CalendarAddViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(calendar._tenantName, calendar._token))
+                {
+                    calendarDelete = this.calendarRepository.DeleteCalendar(calendar);
+                }
+                else
+                {
+                    calendarDelete._failure = true;
+                    calendarDelete._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                calendarDelete._failure = true;
+                calendarDelete._message = es.Message;
+            }
+
+            return calendarDelete;
+        }
     }
 }

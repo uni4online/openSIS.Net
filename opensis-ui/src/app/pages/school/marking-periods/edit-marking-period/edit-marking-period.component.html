@@ -1,6 +1,10 @@
-<div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
-    <h2 class="headline m-0" fxFlex="auto">{{'addMarkingPeriod' | translate}}</h2>
+<form [formGroup]="form" (ngSubmit)="submit()">
 
+<div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
+    <h2 class="headline m-0" fxFlex="auto" *ngIf="isEdit; else add">{{'editMarkingPeriod' | translate}}</h2>
+    <ng-template #add>
+        <h2 class="headline m-0" fxFlex="auto" >{{'addMarkingPeriod' | translate}}</h2>
+      </ng-template>
     <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
         <mat-icon [icIcon]="icClose"></mat-icon>
     </button>
@@ -10,56 +14,66 @@
 <mat-dialog-content fxLayout="column">
     <mat-form-field class="mt-6" appearance="outline" color="primary">
         <mat-label>{{'title' | translate}}</mat-label>
-        <input cdkFocusInitial matInput required>
+        <input formControlName="title"  [(ngModel)]="markingPeriodAddModel.tableSchoolYears.title"  name="title" cdkFocusInitial matInput required>
+        <mat-error *ngIf="form.get('title').hasError('required')">{{'titleIsRequired'|translate}}</mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="outline" color="primary">
         <mat-label>{{'shortName' | translate}}</mat-label>
-        <input matInput required>
+        <input formControlName="shortName"  [(ngModel)]="markingPeriodAddModel.tableSchoolYears.shortName"  name="shortName"  matInput required>
+        <mat-error *ngIf="form.get('shortName').hasError('required')">{{'shortNameIsRequired'|translate}}</mat-error>
     </mat-form-field>
 
     <div class="mb-2 md:flex md:flex-wrap -mx-6">
         <div class="flex flex-1 mx-6 md:w-1/2">
             <mat-form-field class="w-full" appearance="outline" color="primary">
                 <mat-label>{{'begins' | translate}}</mat-label>
-                <input [matDatepicker]="begins" matInput>
+                <input  formControlName="startDate" (dateChange)="parentStartDateCompare()"  [(ngModel)]="markingPeriodAddModel.tableSchoolYears.startDate"  name="startDate" [matDatepicker]="begins" matInput required>
                 <mat-datepicker-toggle [for]="begins" matSuffix></mat-datepicker-toggle>
                 <mat-datepicker #begins></mat-datepicker>
+                <mat-error *ngIf="form.get('startDate').hasError('required')">{{'startDateIsRequired'|translate}}</mat-error>
+                <mat-error *ngIf="!form.get('startDate').hasError('required') && form.get('startDate').hasError('invalidDateComparison')"></mat-error>
+                <mat-error *ngIf="form.get('startDate').hasError('compareParentError')">{{'startDateShouldBeBetweenParentStartAndEndDate'|translate}}</mat-error>
             </mat-form-field>
         </div>
         <div class="flex flex-1 mx-6 md:w-1/2">
             <mat-form-field class="w-full" appearance="outline" color="primary">
                 <mat-label>{{'ends' | translate}}</mat-label>
-                <input [matDatepicker]="ends" matInput>
+                <input formControlName="endDate" (dateChange)="dateCompare()" [(ngModel)]="markingPeriodAddModel.tableSchoolYears.endDate"  name="endDate" [matDatepicker]="ends" matInput required>
                 <mat-datepicker-toggle [for]="ends" matSuffix></mat-datepicker-toggle>
                 <mat-datepicker #ends></mat-datepicker>
+                <mat-error *ngIf="form.get('endDate').hasError('required')">{{'endDateIsRequired'|translate}}</mat-error>
+                <mat-error *ngIf="form.get('endDate').hasError('compareError')">{{"endDateCannotBeEarlierThanStartDate"|translate}}</mat-error>
+                <mat-error *ngIf="form.get('endDate').hasError('compareParentError')">{{'endDateShouldBeBetweenParentStartAndEndDate'|translate}}</mat-error>
             </mat-form-field>
         </div>
     </div>
-
-    <div class="mb-2 md:flex md:flex-wrap -mx-6">
-        <div class="flex flex-1 mx-6 md:w-1/2">
-            <mat-form-field class="w-full" appearance="outline" color="primary">
-                <mat-label>{{'gradePostingBegins' | translate}}</mat-label>
-                <input [matDatepicker]="gradePostingBegins" matInput>
-                <mat-datepicker-toggle [for]="gradePostingBegins" matSuffix></mat-datepicker-toggle>
-                <mat-datepicker #gradePostingBegins></mat-datepicker>
-            </mat-form-field>
-        </div>
-        <div class="flex flex-1 mx-6 md:w-1/2">
-            <mat-form-field class="w-full" appearance="outline" color="primary">
-                <mat-label>{{'gradePostingEnds' | translate}}</mat-label>
-                <input [matDatepicker]="gradePostingEnds" matInput>
-                <mat-datepicker-toggle [for]="gradePostingEnds" matSuffix></mat-datepicker-toggle>
-                <mat-datepicker #gradePostingEnds></mat-datepicker>
-            </mat-form-field>
+    <div *ngIf="doesGrades">
+        <div class="mb-2 md:flex md:flex-wrap -mx-6">
+            <div class="flex flex-1 mx-6 md:w-1/2">
+                <mat-form-field class="w-full" appearance="outline" color="primary">
+                    <mat-label>{{'gradePostingBegins' | translate}}</mat-label>
+                    <input formControlName="postStartDate"  [(ngModel)]="markingPeriodAddModel.tableSchoolYears.postStartDate"  name="postStartDate" [matDatepicker]="gradePostingBegins" matInput >
+                    <mat-datepicker-toggle [for]="gradePostingBegins" matSuffix></mat-datepicker-toggle>
+                    <mat-datepicker #gradePostingBegins></mat-datepicker>
+                    <mat-error *ngIf="form.get('postStartDate').hasError('invalidDateComparison')"></mat-error>
+                </mat-form-field>
+            </div>
+            <div class="flex flex-1 mx-6 md:w-1/2">
+                <mat-form-field class="w-full" appearance="outline" color="primary">
+                    <mat-label>{{'gradePostingEnds' | translate}}</mat-label>
+                    <input formControlName="postEndDate" (dateChange)="gradeDateCompare()" [(ngModel)]="markingPeriodAddModel.tableSchoolYears.postEndDate"  name="postEndDate" [matDatepicker]="gradePostingEnds" matInput>
+                    <mat-datepicker-toggle [for]="gradePostingEnds" matSuffix></mat-datepicker-toggle>
+                    <mat-datepicker #gradePostingEnds></mat-datepicker>
+                    <mat-error *ngIf="form.get('postEndDate').hasError('compareGradeError')">{{"gradePostingEndDateCannotBeEarlierThanGradePostingBeginDate"|translate}}</mat-error>
+                </mat-form-field>
+            </div>
         </div>
     </div>
-
-    <div fxLayout="row" fxLayoutGap="25px">
-        <mat-checkbox [checked]="false" color="primary">{{'graded' | translate}}</mat-checkbox>
-        <mat-checkbox [checked]="false" color="primary">{{'exam' | translate}}</mat-checkbox>
-        <mat-checkbox [checked]="false" color="primary">{{'comments' | translate}}</mat-checkbox>
+        <div fxLayout="row" fxLayoutGap="25px">
+        <mat-checkbox formControlName="doesGrades" (click) = "checkGrade(markingPeriodAddModel.tableSchoolYears.doesGrades)"[(ngModel)]="markingPeriodAddModel.tableSchoolYears.doesGrades" color="primary">{{'graded' | translate}}</mat-checkbox>
+        <mat-checkbox formControlName="doesExam" [(ngModel)]="markingPeriodAddModel.tableSchoolYears.doesExam" color="primary">{{'exam' | translate}}</mat-checkbox>
+        <mat-checkbox formControlName="doesComments" [(ngModel)]="markingPeriodAddModel.tableSchoolYears.doesComments" color="primary">{{'comments' | translate}}</mat-checkbox>
     </div>
 </mat-dialog-content>
 
@@ -67,3 +81,4 @@
     <button mat-button mat-dialog-close type="button">{{'cancel' | translate}}</button>
     <button color="primary" mat-raised-button type="submit">{{'submit' | translate}}</button>
 </mat-dialog-actions>
+</form>

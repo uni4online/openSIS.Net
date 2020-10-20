@@ -1,7 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-
 import { CalendarComponent } from './calendar.component';
 import { CalendarModule as AngularCalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
@@ -11,6 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { ScrollbarModule } from '../../../../@vex/components/scrollbar/scrollbar.module';
+import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -23,7 +22,7 @@ import { IconModule } from '@visurel/iconify-angular';
 import { ContainerModule } from '../../../../@vex/directives/container/container.module';
 import { MatMenuModule } from '@angular/material/menu';
 import { TranslateModule } from '@ngx-translate/core';
-
+import { CalendarRoutingModule } from './calendar-routing-module';
 
 @NgModule({
   declarations: [CalendarComponent, CalendarEditComponent],
@@ -42,6 +41,7 @@ import { TranslateModule } from '@ngx-translate/core';
     ScrollbarModule,
     MatSnackBarModule,
     MatInputModule,
+    MatSelectModule,
     MatDatepickerModule,
     ReactiveFormsModule,
     PageLayoutModule,
@@ -49,7 +49,8 @@ import { TranslateModule } from '@ngx-translate/core';
     IconModule,
     ContainerModule,
     MatMenuModule,
-    TranslateModule
+    TranslateModule,
+    CalendarRoutingModule
   ],
   entryComponents: [CalendarEditComponent]
 })

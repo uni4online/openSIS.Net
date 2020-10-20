@@ -109,19 +109,19 @@ export class AppComponent {
           {
             type: 'link',
             label: 'Marking Periods',
-            route: '/school/schoolinfo/marking-periods',
+            route: '/school/marking-periods',
             icon: icinfo
           },
           {
             type: 'link',
             label: 'Calendars',
-            route: '/school/schoolinfo/schoolcalendars',
+            route: '/school/schoolcalendars',
             icon: icinfo
           },
           {
             type: 'link',
             label: 'Notices',
-            route: '/school/schoolinfo/notices',
+            route: '/school/notices',
             icon: icinfo
           },
         ]
@@ -133,7 +133,7 @@ export class AppComponent {
           {
             type: 'link',
             label: 'Student Information',
-            route: '/school/stdentlinfo',
+            route: '/school/students',
             icon: icinfo
           }
         ]
@@ -218,7 +218,7 @@ export class AppComponent {
       { type: 'link',
         label: 'Settings',
         icon: icsettings,
-        route: '/settings/settings'       
+        route: '/school/settings'       
       },
       { type: 'dropdown',
         label: 'Tools',

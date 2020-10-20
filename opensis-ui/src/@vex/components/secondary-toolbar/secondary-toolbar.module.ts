@@ -8,7 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { BreadcrumbsModule } from '../breadcrumbs/breadcrumbs.module';
 import { ContainerModule } from '../../directives/container/container.module';
-
+import {MatMenuModule} from '@angular/material/menu';
 
 @NgModule({
   declarations: [SecondaryToolbarComponent],
@@ -20,7 +20,8 @@ import { ContainerModule } from '../../directives/container/container.module';
     MatButtonModule,
     MatIconModule,
     BreadcrumbsModule,
-    ContainerModule
+    ContainerModule,
+    MatMenuModule
   ],
   exports: [SecondaryToolbarComponent]
 })

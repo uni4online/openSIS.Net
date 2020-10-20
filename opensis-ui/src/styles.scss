@@ -14,6 +14,190 @@
   }
 }
 
+
+@media only screen and (max-width: 767px) {
+  .login-bg {
+    background: rgba(var(--background-base), 1);
+  }
+}
+
+.sidenav {
+  &.collapsed:not(.open) {
+    .sidenav-items {
+      .item-dropdown {
+        height: 0;
+      }
+    }
+  }
+
+  &.collapsed.open {
+    .sidenav-items {
+      .item-dropdown {
+        height: auto;
+      }
+    }
+  }
+}
+
+.mat-form-field {
+  margin-bottom: 15px !important;
+  min-height: 49px;
+
+  .mat-form-field-wrapper {
+
+    .mat-form-field-flex {
+      .mat-form-field-outline {
+        min-height: 49px;
+      }
+
+    }
+
+    .mat-form-field-subscript-wrapper {
+      position: relative;
+      top: -4px;
+      background: rgba(var(--color-warn), 1);
+      border-bottom-left-radius: 4px;
+      border-bottom-right-radius: 4px;
+      margin-top: 0;
+
+      .mat-error {
+        color: #ffffff;
+        line-height: 18px;
+      }
+    }
+
+    .mat-form-field-infix {
+      .mat-form-field-label-wrapper {
+        .mat-form-field-label {
+          top: 1.4em;
+          line-height: 20px;
+        }
+      }
+
+      .mat-input-element {
+        margin-top: 0.2em;
+      }
+
+      .mat-select {
+        .mat-select-trigger {
+          .mat-select-value {
+            .mat-select-value-text {
+              line-height: 22px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  &.mat-form-field-appearance-outline {
+    .mat-form-field-outline-thick {
+
+      .mat-form-field-outline-start,
+      .mat-form-field-outline-end,
+      .mat-form-field-outline-gap {
+        border-width: 1px;
+      }
+    }
+
+    .mat-form-field-wrapper {
+      margin: 0;
+      padding-bottom: 0;
+
+      .mat-form-field-infix {
+        padding: 0.8em 0 0.6em;
+      }
+    }
+  }
+
+  &.mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float {
+    .mat-form-field-outline-gap {
+      border-top: 1px solid currentColor;
+    }
+
+    .mat-form-field-wrapper {
+      .mat-form-field-infix {
+        .mat-form-field-label-wrapper {
+          .mat-form-field-label {
+            transform: translateY(-0.4em) scale(0.75);
+          }
+        }
+      }
+    }
+  }
+}
+
+.mat-form-field:not(.mat-form-field-appearance-legacy) .mat-form-field-prefix .mat-icon-button,
+.mat-form-field:not(.mat-form-field-appearance-legacy) .mat-form-field-suffix .mat-icon-button {
+  width: 1.5em !important;
+  height: 1.8em !important;
+}
+
+// .mat-form-field-appearance-fill .mat-form-field-flex {
+//   padding: .6em .75em;
+// }
+.vex-toolbar {
+  .mat-form-field-wrapper {
+    padding-bottom: 0;
+
+    .mat-form-field-infix {
+      min-width: unset;
+      width: auto;
+
+    .mat-select-arrow-wrapper {
+      padding-top: 17px;
+    }
+  
+    .mat-select-value { 
+      text-align: right;
+        max-width : unset;
+        width     : unset;
+        padding-right: 10px;
+      }
+    }
+  }
+}
+
+
+.language-selection {
+  .mat-form-field-appearance-standard {
+    .mat-form-field-flex {
+      padding-top: 0;
+      align-items: start;
+    }
+
+    .mat-form-field-underline {
+    display: none !important
+    }
+  }
+
+  .mat-form-field-infix {
+    width    : auto !important;
+    min-width: 80px;
+    padding: 0;
+    border-top: 0;
+
+    &::after {
+      color: rgba(255, 255, 255, 0.54) !important;
+  }
+
+    select {
+      width    : auto !important;
+      min-width: 80px;
+}
+  }
+
+  .mat-primary.mat-form-field{
+    &.mat-focused .mat-form-field-prefix {
+      color: white;
+    }
+
+    .mat-form-field-prefix {
+      margin-top: -2px;
+    }
+  }
+}
+
 /*
   You can override any CSS Variable or style here
   Example:
@@ -336,6 +520,7 @@
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
   }
+
   .table-responsive-sm > .table-bordered {
     border: 0;
   }
@@ -348,6 +533,7 @@
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
   }
+
   .table-responsive-md > .table-bordered {
     border: 0;
   }
@@ -360,6 +546,7 @@
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
   }
+
   .table-responsive-lg > .table-bordered {
     border: 0;
   }
@@ -372,6 +559,7 @@
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
   }
+
   .table-responsive-xl > .table-bordered {
     border: 0;
   }
@@ -538,6 +726,7 @@
     margin-right: -15px;
     margin-left: -15px;
   }
+
   .bcard-deck .bcard {
     -ms-flex: 1 0 0%;
     flex: 1 0 0%;
@@ -558,35 +747,43 @@
     -ms-flex-flow: row wrap;
     flex-flow: row wrap;
   }
+
   .bcard-group > .bcard {
     -ms-flex: 1 0 0%;
     flex: 1 0 0%;
     margin-bottom: 0;
   }
+
   .bcard-group > .bcard + .bcard {
     margin-left: 0;
     border-left: 0;
   }
+
   .bcard-group > .bcard:not(:last-child) {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
   }
+
   .bcard-group > .bcard:not(:last-child) .bcard-img-top,
   .bcard-group > .bcard:not(:last-child) .bcard-header {
     border-top-right-radius: 0;
   }
+
   .bcard-group > .bcard:not(:last-child) .bcard-img-bottom,
   .bcard-group > .bcard:not(:last-child) .bcard-footer {
     border-bottom-right-radius: 0;
   }
+
   .bcard-group > .bcard:not(:first-child) {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
   }
+
   .bcard-group > .bcard:not(:first-child) .bcard-img-top,
   .bcard-group > .bcard:not(:first-child) .bcard-header {
     border-top-left-radius: 0;
   }
+
   .bcard-group > .bcard:not(:first-child) .bcard-img-bottom,
   .bcard-group > .bcard:not(:first-child) .bcard-footer {
     border-bottom-left-radius: 0;
@@ -608,6 +805,7 @@
     orphans: 1;
     widows: 1;
   }
+
   .bcard-columns .bcard {
     display: inline-block;
     width: 100%;

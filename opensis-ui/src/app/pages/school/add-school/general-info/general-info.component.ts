@@ -18,7 +18,7 @@ import { WashInfoEnum } from '../../../../enums/wash-info.enum';
 import { status } from '../../../../enums/wash-info.enum';
 import { MY_FORMATS } from '../../../shared/format-datepicker';
 import { ValidationService } from '../../../shared/validation.service';
-import { LoaderService } from 'src/app/services/loader.service';
+import { LoaderService } from '../../../../services/loader.service';
 import { __values } from 'tslib';
 import { BehaviorSubject } from 'rxjs';
 import { CountryModel } from '../../../../models/countryModel';
@@ -83,6 +83,7 @@ export class GeneralInfoComponent implements OnInit {
   generalInfo=WashInfoEnum;
   statusInfo=status;
   city:number;
+  stateCount:number;
   gradeLevel= [
     {id : 'PK', title : "PK"},
     {id : 'K', title : "K"},
@@ -174,73 +175,6 @@ export class GeneralInfoComponent implements OnInit {
       });
       this.getAllCountry();
      
-    this.schoolLevelOptions = Object.keys(this.schoolLevels);
-    this.schoolClassificationOptions = Object.keys(this.schoolClassifications);
-    this.genderOptions = Object.keys(this.genders);   
-   
-    
-    if (this.commonFunction.checkEmptyObject(this.dataOfgeneralInfoFromView) === true) {
-      this.schoolAddViewModel = this.dataOfgeneralInfoFromView;
-    
-
-
-    } else if (this.commonFunction.checkEmptyObject(this.dataOfwashInfoFromGeneral) === true) {
-      this.schoolAddViewModel = this.dataOfwashInfoFromGeneral;
-
-    }
-    else if (this.commonFunction.checkEmptyObject(this.dataOfgeneralInfoFromWash) === true) {
-      this.schoolAddViewModel = this.dataOfgeneralInfoFromWash;
-
-    }
-
-    
-    if ((this.commonFunction.checkEmptyObject(this.dataOfwashInfoFromGeneral) === true)
-     || (this.commonFunction.checkEmptyObject(this.dataOfgeneralInfoFromView) === true) 
-     || (this.commonFunction.checkEmptyObject(this.dataOfgeneralInfoFromWash) === true))
-     {
-      this._ImageCropperService.nextMessage(false);      
-      // this.schoolAddViewModel.schoolMaster.city = +this.schoolAddViewModel.schoolMaster.city;
-      // this.schoolAddViewModel.schoolMaster.state = +this.schoolAddViewModel.schoolMaster.state;
-
-      this.schoolAddViewModel.schoolMaster.city = this.schoolAddViewModel.schoolMaster.city;
-      this.schoolAddViewModel.schoolMaster.state = this.schoolAddViewModel.schoolMaster.state;
-
-      this.schoolAddViewModel.schoolMaster.country = +this.schoolAddViewModel.schoolMaster.country;
-   
-      // this.getAllStateByCountry(this.schoolAddViewModel.schoolMaster.country);
-      // this.getAllCitiesByState(this.schoolAddViewModel.schoolMaster.state);
-      this.schoolAddViewModel.schoolMaster.modifiedBy = sessionStorage.getItem('email');
-      this.schoolAddViewModel.schoolMaster.dateModifed = this.dateCreated;
-      this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolOpened=this.commonFunction.formatDateInEditMode(this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolOpened);      
-      this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolClosed=this.commonFunction.formatDateInEditMode(this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolClosed);
-      
-    }else{     
-      this.schoolAddViewModel.schoolMaster.createdBy = sessionStorage.getItem('email');
-      this.schoolAddViewModel.schoolMaster.dateCreated = this.dateCreated;     
-    }
-
-    this.schoolAddViewModel.schoolMaster.schoolLevel = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolLevel);
-    this.schoolAddViewModel.schoolMaster.schoolClassification = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolClassification) ;
-    
-    this.schoolAddViewModel.schoolMaster.schoolDetail[0].lowestGradeLevel = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolDetail[0].lowestGradeLevel);
-    this.schoolAddViewModel.schoolMaster.schoolDetail[0].highestGradeLevel = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolDetail[0].highestGradeLevel);
-    this.schoolAddViewModel.schoolMaster.schoolDetail[0].gender = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolDetail[0].gender);
-    this.schoolAddViewModel.schoolMaster.schoolDetail[0].telephone = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolDetail[0].telephone) ;
-    this.schoolAddViewModel.schoolMaster.schoolDetail[0].website = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolDetail[0].website) ;
-    this.schoolAddViewModel.schoolMaster.schoolDetail[0].twitter = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolDetail[0].twitter) ;
-    this.schoolAddViewModel.schoolMaster.schoolDetail[0].instagram = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolDetail[0].instagram) ;
-
-
-
-    this.schoolAddViewModel.schoolMaster.schoolName = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolName);
-    this.schoolAddViewModel.schoolMaster.alternateName = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.alternateName) ;
-    this.schoolAddViewModel.schoolMaster.schoolDetail[0].locale = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolDetail[0].locale);
-    this.schoolAddViewModel.schoolMaster.schoolDetail[0].gender = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolDetail[0].gender);
-    this.schoolAddViewModel.schoolMaster.county = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.county);
-    this.schoolAddViewModel.schoolMaster.division = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.division) ;
-  
-    this.schoolAddViewModel.schoolMaster.district = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.district) ;
-    this.schoolAddViewModel.schoolMaster.zip = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.zip) ;
     
   }
 
@@ -254,7 +188,7 @@ export class GeneralInfoComponent implements OnInit {
     let closingDate = this.form.controls.date_school_closed.value
    
     if (ValidationService.compareValidation(openingDate, closingDate) === false) {
-      this.form.controls.date_school_closed.setErrors({ compareError: false })
+      this.form.controls.date_school_closed.setErrors({ compareError: true })
       
     }
 
@@ -269,6 +203,9 @@ export class GeneralInfoComponent implements OnInit {
         this.countryListArr=[];
       } else {        
         this.countryListArr=data.tableCountry;         
+        this.stateCount=data.stateCount;
+        this.onEditCall()
+        
       }
     }
 
@@ -277,7 +214,7 @@ export class GeneralInfoComponent implements OnInit {
  }
 
  getAllStateByCountry(data){   
-   
+   if(this.stateCount>0){
     if ((this.commonFunction.checkEmptyObject(this.dataOfwashInfoFromGeneral) === true)
     || (this.commonFunction.checkEmptyObject(this.dataOfgeneralInfoFromView) === true) 
     || (this.commonFunction.checkEmptyObject(this.dataOfgeneralInfoFromWash) === true)){
@@ -326,7 +263,8 @@ export class GeneralInfoComponent implements OnInit {
         }
     
       })
-    } 
+    }
+  } 
  }
  getAllCitiesByState(data){
   if ((this.commonFunction.checkEmptyObject(this.dataOfwashInfoFromGeneral) === true)
@@ -385,9 +323,15 @@ export class GeneralInfoComponent implements OnInit {
      || (this.commonFunction.checkEmptyObject(this.dataOfgeneralInfoFromView) === true) 
      || (this.commonFunction.checkEmptyObject(this.dataOfgeneralInfoFromWash) === true)){
 
-      this.schoolAddViewModel.schoolMaster.country = this.countryName;
-      // this.schoolAddViewModel.schoolMaster.state = this.stateName;
-      this.schoolAddViewModel.schoolMaster.state = this.schoolAddViewModel.schoolMaster.state.toString();
+      if(this.stateCount!==0){
+        this.schoolAddViewModel.schoolMaster.country = this.countryName;
+        this.schoolAddViewModel.schoolMaster.state = this.stateName;
+      }
+      else{
+        this.schoolAddViewModel.schoolMaster.country = this.schoolAddViewModel.schoolMaster.country.toString();
+        this.schoolAddViewModel.schoolMaster.state = this.schoolAddViewModel.schoolMaster.state.toString();
+      }
+      
 
       this.schoolAddViewModel.schoolMaster.city = this.schoolAddViewModel.schoolMaster.city.toString();
 
@@ -407,6 +351,7 @@ export class GeneralInfoComponent implements OnInit {
               this.snackbar.open('General Info Updation Successful.', '', {
                 duration: 10000
               });
+              this.generalInfoService.changeMessage(true);
               this.parentShowWash.emit(this.isEditMode);
               this.dataOfgeneralInfo.emit(data);
             }
@@ -414,9 +359,8 @@ export class GeneralInfoComponent implements OnInit {
 
         })
       }else{
-
-        this.schoolAddViewModel.schoolMaster.country = this.countryName;
-      // this.schoolAddViewModel.schoolMaster.state = this.stateName;
+        this.schoolAddViewModel.schoolMaster.country = this.schoolAddViewModel.schoolMaster.country.toString();
+       this.schoolAddViewModel.schoolMaster.state = this.stateName;
       this.schoolAddViewModel.schoolMaster.state = this.schoolAddViewModel.schoolMaster.state.toString();
 
       this.schoolAddViewModel.schoolMaster.city = this.schoolAddViewModel.schoolMaster.city.toString();
@@ -437,6 +381,8 @@ export class GeneralInfoComponent implements OnInit {
               this.snackbar.open('General Info Submission Successful.', '', {
                 duration: 10000
               });
+              let schoolIdToString=data.schoolMaster.schoolId.toString();
+              sessionStorage.setItem("selectedSchoolId",schoolIdToString)
               this.generalInfoService.changeMessage(true);
               this.parentShowWash.emit(this.isEditMode);
               this.dataOfgeneralInfo.emit(data);
@@ -447,6 +393,80 @@ export class GeneralInfoComponent implements OnInit {
 
       }
     }
+  }
+  onEditCall(){
+    this.schoolLevelOptions = Object.keys(this.schoolLevels);
+    this.schoolClassificationOptions = Object.keys(this.schoolClassifications);
+    this.genderOptions = Object.keys(this.genders);   
+   
+    
+    if (this.commonFunction.checkEmptyObject(this.dataOfgeneralInfoFromView) === true) {
+      this.schoolAddViewModel = this.dataOfgeneralInfoFromView;
+    
+
+
+    } else if (this.commonFunction.checkEmptyObject(this.dataOfwashInfoFromGeneral) === true) {
+      this.schoolAddViewModel = this.dataOfwashInfoFromGeneral;
+
+    }
+    else if (this.commonFunction.checkEmptyObject(this.dataOfgeneralInfoFromWash) === true) {
+      this.schoolAddViewModel = this.dataOfgeneralInfoFromWash;
+
+    }
+
+    
+    if ((this.commonFunction.checkEmptyObject(this.dataOfwashInfoFromGeneral) === true)
+     || (this.commonFunction.checkEmptyObject(this.dataOfgeneralInfoFromView) === true) 
+     || (this.commonFunction.checkEmptyObject(this.dataOfgeneralInfoFromWash) === true))
+     {
+      this._ImageCropperService.nextMessage(false);  
+      if(this.stateCount!==0)    {
+       this.schoolAddViewModel.schoolMaster.city = +this.schoolAddViewModel.schoolMaster.city;
+       this.schoolAddViewModel.schoolMaster.state = +this.schoolAddViewModel.schoolMaster.state;
+      }
+      else{
+      this.schoolAddViewModel.schoolMaster.city = this.schoolAddViewModel.schoolMaster.city;
+      this.schoolAddViewModel.schoolMaster.state = this.schoolAddViewModel.schoolMaster.state;
+      }
+      this.schoolAddViewModel.schoolMaster.country = +this.schoolAddViewModel.schoolMaster.country;
+      if(this.stateCount!==0){
+       this.getAllStateByCountry(this.schoolAddViewModel.schoolMaster.country);
+       this.getAllCitiesByState(this.schoolAddViewModel.schoolMaster.state);
+      }
+
+      this.schoolAddViewModel.schoolMaster.modifiedBy = sessionStorage.getItem('email');
+      this.schoolAddViewModel.schoolMaster.dateModifed = this.dateCreated;
+      this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolOpened=this.commonFunction.formatDateInEditMode(this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolOpened);      
+      this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolClosed=this.commonFunction.formatDateInEditMode(this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolClosed);
+      
+    }else{     
+      this.schoolAddViewModel.schoolMaster.createdBy = sessionStorage.getItem('email');
+      this.schoolAddViewModel.schoolMaster.dateCreated = this.dateCreated;     
+    }
+
+    this.schoolAddViewModel.schoolMaster.schoolLevel = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolLevel);
+    this.schoolAddViewModel.schoolMaster.schoolClassification = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolClassification) ;
+    
+    this.schoolAddViewModel.schoolMaster.schoolDetail[0].lowestGradeLevel = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolDetail[0].lowestGradeLevel);
+    this.schoolAddViewModel.schoolMaster.schoolDetail[0].highestGradeLevel = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolDetail[0].highestGradeLevel);
+    this.schoolAddViewModel.schoolMaster.schoolDetail[0].gender = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolDetail[0].gender);
+    this.schoolAddViewModel.schoolMaster.schoolDetail[0].telephone = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolDetail[0].telephone) ;
+    this.schoolAddViewModel.schoolMaster.schoolDetail[0].website = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolDetail[0].website) ;
+    this.schoolAddViewModel.schoolMaster.schoolDetail[0].twitter = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolDetail[0].twitter) ;
+    this.schoolAddViewModel.schoolMaster.schoolDetail[0].instagram = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolDetail[0].instagram) ;
+
+
+
+    this.schoolAddViewModel.schoolMaster.schoolName = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolName);
+    this.schoolAddViewModel.schoolMaster.alternateName = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.alternateName) ;
+    this.schoolAddViewModel.schoolMaster.schoolDetail[0].locale = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolDetail[0].locale);
+    this.schoolAddViewModel.schoolMaster.schoolDetail[0].gender = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.schoolDetail[0].gender);
+    this.schoolAddViewModel.schoolMaster.county = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.county);
+    this.schoolAddViewModel.schoolMaster.division = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.division) ;
+  
+    this.schoolAddViewModel.schoolMaster.district = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.district) ;
+    this.schoolAddViewModel.schoolMaster.zip = this.commonFunction.trimData(this.schoolAddViewModel.schoolMaster.zip) ;
+    
   }
 
 }

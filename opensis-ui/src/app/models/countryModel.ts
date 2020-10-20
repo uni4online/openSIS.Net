@@ -19,6 +19,7 @@ export class TableCountryModel {
 export class CountryModel extends CommonField {
     
     public tableCountry : [];
+    public stateCount: number;
    
     constructor() {
         super();

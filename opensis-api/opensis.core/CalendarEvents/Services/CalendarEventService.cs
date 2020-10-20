@@ -118,5 +118,28 @@ namespace opensis.core.CalendarEvents.Services
 
             return calendarEventListModel;
         }
+
+
+        /// <summary>
+        /// Delete Calendar Event
+        /// </summary>
+        /// <param name="calendarEvent"></param>
+        /// <returns></returns>
+        public CalendarEventAddViewModel DeleteCalendarEvent(CalendarEventAddViewModel calendarEvent)
+        {
+            CalendarEventAddViewModel deleteCalendarEvent = new CalendarEventAddViewModel();
+            if (TokenManager.CheckToken(calendarEvent._tenantName, calendarEvent._token))
+            {
+                deleteCalendarEvent = this.calendarEventRepository.DeleteCalendarEvent(calendarEvent);
+                return deleteCalendarEvent;
+            }
+            else
+            {
+                deleteCalendarEvent._failure = true;
+                deleteCalendarEvent._message = TOKENINVALID;
+                return deleteCalendarEvent;
+            }
+
+        }
     }
 }

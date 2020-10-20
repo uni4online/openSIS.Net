@@ -29,7 +29,17 @@ namespace opensisAPI.Controllers
             NoticeAddViewModel noticeAdd = new NoticeAddViewModel();
             try
             {
-                noticeAdd = _noticeService.SaveNotice(notice);
+                if (notice.Notice.SchoolId > 0)
+                {
+                    noticeAdd = _noticeService.SaveNotice(notice);
+                }
+                else
+                {
+                    noticeAdd._token = notice._token;
+                    noticeAdd._tenantName = notice._tenantName;
+                    noticeAdd._failure = true;
+                    noticeAdd._message = "Please enter valid scholl id";
+                }
             }
             catch (Exception es)
             {
@@ -62,7 +72,17 @@ namespace opensisAPI.Controllers
             NoticeAddViewModel noticeAdd = new NoticeAddViewModel();
             try
             {
-                noticeAdd = _noticeService.UpdateNotice(notice);
+                if (notice.Notice.SchoolId > 0)
+                {
+                    noticeAdd = _noticeService.UpdateNotice(notice);
+                }
+                else
+                {
+                    noticeAdd._token = notice._token;
+                    noticeAdd._tenantName = notice._tenantName;
+                    noticeAdd._failure = true;
+                    noticeAdd._message = "Please enter valid scholl id";
+                }
             }
             catch (Exception es)
             {
@@ -79,7 +99,17 @@ namespace opensisAPI.Controllers
             NoticeAddViewModel noticeView = new NoticeAddViewModel();
             try
             {
-                noticeView = _noticeService.ViewNotice(notice);
+                if (notice.Notice.SchoolId > 0)
+                {
+                    noticeView = _noticeService.ViewNotice(notice);
+                }
+                else
+                {
+                    noticeView._token = notice._token;
+                    noticeView._tenantName = notice._tenantName;
+                    noticeView._failure = true;
+                    noticeView._message = "Please enter valid scholl id";
+                }
             }
             catch (Exception es)
             {
@@ -95,7 +125,17 @@ namespace opensisAPI.Controllers
             NoticeListViewModel noticeAdd = new NoticeListViewModel();
             try
             {
-                noticeAdd = _noticeService.GetAllNotice(noticeList);
+                if (noticeList.SchoolId > 0)
+                {
+                    noticeAdd = _noticeService.GetAllNotice(noticeList);
+                }
+                else
+                {
+                    noticeAdd._token = noticeList._token;
+                    noticeAdd._tenantName = noticeList._tenantName;
+                    noticeAdd._failure = true;
+                    noticeAdd._message = "Please enter valid scholl id";
+                }
             }
             catch (Exception es)
             {
