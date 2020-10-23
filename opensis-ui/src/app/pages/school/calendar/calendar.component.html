@@ -4,39 +4,42 @@
       <vex-breadcrumbs [crumbs]="['School','Calendar']" class="flex-auto"></vex-breadcrumbs>
     </vex-secondary-toolbar>
   </vex-page-layout-header>
-  <div class="-mt-20 absolute w-full" vexContainer>
+  <div class="-mt-16 absolute w-full" vexContainer>
     <mat-drawer-container class="bg-transparent" vexContainer>
-      <mat-card class="mb-5 mx-6">
-        <div class="flex items-center pl-0 pb-5" fxLayout="row" fxLayoutAlign="center center">
-          <h2 class="flex-auto">
-            <mat-form-field style="width: 50%;">
+      <mat-card class="mb-5 mx-6 pt-3 px-0 pb-0">
+        <div class="flex items-center py-0 px-4" fxLayout="row" fxLayoutAlign="center center">
+
+          <div class="flex-auto">
+            <div style="text-align: center !important;"><label
+                *ngIf="!showCalendarView">{{'NoCalendarWereFound'| translate }}</label></div>
+            <mat-form-field *ngIf="showCalendarView" class="select-calendar">
               <mat-select [(value)]="selectedCalendar" (selectionChange)="changeCalendar($event.value)">
                 <mat-option *ngFor="let calendar of calendars" [value]="calendar">
                   {{calendar.title}}
                 </mat-option>
               </mat-select>
             </mat-form-field>
-          </h2>
+          </div>
+
           <button type="button" color="primary" mat-raised-button class="mr-3" (click)="openAddNewCalendar()">
             <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2 ic-inline" inline="true"></ic-icon>
             {{'addCalendar' | translate}}
           </button>
-          <button type="button" color="primary" mat-raised-button class="mr-3"
+          <a *ngIf="showCalendarView" class="mx-3" href="javascript:void(0)"
             (click)="openEditCalendar(this.selectedCalendar)">
-            <ic-icon [icon]="icEdit" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2 ic-inline" inline="true"></ic-icon>
-            {{'editCalendar' | translate}}
-          </button>
-          <button type="button" color="primary" mat-raised-button class="mr-3"
+            <ic-icon [icon]="icEdit" inline="true" class="text-2xl"></ic-icon>
+          </a>
+          <a *ngIf="showCalendarView" class="mx-3" href="javascript:void(0)"
             (click)="deleteCalendarConfirm(this.selectedCalendar)">
-            <ic-icon [icon]="icDelete" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2 ic-inline" inline="true"></ic-icon>
-            {{'deleteCalendar' | translate}}
-          </button>
+            <ic-icon [icon]="icDelete" class="text-2xl" inline="true"></ic-icon>
+          </a>
         </div>
-        <hr />
-        <div class="flex-auto flex flex-col sm:flex-row justify-between items-center my-3">
-          <div class="headline text-md text-gray">{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</div>
+        <hr *ngIf="showCalendarView" class="-mx-4" />
+        <div class="flex-auto flex flex-col sm:flex-row justify-between items-center my-3  px-4">
+          <div *ngIf="showCalendarView" class="headline text-md text-gray">
+            {{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</div>
 
-          <div class="actions flex flex-col sm:flex-row justify-end items-center">
+          <div *ngIf="showCalendarView" class="actions flex flex-col sm:flex-row justify-end items-center">
             <div class="chevrons">
               <button [(viewDate)]="viewDate" [view]="view" mat-icon-button mwlCalendarPreviousView>
                 <mat-icon [icIcon]="icChevronLeft"></mat-icon>
@@ -53,11 +56,6 @@
           </div>
         </div>
 
-
-        <div>
-
-        </div>
-
         <ng-template #customCellTemplate let-day="day" let-locale="locale">
           <div class="cal-cell-top">
             <span class="cal-day-badge" *ngIf="day.badgeTotal > 0">{{ day.badgeTotal }}</span>
@@ -66,39 +64,32 @@
 
           <div class="cal-events" *ngIf="day.events.length > 0">
             <div *ngFor="let event of day.events;" style="width: 100% !important;">
-              <div class="cal-event" [style.backgroundColor]="event.meta.calendar.eventColor"
-                [ngClass]="event?.cssClass" [mwlCalendarTooltip]="event.title | calendarEventTitle:'monthTooltip':event"
-                [tooltipEvent]="event" mwlDraggable [class.cal-draggable]="event.draggable"
-                dragActiveClass="cal-drag-active" [dropData]="{event: event}"
-                [dragAxis]="{x: event.draggable, y: event.draggable}">
-                <small class="ml-3 text-gray" (click)="$event.stopPropagation(); viewEvent(event)">{{ event.title}}</small>
+              <div class="cal-event" [ngClass]="event?.cssClass"
+                [mwlCalendarTooltip]="event.title | calendarEventTitle:'monthTooltip':event" [tooltipEvent]="event"
+                mwlDraggable [class.cal-draggable]="event.draggable" dragActiveClass="cal-drag-active"
+                [dropData]="{event: event}" [dragAxis]="{x: event.draggable, y: event.draggable}">
+                <span class="event-color" [style.backgroundColor]="event.meta.calendar.eventColor"></span>
+                <span (click)="$event.stopPropagation(); viewEvent(event)" class="text-xs">{{ event.title}}</span>
               </div>
             </div>
           </div>
-
-
         </ng-template>
-        <ng-template #loading>
-          <div class="text-center">
-            <i class="fas fa-spin fa-spinner fa-5x"></i> <br />
-            Loading events...
-          </div>
-        </ng-template>
-
-        <vex-scrollbar *ngIf="events$ | async; else loading; let events" [ngSwitch]="view"
-          class="px-0 shadow flex-auto relative" vexContainer>
-          <mwl-calendar-month-view *ngSwitchCase="'month'" [refresh]="refresh"
-            (beforeViewRender)="beforeMonthViewRender($event)" [viewDate]="viewDate" [events]="events"
-            (dayClicked)="openAddNewEvent($event.day)" [cellTemplate]="customCellTemplate"
-            (eventTimesChanged)="eventTimesChanged($event)" [weekendDays]="weekendDays">
-          </mwl-calendar-month-view>
-          <mwl-calendar-week-view *ngSwitchCase="'week'" (eventTimesChanged)="eventTimesChanged($event)"
-            [weekendDays]="weekendDays" [refresh]="refresh" [viewDate]="viewDate" [events]="events">
-          </mwl-calendar-week-view>
-          <mwl-calendar-day-view *ngSwitchCase="'day'" (eventTimesChanged)="eventTimesChanged($event)"
-            [refresh]="refresh" [viewDate]="viewDate" [events]="events">
-          </mwl-calendar-day-view>
-        </vex-scrollbar>
+        <div *ngIf="showCalendarView">
+          <vex-scrollbar *ngIf="events$ | async; let events" [ngSwitch]="view" class="px-0 shadow flex-auto relative"
+            vexContainer>
+            <mwl-calendar-month-view *ngSwitchCase="'month'" [refresh]="refresh"
+              (beforeViewRender)="beforeMonthViewRender($event)" [viewDate]="viewDate" [events]="events"
+              (dayClicked)="openAddNewEvent($event.day)" [cellTemplate]="customCellTemplate"
+              (eventTimesChanged)="eventTimesChanged($event)" [weekendDays]="weekendDays">
+            </mwl-calendar-month-view>
+            <mwl-calendar-week-view *ngSwitchCase="'week'" (eventTimesChanged)="eventTimesChanged($event)"
+              [weekendDays]="weekendDays" [refresh]="refresh" [viewDate]="viewDate" [events]="events">
+            </mwl-calendar-week-view>
+            <mwl-calendar-day-view *ngSwitchCase="'day'" (eventTimesChanged)="eventTimesChanged($event)"
+              [refresh]="refresh" [viewDate]="viewDate" [events]="events">
+            </mwl-calendar-day-view>
+          </vex-scrollbar>
+        </div>
       </mat-card>
     </mat-drawer-container>
   </div>

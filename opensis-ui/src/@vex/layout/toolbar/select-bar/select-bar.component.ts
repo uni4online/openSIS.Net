@@ -87,6 +87,7 @@ export class SelectBarComponent implements OnInit {
   selectSchoolOnLoad() {
     if (!sessionStorage.getItem("selectedSchoolId")) {
       sessionStorage.setItem("selectedSchoolId", this.schools[0].schoolId);
+      this.callAcademicYearsOnSchoolSelect();
     } else {
       this.setSchool();
     }
@@ -94,6 +95,7 @@ export class SelectBarComponent implements OnInit {
 
   selectNewSchoolOnAddSchool() {
     this.setSchool();
+    this.callAcademicYearsOnSchoolSelect();
   }
 
   setSchool() {
@@ -106,6 +108,7 @@ export class SelectBarComponent implements OnInit {
     } else {
       this.schoolCtrl.setValue(this.schools[0]);
     }
+    this.callAcademicYearsOnSchoolSelect();
   }
 
   changeSchool(id) {
@@ -145,6 +148,7 @@ export class SelectBarComponent implements OnInit {
       sessionStorage.setItem("academicyear", event.value);
       this.callMarkingPeriodTitleList();
     }
+    this.router.navigate(['/school/dashboards']);
   }
 
   callMarkingPeriodTitleList() {
@@ -174,6 +178,7 @@ export class SelectBarComponent implements OnInit {
   }
 
   changePeriod(event) {
+    this.router.navigate(['/school/dashboards']);
   }
 
   protected filterSchools() {

@@ -28,23 +28,23 @@
         <div class="flex flex-1 mx-6 md:w-1/2">
             <mat-form-field class="w-full" appearance="outline" color="primary">
                 <mat-label>{{'begins' | translate}}</mat-label>
-                <input  formControlName="startDate" (dateChange)="parentStartDateCompare()"  [(ngModel)]="markingPeriodAddModel.tableSchoolYears.startDate"  name="startDate" [matDatepicker]="begins" matInput required>
+                <input  formControlName="startDate"   [(ngModel)]="markingPeriodAddModel.tableSchoolYears.startDate"  name="startDate" [matDatepicker]="begins" [min]="minDate" [max]="maxDate" matInput required>
                 <mat-datepicker-toggle [for]="begins" matSuffix></mat-datepicker-toggle>
                 <mat-datepicker #begins></mat-datepicker>
                 <mat-error *ngIf="form.get('startDate').hasError('required')">{{'startDateIsRequired'|translate}}</mat-error>
                 <mat-error *ngIf="!form.get('startDate').hasError('required') && form.get('startDate').hasError('invalidDateComparison')"></mat-error>
-                <mat-error *ngIf="form.get('startDate').hasError('compareParentError')">{{'startDateShouldBeBetweenParentStartAndEndDate'|translate}}</mat-error>
+                
             </mat-form-field>
         </div>
         <div class="flex flex-1 mx-6 md:w-1/2">
             <mat-form-field class="w-full" appearance="outline" color="primary">
                 <mat-label>{{'ends' | translate}}</mat-label>
-                <input formControlName="endDate" (dateChange)="dateCompare()" [(ngModel)]="markingPeriodAddModel.tableSchoolYears.endDate"  name="endDate" [matDatepicker]="ends" matInput required>
+                <input formControlName="endDate" (dateChange)="dateCompare()" [(ngModel)]="markingPeriodAddModel.tableSchoolYears.endDate"  name="endDate" [matDatepicker]="ends" [min]="minDate" [max]="maxDate" matInput required>
                 <mat-datepicker-toggle [for]="ends" matSuffix></mat-datepicker-toggle>
                 <mat-datepicker #ends></mat-datepicker>
                 <mat-error *ngIf="form.get('endDate').hasError('required')">{{'endDateIsRequired'|translate}}</mat-error>
                 <mat-error *ngIf="form.get('endDate').hasError('compareError')">{{"endDateCannotBeEarlierThanStartDate"|translate}}</mat-error>
-                <mat-error *ngIf="form.get('endDate').hasError('compareParentError')">{{'endDateShouldBeBetweenParentStartAndEndDate'|translate}}</mat-error>
+                
             </mat-form-field>
         </div>
     </div>

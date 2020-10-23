@@ -28,7 +28,7 @@ namespace opensis.data.Repository
             MarkingPeriod markingPeriodModel = new MarkingPeriod();
             try
             {
-                var MarkingperiodViews = this.context?.SchoolYears.Where(x=>x.SchoolId==markingPeriod.SchoolId && x.TenantId==markingPeriod.TenantId).Select(x => new SchoolYearView()
+                var MarkingperiodViews = this.context?.SchoolYears.Where(x=>x.SchoolId==markingPeriod.SchoolId && x.TenantId==markingPeriod.TenantId && x.AcademicYear==markingPeriod.AcademicYear).Select(x => new SchoolYearView()
                 {
                     SchoolId = x.SchoolId,
                     MarkingPeriodId = x.MarkingPeriodId,
@@ -43,11 +43,11 @@ namespace opensis.data.Repository
                     PostStartDate=x.PostStartDate,
                     PostEndDate=x.PostEndDate,
                     StartDate=x.StartDate,
-                    Children = this.context.Semesters.Where(y => y.YearId == x.MarkingPeriodId).Select(y => new SchoolSemesterView()
+                    Children = this.context.Semesters.Where(y => y.YearId == x.MarkingPeriodId && y.AcademicYear == markingPeriod.AcademicYear).Select(y => new SchoolSemesterView()
                     { TenantId = y.TenantId,DoesComments=y.DoesComments,DoesExam=y.DoesExam,DoesGrades=y.DoesGrades,StartDate=y.StartDate,EndDate=y.EndDate,PostStartDate=y.PostStartDate,PostEndDate=y.PostEndDate, Title = y.Title, SchoolId = y.SchoolId, YearId = (int)y.YearId, MarkingPeriodId = y.MarkingPeriodId, IsParent = false, ShortName = y.ShortName,
-                    Children=this.context.Quarters.Where(z=>z.SemesterId==y.MarkingPeriodId).Select(z=> new SchoolQuarterView() {MarkingPeriodId=z.MarkingPeriodId,SemesterId=(int)z.SemesterId,IsParent=false,SchoolId=z.SchoolId,
+                    Children=this.context.Quarters.Where(z=>z.SemesterId==y.MarkingPeriodId && z.AcademicYear == markingPeriod.AcademicYear).Select(z=> new SchoolQuarterView() {MarkingPeriodId=z.MarkingPeriodId,SemesterId=(int)z.SemesterId,IsParent=false,SchoolId=z.SchoolId,
                     Title=z.Title,ShortName=z.ShortName,TenantId=z.TenantId,DoesComments=z.DoesComments,DoesExam=z.DoesExam,DoesGrades=z.DoesGrades,StartDate=z.StartDate,EndDate=z.EndDate,PostStartDate=z.PostStartDate,PostEndDate=z.PostEndDate,
-                    Children=this.context.ProgressPeriods.Where(a=>a.QuarterId==z.MarkingPeriodId).Select(a=> new SchoolProgressPeriodView() {IsParent=false,MarkingPeriodId=a.MarkingPeriodId,SchoolId=a.SchoolId,
+                    Children=this.context.ProgressPeriods.Where(a=>a.QuarterId==z.MarkingPeriodId && a.AcademicYear == markingPeriod.AcademicYear).Select(a=> new SchoolProgressPeriodView() {IsParent=false,MarkingPeriodId=a.MarkingPeriodId,SchoolId=a.SchoolId,
                     QuarterId=a.QuarterId,ShortName=a.ShortName,TenantId=a.TenantId,Title=a.Title,DoesComments=a.DoesComments,DoesExam=a.DoesExam,DoesGrades=a.DoesGrades,StartDate=a.StartDate,EndDate=a.EndDate,PostStartDate=a.PostStartDate,PostEndDate=a.PostEndDate}).ToList() }).ToList() }).ToList() }).ToList();
                 markingPeriodModel.schoolYearsView = MarkingperiodViews;
                 markingPeriodModel._tenantName = markingPeriod._tenantName;

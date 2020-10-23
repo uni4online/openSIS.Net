@@ -11,7 +11,7 @@ import { CalendarService } from '../../../../services/calendar.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ValidationService } from '../../../shared/validation.service';
 import * as moment from 'moment';
-
+import { SharedFunction} from '../../../shared/shared-function';
 
 @Component({
   selector: 'vex-add-calendar',
@@ -43,7 +43,7 @@ export class AddCalendarComponent implements OnInit {
     { name: 'saturday', id: 6 }
   ];
   constructor(private dialogRef: MatDialogRef<AddCalendarComponent>,
-    private fb: FormBuilder, private _membershipService: MembershipService,
+    private fb: FormBuilder, private _membershipService: MembershipService,private commonFunction:SharedFunction,
     private _calendarService: CalendarService, @Inject(MAT_DIALOG_DATA) public data: any, private snackbar: MatSnackBar) {
 
 
@@ -96,22 +96,14 @@ export class AddCalendarComponent implements OnInit {
     }
   }
 
-  private formatDate(date: string): string {
-    if (date === undefined || date === null) {
-      return undefined;
-    } else {
-      return moment(date).format('YYYY-MM-DDTHH:mm:ss.SSS');
-    }
-  }
-
   submitCalendar() {
     this.calendarAddViewModel.schoolCalendar.title = this.form.value.title;
     this.calendarAddViewModel.schoolCalendar.defaultCalender = this.form.value.isDefaultCalendar;
     this.calendarAddViewModel.schoolCalendar.academicYear = new Date(this.form.value.startDate).getFullYear();
     this.calendarAddViewModel.schoolCalendar.days = this.weekArray.toString().replace(/,/g, "");
     this.calendarAddViewModel.schoolCalendar.visibleToMembershipId = this.memberArray.toString();
-    this.calendarAddViewModel.schoolCalendar.startDate = this.formatDate(this.form.value.startDate);
-    this.calendarAddViewModel.schoolCalendar.endDate = this.formatDate(this.form.value.endDate);
+    this.calendarAddViewModel.schoolCalendar.startDate = this.commonFunction.formatDateSaveWithoutTime(this.form.value.startDate);
+    this.calendarAddViewModel.schoolCalendar.endDate = this.commonFunction.formatDateSaveWithoutTime(this.form.value.endDate);
     if (this.form.valid && this.weekArray.length > 0) {
       if (this.calendarAddViewModel.schoolCalendar.calenderId > 0) {
         this._calendarService.updateCalendar(this.calendarAddViewModel).subscribe(data => {

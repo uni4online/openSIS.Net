@@ -63,6 +63,7 @@ export class CalendarComponent implements OnInit {
   getAllCalendarEventList: CalendarEventListViewModel = new CalendarEventListViewModel();
   calendarAddViewModel = new CalendarAddViewModel();
   calendarEventAddViewModel = new CalendarEventAddViewModel();
+  showCalendarView: boolean = false;
   view: CalendarView = CalendarView.Month;
   calendars: CalendarModel[];
   activeDayIsOpen = true;
@@ -124,7 +125,9 @@ export class CalendarComponent implements OnInit {
   getAllCalendar() {
     this._calendarService.getAllCalendar(this.getCalendarList).subscribe((data) => {
       this.calendars = data.calendarList;
+      this.showCalendarView = false;
       if (this.calendars.length !== 0) {
+        this.showCalendarView = true;
         const defaultCalender = this.calendars.find(element => element.defaultCalender === true);
         if (defaultCalender != null) {
           this.selectedCalendar = defaultCalender;
@@ -132,9 +135,11 @@ export class CalendarComponent implements OnInit {
           this.getDays(this.selectedCalendar.days);
           this.getAllCalendarEvent();
         }
+        this.refresh.next();
       }
+      
     });
-    this.refresh.next();
+   
   }
 
   // Rendar all events in calendar
@@ -219,13 +224,7 @@ export class CalendarComponent implements OnInit {
         this.snackbar.open('Event dragging failed. ' + data._message, '', {
           duration: 10000
         });
-      } else {
-        this.snackbar.open('Event dragged successfully. ', '', {
-          duration: 10000
-        });
-
-      }
-
+      } 
     });
     this.refresh.next();
   }

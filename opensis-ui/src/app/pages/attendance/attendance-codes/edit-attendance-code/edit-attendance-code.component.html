@@ -1,5 +1,5 @@
 <div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
-    <h2 class="headline m-0" fxFlex="auto">{{'addAttendanceCode'|translate}}</h2>
+    <h2 class="headline m-0" fxFlex="auto">{{attendanceCodeModalTitle|translate}}</h2>
 
     <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
         <mat-icon [icIcon]="icClose"></mat-icon>
@@ -11,44 +11,48 @@
     <mat-form-field class="mt-6" appearance="outline" color="primary">
         <mat-label>{{'title' | translate}}</mat-label>
         <input formControlName="title" cdkFocusInitial matInput required>
+        <mat-error *ngIf="form.get('title').hasError('required')">{{'titleIsRequired'|translate}}
+        </mat-error>
     </mat-form-field>
 
     <mat-form-field class="w-full" appearance="outline" color="primary">
         <mat-label>{{'shortName' | translate}}</mat-label>
         <input formControlName="shortName" matInput required>
+        <mat-error *ngIf="form.get('shortName').hasError('required')">{{'shortNameIsRequired'|translate}}
+        </mat-error>
     </mat-form-field>
     
     <mat-form-field class="w-full" appearance="outline" color="primary">
         <mat-label>{{'sortOrder' | translate}}</mat-label>
-        <input type="number" formControlName="sortOrder" matInput required>
+        <input type="number" formControlName="sortOrder" min=1 oninput="validity.valid||(value='');" matInput required>
+        <mat-error *ngIf="form.get('sortOrder').hasError('required')">{{'sortOrderIsRequired'|translate}}
+        </mat-error>
     </mat-form-field>
     
     <mat-form-field class="w-full" appearance="outline" color="primary">
         <mat-label>{{'allowEntryBy' | translate}}</mat-label>
-        <mat-select name="gender">
-            <mat-option value=""></mat-option>
+        <mat-select name="allowEntryBy" formControlName="allowEntryBy">
+            <mat-option value="null"></mat-option>
             <mat-option value="Teacher & Office">Teacher & Office</mat-option>
             <mat-option value="Office Only">Office Only</mat-option>
         </mat-select>
     </mat-form-field>
 
-    <mat-checkbox formControlName="" class="mb-4" color="primary">{{'defaultForTeacherAndOffice' | translate}}</mat-checkbox>
+    <mat-checkbox formControlName="defaultCode" class="mb-4" color="primary">{{'defaultForTeacherAndOffice' | translate}}</mat-checkbox>
     
     <mat-form-field class="w-full" appearance="outline" color="primary">
         <mat-label>{{'stateCode' | translate}}</mat-label>
-        <mat-select name="gender">
-            <mat-option value=""></mat-option>
+        <mat-select name="stateCode" formControlName="stateCode">
+            <mat-option value="null"></mat-option>
             <mat-option value="Present">Present</mat-option>
             <mat-option value="Absent">Absent</mat-option>
             <mat-option value="Half Day">Half Day</mat-option>
         </mat-select>
     </mat-form-field>
 
-
-
 </mat-dialog-content>
 
 <mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" class="py-6">
     <button mat-button mat-dialog-close type="button">{{'cancel' | translate}}</button>
-    <button color="primary" mat-raised-button type="submit">{{'submit' | translate}}</button>
+    <button color="primary" mat-raised-button type="submit" (click)="submitAttenndanceCode()">{{attendanceCodeModalActionButton | translate}}</button>
 </mat-dialog-actions>

@@ -44,6 +44,8 @@ using opensis.core.StudentEnrollmentCodes.Interfaces;
 using opensis.core.StudentEnrollmentCodes.Services;
 using opensis.core.Student.Interfaces;
 using opensis.core.Student.Services;
+using opensis.core.CustomField.Interfaces;
+using opensis.core.CustomField.Services;
 
 namespace opensisAPI
 {
@@ -91,6 +93,8 @@ namespace opensisAPI
             services.AddScoped<IStudentEnrollmentCodeRepository, StudentEnrollmentCodeRepository>();
             services.AddScoped<IAttendanceCodeRegisterService, AttendanceCodeRegister>();
             services.AddScoped<IAttendanceCodeRepository, AttendanceCodeRepository>();
+            services.AddScoped<ICustomFieldService, CustomFieldService>();
+            services.AddScoped<ICustomFieldRepository, CustomFieldRepository>();
 
 
 

@@ -18,6 +18,8 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { LoaderService } from '../../../../services/loader.service';
+import { FormControl } from '@angular/forms';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'vex-school-details',
@@ -29,7 +31,6 @@ import { LoaderService } from '../../../../services/loader.service';
   ],
 })
 export class SchoolDetailsComponent implements OnInit {
-  @Input()
   columns = [
     { label: 'Name', property: 'schoolName', type: 'text', visible: true },
     { label: 'Address', property: 'streetAddress1', type: 'text', visible: true, cssClasses: ['font-medium'] },
@@ -39,7 +40,10 @@ export class SchoolDetailsComponent implements OnInit {
   ];
 
   selection = new SelectionModel<any>(true, []);
-  totalCount:number=0;pageNumber:number;pageSize:number;
+  totalCount:number=0;
+  pageNumber:number;
+  pageSize:number;
+  searchCtrl: FormControl;
   icMoreVert = icMoreVert;
   icAdd = icAdd;
   icSearch = icSearch;
@@ -49,7 +53,7 @@ export class SchoolDetailsComponent implements OnInit {
   loading:Boolean;
   getAllSchool: GetAllSchoolModel = new GetAllSchoolModel();
   SchoolModelList: MatTableDataSource<AllSchoolListModel>;
-  
+
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator; 
   @ViewChild(MatSort) sort:MatSort
 
@@ -59,20 +63,34 @@ export class SchoolDetailsComponent implements OnInit {
     private loaderService:LoaderService
     ) 
     { 
+     console.log(this.getAllSchool);
+     this.getAllSchool.filterParams=null;
      this.loaderService.isLoading.subscribe((val) => {
         this.loading = val;
       });
       this.callAllSchool();
-  }
+}
 
   ngOnInit(): void {
+    this.searchCtrl = new FormControl();
   }
   ngAfterViewInit() {
+    //  Sorting
     this.getAllSchool=new GetAllSchoolModel();
     this.sort.sortChange.subscribe((res) => {
       this.getAllSchool.pageNumber=this.pageNumber
       this.getAllSchool.pageSize=this.pageSize;
       this.getAllSchool.sortingModel.sortColumn=res.active;
+      if(this.searchCtrl.value!=null){
+        let filterParams=[
+          {
+           columnName:null,
+           filterValue:this.searchCtrl.value,
+           filterOption:3
+          }
+        ]
+         Object.assign(this.getAllSchool,{filterParams: filterParams});
+      }
       if(res.direction==""){
        this.getAllSchool.sortingModel=null;
       this.callAllSchool();
@@ -83,6 +101,33 @@ export class SchoolDetailsComponent implements OnInit {
     this.callAllSchool();
       }
     });
+
+    //  Searching
+    this.searchCtrl.valueChanges.pipe(debounceTime(500),distinctUntilChanged()).subscribe((term)=>{
+      if(term!=''){
+     let filterParams=[
+       {
+        columnName:null,
+        filterValue:term,
+        filterOption:3
+       }
+     ]
+     if(this.sort.active!=undefined && this.sort.direction!=""){
+      this.getAllSchool.sortingModel.sortColumn=this.sort.active;
+      this.getAllSchool.sortingModel.sortDirection=this.sort.direction;
+    }
+     Object.assign(this.getAllSchool,{filterParams: filterParams});
+     console.log(this.getAllSchool);
+     this.callAllSchool();
+    }else{
+      if(this.sort.active!=undefined && this.sort.direction!=""){
+        this.getAllSchool.sortingModel.sortColumn=this.sort.active;
+        this.getAllSchool.sortingModel.sortDirection=this.sort.direction;
+      }
+     this.callAllSchool();
+
+    }
+      })
   }
 
   goToAdd(){
@@ -94,6 +139,16 @@ export class SchoolDetailsComponent implements OnInit {
     if(this.sort.active!=undefined && this.sort.direction!=""){
       this.getAllSchool.sortingModel.sortColumn=this.sort.active;
       this.getAllSchool.sortingModel.sortDirection=this.sort.direction;
+    }
+    if(this.searchCtrl.value!=null){
+      let filterParams=[
+        {
+         columnName:null,
+         filterValue:this.searchCtrl.value,
+         filterOption:3
+        }
+      ]
+     Object.assign(this.getAllSchool,{filterParams: filterParams});
     }
     this.getAllSchool.pageNumber=event.pageIndex+1;
     this.getAllSchool.pageSize=event.pageSize;
@@ -108,6 +163,7 @@ export class SchoolDetailsComponent implements OnInit {
     if(this.getAllSchool.sortingModel?.sortColumn==""){
       this.getAllSchool.sortingModel=null
     }
+    console.log(this.getAllSchool);
     this.schoolService.GetAllSchoolList(this.getAllSchool).subscribe(data => {
       if(data._failure){
         this.snackbar.open('School information failed. '+ data._message, 'LOL THANKS', {
@@ -118,6 +174,7 @@ export class SchoolDetailsComponent implements OnInit {
         this.pageNumber = data.pageNumber;
         this.pageSize = data._pageSize;
         this.SchoolModelList = new MatTableDataSource(data.getSchoolForView);
+        // if(this.getAllSchool.filterParams!=null)
         this.getAllSchool=new GetAllSchoolModel();
       }
     });

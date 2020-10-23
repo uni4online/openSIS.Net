@@ -10,5 +10,6 @@ namespace opensis.data.ViewModels.MarkingPeriods
         public List<SchoolYearView> schoolYearsView { get; set; }
         public int SchoolId { get; set; }
         public Guid TenantId { get; set; }
+        public decimal? AcademicYear { get; set; }
     }
 }

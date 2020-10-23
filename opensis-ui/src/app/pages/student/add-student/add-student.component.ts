@@ -7,16 +7,36 @@ import { ActivatedRoute } from '@angular/router';
 import { SchoolService } from '../../../services/school.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SharedFunction } from '../../../pages/shared/shared-function';
+import { LayoutService } from 'src/@vex/services/layout.service';
+import { stagger60ms } from '../../../../@vex/animations/stagger.animation';
+import { fadeInUp400ms } from '../../../../@vex/animations/fade-in-up.animation';
+import icSchool from '@iconify/icons-ic/outline-school';
+import icCalendar from '@iconify/icons-ic/outline-calendar-today';
+import icAlarm from '@iconify/icons-ic/outline-alarm';
+import icPoll from '@iconify/icons-ic/outline-poll';
+import icAccessibility from '@iconify/icons-ic/outline-accessibility';
+import icHowToReg from '@iconify/icons-ic/outline-how-to-reg';
+import icBilling from '@iconify/icons-ic/outline-monetization-on';
 
 @Component({
   selector: 'vex-add-student',
   templateUrl: './add-student.component.html',
   styleUrls: ['./add-student.component.scss'],
   animations: [  
-    fadeInRight400ms    
+    fadeInRight400ms,
+    stagger60ms,
+    fadeInUp400ms
   ]
 })
 export class AddStudentComponent implements OnInit {
+
+  icSchool = icSchool;
+  icCalendar = icCalendar;
+  icAlarm = icAlarm;
+  icPoll = icPoll;
+  icAccessibility = icAccessibility;
+  icHowToReg = icHowToReg;
+  icBilling = icBilling;
 
   pageTitle = 'General Info';
   pageId: string = '';
@@ -25,13 +45,17 @@ export class AddStudentComponent implements OnInit {
   displayAddressAndContacts = false;
   displayEnrollmentInfo = false;
   displayFamilyInfo = false;
+  displayLoginInfo = false;
 
   GeneralInfoFlag: boolean = true;
   AddressAndContactsFlag: boolean = false;
   EnrollmentInfoFlag: boolean = false;
   FamilyInfoFlag: boolean = false;
+  LoginInfoFlag: boolean = false;
 
-  constructor() { }
+  constructor(private layoutService: LayoutService) {
+    this.layoutService.collapseSidenav();
+  }
 
   ngOnInit(): void {
     this.pageId = localStorage.getItem("pageId");
@@ -70,6 +94,14 @@ export class AddStudentComponent implements OnInit {
     } else {
       this.displayFamilyInfo = false;
       this.FamilyInfoFlag = false;
+    }
+
+    if (pageId === 'Login Info') {
+      this.displayLoginInfo = true;
+      this.LoginInfoFlag = true;
+    } else {
+      this.displayLoginInfo = false;
+      this.LoginInfoFlag = false;
     }
   }
 

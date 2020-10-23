@@ -17,5 +17,6 @@ namespace opensis.data.Models
         public string UpdatedBy { get; set; }
 
         public virtual GradeEquivalency IscedGradeLevelNavigation { get; set; }
+        public virtual SchoolMaster SchoolMaster { get; set; }
     }
 }

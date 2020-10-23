@@ -1,0 +1,133 @@
+<div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
+    <h2 class="headline m-0" fxFlex="auto">{{'addAndLinkContact' | translate}}</h2>
+    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+        <mat-icon [icIcon]="icClose"></mat-icon>
+    </button>
+</div>
+<mat-divider class="-mx-6 text-border"></mat-divider>
+<form [formGroup]="form">
+    <mat-dialog-content fxLayout="column">
+        <mat-form-field class="mt-6" appearance="outline" color="primary">
+            <mat-label>{{'searchContact' | translate}}</mat-label>
+            <input formControlName="search" name="search" type="text" cdkFocusInitial matInput>
+        </mat-form-field>
+
+        <p class="text-center">- {{'orAddAsNewContactBelow' | translate}} -</p>
+
+        <mat-form-field appearance="outline" class="mt-3" color="primary">
+            <mat-label>{{'firstName' | translate}}</mat-label>
+            <input formControlName="firstName" type="text" name="first_name" matInput required>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" color="primary">
+            <mat-label>{{'lastName' | translate}}</mat-label>
+            <input formControlName="lastName" type="text" name="last_name" matInput required>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" color="primary">
+            <mat-label>{{'contactRelationship' | translate}}</mat-label>
+            <mat-select name="country">
+                <mat-option>Father</mat-option>
+                <mat-option>Mother</mat-option>
+                <mat-option>Grand Father</mat-option>
+                <mat-option>Step Father</mat-option>
+                <mat-option>Step Mother</mat-option>
+                <mat-option>Legal Guardian</mat-option>
+                <mat-option>Other</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" color="primary">
+            <mat-label>{{'emailAddress' | translate}}</mat-label>
+            <input formControlName="emailAddress" type="text" name="email_address" matInput required>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" color="primary">
+            <mat-label>{{'mobilePhone' | translate}}</mat-label>
+            <input formControlName="mobilePhone" type="text" name="mobile_phone" matInput required>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" color="primary">
+            <mat-label>{{'workPhone' | translate}}</mat-label>
+            <input formControlName="workPhone" type="text" name="work_phone" matInput>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" color="primary">
+            <mat-label>{{'homePhone' | translate}}</mat-label>
+            <input formControlName="homePhone" type="text" name="home_phone" matInput>
+        </mat-form-field>
+
+        <h6 class="text-primary">{{'address' | translate}}</h6>
+        <div>
+            <mat-radio-group aria-label="Select an option" color="primary">
+                <mat-radio-button value="1" class="mr-3">{{'sameAsStudentsHomeAddress' | translate}}</mat-radio-button>
+                <mat-radio-button value="2" checked="checked">{{'addNewAddress' | translate}}</mat-radio-button>
+            </mat-radio-group>
+        </div>
+
+        <mat-form-field fxFlex="auto" class="mt-4" appearance="outline" color="primary">
+            <mat-label>{{'streetAddress1'|translate}}</mat-label>
+            <input name="street_address_1" matInput>
+        </mat-form-field>
+
+        <mat-form-field fxFlex="auto" appearance="outline" color="primary">
+            <mat-label>{{'streetAddress2'|translate}}</mat-label>
+            <input name="street_address_2" matInput>
+        </mat-form-field>
+
+        <mat-form-field fxFlex="auto" appearance="outline" color="primary">
+            <mat-label>{{'country'|translate}}</mat-label>
+            <mat-select name="country">
+                <mat-option>Provide Country List</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field fxFlex="auto" appearance="outline" color="primary">
+            <mat-label>{{'stateProvinceLocality'|translate}}</mat-label>
+            <input name="state_province_locality" matInput>
+        </mat-form-field>
+
+        <mat-form-field fxFlex="auto" appearance="outline" color="primary">
+            <mat-label>{{'city'|translate}}</mat-label>
+            <input name="city" matInput>
+        </mat-form-field>
+
+        <mat-form-field fxFlex="auto" appearance="outline" color="primary">
+            <mat-label>{{'zipPostalCode'|translate}}</mat-label>
+            <input name="city" matInput>
+        </mat-form-field>
+
+        <mat-form-field fxFlex="auto" appearance="outline" color="primary">
+            <mat-label>{{'busNo'|translate}}</mat-label>
+            <input name="city" matInput>
+        </mat-form-field>
+
+        <div>
+            <mat-checkbox formControlName="doesGrades" color="primary" class="mr-6">{{'busPickup' | translate}}
+            </mat-checkbox>
+            <mat-checkbox formControlName="doesGrades" color="primary">{{'busDropoff' | translate}}</mat-checkbox>
+        </div>
+        <hr class="-mx-6 my-6">
+        <div class="flex flex-auto">
+            <mat-slide-toggle formControlName="schoolAccess" color="primary" class="mr-4">
+                {{'custodyOfStudent' | translate}}</mat-slide-toggle>
+            <mat-slide-toggle formControlName="schoolAccess" color="primary" checked="checked">
+                {{'schoolAccess' | translate}}</mat-slide-toggle>
+        </div>
+
+        <mat-form-field appearance="outline" class="mt-6" color="primary">
+            <mat-label>{{'username' | translate}}</mat-label>
+            <input formControlName="username" type="text" name="username" matInput>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" color="primary">
+            <mat-label>{{'password' | translate}}</mat-label>
+            <input formControlName="password" type="password" name="password" matInput>
+        </mat-form-field>
+
+    </mat-dialog-content>
+    <mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" class="py-6">
+        <button mat-button mat-dialog-close type="button">{{'cancel' | translate}}</button>
+        <button color="primary" mat-raised-button type="submit">{{'submit' | translate}}</button>
+    </mat-dialog-actions>
+</form>

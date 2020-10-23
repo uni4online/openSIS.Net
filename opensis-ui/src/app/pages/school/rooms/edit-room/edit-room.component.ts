@@ -35,8 +35,8 @@ export class EditRoomComponent implements OnInit {
       this.form=fb.group({
         roomId:[0],
         title:['',[Validators.required]],
-        capacity:[,[Validators.required]],
-        sortorder:[,[Validators.required]],
+        capacity:[,[Validators.required,Validators.min(0)]],
+        sortorder:[,[Validators.required,Validators.min(1)]],
         description:[],
         isActive:[false]
   
@@ -62,6 +62,7 @@ export class EditRoomComponent implements OnInit {
 
   }
   submit(){
+    if (this.form.valid) { 
     if(this.form.controls.roomId.value==0){
       this.roomAddViewModel.tableRoom.title=this.form.controls.title.value
       this.roomAddViewModel.tableRoom.capacity=this.form.controls.capacity.value
@@ -116,7 +117,7 @@ export class EditRoomComponent implements OnInit {
         }
       )
     }
-    
+    }
   }
   cancel(){
     this.dialogRef.close();

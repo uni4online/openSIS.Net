@@ -26,7 +26,7 @@
         <div class="flex-1 mx-6 md:w-1/2">
             <mat-form-field class="w-full" appearance="outline" color="primary">
                 <mat-label>{{'sortOrder' | translate}}</mat-label>
-                <input type="number" formControlName="sortOrder" cdkFocusInitial matInput required>
+                <input type="number" oninput="validity.valid||(value='');" formControlName="sortOrder" min=1 cdkFocusInitial matInput required>
                 <mat-error *ngIf="form.get('sortOrder').hasError('required')">{{'sortOrderIsRequired'|translate}}
                 </mat-error>
             </mat-form-field>

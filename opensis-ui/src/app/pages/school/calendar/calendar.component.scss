@@ -7,3 +7,49 @@ vex-calendar {
     background-size: cover;
   }
 }
+
+.cal-month-view {
+  .cal-events {
+    margin-bottom: 15px;
+
+    .cal-event {
+      display      : block;
+      width        : 100%;
+      height       : auto;
+      background   : transparent;
+      border-color : unset;
+      color        : #333333;
+      border-radius: unset;
+      margin-bottom: 2px;
+    }
+
+    span {
+      display: inline-block;
+      white-space   : nowrap;
+      overflow      : hidden;
+      text-overflow : ellipsis;
+      width         : calc(100% - 26px);
+      vertical-align: top;
+      line-height   : 15px;
+    }
+
+    .event-color {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-left: 4px;
+      margin-right: 6px;
+      margin-top   : 2px;
+    }
+  }
+}
+
+.mat-form-field {
+  &.select-calendar {
+    margin-bottom: 0 !important;
+  }
+
+  .mat-form-field-wrapper {
+    padding-bottom: 0.3em;
+  }
+}

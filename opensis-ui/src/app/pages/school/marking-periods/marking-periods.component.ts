@@ -154,7 +154,8 @@ export class MarkingPeriodsComponent implements OnInit {
       data: {
         editDetails:editDetails,
         isAdd:false,
-        isEdit:true
+        isEdit:true,
+        fullData:this.list
       }   
     }).afterClosed().subscribe((data) => {
      if(data){

@@ -7,9 +7,9 @@ import { WashInfoEnum } from '../../../../enums/wash-info.enum';
 import { SchoolAddViewModel } from '../../../../models/schoolMasterModel';
 import { fadeInRight400ms } from '../../../../../@vex/animations/fade-in-right.animation';
 import { TranslateService } from '@ngx-translate/core';
-import { SchoolService } from 'src/app/services/school.service'
+import { SchoolService } from '../../../../../app/services/school.service'
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { LoaderService } from 'src/app/services/loader.service';
+import { LoaderService } from '../../../../../app/services/loader.service';
 import { SharedFunction } from '../../../shared/shared-function';
 import { ImageCropperService } from '../../../../services/image-cropper.service';
 @Component({

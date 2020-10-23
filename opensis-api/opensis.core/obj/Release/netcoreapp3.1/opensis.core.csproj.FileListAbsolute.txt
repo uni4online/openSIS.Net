@@ -1,0 +1,12 @@
+C:\Projects\Synopsis\openSIS\opensis2_dotnet_development\opensis-api\opensis.core\bin\Release\netcoreapp3.1\opensis.core.deps.json
+C:\Projects\Synopsis\openSIS\opensis2_dotnet_development\opensis-api\opensis.core\bin\Release\netcoreapp3.1\opensis.core.dll
+C:\Projects\Synopsis\openSIS\opensis2_dotnet_development\opensis-api\opensis.core\bin\Release\netcoreapp3.1\opensis.core.pdb
+C:\Projects\Synopsis\openSIS\opensis2_dotnet_development\opensis-api\opensis.core\bin\Release\netcoreapp3.1\opensis.data.dll
+C:\Projects\Synopsis\openSIS\opensis2_dotnet_development\opensis-api\opensis.core\bin\Release\netcoreapp3.1\opensis.data.pdb
+C:\Projects\Synopsis\openSIS\opensis2_dotnet_development\opensis-api\opensis.core\obj\Release\netcoreapp3.1\opensis.core.csprojAssemblyReference.cache
+C:\Projects\Synopsis\openSIS\opensis2_dotnet_development\opensis-api\opensis.core\obj\Release\netcoreapp3.1\opensis.core.AssemblyInfoInputs.cache
+C:\Projects\Synopsis\openSIS\opensis2_dotnet_development\opensis-api\opensis.core\obj\Release\netcoreapp3.1\opensis.core.AssemblyInfo.cs
+C:\Projects\Synopsis\openSIS\opensis2_dotnet_development\opensis-api\opensis.core\obj\Release\netcoreapp3.1\opensis.core.csproj.CoreCompileInputs.cache
+C:\Projects\Synopsis\openSIS\opensis2_dotnet_development\opensis-api\opensis.core\obj\Release\netcoreapp3.1\opensis.core.csproj.CopyComplete
+C:\Projects\Synopsis\openSIS\opensis2_dotnet_development\opensis-api\opensis.core\obj\Release\netcoreapp3.1\opensis.core.dll
+C:\Projects\Synopsis\openSIS\opensis2_dotnet_development\opensis-api\opensis.core\obj\Release\netcoreapp3.1\opensis.core.pdb

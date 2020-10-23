@@ -17,7 +17,7 @@ namespace opensis.data.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                string connectionString = "server=localhost;database={tenant};user=root;password=root";
+                string connectionString = "server=localhost;database={tenant};user=root;password=admin@123";
                 optionsBuilder.UseMySql(connectionString.Replace("{tenant}", "opensisv2test"));
             }
 

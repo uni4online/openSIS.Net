@@ -100,7 +100,7 @@ namespace opensis.data.Repository
                     if (pageResult.FilterParams != null && pageResult.FilterParams.ElementAt(0).ColumnName == null && pageResult.FilterParams.Count == 1)
                     {
                         string Columnvalue = pageResult.FilterParams.ElementAt(0).FilterValue;
-                        schoolListModel.GetSchoolForView = schoollist.Where(x => x.SchoolName.Contains(Columnvalue) || x.Telephone.Contains(Columnvalue) ||x.StreetAddress1.Contains(Columnvalue) || x.NameOfPrincipal.Contains(Columnvalue)).ToList();
+                        schoolListModel.GetSchoolForView = schoollist.Where(x => x.SchoolName.ToLower().Contains(Columnvalue.ToLower()) || x.Telephone.ToLower().Contains(Columnvalue.ToLower()) ||x.StreetAddress1.ToLower().Contains(Columnvalue.ToLower()) || x.NameOfPrincipal.ToLower().Contains(Columnvalue.ToLower())).ToList();
                     }
                     else
                     {
@@ -109,7 +109,7 @@ namespace opensis.data.Repository
                 }
                 
 
-                schoolListModel.TotalCount = schoolListModel.GetSchoolForView.Count();
+                schoolListModel.TotalCount = totalCount;
                 schoolListModel.PageNumber = pageResult.PageNumber;
                 schoolListModel._pageSize = pageResult.PageSize;
                 schoolListModel._tenantName = pageResult._tenantName;

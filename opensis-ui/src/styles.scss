@@ -198,6 +198,65 @@
   }
 }
 
+.container-sidenav-secondary {
+  width: 100%;
+
+  .sidenav-secondary {
+    width       : 240px;
+    background  : #fff;
+    border-top  : 1px solid #eee;
+    border-right: 1px solid rgb(228, 228, 228);
+    height      : calc(100vh - 64px);
+
+    .mat-expansion-panel:not([class*="mat-elevation-z"]) {
+      box-shadow: none;
+
+      .mat-expansion-panel-header {
+        padding: 0 17px;
+
+        .mat-expansion-indicator::after {
+          border-color: rgba(0,0,0,0.3);
+        }
+
+        &.mat-expanded {
+          height: 48px;
+        }
+      }
+      .mat-expansion-panel-body {
+        padding: 0;
+
+        .nav-sub-item {
+          li {
+            a {
+              padding: 6px 12px 6px 53px;
+              display: block;
+              cursor: pointer;
+            }
+          }
+        }
+      }
+    }
+
+    .simplebar-wrapper {
+      height      : calc(100vh - 65px);
+
+      .simplebar-mask {
+        height      : calc(100vh - 65px);
+
+        .simplebar-content-wrapper {
+          height      : calc(100vh - 65px);
+        }
+      }
+    }
+  }
+
+  .right-content {
+    width: calc(100% - 240px);
+    height      : calc(100vh - 64px);
+    overflow: auto;
+  }
+}
+
 /*
   You can override any CSS Variable or style here
   Example:

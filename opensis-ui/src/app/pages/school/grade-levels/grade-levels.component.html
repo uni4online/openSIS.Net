@@ -1,3 +1,4 @@
+<mat-card  class="w-full p-0" fxFlex="auto">
 <div class="bg-white px-gutter h-16 border-b sticky left-0" fxLayout="row" fxLayoutAlign="start center">
     <div class="flex w-full justify-between">
         <div class="py-3" fxFlex="300px" fxFlex.lt-md="auto" fxHide.xs fxLayout="row"
@@ -119,6 +120,7 @@
     <tr mat-footer-row *matFooterRowDef="['noData']" [class.hide]="sendGradeLevelsToDialog?.length!=0"></tr>
     
   </table>
+</mat-card>
 
   <mat-menu #columnFilterMenu="matMenu" xPosition="before" yPosition="below">
     <button (click)="toggleColumnVisibility(column, $event)" *ngFor="let column of columns"

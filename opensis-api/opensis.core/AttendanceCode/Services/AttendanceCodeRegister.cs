@@ -27,30 +27,29 @@ namespace opensis.core.AttendanceCode.Services
         /// <returns></returns>
         public AttendanceCodeAddViewModel SaveAttendanceCode(AttendanceCodeAddViewModel attendanceCodeAddViewModel)
         {
-            AttendanceCodeAddViewModel AttendanceCodeAddViewModel = new AttendanceCodeAddViewModel();
+            AttendanceCodeAddViewModel AttendanceCodeAddModel = new AttendanceCodeAddViewModel();
             try
             {
                 if (TokenManager.CheckToken(attendanceCodeAddViewModel._tenantName, attendanceCodeAddViewModel._token))
                 {
 
-                    AttendanceCodeAddViewModel = this.attendanceCodeRepository.AddAttendanceCode(attendanceCodeAddViewModel);
-                    return AttendanceCodeAddViewModel;
+                    AttendanceCodeAddModel = this.attendanceCodeRepository.AddAttendanceCode(attendanceCodeAddViewModel);                
 
                 }
                 else
                 {
-                    AttendanceCodeAddViewModel._failure = true;
-                    AttendanceCodeAddViewModel._message = TOKENINVALID;
-                    return AttendanceCodeAddViewModel;
+                    AttendanceCodeAddModel._failure = true;
+                    AttendanceCodeAddModel._message = TOKENINVALID;
+                    
                 }
             }
             catch (Exception es)
             {
 
-                AttendanceCodeAddViewModel._failure = true;
-                AttendanceCodeAddViewModel._message = es.Message;
+                AttendanceCodeAddModel._failure = true;
+                AttendanceCodeAddModel._message = es.Message;
             }
-            return AttendanceCodeAddViewModel;
+            return AttendanceCodeAddModel;
 
         }
         /// <summary>
@@ -87,26 +86,54 @@ namespace opensis.core.AttendanceCode.Services
         /// <returns></returns>
         public AttendanceCodeAddViewModel UpdateAttendanceCode(AttendanceCodeAddViewModel attendanceCodeAddViewModel)
         {
-            AttendanceCodeAddViewModel attendanceCodeUpdate = new AttendanceCodeAddViewModel();
+            AttendanceCodeAddViewModel attendanceCodeUpdateModel = new AttendanceCodeAddViewModel();
             try
             {
                 if (TokenManager.CheckToken(attendanceCodeAddViewModel._tenantName, attendanceCodeAddViewModel._token))
                 {
-                    attendanceCodeUpdate = this.attendanceCodeRepository.UpdateAttendanceCode(attendanceCodeAddViewModel);
+                    attendanceCodeUpdateModel = this.attendanceCodeRepository.UpdateAttendanceCode(attendanceCodeAddViewModel);
                 }
                 else
                 {
-                    attendanceCodeUpdate._failure = true;
-                    attendanceCodeUpdate._message = TOKENINVALID;
+                    attendanceCodeUpdateModel._failure = true;
+                    attendanceCodeUpdateModel._message = TOKENINVALID;
                 }
             }
             catch (Exception es)
             {
-                attendanceCodeUpdate._failure = true;
-                attendanceCodeUpdate._message = es.Message;
+                attendanceCodeUpdateModel._failure = true;
+                attendanceCodeUpdateModel._message = es.Message;
             }
 
-            return attendanceCodeUpdate;
+            return attendanceCodeUpdateModel;
+        }
+        /// <summary>
+        /// Get All AttendanceCode
+        /// </summary>
+        /// <param name="attendanceCodeListViewModel"></param>
+        /// <returns></returns>
+        public AttendanceCodeListViewModel GetAllAttendanceCode(AttendanceCodeListViewModel attendanceCodeListViewModel)
+        {
+            AttendanceCodeListViewModel attendanceCodeListModel = new AttendanceCodeListViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(attendanceCodeListViewModel._tenantName, attendanceCodeListViewModel._token))
+                {
+                    attendanceCodeListModel = this.attendanceCodeRepository.GetAllAttendanceCode(attendanceCodeListViewModel);
+                }
+                else
+                {
+                    attendanceCodeListModel._failure = true;
+                    attendanceCodeListModel._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                attendanceCodeListModel._failure = true;
+                attendanceCodeListModel._message = es.Message;
+            }
+
+            return attendanceCodeListModel;
         }
         /// <summary>
         /// Delete AttendanceCode
@@ -115,26 +142,167 @@ namespace opensis.core.AttendanceCode.Services
         /// <returns></returns>
         public AttendanceCodeAddViewModel DeleteAttendanceCode(AttendanceCodeAddViewModel attendanceCodeAddViewModel)
         {
-            AttendanceCodeAddViewModel attendanceCodedelete = new AttendanceCodeAddViewModel();
+            AttendanceCodeAddViewModel attendanceCodeDeleteModel = new AttendanceCodeAddViewModel();
             try
             {
                 if (TokenManager.CheckToken(attendanceCodeAddViewModel._tenantName, attendanceCodeAddViewModel._token))
                 {
-                    attendanceCodedelete = this.attendanceCodeRepository.DeleteAttendanceCode(attendanceCodeAddViewModel);
+                    attendanceCodeDeleteModel = this.attendanceCodeRepository.DeleteAttendanceCode(attendanceCodeAddViewModel);
                 }
                 else
                 {
-                    attendanceCodedelete._failure = true;
-                    attendanceCodedelete._message = TOKENINVALID;
+                    attendanceCodeDeleteModel._failure = true;
+                    attendanceCodeDeleteModel._message = TOKENINVALID;
                 }
             }
             catch (Exception es)
             {
-                attendanceCodedelete._failure = true;
-                attendanceCodedelete._message = es.Message;
+                attendanceCodeDeleteModel._failure = true;
+                attendanceCodeDeleteModel._message = es.Message;
             }
 
-            return attendanceCodedelete;
+            return attendanceCodeDeleteModel;
+        }
+        /// <summary>
+        /// Add  AttendanceCodeCategories
+        /// </summary>
+        /// <param name="attendanceCodeCategoriesAddViewModel"></param>
+        /// <returns></returns>
+        public AttendanceCodeCategoriesAddViewModel SaveAttendanceCodeCategories(AttendanceCodeCategoriesAddViewModel attendanceCodeCategoriesAddViewModel)
+        {
+            AttendanceCodeCategoriesAddViewModel AttendanceCodeCategoriesAddModel = new AttendanceCodeCategoriesAddViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(attendanceCodeCategoriesAddViewModel._tenantName, attendanceCodeCategoriesAddViewModel._token))
+                {
+
+                    AttendanceCodeCategoriesAddModel = this.attendanceCodeRepository.AddAttendanceCodeCategories(attendanceCodeCategoriesAddViewModel);                 
+
+                }
+                else
+                {
+                    AttendanceCodeCategoriesAddModel._failure = true;
+                    AttendanceCodeCategoriesAddModel._message = TOKENINVALID;                    
+                }
+            }
+            catch (Exception es)
+            {
+
+                AttendanceCodeCategoriesAddModel._failure = true;
+                AttendanceCodeCategoriesAddModel._message = es.Message;
+            }
+            return AttendanceCodeCategoriesAddModel;
+        }
+        /// <summary>
+        /// Get  AttendanceCodeCategories By Id
+        /// </summary>
+        /// <param name="attendanceCodeCategoriesAddViewModel"></param>
+        /// <returns></returns>
+        public AttendanceCodeCategoriesAddViewModel ViewAttendanceCodeCategories(AttendanceCodeCategoriesAddViewModel attendanceCodeCategoriesAddViewModel)
+        {
+            AttendanceCodeCategoriesAddViewModel attendanceCodeCategoriesViewModel = new AttendanceCodeCategoriesAddViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(attendanceCodeCategoriesAddViewModel._tenantName, attendanceCodeCategoriesAddViewModel._token))
+                {
+                    attendanceCodeCategoriesViewModel = this.attendanceCodeRepository.ViewAttendanceCodeCategories(attendanceCodeCategoriesAddViewModel);
+                }
+                else
+                {
+                    attendanceCodeCategoriesViewModel._failure = true;
+                    attendanceCodeCategoriesViewModel._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                attendanceCodeCategoriesViewModel._failure = true;
+                attendanceCodeCategoriesViewModel._message = es.Message;
+            }
+            return attendanceCodeCategoriesViewModel;
+        }
+        /// <summary>
+        /// Update  AttendanceCodeCategories
+        /// </summary>
+        /// <param name="attendanceCodeCategoriesAddViewModel"></param>
+        /// <returns></returns>
+        public AttendanceCodeCategoriesAddViewModel UpdateAttendanceCodeCategories(AttendanceCodeCategoriesAddViewModel attendanceCodeCategoriesAddViewModel)
+        {
+            AttendanceCodeCategoriesAddViewModel attendanceCodeCategoriesUpdateModel = new AttendanceCodeCategoriesAddViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(attendanceCodeCategoriesAddViewModel._tenantName, attendanceCodeCategoriesAddViewModel._token))
+                {
+                    attendanceCodeCategoriesUpdateModel = this.attendanceCodeRepository.UpdateAttendanceCodeCategories(attendanceCodeCategoriesAddViewModel);
+                }
+                else
+                {
+                    attendanceCodeCategoriesUpdateModel._failure = true;
+                    attendanceCodeCategoriesUpdateModel._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                attendanceCodeCategoriesUpdateModel._failure = true;
+                attendanceCodeCategoriesUpdateModel._message = es.Message;
+            }
+
+            return attendanceCodeCategoriesUpdateModel;
+        }
+        /// <summary>
+        /// Get All AttendanceCodeCategories
+        /// </summary>
+        /// <param name="attendanceCodeCategoriesListViewModel"></param>
+        /// <returns></returns>
+        public AttendanceCodeCategoriesListViewModel GetAllAttendanceCodeCategories(AttendanceCodeCategoriesListViewModel attendanceCodeCategoriesListViewModel)
+        {
+            AttendanceCodeCategoriesListViewModel attendanceCodeCategoriesListModel = new AttendanceCodeCategoriesListViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(attendanceCodeCategoriesListViewModel._tenantName, attendanceCodeCategoriesListViewModel._token))
+                {
+                    attendanceCodeCategoriesListModel = this.attendanceCodeRepository.GetAllAttendanceCodeCategories(attendanceCodeCategoriesListViewModel);
+                }
+                else
+                {
+                    attendanceCodeCategoriesListModel._failure = true;
+                    attendanceCodeCategoriesListModel._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                attendanceCodeCategoriesListModel._failure = true;
+                attendanceCodeCategoriesListModel._message = es.Message;
+            }
+
+            return attendanceCodeCategoriesListModel;
+        }
+        /// <summary>
+        /// Delete AttendanceCodeCategories
+        /// </summary>
+        /// <param name="attendanceCodeCategoriesAddViewModel"></param>
+        /// <returns></returns>
+        public AttendanceCodeCategoriesAddViewModel DeleteAttendanceCodeCategories(AttendanceCodeCategoriesAddViewModel attendanceCodeCategoriesAddViewModel)
+        {
+            AttendanceCodeCategoriesAddViewModel attendanceCodeCategoriesDeleteModel = new AttendanceCodeCategoriesAddViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(attendanceCodeCategoriesAddViewModel._tenantName, attendanceCodeCategoriesAddViewModel._token))
+                {
+                    attendanceCodeCategoriesDeleteModel = this.attendanceCodeRepository.DeleteAttendanceCodeCategories(attendanceCodeCategoriesAddViewModel);
+                }
+                else
+                {
+                    attendanceCodeCategoriesDeleteModel._failure = true;
+                    attendanceCodeCategoriesDeleteModel._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                attendanceCodeCategoriesDeleteModel._failure = true;
+                attendanceCodeCategoriesDeleteModel._message = es.Message;
+            }
+
+            return attendanceCodeCategoriesDeleteModel;
         }
     }
 }

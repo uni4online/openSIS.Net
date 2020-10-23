@@ -8,6 +8,7 @@ namespace opensis.data.Models
     {
         public Guid TenantId { get; set; }
         public int SchoolId { get; set; }
+        public int AttendanceCategoryId { get; set; }
         public int AttendanceCode1 { get; set; }
         public decimal? AcademicYear { get; set; }
         public string Title { get; set; }
@@ -19,5 +20,7 @@ namespace opensis.data.Models
         public int? SortOrder { get; set; }
         public DateTime? LastUpdated { get; set; }
         public string UpdatedBy { get; set; }
+
+        public virtual AttendanceCodeCategories AttendanceCodeCategories { get; set; }
     }
 }

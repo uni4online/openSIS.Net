@@ -23,9 +23,11 @@ namespace opensis.data.Models
 
 
         public virtual DbSet<AttendanceCode> AttendanceCode { get; set; }
+        public virtual DbSet<AttendanceCodeCategories> AttendanceCodeCategories { get; set; }
         public virtual DbSet<CalendarEvents> CalendarEvents { get; set; }
         public virtual DbSet<City> City { get; set; }
         public virtual DbSet<Country> Country { get; set; }
+        public virtual DbSet<CustomFields> CustomFields { get; set; }
         public virtual DbSet<GradeEquivalency> GradeEquivalency { get; set; }
         public virtual DbSet<Gradelevels> Gradelevels { get; set; }
         public virtual DbSet<Language> Language { get; set; }
@@ -51,13 +53,14 @@ namespace opensis.data.Models
 
             modelBuilder.Entity<AttendanceCode>(entity =>
             {
-                entity.HasKey(e => new { e.TenantId, e.SchoolId, e.AttendanceCode1 });
+                entity.HasKey(e => new { e.TenantId, e.SchoolId, e.AttendanceCategoryId, e.AttendanceCode1 });
 
                 entity.ToTable("attendance_code");
 
                 entity.Property(e => e.TenantId).HasColumnName("tenant_id");
 
                 entity.Property(e => e.SchoolId).HasColumnName("school_id");
+                entity.Property(e => e.AttendanceCategoryId).HasColumnName("attendance_category_id");
 
                 entity.Property(e => e.AttendanceCode1).HasColumnName("attendance_code");
 
@@ -102,7 +105,52 @@ namespace opensis.data.Models
                     .HasColumnName("updated_by")
                     .HasMaxLength(100)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.AttendanceCodeCategories)
+                    .WithMany(p => p.AttendanceCode)
+                    .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.AttendanceCategoryId })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_attendance_code_attendance_code_categories");
             });
+
+
+            modelBuilder.Entity<AttendanceCodeCategories>(entity =>
+            {
+                entity.HasKey(e => new { e.TenantId, e.SchoolId, e.AttendanceCategoryId });
+
+                entity.ToTable("attendance_code_categories");
+
+                entity.Property(e => e.TenantId).HasColumnName("tenant_id");
+
+                entity.Property(e => e.SchoolId).HasColumnName("school_id");
+
+                entity.Property(e => e.AttendanceCategoryId).HasColumnName("attendance_category_id");
+
+                entity.Property(e => e.AcademicYear)
+                    .HasColumnName("academic_year")
+                    .HasColumnType("decimal(4, 0)");
+
+                entity.Property(e => e.LastUpdated)
+                    .HasColumnName("last_updated")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.Title)
+                    .HasColumnName("title")
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UpdatedBy)
+                    .HasColumnName("updated_by")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.SchoolMaster)
+                    .WithMany(p => p.AttendanceCodeCategories)
+                    .HasForeignKey(d => new { d.TenantId, d.SchoolId })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_attendance_code_categories_school_master");
+            });
+
 
             modelBuilder.Entity<CalendarEvents>(entity =>
             {
@@ -197,6 +245,66 @@ namespace opensis.data.Models
                 entity.Property(e => e.Name).HasColumnName("name").HasMaxLength(50);
             });
 
+            modelBuilder.Entity<CustomFields>(entity =>
+            {
+                entity.HasKey(e => new { e.TenantId, e.SchoolId, e.FieldId });
+
+                entity.ToTable("custom_fields");
+
+                entity.Property(e => e.TenantId).HasColumnName("tenant_id");
+
+                entity.Property(e => e.SchoolId).HasColumnName("school_id");
+
+                entity.Property(e => e.FieldId).HasColumnName("field_id");
+
+                entity.Property(e => e.CategoryId).HasColumnName("category_id");
+
+                entity.Property(e => e.DefaultSelection)
+                    .HasColumnName("default_selection")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Hide).HasColumnName("hide");
+
+                entity.Property(e => e.LastUpdate)
+                    .HasColumnName("last_update")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.Required).HasColumnName("required");
+
+                entity.Property(e => e.Search).HasColumnName("search");
+
+                entity.Property(e => e.SelectOptions)
+                    .HasColumnName("select_options")
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SortOrder).HasColumnName("sort_order");
+
+                entity.Property(e => e.SystemField).HasColumnName("system_field");
+
+                entity.Property(e => e.Title)
+                    .HasColumnName("title")
+                    .HasMaxLength(30)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Type)
+                    .HasColumnName("type")
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UpdatedBy)
+                    .HasColumnName("updated_by")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.SchoolMaster)
+                    .WithMany(p => p.CustomFields)
+                    .HasForeignKey(d => new { d.TenantId, d.SchoolId })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_custom_fields_school_master");
+            });
+
+
             modelBuilder.Entity<GradeEquivalency>(entity =>
             {
                 entity.HasKey(e => e.IscedGradeLevel);
@@ -270,7 +378,14 @@ namespace opensis.data.Models
                     .HasForeignKey(d => d.IscedGradeLevel)
                     .HasConstraintName("FK_gradelevels_grade_equivalency");
 
+                entity.HasOne(d => d.SchoolMaster)
+                    .WithMany(p => p.Gradelevels)
+                    .HasForeignKey(d => new { d.TenantId, d.SchoolId })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_gradelevels_school_master");
+
             });
+
 
             modelBuilder.Entity<Language>(entity =>
             {

@@ -1,0 +1,84 @@
+<div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
+    <h2 class="headline m-0" fxFlex="auto">John Doe</h2>
+    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+        <mat-icon [icIcon]="icClose"></mat-icon>
+    </button>
+</div>
+<mat-divider class="-mx-6 text-border"></mat-divider>
+<mat-dialog-content>
+    <ul class="grid grid-cols-2 col-gap-8 row-gap-10 mt-6">
+        <li>
+            <label class="text-sm leading-5 text-gray">{{'firstName' | translate}}</label>
+            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">John</p>
+        </li>
+        <li>
+            <label class="text-sm leading-5 text-gray">{{'lastName' | translate}}</label>
+            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Doe</p>
+        </li>
+        <li>
+            <label class="text-sm leading-5 text-gray">{{'contactRelationship' | translate}}</label>
+            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Father</p>
+        </li>
+        <li>
+            <label class="text-sm leading-5 text-gray">{{'emailAddress' | translate}}</label>
+            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">johndoe2020@example.com</p>
+        </li>
+        <li>
+            <label class="text-sm leading-5 text-gray">{{'mobilePhone' | translate}}</label>
+            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">1234567890</p>
+        </li>
+        <li>
+            <label class="text-sm leading-5 text-gray">{{'workPhone' | translate}}</label>
+            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">1234567980</p>
+        </li>
+        <li>
+            <label class="text-sm leading-5 text-gray">{{'homePhone' | translate}}</label>
+            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">3216549870</p>
+        </li>
+    </ul>
+    
+    <h6 class="text-primary mt-10 mb-3">{{'address' | translate}}</h6>
+    <ul class="grid grid-cols-2 col-gap-8 row-gap-10">
+        <li>
+            <label class="text-sm leading-5 text-gray">{{'streetAddress1' | translate}}</label>
+            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">2000 Ruth St NW</p>
+        </li>
+        <li>
+            <label class="text-sm leading-5 text-gray">{{'streetAddress2' | translate}}</label>
+            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">-</p>
+        </li>
+        <li>
+            <label class="text-sm leading-5 text-gray">{{'country' | translate}}</label>
+            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">USA</p>
+        </li>
+        <li>
+            <label class="text-sm leading-5 text-gray">{{'stateProvinceLocality' | translate}}</label>
+            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">GA</p>
+        </li>
+        <li>
+            <label class="text-sm leading-5 text-gray">{{'city' | translate}}</label>
+            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Atlanta</p>
+        </li>
+        <li>
+            <label class="text-sm leading-5 text-gray">{{'zipPostalCode' | translate}}</label>
+            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">303178</p>
+        </li>
+        <li>
+            <label class="text-sm leading-5 text-gray">{{'busNo' | translate}}</label>
+            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">S12</p>
+        </li>
+        <li>
+            <label class="text-sm leading-5 text-gray">{{'busPickup' | translate}}</label>
+            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Yes</p>
+        </li>
+        <li>
+            <label class="text-sm leading-5 text-gray">{{'busDropoff' | translate}}</label>
+            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Yes</p>
+        </li>
+        <li>
+            <label class="text-sm leading-5 text-gray">{{'custodyOfStudent' | translate}}</label>
+            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Yes</p>
+        </li>
+    </ul>
+</mat-dialog-content>
+<mat-dialog-actions class="py-6"></mat-dialog-actions>

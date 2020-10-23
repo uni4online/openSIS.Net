@@ -2,15 +2,15 @@ import { Component, Input, OnInit } from '@angular/core';
 import icPreview from '@iconify/icons-ic/round-preview';
 import icPeople from '@iconify/icons-ic/twotone-people';
 import icMoreVert from '@iconify/icons-ic/more-vert';
-import { NoticeDeleteModel } from 'src/app/models/noticeDeleteModel';
-import { NoticeService } from 'src/app/services/notice.service';
+import { NoticeDeleteModel } from '../../../../../app/models/noticeDeleteModel';
+import { NoticeService } from '../../../../../app/services/notice.service';
 import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NoticeAddViewModel, NoticeListViewModel } from 'src/app/models/noticeModel';
 import { MatDialog } from '@angular/material/dialog';
 import { EditNoticeComponent } from '../edit-notice/edit-notice.component';
 import { TranslateService } from '@ngx-translate/core';
-import { ConfirmDialogComponent } from 'src/app/pages/shared-module/confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogComponent } from '../../../../../app/pages/shared-module/confirm-dialog/confirm-dialog.component';
 @Component({
   selector: 'vex-notice-cards',
   templateUrl: './notice-cards.component.html',

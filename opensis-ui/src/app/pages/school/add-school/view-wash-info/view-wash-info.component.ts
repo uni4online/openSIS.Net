@@ -1,10 +1,10 @@
 import { Component, OnInit,Input,Output,EventEmitter } from '@angular/core';
-import { fadeInUp400ms } from 'src/@vex/animations/fade-in-up.animation';
-import {fadeInRight400ms} from 'src/@vex/animations/fade-in-right.animation';
-import { stagger60ms } from 'src/@vex/animations/stagger.animation';
+import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
+import {fadeInRight400ms} from '../../../../../@vex/animations/fade-in-right.animation';
+import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
 import icEdit from '@iconify/icons-ic/twotone-edit';
-import { SchoolService } from 'src/app/services/school.service';
-import { SchoolAddViewModel } from 'src/app/models/schoolMasterModel';
+import { SchoolService } from '../../../../../app/services/school.service';
+import { SchoolAddViewModel } from '../../../../../app/models/schoolMasterModel';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 

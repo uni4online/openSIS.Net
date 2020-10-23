@@ -7,7 +7,7 @@
     <vex-page-layout-content class="-mt-6">
         <mat-drawer-container class="bg-transparent flex-auto flex -mt-16">
             <mat-drawer-content class="flex-auto flex items-start">
-                <mat-card  class="w-full p-0" fxFlex="auto">
+                <div  class="w-full p-0">
                     <div *ngIf="displayGradeLevels">
                         <vex-grade-levels></vex-grade-levels>
                     </div>
@@ -20,7 +20,7 @@
                     <div *ngIf="displaySchoolFields">
                         <vex-school-fields></vex-school-fields>
                     </div>
-                </mat-card>
+                </div>
             </mat-drawer-content>
         </mat-drawer-container>
     </vex-page-layout-content>

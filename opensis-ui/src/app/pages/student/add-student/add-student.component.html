@@ -1,37 +1,64 @@
+<div class="flex container-sidenav-secondary">
+    <div class="sidenav-secondary">
+        <vex-scrollbar class="flex-auto">
+        <div class="h-45 flex items-center sm:px-0" fxLayout="row" fxLayoutAlign="start center">
+            <vex-profile-image></vex-profile-image>
+        </div>
+
+        <mat-accordion>
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            <mat-icon [icIcon]="icSchool" class="mr-3"></mat-icon> Student Details
+                        </mat-panel-title>
+                </mat-expansion-panel-header>
+                <ul class="nav-sub-item">
+                    <li><a routerLink="" @fadeInRight (click)='showPage("General Info")'>General Info</a></li>
+                        <li><a routerLink="" @fadeInRight class="text-primary"
+                                (click)='showPage("Address & Contacts")'>Address & Contact</a></li>
+                        <li><a routerLink="" @fadeInRight (click)='showPage("School & Enrollment Info")'>School &
+                                Enrollment Info</a></li>
+                    <li><a routerLink="" @fadeInRight (click)='showPage("Family Info")'>Family Info</a></li>
+                    <li><a routerLink="" @fadeInRight (click)='showPage("Login Info")'>Login Info</a></li>
+                </ul>
+              </mat-expansion-panel>
+        </mat-accordion>
+        <div class="px-gutter sm:px-0">
+                <a @fadeInRight class="list-item mt-2 no-underline flex items-center" matRipple>
+                    <mat-icon [icIcon]="icCalendar" class="mr-3"></mat-icon> Schedule
+                </a>
+                <a @fadeInRight class="list-item mt-2 no-underline flex items-center" matRipple>
+                    <mat-icon [icIcon]="icAlarm" class="mr-3"></mat-icon> Attendance
+                </a>
+                <a @fadeInRight class="list-item mt-2 no-underline flex items-center" matRipple>
+                    <mat-icon [icIcon]="icPoll" class="mr-3"></mat-icon> Grades
+                </a>
+                <a @fadeInRight class="list-item mt-2 no-underline flex items-center" matRipple>
+                    <mat-icon [icIcon]="icAccessibility" class="mr-3"></mat-icon> Extracurricular
+                </a>
+                <a @fadeInRight class="list-item mt-2 no-underline flex items-center" matRipple>
+                    <mat-icon [icIcon]="icHowToReg" class="mr-3"></mat-icon> Behavior
+                </a>
+                <a @fadeInRight class="list-item mt-2 no-underline flex items-center" matRipple>
+                    <mat-icon [icIcon]="icBilling" class="mr-3"></mat-icon> Billing & Fees
+                </a>
+        </div>
+        </vex-scrollbar>
+    </div>
+    <div class="right-content">
+
+
 <vex-page-layout>
-    <vex-page-layout-header class="pb-16" fxLayout="column" fxLayoutAlign="center start">        
+            <vex-page-layout-header class="pb-16 pt-6" fxLayoutAlign="center start">
         <vex-secondary-toolbar current="Add Student Information" class="w-full">
             <vex-breadcrumbs [crumbs]="['Student','Add Student']" class="flex-auto"></vex-breadcrumbs>
         </vex-secondary-toolbar>
     </vex-page-layout-header>    
-    <vex-page-layout-content class="-mt-6">
+            <vex-page-layout-content class="-mt-14">
         <mat-drawer-container class="bg-transparent flex-auto flex -mt-16">
             <mat-drawer-content class="flex-auto flex items-start">
-                <div class="hidden sm:block mr-6 ng-tns-c284-386 ng-star-inserted w-1/6">
-                    <div class="max-w-xxxs w-full">
-                        <div class="h-45 mb-6 flex items-center sm:px-0" fxLayout="row" fxLayoutAlign="start center">
-                            <vex-profile-image></vex-profile-image>
-                        </div>
 
-                        <div class="px-gutter sm:px-0">
-                            <a @fadeInRight class="list-item mt-2 no-underline flex items-center" matRipple (click)='showPage("General Info")'>
-                                <span>General Info</span>
-                            </a>
-                            <a @fadeInRight class="list-item mt-2 no-underline flex items-center" matRipple (click)='showPage("Address & Contacts")'>
-                                <span>Address & Contacts</span>
-                            </a>
-                            <a @fadeInRight class="list-item mt-2 no-underline flex items-center" matRipple (click)='showPage("School & Enrollment Info")'>
-                                <span>School & Enrollment Info</span>
-                            </a>
-                            <a @fadeInRight class="list-item mt-2 no-underline flex items-center" matRipple (click)='showPage("Family Info")'>
-                                <span>Family Info</span>
-                            </a>
-                            <a @fadeInRight class="list-item mt-2 no-underline flex items-center" matRipple (click)='showPage("Login Info")'>
-                                <span>Login Info</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
+
                 <div class="w-full" fxFlex="auto">
                     <div  *ngIf="displayGeneralInfo">
                         <vex-student-generalinfo></vex-student-generalinfo>
@@ -48,8 +75,14 @@
                     <div  *ngIf="displayFamilyInfo">
                     <vex-student-familyinfo></vex-student-familyinfo>
                     </div>
+
+                            <div *ngIf="displayLoginInfo">
+                                <vex-student-logininfo></vex-student-logininfo>
+                            </div>
                 </div>
             </mat-drawer-content>
         </mat-drawer-container>
     </vex-page-layout-content>
-</vex-page-layout>
+        </vex-page-layout>
+    </div>
+</div>

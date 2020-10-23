@@ -1,12 +1,119 @@
 <mat-card class="w-full">
 
     <mat-card-header>
-        <mat-card-title>{{'addressAndContacts'|translate}}</mat-card-title>
+        <mat-card-title>{{'addressAndContact'|translate}}</mat-card-title>
     </mat-card-header>
     <mat-card-content>
 
         <div @stagger fxLayout="column">
-            <h4 class="text-primary px-4 pb-2">{{'personalContactInformation'|translate}}</h4>
+            <h4 class="text-primary px-4 pb-2">{{'studentHomeAddress'|translate}}</h4>
+            <div class="mb-2 md:flex md:flex-wrap">
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'streetAddress1'|translate}}</mat-label>
+                        <input name="street_address_1" matInput>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'streetAddress2'|translate}}</mat-label>
+                        <input name="street_address_2" matInput>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="mb-2 md:flex md:flex-wrap">
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'country'|translate}}</mat-label>
+                        <mat-select name="country">
+                            <mat-option>Provide Country List</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'stateProvinceLocality'|translate}}</mat-label>
+                        <input name="state_province_locality" matInput>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="mb-2 md:flex md:flex-wrap">
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'city'|translate}}</mat-label>
+                        <input name="city" matInput>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'zipPostalCode'|translate}}</mat-label>
+                        <input name="city" matInput>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="mb-2 md:flex md:flex-wrap">
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'busNo'|translate}}</mat-label>
+                        <input name="city" matInput>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-1 mx-4 md:w-1/2 md:pt-3">
+                    <mat-checkbox formControlName="doesGrades" color="primary" class="mr-6">{{'busPickup' | translate}}</mat-checkbox>
+                    <mat-checkbox formControlName="doesGrades" color="primary">{{'busDropoff' | translate}}</mat-checkbox>
+                </div>
+            </div>
+
+            <h4 class="text-primary px-4 pb-2 pt-10">{{'studentMailingAddress'|translate}}</h4>
+            <div class="px-4 pb-3">
+                <mat-checkbox formControlName="doesGrades" color="primary">{{'sameAsHomeAddress' | translate}}</mat-checkbox>
+            </div>
+            <div class="mb-2 md:flex md:flex-wrap">
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'streetAddress1'|translate}}</mat-label>
+                        <input name="street_address_1" matInput>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'streetAddress2'|translate}}</mat-label>
+                        <input name="street_address_2" matInput>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="mb-2 md:flex md:flex-wrap">
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'country'|translate}}</mat-label>
+                        <mat-select name="country">
+                            <mat-option>Provide Country List</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'stateProvinceLocality'|translate}}</mat-label>
+                        <input name="state_province_locality" matInput>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="mb-2 md:flex md:flex-wrap">
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'city'|translate}}</mat-label>
+                        <input name="city" matInput>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'zip/Postal Code'|translate}}</mat-label>
+                        <input name="city" matInput>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <h4 class="text-primary px-4 pb-2 pt-10">{{'personalContactInformation'|translate}}</h4>
             <div class="mb-2 md:flex md:flex-wrap">
                 <div class="flex flex-1 mx-4 md:w-1/2">
                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
@@ -68,124 +175,6 @@
                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                         <mat-label>{{'linkedIn'|translate}}</mat-label>
                         <input name="linkedin" matInput>
-                    </mat-form-field>
-                </div>
-                <div class="flex flex-1 mx-4 md:w-1/2"></div>
-            </div>
-
-            <h4 class="text-primary px-4 pb-2 pt-10">{{'studentHomeAddress'|translate}}</h4>
-            <div class="mb-2 md:flex md:flex-wrap">
-                <div class="flex flex-1 mx-4 md:w-1/2">
-                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
-                        <mat-label>{{'streetAddress1'|translate}}</mat-label>
-                        <input name="street_address_1" matInput>
-                    </mat-form-field>
-                </div>
-                <div class="flex flex-1 mx-4 md:w-1/2">
-                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
-                        <mat-label>{{'streetAddress2'|translate}}</mat-label>
-                        <input name="street_address_2" matInput>
-                    </mat-form-field>
-                </div>
-            </div>
-            <div class="mb-2 md:flex md:flex-wrap">
-                <div class="flex flex-1 mx-4 md:w-1/2">
-                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
-                        <mat-label>{{'country'|translate}}</mat-label>
-                        <input name="country" matInput>
-                    </mat-form-field>
-                </div>
-                <div class="flex flex-1 mx-4 md:w-1/2">
-                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
-                        <mat-label>{{'stateProvinceLocality'|translate}}</mat-label>
-                        <input name="state_province_locality" matInput>
-                    </mat-form-field>
-                </div>
-            </div>
-            <div class="mb-2 md:flex md:flex-wrap">
-                <div class="flex flex-1 mx-4 md:w-1/2">
-                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
-                        <mat-label>{{'city'|translate}}</mat-label>
-                        <input name="city" matInput>
-                    </mat-form-field>
-                </div>
-                <div class="flex flex-1 mx-4 md:w-1/2">
-                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
-                        <mat-label>{{'county'|translate}}</mat-label>
-                        <input name="country" matInput>
-                    </mat-form-field>
-                </div>
-            </div>
-            <div class="mb-2 md:flex md:flex-wrap">
-                <div class="flex flex-1 mx-4 md:w-1/2">
-                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
-                        <mat-label>{{'zipPostalCode'|translate}}</mat-label>
-                        <input name="city" matInput>
-                    </mat-form-field>
-                </div>
-                <div class="flex flex-1 mx-4 md:w-1/2"></div>
-            </div>
-            <div class="mb-2 md:flex md:flex-wrap">
-                <div class="flex flex-1 mx-4 md:w-1/2">
-                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
-                        <mat-label>{{'busNo'|translate}}</mat-label>
-                        <input name="city" matInput>
-                    </mat-form-field>
-                </div>
-                <div class="flex flex-1 mx-4 md:w-1/2 md:pt-3">
-                    <mat-checkbox formControlName="doesGrades" color="primary" class="mr-6">{{'busPickup' | translate}}</mat-checkbox>
-                    <mat-checkbox formControlName="doesGrades" color="primary">{{'busDropoff' | translate}}</mat-checkbox>
-                </div>
-            </div>
-
-            <h4 class="text-primary px-4 pb-2 pt-10">{{'studentMailingAddress'|translate}}</h4>
-            <div class="mb-2 md:flex md:flex-wrap">
-                <div class="flex flex-1 mx-4 md:w-1/2">
-                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
-                        <mat-label>{{'streetAddress1'|translate}}</mat-label>
-                        <input name="street_address_1" matInput>
-                    </mat-form-field>
-                </div>
-                <div class="flex flex-1 mx-4 md:w-1/2">
-                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
-                        <mat-label>{{'streetAddress2'|translate}}</mat-label>
-                        <input name="street_address_2" matInput>
-                    </mat-form-field>
-                </div>
-            </div>
-            <div class="mb-2 md:flex md:flex-wrap">
-                <div class="flex flex-1 mx-4 md:w-1/2">
-                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
-                        <mat-label>{{'country'|translate}}</mat-label>
-                        <input name="country" matInput>
-                    </mat-form-field>
-                </div>
-                <div class="flex flex-1 mx-4 md:w-1/2">
-                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
-                        <mat-label>{{'stateProvinceLocality'|translate}}</mat-label>
-                        <input name="state_province_locality" matInput>
-                    </mat-form-field>
-                </div>
-            </div>
-            <div class="mb-2 md:flex md:flex-wrap">
-                <div class="flex flex-1 mx-4 md:w-1/2">
-                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
-                        <mat-label>{{'city'|translate}}</mat-label>
-                        <input name="city" matInput>
-                    </mat-form-field>
-                </div>
-                <div class="flex flex-1 mx-4 md:w-1/2">
-                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
-                        <mat-label>{{'county'|translate}}</mat-label>
-                        <input name="country" matInput>
-                    </mat-form-field>
-                </div>
-            </div>
-            <div class="mb-2 md:flex md:flex-wrap">
-                <div class="flex flex-1 mx-4 md:w-1/2">
-                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
-                        <mat-label>{{'zip/Postal Code'|translate}}</mat-label>
-                        <input name="city" matInput>
                     </mat-form-field>
                 </div>
                 <div class="flex flex-1 mx-4 md:w-1/2"></div>

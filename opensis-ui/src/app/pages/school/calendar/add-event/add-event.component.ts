@@ -4,6 +4,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import icClose from '@iconify/icons-ic/twotone-close';
 import icEdit from '@iconify/icons-ic/edit';
 import icDelete from '@iconify/icons-ic/delete';
+import icMoreVertical from '@iconify/icons-ic/more-vert';
+import icDone from '@iconify/icons-ic/done';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
 import { GetAllMembersList } from '../../../../models/membershipModel';
@@ -15,6 +17,7 @@ import { ValidationService } from '../../../shared/validation.service';
 import * as moment from 'moment';
 import { TranslateService } from '@ngx-translate/core';
 import { ConfirmDialogComponent } from '../../../shared-module/confirm-dialog/confirm-dialog.component';
+import { SharedFunction} from '../../../shared/shared-function';
 
 @Component({
   selector: 'vex-add-event',
@@ -35,16 +38,24 @@ export class AddEventComponent implements OnInit {
   membercount: number;
   memberArray: number[] = [];
   colors: colors[] =[
-    {name: 'Blue',value: '#5c77ff'},
-    {name: 'Yellow', value: '#ffc107'},
-    {name: 'Red', value: '#f44336'}
+    {name: 'Red',value: '#f44336'},
+    {name: 'Orange', value: '#ff9800'},
+    {name: 'Amber', value: '#ffc107'},
+    {name: 'Green', value: '#4caf50'},
+    {name: 'Teal', value: '#009688'},
+    {name: 'Cyan', value: '#00bcd4'},
+    {name: 'Purple', value: '#9c27b0'},
+    {name: 'Pink', value: '#e91e63'},
+    {name: 'Blue', value: '#1763b3'}
   ];
     
   icClose = icClose;
   icEdit = icEdit;
   icDelete = icDelete;
+  icMoreVertical = icMoreVertical;
+  icDone = icDone;
   form: FormGroup;
-  constructor(private dialog: MatDialog,private dialogRef: MatDialogRef<AddEventComponent>, @Inject(MAT_DIALOG_DATA) public data: any, public translate: TranslateService, private snackbar: MatSnackBar, private _calendarService: CalendarService, private _calendarEventService: CalendarEventService, private fb: FormBuilder) {
+  constructor(private dialog: MatDialog, private commonFunction:SharedFunction, private dialogRef: MatDialogRef<AddEventComponent>, @Inject(MAT_DIALOG_DATA) public data: any, public translate: TranslateService, private snackbar: MatSnackBar, private _calendarService: CalendarService, private _calendarEventService: CalendarEventService, private fb: FormBuilder) {
     this.translate.setDefaultLang('en');
     this.form = this.fb.group({
       title: ['', Validators.required],
@@ -103,14 +114,6 @@ export class AddEventComponent implements OnInit {
     }
   }
 
-  private formatDate(date: string): string {
-    if (date === undefined || date === null) {
-      return undefined;
-    } else {
-      return moment(date).format('YYYY-MM-DDTHH:mm:ss.SSS');
-    }
-  }
-
   //edit event
   editCalendarEvent() {
     this.isEditMode = true;
@@ -165,8 +168,8 @@ export class AddEventComponent implements OnInit {
     this.calendarEventAddViewModel.schoolCalendarEvent.academicYear = new Date(this.form.value.startDate).getFullYear();
     this.calendarEventAddViewModel.schoolCalendarEvent.description = this.form.value.notes;
     this.calendarEventAddViewModel.schoolCalendarEvent.visibleToMembershipId = this.memberArray.toString();
-    this.calendarEventAddViewModel.schoolCalendarEvent.startDate = this.formatDate(this.form.value.startDate);
-    this.calendarEventAddViewModel.schoolCalendarEvent.endDate = this.formatDate(this.form.value.endDate);
+    this.calendarEventAddViewModel.schoolCalendarEvent.startDate = this.commonFunction.formatDateSaveWithoutTime(this.form.value.startDate);
+    this.calendarEventAddViewModel.schoolCalendarEvent.endDate = this.commonFunction.formatDateSaveWithoutTime(this.form.value.endDate);
     this.calendarEventAddViewModel.schoolCalendarEvent.calendarId = this._calendarService.getCalendarId();
     this.calendarEventAddViewModel.schoolCalendarEvent.eventColor = this.form.value.eventColor;
     if (this.form.valid) {

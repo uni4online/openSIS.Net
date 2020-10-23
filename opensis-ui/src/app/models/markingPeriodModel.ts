@@ -4,10 +4,12 @@ export class MarkingPeriodListModel  extends CommonField{
     public schoolYearsView: [];
     public tenantId: string;
     public schoolId: number;
+    public academicYear:number;
     constructor() {
         super(); 
         this.schoolYearsView = null;      
         this.tenantId= sessionStorage.getItem("tenantId");
+        this.academicYear= +sessionStorage.getItem("academicyear");
         this.schoolId= +sessionStorage.getItem("selectedSchoolId");
         this._tenantName= sessionStorage.getItem("tenant");
         this._token=sessionStorage.getItem("token");

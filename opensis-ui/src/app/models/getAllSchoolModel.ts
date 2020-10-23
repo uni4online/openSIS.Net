@@ -3,6 +3,7 @@ export class GetAllSchoolModel {
     pageNumber: number;
     pageSize: number;
     sortingModel:sorting;
+    filterParams:filterParams;
     _tenantName: string;
     _token: string;
     _failure: boolean;
@@ -12,6 +13,7 @@ constructor() {
     this.pageNumber=1;
     this.pageSize=10;
     this.sortingModel=new sorting();
+    this.filterParams=null;
     this._tenantName=sessionStorage.getItem("tenant");
     this._token=sessionStorage.getItem("token");
     this._failure=false;
@@ -60,6 +62,17 @@ class sorting{
     constructor(){
         this.sortColumn="";
         this.sortDirection="";
+    }
+}
+
+export class filterParams{
+       columnName: string;
+       filterValue: string;
+       filterOption: number;
+    constructor(){
+        this.columnName=null;
+        this.filterOption=3;
+        this.filterValue=null;
     }
 }
 

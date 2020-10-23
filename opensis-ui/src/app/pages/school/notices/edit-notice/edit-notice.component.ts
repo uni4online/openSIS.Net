@@ -16,7 +16,7 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { MY_FORMATS } from '../../../../pages/shared/format-datepicker';
 import { MembershipService } from '../../../../../app/services/membership.service';
 import * as moment from 'moment';
-
+import { SharedFunction} from '../../../shared/shared-function';
 import { ValidationService } from '../../../shared/validation.service';
 
 @Component({
@@ -48,19 +48,14 @@ export class EditNoticeComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data:any,
     private router: Router, private Activeroute: ActivatedRoute, private fb: FormBuilder,
      private _noticeService: NoticeService,private _membershipService: MembershipService,
-      public translateService: TranslateService, private snackbar: MatSnackBar) {
+      public translateService: TranslateService, private snackbar: MatSnackBar,
+      private commonFunction:SharedFunction) {
         
     translateService.use('en');
     
   }
 
-  private formatDate(date: any): string {
-    if (date === undefined || date === null) {
-      return undefined;
-    } else {
-      return moment(date).format('YYYY-MM-DDTHH:mm:ss.SSS');
-    }
-  }
+  
 
   ngOnInit(): void {
     if(this.data==null){
@@ -107,8 +102,8 @@ export class EditNoticeComponent implements OnInit {
   submitNotice() {
     this.noticeAddViewModel.notice.body = this.form.value.Body;
     this.noticeAddViewModel.notice.title = this.form.value.Title;
-    this.noticeAddViewModel.notice.validFrom = this.form.value.valid_from;
-    this.noticeAddViewModel.notice.validTo = this.form.value.valid_to;
+    this.noticeAddViewModel.notice.validFrom = this.commonFunction.formatDateSaveWithoutTime(this.form.value.valid_from);
+    this.noticeAddViewModel.notice.validTo = this.commonFunction.formatDateSaveWithoutTime(this.form.value.valid_to);
     this.noticeAddViewModel.notice.targetMembershipIds = this.memberArray.toString();
   
     if (this.form.valid) {
@@ -131,8 +126,8 @@ export class EditNoticeComponent implements OnInit {
       }
       else {
       
-        this.noticeAddViewModel.notice.validFrom=this.formatDate(this.noticeAddViewModel.notice.validFrom)
-        this.noticeAddViewModel.notice.validTo=this.formatDate(this.noticeAddViewModel.notice.validTo)
+        this.noticeAddViewModel.notice.validFrom=this.commonFunction.formatDateSaveWithoutTime(this.noticeAddViewModel.notice.validFrom)
+        this.noticeAddViewModel.notice.validTo=this.commonFunction.formatDateSaveWithoutTime(this.noticeAddViewModel.notice.validTo)
           this._noticeService.addNotice(this.noticeAddViewModel).subscribe(data => {
             if (data._failure) {
               this.snackbar.open('Notice saving failed. ' + data._message, '', {

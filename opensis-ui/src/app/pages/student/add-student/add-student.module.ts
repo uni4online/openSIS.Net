@@ -21,11 +21,18 @@ import { StudentGeneralinfoComponent } from '../add-student/student-generalinfo/
 import { StudentAddressandcontactsComponent } from '../add-student/student-addressandcontacts/student-addressandcontacts.component';
 import { StudentEnrollmentinfoComponent } from '../add-student/student-enrollmentinfo/student-enrollmentinfo.component';
 import { StudentFamilyinfoComponent } from '../add-student/student-familyinfo/student-familyinfo.component';
+import { StudentLogininfoComponent } from '../add-student/student-logininfo/student-logininfo.component';
+import { ViewstudentGeneralinfoComponent } from '../add-student/viewstudent-generalinfo/viewstudent-generalinfo.component';
+import { ViewstudentAddressandcontactsComponent } from '../add-student/viewstudent-addressandcontacts/viewstudent-addressandcontacts.component';
+import { ViewstudentLogininfoComponent } from '../add-student/viewstudent-logininfo/viewstudent-logininfo.component';
 import { TranslateModule } from '@ngx-translate/core';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModuleModule } from '../../shared-module/shared-module.module';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { ScrollbarModule } from '../../../../@vex/components/scrollbar/scrollbar.module';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 
 
@@ -35,7 +42,11 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     StudentGeneralinfoComponent,
     StudentAddressandcontactsComponent,
     StudentEnrollmentinfoComponent,
-    StudentFamilyinfoComponent
+    StudentFamilyinfoComponent,
+    StudentLogininfoComponent,
+    ViewstudentGeneralinfoComponent,
+    ViewstudentAddressandcontactsComponent,
+    ViewstudentLogininfoComponent
   ],
   imports: [
     CommonModule,
@@ -60,7 +71,10 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     ReactiveFormsModule,
     FormsModule,
     SharedModuleModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatExpansionModule,
+    ScrollbarModule,
+    FlexLayoutModule
   ]
 })
 export class AddStudentModule { }

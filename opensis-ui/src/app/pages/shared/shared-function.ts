@@ -18,7 +18,24 @@ export class SharedFunction {
         }
          
     }
-   
+    formatDateSaveWithoutTime(date){
+      if (date === undefined || date === null) {
+        return undefined;
+      } else {
+        let dt = moment(date).format('YYYY-MM-DD');      
+        return dt;    
+      }
+    }
+
+    formatDateSaveWithTime(date){
+      if (date === undefined || date === null) {
+        return undefined;
+      } else {
+        let dt = moment(date).format('YYYY-MM-DD hh:mm:ss tt');      
+        return dt;    
+      }
+    }
+    
     formatDate(date){      
         if(date !== "" && date !== null && date!== undefined && date !="-"){
           var formattedDate = date.split('T');  

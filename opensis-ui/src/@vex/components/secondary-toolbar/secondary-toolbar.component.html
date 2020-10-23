@@ -11,5 +11,5 @@
 </div>
 
 <mat-menu #menu="matMenu">
-  <a mat-menu-item *ngFor="let page of pages" (click)="changePage(page)">{{page}}</a>
+  <a mat-menu-item *ngFor="let page of pages" [ngClass]="{'selected-item':selectedValue==page}" (click)="changePage(page)">{{page}}</a>
 </mat-menu>

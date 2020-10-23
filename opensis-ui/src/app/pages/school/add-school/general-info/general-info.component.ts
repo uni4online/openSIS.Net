@@ -128,7 +128,6 @@ export class GeneralInfoComponent implements OnInit {
   ngOnInit(): void {
     const today = moment();
     this.dateCreated = today.format('YYYY-MM-DD');
-
     this.form = this.fb.group(
       {
         school_Name: ['', [Validators.required,Validators.maxLength(100)]],
@@ -334,7 +333,8 @@ export class GeneralInfoComponent implements OnInit {
       
 
       this.schoolAddViewModel.schoolMaster.city = this.schoolAddViewModel.schoolMaster.city.toString();
-
+      this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolOpened = this.commonFunction.formatDateSaveWithoutTime(this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolOpened);  
+      this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolClosed = this.commonFunction.formatDateSaveWithoutTime(this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolClosed);  
         this.generalInfoService.UpdateSchool(this.schoolAddViewModel).subscribe(data => {
           if (typeof (data) == 'undefined') {
             this.snackbar.open('General Info Updation failed. ' + sessionStorage.getItem("httpError"), '', {
@@ -364,7 +364,8 @@ export class GeneralInfoComponent implements OnInit {
       this.schoolAddViewModel.schoolMaster.state = this.schoolAddViewModel.schoolMaster.state.toString();
 
       this.schoolAddViewModel.schoolMaster.city = this.schoolAddViewModel.schoolMaster.city.toString();
-        
+      this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolOpened = this.commonFunction.formatDateSaveWithoutTime(this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolOpened);  
+      this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolClosed = this.commonFunction.formatDateSaveWithoutTime(this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolClosed);  
         this.generalInfoService.AddSchool(this.schoolAddViewModel).subscribe(data => {
           if (typeof (data) == 'undefined') {
             this.snackbar.open('General Info Submission failed. ' + sessionStorage.getItem("httpError"), '', {

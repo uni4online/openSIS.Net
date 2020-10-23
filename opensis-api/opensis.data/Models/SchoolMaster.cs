@@ -7,6 +7,9 @@ namespace opensis.data.Models
     {
         public SchoolMaster()
         {
+            AttendanceCodeCategories = new HashSet<AttendanceCodeCategories>();
+            CustomFields = new HashSet<CustomFields>();
+            Gradelevels = new HashSet<Gradelevels>();
             Membership = new HashSet<Membership>();
             Quarters = new HashSet<Quarters>();
             SchoolCalendars = new HashSet<SchoolCalendars>();
@@ -47,6 +50,9 @@ namespace opensis.data.Models
         public double? Latitude { get; set; }
 
         public virtual Plans Plans { get; set; }
+        public virtual ICollection<AttendanceCodeCategories> AttendanceCodeCategories { get; set; }
+        public virtual ICollection<CustomFields> CustomFields { get; set; }
+        public virtual ICollection<Gradelevels> Gradelevels { get; set; }
         public virtual ICollection<Membership> Membership { get; set; }
         public virtual ICollection<Quarters> Quarters { get; set; }
         public virtual ICollection<SchoolCalendars> SchoolCalendars { get; set; }

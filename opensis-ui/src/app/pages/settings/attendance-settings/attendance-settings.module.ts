@@ -30,8 +30,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import {MatSortModule} from '@angular/material/sort';
 import { SharedModuleModule } from '../../../pages/shared-module/shared-module.module';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-
-
+import { MatTabsModule } from '@angular/material/tabs';
 
 @NgModule({
   declarations: [AttendanceSettingsComponent, AttendanceCodesComponent],
@@ -63,9 +62,10 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
     SharedModuleModule,
     MatDialogModule,
     MatMenuModule,
-    MatSortModule,
     MatCheckboxModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    MatTabsModule,
+    SharedModuleModule
   ]
 })
 export class AttendanceSettingsModule { }

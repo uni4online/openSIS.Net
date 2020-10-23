@@ -51,7 +51,7 @@ namespace opensisAPI.Controllers
             }
             return attendanceCodeView;
         }
-        [HttpPut("updatewAttendanceCode")]
+        [HttpPut("updateAttendanceCode")]
 
         public ActionResult<AttendanceCodeAddViewModel> UpdateAttendanceCode(AttendanceCodeAddViewModel attendanceCodeAddViewModel)
         {
@@ -66,6 +66,32 @@ namespace opensisAPI.Controllers
                 attendanceCodeUpdate._message = es.Message;
             }
             return attendanceCodeUpdate;
+        }
+        [HttpPost("getAllAttendanceCode")]
+
+        public ActionResult<AttendanceCodeListViewModel> GetAllAttendanceCode(AttendanceCodeListViewModel attendanceCodeListViewModel)
+        {
+            AttendanceCodeListViewModel attendanceCodeList = new AttendanceCodeListViewModel();
+            try
+            {
+                if (attendanceCodeListViewModel.SchoolId > 0)
+                {
+                    attendanceCodeList = _attendanceCodeRegisterService.GetAllAttendanceCode(attendanceCodeListViewModel);
+                }
+                else
+                {
+                    attendanceCodeList._token = attendanceCodeListViewModel._token;
+                    attendanceCodeList._tenantName = attendanceCodeListViewModel._tenantName;
+                    attendanceCodeList._failure = true;
+                    attendanceCodeList._message = "Please enter valid school id";
+                }
+            }
+            catch (Exception es)
+            {
+                attendanceCodeList._message = es.Message;
+                attendanceCodeList._failure = true;
+            }
+            return attendanceCodeList;
         }
         [HttpPost("deleteAttendanceCode")]
 
@@ -82,6 +108,96 @@ namespace opensisAPI.Controllers
                 attendanceCodelDelete._message = es.Message;
             }
             return attendanceCodelDelete;
+        }
+
+        [HttpPost("addAttendanceCodeCategories")]
+        public ActionResult<AttendanceCodeCategoriesAddViewModel> AddAttendanceCodeCategories(AttendanceCodeCategoriesAddViewModel attendanceCodeCategoriesAddViewModel)
+        {
+            AttendanceCodeCategoriesAddViewModel attendanceCodeCategoriesAdd = new AttendanceCodeCategoriesAddViewModel();
+            try
+            {
+                attendanceCodeCategoriesAdd = _attendanceCodeRegisterService.SaveAttendanceCodeCategories(attendanceCodeCategoriesAddViewModel);
+            }
+            catch (Exception es)
+            {
+                attendanceCodeCategoriesAdd._failure = true;
+                attendanceCodeCategoriesAdd._message = es.Message;
+            }
+            return attendanceCodeCategoriesAdd;
+        }
+        [HttpPost("viewAttendanceCodeCategories")]
+
+        public ActionResult<AttendanceCodeCategoriesAddViewModel> ViewAttendanceCodeCategories(AttendanceCodeCategoriesAddViewModel attendanceCodeCategoriesAddViewModel)
+        {
+            AttendanceCodeCategoriesAddViewModel attendanceCodeCategoriesView = new AttendanceCodeCategoriesAddViewModel();
+            try
+            {
+                attendanceCodeCategoriesView = _attendanceCodeRegisterService.ViewAttendanceCodeCategories(attendanceCodeCategoriesAddViewModel);
+            }
+            catch (Exception es)
+            {
+                attendanceCodeCategoriesView._failure = true;
+                attendanceCodeCategoriesView._message = es.Message;
+            }
+            return attendanceCodeCategoriesView;
+        }
+        [HttpPut("updateAttendanceCodeCategories")]
+
+        public ActionResult<AttendanceCodeCategoriesAddViewModel> UpdateAttendanceCodeCategories(AttendanceCodeCategoriesAddViewModel attendanceCodeCategoriesAddViewModel)
+        {
+            AttendanceCodeCategoriesAddViewModel attendanceCodeCategoriesUpdate = new AttendanceCodeCategoriesAddViewModel();
+            try
+            {
+                attendanceCodeCategoriesUpdate = _attendanceCodeRegisterService.UpdateAttendanceCodeCategories(attendanceCodeCategoriesAddViewModel);
+            }
+            catch (Exception es)
+            {
+                attendanceCodeCategoriesUpdate._failure = true;
+                attendanceCodeCategoriesUpdate._message = es.Message;
+            }
+            return attendanceCodeCategoriesUpdate;
+        }
+        [HttpPost("getAllAttendanceCodeCategories")]
+
+        public ActionResult<AttendanceCodeCategoriesListViewModel> GetAllAttendanceCodeCategories(AttendanceCodeCategoriesListViewModel attendanceCodeCategoriesListViewModel)
+        {
+            AttendanceCodeCategoriesListViewModel attendanceCodeCategoriesList = new AttendanceCodeCategoriesListViewModel();
+            try
+            {
+                if (attendanceCodeCategoriesListViewModel.SchoolId > 0)
+                {
+                    attendanceCodeCategoriesList = _attendanceCodeRegisterService.GetAllAttendanceCodeCategories(attendanceCodeCategoriesListViewModel);
+                }
+                else
+                {
+                    attendanceCodeCategoriesList._token = attendanceCodeCategoriesListViewModel._token;
+                    attendanceCodeCategoriesList._tenantName = attendanceCodeCategoriesListViewModel._tenantName;
+                    attendanceCodeCategoriesList._failure = true;
+                    attendanceCodeCategoriesList._message = "Please enter valid school id";
+                }
+            }
+            catch (Exception es)
+            {
+                attendanceCodeCategoriesList._message = es.Message;
+                attendanceCodeCategoriesList._failure = true;
+            }
+            return attendanceCodeCategoriesList;
+        }
+        [HttpPost("deleteAttendanceCodeCategories")]
+
+        public ActionResult<AttendanceCodeCategoriesAddViewModel> DeleteAttendanceCodeCategories(AttendanceCodeCategoriesAddViewModel attendanceCodeCategoriesAddViewModel)
+        {
+            AttendanceCodeCategoriesAddViewModel attendanceCodeCategorieslDelete = new AttendanceCodeCategoriesAddViewModel();
+            try
+            {
+                attendanceCodeCategorieslDelete = _attendanceCodeRegisterService.DeleteAttendanceCodeCategories(attendanceCodeCategoriesAddViewModel);
+            }
+            catch (Exception es)
+            {
+                attendanceCodeCategorieslDelete._failure = true;
+                attendanceCodeCategorieslDelete._message = es.Message;
+            }
+            return attendanceCodeCategorieslDelete;
         }
     }
 }

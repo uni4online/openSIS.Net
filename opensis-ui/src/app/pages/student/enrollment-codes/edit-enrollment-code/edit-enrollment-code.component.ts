@@ -37,7 +37,7 @@ export class EditEnrollmentCodeComponent implements OnInit {
       enrollmentCode:[0],
       title:['',[Validators.required]],
       shortName:['',[Validators.required]],
-      sortOrder:['',[Validators.required]],
+      sortOrder:['',[Validators.required,Validators.min(1)]],
       type:['',[]]
     });
   
@@ -59,6 +59,7 @@ export class EditEnrollmentCodeComponent implements OnInit {
     }
   }
   submit(){
+    if (this.form.valid) {
     if(this.form.controls.enrollmentCode.value===0){
       this.enrollmentCodeAddView.studentEnrollmentCode.title=this.form.controls.title.value
       this.enrollmentCodeAddView.studentEnrollmentCode.shortName=this.form.controls.shortName.value
@@ -113,6 +114,6 @@ export class EditEnrollmentCodeComponent implements OnInit {
         }
       )
     }
-    
+  }
   }
 }

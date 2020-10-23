@@ -1,0 +1,60 @@
+<div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
+    <h2 class="headline m-0" fxFlex="auto">{{'addCustomField'|translate}}</h2>
+
+    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+        <mat-icon [icIcon]="icClose"></mat-icon>
+    </button>
+</div>
+<mat-divider class="-mx-6 text-border"></mat-divider>
+
+<mat-dialog-content fxLayout="column" [formGroup]="form">
+    <mat-form-field class="mt-6" appearance="outline" color="primary">
+        <mat-label>{{'fieldName' | translate}}</mat-label>
+        <input formControlName="title" cdkFocusInitial matInput required>
+    </mat-form-field>
+
+    <mat-form-field class="w-full" appearance="outline" color="primary">
+        <mat-label>{{'sortOrder' | translate}}</mat-label>
+        <input type="number" formControlName="sortOrder" matInput required>
+    </mat-form-field>
+
+    <mat-form-field class="w-full" appearance="outline" color="primary">
+        <mat-label>{{'fieldType' | translate}}</mat-label>
+        <mat-select name="gender" required>
+            <mat-option value=""></mat-option>
+            <mat-option value="Teacher & Office">Pull-Down</mat-option>
+            <mat-option value="Office Only">Auto Pull-down</mat-option>
+            <mat-option value="">Edit Pull-Down</mat-option>
+            <mat-option value="">Text</mat-option>
+            <mat-option value="">Checkbox</mat-option>
+            <mat-option value="">Coded Pull-Down</mat-option>
+            <mat-option value="">Number</mat-option>
+            <mat-option value="">Select Multiple from Options</mat-option>
+            <mat-option value="">Date</mat-option>
+            <mat-option value="">Long Text</mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="w-full" appearance="outline" color="primary">
+        <mat-label>{{'pullDownAutoPullDownCodedPullDownSelectMultipleChoices' | translate}}</mat-label>
+        <textarea formControlName="shortName" matInput></textarea>
+        <p class="text-xs text-gray">{{'oneItemPerLine' | translate}}</p>
+    </mat-form-field>
+
+    <mat-form-field class="w-full" appearance="outline" color="primary">
+        <mat-label>{{'default' | translate}}</mat-label>
+        <input type="text" formControlName="default" matInput required>
+        <p class="text-xs text-gray">{{'defaultFieldHint' | translate}}</p>
+    </mat-form-field>
+
+    <div class="flex">
+        <mat-slide-toggle class="example-margin mr-6" color="primary">{{'required' | translate}}</mat-slide-toggle>
+        <mat-slide-toggle class="example-margin mr-6" color="primary">{{'systemWide' | translate}}</mat-slide-toggle>
+    </div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" class="py-6">
+    <button mat-button mat-dialog-close type="button">{{'cancel' | translate}}</button>
+    <button color="primary" mat-raised-button type="submit">{{'submit' | translate}}</button>
+</mat-dialog-actions>
