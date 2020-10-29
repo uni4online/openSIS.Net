@@ -84,6 +84,9 @@ export class GeneralInfoComponent implements OnInit {
   statusInfo=status;
   city:number;
   stateCount:number;
+  minDate;
+  selectedLowGradeLevelIndex:number;
+  selectedHighGradeLevelIndex:number;
   gradeLevel= [
     {id : 'PK', title : "PK"},
     {id : 'K', title : "K"},
@@ -172,9 +175,32 @@ export class GeneralInfoComponent implements OnInit {
         linkedin: ['',Validators.maxLength(100)],
         county: ['',Validators.maxLength(50)],
       });
-      this.getAllCountry();
-     
-    
+      this.getAllCountry();   
+  }
+
+  checkLowGradeLevel(event){
+    let index=this.gradeLevel.findIndex((val)=>{
+      return val.id==event.value;
+    });
+    this.selectedLowGradeLevelIndex=index;
+    if(index>this.selectedHighGradeLevelIndex){
+    this.form.controls.lowest_grade_level.setErrors({'nomatch': true});
+    }else{
+    this.form.controls.lowest_grade_level.setErrors(null);
+    this.form.controls.highest_grade_level.setErrors(null);
+    }
+  }
+  checkHighGradeLevel(event){
+    let index=this.gradeLevel.findIndex((val)=>{
+      return val.id==event.value;
+    });
+    this.selectedHighGradeLevelIndex=index;
+    if(this.selectedLowGradeLevelIndex>index){
+    this.form.controls.highest_grade_level.setErrors({'nomatch': true});
+    }else{
+    this.form.controls.highest_grade_level.setErrors(null);
+    this.form.controls.lowest_grade_level.setErrors(null);
+    }
   }
 
 
@@ -182,14 +208,8 @@ export class GeneralInfoComponent implements OnInit {
     return this.form.controls;
   }
   dateCompare() {
-   
-    let openingDate = this.form.controls.date_school_opened.value
-    let closingDate = this.form.controls.date_school_closed.value
-   
-    if (ValidationService.compareValidation(openingDate, closingDate) === false) {
-      this.form.controls.date_school_closed.setErrors({ compareError: true })
-      
-    }
+    this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolClosed=null;
+    this.minDate = this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolOpened;
 
   }
  getAllCountry(){  
@@ -295,9 +315,7 @@ export class GeneralInfoComponent implements OnInit {
     
 
   if (this.cityModel.stateId !== 0)
-  {   
-   
-  
+  {  
     this.commonService.GetAllCity(this.cityModel).subscribe(val => {
       if (typeof (val) == 'undefined') {
         this.cityListArr=[];

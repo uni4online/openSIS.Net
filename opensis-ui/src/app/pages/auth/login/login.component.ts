@@ -106,6 +106,19 @@ export class LoginComponent implements OnInit {
     //   this.translate.addLangs(this.listOfLanguageCode);
     //   this.translate.setDefaultLang('en');
     // this.selectedLanguage=this.translate.defaultLang
+    if(this.languageList?.length>0){
+      let modifiedLanguageList=[];
+      for(let i=0;i<this.languageList?.length;i++){
+        if(this.languageList[i].lcid=="en-us" || this.languageList[i].lcid=="fr-fr" || this.languageList[i].lcid=="es-es"){
+          modifiedLanguageList.push(this.languageList[i]);
+        }
+        if(modifiedLanguageList.length>=3){
+          break;
+        }
+      }
+     this.languageList=modifiedLanguageList;
+    }
+    
     let checkPreviousPreference = sessionStorage.getItem("language");
     if(checkPreviousPreference==null){
       sessionStorage.setItem("language",'en-us');

@@ -43,13 +43,31 @@ namespace opensis.data.Repository
         {
             int resultData;
             SchoolListModel schoolListModel = new SchoolListModel();
+            IQueryable<SchoolMaster> transactionIQ = null;
+            var SchoolMasterList = this.context?.SchoolMaster
+                       .Include(d => d.SchoolDetail)
+                       .Where(x => x.TenantId == pageResult.TenantId);
             try
             {
-                //string sortField = "SchoolName"; string sortOrder = "desc";
+                if (pageResult.FilterParams == null || pageResult.FilterParams.Count == 0)
+                {
+                    //string sortField = "SchoolName"; string sortOrder = "desc";
 
-                IQueryable<SchoolMaster> transactionIQ = this.context?.SchoolMaster
-                    .Include(d => d.SchoolDetail)
-                    .Where(x => x.TenantId == pageResult.TenantId);
+                    transactionIQ = SchoolMasterList;
+                }
+                else
+                {
+                    if (pageResult.FilterParams != null && pageResult.FilterParams.ElementAt(0).ColumnName == null && pageResult.FilterParams.Count == 1)
+                    {
+                        string Columnvalue = pageResult.FilterParams.ElementAt(0).FilterValue;
+                        transactionIQ = SchoolMasterList
+                    .Where(x => x.TenantId == pageResult.TenantId).Where(x => x.SchoolName.ToLower().Contains(Columnvalue.ToLower()) || x.SchoolDetail.Count>0? x.SchoolDetail.FirstOrDefault().Telephone.ToLower().Contains(Columnvalue.ToLower()):string.Empty.Contains(Columnvalue.ToLower()) || x.StreetAddress1.ToLower().Contains(Columnvalue.ToLower()) || x.SchoolDetail.Count>0?x.SchoolDetail.FirstOrDefault().NameOfPrincipal.ToLower().Contains(Columnvalue.ToLower()):string.Empty.Contains(Columnvalue.ToLower())).AsQueryable();
+                    }
+                    else
+                    {
+                        transactionIQ = Utility.FilteredData(pageResult.FilterParams, SchoolMasterList).AsQueryable();
+                    }
+                }
                 if (pageResult.SortingModel != null)
                 {
                     switch (pageResult.SortingModel.SortColumn.ToLower())
@@ -59,11 +77,11 @@ namespace opensis.data.Repository
                             if (pageResult.SortingModel.SortDirection.ToLower() == "asc")
                             {
 
-                                transactionIQ = transactionIQ.OrderBy(a => a.SchoolDetail.FirstOrDefault().NameOfPrincipal);
+                                transactionIQ = transactionIQ.OrderBy(a => a.SchoolDetail.Count>0 ? a.SchoolDetail.FirstOrDefault().NameOfPrincipal:null);
                             }
                             else
                             {
-                                transactionIQ = transactionIQ.OrderByDescending(a => a.SchoolDetail.FirstOrDefault().NameOfPrincipal);
+                                transactionIQ = transactionIQ.OrderByDescending(a => a.SchoolDetail.Count > 0 ? a.SchoolDetail.FirstOrDefault().NameOfPrincipal : null);
                             }
                             break;
 
@@ -81,34 +99,17 @@ namespace opensis.data.Repository
                     SchoolId = s.SchoolId,
                     SchoolName = s.SchoolName,
                     TenantId = s.TenantId,
-                    Telephone = s.SchoolDetail.FirstOrDefault().Telephone == null ? string.Empty : s.SchoolDetail.FirstOrDefault().Telephone.Trim(),
-                    NameOfPrincipal = s.SchoolDetail.FirstOrDefault().NameOfPrincipal == null ? string.Empty : s.SchoolDetail.FirstOrDefault().NameOfPrincipal.Trim(),
-                    StreetAddress1 = ToFullAddress(s.StreetAddress1, s.StreetAddress2,
-                    //this.context.City.Where(x => x.Id == Convert.ToInt32(s.City)).FirstOrDefault().Name,
-                    //this.context.State.Where(x => x.Id == Convert.ToInt32(s.State)).FirstOrDefault().Name,
+                    Telephone = s.SchoolDetail.FirstOrDefault()==null?string.Empty: s.SchoolDetail.FirstOrDefault().Telephone == null ? string.Empty : s.SchoolDetail.FirstOrDefault().Telephone.Trim(),
+                    NameOfPrincipal = s.SchoolDetail.FirstOrDefault()==null? string.Empty: s.SchoolDetail.FirstOrDefault().NameOfPrincipal == null ? string.Empty : s.SchoolDetail.FirstOrDefault().NameOfPrincipal.Trim(),
+                    StreetAddress1 = s.SchoolDetail.FirstOrDefault()==null?string.Empty: ToFullAddress(s.StreetAddress1, s.StreetAddress2,
                     int.TryParse(s.City, out resultData) == true ? this.context.City.Where(x => x.Id == Convert.ToInt32(s.City)).FirstOrDefault().Name : s.City,
                     int.TryParse(s.State, out resultData) == true ? this.context.State.Where(x => x.Id == Convert.ToInt32(s.State)).FirstOrDefault().Name : s.State,
                     this.context.Country.Where(x => x.Id == Convert.ToInt32(s.Country)).FirstOrDefault().Name, s.Zip),
-                    Status = s.SchoolDetail.FirstOrDefault().Status == null ? false : s.SchoolDetail.FirstOrDefault().Status
+                    Status = s.SchoolDetail.FirstOrDefault()==null?false: s.SchoolDetail.FirstOrDefault().Status == null ? false : s.SchoolDetail.FirstOrDefault().Status
                 }).ToList();
-                if (pageResult.FilterParams == null || pageResult.FilterParams.Count == 0)
-                {
-                    schoolListModel.GetSchoolForView = schoollist;
-                }
-                else
-                {
-                    if (pageResult.FilterParams != null && pageResult.FilterParams.ElementAt(0).ColumnName == null && pageResult.FilterParams.Count == 1)
-                    {
-                        string Columnvalue = pageResult.FilterParams.ElementAt(0).FilterValue;
-                        schoolListModel.GetSchoolForView = schoollist.Where(x => x.SchoolName.ToLower().Contains(Columnvalue.ToLower()) || x.Telephone.ToLower().Contains(Columnvalue.ToLower()) ||x.StreetAddress1.ToLower().Contains(Columnvalue.ToLower()) || x.NameOfPrincipal.ToLower().Contains(Columnvalue.ToLower())).ToList();
-                    }
-                    else
-                    {
-                        schoolListModel.GetSchoolForView = Utility.FilteredData(pageResult.FilterParams, schoollist).ToList();
-                    }
-                }
-                
 
+                schoolListModel.TenantId = pageResult.TenantId;
+                schoolListModel.GetSchoolForView = schoollist;
                 schoolListModel.TotalCount = totalCount;
                 schoolListModel.PageNumber = pageResult.PageNumber;
                 schoolListModel._pageSize = pageResult.PageSize;

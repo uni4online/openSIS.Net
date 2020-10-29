@@ -6,7 +6,7 @@
             <mat-tab *ngFor="let category of attendanceCategories"> 
                 <ng-template mat-tab-label>
                    <span (click)="onClick(category.attendanceCategoryId)" class="custom-label"> {{category.title}}</span>
-                    <div *ngIf="selectedAttendanceCategory==category.attendanceCategoryId" class="ml-2">
+                    <div *ngIf="selectedAttendanceCategory==category.attendanceCategoryId">
                         <a (click)="openEditCategory(category)"><mat-icon [icIcon]="icEdit"></mat-icon></a>
                         <a (click)="openDeleteCategory(category)"><mat-icon [icIcon]="icDelete"></mat-icon></a>
                     </div>
@@ -57,7 +57,7 @@
                         </button>
 
                         <button color="primary" class="ml-4" fxFlex="none" mat-raised-button type="button"
-                            (click)='goToAdd()'>
+                            (click)='goToAddAttendanceCode()'>
                             <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true"
                                 size="24px">
                             </ic-icon>
@@ -95,7 +95,7 @@
                 <ng-container matColumnDef="allowEntryBy">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="uppercase">{{'allowEntryBy'|translate}}</th>
                     <td mat-cell *matCellDef="let element">
-                        {{element.allowEntryBy==null?'-':element.allowEntryBy}}
+                        {{element.allowEntryBy==null?'N/A':element.allowEntryBy}}
                     </td>
                 </ng-container>
 
@@ -109,7 +109,7 @@
                 <ng-container matColumnDef="stateCode">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="uppercase">{{'stateCode'|translate}}</th>
                     <td mat-cell *matCellDef="let element">
-                        {{element.stateCode==null?'-':attedanceStateCode[element.stateCode]}}
+                        {{element.stateCode==null?'N/A':attedanceStateCode[element.stateCode]}}
                     </td>
                 </ng-container>
 

@@ -63,7 +63,6 @@ export class SchoolDetailsComponent implements OnInit {
     private loaderService:LoaderService
     ) 
     { 
-     console.log(this.getAllSchool);
      this.getAllSchool.filterParams=null;
      this.loaderService.isLoading.subscribe((val) => {
         this.loading = val;
@@ -117,9 +116,12 @@ export class SchoolDetailsComponent implements OnInit {
       this.getAllSchool.sortingModel.sortDirection=this.sort.direction;
     }
      Object.assign(this.getAllSchool,{filterParams: filterParams});
-     console.log(this.getAllSchool);
+     this.getAllSchool.pageNumber=this.pageNumber;
+     this.getAllSchool.pageSize=this.pageSize;
      this.callAllSchool();
     }else{
+      this.getAllSchool.pageNumber=this.pageNumber;
+     this.getAllSchool.pageSize=this.pageSize;
       if(this.sort.active!=undefined && this.sort.direction!=""){
         this.getAllSchool.sortingModel.sortColumn=this.sort.active;
         this.getAllSchool.sortingModel.sortDirection=this.sort.direction;
@@ -163,7 +165,6 @@ export class SchoolDetailsComponent implements OnInit {
     if(this.getAllSchool.sortingModel?.sortColumn==""){
       this.getAllSchool.sortingModel=null
     }
-    console.log(this.getAllSchool);
     this.schoolService.GetAllSchoolList(this.getAllSchool).subscribe(data => {
       if(data._failure){
         this.snackbar.open('School information failed. '+ data._message, 'LOL THANKS', {

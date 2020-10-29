@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit, Optional } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import icClose from '@iconify/icons-ic/twotone-close';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
@@ -34,25 +34,27 @@ export class EditGradeLevelsComponent implements OnInit {
      private fb: FormBuilder,
      private gradeLevelService:GradeLevelService,
      private snackbar: MatSnackBar) {
-     this.getGradeEquivalency()
-     if(data.editMode){
-      this.editMode = data.editMode;
-      this.editDetails = data.editDetails;
-      this.nextGradeLevelList=data.gradeLevels;
-     }else{
-       this.nextGradeLevelList=data.gradeLevels;
-     }
-     this.form = this.fb.group(
-      {
-        title: ['',Validators.required],
-        shortName: ['',Validators.required],
-        sortOrder: ['',Validators.required],
-        iscedGradeLevel:["null",Validators.required],
-        nextGradeId: ["null",Validators.required],
-      });
     }
 
   ngOnInit(): void {
+      this.getGradeEquivalencyList=this.data.gradeLevelEquivalencyList;
+      if(this.data.editMode){
+      this.editMode = this.data.editMode;
+      this.editDetails = this.data.editDetails;
+      this.nextGradeLevelList=this.data.gradeLevels;
+     }else{
+       this.nextGradeLevelList=this.data.gradeLevels;
+     }
+    
+      this.form = this.fb.group(
+      {
+        title: ['',Validators.required],
+        shortName: ['',Validators.required],
+        sortOrder: ['',[Validators.required,Validators.min(1)]],
+        iscedGradeLevel:["null",Validators.required],
+        nextGradeId: ["null",Validators.required],
+      });
+      
     if(this.editMode){
       this.modalTitle="updateGradeLevel"
       this.modalActionButtonTitle="update";
@@ -86,6 +88,7 @@ export class EditGradeLevelsComponent implements OnInit {
   }
 
   submit(){
+    this.form.markAllAsTouched();
     if(this.editMode){
       this.updateGradeLevel();
     }else{

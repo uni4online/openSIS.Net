@@ -9,7 +9,7 @@ import icAdd from '@iconify/icons-ic/twotone-add';
 import icFilterList from '@iconify/icons-ic/twotone-filter-list';
 import { EditGradeLevelsComponent } from '../grade-levels/edit-grade-levels/edit-grade-levels.component';
 import { TranslateService } from '@ngx-translate/core';
-import { AddGradeLevelModel, GetAllGradeLevelsModel } from '../../../models/gradeLevelModel';
+import { AddGradeLevelModel, GelAllGradeEquivalencyModel, GetAllGradeLevelsModel } from '../../../models/gradeLevelModel';
 import { MatTableDataSource } from '@angular/material/table';
 import { GradeLevelService } from '../../../services/grade-level.service';
 import { MatPaginator } from '@angular/material/paginator';
@@ -38,6 +38,7 @@ export class GradeLevelsComponent implements OnInit {
   icFilterList = icFilterList;
   getAllGradeLevels:GetAllGradeLevelsModel = new GetAllGradeLevelsModel();
   gradeLevelList:MatTableDataSource<GetAllGradeLevelsModel>;
+  getGradeEquivalencyList:GelAllGradeEquivalencyModel = new GelAllGradeEquivalencyModel();
   sendGradeLevelsToDialog:[];
   editMode:boolean;
   sendDetailsToEditComponent:[];
@@ -65,13 +66,23 @@ export class GradeLevelsComponent implements OnInit {
     }); 
   }
     ngOnInit(): void {
+      this.getGradeEquivalency()
       this.getAllGradeLevel();
+    }
+
+    getGradeEquivalency(){
+      this.gradeLevelService.getAllGradeEquivalency(this.getGradeEquivalencyList).subscribe((res)=>{
+        this.getGradeEquivalencyList=res;
+      })
     }
 
   openAddNew() {
     this.editMode=false;
     this.dialog.open(EditGradeLevelsComponent, {
-      data: {editMode:this.editMode,gradeLevels:this.sendGradeLevelsToDialog},
+      data: {
+        editMode:this.editMode,
+        gradeLevels:this.sendGradeLevelsToDialog,
+        gradeLevelEquivalencyList:this.getGradeEquivalencyList},
       width: '600px'
     }).afterClosed().subscribe((res) => {
       if(res){
@@ -86,7 +97,8 @@ export class GradeLevelsComponent implements OnInit {
       data:{
         editMode:this.editMode,
         editDetails:editDetails,
-        gradeLevels:this.sendGradeLevelsToDialog
+        gradeLevels:this.sendGradeLevelsToDialog,
+        gradeLevelEquivalencyList:this.getGradeEquivalencyList
       },
       width:'600px'
     }).afterClosed().subscribe((res) => {

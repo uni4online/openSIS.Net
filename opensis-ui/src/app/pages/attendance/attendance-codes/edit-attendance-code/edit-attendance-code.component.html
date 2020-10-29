@@ -27,12 +27,13 @@
         <input type="number" formControlName="sortOrder" min=1 oninput="validity.valid||(value='');" matInput required>
         <mat-error *ngIf="form.get('sortOrder').hasError('required')">{{'sortOrderIsRequired'|translate}}
         </mat-error>
+        <mat-error *ngIf="form.get('sortOrder').hasError('min')">{{'sortOrderCannotBeLessThenOne'|translate}}</mat-error>
     </mat-form-field>
     
     <mat-form-field class="w-full" appearance="outline" color="primary">
         <mat-label>{{'allowEntryBy' | translate}}</mat-label>
         <mat-select name="allowEntryBy" formControlName="allowEntryBy">
-            <mat-option value="null"></mat-option>
+            <mat-option value="null">N/A</mat-option>
             <mat-option value="Teacher & Office">Teacher & Office</mat-option>
             <mat-option value="Office Only">Office Only</mat-option>
         </mat-select>
@@ -43,7 +44,7 @@
     <mat-form-field class="w-full" appearance="outline" color="primary">
         <mat-label>{{'stateCode' | translate}}</mat-label>
         <mat-select name="stateCode" formControlName="stateCode">
-            <mat-option value="null"></mat-option>
+            <mat-option value="null">N/A</mat-option>
             <mat-option value="Present">Present</mat-option>
             <mat-option value="Absent">Absent</mat-option>
             <mat-option value="Half Day">Half Day</mat-option>

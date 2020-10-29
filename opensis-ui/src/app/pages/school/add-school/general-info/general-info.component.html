@@ -93,27 +93,29 @@
         </div>
         <div class="mb-2 md:flex md:flex-wrap">
             <div class="flex flex-1 mx-4 md:w-1/2">
-                <mat-form-field class="w-full" appearance="outline" color="primary">
+              <mat-form-field class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'lowestGradeLevel'|translate}}</mat-label>
-                    <mat-select formControlName="lowest_grade_level" [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].lowestGradeLevel" name="lowest_grade_level" required>
+                    <mat-select formControlName="lowest_grade_level" (selectionChange)="checkLowGradeLevel($event)" [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].lowestGradeLevel" name="lowest_grade_level" required>
                         <mat-option></mat-option>
                         <mat-option *ngFor="let lowestGradeLevel of gradeLevel" [value]="lowestGradeLevel.id" [disabled]="lowestGradeLevel.id==schoolAddViewModel.schoolMaster.schoolDetail[0].highestGradeLevel">
                             {{lowestGradeLevel.title}}
                            </mat-option>
                     </mat-select>
                     <mat-error *ngIf="form.get('lowest_grade_level').hasError('required')">{{'lowestGradeLevelIsRequired'|translate}}</mat-error>
+                    <mat-error *ngIf="form.controls.lowest_grade_level.errors?.nomatch">{{'lowestGradeLevelCannotBeGreaterThanHighestGrade'|translate}}</mat-error>
                 </mat-form-field>
             </div>
             <div class="flex flex-1 mx-4 md:w-1/2">
-                <mat-form-field class="w-full" appearance="outline" color="primary">
+                 <mat-form-field class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'highestGradeLevel'|translate}}</mat-label>
-                    <mat-select formControlName="highest_grade_level" [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].highestGradeLevel"  name="highest_grade_level" required>
+                    <mat-select formControlName="highest_grade_level" (selectionChange)="checkHighGradeLevel($event)" [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].highestGradeLevel"  name="highest_grade_level" required>
                         <mat-option></mat-option>
                         <mat-option *ngFor="let highestGradeLevel of gradeLevel" [value]="highestGradeLevel.id" [disabled]="highestGradeLevel.id==schoolAddViewModel.schoolMaster.schoolDetail[0].lowestGradeLevel">
                             {{highestGradeLevel.title}}
                            </mat-option>
                     </mat-select>
                     <mat-error *ngIf="form.get('highest_grade_level').hasError('required')">{{'highestGradeLevelIsRequired'|translate}}</mat-error>
+                    <mat-error *ngIf="form.controls.highest_grade_level.errors?.nomatch">{{'highestGradeLevelCannotBeLowerThanLowestGrade'|translate}}</mat-error>
                 </mat-form-field>
             </div>
         </div>
@@ -121,21 +123,18 @@
             <div class="flex flex-1 mx-4 md:w-1/2">
                 <mat-form-field class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'dateSchoolOpened'|translate}}</mat-label>
-                    <input formControlName="date_school_opened" [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolOpened" name="date_school_opened"  [matDatepicker]="datepickerRef" matInput required>
+                    <input formControlName="date_school_opened" (dateInput)="dateCompare()" [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolOpened" name="date_school_opened"  [matDatepicker]="datepickerRef" matInput required>
                     <mat-datepicker-toggle [for]="datepickerRef" matSuffix></mat-datepicker-toggle>
                     <mat-datepicker #datepickerRef></mat-datepicker>
-                    <mat-error *ngIf="form.get('date_school_opened').hasError('required')">{{'dateSchoolOpenedIsRequired'|translate}}</mat-error>
-                    <mat-error *ngIf="!form.get('date_school_opened').hasError('required') && form.get('date_school_opened').hasError('invalidDateComparison')"></mat-error>
+                    <mat-error *ngIf="form.get('date_school_opened').hasError('required')">{{'dateSchoolOpenedIsRequired'|translate}}</mat-error>                   
                 </mat-form-field>
             </div>
             <div class="flex flex-1 mx-4 md:w-1/2">
                 <mat-form-field class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'dateSchoolClosed'|translate}}</mat-label>
-                    <input formControlName="date_school_closed" (dateChange)="dateCompare()" [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolClosed"  name="date_school_closed" [matDatepicker]="dateSchoolClosed" matInput>
+                    <input formControlName="date_school_closed"  [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolClosed" [min]="minDate"  name="date_school_closed" [matDatepicker]="dateSchoolClosed" matInput>
                     <mat-datepicker-toggle [for]="dateSchoolClosed" matSuffix></mat-datepicker-toggle>
-                    <mat-datepicker #dateSchoolClosed></mat-datepicker>
-                    <mat-error *ngIf="form.get('date_school_closed').hasError('compareError')">{{"date_school_closedCannotBeEarlierThendate_school_opened"|translate}}</mat-error>
-            
+                    <mat-datepicker #dateSchoolClosed></mat-datepicker>        
                 </mat-form-field>
             </div>
         </div>

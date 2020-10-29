@@ -35,6 +35,8 @@
     "associations": "Associations",
     "lowestGradeLevel": "Lowest Grade Level",
     "highestGradeLevel": "Highest Grade Level",
+    "highestGradeLevelCannotBeLowerThanLowestGrade":"Highest grade level cannot be lower than lowest grade",
+    "lowestGradeLevelCannotBeGreaterThanHighestGrade":"Lowest grade level cannot be greater than highest grade",
     "dateSchoolOpened": "Date School Opened",
     "dateSchoolClosed": "Date School Closed",
     "date_school_closedCannotBeEarlierThendate_school_opened": "Date_school_closed Cannot Be Earlier Then Date_school_opened",
@@ -285,6 +287,18 @@
     "sameAsStudentsHomeAddress":"Same as Student's Home Address",
     "addNewAddress":"Add New Address",
     "orAddAsNewContactBelow":"or add as new contact below",
-    "custodyOfStudent":"Custody of Student"
-
+    "custodyOfStudent":"Custody of Student",
+    "loginInformation":"Login Information",
+    "secretQuestion1":"Secret Question 1",
+    "secretQuestion2":"Secret Question 2",
+    "secretQuestion3":"Secret Question 3",
+    "secretQuestion4":"Secret Question 4",
+    "secretQuestion5":"Secret Question 5",
+    "secretAnswer1":"Secret Answer 1",
+    "secretAnswer2":"Secret Answer 2",
+    "secretAnswer3":"Secret Answer 3",
+    "secretAnswer4":"Secret Answer 4",
+    "secretAnswer5":"Secret Answer 5",
+    "secretQuestionAndAnswer":"Secret Questions and Answers",
+    "answersAreHiddenForSecurityReasons":"Answers are hidden for security reasons"
 }

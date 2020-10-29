@@ -7,4 +7,8 @@
     font-style: italic;
   }
 
-.custom-label{ padding: 15px 0 15px 0; }
+.custom-label{ padding: 15px 15px 15px 15px; }
+
+.mat-tab-list[style] {
+transform: unset !important;
+}

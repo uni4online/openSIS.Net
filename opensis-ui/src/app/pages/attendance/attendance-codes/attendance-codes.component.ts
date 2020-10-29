@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import icMoreVert from '@iconify/icons-ic/twotone-more-vert';
 import icAdd from '@iconify/icons-ic/baseline-add';
 import icEdit from '@iconify/icons-ic/twotone-edit';
@@ -7,7 +7,6 @@ import icSearch from '@iconify/icons-ic/search';
 import icFilterList from '@iconify/icons-ic/filter-list';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
 import { fadeInUp400ms } from '../../../../@vex/animations/fade-in-up.animation';
 import { stagger40ms } from '../../../../@vex/animations/stagger.animation';
 import { TranslateService } from '@ngx-translate/core';
@@ -16,7 +15,7 @@ import { LoaderService } from '../../../services/loader.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { EditAttendanceCodeComponent } from '../attendance-codes/edit-attendance-code/edit-attendance-code.component';
 import { AttendanceCategoryComponent } from '../attendance-codes/attendance-category/attendance-category.component';
-import { MatTabChangeEvent, MatTabGroup } from '@angular/material/tabs';
+import {MatTabGroup } from '@angular/material/tabs';
 import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confirm-dialog.component';
 import { AttendanceCodeService } from '../../../services/attendance-code.service';
 import { AttendanceCodeCategoryModel, AttendanceCodeModel, GetAllAttendanceCategoriesListModel, GetAllAttendanceCodeModel } from '../../../models/attendanceCodeModel';
@@ -32,10 +31,11 @@ import {AttendanceCodeEnum} from '../../../enums/attendance_code.enum';
   ]
 })
 export class AttendanceCodesComponent implements OnInit {
-  @ViewChild('tabs') tabGroup: MatTabGroup;
+  @ViewChild(MatTabGroup) tabGroup: MatTabGroup;
   
   @ViewChild(MatSort) sort: MatSort;
-
+  isCategoryUpdated=false;
+  isCategoryDeleted=false;
   searchKey: string;
   selectedAttendanceCategory = 1;
   attedanceStateCode=AttendanceCodeEnum;
@@ -63,8 +63,7 @@ export class AttendanceCodesComponent implements OnInit {
   getAllAttendanceCodeModel:GetAllAttendanceCodeModel=new GetAllAttendanceCodeModel()
   attendanceCategories=[]
   attendanceCodeList:MatTableDataSource<GetAllAttendanceCodeModel>;
-  constructor(private router: Router,
-    private dialog: MatDialog,
+  constructor(private dialog: MatDialog,
     public translateService: TranslateService,
     private loaderService: LoaderService,
     private attendanceCodeService:AttendanceCodeService,
@@ -83,6 +82,74 @@ export class AttendanceCodesComponent implements OnInit {
   onClick(id) {
     this.selectedAttendanceCategory = id;
     this.getAllAttendanceCode();
+  }
+
+  goToAddCategory() {
+    this.dialog.open(AttendanceCategoryComponent, {
+      width: '500px'
+    }).afterClosed().subscribe((res) => {
+      if(res){
+        this.getAllAttendanceCategory();
+      }
+    });
+  }
+
+  openEditCategory(categoryDetails) {
+    this.editMode=true;
+    this.dialog.open(AttendanceCategoryComponent,{
+      data:{
+        editMode:this.editMode,
+        categoryDetails:categoryDetails,
+      },
+      width:'600px'}).afterClosed().subscribe((res)=>{
+        if(res){
+        this.isCategoryUpdated=true;
+          this.getAllAttendanceCategory();
+        }
+      });
+  }
+
+  openDeleteCategory(categoryDetails) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      maxWidth: "400px",
+      data: {
+          title: "Are you sure?",
+          message: "You are about to delete."}
+    });
+    dialogRef.afterClosed().subscribe(dialogResult => {
+      if(dialogResult){
+        let index = this.attendanceCategories.findIndex((x) => {
+          return x.attendanceCategoryId === categoryDetails.attendanceCategoryId
+        });
+        let shiftIndex:number;
+        if(index==0){
+          if(this.attendanceCategories.length>1){
+            shiftIndex=index+1
+          }else{
+            shiftIndex=-1;
+          }
+        }else{
+          shiftIndex=index-1;
+        }
+        
+        this.isCategoryDeleted=true;
+        this.deleteAttendanceCategory(categoryDetails,shiftIndex);
+      }
+   });
+    }
+
+    
+  goToAddAttendanceCode() {
+    this.dialog.open(EditAttendanceCodeComponent, {
+      data:{
+        editMode:false,
+        attendanceCategoryId:this.selectedAttendanceCategory
+      },width:'600px'
+    }).afterClosed().subscribe((res)=>{
+      if(res){
+        this.getAllAttendanceCode();
+      }
+    });
   }
 
   openEditAttendance(attendanceCodeDetails){
@@ -113,69 +180,6 @@ export class AttendanceCodesComponent implements OnInit {
  });
   }
 
-  openEditCategory(categoryDetails) {
-    this.editMode=true;
-    this.dialog.open(AttendanceCategoryComponent,{
-      data:{
-        editMode:this.editMode,
-        categoryDetails:categoryDetails,
-      },
-      width:'600px'}).afterClosed().subscribe((res)=>{
-        if(res){
-          this.getAllAttendanceCategory();
-        }
-      });
-  }
-
-  goToAdd() {
-    this.dialog.open(EditAttendanceCodeComponent, {
-      data:{
-        editMode:false,
-        attendanceCategoryId:this.selectedAttendanceCategory
-      },width:'600px'
-    }).afterClosed().subscribe((res)=>{
-      if(res){
-        this.getAllAttendanceCode();
-      }
-    });
-  }
-
-  openDeleteCategory(categoryDetails) {
-  const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-    maxWidth: "400px",
-    data: {
-        title: "Are you sure?",
-        message: "You are about to delete."}
-  });
-  dialogRef.afterClosed().subscribe(dialogResult => {
-    if(dialogResult){
-      this.deleteAttendanceCategory(categoryDetails);
-    }
- });
-  }
-
-  
-  onSearchClear(){
-    this.searchKey="";
-    this.applyFilter();
-  }
-
-  applyFilter(){
-    this.attendanceCodeList.filter = this.searchKey.trim().toLowerCase()
-  }
-
- 
-
-  goToAddCategory() {
-    this.dialog.open(AttendanceCategoryComponent, {
-      width: '500px'
-    }).afterClosed().subscribe((res) => {
-      if(res){
-        this.getAllAttendanceCategory();
-      }
-    });
-  }
-
   // *********Attendance Category API Implementation(Mat Tab)*********
 
   // Get All Attendance Category
@@ -188,16 +192,25 @@ export class AttendanceCodesComponent implements OnInit {
         });
       }else{     
         this.attendanceCategories = res.attendanceCodeCategoriesList;
-        if(this.attendanceCategories.length>0){
+        if(this.isCategoryDeleted){
+          this.tabGroup.selectedIndex=this.tabGroup.selectedIndex-1;
+        }
+        if(this.tabGroup!=undefined && !this.isCategoryUpdated && !this.isCategoryDeleted){
+          this.tabGroup.selectedIndex=this.attendanceCategories.length-1;
+          this.selectedAttendanceCategory=this.attendanceCategories[this.attendanceCategories.length-1]?.attendanceCategoryId;
+          this.getAllAttendanceCode();
+        }else if(this.attendanceCategories.length>0 && !this.isCategoryUpdated && !this.isCategoryDeleted){
           this.selectedAttendanceCategory=this.attendanceCategories[0]?.attendanceCategoryId;
           this.getAllAttendanceCode();
-        }      
+        } 
+        this.isCategoryUpdated=false;
+        this.isCategoryDeleted=false;
       }
     })
   }
 
   // Delete Attendance Category
-  deleteAttendanceCategory(categoryDetails) {
+  deleteAttendanceCategory(categoryDetails,indexNeedToBeSelectAfterDelete) {
     this.attendanceCategoryModel.attendanceCodeCategories.schoolId= +sessionStorage.getItem("selectedSchoolId");
     this.attendanceCategoryModel.attendanceCodeCategories.attendanceCategoryId=categoryDetails.attendanceCategoryId;
     this.attendanceCategoryModel.attendanceCodeCategories.academicYear=categoryDetails.academicYear;
@@ -214,7 +227,9 @@ export class AttendanceCodesComponent implements OnInit {
         this.snackbar.open('Attendance Category is Deleted!', '', {
           duration: 10000
         });
-        
+        if(indexNeedToBeSelectAfterDelete!=-1){
+          this.selectedAttendanceCategory=this.attendanceCategories[indexNeedToBeSelectAfterDelete].attendanceCategoryId;
+        }
         this.getAllAttendanceCategory();
       }
     });
@@ -265,6 +280,16 @@ export class AttendanceCodesComponent implements OnInit {
 
   get visibleColumns() {
     return this.columns.filter(column => column.visible).map(column => column.property);
+  }
+
+// Table Search
+  onSearchClear(){
+    this.searchKey="";
+    this.applyFilter();
+  }
+
+  applyFilter(){
+    this.attendanceCodeList.filter = this.searchKey.trim().toLowerCase()
   }
 
 }

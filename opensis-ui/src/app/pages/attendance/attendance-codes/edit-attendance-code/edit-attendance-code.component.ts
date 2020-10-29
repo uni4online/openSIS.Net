@@ -43,7 +43,7 @@ export class EditAttendanceCodeComponent implements OnInit {
        this.form = this.fb.group({
         title:['',Validators.required],
         shortName:['',Validators.required],
-        sortOrder:['',Validators.required],
+        sortOrder:['',[Validators.required,Validators.min(1)]],
         allowEntryBy:["null"],
         defaultCode:[false],
         stateCode:["null"],
@@ -76,6 +76,7 @@ export class EditAttendanceCodeComponent implements OnInit {
   }
 
   submitAttenndanceCode(){
+    this.form.markAllAsTouched();
     if(this.editMode){
       this.updateAttendanceCode();
     }else{
