@@ -110,33 +110,94 @@ namespace opensisAPI.Controllers
             return customFieldDelete;
         }
 
-
-
-        [HttpPost("getAllCustomField")]
-
-        public ActionResult<CustomFieldListViewModel> GetAllCustomField(CustomFieldListViewModel customFieldListViewModel)
+        [HttpPost("addFieldsCategory")]
+        public ActionResult<FieldsCategoryAddViewModel> AddFieldsCategory(FieldsCategoryAddViewModel fieldsCategoryAddViewModel)
         {
-            CustomFieldListViewModel customFieldList = new CustomFieldListViewModel();
+            FieldsCategoryAddViewModel fieldsCategoryAdd = new FieldsCategoryAddViewModel();
             try
             {
-                if (customFieldListViewModel.SchoolId > 0)
+                fieldsCategoryAdd = _customFieldService.SaveFieldsCategory(fieldsCategoryAddViewModel);
+            }
+            catch (Exception es)
+            {
+                fieldsCategoryAdd._failure = true;
+                fieldsCategoryAdd._message = es.Message;
+            }
+            return fieldsCategoryAdd;
+        }
+        [HttpPost("viewFieldsCategory")]
+
+        public ActionResult<FieldsCategoryAddViewModel> ViewFieldsCategory(FieldsCategoryAddViewModel fieldsCategoryAddViewModel)
+        {
+            FieldsCategoryAddViewModel fieldsCategoryView = new FieldsCategoryAddViewModel();
+            try
+            {
+                fieldsCategoryView = _customFieldService.ViewFieldsCategory(fieldsCategoryAddViewModel);
+            }
+            catch (Exception es)
+            {
+                fieldsCategoryView._failure = true;
+                fieldsCategoryView._message = es.Message;
+            }
+            return fieldsCategoryView;
+        }
+        [HttpPut("updateFieldsCategory")]
+
+        public ActionResult<FieldsCategoryAddViewModel> UpdateFieldsCategory(FieldsCategoryAddViewModel fieldsCategoryAddViewModel)
+        {
+            FieldsCategoryAddViewModel fieldsCategoryUpdate = new FieldsCategoryAddViewModel();
+            try
+            {
+                fieldsCategoryUpdate = _customFieldService.UpdateFieldsCategory(fieldsCategoryAddViewModel);
+            }
+            catch (Exception es)
+            {
+                fieldsCategoryUpdate._failure = true;
+                fieldsCategoryUpdate._message = es.Message;
+            }
+            return fieldsCategoryUpdate;
+        }
+        [HttpPost("deleteFieldsCategory")]
+
+        public ActionResult<FieldsCategoryAddViewModel> DeleteFieldsCategory(FieldsCategoryAddViewModel fieldsCategoryAddViewModel)
+        {
+            FieldsCategoryAddViewModel fieldsCategorylDelete = new FieldsCategoryAddViewModel();
+            try
+            {
+                fieldsCategorylDelete = _customFieldService.DeleteFieldsCategory(fieldsCategoryAddViewModel);
+            }
+            catch (Exception es)
+            {
+                fieldsCategorylDelete._failure = true;
+                fieldsCategorylDelete._message = es.Message;
+            }
+            return fieldsCategorylDelete;
+        }
+        [HttpPost("getAllFieldsCategory")]
+
+        public ActionResult<FieldsCategoryListViewModel> GetAllFieldsCategory(FieldsCategoryListViewModel fieldsCategoryListViewModel)
+        {
+            FieldsCategoryListViewModel fieldsCategoryList = new FieldsCategoryListViewModel();
+            try
+            {
+                if (fieldsCategoryListViewModel.SchoolId > 0)
                 {
-                    customFieldList = _customFieldService.GetAllCustomField(customFieldListViewModel);
+                    fieldsCategoryList = _customFieldService.GetAllFieldsCategory(fieldsCategoryListViewModel);
                 }
                 else
                 {
-                    customFieldList._token = customFieldListViewModel._token;
-                    customFieldList._tenantName = customFieldListViewModel._tenantName;
-                    customFieldList._failure = true;
-                    customFieldList._message = "Please enter valid scholl id";
+                    fieldsCategoryList._token = fieldsCategoryListViewModel._token;
+                    fieldsCategoryList._tenantName = fieldsCategoryListViewModel._tenantName;
+                    fieldsCategoryList._failure = true;
+                    fieldsCategoryList._message = "Please enter valid school id";
                 }
             }
             catch (Exception es)
             {
-                customFieldList._failure = true;
-                customFieldList._message = es.Message;
+                fieldsCategoryList._message = es.Message;
+                fieldsCategoryList._failure = true;
             }
-            return customFieldList;
+            return fieldsCategoryList;
         }
 
     }

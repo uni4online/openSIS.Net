@@ -1,4 +1,5 @@
-﻿using opensis.data.ViewModels.Student;
+﻿using opensis.data.Models;
+using opensis.data.ViewModels.Student;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,7 +10,10 @@ namespace opensis.data.Interface
     {
         public StudentAddViewModel AddStudent(StudentAddViewModel student);
         public StudentAddViewModel UpdateStudent(StudentAddViewModel student);
-        public StudentAddViewModel ViewStudent(StudentAddViewModel student);
-        public StudentAddViewModel DeleteStudent(StudentAddViewModel student);
+        public StudentListModel GetAllStudentList(PageResult pageResult);
+        public SearchContactViewModel SearchContactForStudent(SearchContactViewModel searchContactViewModel);
+
+        //public StudentAddViewModel ViewStudent(StudentAddViewModel student);
+        //public StudentAddViewModel DeleteStudent(StudentAddViewModel student);
     }
 }

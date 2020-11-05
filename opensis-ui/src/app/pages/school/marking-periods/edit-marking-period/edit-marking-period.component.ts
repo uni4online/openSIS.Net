@@ -59,6 +59,7 @@ export class EditMarkingPeriodComponent implements OnInit {
     "startDate": "",
     "title": ""
   }
+  sentArray=[];
   constructor(private dialogRef: MatDialogRef<EditMarkingPeriodComponent>,
      private fb: FormBuilder,
      private markingPeriodService:MarkingPeriodService,
@@ -252,7 +253,7 @@ export class EditMarkingPeriodComponent implements OnInit {
               this.snackbar.open('School Semester Updation Successful.', '', {
                 duration: 10000
               });
-              this.schoolService.changeMessage(true);
+              this.markingPeriodService.getCurrentYear(true);    
               this.dialogRef.close(true);  
             }
           }
@@ -283,7 +284,7 @@ export class EditMarkingPeriodComponent implements OnInit {
               this.snackbar.open('School Quarter Updation Successful.', '', {
                 duration: 10000
               });
-              this.schoolService.changeMessage(true);
+              this.markingPeriodService.getCurrentYear(true);    
               this.dialogRef.close(true);  
             }
           }
@@ -314,7 +315,7 @@ export class EditMarkingPeriodComponent implements OnInit {
               this.snackbar.open('School Progress Period  Updation Successful.', '', {
                 duration: 10000
               });
-              this.schoolService.changeMessage(true);
+              this.markingPeriodService.getCurrentYear(true);    
               this.dialogRef.close(true);  
             }
           }
@@ -341,7 +342,7 @@ export class EditMarkingPeriodComponent implements OnInit {
             this.snackbar.open('School Year Updation Successful.', '', {
               duration: 10000
             });
-            this.schoolService.changeMessage(true);
+            this.markingPeriodService.getCurrentYear(true);    
             this.dialogRef.close(true);  
           }
         }    
@@ -374,8 +375,9 @@ export class EditMarkingPeriodComponent implements OnInit {
               this.snackbar.open('School Semester Submission Successful.', '', {
                 duration: 10000
               });
-              this.schoolService.changeMessage(true);
-              this.dialogRef.close(true);  
+              this.sentArray=[true,sessionStorage.getItem("academicyear")]
+              this.markingPeriodService.getCurrentYear(true);    
+              this.dialogRef.close(this.sentArray);  
             }
           }
       
@@ -405,8 +407,9 @@ export class EditMarkingPeriodComponent implements OnInit {
               this.snackbar.open('School Quarter Submission Successful.', '', {
                 duration: 10000
               });
-              this.schoolService.changeMessage(true);
-              this.dialogRef.close(true);  
+              this.sentArray=[true,sessionStorage.getItem("academicyear")]  
+              this.markingPeriodService.getCurrentYear(true);    
+              this.dialogRef.close(this.sentArray);  
             }
           }
       
@@ -435,14 +438,16 @@ export class EditMarkingPeriodComponent implements OnInit {
               this.snackbar.open('School Progress Period Submission Successful.', '', {
                 duration: 10000
               });
-              this.schoolService.changeMessage(true);
-              this.dialogRef.close(true);  
+              this.sentArray=[true,sessionStorage.getItem("academicyear")]  
+              this.markingPeriodService.getCurrentYear(true);    
+              this.dialogRef.close(this.sentArray);  
             }
           }
       
         })
       }else{
         this.markingPeriodAddModel.tableSchoolYears.startDate=this.commonFunction.formatDateSaveWithoutTime(this.markingPeriodAddModel.tableSchoolYears.startDate);  
+        
         this.markingPeriodAddModel.tableSchoolYears.endDate=this.commonFunction.formatDateSaveWithoutTime(this.markingPeriodAddModel.tableSchoolYears.endDate); 
         this.markingPeriodAddModel.tableSchoolYears.postStartDate=this.commonFunction.formatDateSaveWithoutTime(this.markingPeriodAddModel.tableSchoolYears.postStartDate); 
         this.markingPeriodAddModel.tableSchoolYears.postEndDate=this.commonFunction.formatDateSaveWithoutTime(this.markingPeriodAddModel.tableSchoolYears.postEndDate); 
@@ -462,8 +467,10 @@ export class EditMarkingPeriodComponent implements OnInit {
               this.snackbar.open('School Year Submission Successful.', '', {
                 duration: 10000
               });
-              this.schoolService.changeMessage(true);
-              this.dialogRef.close(true);  
+              sessionStorage.setItem("academicyear",this.markingPeriodAddModel.tableSchoolYears.startDate.substr(0, 4))
+              this.markingPeriodService.getCurrentYear(true);    
+              this.sentArray=[true,sessionStorage.getItem("academicyear")]        
+              this.dialogRef.close(this.sentArray);  
             }
           }
       

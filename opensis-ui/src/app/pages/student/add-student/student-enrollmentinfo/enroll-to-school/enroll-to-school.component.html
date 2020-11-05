@@ -1,0 +1,57 @@
+<div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
+    <h2 class="headline m-0" fxFlex="auto">{{'addEnrollment' |translate}}</h2>
+
+    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+        <mat-icon [icIcon]="icClose"></mat-icon>
+    </button>
+</div>
+<mat-divider class="-mx-6 mb-6 text-border"></mat-divider>
+<mat-dialog-content fxLayout="column">
+    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+        <mat-label>{{'school'|translate}}</mat-label>
+        <mat-select name="suffix">
+            <mat-option value="">Show list of schools</mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+        <mat-label>{{'gradeLevel'|translate}}</mat-label>
+        <mat-select name="suffix">
+            <mat-option value="">Show list of Grade Levels</mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+        <mat-label>{{'startDate'|translate}}</mat-label>
+        <input name="date_of_birth" matInput>
+        <mat-datepicker-toggle [for]="datepickerRef" matSuffix></mat-datepicker-toggle>
+        <mat-datepicker #datepickerRef></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+        <mat-label>{{'enrollmentCode'|translate}}</mat-label>
+        <mat-select name="suffix">
+            <mat-option value="">Show list of Enrollment Codes</mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+        <mat-label>{{'dropDate'|translate}}</mat-label>
+        <input name="date_of_birth" matInput>
+        <mat-datepicker-toggle [for]="datepickerRef" matSuffix></mat-datepicker-toggle>
+        <mat-datepicker #datepickerRef></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+        <mat-label>{{'dropCode'|translate}}</mat-label>
+        <mat-select name="suffix">
+            <mat-option value="">Show list of Drop Codes</mat-option>
+        </mat-select>
+    </mat-form-field>
+
+</mat-dialog-content>
+<mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" class="py-6">
+    <button mat-button mat-dialog-close>{{'cancel'| translate }}</button>
+    <button color="primary" mat-raised-button>{{'submit' | translate }}</button>
+
+</mat-dialog-actions>

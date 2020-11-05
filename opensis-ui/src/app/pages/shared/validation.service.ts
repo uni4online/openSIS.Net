@@ -72,4 +72,20 @@ export class ValidationService {
       return true
     }
   }
+  static defaultSelectionValidator(control) {
+    if(control.dirty && control.value !== '') {
+      if (control.value.match(/([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/ )) {
+        return null;
+      }
+      else if(control.value.match( /(Yes)/)){
+        return null;
+      }
+      else if(control.value.match( /(No)/)){
+        return null;
+      }
+       else {
+        return { invalidDefaultSelection: true };
+      }
+    }
+  }
 }

@@ -22,12 +22,12 @@ import { SharedFunction } from '../../../shared/shared-function';
 })
 export class StudentAddressandcontactsComponent implements OnInit {
 
-  form: FormGroup;
+  //form: FormGroup;
 
   constructor(private fb: FormBuilder) { }
 
   ngOnInit(): void {
-    this.form = this.fb.group({});
+    //this.form = this.fb.group({});
   }
 
 }

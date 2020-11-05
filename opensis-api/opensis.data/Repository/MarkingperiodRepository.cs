@@ -179,7 +179,9 @@ namespace opensis.data.Repository
                 var QuatersExist = this.context?.Quarters.FirstOrDefault(x => x.TenantId == semesterDelete.TenantId && x.SchoolId == semesterDelete.SchoolId && x.SemesterId == semesterDelete.MarkingPeriodId);
                 if (QuatersExist != null)
                 {
-                    semester._message = "Semester Cannot deleted because it has realation.";
+                    semester.tableSemesters = null;
+                    semester._message = "Semester cannot be deleted because it has its association";
+                    semester._failure = true;
                 }
                 else
                 {
@@ -417,7 +419,7 @@ namespace opensis.data.Repository
                 if(semester!=null)
                 {
                     schoolYears.tableSchoolYears = null;
-                    schoolYears._message = "SchoolYear Cannot Be Deleted Because It Has Relation With Semester";
+                    schoolYears._message = "School Year cannot be deleted because it has its association";
                     schoolYears._failure = true;
                 }
                 else
@@ -487,7 +489,7 @@ namespace opensis.data.Repository
                 else
                 {
                     quarterAddViewModel._failure = true;
-                    quarterAddViewModel._message = NORECORDFOUND;                    
+                    quarterAddViewModel._message = NORECORDFOUND;                   
                 }
             }
             catch (Exception es)
@@ -560,7 +562,7 @@ namespace opensis.data.Repository
                 if(progressPeriod != null)
                 {
                     quarter.tableQuarter = null;
-                    quarter._message = "Quater Cannot Be Deleted Because It Has Relation With Semester";
+                    quarter._message = "Quarter cannot be deleted because it has its association";
                     quarter._failure = true;
                 }
                 else

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 
 namespace opensis.data.Repository
 {
@@ -27,12 +28,21 @@ namespace opensis.data.Repository
         {
             try
             {
-                int? MasterFieldId = Utility.GetMaxPK(this.context, new Func<CustomFields, int>(x => x.FieldId));
-                customFieldAddViewModel.customFields.FieldId = (int)MasterFieldId;
-                customFieldAddViewModel.customFields.LastUpdate = DateTime.UtcNow;
-                this.context?.CustomFields.Add(customFieldAddViewModel.customFields);
-                this.context?.SaveChanges();
-                customFieldAddViewModel._failure = false;
+                if (!string.IsNullOrWhiteSpace(customFieldAddViewModel.customFields.Type) && !string.IsNullOrWhiteSpace(customFieldAddViewModel.customFields.Module))
+                {
+                    int? MasterFieldId = Utility.GetMaxPK(this.context, new Func<CustomFields, int>(x => x.FieldId));
+                    customFieldAddViewModel.customFields.FieldId = (int)MasterFieldId;
+                    customFieldAddViewModel.customFields.LastUpdate = DateTime.UtcNow;
+                    this.context?.CustomFields.Add(customFieldAddViewModel.customFields);
+                    this.context?.SaveChanges();
+                    customFieldAddViewModel._failure = false;
+                }
+                else
+                {
+                    customFieldAddViewModel.customFields = null;
+                    customFieldAddViewModel._failure = true;
+                    customFieldAddViewModel._message = "Please enter Type and Module";
+                }
             }
             catch (Exception es)
             {
@@ -83,32 +93,42 @@ namespace opensis.data.Repository
         {
             try
             {
-                var customFieldUpdate = this.context?.CustomFields.FirstOrDefault(x => x.TenantId == customFieldAddViewModel.customFields.TenantId && x.SchoolId == customFieldAddViewModel.customFields.SchoolId && x.FieldId == customFieldAddViewModel.customFields.FieldId);
+                if (!string.IsNullOrWhiteSpace(customFieldAddViewModel.customFields.Type) && !string.IsNullOrWhiteSpace(customFieldAddViewModel.customFields.Module))
+                {                
+                    var customFieldUpdate = this.context?.CustomFields.FirstOrDefault(x => x.TenantId == customFieldAddViewModel.customFields.TenantId && x.SchoolId == customFieldAddViewModel.customFields.SchoolId && x.FieldId == customFieldAddViewModel.customFields.FieldId);
 
-                customFieldUpdate.TenantId = customFieldAddViewModel.customFields.TenantId;
-                customFieldUpdate.SchoolId = customFieldAddViewModel.customFields.SchoolId;
-                customFieldUpdate.FieldId = customFieldAddViewModel.customFields.FieldId;
-                customFieldUpdate.Type = customFieldAddViewModel.customFields.Type;
-                customFieldUpdate.Search = customFieldAddViewModel.customFields.Search;
-                customFieldUpdate.Title = customFieldAddViewModel.customFields.Title;
-                customFieldUpdate.SortOrder = customFieldAddViewModel.customFields.SortOrder;
-                customFieldUpdate.SelectOptions = customFieldAddViewModel.customFields.SelectOptions;
-                customFieldUpdate.CategoryId = customFieldAddViewModel.customFields.CategoryId;
-                customFieldUpdate.SystemField = customFieldAddViewModel.customFields.SystemField;
-                customFieldUpdate.Required = customFieldAddViewModel.customFields.Required;
-                customFieldUpdate.DefaultSelection = customFieldAddViewModel.customFields.DefaultSelection;
-                customFieldUpdate.Hide = customFieldAddViewModel.customFields.Hide;
-                customFieldUpdate.LastUpdate = DateTime.UtcNow;
-                customFieldUpdate.UpdatedBy = customFieldAddViewModel.customFields.UpdatedBy;
+                    customFieldUpdate.TenantId = customFieldAddViewModel.customFields.TenantId;
+                    customFieldUpdate.SchoolId = customFieldAddViewModel.customFields.SchoolId;
+                    customFieldUpdate.FieldId = customFieldAddViewModel.customFields.FieldId;
+                    customFieldUpdate.Type = customFieldAddViewModel.customFields.Type;
+                    customFieldUpdate.Search = customFieldAddViewModel.customFields.Search;
+                    customFieldUpdate.Title = customFieldAddViewModel.customFields.Title;
+                    customFieldUpdate.SortOrder = customFieldAddViewModel.customFields.SortOrder;
+                    customFieldUpdate.SelectOptions = customFieldAddViewModel.customFields.SelectOptions;
+                    customFieldUpdate.CategoryId = customFieldAddViewModel.customFields.CategoryId;
+                    customFieldUpdate.SystemField = customFieldAddViewModel.customFields.SystemField;
+                    customFieldUpdate.Required = customFieldAddViewModel.customFields.Required;
+                    customFieldUpdate.DefaultSelection = customFieldAddViewModel.customFields.DefaultSelection;
+                    customFieldUpdate.Hide = customFieldAddViewModel.customFields.Hide;
+                    customFieldUpdate.LastUpdate = DateTime.UtcNow;
+                    customFieldUpdate.UpdatedBy = customFieldAddViewModel.customFields.UpdatedBy;
 
-                this.context?.SaveChanges();
-                customFieldAddViewModel._failure = false;
+                    this.context?.SaveChanges();
+                    customFieldAddViewModel._failure = false;
+                    customFieldAddViewModel._message = "Entity Updated";
+                }
+                else
+                {
+                    customFieldAddViewModel.customFields = null;
+                    customFieldAddViewModel._failure = true;
+                    customFieldAddViewModel._message = "Please enter Type and Module";
+                }
             }
             catch (Exception ex)
             {
-                customFieldAddViewModel.customFields = null;
-                customFieldAddViewModel._failure = true;
-                customFieldAddViewModel._message = ex.Message;
+                    customFieldAddViewModel.customFields = null;
+                    customFieldAddViewModel._failure = true;
+                    customFieldAddViewModel._message = ex.Message;
             }
             return customFieldAddViewModel;
         }
@@ -139,31 +159,130 @@ namespace opensis.data.Repository
         }
 
         /// <summary>
-        ///Get All Custom Field
+        /// Add FieldsCategory
         /// </summary>
-        /// <param name="customField"></param>
+        /// <param name="fieldsCategoryAddViewModel"></param>
         /// <returns></returns>
-        public CustomFieldListViewModel GetAllCustomField(CustomFieldListViewModel customFieldListViewModel)
+        public FieldsCategoryAddViewModel AddFieldsCategory(FieldsCategoryAddViewModel fieldsCategoryAddViewModel)
         {
-            CustomFieldListViewModel customFieldList = new CustomFieldListViewModel();
+            int? CategoryId = Utility.GetMaxPK(this.context, new Func<FieldsCategory, int>(x => x.CategoryId));
+            fieldsCategoryAddViewModel.fieldsCategory.CategoryId = (int)CategoryId;
+            fieldsCategoryAddViewModel.fieldsCategory.LastUpdate = DateTime.UtcNow;
+            this.context?.FieldsCategory.Add(fieldsCategoryAddViewModel.fieldsCategory);
+            this.context?.SaveChanges();
+            fieldsCategoryAddViewModel._failure = false;
+
+            return fieldsCategoryAddViewModel;
+        }
+        /// <summary>
+        /// View FieldsCategory By Id
+        /// </summary>
+        /// <param name="fieldsCategoryAddViewModel"></param>
+        /// <returns></returns>
+        public FieldsCategoryAddViewModel ViewFieldsCategory(FieldsCategoryAddViewModel fieldsCategoryAddViewModel)
+        {
+            FieldsCategoryAddViewModel fieldsCategoryViewModel = new FieldsCategoryAddViewModel();
             try
             {
-
-                var CustomFieldAll = this.context?.CustomFields.Where(x => x.TenantId == customFieldListViewModel.TenantId && x.SchoolId == customFieldListViewModel.SchoolId).OrderBy(x => x.SortOrder).ToList();
-                customFieldList.customFieldsList = CustomFieldAll;
-                customFieldList._tenantName = customFieldListViewModel._tenantName;
-                customFieldList._token = customFieldListViewModel._token;
-                customFieldList._failure = false;
+                var fieldsCategoryView = this.context?.FieldsCategory.FirstOrDefault(x => x.TenantId == fieldsCategoryAddViewModel.fieldsCategory.TenantId && x.SchoolId == fieldsCategoryAddViewModel.fieldsCategory.SchoolId && x.CategoryId == fieldsCategoryAddViewModel.fieldsCategory.CategoryId);
+                if (fieldsCategoryView != null)
+                {
+                    fieldsCategoryViewModel.fieldsCategory = fieldsCategoryView;
+                    fieldsCategoryViewModel._failure = false;
+                }
+                else
+                {
+                    fieldsCategoryViewModel._failure = true;
+                    fieldsCategoryViewModel._message = NORECORDFOUND;
+                }
             }
             catch (Exception es)
             {
-                customFieldList._message = es.Message;
-                customFieldList._failure = true;
-                customFieldList._tenantName = customFieldListViewModel._tenantName;
-                customFieldList._token = customFieldListViewModel._token;
-            }
-            return customFieldList;
 
+                fieldsCategoryViewModel._failure = true;
+                fieldsCategoryViewModel._message = es.Message;
+            }
+            return fieldsCategoryViewModel;
+        }
+        /// <summary>
+        /// Update FieldsCategory 
+        /// </summary>
+        /// <param name="fieldsCategoryAddViewModel"></param>
+        /// <returns></returns>
+        public FieldsCategoryAddViewModel UpdateFieldsCategory(FieldsCategoryAddViewModel fieldsCategoryAddViewModel)
+        {
+            FieldsCategoryAddViewModel fieldsCategoryUpdateModel = new FieldsCategoryAddViewModel();
+            try
+            {
+                var fieldsCategoryUpdate = this.context?.FieldsCategory.FirstOrDefault(x => x.TenantId == fieldsCategoryAddViewModel.fieldsCategory.TenantId && x.SchoolId == fieldsCategoryAddViewModel.fieldsCategory.SchoolId && x.CategoryId == fieldsCategoryAddViewModel.fieldsCategory.CategoryId);
+                fieldsCategoryUpdate.IsSystemCategory = fieldsCategoryAddViewModel.fieldsCategory.IsSystemCategory;
+                fieldsCategoryUpdate.Search = fieldsCategoryAddViewModel.fieldsCategory.Search;
+                fieldsCategoryUpdate.Title = fieldsCategoryAddViewModel.fieldsCategory.Title;
+                fieldsCategoryUpdate.Module = fieldsCategoryAddViewModel.fieldsCategory.Module;
+                fieldsCategoryUpdate.SortOrder = fieldsCategoryAddViewModel.fieldsCategory.SortOrder;
+                fieldsCategoryUpdate.Required = fieldsCategoryAddViewModel.fieldsCategory.Required;
+                fieldsCategoryUpdate.Hide = fieldsCategoryAddViewModel.fieldsCategory.Hide;
+                fieldsCategoryUpdate.LastUpdate = DateTime.UtcNow;
+                fieldsCategoryUpdate.UpdatedBy = fieldsCategoryAddViewModel.fieldsCategory.UpdatedBy;
+                this.context?.SaveChanges();
+                fieldsCategoryAddViewModel._failure = false;
+                fieldsCategoryAddViewModel._message = "Entity Updated";
+            }
+            catch (Exception es)
+            {
+                fieldsCategoryAddViewModel._failure = true;
+                fieldsCategoryAddViewModel._message = es.Message;
+            }
+            return fieldsCategoryAddViewModel;
+        }
+        /// <summary>
+        /// Delete FieldsCategory
+        /// </summary>
+        /// <param name="fieldsCategoryAddViewModel"></param>
+        /// <returns></returns>
+        public FieldsCategoryAddViewModel DeleteFieldsCategory(FieldsCategoryAddViewModel fieldsCategoryAddViewModel)
+        {
+            try
+            {
+                var fieldsCategoryDelete = this.context?.FieldsCategory.FirstOrDefault(x => x.TenantId == fieldsCategoryAddViewModel.fieldsCategory.TenantId && x.SchoolId == fieldsCategoryAddViewModel.fieldsCategory.SchoolId && x.CategoryId == fieldsCategoryAddViewModel.fieldsCategory.CategoryId);
+                this.context?.FieldsCategory.Remove(fieldsCategoryDelete);
+                this.context?.SaveChanges();
+                fieldsCategoryAddViewModel._failure = false;
+                fieldsCategoryAddViewModel._message = "Deleted";
+            }
+            catch (Exception es)
+            {
+                fieldsCategoryAddViewModel._failure = true;
+                fieldsCategoryAddViewModel._message = es.Message;
+            }
+            return fieldsCategoryAddViewModel;
+        }
+        /// <summary>
+        /// Get All FieldsCategory
+        /// </summary>
+        /// <param name="fieldsCategoryListViewModel"></param>
+        /// <returns></returns>
+        public FieldsCategoryListViewModel GetAllFieldsCategory(FieldsCategoryListViewModel fieldsCategoryListViewModel)
+        {
+            FieldsCategoryListViewModel fieldsCategoryListModel = new FieldsCategoryListViewModel();
+            try
+            {
+
+                var fieldsCategoryList = this.context?.FieldsCategory.Include(x=>x.CustomFields).Where(x => x.TenantId == fieldsCategoryListViewModel.TenantId && x.SchoolId == fieldsCategoryListViewModel.SchoolId && x.Module== fieldsCategoryListViewModel.Module).OrderBy(x => x.SortOrder).ToList();
+                fieldsCategoryListModel.fieldsCategoryList = fieldsCategoryList;
+                fieldsCategoryListModel._tenantName = fieldsCategoryListViewModel._tenantName;
+                fieldsCategoryListModel._token = fieldsCategoryListViewModel._token;
+                fieldsCategoryListModel._failure = false;
+            }
+            catch (Exception es)
+            {
+                fieldsCategoryListModel._message = es.Message;
+                fieldsCategoryListModel._failure = true;
+                fieldsCategoryListModel._tenantName = fieldsCategoryListViewModel._tenantName;
+                fieldsCategoryListModel._token = fieldsCategoryListViewModel._token;
+            }
+            fieldsCategoryListModel.fieldsCategoryList.ToList().ForEach(x => x.CustomFields.ToList().ForEach(y => y.FieldsCategory = null));
+            return fieldsCategoryListModel;
         }
     }
 }

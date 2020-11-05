@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using opensis.core.Student.Interfaces;
+using opensis.data.Models;
 using opensis.data.ViewModels.Student;
 
 namespace opensisAPI.Controllers
@@ -28,9 +29,9 @@ namespace opensisAPI.Controllers
             StudentAddViewModel studentAdd = new StudentAddViewModel();
             try
             {
-                if (student.studentEnrollment.SchoolId > 0)
+                if (student.studentMaster.SchoolId > 0)
                 {
-                   studentAdd = _studentService.SaveStudent(student);
+                    studentAdd = _studentService.SaveStudent(student);
                 }
                 else
                 {
@@ -55,7 +56,7 @@ namespace opensisAPI.Controllers
             StudentAddViewModel studentUpdate = new StudentAddViewModel();
             try
             {
-                if (student.studentEnrollment.SchoolId > 0)
+                if (student.studentMaster.SchoolId > 0)
                 {
                     studentUpdate = _studentService.UpdateStudent(student);
                 }
@@ -75,61 +76,95 @@ namespace opensisAPI.Controllers
             return studentUpdate;
         }
 
-        [HttpPost("viewStudent")]
+        [HttpPost("getAllStudentList")]
 
-        public ActionResult<StudentAddViewModel> ViewStudent(StudentAddViewModel student)
+        public ActionResult<StudentListModel> GetAllStudentList(PageResult pageResult)
         {
-            StudentAddViewModel studentView = new StudentAddViewModel();
+            StudentListModel studentList = new StudentListModel();
             try
             {
-                if (student.studentEnrollment.SchoolId > 0)
-                {
-                    studentView = _studentService.ViewStudent(student);
-                }
-                else
-                {
-                    studentView._token = student._token;
-                    studentView._tenantName = student._tenantName;
-                    studentView._failure = true;
-                    studentView._message = "Please enter valid scholl id";
-                }
+                studentList = _studentService.GetAllStudentList(pageResult);
             }
             catch (Exception es)
             {
-                studentView._failure = true;
-                studentView._message = es.Message;
+                studentList._message = es.Message;
+                studentList._failure = true;
             }
-            return studentView;
+            return studentList;
         }
 
+        [HttpPost("searchContactForStudent")]
 
-
-        [HttpPost("deleteStudent")]
-
-        public ActionResult<StudentAddViewModel> DeleteStudent(StudentAddViewModel student)
+        public ActionResult<SearchContactViewModel> SearchContactForStudent(SearchContactViewModel searchContactViewModel)
         {
-            StudentAddViewModel studentDelete = new StudentAddViewModel();
+            SearchContactViewModel contactViewModel = new SearchContactViewModel();
             try
             {
-                if (student.studentEnrollment.SchoolId > 0)
-                {
-                    studentDelete = _studentService.DeleteStudent(student);
-                }
-                else
-                {
-                    studentDelete._token = student._token;
-                    studentDelete._tenantName = student._tenantName;
-                    studentDelete._failure = true;
-                    studentDelete._message = "Please enter valid scholl id";
-                }
+                contactViewModel = _studentService.SearchContactForStudent(searchContactViewModel);
             }
             catch (Exception es)
             {
-                studentDelete._failure = true;
-                studentDelete._message = es.Message;
+                contactViewModel._message = es.Message;
+                contactViewModel._failure = true;
             }
-            return studentDelete;
+            return contactViewModel;
         }
+
+        //[HttpPost("viewStudent")]
+
+        //public ActionResult<StudentAddViewModel> ViewStudent(StudentAddViewModel student)
+        //{
+        //    StudentAddViewModel studentView = new StudentAddViewModel();
+        //    try
+        //    {
+        //        if (student.studentMaster.SchoolId > 0)
+        //        {
+        //            studentView = _studentService.ViewStudent(student);
+        //        }
+        //        else
+        //        {
+        //            studentView._token = student._token;
+        //            studentView._tenantName = student._tenantName;
+        //            studentView._failure = true;
+        //            studentView._message = "Please enter valid scholl id";
+        //        }
+        //    }
+        //    catch (Exception es)
+        //    {
+        //        studentView._failure = true;
+        //        studentView._message = es.Message;
+        //    }
+        //    return studentView;
+        //}
+
+
+
+        //[HttpPost("deleteStudent")]
+
+        //public ActionResult<StudentAddViewModel> DeleteStudent(StudentAddViewModel student)
+        //{
+        //    StudentAddViewModel studentDelete = new StudentAddViewModel();
+        //    try
+        //    {
+        //        if (student.studentMaster.SchoolId > 0)
+        //        {
+        //            studentDelete = _studentService.DeleteStudent(student);
+        //        }
+        //        else
+        //        {
+        //            studentDelete._token = student._token;
+        //            studentDelete._tenantName = student._tenantName;
+        //            studentDelete._failure = true;
+        //            studentDelete._message = "Please enter valid scholl id";
+        //        }
+        //    }
+        //    catch (Exception es)
+        //    {
+        //        studentDelete._failure = true;
+        //        studentDelete._message = es.Message;
+        //    }
+        //    return studentDelete;
+        //}
 
 
 

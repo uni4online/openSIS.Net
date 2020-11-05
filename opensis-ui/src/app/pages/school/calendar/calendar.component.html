@@ -69,7 +69,7 @@
                 mwlDraggable [class.cal-draggable]="event.draggable" dragActiveClass="cal-drag-active"
                 [dropData]="{event: event}" [dragAxis]="{x: event.draggable, y: event.draggable}">
                 <span class="event-color" [style.backgroundColor]="event.meta.calendar.eventColor"></span>
-                <span (click)="$event.stopPropagation(); viewEvent(event)" class="text-xs">{{ event.title}}</span>
+                <span (click)="$event.stopPropagation(); viewEvent(event)" class="text-xs cursor-pointer">{{ event.title}}</span>
               </div>
             </div>
           </div>

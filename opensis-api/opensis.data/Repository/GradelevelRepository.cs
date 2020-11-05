@@ -120,7 +120,7 @@ namespace opensis.data.Repository
                 {
                     gradelevel.tblGradelevel = null;
                     gradelevel._failure = true;
-                    gradelevel._message = "Can not be deleted";
+                    gradelevel._message = "GradeLevel cannot be deleted because it has its association";
                 }
                 else
                 {

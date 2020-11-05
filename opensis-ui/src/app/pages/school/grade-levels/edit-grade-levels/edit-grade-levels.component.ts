@@ -56,7 +56,7 @@ export class EditGradeLevelsComponent implements OnInit {
       });
       
     if(this.editMode){
-      this.modalTitle="updateGradeLevel"
+      this.modalTitle="editGradeLevel"
       this.modalActionButtonTitle="update";
       this.callGradeLevelView();
     }

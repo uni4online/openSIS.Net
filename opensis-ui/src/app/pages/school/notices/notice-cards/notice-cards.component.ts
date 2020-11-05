@@ -6,7 +6,7 @@ import { NoticeDeleteModel } from '../../../../../app/models/noticeDeleteModel';
 import { NoticeService } from '../../../../../app/services/notice.service';
 import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { NoticeAddViewModel, NoticeListViewModel } from 'src/app/models/noticeModel';
+import { NoticeAddViewModel, NoticeListViewModel } from '../../../../models/noticeModel';
 import { MatDialog } from '@angular/material/dialog';
 import { EditNoticeComponent } from '../edit-notice/edit-notice.component';
 import { TranslateService } from '@ngx-translate/core';
@@ -22,6 +22,7 @@ export class NoticeCardsComponent implements OnInit {
   icPreview = icPreview;
   icPeople = icPeople;
   icMoreVert = icMoreVert;
+  showMember = true;
   
   noticeDeleteModel = new NoticeDeleteModel();
   @Input() title: string;
@@ -37,7 +38,12 @@ export class NoticeCardsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if(this.visibleTo.toString() === ""){
+      this.showMember = false;
+    }
+    
   }
+
 
   deleteNoticeConfirm(id) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {

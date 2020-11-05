@@ -49,7 +49,7 @@ export class MarkingPeriodsComponent implements OnInit {
   doesExam=false;
   doesComments=false;
   loading;
-  
+  academicYear;
  
  zeroIndexOfelement:boolean =false;
   constructor(private dialog: MatDialog,
@@ -57,16 +57,22 @@ export class MarkingPeriodsComponent implements OnInit {
     private snackbar: MatSnackBar,
     private commonFunction:SharedFunction,
     private loaderService: LoaderService,
-    public translateService: TranslateService    ) {
-      this.getMarkingPeriod();      
+    public translateService: TranslateService    ) {  
+   
+   
+          
       translateService.use('en');
       this.loaderService.isLoading.subscribe((val) => {
         this.loading = val;
       });
   }
-  ngOnInit(): void {
-    
-  }
+  ngOnInit(): void { 
+    this.academicYear=+sessionStorage.getItem('academicyear');
+   
+    this.getMarkingPeriod(); }
+  
+  
+  
   viewDetails(details,data){
     
      let elem = document.querySelectorAll(".commonClass");
@@ -99,7 +105,8 @@ export class MarkingPeriodsComponent implements OnInit {
         this.doesComments = false;
       }
   }
-  getMarkingPeriod(){
+  getMarkingPeriod(){ 
+    
     this.markingPeriodService.GetMarkingPeriod(this.markingPeriodListModel).subscribe(data => {
       if (typeof (data) == 'undefined') {
         this.snackbar.open('General Info Updation failed. ' + sessionStorage.getItem("httpError"), '', {
@@ -119,7 +126,8 @@ export class MarkingPeriodsComponent implements OnInit {
               if(index === 0){
                 this.viewFirstChild=value;               
               }
-            });           
+            });   
+                  
             this.viewFirstChild.startDate=this.commonFunction.formatDate(this.viewFirstChild.startDate);
             this.viewFirstChild.endDate=this.commonFunction.formatDate(this.viewFirstChild.endDate);
             this.viewFirstChild.postStartDate=this.commonFunction.formatDate(this.viewFirstChild.postStartDate);
@@ -159,6 +167,7 @@ export class MarkingPeriodsComponent implements OnInit {
       }   
     }).afterClosed().subscribe((data) => {
      if(data){
+       
         this.getMarkingPeriod();
       }            
     });    
@@ -266,8 +275,7 @@ export class MarkingPeriodsComponent implements OnInit {
             this.snackbar.open('School Progress Period Deletion failed. ' + data._message, 'LOL THANKS', {
               duration: 10000
             });
-          } else {
-         
+          } else {         
             this.snackbar.open('School Progress Period Deletion Successful.', '', {
               duration: 10000
             }).afterOpened().subscribe(data => {
@@ -291,7 +299,8 @@ export class MarkingPeriodsComponent implements OnInit {
       data: null,
       width: '600px'
     }).afterClosed().subscribe((data) => {
-      if(data){
+      if(data[0]){
+        this.markingPeriodListModel.academicYear = +data[1];
          this.getMarkingPeriod();
        }            
      });  

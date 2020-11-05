@@ -51,6 +51,7 @@ const moment = _rollupMoment || _moment;
 export class GeneralInfoComponent implements OnInit {
   @Output("parentShowWash") parentShowWash: EventEmitter<object> = new EventEmitter<object>();
   @Output() dataOfgeneralInfo: EventEmitter<object> = new EventEmitter();
+  @Output() onViewMode = new EventEmitter();
   @Input() isEditMode: Boolean;
   @Input() dataOfgeneralInfoFromView;
   @Input() dataOfgeneralInfoFromWash;
@@ -87,6 +88,7 @@ export class GeneralInfoComponent implements OnInit {
   minDate;
   selectedLowGradeLevelIndex:number;
   selectedHighGradeLevelIndex:number;
+  formActionButtonTitle="submit";
   gradeLevel= [
     {id : 'PK', title : "PK"},
     {id : 'K', title : "K"},
@@ -175,7 +177,10 @@ export class GeneralInfoComponent implements OnInit {
         linkedin: ['',Validators.maxLength(100)],
         county: ['',Validators.maxLength(50)],
       });
-      this.getAllCountry();   
+      this.getAllCountry(); 
+      if(this.dataOfgeneralInfoFromView!=undefined){
+        this.formActionButtonTitle="update";
+      }  
   }
 
   checkLowGradeLevel(event){
@@ -183,23 +188,32 @@ export class GeneralInfoComponent implements OnInit {
       return val.id==event.value;
     });
     this.selectedLowGradeLevelIndex=index;
-    if(index>this.selectedHighGradeLevelIndex){
-    this.form.controls.lowest_grade_level.setErrors({'nomatch': true});
+    if(index==-1){
+      this.form.controls.lowest_grade_level.markAsTouched();
     }else{
-    this.form.controls.lowest_grade_level.setErrors(null);
-    this.form.controls.highest_grade_level.setErrors(null);
+      if(index>this.selectedHighGradeLevelIndex){
+        this.form.controls.lowest_grade_level.setErrors({'nomatch': true});
+        }else{
+        this.form.controls.lowest_grade_level.setErrors(null);
+        this.form.controls.highest_grade_level.setErrors(null);
+        }
     }
+    
   }
   checkHighGradeLevel(event){
     let index=this.gradeLevel.findIndex((val)=>{
       return val.id==event.value;
     });
     this.selectedHighGradeLevelIndex=index;
-    if(this.selectedLowGradeLevelIndex>index){
-    this.form.controls.highest_grade_level.setErrors({'nomatch': true});
+    if(index==-1){
+      this.form.controls.highest_grade_level.markAsTouched();
     }else{
-    this.form.controls.highest_grade_level.setErrors(null);
-    this.form.controls.lowest_grade_level.setErrors(null);
+      if(this.selectedLowGradeLevelIndex>index){
+        this.form.controls.highest_grade_level.setErrors({'nomatch': true});
+        }else{
+        this.form.controls.highest_grade_level.setErrors(null);
+        this.form.controls.lowest_grade_level.setErrors(null);
+        }
     }
   }
 
@@ -210,8 +224,11 @@ export class GeneralInfoComponent implements OnInit {
   dateCompare() {
     this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolClosed=null;
     this.minDate = this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolOpened;
-
+    let minDate = new Date(this.minDate)
+    this.minDate=new Date(minDate.setDate(minDate.getDate() + 1));
+    
   }
+
  getAllCountry(){  
   this.commonService.GetAllCountry(this.countryModel).subscribe(data => {
     if (typeof (data) == 'undefined') {
@@ -370,7 +387,8 @@ export class GeneralInfoComponent implements OnInit {
                 duration: 10000
               });
               this.generalInfoService.changeMessage(true);
-              this.parentShowWash.emit(this.isEditMode);
+              // this.parentShowWash.emit(this.isEditMode);
+              this.onViewMode.emit();
               this.dataOfgeneralInfo.emit(data);
             }
           }

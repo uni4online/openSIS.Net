@@ -1,3 +1,4 @@
+<vex-mat-spinner-overlay *ngIf="loading"></vex-mat-spinner-overlay>
 <div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
     <h2 class="headline m-0" fxFlex="auto">{{AddOrEditNotice |translate}}</h2>
 
@@ -13,8 +14,8 @@
             <input formControlName="Title" [(ngModel)]="noticeAddViewModel.notice.title" name="Title" matInput required>
             <mat-error *ngIf="form.get('Title').hasError('required')">{{'titleIsRequired'| translate}}</mat-error>
         </mat-form-field>
-        <div class="card">
-            <quill-editor formControlName="Body" name="Body" [(ngModel)]="noticeAddViewModel.notice.body" (onEditorChanged)="changedEditor($event)" [styles]="{ flex: '1 1 auto' }"></quill-editor>
+        <div class="mb-6 border rounded">
+            <quill-editor formControlName="Body" name="Body" [(ngModel)]="noticeAddViewModel.notice.body" (onEditorChanged)="changedEditor($event)" [styles]="{ height: '250px' }"></quill-editor>
 
         </div>
         <div class="mb-2 md:flex md:flex-wrap -mx-6">
@@ -40,17 +41,17 @@
             </div>
         </div>
         
+        <mat-checkbox color="primary">Visible to All School</mat-checkbox>
+        
         <h6 class="text-primary mb-3" [hidden]="membercount==0">{{'visibleToProfile' |translate }}</h6>
 
-        <div class="mb-3">
-            <mat-checkbox (click)="updateCheck($event)"  [hidden]="membercount==0" class="example-margin">
+        <div class="mb-3" [hidden]="membercount==0">
+            <mat-checkbox #checkBox [checked]="checkAll" (click)="updateCheck($event)" class="example-margin">
                 Select All
             </mat-checkbox>
         </div>
 
-
-
-        <ul class="md:grid md:grid-cols-3 md:col-gap-10 md:row-gap-3">
+        <ul class="md:grid md:grid-cols-3 md:col-gap-10 md:row-gap-3"  [hidden]="membercount==0">
             <li *ngFor="let member of getAllMembersList.getAllMemberList">
                 
                 <mat-checkbox [checked]="memberArray.indexOf(member.membershipId) != -1" (click)="selectChildren($event,member.membershipId)" color="primary">
@@ -65,7 +66,7 @@
 
     <mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" class="py-6">
         <button mat-button mat-dialog-close>{{'cancel'| translate }}</button>
-        <button color="primary" mat-raised-button>{{'submit' | translate }}</button>
+        <button color="primary" mat-raised-button>{{noticeModalActionTitle | translate }}</button>
 
     </mat-dialog-actions>
 

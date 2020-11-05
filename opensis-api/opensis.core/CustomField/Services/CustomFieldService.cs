@@ -128,36 +128,147 @@ namespace opensis.core.CustomField.Services
             return customFieldDelete;
         }
 
-
         /// <summary>
-        /// Get All Custom Field
+        /// Add FieldsCategory
         /// </summary>
-        /// <param name="customField"></param>
+        /// <param name="fieldsCategoryAddViewModel"></param>
         /// <returns></returns>
-        public CustomFieldListViewModel GetAllCustomField(CustomFieldListViewModel customFieldListViewModel)
+        public FieldsCategoryAddViewModel SaveFieldsCategory(FieldsCategoryAddViewModel fieldsCategoryAddViewModel)
         {
-            CustomFieldListViewModel customFieldList = new CustomFieldListViewModel();
+            FieldsCategoryAddViewModel FieldsCategoryAddModel = new FieldsCategoryAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(customFieldListViewModel._tenantName, customFieldListViewModel._token))
+                if (TokenManager.CheckToken(fieldsCategoryAddViewModel._tenantName, fieldsCategoryAddViewModel._token))
                 {
-                    customFieldList = this.customFieldRepository.GetAllCustomField(customFieldListViewModel);
+
+                    FieldsCategoryAddModel = this.customFieldRepository.AddFieldsCategory(fieldsCategoryAddViewModel);
+
                 }
                 else
                 {
-                    customFieldList._failure = true;
-                    customFieldList._message = TOKENINVALID;
+                    FieldsCategoryAddModel._failure = true;
+                    FieldsCategoryAddModel._message = TOKENINVALID;
+
                 }
             }
             catch (Exception es)
             {
-                customFieldList._failure = true;
-                customFieldList._message = es.Message;
+
+                FieldsCategoryAddModel._failure = true;
+                FieldsCategoryAddModel._message = es.Message;
+            }
+            return FieldsCategoryAddModel;
+        }
+        /// <summary>
+        /// View By Id FieldsCategory
+        /// </summary>
+        /// <param name="fieldsCategoryAddViewModel"></param>
+        /// <returns></returns>
+        public FieldsCategoryAddViewModel ViewFieldsCategory(FieldsCategoryAddViewModel fieldsCategoryAddViewModel)
+        {
+            FieldsCategoryAddViewModel fieldsCategoryViewModel = new FieldsCategoryAddViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(fieldsCategoryAddViewModel._tenantName, fieldsCategoryAddViewModel._token))
+                {
+                    fieldsCategoryViewModel = this.customFieldRepository.ViewFieldsCategory(fieldsCategoryAddViewModel);
+                }
+                else
+                {
+                    fieldsCategoryViewModel._failure = true;
+                    fieldsCategoryViewModel._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                fieldsCategoryViewModel._failure = true;
+                fieldsCategoryViewModel._message = es.Message;
+            }
+            return fieldsCategoryViewModel;
+        }
+        /// <summary>
+        /// Update FieldsCategory
+        /// </summary>
+        /// <param name="fieldsCategoryAddViewModel"></param>
+        /// <returns></returns>
+        public FieldsCategoryAddViewModel UpdateFieldsCategory(FieldsCategoryAddViewModel fieldsCategoryAddViewModel)
+        {
+            FieldsCategoryAddViewModel fieldsCategoryUpdateModel = new FieldsCategoryAddViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(fieldsCategoryAddViewModel._tenantName, fieldsCategoryAddViewModel._token))
+                {
+                    fieldsCategoryUpdateModel = this.customFieldRepository.UpdateFieldsCategory(fieldsCategoryAddViewModel);
+                }
+                else
+                {
+                    fieldsCategoryUpdateModel._failure = true;
+                    fieldsCategoryUpdateModel._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                fieldsCategoryUpdateModel._failure = true;
+                fieldsCategoryUpdateModel._message = es.Message;
             }
 
-            return customFieldList;
+            return fieldsCategoryUpdateModel;
         }
+        /// <summary>
+        /// Delete FieldsCategory
+        /// </summary>
+        /// <param name="fieldsCategoryAddViewModel"></param>
+        /// <returns></returns>
+        public FieldsCategoryAddViewModel DeleteFieldsCategory(FieldsCategoryAddViewModel fieldsCategoryAddViewModel)
+        {
+            FieldsCategoryAddViewModel fieldsCategoryDeleteModel = new FieldsCategoryAddViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(fieldsCategoryAddViewModel._tenantName, fieldsCategoryAddViewModel._token))
+                {
+                    fieldsCategoryDeleteModel = this.customFieldRepository.DeleteFieldsCategory(fieldsCategoryAddViewModel);
+                }
+                else
+                {
+                    fieldsCategoryDeleteModel._failure = true;
+                    fieldsCategoryDeleteModel._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                fieldsCategoryDeleteModel._failure = true;
+                fieldsCategoryDeleteModel._message = es.Message;
+            }
 
+            return fieldsCategoryDeleteModel;
+        }
+        /// <summary>
+        /// Get All FieldsCategory
+        /// </summary>
+        /// <param name="fieldsCategoryListViewModel"></param>
+        /// <returns></returns>
+        public FieldsCategoryListViewModel GetAllFieldsCategory(FieldsCategoryListViewModel fieldsCategoryListViewModel)
+        {
+            FieldsCategoryListViewModel fieldsCategoryListModel = new FieldsCategoryListViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(fieldsCategoryListViewModel._tenantName, fieldsCategoryListViewModel._token))
+                {
+                    fieldsCategoryListModel = this.customFieldRepository.GetAllFieldsCategory(fieldsCategoryListViewModel);
+                }
+                else
+                {
+                    fieldsCategoryListModel._failure = true;
+                    fieldsCategoryListModel._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                fieldsCategoryListModel._failure = true;
+                fieldsCategoryListModel._message = es.Message;
+            }
 
+            return fieldsCategoryListModel;
+        }
     }
 }

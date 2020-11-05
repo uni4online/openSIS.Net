@@ -1,4 +1,8 @@
 .marking-period-tree {
+    > li {
+        margin-bottom: 15px;
+    }
+    
     .tree-node {
         @apply border-primary-light rounded;
 

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit } from '@angular/core';
 import icArrowDropDown from '@iconify/icons-ic/arrow-drop-down';
 import icAdd from '@iconify/icons-ic/add';
 import { MatDialog } from '@angular/material/dialog';
@@ -15,6 +15,7 @@ import moment from 'moment';
 import { LoaderService } from '../../../services/loader.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'vex-notices',
   templateUrl: './notices.component.html',
   styleUrls: ['./notices.component.scss'],
@@ -39,7 +40,8 @@ export class NoticesComponent implements OnInit {
     private _noticeService: NoticeService,
     private _membershipService:MembershipService, 
     private snackbar: MatSnackBar,
-    private loaderService: LoaderService) {
+    private loaderService: LoaderService,
+    private cdr: ChangeDetectorRef) {
     translateService.use('en');
     this.loaderService.isLoading.subscribe((v) => {
       this.loading = v;
@@ -58,6 +60,9 @@ export class NoticesComponent implements OnInit {
     this.showRecords('All');
     this.getMemberList();
   }
+  ngAfterViewChecked(){
+    this.cdr.detectChanges();
+ }
   getMemberList(){
     this._membershipService.getAllMembers(this.getAllMembersList).subscribe(
       (res) => {

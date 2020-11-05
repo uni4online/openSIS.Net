@@ -24,9 +24,13 @@
 
 
                     <div fxFlex="200px" class="pt-3">
+                        <button class="ml-3" fxFlex="none" mat-icon-button
+                            matTooltip="Export to Excel" type="button">
+                            <span class="icon icon-file-excel text-lg"></span>
+                        </button>
                         <button 
                         [matMenuTriggerFor]="columnFilterMenu"
-                        class="ml-4"
+                        class="ml-3"
                         fxFlex="none"
                         mat-icon-button
                         matTooltip="Filter Columns"

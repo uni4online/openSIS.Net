@@ -25,6 +25,8 @@ import { StudentLogininfoComponent } from '../add-student/student-logininfo/stud
 import { ViewstudentGeneralinfoComponent } from '../add-student/viewstudent-generalinfo/viewstudent-generalinfo.component';
 import { ViewstudentAddressandcontactsComponent } from '../add-student/viewstudent-addressandcontacts/viewstudent-addressandcontacts.component';
 import { ViewstudentLogininfoComponent } from '../add-student/viewstudent-logininfo/viewstudent-logininfo.component';
+import { StudentContactsComponent } from '../add-student/student-familyinfo/student-contacts/student-contacts.component';
+import { SiblingsinfoComponent } from '../add-student/student-familyinfo/siblingsinfo/siblingsinfo.component';
 import { TranslateModule } from '@ngx-translate/core';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -46,7 +48,9 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     StudentLogininfoComponent,
     ViewstudentGeneralinfoComponent,
     ViewstudentAddressandcontactsComponent,
-    ViewstudentLogininfoComponent
+    ViewstudentLogininfoComponent,
+    StudentContactsComponent,
+    SiblingsinfoComponent
   ],
   imports: [
     CommonModule,

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, OnInit, Output, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import icClose from '@iconify/icons-ic/twotone-close';
@@ -18,6 +18,8 @@ import { MembershipService } from '../../../../../app/services/membership.servic
 import * as moment from 'moment';
 import { SharedFunction} from '../../../shared/shared-function';
 import { ValidationService } from '../../../shared/validation.service';
+import { LoaderService } from '../../../../services/loader.service';
+import { MatCheckbox } from '@angular/material/checkbox';
 
 @Component({
   selector: 'vex-edit-notice',
@@ -35,7 +37,10 @@ import { ValidationService } from '../../../shared/validation.service';
   ]
 })
 export class EditNoticeComponent implements OnInit {
+  @ViewChild('checkBox' ) checkBox:MatCheckbox;
+  checkAll:boolean;
   AddOrEditNotice: string;
+  noticeModalActionTitle="submit";
   @Output() afterClosed = new EventEmitter<boolean>();
   getAllMembersList: GetAllMembersList = new GetAllMembersList();
   icClose = icClose;
@@ -44,20 +49,23 @@ export class EditNoticeComponent implements OnInit {
   memberArray: number[] = [];
   form: FormGroup;
   membercount:number;
+  loading:boolean=false;
   constructor(private dialogRef: MatDialogRef<EditNoticeComponent>, 
     @Inject(MAT_DIALOG_DATA) public data:any,
     private router: Router, private Activeroute: ActivatedRoute, private fb: FormBuilder,
      private _noticeService: NoticeService,private _membershipService: MembershipService,
       public translateService: TranslateService, private snackbar: MatSnackBar,
-      private commonFunction:SharedFunction) {
-        
+      private commonFunction:SharedFunction,
+      private loaderService: LoaderService) {
     translateService.use('en');
-    
+    this.loaderService.isLoading.subscribe((v) => {
+      this.loading = v;
+    });  
   }
 
   
 
-  ngOnInit(): void {
+  ngOnInit(): void {   
     if(this.data==null){
       this.snackbar.open('Null vallue occur. ','', {
         duration: 10000
@@ -71,6 +79,7 @@ export class EditNoticeComponent implements OnInit {
       }
       else{
         this.AddOrEditNotice = "editNotice";
+        this.noticeModalActionTitle="update";
         this.noticeAddViewModel.notice=this.data.notice
         
         this._noticeService.viewNotice(this.noticeAddViewModel).subscribe(
@@ -80,6 +89,10 @@ export class EditNoticeComponent implements OnInit {
             if(this.noticeAddViewModel.notice.targetMembershipIds!=null){
               var membershipIds:string[] = this.noticeAddViewModel.notice.targetMembershipIds.split(',');
           this.memberArray = membershipIds.map(Number);
+          if(this.memberArray.length === this.getAllMembersList.getAllMemberList.length){
+            this.checkAll=true;
+          }
+
             }
           }
         )
@@ -93,8 +106,6 @@ export class EditNoticeComponent implements OnInit {
       valid_to: ['', Validators.required],
       TargetMembershipIds: ['']
     });
-
-
   }
   get f() {
     return this.form.controls;
@@ -150,37 +161,38 @@ export class EditNoticeComponent implements OnInit {
       this.body = document.querySelector(".ql-editor").innerHTML;
     }
   }
+
   updateCheck(event) {
-    if(this.memberArray.length===this.getAllMembersList.getAllMemberList.length){
-      for (let i = 1; i <= this.getAllMembersList.getAllMemberList.length; i++) {
-        var index = this.memberArray.indexOf(i);
+    if (this.memberArray.length === this.getAllMembersList.getAllMemberList.length) {
+      for (let i = 0; i < this.getAllMembersList.getAllMemberList.length; i++) {
+        var index = this.memberArray.indexOf(this.getAllMembersList.getAllMemberList[i].membershipId);
         if (index > -1) {
           this.memberArray.splice(index, 1);
         }
         else {
-          this.memberArray.push(i);
+          this.memberArray.push(this.getAllMembersList.getAllMemberList[i].membershipId);
         }
       }
     }
-    else if(this.memberArray.length===0){
-      for (let i = 1; i <= this.getAllMembersList.getAllMemberList.length; i++) {
-        var index = this.memberArray.indexOf(i);
+    else if (this.memberArray.length === 0) {
+      for (let i = 0; i < this.getAllMembersList.getAllMemberList.length; i++) {
+        var index = this.memberArray.indexOf(this.getAllMembersList.getAllMemberList[i].membershipId);
         if (index > -1) {
           this.memberArray.splice(index, 1);
         }
         else {
-          this.memberArray.push(i);
+          this.memberArray.push(this.getAllMembersList.getAllMemberList[i].membershipId);
         }
       }
     }
-    else{
-      for (let i = 1; i <= this.getAllMembersList.getAllMemberList.length; i++) {
-        let index = this.memberArray.indexOf(i);
+    else {
+      for (let i = 0; i < this.getAllMembersList.getAllMemberList.length; i++) {
+        let index = this.memberArray.indexOf(this.getAllMembersList.getAllMemberList[i].membershipId);
         if (index > -1) {
           continue;
         }
         else {
-          this.memberArray.push(i);
+          this.memberArray.push(this.getAllMembersList.getAllMemberList[i].membershipId);
         }
       }
     }
@@ -196,8 +208,15 @@ export class EditNoticeComponent implements OnInit {
     else {
       this.memberArray.push(id);
     }
-
+    if(this.memberArray.length == this.getAllMembersList.getAllMemberList.length){
+      this.checkBox.checked=true;
+      this.checkAll=true;
+    }else{
+      this.checkAll=false;
+      this.checkBox.checked=false;
+    }
   }
+
   dateCompare() {
    
     let openingDate = this.form.controls.valid_from.value

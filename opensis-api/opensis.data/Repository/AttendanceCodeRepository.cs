@@ -254,7 +254,8 @@ namespace opensis.data.Repository
                 var AttendanceCodeExist = this.context?.AttendanceCode.FirstOrDefault(x => x.TenantId == attendanceCodeCategoriesDelete.TenantId && x.SchoolId == attendanceCodeCategoriesDelete.SchoolId && x.AttendanceCategoryId == attendanceCodeCategoriesDelete.AttendanceCategoryId);
                 if (AttendanceCodeExist != null)
                 {
-                    attendanceCodeCategoriesAddViewModel._message = "AttendanceCodeCategory cannot be deleted because it has realation.";
+                    attendanceCodeCategoriesAddViewModel.attendanceCodeCategories = null;
+                    attendanceCodeCategoriesAddViewModel._message = "AttendanceCodeCategory cannot be deleted because it has its association";
                     attendanceCodeCategoriesAddViewModel._failure = true;
                 }
                 else

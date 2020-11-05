@@ -9,19 +9,19 @@
     <mat-dialog-content fxLayout="column">
         <mat-form-field class="mt-6" appearance="outline" color="primary">
             <mat-label>{{'searchContact' | translate}}</mat-label>
-            <input formControlName="search" name="search" type="text" cdkFocusInitial matInput>
+            <input name="search" type="text" cdkFocusInitial matInput>
         </mat-form-field>
 
         <p class="text-center">- {{'orAddAsNewContactBelow' | translate}} -</p>
 
         <mat-form-field appearance="outline" class="mt-3" color="primary">
             <mat-label>{{'firstName' | translate}}</mat-label>
-            <input formControlName="firstName" type="text" name="first_name" matInput required>
+            <input type="text" name="first_name" matInput required>
         </mat-form-field>
 
         <mat-form-field appearance="outline" color="primary">
             <mat-label>{{'lastName' | translate}}</mat-label>
-            <input formControlName="lastName" type="text" name="last_name" matInput required>
+            <input type="text" name="last_name" matInput required>
         </mat-form-field>
 
         <mat-form-field appearance="outline" color="primary">
@@ -39,22 +39,22 @@
 
         <mat-form-field appearance="outline" color="primary">
             <mat-label>{{'emailAddress' | translate}}</mat-label>
-            <input formControlName="emailAddress" type="text" name="email_address" matInput required>
+            <input type="text" name="email_address" matInput required>
         </mat-form-field>
 
         <mat-form-field appearance="outline" color="primary">
             <mat-label>{{'mobilePhone' | translate}}</mat-label>
-            <input formControlName="mobilePhone" type="text" name="mobile_phone" matInput required>
+            <input type="text" name="mobile_phone" matInput required>
         </mat-form-field>
 
         <mat-form-field appearance="outline" color="primary">
             <mat-label>{{'workPhone' | translate}}</mat-label>
-            <input formControlName="workPhone" type="text" name="work_phone" matInput>
+            <input type="text" name="work_phone" matInput>
         </mat-form-field>
 
         <mat-form-field appearance="outline" color="primary">
             <mat-label>{{'homePhone' | translate}}</mat-label>
-            <input formControlName="homePhone" type="text" name="home_phone" matInput>
+            <input type="text" name="home_phone" matInput>
         </mat-form-field>
 
         <h6 class="text-primary">{{'address' | translate}}</h6>
@@ -103,26 +103,26 @@
         </mat-form-field>
 
         <div>
-            <mat-checkbox formControlName="doesGrades" color="primary" class="mr-6">{{'busPickup' | translate}}
+            <mat-checkbox color="primary" class="mr-6">{{'busPickup' | translate}}
             </mat-checkbox>
-            <mat-checkbox formControlName="doesGrades" color="primary">{{'busDropoff' | translate}}</mat-checkbox>
+            <mat-checkbox color="primary">{{'busDropoff' | translate}}</mat-checkbox>
         </div>
         <hr class="-mx-6 my-6">
         <div class="flex flex-auto">
-            <mat-slide-toggle formControlName="schoolAccess" color="primary" class="mr-4">
+            <mat-slide-toggle color="primary" class="mr-4">
                 {{'custodyOfStudent' | translate}}</mat-slide-toggle>
-            <mat-slide-toggle formControlName="schoolAccess" color="primary" checked="checked">
-                {{'schoolAccess' | translate}}</mat-slide-toggle>
+            <mat-slide-toggle color="primary" checked="checked">
+                {{'portalAccess' | translate}}</mat-slide-toggle>
         </div>
 
         <mat-form-field appearance="outline" class="mt-6" color="primary">
             <mat-label>{{'username' | translate}}</mat-label>
-            <input formControlName="username" type="text" name="username" matInput>
+            <input type="text" name="username" matInput>
         </mat-form-field>
 
         <mat-form-field appearance="outline" color="primary">
             <mat-label>{{'password' | translate}}</mat-label>
-            <input formControlName="password" type="password" name="password" matInput>
+            <input type="password" name="password" matInput>
         </mat-form-field>
 
     </mat-dialog-content>

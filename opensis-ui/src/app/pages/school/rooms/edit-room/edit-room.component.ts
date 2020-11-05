@@ -83,6 +83,9 @@ export class EditRoomComponent implements OnInit {
               });
             } 
             else { 
+              this.snackbar.open('Room Created Successfully. ' + res._message, 'LOL THANKS', {
+                duration: 10000
+              });
               this.dialogRef.close('submited');
             }
           }
@@ -111,6 +114,9 @@ export class EditRoomComponent implements OnInit {
               });
             } 
             else { 
+              this.snackbar.open('Room Edited Successfully. ' + res._message, 'LOL THANKS', {
+                duration: 10000
+              });
               this.dialogRef.close('submited');
             }
           }

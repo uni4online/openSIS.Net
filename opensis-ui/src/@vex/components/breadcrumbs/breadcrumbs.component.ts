@@ -17,13 +17,13 @@ import { trackByValue } from '../../utils/track-by';
           <a [routerLink]="[]">{{ crumb }}</a>
         </vex-breadcrumb>
       </ng-container>
+ 
     </div>
   `
 })
 export class BreadcrumbsComponent implements OnInit {
 
   @Input() crumbs: string[] = [];
-
   trackByValue = trackByValue;
   icHome = icHome;
 

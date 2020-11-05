@@ -1739,27 +1739,122 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasColumnName("school_id")
                         .HasColumnType("int");
 
+                    b.Property<int>("CategoryId")
+                        .HasColumnName("category_id")
+                        .HasColumnType("int")
+                        .HasComment("Take categoryid from custom_category table");
+
                     b.Property<int>("FieldId")
                         .HasColumnName("field_id")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("CategoryId")
-                        .HasColumnName("category_id")
                         .HasColumnType("int");
 
                     b.Property<string>("DefaultSelection")
                         .HasColumnName("default_selection")
                         .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
+                        .HasComment("default value selection on form load")
                         .HasMaxLength(100)
                         .IsUnicode(false);
 
                     b.Property<bool?>("Hide")
                         .HasColumnName("hide")
+                        .HasColumnType("tinyint(1)")
+                        .HasComment("hide the custom field on UI");
+
+                    b.Property<DateTime?>("LastUpdate")
+                        .HasColumnName("last_update")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("Module")
+                        .IsRequired()
+                        .HasColumnName("module")
+                        .HasColumnType("char(10) CHARACTER SET utf8mb4")
+                        .IsFixedLength(true)
+                        .HasComment("module like \"school\", \"student\" etc.")
+                        .HasMaxLength(10)
+                        .IsUnicode(false);
+
+                    b.Property<bool?>("Required")
+                        .HasColumnName("required")
+                        .HasColumnType("tinyint(1)")
+                        .HasComment("Whether value input is required");
+
+                    b.Property<bool?>("Search")
+                        .HasColumnName("search")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("SelectOptions")
+                        .HasColumnName("select_options")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4")
+                        .HasComment("LOV for dropdown separated by | character.")
+                        .IsUnicode(false);
+
+                    b.Property<int?>("SortOrder")
+                        .HasColumnName("sort_order")
+                        .HasColumnType("int");
+
+                    b.Property<bool?>("SystemField")
+                        .HasColumnName("system_field")
+                        .HasColumnType("tinyint(1)")
+                        .HasComment("wheher it is applicable throughput all forms");
+
+                    b.Property<string>("Title")
+                        .HasColumnName("title")
+                        .HasColumnType("varchar(30) CHARACTER SET utf8mb4")
+                        .HasComment("Field Name")
+                        .HasMaxLength(30)
+                        .IsUnicode(false);
+
+                    b.Property<string>("Type")
+                        .HasColumnName("type")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasComment("Datatype")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnName("updated_by")
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
+                        .HasMaxLength(100)
+                        .IsUnicode(false);
+
+                    b.HasKey("TenantId", "SchoolId", "CategoryId", "FieldId");
+
+                    b.ToTable("custom_fields");
+                });
+
+            modelBuilder.Entity("opensis.data.Models.FieldsCategory", b =>
+                {
+                    b.Property<Guid>("TenantId")
+                        .HasColumnName("tenant_id")
+                        .HasColumnType("char(36)");
+
+                    b.Property<int>("SchoolId")
+                        .HasColumnName("school_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnName("category_id")
+                        .HasColumnType("int");
+
+                    b.Property<bool?>("Hide")
+                        .HasColumnName("hide")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool?>("IsSystemCategory")
+                        .HasColumnName("is_system_category")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<DateTime?>("LastUpdate")
                         .HasColumnName("last_update")
                         .HasColumnType("datetime");
+
+                    b.Property<string>("Module")
+                        .HasColumnName("module")
+                        .HasColumnType("char(10) CHARACTER SET utf8mb4")
+                        .IsFixedLength(true)
+                        .HasComment("module like \"school\", \"student\" etc.")
+                        .HasMaxLength(10)
+                        .IsUnicode(false);
 
                     b.Property<bool?>("Required")
                         .HasColumnName("required")
@@ -1769,29 +1864,14 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasColumnName("search")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<string>("SelectOptions")
-                        .HasColumnName("select_options")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4")
-                        .IsUnicode(false);
-
                     b.Property<int?>("SortOrder")
                         .HasColumnName("sort_order")
                         .HasColumnType("int");
 
-                    b.Property<bool?>("SystemField")
-                        .HasColumnName("system_field")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<string>("Title")
                         .HasColumnName("title")
-                        .HasColumnType("varchar(30) CHARACTER SET utf8mb4")
-                        .HasMaxLength(30)
-                        .IsUnicode(false);
-
-                    b.Property<string>("Type")
-                        .HasColumnName("type")
-                        .HasColumnType("varchar(10) CHARACTER SET utf8mb4")
-                        .HasMaxLength(10)
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50)
                         .IsUnicode(false);
 
                     b.Property<string>("UpdatedBy")
@@ -1800,9 +1880,10 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasMaxLength(100)
                         .IsUnicode(false);
 
-                    b.HasKey("TenantId", "SchoolId", "FieldId");
+                    b.HasKey("TenantId", "SchoolId", "CategoryId")
+                        .HasName("PK_custom_category");
 
-                    b.ToTable("custom_fields");
+                    b.ToTable("fields_category");
                 });
 
             modelBuilder.Entity("opensis.data.Models.GradeEquivalency", b =>
@@ -3553,9 +3634,9 @@ namespace opensis.data.Migrations.MySqlMigrations
 
                     b.Property<string>("Title")
                         .HasColumnName("title")
-                        .HasColumnType("char(10) CHARACTER SET utf8mb4")
-                        .IsFixedLength(true)
-                        .HasMaxLength(10);
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
 
                     b.Property<string>("UpdatedBy")
                         .HasColumnName("updated_by")
@@ -4419,6 +4500,489 @@ namespace opensis.data.Migrations.MySqlMigrations
                     b.ToTable("student_enrollment_code");
                 });
 
+            modelBuilder.Entity("opensis.data.Models.StudentMaster", b =>
+                {
+                    b.Property<Guid>("TenantId")
+                        .HasColumnName("tenant_id")
+                        .HasColumnType("char(36)");
+
+                    b.Property<int>("SchoolId")
+                        .HasColumnName("school_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StudentId")
+                        .HasColumnName("student_id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("AdmissionNumber")
+                        .HasColumnName("admission_number")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("AlternateId")
+                        .HasColumnName("alternate_id")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("BusNo")
+                        .HasColumnName("bus_No")
+                        .HasColumnType("varchar(15) CHARACTER SET utf8mb4")
+                        .HasMaxLength(15)
+                        .IsUnicode(false);
+
+                    b.Property<int?>("CountryOfBirth")
+                        .HasColumnName("country_of_birth")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("DistrictId")
+                        .HasColumnName("district_id")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("Dob")
+                        .HasColumnName("dob")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Ethnicity")
+                        .HasColumnName("ethnicity")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("Facebook")
+                        .HasColumnName("facebook")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4")
+                        .IsUnicode(false);
+
+                    b.Property<string>("FirstGivenName")
+                        .HasColumnName("first_given_name")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<int?>("FirstLanguageId")
+                        .HasColumnName("first_language_id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Gender")
+                        .HasColumnName("gender")
+                        .HasColumnType("varchar(6) CHARACTER SET utf8mb4")
+                        .HasMaxLength(6)
+                        .IsUnicode(false);
+
+                    b.Property<string>("HomeAddressCity")
+                        .HasColumnName("home_address_city")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("HomeAddressCountry")
+                        .HasColumnName("home_address_country")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("HomeAddressLineOne")
+                        .HasColumnName("home_address_line_one")
+                        .HasColumnType("varchar(200) CHARACTER SET utf8mb4")
+                        .HasMaxLength(200)
+                        .IsUnicode(false);
+
+                    b.Property<string>("HomeAddressLineTwo")
+                        .HasColumnName("home_address_line_two")
+                        .HasColumnType("varchar(200) CHARACTER SET utf8mb4")
+                        .HasMaxLength(200)
+                        .IsUnicode(false);
+
+                    b.Property<string>("HomeAddressState")
+                        .HasColumnName("home_address_state")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("HomeAddressZip")
+                        .HasColumnName("home_address_zip")
+                        .HasColumnType("varchar(15) CHARACTER SET utf8mb4")
+                        .HasMaxLength(15)
+                        .IsUnicode(false);
+
+                    b.Property<string>("HomePhone")
+                        .HasColumnName("home_phone")
+                        .HasColumnType("varchar(15) CHARACTER SET utf8mb4")
+                        .HasMaxLength(15)
+                        .IsUnicode(false);
+
+                    b.Property<string>("Instagram")
+                        .HasColumnName("instagram")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4")
+                        .IsUnicode(false);
+
+                    b.Property<bool?>("IsPrimaryCustodian")
+                        .HasColumnName("is_primary_custodian")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool?>("IsPrimaryPortalUser")
+                        .HasColumnName("is_primary_portal_user")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool?>("IsSecondaryCustodian")
+                        .HasColumnName("is_secondary_custodian")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool?>("IsSecondaryPortalUser")
+                        .HasColumnName("is_secondary_portal_user")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("LastFamilyName")
+                        .HasColumnName("last_family_name")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("Linkedin")
+                        .HasColumnName("linkedin")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4")
+                        .IsUnicode(false);
+
+                    b.Property<string>("MailingAddressCity")
+                        .HasColumnName("mailing_address_city")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("MailingAddressCountry")
+                        .HasColumnName("mailing_address_country")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("MailingAddressLineOne")
+                        .HasColumnName("mailing_address_line_one")
+                        .HasColumnType("varchar(200) CHARACTER SET utf8mb4")
+                        .HasMaxLength(200)
+                        .IsUnicode(false);
+
+                    b.Property<string>("MailingAddressLineTwo")
+                        .HasColumnName("mailing_address_line_two")
+                        .HasColumnType("varchar(200) CHARACTER SET utf8mb4")
+                        .HasMaxLength(200)
+                        .IsUnicode(false);
+
+                    b.Property<bool?>("MailingAddressSameToHome")
+                        .HasColumnName("mailing_address_same_to_home")
+                        .HasColumnType("tinyint(1)")
+                        .HasComment("if true, home address will be replicated to mailing");
+
+                    b.Property<string>("MailingAddressState")
+                        .HasColumnName("mailing_address_state")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("MailingAddressZip")
+                        .HasColumnName("mailing_address_zip")
+                        .HasColumnType("varchar(15) CHARACTER SET utf8mb4")
+                        .HasMaxLength(15)
+                        .IsUnicode(false);
+
+                    b.Property<string>("MaritalStatus")
+                        .HasColumnName("marital_status")
+                        .HasColumnType("varchar(10) CHARACTER SET utf8mb4")
+                        .HasMaxLength(10)
+                        .IsUnicode(false);
+
+                    b.Property<string>("MiddleName")
+                        .HasColumnName("middle_name")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("MobilePhone")
+                        .HasColumnName("mobile_phone")
+                        .HasColumnType("varchar(15) CHARACTER SET utf8mb4")
+                        .HasMaxLength(15)
+                        .IsUnicode(false);
+
+                    b.Property<int?>("Nationality")
+                        .HasColumnName("nationality")
+                        .HasColumnType("int");
+
+                    b.Property<string>("OtherGovtIssuedNumber")
+                        .HasColumnName("other_govt_issued_number")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("PersonalEmail")
+                        .HasColumnName("personal_email")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4")
+                        .IsUnicode(false);
+
+                    b.Property<string>("PreferredName")
+                        .HasColumnName("preferred_name")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("PreviousName")
+                        .HasColumnName("previous_name")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("PrimaryContactAddressLineOne")
+                        .HasColumnName("primary_contact_address_line_one")
+                        .HasColumnType("varchar(200) CHARACTER SET utf8mb4")
+                        .HasMaxLength(200)
+                        .IsUnicode(false);
+
+                    b.Property<string>("PrimaryContactAddressLineTwo")
+                        .HasColumnName("primary_contact_address_line_two")
+                        .HasColumnType("varchar(200) CHARACTER SET utf8mb4")
+                        .HasMaxLength(200)
+                        .IsUnicode(false);
+
+                    b.Property<string>("PrimaryContactCity")
+                        .HasColumnName("primary_contact_city")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("PrimaryContactCountry")
+                        .HasColumnName("primary_contact_country")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("PrimaryContactEmail")
+                        .HasColumnName("primary_contact_email")
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
+                        .HasMaxLength(100)
+                        .IsUnicode(false);
+
+                    b.Property<string>("PrimaryContactFirstname")
+                        .HasColumnName("primary_contact_firstname")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("PrimaryContactHomePhone")
+                        .HasColumnName("primary_contact_home_phone")
+                        .HasColumnType("varchar(15) CHARACTER SET utf8mb4")
+                        .HasMaxLength(15)
+                        .IsUnicode(false);
+
+                    b.Property<string>("PrimaryContactLastname")
+                        .HasColumnName("primary_contact_lastname")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("PrimaryContactMobile")
+                        .HasColumnName("primary_contact_mobile")
+                        .HasColumnType("varchar(15) CHARACTER SET utf8mb4")
+                        .HasMaxLength(15)
+                        .IsUnicode(false);
+
+                    b.Property<string>("PrimaryContactRelationship")
+                        .HasColumnName("primary_contact_relationship")
+                        .HasColumnType("varchar(20) CHARACTER SET utf8mb4")
+                        .HasMaxLength(20)
+                        .IsUnicode(false);
+
+                    b.Property<string>("PrimaryContactState")
+                        .HasColumnName("primary_contact_state")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<bool?>("PrimaryContactStudentAddressSame")
+                        .HasColumnName("primary_contact_student_address_same")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("PrimaryContactWorkPhone")
+                        .HasColumnName("primary_contact_work_phone")
+                        .HasColumnType("varchar(15) CHARACTER SET utf8mb4")
+                        .HasMaxLength(15)
+                        .IsUnicode(false);
+
+                    b.Property<string>("PrimaryContactZip")
+                        .HasColumnName("primary_contact_zip")
+                        .HasColumnType("varchar(15) CHARACTER SET utf8mb4")
+                        .HasMaxLength(15)
+                        .IsUnicode(false);
+
+                    b.Property<string>("PrimaryPortalUserId")
+                        .HasColumnName("primary_portal_user_id")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasComment("user_master table-->user_id, membership table --> profile:Parent")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("Race")
+                        .HasColumnName("race")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("RollNumber")
+                        .HasColumnName("roll_number")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("Salutation")
+                        .HasColumnName("salutation")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<bool?>("SchoolBusDropOff")
+                        .HasColumnName("school_bus_drop_off")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool?>("SchoolBusPickUp")
+                        .HasColumnName("school_bus_pick_up")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("SchoolEmail")
+                        .HasColumnName("school_email")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4")
+                        .IsUnicode(false);
+
+                    b.Property<int?>("SecondLanguageId")
+                        .HasColumnName("second_language_id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SecondaryContactAddressLineOne")
+                        .HasColumnName("secondary_contact_address_line_one")
+                        .HasColumnType("varchar(200) CHARACTER SET utf8mb4")
+                        .HasMaxLength(200)
+                        .IsUnicode(false);
+
+                    b.Property<string>("SecondaryContactAddressLineTwo")
+                        .HasColumnName("secondary_contact_address_line_two")
+                        .HasColumnType("varchar(200) CHARACTER SET utf8mb4")
+                        .HasMaxLength(200)
+                        .IsUnicode(false);
+
+                    b.Property<string>("SecondaryContactCity")
+                        .HasColumnName("secondary_contact_city")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("SecondaryContactCountry")
+                        .HasColumnName("secondary_contact_country")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("SecondaryContactEmail")
+                        .HasColumnName("secondary_contact_email")
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
+                        .HasMaxLength(100)
+                        .IsUnicode(false);
+
+                    b.Property<string>("SecondaryContactFirstname")
+                        .HasColumnName("secondary_contact_firstname")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("SecondaryContactHomePhone")
+                        .HasColumnName("secondary_contact_home_phone")
+                        .HasColumnType("varchar(15) CHARACTER SET utf8mb4")
+                        .HasMaxLength(15)
+                        .IsUnicode(false);
+
+                    b.Property<string>("SecondaryContactLastname")
+                        .HasColumnName("secondary_contact_lastname")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("SecondaryContactMobile")
+                        .HasColumnName("secondary_contact_mobile")
+                        .HasColumnType("varchar(15) CHARACTER SET utf8mb4")
+                        .HasMaxLength(15)
+                        .IsUnicode(false);
+
+                    b.Property<string>("SecondaryContactRelationship")
+                        .HasColumnName("secondary_contact_relationship")
+                        .HasColumnType("varchar(20) CHARACTER SET utf8mb4")
+                        .HasMaxLength(20)
+                        .IsUnicode(false);
+
+                    b.Property<string>("SecondaryContactState")
+                        .HasColumnName("secondary_contact_state")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<bool?>("SecondaryContactStudentAddressSame")
+                        .HasColumnName("secondary_contact_student_address_same")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("SecondaryContactWorkPhone")
+                        .HasColumnName("secondary_contact_work_phone")
+                        .HasColumnType("varchar(15) CHARACTER SET utf8mb4")
+                        .HasMaxLength(15)
+                        .IsUnicode(false);
+
+                    b.Property<string>("SecondaryContactZip")
+                        .HasColumnName("secondary_contact_zip")
+                        .HasColumnType("varchar(15) CHARACTER SET utf8mb4")
+                        .HasMaxLength(15)
+                        .IsUnicode(false);
+
+                    b.Property<string>("SecondaryPortalUserId")
+                        .HasColumnName("secondary_portal_user_id")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasComment("user_master table-->user_id, membership table --> profile:Parent")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("SocialSecurityNumber")
+                        .HasColumnName("social_security_number")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<int?>("StateId")
+                        .HasColumnName("state_id")
+                        .HasColumnType("int");
+
+                    b.Property<byte[]>("StudentPhoto")
+                        .HasColumnName("student_photo")
+                        .HasColumnType("longblob");
+
+                    b.Property<string>("Suffix")
+                        .HasColumnName("suffix")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<int?>("ThirdLanguageId")
+                        .HasColumnName("third_language_id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Twitter")
+                        .HasColumnName("twitter")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4")
+                        .IsUnicode(false);
+
+                    b.Property<string>("Youtube")
+                        .HasColumnName("youtube")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4")
+                        .IsUnicode(false);
+
+                    b.HasKey("TenantId", "SchoolId", "StudentId");
+
+                    b.ToTable("student_master");
+                });
+
             modelBuilder.Entity("opensis.data.Models.UserMaster", b =>
                 {
                     b.Property<Guid>("TenantId")
@@ -4439,6 +5003,10 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasColumnType("varchar(150) CHARACTER SET utf8mb4")
                         .HasMaxLength(150)
                         .IsUnicode(false);
+
+                    b.Property<bool?>("IsActive")
+                        .HasColumnName("is_active")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<int>("LangId")
                         .ValueGeneratedOnAdd()
@@ -4516,6 +5084,21 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .WithMany("CustomFields")
                         .HasForeignKey("TenantId", "SchoolId")
                         .HasConstraintName("FK_custom_fields_school_master")
+                        .IsRequired();
+
+                    b.HasOne("opensis.data.Models.FieldsCategory", "FieldsCategory")
+                        .WithMany("CustomFields")
+                        .HasForeignKey("TenantId", "SchoolId", "CategoryId")
+                        .HasConstraintName("FK_custom_fields_custom_category")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("opensis.data.Models.FieldsCategory", b =>
+                {
+                    b.HasOne("opensis.data.Models.SchoolMaster", "SchoolMaster")
+                        .WithMany("FieldsCategory")
+                        .HasForeignKey("TenantId", "SchoolId")
+                        .HasConstraintName("FK_custom_category_school_master")
                         .IsRequired();
                 });
 
@@ -4628,6 +5211,24 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .WithMany("State")
                         .HasForeignKey("CountryId")
                         .HasConstraintName("FK_state_country");
+                });
+
+            modelBuilder.Entity("opensis.data.Models.StudentEnrollment", b =>
+                {
+                    b.HasOne("opensis.data.Models.StudentMaster", "StudentMaster")
+                        .WithOne("StudentEnrollment")
+                        .HasForeignKey("opensis.data.Models.StudentEnrollment", "TenantId", "SchoolId", "StudentId")
+                        .HasConstraintName("FK_student_enrollment_student_master")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("opensis.data.Models.StudentMaster", b =>
+                {
+                    b.HasOne("opensis.data.Models.SchoolMaster", "SchoolMaster")
+                        .WithMany("StudentMaster")
+                        .HasForeignKey("TenantId", "SchoolId")
+                        .HasConstraintName("FK_student_master_school_master")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("opensis.data.Models.UserMaster", b =>

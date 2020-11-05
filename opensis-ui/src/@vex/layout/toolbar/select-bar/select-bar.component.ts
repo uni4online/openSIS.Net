@@ -48,11 +48,16 @@ export class SelectBarComponent implements OnInit {
       }
     })
 
+    
     this.callAllSchool();
   }
 
   ngOnInit() {
-    this.callAcademicYearsOnSchoolSelect();
+    this.markingPeriodService.currentY.subscribe((res) => {
+      if (res) {
+        this.callAcademicYearsOnSchoolSelect();        
+      }
+    })
   }
   callAllSchool() {
     this.getSchoolList.tenantId = sessionStorage.getItem("tenantId");
@@ -95,7 +100,6 @@ export class SelectBarComponent implements OnInit {
 
   selectNewSchoolOnAddSchool() {
     this.setSchool();
-    this.callAcademicYearsOnSchoolSelect();
   }
 
   setSchool() {
@@ -108,7 +112,9 @@ export class SelectBarComponent implements OnInit {
     } else {
       this.schoolCtrl.setValue(this.schools[0]);
     }
-    this.callAcademicYearsOnSchoolSelect();
+    if(!this.checkForAnyNewSchool){
+      this.callAcademicYearsOnSchoolSelect();
+    }
   }
 
   changeSchool(id) {
@@ -118,21 +124,27 @@ export class SelectBarComponent implements OnInit {
   }
 
   callAcademicYearsOnSchoolSelect() {
+   
     this.getAcademicYears.schoolId = +sessionStorage.getItem("selectedSchoolId");
     this.markingPeriodService.getAcademicYearList(this.getAcademicYears).subscribe((res) => {
       this.academicYears = res.academicYears;
       // set initial selection
       if (this.academicYears?.length > 0) {
+       
         this.academicYearsCtrl.setValue(this.academicYears[this.academicYears.length - 1].academyYear);
+        sessionStorage.setItem("academicyear", this.academicYearsCtrl.value)
       } else {
+       
         this.academicYearsCtrl.setValue(this.nullValueForDropdown);
+        sessionStorage.setItem("academicyear","null");
       }
       if(this.academicYearsCtrl.value==this.nullValueForDropdown){
+       
         sessionStorage.setItem("academicyear","null");
          this.periods=[]
         this.callMarkingPeriodTitleList();
-        }else{
-          sessionStorage.setItem("academicyear", this.academicYearsCtrl.value)
+        }else{         
+          sessionStorage.setItem("academicyear", this.academicYearsCtrl.value);         
           this.callMarkingPeriodTitleList();
         }
     

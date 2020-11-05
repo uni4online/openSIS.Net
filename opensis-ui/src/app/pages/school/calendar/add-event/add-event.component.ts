@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import icClose from '@iconify/icons-ic/twotone-close';
@@ -18,6 +18,7 @@ import * as moment from 'moment';
 import { TranslateService } from '@ngx-translate/core';
 import { ConfirmDialogComponent } from '../../../shared-module/confirm-dialog/confirm-dialog.component';
 import { SharedFunction} from '../../../shared/shared-function';
+import { MatCheckbox } from '@angular/material/checkbox';
 
 @Component({
   selector: 'vex-add-event',
@@ -29,7 +30,10 @@ import { SharedFunction} from '../../../shared/shared-function';
   ]
 })
 export class AddEventComponent implements OnInit {
-  isEditMode: Boolean = false;
+  @ViewChild('selectAllCheckBox') selectAllCheckBox:MatCheckbox;
+  @ViewChild('systemWideCheck') systemWideCheck:MatCheckbox;
+  isEditMode: boolean = false;
+  checkAll:boolean;
   calendarEventTitle: string;
   getAllMembersList: GetAllMembersList = new GetAllMembersList();
   calendarEventAddViewModel = new CalendarEventAddViewModel();
@@ -96,7 +100,9 @@ export class AddEventComponent implements OnInit {
          
         var foundMembers = this.data.allMembers.getAllMemberList.filter(x => this.memberArray.indexOf(x.membershipId) !== -1);
         this.memberNames = foundMembers.map(a => a.profile).join();
-          
+        if(this.memberArray.length === this.getAllMembersList.getAllMemberList.length){
+          this.checkAll=true;
+        }
         }
 
       }
@@ -207,41 +213,40 @@ export class AddEventComponent implements OnInit {
 
   updateCheck(event) {
     if (this.memberArray.length === this.getAllMembersList.getAllMemberList.length) {
-      for (let i = 1; i <= this.getAllMembersList.getAllMemberList.length; i++) {
-        var index = this.memberArray.indexOf(i);
+      for (let i = 0; i < this.getAllMembersList.getAllMemberList.length; i++) {
+        var index = this.memberArray.indexOf(this.getAllMembersList.getAllMemberList[i].membershipId);
         if (index > -1) {
           this.memberArray.splice(index, 1);
         }
         else {
-          this.memberArray.push(i);
+          this.memberArray.push(this.getAllMembersList.getAllMemberList[i].membershipId);
         }
       }
     }
     else if (this.memberArray.length === 0) {
-      for (let i = 1; i <= this.getAllMembersList.getAllMemberList.length; i++) {
-        var index = this.memberArray.indexOf(i);
+      for (let i = 0; i < this.getAllMembersList.getAllMemberList.length; i++) {
+        var index = this.memberArray.indexOf(this.getAllMembersList.getAllMemberList[i].membershipId);
         if (index > -1) {
           this.memberArray.splice(index, 1);
         }
         else {
-          this.memberArray.push(i);
+          this.memberArray.push(this.getAllMembersList.getAllMemberList[i].membershipId);
         }
       }
     }
     else {
-      for (let i = 1; i <= this.getAllMembersList.getAllMemberList.length; i++) {
-        let index = this.memberArray.indexOf(i);
+      for (let i = 0; i < this.getAllMembersList.getAllMemberList.length; i++) {
+        let index = this.memberArray.indexOf(this.getAllMembersList.getAllMemberList[i].membershipId);
         if (index > -1) {
           continue;
         }
         else {
-          this.memberArray.push(i);
+          this.memberArray.push(this.getAllMembersList.getAllMemberList[i].membershipId);
         }
       }
     }
-
-
   }
+  
   selectChildren(event, id) {
     event.preventDefault();
     var index = this.memberArray.indexOf(id);
@@ -251,7 +256,25 @@ export class AddEventComponent implements OnInit {
     else {
       this.memberArray.push(id);
     }
+    if(this.memberArray.length == this.getAllMembersList.getAllMemberList.length){
+      this.checkAll=true;
+      this.selectAllCheckBox.checked=true;
+    }else{
+      this.checkAll=false;
+      this.selectAllCheckBox.checked=false;
+    }
 
+  }
+
+  showSystemWide(event){
+    if(this.systemWideCheck.checked){
+         this.selectAllCheckBox.checked=false;
+      this.memberArray=[];
+    }else{
+
+         this.selectAllCheckBox.checked=true;
+      this.memberArray = this.getAllMembersList.getAllMemberList.map(a => a.membershipId);
+    }
   }
 
 }

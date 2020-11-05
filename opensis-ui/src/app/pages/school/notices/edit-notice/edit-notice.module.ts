@@ -16,6 +16,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { QuillModule } from 'ngx-quill';
 import { TranslateModule } from '@ngx-translate/core';
+import {SharedModuleModule} from '../../../shared-module/shared-module.module';
 
 
 @NgModule({
@@ -36,6 +37,7 @@ import { TranslateModule } from '@ngx-translate/core';
     MatFormFieldModule,
     MatCheckboxModule,
     TranslateModule,
+    SharedModuleModule,
     QuillModule.forRoot({
       modules: {
         toolbar: [

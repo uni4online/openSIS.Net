@@ -23,7 +23,7 @@ import {  RouterModule } from '@angular/router';
 
 import { MatTableModule } from '@angular/material/table';
 import { EnrollmentCodesComponent } from '../../student/enrollment-codes/enrollment-codes.component';
-// import { SectionsComponent } from '../../school/sections/sections.component';
+import { StudentFieldsComponent } from '../../student/student-fields/student-fields.component';
 // import { RoomsComponent } from '../../school/rooms/rooms.component';
 // import { SchoolFieldsComponent } from '../../school/school-fields/school-fields.component';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -37,7 +37,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 
 @NgModule({
-  declarations: [StudentSettingsComponent, EnrollmentCodesComponent],
+  declarations: [StudentSettingsComponent, EnrollmentCodesComponent, StudentFieldsComponent],
   imports: [
     CommonModule,
     MatIconModule,

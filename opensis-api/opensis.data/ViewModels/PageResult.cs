@@ -9,6 +9,8 @@ namespace opensis.data.Models
     public class PageResult: CommonFields
     {
         public Guid TenantId { get; set; }
+        public int? SchoolId { get; set; }
+
         const int maxPageSize = 50;
         public int PageNumber { get; set; } = 1;
 

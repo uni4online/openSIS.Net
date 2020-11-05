@@ -41,7 +41,7 @@ namespace opensisAPI.Controllers
                     markingPeriodModel._token = markingPeriod._token;
                     markingPeriodModel._tenantName = markingPeriod._tenantName;
                     markingPeriodModel._failure = true;
-                    markingPeriodModel._message = "Please enter valid scholl id";
+                    markingPeriodModel._message = "Please enter valid school id";
                 }
             }
             catch (Exception es)
@@ -66,7 +66,7 @@ namespace opensisAPI.Controllers
                     schoolYearAdd._token = schoolYear._token;
                     schoolYearAdd._tenantName = schoolYear._tenantName;
                     schoolYearAdd._failure = true;
-                    schoolYearAdd._message = "Please enter valid scholl id";
+                    schoolYearAdd._message = "Please enter valid school id";
                 }
             }
             catch (Exception es)
@@ -92,7 +92,7 @@ namespace opensisAPI.Controllers
                     SchoolYearsView._token = schoolYear._token;
                     SchoolYearsView._tenantName = schoolYear._tenantName;
                     SchoolYearsView._failure = true;
-                    SchoolYearsView._message = "Please enter valid scholl id";
+                    SchoolYearsView._message = "Please enter valid school id";
                 }
             }
             catch (Exception es)
@@ -118,7 +118,7 @@ namespace opensisAPI.Controllers
                     SchoolYearsUpdate._token = schoolYear._token;
                     SchoolYearsUpdate._tenantName = schoolYear._tenantName;
                     SchoolYearsUpdate._failure = true;
-                    SchoolYearsUpdate._message = "Please enter valid scholl id";
+                    SchoolYearsUpdate._message = "Please enter valid school id";
                 }
             }
             catch (Exception es)
@@ -144,7 +144,7 @@ namespace opensisAPI.Controllers
                     schoolYearlDelete._token = schoolYear._token;
                     schoolYearlDelete._tenantName = schoolYear._tenantName;
                     schoolYearlDelete._failure = true;
-                    schoolYearlDelete._message = "Please enter valid scholl id";
+                    schoolYearlDelete._message = "Please enter valid school id";
                 }
             }
             catch (Exception es)
@@ -169,7 +169,7 @@ namespace opensisAPI.Controllers
                     quarterAdd._token = quarter._token;
                     quarterAdd._tenantName = quarter._tenantName;
                     quarterAdd._failure = true;
-                    quarterAdd._message = "Please enter valid scholl id";
+                    quarterAdd._message = "Please enter valid school id";
                 }
             }
             catch (Exception es)
@@ -196,7 +196,7 @@ namespace opensisAPI.Controllers
                     quarterAdd._token = quarter._token;
                     quarterAdd._tenantName = quarter._tenantName;
                     quarterAdd._failure = true;
-                    quarterAdd._message = "Please enter valid scholl id";
+                    quarterAdd._message = "Please enter valid school id";
                 }
             }
             catch (Exception es)
@@ -223,7 +223,7 @@ namespace opensisAPI.Controllers
                     quarterAdd._token = quarter._token;
                     quarterAdd._tenantName = quarter._tenantName;
                     quarterAdd._failure = true;
-                    quarterAdd._message = "Please enter valid scholl id";
+                    quarterAdd._message = "Please enter valid school id";
                 }
             }
             catch (Exception es)
@@ -250,7 +250,7 @@ namespace opensisAPI.Controllers
                     quarterlDelete._token = quarter._token;
                     quarterlDelete._tenantName = quarter._tenantName;
                     quarterlDelete._failure = true;
-                    quarterlDelete._message = "Please enter valid scholl id";
+                    quarterlDelete._message = "Please enter valid school id";
                 }
             }
             catch (Exception es)
@@ -275,7 +275,7 @@ namespace opensisAPI.Controllers
                     semesterAdd._token = semester._token;
                     semesterAdd._tenantName = semester._tenantName;
                     semesterAdd._failure = true;
-                    semesterAdd._message = "Please enter valid scholl id";
+                    semesterAdd._message = "Please enter valid school id";
                 }
             }
             catch (Exception es)
@@ -302,7 +302,7 @@ namespace opensisAPI.Controllers
                     semesterUpdate._token = semester._token;
                     semesterUpdate._tenantName = semester._tenantName;
                     semesterUpdate._failure = true;
-                    semesterUpdate._message = "Please enter valid scholl id";
+                    semesterUpdate._message = "Please enter valid school id";
                 }
             }
             catch (Exception es)
@@ -330,7 +330,7 @@ namespace opensisAPI.Controllers
                     semesterView._token = semester._token;
                     semesterView._tenantName = semester._tenantName;
                     semesterView._failure = true;
-                    semesterView._message = "Please enter valid scholl id";
+                    semesterView._message = "Please enter valid school id";
                 }
             }
             catch (Exception es)
@@ -357,7 +357,7 @@ namespace opensisAPI.Controllers
                     semesterDelete._token = semester._token;
                     semesterDelete._tenantName = semester._tenantName;
                     semesterDelete._failure = true;
-                    semesterDelete._message = "Please enter valid scholl id";
+                    semesterDelete._message = "Please enter valid school id";
                 }
             }
             catch (Exception es)
@@ -383,7 +383,7 @@ namespace opensisAPI.Controllers
                     progressPeriodAdd._token = progressPeriod._token;
                     progressPeriodAdd._tenantName = progressPeriod._tenantName;
                     progressPeriodAdd._failure = true;
-                    progressPeriodAdd._message = "Please enter valid scholl id";
+                    progressPeriodAdd._message = "Please enter valid school id";
                 }
             }
             catch (Exception es)
@@ -410,7 +410,7 @@ namespace opensisAPI.Controllers
                     progressUpdate._token = progressPeriod._token;
                     progressUpdate._tenantName = progressPeriod._tenantName;
                     progressUpdate._failure = true;
-                    progressUpdate._message = "Please enter valid scholl id";
+                    progressUpdate._message = "Please enter valid school id";
                 }
             }
             catch (Exception es)
@@ -437,7 +437,7 @@ namespace opensisAPI.Controllers
                     progressPeriodView._token = progressPeriod._token;
                     progressPeriodView._tenantName = progressPeriod._tenantName;
                     progressPeriodView._failure = true;
-                    progressPeriodView._message = "Please enter valid scholl id";
+                    progressPeriodView._message = "Please enter valid school id";
                 }
             }
             catch (Exception es)
@@ -464,7 +464,7 @@ namespace opensisAPI.Controllers
                     progressPeriodDelete._token = progressPeriod._token;
                     progressPeriodDelete._tenantName = progressPeriod._tenantName;
                     progressPeriodDelete._failure = true;
-                    progressPeriodDelete._message = "Please enter valid scholl id";
+                    progressPeriodDelete._message = "Please enter valid school id";
                 }
             }
             catch (Exception es)
@@ -491,7 +491,7 @@ namespace opensisAPI.Controllers
                     dropDownViewModel._token = downViewModel._token;
                     dropDownViewModel._tenantName = downViewModel._tenantName;
                     dropDownViewModel._failure = true;
-                    dropDownViewModel._message = "Please enter valid scholl id";
+                    dropDownViewModel._message = "Please enter valid school id";
                 }
             }
             catch (Exception es)
@@ -517,7 +517,7 @@ namespace opensisAPI.Controllers
                     dropDownViewModel._token = downViewModel._token;
                     dropDownViewModel._tenantName = downViewModel._tenantName;
                     dropDownViewModel._failure = true;
-                    dropDownViewModel._message = "Please enter valid scholl id";
+                    dropDownViewModel._message = "Please enter valid school id";
                 }
             }
             catch (Exception es)

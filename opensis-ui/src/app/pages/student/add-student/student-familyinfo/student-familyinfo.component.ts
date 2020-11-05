@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
 import { fadeInRight400ms } from '../../../../../@vex/animations/fade-in-right.animation';
@@ -7,9 +6,6 @@ import { TranslateService } from '@ngx-translate/core';
 import icEdit from '@iconify/icons-ic/twotone-edit';
 import icDelete from '@iconify/icons-ic/twotone-delete';
 import icAdd from '@iconify/icons-ic/baseline-add';
-import { MatDialog } from '@angular/material/dialog';
-import { EditContactComponent } from './edit-contact/edit-contact.component';
-import { ViewContactComponent } from './view-contact/view-contact.component';
 
 @Component({
   selector: 'vex-student-familyinfo',
@@ -26,27 +22,42 @@ export class StudentFamilyinfoComponent implements OnInit {
   icEdit = icEdit;
   icDelete = icDelete;
   icAdd = icAdd;
+  pageTitle = 'Contacts';
+  pageId = 'Contacts';
 
-  form: FormGroup;
+  displayContacts = true;
+  displaySiblingsInfo = true;
+  ContactsFlag = true
+  SiblingsInfoFlag = true
 
-  constructor(private fb: FormBuilder, private dialog: MatDialog,
-    public translateService:TranslateService) { }
+  //form: FormGroup;
+
+  constructor(public translateService:TranslateService) { 
+    this.showChildPage('Contacts');
+  }
 
   ngOnInit(): void {
+    this.pageId = localStorage.getItem("pageId");
 
-    this.form = this.fb.group({});
   }
 
-  openAddNew() {
-    this.dialog.open(EditContactComponent, {
-      width: '600px'
-    });
+  showChildPage(pageId = 'Contacts') {
+    console.log(pageId);
+    this.pageTitle = pageId;
+    if (pageId === 'Contacts') {
+      this.displayContacts = true;
+      this.ContactsFlag = true;
+    } else {
+      this.displayContacts = false;
+      this.ContactsFlag = false;
+    }
+    if (pageId === 'Siblings Info') {
+      this.displaySiblingsInfo = true;
+      this.SiblingsInfoFlag = true;
+    } else {
+      this.displaySiblingsInfo = false;
+      this.SiblingsInfoFlag = false;
   }
-
-  openViewDetails() {
-    this.dialog.open(ViewContactComponent, {
-      width: '600px'
-    });
   }
 
 }

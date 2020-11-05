@@ -5,7 +5,7 @@ import icClose from '@iconify/icons-ic/twotone-close';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
 import { AttendanceCodeService } from '../../../../services/attendance-code.service';
-import { AttendanceCodeCategoryModel, AttendanceCodeModel } from '../../../../models/attendanceCodeModel';
+import { AttendanceCodeModel } from '../../../../models/attendanceCodeModel';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {AttendanceCodeEnum} from '../../../../enums/attendance_code.enum';
 
@@ -52,7 +52,7 @@ export class EditAttendanceCodeComponent implements OnInit {
 
   ngOnInit(): void {
     if(this.editMode){
-      this.attendanceCodeModalTitle="updateAttendanceCode";
+      this.attendanceCodeModalTitle="editAttendanceCode";
       this.attendanceCodeModalActionButton="update";
       let modifiedStateCode;
       if(this.editDetails.stateCode==null){

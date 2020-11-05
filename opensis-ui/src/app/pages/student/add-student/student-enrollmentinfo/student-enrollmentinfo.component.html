@@ -56,52 +56,125 @@
             </div>
             <div class="mb-2 mx-4">
                 <div class="flex flex-wrap">
-                    <mat-checkbox formControlName="doesEligibility" color="primary" class="mr-6">{{'504Eligibility' | translate}}</mat-checkbox>
-                    <mat-checkbox formControlName="doesEconomicDisadvantage" color="primary" class="mr-6">{{'economicDisadvantage' | translate}}</mat-checkbox>
-                    <mat-checkbox formControlName="doesFreeLunchEligibility" color="primary" class="mr-6">{{'freeLunchEligibility' | translate}}</mat-checkbox>
-                    <mat-checkbox formControlName="doesFreeLunchEligibility" color="primary" class="mr-6">{{'freeLunchEligibility' | translate}}</mat-checkbox>
-                    <mat-checkbox formControlName="doesSpecialEducationIndicator" color="primary" class="mr-6">{{'specialEducationIndicator' | translate}}</mat-checkbox>
-                    <mat-checkbox formControlName="doesLepIndicator" color="primary">{{'lepIndicator' | translate}}</mat-checkbox>
+                    <mat-checkbox color="primary" class="mr-6">
+                        {{'504Eligibility' | translate}}</mat-checkbox>
+                    <mat-checkbox color="primary" class="mr-6">
+                        {{'economicDisadvantage' | translate}}</mat-checkbox>
+                    <mat-checkbox color="primary" class="mr-6">
+                        {{'freeLunchEligibility' | translate}}</mat-checkbox>
+                    <mat-checkbox color="primary" class="mr-6">
+                        {{'freeLunchEligibility' | translate}}</mat-checkbox>
+                    <mat-checkbox color="primary" class="mr-6">
+                        {{'specialEducationIndicator' | translate}}</mat-checkbox>
+                    <mat-checkbox color="primary">{{'lepIndicator' | translate}}
+                    </mat-checkbox>
                 </div>
             </div>
 
+            <div class="px-4 pt-3 mb-4 text-right">
+                <button color="primary" mat-raised-button>{{'submit'|translate}}</button>
+            </div>
 
-            <h4 class="text-primary px-4 pb-2 pt-10">{{'enrollmentInfo'|translate}}</h4>
-            <div class="mb-2 md:flex md:flex-wrap">
-                <div class="flex flex-1 mx-4 md:w-1/2">
-                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
-                        <mat-label>{{'school'|translate}}</mat-label>
-                        <mat-select name="rolling_retention_option">
-                            <mat-option value=""></mat-option>
-                        </mat-select>
-                    </mat-form-field>
+            <hr class="-mx-3 mt-6"/>
+
+
+            <div class="flex w-full justify-between items-center px-4 pb-2 pt-10">
+                <h4 class="text-primary">{{'enrollmentInfo'|translate}}</h4>
+                <div class="text-right">
+                    <button mat-raised-button color="primary" (click)="openEnrollToNewSchool()">
+                        <mat-icon [icIcon]="icAdd"></mat-icon> {{'enrollToNewSchool' |translate}}
+                    </button>
                 </div>
+                </div>
+
+            <div class="mb-6 md:flex md:flex-wrap">
                 <div class="flex flex-1 mx-4 md:w-1/2">
-                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
-                        <mat-label>{{'enrollmentStartDate'|translate}}</mat-label>
-                        <input name="enrollment_start_date" matInput>
-                        <mat-datepicker-toggle [for]="datepickerRef" matSuffix></mat-datepicker-toggle>
-                        <mat-datepicker #datepickerRef></mat-datepicker>
-                    </mat-form-field>
+                    <mat-accordion class="w-full">
+                        <mat-expansion-panel>
+                            <mat-expansion-panel-header>
+                                <mat-panel-title class="font-semibold">
+                                    <span class="text-green mr-4"><i class="icon icon-checkmark-circle"></i></span>Pech
+                                    State High School
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <div class="border-t -mx-6">
+                                <!-- <button mat-raised-button class="btn-add-enrollment" color="primary" (click)="openEnrollToNewSchool()">
+                                    <span>{{'addEnrollmentInfo' | translate}}</span>
+                                </button> -->
+                                <ul class="enrollment-timeline mt-4">
+                                    <li>
+                                        <span></span>
+                                        <div>
+                                            <button mat-button class="-mt-2 text-green" (click)="openEnrollToNewSchool()">
+                                                <span><i class="icon icon-plus3 mr-2"></i>{{'addEnrollmentInfo' | translate}}</span>
+                                            </button> <span class="mx-2">/</span> <button mat-button class="-mt-2 text-warn" (click)="openEnrollToNewSchool()">
+                                                <span><i class="icon icon-blocked mr-2"></i>{{'dropStudent' | translate}}</span>
+                                </button>
+                                        </div>
+                                    </li> 
+                                    <li>
+                                        <span>2018</span>
+                                        <div>Promoted to Grade 12 on Aug 12, 2018</div>
+                                    </li>
+                                    <li>
+                                        <span>2017</span>
+                                        <div>Promoted to Grade 11 on Aug 22, 2017</div>
+                                    </li>
+                                    <li>
+                                        <span>2016</span>
+                                        <div>Promoted to Grade 10 on Sep 01, 2016</div>
+                                    </li>
+                                    <li>
+                                        <span>2015</span>
+                                        <div>Enrolled as New Student at Grade 9 on Nov 1, 2015</div>
+                                    </li>                                    
+                                </ul>
+
+                </div>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+            </div>
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-accordion class="w-full">
+                        <mat-expansion-panel class="border">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title class="font-semibold">
+                                    Pech Tree High School
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <div class="border-t -mx-6">
+                                <ul class="enrollment-timeline mt-4">                                    
+                                    <li>
+                                        <span></span>
+                                        <div>
+                                            <button mat-button class="-mt-2 text-green" (click)="openEnrollToNewSchool()">
+                                                <span><i class="icon icon-plus3 mr-2"></i>{{'addEnrollmentInfo' | translate}}</span>
+                                </button>
+                                        </div>
+                                    </li> 
+                                    <li>
+                                        <span>2014</span>
+                                        <div>Dropped from Pech Tree High School on Dec 12, 2014</div>
+                                    </li>
+                                    <li>
+                                        <span>2014</span>
+                                        <div>Promoted to Grade 8 on Aug 12, 2014</div>
+                                    </li>
+                                    <li>
+                                        <span>2013</span>
+                                        <div>Promoted to Grade 7 on Aug 22, 2013</div>
+                                    </li>
+                                    <li>
+                                        <span>2012</span>
+                                        <div>Enrolled as Existing Student at Grade 6 on Aug 12, 2012</div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </mat-expansion-panel>
+                    </mat-accordion>
                 </div>
             </div>
-            <div class="mb-2 md:flex md:flex-wrap">
-                <div class="flex flex-1 mx-4 md:w-1/2">
-                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
-                        <mat-label>{{'enrollmentCode'|translate}}</mat-label>
-                        <mat-select name="enrollment_code">
-                            <mat-option value=""></mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-                <div class="flex flex-1 mx-4 md:w-1/2"></div>
-            </div>
+
         </div>
     </mat-card-content>
-    <mat-card-actions>
-        <div class="px-4 mb-2 text-right">
-            <button color="primary" mat-raised-button>{{'submit'|translate}}</button>
-        </div>
-    </mat-card-actions>
-
 </mat-card>

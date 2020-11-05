@@ -1,8 +1,8 @@
 
 <vex-page-layout>
     <vex-page-layout-header class="pb-16" fxLayout="column" fxLayoutAlign="center start">        
-        <vex-secondary-toolbar current="Add School Information" class="w-full">
-            <vex-breadcrumbs [crumbs]="['School','Add School']" class="flex-auto"></vex-breadcrumbs>
+        <vex-secondary-toolbar current={{schoolTitle}} class="w-full">
+            <vex-breadcrumbs [crumbs]="['School',pageStatus]" class="flex-auto"></vex-breadcrumbs>
         </vex-secondary-toolbar>
     </vex-page-layout-header>    
     <vex-page-layout-content class="-mt-6">
@@ -10,7 +10,7 @@
             <mat-drawer-content class="flex-auto flex items-start">
                 <div class="hidden sm:block mr-6 ng-tns-c284-386 ng-star-inserted w-1/6">
                     <div class="max-w-xxxs w-full">
-                        <div class="h-45 mb-6 flex items-center sm:px-0" fxLayout="row" fxLayoutAlign="start center">
+                        <div class="h-45 mb-6 flex items-center justify-center bg-white sm:px-0" fxLayout="row" fxLayoutAlign="start center">
                             <vex-profile-image [enableCropTool]="enableCropTool" [responseImage]="responseImage" [mode]="modeForImage"></vex-profile-image>
                         </div>
 
@@ -19,7 +19,7 @@
                                 <!-- <ic-icon [icon]="item.icon" [ngClass]="item.classes?.icon" class="ltr:mr-3 rtl:ml-3" size="24px"></ic-icon> -->
                                 <span>General Information</span>
                             </a>
-                            <button @fadeInRight [ngClass]=" washFlag ? 'list-item mt-2 no-underline flex items-center bg-primary hover:bg-primary text-white' : 'list-item mt-2 no-underline flex items-center'" (click) = "isViewMode? showViewWashInfo() : showWashEdit($event)" [disabled]="disabledWashInfo"  matRipple>
+                            <button class="w-full" @fadeInRight [ngClass]=" washFlag ? 'list-item mt-2 no-underline flex items-center bg-primary hover:bg-primary text-white' : 'list-item mt-2 no-underline flex items-center'" (click) = "isViewMode? showViewWashInfo() : showWashEdit($event)" [disabled]="disabledWashInfo"  matRipple>
                                 <span>WASH Information</span>
                             </button>
                             <a @fadeInRight class="list-item mt-2 no-underline flex items-center" matRipple>
@@ -38,7 +38,8 @@
                             [dataOfgeneralInfoFromView]="dataOfgeneralInfoFromView" 
                             (dataOfgeneralInfo) = "getDataOfgeneralInfo($event)" 
                             [isEditMode]="isEditMode"
-                            [image]="image">
+                            [image]="image"
+                            (onViewMode)="showViewGeneralInfo()">
                         </vex-general-info>
                      </div>
                      <div  *ngIf="displayWash">

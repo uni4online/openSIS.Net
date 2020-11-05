@@ -21,5 +21,6 @@ namespace opensis.data.Models
         public int? LastSchool { get; set; }
         public DateTime? LastUpdated { get; set; }
         public string UpdatedBy { get; set; }
+        public virtual StudentMaster StudentMaster { get; set; }
     }
 }

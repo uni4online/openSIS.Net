@@ -3,6 +3,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
 import { fadeInRight400ms } from '../../../../../@vex/animations/fade-in-right.animation';
+import { MatDialog } from '@angular/material/dialog';
+import icAdd from '@iconify/icons-ic/baseline-add';
+import { EnrollToSchoolComponent } from './enroll-to-school/enroll-to-school.component';
+import { EditEnrollmentComponent } from './edit-enrollment/edit-enrollment.component';
 
 @Component({
   selector: 'vex-student-enrollmentinfo',
@@ -16,12 +20,26 @@ import { fadeInRight400ms } from '../../../../../@vex/animations/fade-in-right.a
 })
 export class StudentEnrollmentinfoComponent implements OnInit {
 
-  form: FormGroup;
+  icAdd = icAdd;
 
-  constructor(private fb: FormBuilder) { }
+  //form: FormGroup;
+
+  constructor(private fb: FormBuilder,private dialog: MatDialog) { }
 
   ngOnInit(): void {
-    this.form = this.fb.group({});
+    //this.form = this.fb.group({});
+  }
+
+  openEnrollToNewSchool() {
+    this.dialog.open(EnrollToSchoolComponent, {
+      width: '600px'
+    });
+  }
+
+  openEnrollmentInfo() {
+    this.dialog.open(EditEnrollmentComponent, {
+      width: '600px'
+    });
   }
 
 }

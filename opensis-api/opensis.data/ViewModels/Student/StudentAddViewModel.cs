@@ -7,6 +7,6 @@ namespace opensis.data.ViewModels.Student
 {
     public class StudentAddViewModel:CommonFields
     {
-        public StudentEnrollment studentEnrollment { get; set; }
+        public StudentMaster studentMaster { get; set; }
     }
 }

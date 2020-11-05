@@ -2,13 +2,16 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { MarkingPeriodListModel,MarkingPeriodAddModel,SemesterAddModel,QuarterAddModel,ProgressPeriodAddModel, GetAcademicYearListModel, GetMarkingPeriodTitleListModel} from '../models/markingPeriodModel';
-
+import { BehaviorSubject } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
 export class MarkingPeriodService {
 
   apiUrl:string = environment.apiURL;
+  private currentYear = new BehaviorSubject(false);
+  currentY = this.currentYear.asObservable();
+
   constructor(private http: HttpClient) { }
 
   GetMarkingPeriod(obj: MarkingPeriodListModel){
@@ -33,7 +36,7 @@ export class MarkingPeriodService {
     return this.http.post<SemesterAddModel>(apiurl,obj)
   }
   UpdateSemester(obj: SemesterAddModel){
-    console.log(JSON.stringify(obj))
+   
     let apiurl = this.apiUrl + obj._tenantName+ "/MarkingPeriod/updateSemester";   
     return this.http.put<SemesterAddModel>(apiurl,obj)
   }
@@ -80,5 +83,7 @@ export class MarkingPeriodService {
     let apiurl = this.apiUrl + obj._tenantName+ "/MarkingPeriod/getMarkingPeriodTitleList";   
     return this.http.post<GetMarkingPeriodTitleListModel>(apiurl,obj)
   }
- 
+  getCurrentYear(message: boolean) {
+    this.currentYear.next(message)
+  } 
 }

@@ -25,7 +25,6 @@ export class EditEnrollmentCodeComponent implements OnInit {
   buttonType;
   enrollmentCodeAddView:EnrollmentCodeAddView= new EnrollmentCodeAddView();
   enrollmentCodeEnum=Object.keys(EnrollmentCodeEnum)
-  typeValues=["Add", "Drop", "Rolled Over", "Drop (Transfer)", "Enroll (Transfer)"]
   constructor(
     private dialogRef: MatDialogRef<EditEnrollmentCodeComponent>,
     @Inject(MAT_DIALOG_DATA) public data:any,
@@ -59,6 +58,7 @@ export class EditEnrollmentCodeComponent implements OnInit {
     }
   }
   submit(){
+    this.form.markAllAsTouched();
     if (this.form.valid) {
     if(this.form.controls.enrollmentCode.value===0){
       this.enrollmentCodeAddView.studentEnrollmentCode.title=this.form.controls.title.value
@@ -79,7 +79,10 @@ export class EditEnrollmentCodeComponent implements OnInit {
                 duration: 10000
               });
             } 
-            else { 
+            else {
+              this.snackbar.open('Enrollment code Created Successfully. ' + res._message, 'LOL THANKS', {
+                duration: 10000
+              }); 
               this.dialogRef.close('submited');
             }
           
@@ -107,6 +110,9 @@ export class EditEnrollmentCodeComponent implements OnInit {
               });
             } 
             else { 
+              this.snackbar.open('Enrollment code Edited Successfully. ' + res._message, 'LOL THANKS', {
+                duration: 10000
+              }); 
               this.dialogRef.close('submited');
             }
           

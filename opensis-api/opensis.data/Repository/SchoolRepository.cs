@@ -60,13 +60,22 @@ namespace opensis.data.Repository
                     if (pageResult.FilterParams != null && pageResult.FilterParams.ElementAt(0).ColumnName == null && pageResult.FilterParams.Count == 1)
                     {
                         string Columnvalue = pageResult.FilterParams.ElementAt(0).FilterValue;
-                        transactionIQ = SchoolMasterList
-                    .Where(x => x.TenantId == pageResult.TenantId).Where(x => x.SchoolName.ToLower().Contains(Columnvalue.ToLower()) || x.SchoolDetail.Count>0? x.SchoolDetail.FirstOrDefault().Telephone.ToLower().Contains(Columnvalue.ToLower()):string.Empty.Contains(Columnvalue.ToLower()) || x.StreetAddress1.ToLower().Contains(Columnvalue.ToLower()) || x.SchoolDetail.Count>0?x.SchoolDetail.FirstOrDefault().NameOfPrincipal.ToLower().Contains(Columnvalue.ToLower()):string.Empty.Contains(Columnvalue.ToLower())).AsQueryable();
+                        transactionIQ = SchoolMasterList.Where(x => x.SchoolName.ToLower().Contains(Columnvalue.ToLower()) || x.StreetAddress1.ToLower().Contains(Columnvalue.ToLower()) || x.StreetAddress2.ToLower().Contains(Columnvalue.ToLower()) || x.Zip.ToLower().Contains(Columnvalue.ToLower()));
+                        var childTelephoneFilter = SchoolMasterList.Where(x => x.SchoolDetail.FirstOrDefault() != null ? x.SchoolDetail.FirstOrDefault().Telephone.ToLower().Contains(Columnvalue.ToLower()) : string.Empty.Contains(Columnvalue));
+                        if (childTelephoneFilter.ToList().Count>0) {
+                            transactionIQ=transactionIQ.Concat(childTelephoneFilter);
+                        }
+                        var childNameOfPrincipalFilter = SchoolMasterList.Where(x => x.SchoolDetail.FirstOrDefault() != null ?  x.SchoolDetail.FirstOrDefault().NameOfPrincipal.ToLower().Contains(Columnvalue.ToLower()) : string.Empty.Contains(Columnvalue));
+                        if (childNameOfPrincipalFilter.ToList().Count > 0)
+                        {
+                            transactionIQ = transactionIQ.Concat(childNameOfPrincipalFilter);
+                        }
                     }
                     else
                     {
                         transactionIQ = Utility.FilteredData(pageResult.FilterParams, SchoolMasterList).AsQueryable();
                     }
+                    transactionIQ = transactionIQ.Distinct();
                 }
                 if (pageResult.SortingModel != null)
                 {
@@ -104,7 +113,7 @@ namespace opensis.data.Repository
                     StreetAddress1 = s.SchoolDetail.FirstOrDefault()==null?string.Empty: ToFullAddress(s.StreetAddress1, s.StreetAddress2,
                     int.TryParse(s.City, out resultData) == true ? this.context.City.Where(x => x.Id == Convert.ToInt32(s.City)).FirstOrDefault().Name : s.City,
                     int.TryParse(s.State, out resultData) == true ? this.context.State.Where(x => x.Id == Convert.ToInt32(s.State)).FirstOrDefault().Name : s.State,
-                    this.context.Country.Where(x => x.Id == Convert.ToInt32(s.Country)).FirstOrDefault().Name, s.Zip),
+                    int.TryParse(s.Country, out resultData) == true ? this.context.Country.Where(x => x.Id == Convert.ToInt32(s.Country)).FirstOrDefault().Name:string.Empty, s.Zip),
                     Status = s.SchoolDetail.FirstOrDefault()==null?false: s.SchoolDetail.FirstOrDefault().Status == null ? false : s.SchoolDetail.FirstOrDefault().Status
                 }).ToList();
 
@@ -304,6 +313,7 @@ namespace opensis.data.Repository
             {
                 int? MasterSchoolId = Utility.GetMaxPK(this.context, new Func<SchoolMaster, int>(x => x.SchoolId));
                 int? MemberShipId = Utility.GetMaxPK(this.context, new Func<Membership, int>(x => x.MembershipId));
+                int? CategoryId = Utility.GetMaxPK(this.context, new Func<FieldsCategory, int>(x => x.CategoryId));
                 school.schoolMaster.SchoolId = (int)MasterSchoolId;
                 if (school.schoolMaster.SchoolDetail.ToList().Count>0)
                 {
@@ -322,11 +332,27 @@ namespace opensis.data.Repository
                     new Membership(){LastUpdated=DateTime.UtcNow,UpdatedBy="", TenantId= school.schoolMaster.TenantId,Profile= "Teacher w/Custom",Title= "Teacher w/Custom",MembershipId= (int)MemberShipId+7 },
                     new Membership(){LastUpdated=DateTime.UtcNow,UpdatedBy="", TenantId= school.schoolMaster.TenantId,Profile= "Parent w/Custom",Title= "Parent w/Custom",MembershipId= (int)MemberShipId+8 },
                 };
+
+                school.schoolMaster.FieldsCategory = new List<FieldsCategory>()
+                {
+                    new FieldsCategory(){ TenantId=school.schoolMaster.TenantId,IsSystemCategory=true,Search=true, Title="General Information",Module="School",SortOrder=1,Required=true,Hide=false,LastUpdate=DateTime.UtcNow,UpdatedBy="",CategoryId=(int)CategoryId},
+                    new FieldsCategory(){ TenantId=school.schoolMaster.TenantId,IsSystemCategory=true,Search=true, Title="Wash Information",Module="School",SortOrder=2,Required=true,Hide=false,LastUpdate=DateTime.UtcNow,UpdatedBy="",CategoryId=(int)CategoryId+1},
+                    new FieldsCategory(){ TenantId=school.schoolMaster.TenantId,IsSystemCategory=true,Search=true, Title="General Info",Module="Student",SortOrder=1,Required=true,Hide=false,LastUpdate=DateTime.UtcNow,UpdatedBy="",CategoryId=(int)CategoryId+2},
+                    new FieldsCategory(){ TenantId=school.schoolMaster.TenantId,IsSystemCategory=true,Search=true, Title="Address & Contact",Module="Student",SortOrder=2,Required=true,Hide=false,LastUpdate=DateTime.UtcNow,UpdatedBy="",CategoryId=(int)CategoryId+3},
+                    new FieldsCategory(){ TenantId=school.schoolMaster.TenantId,IsSystemCategory=true,Search=true, Title="School & Enrollment Info",Module="Student",SortOrder=3,Required=true,Hide=false,LastUpdate=DateTime.UtcNow,UpdatedBy="",CategoryId=(int)CategoryId+4},
+                    new FieldsCategory(){ TenantId=school.schoolMaster.TenantId,IsSystemCategory=true,Search=true, Title="Family Info",Module="Student",SortOrder=4,Required=true,Hide=false,LastUpdate=DateTime.UtcNow,UpdatedBy="",CategoryId=(int)CategoryId+5},
+                    new FieldsCategory(){ TenantId=school.schoolMaster.TenantId,IsSystemCategory=true,Search=true, Title="Login Info",Module="Student",SortOrder=5,Required=true,Hide=false,LastUpdate=DateTime.UtcNow,UpdatedBy="",CategoryId=(int)CategoryId+6}
+                };
                 this.context?.SchoolMaster.Add(school.schoolMaster);
                 this.context?.SaveChanges();
                 school._failure = false;
                 school.schoolMaster.Membership.ToList().ForEach(x=>x.SchoolMaster=null);
                 if (school.schoolMaster.SchoolDetail.ToList().Count>0)
+                {
+                    school.schoolMaster.SchoolDetail.FirstOrDefault().SchoolMaster = null;
+                }
+                school.schoolMaster.FieldsCategory.ToList().ForEach(x => x.SchoolMaster = null);
+                if (school.schoolMaster.SchoolDetail.ToList().Count > 0)
                 {
                     school.schoolMaster.SchoolDetail.FirstOrDefault().SchoolMaster = null;
                 }

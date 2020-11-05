@@ -144,6 +144,18 @@ export class AppComponent {
         children: [
           {
             type: 'link',
+            label: 'Parent Info',
+            route: '/school/parents',
+            icon: icinfo
+          },
+          {
+            type: 'link',
+            label: 'Staff Info',
+            route: '/school/staffs',
+            icon: icinfo
+          },
+          {
+            type: 'link',
             label: 'Preferences',
             route: '/school/preferences',
             icon: icinfo
@@ -158,6 +170,12 @@ export class AppComponent {
             type: 'link',
             label: 'Schedule Students',
             route: '/school/schedulestudents',
+            icon: icinfo
+          },
+          {
+            type: 'link',
+            label: 'Run Scheduler',
+            route: '/school/runscheduler',
             icon: icinfo
           }
         ]

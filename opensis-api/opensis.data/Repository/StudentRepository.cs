@@ -1,4 +1,5 @@
-﻿using opensis.data.Helper;
+﻿using Microsoft.EntityFrameworkCore;
+using opensis.data.Helper;
 using opensis.data.Interface;
 using opensis.data.Models;
 using opensis.data.ViewModels.Student;
@@ -27,10 +28,9 @@ namespace opensis.data.Repository
         {
             try
             {
-                int? MasterStudentId = Utility.GetMaxPK(this.context, new Func<StudentEnrollment, int>(x => x.StudentId));
-                student.studentEnrollment.StudentId = (int)MasterStudentId;
-                student.studentEnrollment.LastUpdated = DateTime.UtcNow;
-                this.context?.StudentEnrollment.Add(student.studentEnrollment);
+                int? MasterStudentId = Utility.GetMaxPK(this.context, new Func<StudentMaster, int>(x => x.StudentId));
+                student.studentMaster.StudentId = (int)MasterStudentId;
+                this.context?.StudentMaster.Add(student.studentMaster);
                 this.context?.SaveChanges();
                 student._failure = false;
             }
@@ -52,92 +52,344 @@ namespace opensis.data.Repository
         {
             try
             {
-                var studentUpdate = this.context?.StudentEnrollment.FirstOrDefault(x => x.TenantId == student.studentEnrollment.TenantId && x.SchoolId == student.studentEnrollment.SchoolId && x.StudentId == student.studentEnrollment.StudentId);
+                var studentUpdate = this.context?.StudentMaster.FirstOrDefault(x => x.TenantId == student.studentMaster.TenantId && x.SchoolId == student.studentMaster.SchoolId && x.StudentId == student.studentMaster.StudentId);
 
-                studentUpdate.TenantId = student.studentEnrollment.TenantId;
-                studentUpdate.SchoolId = student.studentEnrollment.SchoolId;
-                studentUpdate.StudentId = student.studentEnrollment.StudentId;
-                studentUpdate.EnrollmentId = student.studentEnrollment.EnrollmentId;
-                studentUpdate.GradeId = student.studentEnrollment.GradeId;
-                studentUpdate.SectionId = student.studentEnrollment.SectionId;
-                studentUpdate.StartDate = student.studentEnrollment.StartDate;
-                studentUpdate.EndDate = student.studentEnrollment.EndDate;
-                studentUpdate.EnrollmentCode = student.studentEnrollment.EnrollmentCode;
-                studentUpdate.DropCode = student.studentEnrollment.DropCode;
-                studentUpdate.NextSchool = student.studentEnrollment.NextSchool;
-                studentUpdate.CalendarId = student.studentEnrollment.CalendarId;
-                studentUpdate.LastSchool = student.studentEnrollment.LastSchool;
-                studentUpdate.LastUpdated = DateTime.UtcNow;
-                studentUpdate.UpdatedBy = student.studentEnrollment.UpdatedBy;
+                studentUpdate.Salutation = student.studentMaster.Salutation;
+                studentUpdate.Suffix = student.studentMaster.Suffix;
+                studentUpdate.FirstGivenName = student.studentMaster.FirstGivenName;
+                studentUpdate.MiddleName = student.studentMaster.MiddleName;
+                studentUpdate.LastFamilyName = student.studentMaster.LastFamilyName;
+                studentUpdate.PreferredName = student.studentMaster.PreferredName;
+                studentUpdate.PreviousName = student.studentMaster.PreviousName;
+                studentUpdate.AlternateId = student.studentMaster.AlternateId;
+                studentUpdate.DistrictId = student.studentMaster.DistrictId;
+                studentUpdate.StateId = student.studentMaster.StateId;
+                studentUpdate.AdmissionNumber = student.studentMaster.AdmissionNumber;
+                studentUpdate.RollNumber = student.studentMaster.RollNumber;
+                studentUpdate.SocialSecurityNumber = student.studentMaster.SocialSecurityNumber;
+                studentUpdate.OtherGovtIssuedNumber = student.studentMaster.OtherGovtIssuedNumber;
+                studentUpdate.Dob = student.studentMaster.Dob;
+                studentUpdate.Gender = student.studentMaster.Gender;
+                studentUpdate.Race = student.studentMaster.Race;
+                studentUpdate.Ethnicity = student.studentMaster.Ethnicity;
+                studentUpdate.MaritalStatus = student.studentMaster.MaritalStatus;
+                studentUpdate.CountryOfBirth = student.studentMaster.CountryOfBirth;
+                studentUpdate.Nationality = student.studentMaster.Nationality;
+                studentUpdate.FirstLanguageId = student.studentMaster.FirstLanguageId;
+                studentUpdate.SecondLanguageId = student.studentMaster.SecondLanguageId;
+                studentUpdate.ThirdLanguageId = student.studentMaster.ThirdLanguageId;
+
+                studentUpdate.HomeAddressLineOne = student.studentMaster.HomeAddressLineOne;
+                studentUpdate.HomeAddressLineTwo = student.studentMaster.HomeAddressLineTwo;
+                studentUpdate.HomeAddressCountry = student.studentMaster.HomeAddressCountry;
+                studentUpdate.HomeAddressState = student.studentMaster.HomeAddressState;
+                studentUpdate.HomeAddressCity = student.studentMaster.HomeAddressCity;
+                studentUpdate.HomeAddressZip = student.studentMaster.HomeAddressZip;
+                studentUpdate.BusNo = student.studentMaster.BusNo;
+                studentUpdate.SchoolBusPickUp = student.studentMaster.SchoolBusPickUp;
+                studentUpdate.SchoolBusDropOff = student.studentMaster.SchoolBusDropOff;
+                studentUpdate.MailingAddressSameToHome = student.studentMaster.MailingAddressSameToHome;
+                studentUpdate.MailingAddressLineOne = student.studentMaster.MailingAddressLineOne;
+                studentUpdate.MailingAddressLineTwo = student.studentMaster.MailingAddressLineTwo;
+                studentUpdate.MailingAddressCountry = student.studentMaster.MailingAddressCountry;
+                studentUpdate.MailingAddressState = student.studentMaster.MailingAddressState;
+                studentUpdate.MailingAddressCity = student.studentMaster.MailingAddressCity;
+                studentUpdate.MailingAddressZip = student.studentMaster.MailingAddressZip;
+                studentUpdate.HomePhone = student.studentMaster.HomePhone;
+                studentUpdate.MobilePhone = student.studentMaster.MobilePhone;
+                studentUpdate.PersonalEmail = student.studentMaster.PersonalEmail;
+                studentUpdate.SchoolEmail = student.studentMaster.SchoolEmail;
+                studentUpdate.Twitter = student.studentMaster.Twitter;
+                studentUpdate.Facebook = student.studentMaster.Facebook;
+                studentUpdate.Instagram = student.studentMaster.Instagram;
+                studentUpdate.Youtube = student.studentMaster.Youtube;
+                studentUpdate.Linkedin = student.studentMaster.Linkedin;
+
+                studentUpdate.StudentPhoto = student.studentMaster.StudentPhoto;
+
+                studentUpdate.PrimaryContactFirstname = student.studentMaster.PrimaryContactFirstname;
+                studentUpdate.PrimaryContactLastname = student.studentMaster.PrimaryContactLastname;
+                studentUpdate.PrimaryContactRelationship = student.studentMaster.PrimaryContactRelationship;
+                studentUpdate.PrimaryContactEmail = student.studentMaster.PrimaryContactEmail;
+                studentUpdate.PrimaryContactMobile = student.studentMaster.PrimaryContactMobile;
+                studentUpdate.PrimaryContactWorkPhone = student.studentMaster.PrimaryContactWorkPhone;
+                studentUpdate.PrimaryContactHomePhone = student.studentMaster.PrimaryContactHomePhone;
+                studentUpdate.PrimaryContactAddressLineOne = student.studentMaster.PrimaryContactAddressLineOne;
+                studentUpdate.PrimaryContactAddressLineTwo = student.studentMaster.PrimaryContactAddressLineTwo;
+                studentUpdate.PrimaryContactCountry = student.studentMaster.PrimaryContactCountry;
+                studentUpdate.PrimaryContactState = student.studentMaster.PrimaryContactState;
+                studentUpdate.PrimaryContactCity = student.studentMaster.PrimaryContactCity;
+                studentUpdate.PrimaryContactZip = student.studentMaster.PrimaryContactZip;
+
+                studentUpdate.SecondaryContactFirstname = student.studentMaster.SecondaryContactFirstname;
+                studentUpdate.SecondaryContactLastname = student.studentMaster.SecondaryContactLastname;
+                studentUpdate.SecondaryContactRelationship = student.studentMaster.SecondaryContactRelationship;
+                studentUpdate.SecondaryContactEmail = student.studentMaster.SecondaryContactEmail;
+                studentUpdate.SecondaryContactMobile = student.studentMaster.SecondaryContactMobile;
+                studentUpdate.SecondaryContactWorkPhone = student.studentMaster.SecondaryContactWorkPhone;
+                studentUpdate.SecondaryContactHomePhone = student.studentMaster.SecondaryContactHomePhone;
+                studentUpdate.SecondaryContactAddressLineOne = student.studentMaster.SecondaryContactAddressLineOne;
+                studentUpdate.SecondaryContactAddressLineTwo = student.studentMaster.SecondaryContactAddressLineTwo;
+                studentUpdate.SecondaryContactCountry = student.studentMaster.SecondaryContactCountry;
+                studentUpdate.SecondaryContactState = student.studentMaster.SecondaryContactState;
+                studentUpdate.SecondaryContactCity = student.studentMaster.SecondaryContactCity;
+                studentUpdate.SecondaryContactZip = student.studentMaster.SecondaryContactZip;
+
 
                 this.context?.SaveChanges();
                 student._failure = false;
-               
+
             }
             catch (Exception ex)
             {
-                student.studentEnrollment = null;
+                student.studentMaster = null;
                 student._failure = true;
                 student._message = ex.Message;
-                
+
             }
             return student;
 
         }
+
         /// <summary>
-        /// View Student By Id
+        /// Get All Student With Pagination,sorting,searching
         /// </summary>
-        /// <param name="student"></param>
+        /// <param name="pageResult"></param>
         /// <returns></returns>
 
-        public StudentAddViewModel ViewStudent(StudentAddViewModel student)
+        public StudentListModel GetAllStudentList(PageResult pageResult)
         {
-            StudentAddViewModel studentView = new StudentAddViewModel();
+            StudentListModel studentListModel = new StudentListModel();
+            IQueryable<StudentMaster> transactionIQ = null;
+            var StudentMasterList = this.context?.StudentMaster.Where(x => x.TenantId == pageResult.TenantId && x.SchoolId == pageResult.SchoolId);
             try
             {
-               
-                var studentById = this.context?.StudentEnrollment.FirstOrDefault(x => x.TenantId == student.studentEnrollment.TenantId && x.SchoolId == student.studentEnrollment.SchoolId && x.StudentId == student.studentEnrollment.StudentId);
-                if (studentById != null)
+                if (pageResult.FilterParams == null || pageResult.FilterParams.Count == 0)
                 {
-                    studentView.studentEnrollment = studentById;                    
+
+                    transactionIQ = StudentMasterList;
                 }
                 else
                 {
-                    studentView._failure = true;
-                    studentView._message = NORECORDFOUND;           
+                    if (pageResult.FilterParams != null && pageResult.FilterParams.ElementAt(0).ColumnName == null && pageResult.FilterParams.Count == 1)
+                    {
+                        string Columnvalue = pageResult.FilterParams.ElementAt(0).FilterValue;
+                        transactionIQ = StudentMasterList.Where(x => x.FirstGivenName.ToLower().Contains(Columnvalue.ToLower()) || x.MiddleName.ToLower().Contains(Columnvalue.ToLower()) || x.LastFamilyName.ToLower().Contains(Columnvalue.ToLower()) || x.StudentId.ToString().Contains(Columnvalue) || x.AlternateId.Contains(Columnvalue) || x.HomePhone.Contains(Columnvalue) || x.MobilePhone.Contains(Columnvalue));
+                    }
+                    else
+                    {
+                        transactionIQ = Utility.FilteredData(pageResult.FilterParams, StudentMasterList).AsQueryable();
+                    }
+                    //transactionIQ = transactionIQ.Distinct();
                 }
+                if (pageResult.SortingModel != null)
+                {
+                    transactionIQ = Utility.Sort(transactionIQ, pageResult.SortingModel.SortColumn, pageResult.SortingModel.SortDirection.ToLower());
+                }
+
+                int totalCount = transactionIQ.Count();
+                transactionIQ = transactionIQ.Skip((pageResult.PageNumber - 1) * pageResult.PageSize).Take(pageResult.PageSize);
+                var studentList = transactionIQ.ToList();
+                
+                studentListModel.TenantId = pageResult.TenantId;
+                studentListModel.studentMaster = studentList;
+                studentListModel.TotalCount = totalCount;
+                studentListModel.PageNumber = pageResult.PageNumber;
+                studentListModel._pageSize = pageResult.PageSize;
+                studentListModel._tenantName = pageResult._tenantName;
+                studentListModel._token = pageResult._token;
+                studentListModel._failure = false;
             }
             catch (Exception es)
             {
-                studentView._failure = true;
-                studentView._message=es.Message;
+                studentListModel._message = es.Message;
+                studentListModel._failure = true;
+                studentListModel._tenantName = pageResult._tenantName;
+                studentListModel._token = pageResult._token;
             }
-            return studentView;
+            return studentListModel;
+
         }
 
         /// <summary>
-        /// Delete Student
+        /// SearchContact For Student
         /// </summary>
-        /// <param name="student"></param>
+        /// <param name="searchContactViewModel"></param>
         /// <returns></returns>
 
-        public StudentAddViewModel DeleteStudent(StudentAddViewModel student)
+        public SearchContactViewModel SearchContactForStudent(SearchContactViewModel searchContactViewModel)
         {
+            SearchContactViewModel contactViewModel = new SearchContactViewModel();
+            IQueryable<StudentMaster> transactionIQ = null;
+            var StudentMasterList = this.context?.StudentMaster.Where(x => x.TenantId == searchContactViewModel.TenantId && x.SchoolId == searchContactViewModel.SchoolId);
             try
             {
-                var studentDel = this.context?.StudentEnrollment.FirstOrDefault(x => x.TenantId == student.studentEnrollment.TenantId && x.SchoolId == student.studentEnrollment.SchoolId && x.StudentId == student.studentEnrollment.StudentId);
-                this.context?.StudentEnrollment.Remove(studentDel);
-                this.context?.SaveChanges();
-                student._failure = false;
-                student._message = "Deleted";
+                if (searchContactViewModel.FilterValue != null)
+                {
+                    string Columnvalue = searchContactViewModel.FilterValue;
+                    transactionIQ = StudentMasterList.Where(x => x.PrimaryContactFirstname.ToLower().Contains(Columnvalue.ToLower()) || x.PrimaryContactLastname.ToLower().Contains(Columnvalue.ToLower()) || x.PrimaryContactHomePhone.ToLower().Contains(Columnvalue.ToLower()) || x.PrimaryContactWorkPhone.ToLower().Contains(Columnvalue.ToLower()) || x.PrimaryContactMobile.ToLower().Contains(Columnvalue.ToLower()) || x.PrimaryContactEmail.ToLower().Contains(Columnvalue.ToLower())
+                    || x.SecondaryContactFirstname.ToLower().Contains(Columnvalue.ToLower()) || x.SecondaryContactLastname.ToLower().Contains(Columnvalue.ToLower()) || x.SecondaryContactHomePhone.ToLower().Contains(Columnvalue.ToLower()) || x.SecondaryContactWorkPhone.ToLower().Contains(Columnvalue.ToLower()) || x.SecondaryContactMobile.ToLower().Contains(Columnvalue.ToLower()) || x.SecondaryContactEmail.ToLower().Contains(Columnvalue.ToLower()));
+
+                    int checkCount = transactionIQ.Count();
+                    if (checkCount < 1)
+                    {
+                        contactViewModel._message = "NO Data Found";
+                        contactViewModel._failure = true;
+                        contactViewModel._tenantName = searchContactViewModel._tenantName;
+                        contactViewModel._token = searchContactViewModel._token;
+                    }
+                }
+                else
+                {
+                    contactViewModel._message = "Please Provide Value";
+                    contactViewModel._failure = true;
+                    contactViewModel._tenantName = searchContactViewModel._tenantName;
+                    contactViewModel._token = searchContactViewModel._token;
+                }
+
+                var studentList = transactionIQ.ToList();
+
+                contactViewModel.TenantId = searchContactViewModel.TenantId;
+                contactViewModel.studentMaster = studentList;
+                contactViewModel._tenantName = searchContactViewModel._tenantName;
+                contactViewModel._token = searchContactViewModel._token;
+                contactViewModel._failure = false;
             }
             catch (Exception es)
             {
-                student._failure = true;
-                student._message = es.Message;
+                contactViewModel._message = es.Message;
+                contactViewModel._failure = true;
+                contactViewModel._tenantName = searchContactViewModel._tenantName;
+                contactViewModel._token = searchContactViewModel._token;
             }
-            return student;
+            return contactViewModel;
+
         }
+
+
+
+        /// <summary>
+        /// Add Enrollment
+        /// </summary>
+        /// <param name="student"></param>
+        /// <returns></returns>
+        //  public StudentAddViewModel AddEnrollment(StudentAddViewModel student)
+        //  {
+        //    try
+        //    {
+        //        int? MasterStudentId = Utility.GetMaxPK(this.context, new Func<StudentEnrollment, int>(x => x.StudentId));
+        //        student.studentEnrollment.StudentId = (int)MasterStudentId;
+        //        student.studentEnrollment.LastUpdated = DateTime.UtcNow;
+        //        this.context?.StudentEnrollment.Add(student.studentEnrollment);
+        //        this.context?.SaveChanges();
+        //        student._failure = false;
+        //    }
+        //    catch (Exception es)
+        //    {
+        //        student._failure = true;
+        //        student._message = es.Message;
+        //    }
+
+        //    return student;
+        //}
+
+        /// <summary>
+        /// Update Enrollment
+        /// </summary>
+        /// <param name="student"></param>
+        /// <returns></returns>
+        //    public StudentAddViewModel UpdateEnrollment(StudentAddViewModel student)
+        //    {
+        //        try
+        //        {
+        //            var studentUpdate = this.context?.StudentEnrollment.FirstOrDefault(x => x.TenantId == student.studentEnrollment.TenantId && x.SchoolId == student.studentEnrollment.SchoolId && x.StudentId == student.studentEnrollment.StudentId);
+
+        //            studentUpdate.TenantId = student.studentEnrollment.TenantId;
+        //            studentUpdate.SchoolId = student.studentEnrollment.SchoolId;
+        //            studentUpdate.StudentId = student.studentEnrollment.StudentId;
+        //            studentUpdate.EnrollmentId = student.studentEnrollment.EnrollmentId;
+        //            studentUpdate.GradeId = student.studentEnrollment.GradeId;
+        //            studentUpdate.SectionId = student.studentEnrollment.SectionId;
+        //            studentUpdate.StartDate = student.studentEnrollment.StartDate;
+        //            studentUpdate.EndDate = student.studentEnrollment.EndDate;
+        //            studentUpdate.EnrollmentCode = student.studentEnrollment.EnrollmentCode;
+        //            studentUpdate.DropCode = student.studentEnrollment.DropCode;
+        //            studentUpdate.NextSchool = student.studentEnrollment.NextSchool;
+        //            studentUpdate.CalendarId = student.studentEnrollment.CalendarId;
+        //            studentUpdate.LastSchool = student.studentEnrollment.LastSchool;
+        //            studentUpdate.LastUpdated = DateTime.UtcNow;
+        //            studentUpdate.UpdatedBy = student.studentEnrollment.UpdatedBy;
+
+        //            this.context?.SaveChanges();
+        //            student._failure = false;
+
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            student.studentEnrollment = null;
+        //            student._failure = true;
+        //            student._message = ex.Message;
+
+        //        }
+        //        return student;
+
+        //    }
+        //    /// <summary>
+        //    /// View Student By Id
+        //    /// </summary>
+        //    /// <param name="student"></param>
+        //    /// <returns></returns>
+
+        //    public StudentAddViewModel ViewStudent(StudentAddViewModel student)
+        //    {
+        //        StudentAddViewModel studentView = new StudentAddViewModel();
+        //        try
+        //        {
+
+        //            var studentById = this.context?.StudentEnrollment.FirstOrDefault(x => x.TenantId == student.studentEnrollment.TenantId && x.SchoolId == student.studentEnrollment.SchoolId && x.StudentId == student.studentEnrollment.StudentId);
+        //            if (studentById != null)
+        //            {
+        //                studentView.studentEnrollment = studentById;                    
+        //            }
+        //            else
+        //            {
+        //                studentView._failure = true;
+        //                studentView._message = NORECORDFOUND;           
+        //            }
+        //        }
+        //        catch (Exception es)
+        //        {
+        //            studentView._failure = true;
+        //            studentView._message=es.Message;
+        //        }
+        //        return studentView;
+        //    }
+
+        //    /// <summary>
+        //    /// Delete Student
+        //    /// </summary>
+        //    /// <param name="student"></param>
+        //    /// <returns></returns>
+
+        //    public StudentAddViewModel DeleteStudent(StudentAddViewModel student)
+        //    {
+        //        try
+        //        {
+        //            var studentDel = this.context?.StudentEnrollment.FirstOrDefault(x => x.TenantId == student.studentEnrollment.TenantId && x.SchoolId == student.studentEnrollment.SchoolId && x.StudentId == student.studentEnrollment.StudentId);
+        //            this.context?.StudentEnrollment.Remove(studentDel);
+        //            this.context?.SaveChanges();
+        //            student._failure = false;
+        //            student._message = "Deleted";
+        //        }
+        //        catch (Exception es)
+        //        {
+        //            student._failure = true;
+        //            student._message = es.Message;
+        //        }
+        //        return student;
+        //    }
     }
-        
 }
+
+
+

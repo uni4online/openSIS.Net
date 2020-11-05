@@ -52,7 +52,7 @@ export class AttendanceCategoryComponent implements OnInit {
 
   ngOnInit(): void {
     if(this.editMode){
-      this.attendanceCategoryModalTitle="updateAttendanceCategory";
+      this.attendanceCategoryModalTitle="editAttendanceCategory";
       this.attendanceCategoryModalActionButton="update"
       this.form.patchValue({
         title:this.editDetails.title

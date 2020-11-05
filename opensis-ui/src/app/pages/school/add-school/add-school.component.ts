@@ -9,6 +9,8 @@ import { SchoolService } from '../../../services/school.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SharedFunction } from '../../../pages/shared/shared-function';
 import { CommonService } from '../../../services/common.service';
+import { LayoutService } from 'src/@vex/services/layout.service';
+
 @Component({
   
   selector: 'vex-add-school',
@@ -20,7 +22,9 @@ import { CommonService } from '../../../services/common.service';
 })
 export class AddSchoolComponent implements OnInit {
   clickEventSubscriptionForCrop:Subscription;
-  clickEventSubscriptionForUnCrop:Subscription;  
+  clickEventSubscriptionForUnCrop:Subscription; 
+  schoolTitle="Add School Information";
+  pageStatus="Add School"
   responseImage:string;
   image:string='';
   displayGeneral = true;
@@ -51,16 +55,16 @@ export class AddSchoolComponent implements OnInit {
     private Activeroute: ActivatedRoute,
      private snackbar: MatSnackBar,
      private schoolService:SchoolService,
-     private commonFunction:SharedFunction) { 
+     private commonFunction:SharedFunction,
+     private layoutService: LayoutService) { 
    // this.Activeroute.params.subscribe(params => { this.tenant ='opensisv2'; });
+    this.layoutService.collapseSidenav();
 
     this.clickEventSubscriptionForCrop=this.imageCropperService.getCroppedEvent().subscribe((res)=>{
-     
         this.image=res;
       });
     
     this.clickEventSubscriptionForUnCrop=this.imageCropperService.getUncroppedEvent().subscribe((res)=>{    
-      //this.image='data:image/png;base64,'+btoa(res.target.result);
       this.image=btoa(res.target.result);    
     });
   }
@@ -94,7 +98,7 @@ export class AddSchoolComponent implements OnInit {
   
   
   showGeneralEdit(){ 
-    
+    this.pageStatus="Edit School";
     if(this.isAddMode){
       this.isEditMode=false; 
     }else{
@@ -113,7 +117,7 @@ export class AddSchoolComponent implements OnInit {
   }
 
   showWashEdit(data){ 
-   
+    this.pageStatus="Edit School";
     if(data){     
       this.isViewMode=false;
     }  
@@ -131,7 +135,7 @@ export class AddSchoolComponent implements OnInit {
     }    
   }
   showViewGeneralInfo(){ 
-     
+    this.pageStatus="View School";
     this.displayGeneral = false;
     this.displayWash = false;
     this.generalFlag = true;
@@ -143,7 +147,7 @@ export class AddSchoolComponent implements OnInit {
     this.imageCropperService.nextMessage(true);
   }
   showViewWashInfo(){  
-      
+    this.pageStatus="View School";
     this.displayGeneral = false;
     this.displayWash = false;
     this.generalFlag = false;
@@ -159,7 +163,8 @@ export class AddSchoolComponent implements OnInit {
     this.schoolAddViewModel.schoolMaster.schoolDetail[0].schoolId=this.schoolId;
     this.schoolAddViewModel.schoolMaster.schoolId=this.schoolId;     
     this.schoolService.ViewSchool(this.schoolAddViewModel).subscribe(data => {    
-      this.generalAndWashInfoData = data;     
+      this.generalAndWashInfoData = data;
+      this.schoolTitle=this.generalAndWashInfoData.schoolMaster.schoolName;
       if(this.id === null){
         this.isAddMode=true;
         this.showGeneralEdit();

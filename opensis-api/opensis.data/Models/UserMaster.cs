@@ -13,6 +13,7 @@ namespace opensis.data.Models
         public string PasswordHash { get; set; }
         public int LangId { get; set; }
         public int MembershipId { get; set; }
+        public bool? IsActive { get; set; }
         public DateTime? LastUpdated { get; set; }
         public string UpdatedBy { get; set; }
 

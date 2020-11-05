@@ -34,8 +34,8 @@ export class EnrollmentCodesComponent implements OnInit {
     { label: 'Title',       property: 'title',      type: 'text', visible: true },
     { label: 'Short Name',  property: 'shortName',  type: 'text', visible: true },
     { label: 'Sort Order',  property: 'sortOrder',  type: 'text', visible: true },
-    { label: 'type',        property: 'type',       type: 'text', visible: true },
-    { label: 'action',      property: 'action',     type: 'text', visible: true }
+    { label: 'Type',        property: 'type',       type: 'text', visible: true },
+    { label: 'Action',      property: 'action',     type: 'text', visible: true }
   ];
 
  
@@ -46,7 +46,7 @@ export class EnrollmentCodesComponent implements OnInit {
   icDelete = icDelete;
   icSearch = icSearch;
   icFilterList = icFilterList;
-  loading:Boolean;
+  loading:boolean;
   searchKey:string;
   enrollmentCodelistView:EnrollmentCodeListView=new EnrollmentCodeListView();
   enrollmentAddView:EnrollmentCodeAddView=new EnrollmentCodeAddView()
@@ -123,7 +123,7 @@ export class EnrollmentCodesComponent implements OnInit {
   openEditdata(element){
     this.dialog.open(EditEnrollmentCodeComponent, {
       data: element,
-        width: '800px'
+        width: '600px'
     }).afterClosed().subscribe(
       result=>{
         if(result==="submited"){
@@ -148,6 +148,9 @@ export class EnrollmentCodesComponent implements OnInit {
             });
           } 
           else { 
+            this.snackbar.open('Enrollment code deleted.', 'LOL THANKS', {
+              duration: 10000
+            });
             this.getAllStudentEnrollmentCode()
           }
         }

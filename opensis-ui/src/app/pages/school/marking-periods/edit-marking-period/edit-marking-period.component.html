@@ -79,6 +79,6 @@
 
 <mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" class="py-6">
     <button mat-button mat-dialog-close type="button">{{'cancel' | translate}}</button>
-    <button color="primary" mat-raised-button type="submit">{{'submit' | translate}}</button>
+    <button color="primary" mat-raised-button type="submit" >{{isEdit? "UPDATE" : "SUBMIT"}}</button>    
 </mat-dialog-actions>
 </form>

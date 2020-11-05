@@ -25,6 +25,8 @@ export class EditSectionComponent implements OnInit {
   form: FormGroup;
   sectionAddModel: SectionAddModel = new SectionAddModel();
   getAllSection: GetAllSectionModel = new GetAllSectionModel();
+  sectionModalTitle="addSection";
+  ssectionModalActionTitle="submit";
   isEdit=false;
   constructor(private dialogRef: MatDialogRef<EditSectionComponent>, private fb: FormBuilder,
     private sectionService:SectionService,
@@ -35,13 +37,14 @@ export class EditSectionComponent implements OnInit {
   ngOnInit(): void {
     this.form = this.fb.group(
       {
-        title: ['', [Validators.required]],
-        sortOrder: ['',Validators.required],
+        title: ['', Validators.required],
+        sortOrder: ['',[Validators.required,Validators.min(1)]],
        
       });
 
       if (this.data && (Object.keys(this.data).length !== 0 || Object.keys(this.data).length > 0) ){
-        this.isEdit=true;        
+        this.sectionModalTitle="editSection";
+        this.ssectionModalActionTitle="update"       
         this.sectionAddModel.tableSections.name=this.data.editDetails.name;
         this.sectionAddModel.tableSections.sortOrder=this.data.editDetails.sortOrder;
       }
@@ -61,7 +64,6 @@ export class EditSectionComponent implements OnInit {
       if (this.data && (Object.keys(this.data).length !== 0 || Object.keys(this.data).length > 0) ){
 
         this.sectionAddModel.tableSections.sectionId = this.data.editDetails.sectionId;
-        console.log(this.sectionAddModel)
         this.sectionService.UpdateSection(this.sectionAddModel).subscribe(data => {
           if (typeof (data) == 'undefined') {
             this.snackbar.open('Section Updation failed. ' + sessionStorage.getItem("httpError"), '', {
@@ -97,7 +99,6 @@ export class EditSectionComponent implements OnInit {
                 duration: 10000
               });
             } else {
-              console.log(data)
               this.snackbar.open('Section Submission Successful.', '', {
                 duration: 10000
               });              
