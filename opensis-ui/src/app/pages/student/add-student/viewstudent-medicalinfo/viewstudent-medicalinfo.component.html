@@ -1,0 +1,76 @@
+<mat-card class="w-full">
+
+    <div class="flex items-center mx-4" fxLayout="row" fxLayoutAlign="center center">
+        <h3 class="flex-auto">{{'medicalInformation' | translate}}</h3>
+        <button mat-button color="primary"><mat-icon [icIcon]="icEdit"></mat-icon> {{'editInformation' |translate}}</button>
+    </div>
+    <mat-card-content>
+
+        <div @stagger fxLayout="column">
+            <h4 class="text-primary pt-6 pb-2 px-4">{{'alertInformation'|translate}}</h4>
+            <ul class="grid grid-cols-3 col-gap-8 row-gap-10 mt-2 mx-4">
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'criticalAlert' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">-</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'alertDescription' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">-</p>
+                </li>
+            </ul>
+
+
+            <h4 class="text-primary pt-6 pb-2 px-4">{{'providerInformation'|translate}}</h4>
+            <ul class="grid grid-cols-3 col-gap-8 row-gap-10 my-3 mx-4">
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'primaryCarePhysician' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Dr. Justin Philip</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'primaryCarePhysicianPhone' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">1234567890</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'insuranceCompany' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">ABC Insurance</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'insuranceCompanyPhone' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">7895123465</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'policyNumber' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">EGB455S56521335-11</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'policyHolderName' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Simon Davis</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'preferredMedicalFacility' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">-</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'preferredMedicalFacilityPhone' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">-</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'dentist' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Dr. Amardeep Chadda</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'dentistsPhone' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">55646213556</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'vision' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Dr. P.B.Smith</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'visionProvidersPhone' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">9985125665</p>
+                </li>
+            </ul>
+        </div>
+    </mat-card-content>
+</mat-card>

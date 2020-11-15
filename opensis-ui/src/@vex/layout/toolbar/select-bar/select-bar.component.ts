@@ -92,6 +92,7 @@ export class SelectBarComponent implements OnInit {
   selectSchoolOnLoad() {
     if (!sessionStorage.getItem("selectedSchoolId")) {
       sessionStorage.setItem("selectedSchoolId", this.schools[0].schoolId);
+      sessionStorage.setItem("schoolOpened", this.schools[0].dateSchoolOpened);
       this.callAcademicYearsOnSchoolSelect();
     } else {
       this.setSchool();
@@ -109,45 +110,48 @@ export class SelectBarComponent implements OnInit {
     });
     if (index != -1) {
       this.schoolCtrl.setValue(this.schools[index]);
+      sessionStorage.setItem("schoolOpened", this.schools[index].dateSchoolOpened);
     } else {
       this.schoolCtrl.setValue(this.schools[0]);
+      sessionStorage.setItem("schoolOpened", this.schools[0].dateSchoolOpened);
     }
     if(!this.checkForAnyNewSchool){
       this.callAcademicYearsOnSchoolSelect();
     }
   }
 
-  changeSchool(id) {
-    sessionStorage.setItem("selectedSchoolId", id);
+  changeSchool(details) {
+    sessionStorage.setItem("selectedSchoolId", details.schoolId);
+    sessionStorage.setItem("schoolOpened", details.dateSchoolOpened);
     this.callAcademicYearsOnSchoolSelect();
     this.router.navigate(['/school/dashboards']);
   }
 
   callAcademicYearsOnSchoolSelect() {
-   
     this.getAcademicYears.schoolId = +sessionStorage.getItem("selectedSchoolId");
     this.markingPeriodService.getAcademicYearList(this.getAcademicYears).subscribe((res) => {
       this.academicYears = res.academicYears;
       // set initial selection
       if (this.academicYears?.length > 0) {
-       
-        this.academicYearsCtrl.setValue(this.academicYears[this.academicYears.length - 1].academyYear);
-        sessionStorage.setItem("academicyear", this.academicYearsCtrl.value)
+        this.academicYearsCtrl.setValue(this.academicYears[this.academicYears.length - 1]);
+        sessionStorage.setItem("academicyear", this.academicYearsCtrl.value.academyYear);
+        sessionStorage.setItem("markingPeriod",this.academicYearsCtrl.value.startDate);
       } else {
        
         this.academicYearsCtrl.setValue(this.nullValueForDropdown);
         sessionStorage.setItem("academicyear","null");
+        sessionStorage.setItem("markingPeriod","null");
       }
       if(this.academicYearsCtrl.value==this.nullValueForDropdown){
-       
         sessionStorage.setItem("academicyear","null");
+        sessionStorage.setItem("markingPeriod","null");
          this.periods=[]
         this.callMarkingPeriodTitleList();
         }else{         
-          sessionStorage.setItem("academicyear", this.academicYearsCtrl.value);         
+          sessionStorage.setItem("academicyear", this.academicYearsCtrl.value.academyYear); 
+          sessionStorage.setItem("markingPeriod",this.academicYearsCtrl.value.startDate);
           this.callMarkingPeriodTitleList();
         }
-    
     })
 
   }
@@ -155,9 +159,11 @@ export class SelectBarComponent implements OnInit {
   changeYear(event) {
     if(event.value==this.nullValueForDropdown){
     sessionStorage.setItem("academicyear","null");
+    sessionStorage.setItem("markingPeriod", "null");
     this.callMarkingPeriodTitleList();
     }else{
-      sessionStorage.setItem("academicyear", event.value);
+      sessionStorage.setItem("academicyear", event.value.academyYear);
+      sessionStorage.setItem("markingPeriod", event.value.startDate);
       this.callMarkingPeriodTitleList();
     }
     this.router.navigate(['/school/dashboards']);

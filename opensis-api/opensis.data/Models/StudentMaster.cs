@@ -25,6 +25,7 @@ namespace opensis.data.Models
         public string OtherGovtIssuedNumber { get; set; }
         public byte[] StudentPhoto { get; set; }
         public DateTime? Dob { get; set; }
+        public string StudentPortalId { get; set; }
         public string Gender { get; set; }
         public string Race { get; set; }
         public string Ethnicity { get; set; }
@@ -93,8 +94,10 @@ namespace opensis.data.Models
         public string SecondaryContactCity { get; set; }
         public string SecondaryContactState { get; set; }
         public string SecondaryContactZip { get; set; }
-
+        public virtual Language FirstLanguage { get; set; }
         public virtual SchoolMaster SchoolMaster { get; set; }
+        public virtual Language SecondLanguage { get; set; }
+        public virtual Language ThirdLanguage { get; set; }
         public virtual StudentEnrollment StudentEnrollment { get; set; }
     }
 }

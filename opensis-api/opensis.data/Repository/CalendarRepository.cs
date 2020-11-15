@@ -138,7 +138,7 @@ namespace opensis.data.Repository
             CalendarListModel calendarListModel = new CalendarListModel();
             try
             {
-                var calendarRepository = this.context?.SchoolCalendars.Where(x => x.TenantId == calendarList.TenantId && x.SchoolId == calendarList.SchoolId).OrderBy(x => x.Title).ToList();
+                var calendarRepository = this.context?.SchoolCalendars.Where(x => x.TenantId == calendarList.TenantId && x.SchoolId == calendarList.SchoolId && x.AcademicYear == calendarList.AcademicYear).OrderBy(x => x.Title).ToList();
                 calendarListModel.CalendarList = calendarRepository;
                 calendarListModel._tenantName = calendarList._tenantName;
                 calendarListModel._token = calendarList._token;

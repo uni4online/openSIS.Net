@@ -13,8 +13,8 @@
                     <div class="py-3" fxFlex="300px" fxFlex.lt-md="auto" fxHide.xs fxLayout="row"
                         fxLayoutAlign="start center">
 
-                        <div class="flex">
-                            <input class="px-4 py-3 border-0 outline-none w-full bg-transparent" placeholder="Search..."
+                         <div class="flex">
+                            <input [formControl]="searchCtrl" class="px-4 py-3 border-0 outline-none w-full bg-transparent" placeholder="Search..."
                                 type="search">
                             <button class="ml-4" fxFlex="none" fxHide.gt-xs mat-icon-button type="button">
                                 <mat-icon [icIcon]="icSearch"></mat-icon>
@@ -24,80 +24,77 @@
 
 
                     <div fxFlex="200px" class="pt-3">
-                        <button [matMenuTriggerFor]="columnFilterMenu" class="ml-4" fxFlex="none" mat-icon-button
-                            matTooltip="Filter Columns" type="button">
+                        <button 
+                            [matMenuTriggerFor]="columnFilterMenu"
+                            class="ml-4"
+                            fxFlex="none"
+                            mat-icon-button
+                            matTooltip="Filter Columns"
+                             type="button">
                             <mat-icon [icIcon]="icFilterList"></mat-icon>
                         </button>
 
                         <button color="primary" class="ml-4" fxFlex="none" mat-raised-button type="button"
-                            (click)='goToAdd()'>
-                            <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true"
-                                size="24px">
-                            </ic-icon>
-                            <span>Add New Student</span>
-                        </button>
-                    </div>
+                        (click)='goToAdd()'>
+                        <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true"
+                            size="24px">
+                        </ic-icon>
+                        <span>Add New Student</span>
+                    </button>
                 </div>
             </div>
+        </div>
 
             <table @stagger mat-table [dataSource]="StudentModelList" class="mat-elevation-z8 table-auto w-full" matSort>
-                <ng-container matColumnDef="student_Name">
+               
+                <ng-container matColumnDef="studentName">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>NAME</th>
                     <td mat-cell *matCellDef="let element">
-                        <a class="text-blue" style="cursor: pointer;">
-                            {{element.student_Name}}</a>
+                        <a (click) ="viewGeneralInfo(element)" class="text-blue cursor-pointer">
+                            {{element.studentName}}</a>
                     </td>
                 </ng-container>
 
                 <!-- Body -->
-                <ng-container matColumnDef="student_ID">
+                <ng-container matColumnDef="studentId">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>STUDENT ID</th>
                     <td mat-cell *matCellDef="let element">
-                        {{element.student_ID}}
+                        {{element.studentId}}
                     </td>
                 </ng-container>
 
-                <ng-container matColumnDef="alternate_ID">
+                <ng-container matColumnDef="studentAlternateId">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>ALTERNATE ID</th>
                     <td mat-cell *matCellDef="let element">
-                        {{element.alternate_ID}}
+                        {{element.studentAlternateId}}
                     </td>
                 </ng-container>
 
-                <ng-container matColumnDef="grade">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>GRADE</th>
-                    <td mat-cell *matCellDef="let element">
-                        {{element.grade}}
-                    </td>
-                </ng-container>
-
-                <ng-container matColumnDef="section">
-                    <th mat-header-cell *matHeaderCellDef>SECTION</th>
-                    <td mat-cell *matCellDef="let element">
-                        {{element.section}}
-                    </td>
-                </ng-container>
+                
 
                 <ng-container matColumnDef="phone">
-                    <th mat-header-cell *matHeaderCellDef>PHONE</th>
+                    <th mat-header-cell *matHeaderCellDef  mat-sort-header>PHONE</th>
                     <td mat-cell *matCellDef="let element">
                         {{element.phone}}
                     </td>
-                </ng-container>
-
-                <ng-container matColumnDef="loading">
-                    <mat-footer-cell *matFooterCellDef colspan="6">
-                        <vex-mat-spinner-overlay *ngIf="loading" color="accent"></vex-mat-spinner-overlay>
+                </ng-container>              
+              
+                  <ng-container matColumnDef="loading">
+                    <mat-footer-cell *matFooterCellDef colspan="5">
+                      <vex-mat-spinner-overlay *ngIf="loading" color="accent"></vex-mat-spinner-overlay>
                     </mat-footer-cell>
-                </ng-container>
-
-                <tr mat-header-row *matHeaderRowDef="visibleColumns"></tr>
-                <tr mat-row *matRowDef="let row; columns: visibleColumns" @fadeInUp></tr>
-                <mat-footer-row *matFooterRowDef="['loading']" [class.hide]="!loading"></mat-footer-row>
-
+                  </ng-container>
+                  <ng-container matColumnDef="noData">
+                    <td mat-footer-cell *matFooterCellDef colspan="5">
+                      {{loading?'Fetching Data...':'No Data'}}
+                    </td>
+                  </ng-container>
+                  <tr mat-header-row *matHeaderRowDef="visibleColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: visibleColumns" @fadeInUp></tr>
+                  <tr mat-footer-row *matFooterRowDef="['loading']" [class.hide]="!loading"></tr>
+                  <tr mat-footer-row *matFooterRowDef="['noData']" [class.hide]="totalCount!=0"></tr>
             </table>
-            <!-- <mat-paginator [length]="totalCount" [pageSize]="pageSize" [pageSizeOptions]="[10, 20, 30, 40]"
-                showFirstLastButtons (page)='getPageEvent($event)'></mat-paginator> -->
+            <mat-paginator [length]="totalCount" [pageSize]="pageSize" [pageSizeOptions]="[10, 20, 30, 40]" showFirstLastButtons (page)='getPageEvent($event)'></mat-paginator>
         </div>
 
     </vex-page-layout-content>

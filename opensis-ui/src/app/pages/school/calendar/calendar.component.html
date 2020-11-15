@@ -11,7 +11,9 @@
 
           <div class="flex-auto">
             <div style="text-align: center !important;"><label
-                *ngIf="!showCalendarView">{{'NoCalendarWereFound'| translate }}</label></div>
+                *ngIf="!showCalendarView && isMarkingPeriod!='null'">{{'NoCalendarWereFound'| translate }}</label></div>
+            <div style="text-align: center !important;"><label
+                  *ngIf="isMarkingPeriod=='null'"><ic-icon [icon]="icWarning"  inline="true"></ic-icon>{{'pleaseCreateMarkingPeriodBeforeAddingCalender'| translate}}</label></div>
             <mat-form-field *ngIf="showCalendarView" class="select-calendar">
               <mat-select [(value)]="selectedCalendar" (selectionChange)="changeCalendar($event.value)">
                 <mat-option *ngFor="let calendar of calendars" [value]="calendar">
@@ -21,7 +23,7 @@
             </mat-form-field>
           </div>
 
-          <button type="button" color="primary" mat-raised-button class="mr-3" (click)="openAddNewCalendar()">
+          <button type="button" [disabled]="isMarkingPeriod=='null'" color="primary" mat-raised-button class="mr-3" (click)="openAddNewCalendar()">
             <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2 ic-inline" inline="true"></ic-icon>
             {{'addCalendar' | translate}}
           </button>

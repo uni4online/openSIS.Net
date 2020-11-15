@@ -3,20 +3,18 @@
         <mat-card class="w-full p-0" fxFlex="auto">
             <div class="px-gutter py-4">
                 <h4 class="text-primary p-0 mb-4">{{'categories'|translate}}</h4>
-
-                <div class="mt-2 mb-4 flex flex-wrap justify-between">
-                    <a routerLink="" class="font-bold">General Information</a>
-                </div>
-                <div class="mt-2 mb-4 flex flex-wrap justify-between">
-                    <a routerLink="">Sanitary Information</a>
-                </div>
-                <div class="mt-2 flex flex-wrap justify-between">
-                    <a routerLink="">Other Information</a>
-                    <div>
-                        <a routerLink="" class="mr-3"><mat-icon [icIcon]="icEdit"></mat-icon></a>
-                        <a routerLink=""><mat-icon [icIcon]="icDelete"></mat-icon></a>
+<!-- 
+                <div *ngFor="let x of fieldsCategoryList" class="mt-2 mb-4 flex flex-wrap justify-between">
+                    <a routerLink="" class="font-bold">{{x.title}}</a>
+                </div> -->
+        
+                <div *ngFor="let fieldsCategory of fieldsCategoryList" class="mt-2 flex flex-wrap justify-between">
+                    <a class="cursor-pointer" [ngClass]="{'font-bold':currentCategoryId === fieldsCategory.categoryId}" (click)="selectCategory(fieldsCategory)">{{fieldsCategory.title}} </a>
+                    <div  *ngIf="!fieldsCategory.isSystemCategory">
+                        <a class="cursor-pointer mr-3" (click)="editFieldCategory(fieldsCategory)"><mat-icon [icIcon]="icEdit"></mat-icon></a>
+                        <a class="cursor-pointer" (click)="confirmDeleteFieldCategory(fieldsCategory)"><mat-icon [icIcon]="icDelete"></mat-icon></a>
                     </div>
-                </div>
+                </div> 
                 <hr class="my-3"/>
                 <button color="" class="w-full text-primary" mat-button type="button"
                     (click)='goToAddCategory()'>
@@ -32,14 +30,21 @@
         <mat-card class="w-full p-0" fxFlex="auto">
             <div class="bg-white px-6 h-16 border-b sticky left-0" fxLayout="row" fxLayoutAlign="start center">
                 <div class="flex w-full justify-between">
-                    <div class="py-3" fxFlex="300px" fxFlex.lt-md="auto" fxHide.xs fxLayout="row"
-                        fxLayoutAlign="start center">
+                    <div class="py-3" fxFlex="300px" fxFlex.lt-md="auto" fxHide.xs fxLayout="row" fxLayoutAlign="start center">
 
                         <div class="flex">
-                            <input class="px-4 py-3 border-0 outline-none w-full bg-transparent" placeholder="Search..."
-                                type="search">
-                            <button class="ml-4" fxFlex="none" fxHide.gt-xs mat-icon-button type="button">
-                                <mat-icon [icIcon]="icSearch"></mat-icon>
+                            <input
+                            matInput
+                            [(ngModel)]="searchKey"
+                            (keyup)="applyFilter()"
+                            class="py-3 border-0 outline-none w-full bg-transparent"
+                            appearance="outline" color="primary"
+                             placeholder="Search..."
+                            type="search">
+                            <button mat-button matSuffix mat-icon-button aria-label="clear"
+                            *ngIf="searchKey"
+                            (click)="onSearchClear()">
+                            <mat-icon>close</mat-icon>
                             </button>
                         </div>
                     </div>

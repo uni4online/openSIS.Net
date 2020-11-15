@@ -177,10 +177,21 @@ export class GeneralInfoComponent implements OnInit {
         linkedin: ['',Validators.maxLength(100)],
         county: ['',Validators.maxLength(50)],
       });
-      this.getAllCountry(); 
+      this.getAllCountry();  
       if(this.dataOfgeneralInfoFromView!=undefined){
         this.formActionButtonTitle="update";
-      }  
+      } 
+  }
+
+  checkGradeLevelsOnEdit(){
+    let lowGradeIndex=this.gradeLevel.findIndex((val)=>{
+      return val.id==this.schoolAddViewModel.schoolMaster.schoolDetail[0].lowestGradeLevel;
+    });
+    this.selectedLowGradeLevelIndex=lowGradeIndex;
+    let highGradeIndex=this.gradeLevel.findIndex((val)=>{
+      return val.id==this.schoolAddViewModel.schoolMaster.schoolDetail[0].highestGradeLevel;
+    });
+    this.selectedHighGradeLevelIndex=highGradeIndex;
   }
 
   checkLowGradeLevel(event){
@@ -194,12 +205,13 @@ export class GeneralInfoComponent implements OnInit {
       if(index>this.selectedHighGradeLevelIndex){
         this.form.controls.lowest_grade_level.setErrors({'nomatch': true});
         }else{
-        this.form.controls.lowest_grade_level.setErrors(null);
-        this.form.controls.highest_grade_level.setErrors(null);
+          this.form.controls.lowest_grade_level.setErrors(null);
+          if(this.form.controls.highest_grade_level.errors?.nomatch){
+            this.form.controls.highest_grade_level.setErrors(null);
+          }
         }
     }
-    
-  }
+ }
   checkHighGradeLevel(event){
     let index=this.gradeLevel.findIndex((val)=>{
       return val.id==event.value;
@@ -212,8 +224,22 @@ export class GeneralInfoComponent implements OnInit {
         this.form.controls.highest_grade_level.setErrors({'nomatch': true});
         }else{
         this.form.controls.highest_grade_level.setErrors(null);
-        this.form.controls.lowest_grade_level.setErrors(null);
+        if(this.form.controls.lowest_grade_level.errors?.nomatch){
+          this.form.controls.lowest_grade_level.setErrors(null);
         }
+        }
+    }
+  }
+
+  checkClosedDate(){
+    let startDate=new Date(this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolOpened).getTime();
+    let closedDate=new Date(this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolClosed).getTime();
+    if(closedDate<=startDate && startDate!=null){
+      this.form.controls.date_school_closed.setErrors({'nomatch':true});
+    }else{
+      if(this.form.controls.date_school_closed.errors?.nomatch){
+        this.form.controls.date_school_closed.setErrors(null);
+      }
     }
   }
 
@@ -439,7 +465,7 @@ export class GeneralInfoComponent implements OnInit {
     
     if (this.commonFunction.checkEmptyObject(this.dataOfgeneralInfoFromView) === true) {
       this.schoolAddViewModel = this.dataOfgeneralInfoFromView;
-    
+      this.checkGradeLevelsOnEdit()
 
 
     } else if (this.commonFunction.checkEmptyObject(this.dataOfwashInfoFromGeneral) === true) {

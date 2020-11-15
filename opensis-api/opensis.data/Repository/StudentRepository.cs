@@ -30,6 +30,10 @@ namespace opensis.data.Repository
             {
                 int? MasterStudentId = Utility.GetMaxPK(this.context, new Func<StudentMaster, int>(x => x.StudentId));
                 student.studentMaster.StudentId = (int)MasterStudentId;
+
+                int? MasterEnrollmentId = Utility.GetMaxPK(this.context, new Func<StudentEnrollment, int>(x => (int)x.EnrollmentId));
+                student.studentMaster.StudentEnrollment = new StudentEnrollment() { TenantId = student.studentMaster.TenantId, SchoolId = student.studentMaster.SchoolId, StudentId = student.studentMaster.StudentId, EnrollmentId = (int)MasterEnrollmentId };
+
                 this.context?.StudentMaster.Add(student.studentMaster);
                 this.context?.SaveChanges();
                 student._failure = false;
@@ -135,8 +139,35 @@ namespace opensis.data.Repository
                 studentUpdate.SecondaryContactCity = student.studentMaster.SecondaryContactCity;
                 studentUpdate.SecondaryContactZip = student.studentMaster.SecondaryContactZip;
 
-
                 this.context?.SaveChanges();
+
+                if(!string.IsNullOrWhiteSpace(student.PasswordHash) && !string.IsNullOrWhiteSpace(student.studentMaster.PersonalEmail))
+                {
+                    UserMaster userMaster = new UserMaster();
+
+                    var decrypted = Utility.Decrypt(student.PasswordHash);
+                    string passwordHash = Utility.GetHashedPassword(decrypted);
+
+                    var loginInfo = this.context?.UserMaster.FirstOrDefault(x => x.TenantId == student.studentMaster.TenantId && x.SchoolId == student.studentMaster.SchoolId && x.EmailAddress==student.studentMaster.PersonalEmail);
+
+                    if (loginInfo == null)
+                    {
+                        var membership = this.context?.Membership.FirstOrDefault(x => x.TenantId == student.studentMaster.TenantId && x.SchoolId == student.studentMaster.SchoolId && x.Profile == "Student");
+
+                        userMaster.SchoolId = student.studentMaster.SchoolId;
+                        userMaster.TenantId = student.studentMaster.TenantId;
+                        userMaster.UserId = student.studentMaster.StudentId;
+                        userMaster.LangId = 1;
+                        userMaster.MembershipId = membership.MembershipId;
+                        userMaster.EmailAddress = student.studentMaster.PersonalEmail;
+                        userMaster.PasswordHash = passwordHash;
+                        userMaster.Name = student.studentMaster.FirstGivenName;
+
+                        this.context?.UserMaster.Add(userMaster);
+                        this.context?.SaveChanges();
+                    }
+                }
+
                 student._failure = false;
 
             }
@@ -161,7 +192,7 @@ namespace opensis.data.Repository
         {
             StudentListModel studentListModel = new StudentListModel();
             IQueryable<StudentMaster> transactionIQ = null;
-            var StudentMasterList = this.context?.StudentMaster.Where(x => x.TenantId == pageResult.TenantId && x.SchoolId == pageResult.SchoolId);
+            var StudentMasterList = this.context?.StudentMaster.Include(s => s.StudentEnrollment).Include(p => p.StudentEnrollment.Sections).Include(p => p.StudentEnrollment.Gradelevels).Where(x => x.TenantId == pageResult.TenantId && x.SchoolId == pageResult.SchoolId);
             try
             {
                 if (pageResult.FilterParams == null || pageResult.FilterParams.Count == 0)
@@ -175,6 +206,17 @@ namespace opensis.data.Repository
                     {
                         string Columnvalue = pageResult.FilterParams.ElementAt(0).FilterValue;
                         transactionIQ = StudentMasterList.Where(x => x.FirstGivenName.ToLower().Contains(Columnvalue.ToLower()) || x.MiddleName.ToLower().Contains(Columnvalue.ToLower()) || x.LastFamilyName.ToLower().Contains(Columnvalue.ToLower()) || x.StudentId.ToString().Contains(Columnvalue) || x.AlternateId.Contains(Columnvalue) || x.HomePhone.Contains(Columnvalue) || x.MobilePhone.Contains(Columnvalue));
+                        
+                        var childGradeFilter = StudentMasterList.Where(x => x.StudentEnrollment.Gradelevels != null ? x.StudentEnrollment.Gradelevels.Title.ToLower().Contains(Columnvalue.ToLower()) : string.Empty.Contains(Columnvalue));
+                        if (childGradeFilter.ToList().Count > 0)
+                        {
+                            transactionIQ = transactionIQ.Concat(childGradeFilter);
+                        }
+                        var childSectionFilter = StudentMasterList.Where(x => x.StudentEnrollment.Sections != null ? x.StudentEnrollment.Sections.Name.ToLower().Contains(Columnvalue.ToLower()) : string.Empty.Contains(Columnvalue));
+                        if (childSectionFilter.ToList().Count > 0)
+                        {
+                            transactionIQ = transactionIQ.Concat(childSectionFilter);
+                        }
                     }
                     else
                     {
@@ -182,9 +224,39 @@ namespace opensis.data.Repository
                     }
                     //transactionIQ = transactionIQ.Distinct();
                 }
+
                 if (pageResult.SortingModel != null)
                 {
-                    transactionIQ = Utility.Sort(transactionIQ, pageResult.SortingModel.SortColumn, pageResult.SortingModel.SortDirection.ToLower());
+                    switch (pageResult.SortingModel.SortColumn.ToLower())
+                    {
+                        case "title":
+
+                            if (pageResult.SortingModel.SortDirection.ToLower() == "asc")
+                            {
+
+                                transactionIQ = transactionIQ.OrderBy(a => a.StudentEnrollment.Gradelevels != null ? a.StudentEnrollment.Gradelevels.Title : null);
+                            }
+                            else
+                            {
+                                transactionIQ = transactionIQ.OrderByDescending(a => a.StudentEnrollment.Gradelevels != null ? a.StudentEnrollment.Gradelevels.Title : null);
+                            }
+                            break;
+
+                        case "name":
+
+                            if (pageResult.SortingModel.SortDirection.ToLower() == "asc")
+                            {
+                                transactionIQ = transactionIQ.OrderBy(b => b.StudentEnrollment.Sections != null ? b.StudentEnrollment.Sections.Name : null);
+                            }
+                            else
+                            {
+                                transactionIQ = transactionIQ.OrderByDescending(b => b.StudentEnrollment.Sections != null ? b.StudentEnrollment.Sections.Name : null);
+                            }
+                            break;
+                        default:
+                            transactionIQ = Utility.Sort(transactionIQ, pageResult.SortingModel.SortColumn, pageResult.SortingModel.SortDirection.ToLower());
+                            break;
+                    }
                 }
 
                 int totalCount = transactionIQ.Count();
@@ -192,6 +264,7 @@ namespace opensis.data.Repository
                 var studentList = transactionIQ.ToList();
                 
                 studentListModel.TenantId = pageResult.TenantId;
+                studentListModel.SchoolId = pageResult.SchoolId;
                 studentListModel.studentMaster = studentList;
                 studentListModel.TotalCount = totalCount;
                 studentListModel.PageNumber = pageResult.PageNumber;

@@ -1,18 +1,21 @@
-import { Component, OnInit, Input, Output,EventEmitter, ViewChild } from '@angular/core';
+import { Component, Input, OnInit,Output,EventEmitter, ViewChild } from '@angular/core';
 import icMoreVert from '@iconify/icons-ic/twotone-more-vert';
 import icAdd from '@iconify/icons-ic/baseline-add';
 import icSearch from '@iconify/icons-ic/search';
 import icFilterList from '@iconify/icons-ic/filter-list';
-
+import { StudentService } from '../../../services/student.service';
+import { StudentListModel} from '../../../models/studentModel';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router} from '@angular/router';
+import { SelectionModel } from '@angular/cdk/collections';
 import { fadeInUp400ms } from '../../../../@vex/animations/fade-in-up.animation';
 import { stagger40ms } from '../../../../@vex/animations/stagger.animation';
-import { MatSelectChange } from '@angular/material/select';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatPaginator} from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { LoaderService } from '../../../services/loader.service';
 import { MatTableDataSource } from '@angular/material/table';
+import { LoaderService } from '../../../services/loader.service';
+import { FormControl } from '@angular/forms';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'vex-student',
@@ -23,49 +26,187 @@ import { MatTableDataSource } from '@angular/material/table';
     stagger40ms
   ]
 })
-export class StudentComponent implements OnInit {
-  @Input()
+export class StudentComponent implements OnInit { 
   columns = [
-    { label: 'Name', property: 'student_Name', type: 'text', visible: true },
-    { label: 'Student ID', property: 'student_ID', type: 'text', visible: true },
-    { label: 'Alternate ID', property: 'alternate_ID', type: 'text', visible: true },
-    { label: 'Grade', property: 'grade', type: 'text', visible: true },
-    { label: 'Section', property: 'section', type: 'text', visible: true },
+    { label: 'Name', property: 'studentName', type: 'text', visible: true },
+    { label: 'Student ID', property: 'studentId', type: 'text', visible: true },
+    { label: 'Alternate ID', property: 'studentAlternateId', type: 'text', visible: true },    
     { label: 'Phone', property: 'phone', type: 'text', visible: true }
   ];
 
-  StudentModelList;
-
- 
+  selection = new SelectionModel<any>(true, []);
+  totalCount:number=0;
+  pageNumber:number;
+  pageSize:number;
+  searchCtrl: FormControl;
   icMoreVert = icMoreVert;
   icAdd = icAdd;
   icSearch = icSearch;
   icFilterList = icFilterList;
+  fapluscircle = "fa-plus-circle";
+  tenant = "";
   loading:Boolean;
+  allStudentList=[];
+  getAllStudent: StudentListModel = new StudentListModel(); 
+  StudentModelList: MatTableDataSource<StudentListModel>;
+  
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator; 
+  @ViewChild(MatSort) sort:MatSort
 
-  constructor(private router : Router) { 
-    this.StudentModelList = [
-      {student_Name: 'Anderson, Danny', student_ID: 1, alternate_ID: 466639635, grade: '9', Section: 'Section A', phone: '706-853-9164'},
-      {student_Name: 'Aponte, Justin', student_ID: 2, alternate_ID: 332284656, grade: '10', Section: 'Section C', phone: '404-758-2922'},
-      {student_Name: 'Davis, Julie', student_ID: 3, alternate_ID: 820463327, grade: '11', Section: 'Section B', phone: '585-534-4859'},
-      {student_Name: 'Holmes, Javier', student_ID: 4, alternate_ID: 225394032, grade: '10', Section: 'Section B', phone: '678-347-7936'},
-      {student_Name: 'Loafer, Roman', student_ID: 5, alternate_ID: 746807925, grade: '11', Section: 'Section A', phone: '470-555-3381'},
-      {student_Name: 'Paiva, Laura', student_ID: 6, alternate_ID: 221861771, grade: '11', Section: 'Section C', phone: '770-314-6805'},
-      {student_Name: 'Parker, Colin', student_ID: 7, alternate_ID: 487552403, grade: '11', Section: 'Section C', phone: '678-810-2209'}
-    ]
-  }
+  constructor(
+    private studentService: StudentService,
+    private snackbar: MatSnackBar,
+    private router: Router,
+    private loaderService:LoaderService
+    ) 
+    { 
+     this.getAllStudent.filterParams=null;
+     this.loaderService.isLoading.subscribe((val) => {
+        this.loading = val;
+      });
+      this.callAllStudent();
+    }
+
+  
 
   ngOnInit(): void {
+    this.searchCtrl = new FormControl();
   }
 
+  ngAfterViewInit() {
+    //  Sorting
+    console.log(this.sort)
+    this.getAllStudent=new StudentListModel();
+    this.sort.sortChange.subscribe((res) => {
+      this.getAllStudent.pageNumber=this.pageNumber
+      this.getAllStudent.pageSize=this.pageSize;
+      this.getAllStudent.sortingModel.sortColumn=res.active;
+      if(this.searchCtrl.value!=null){
+        let filterParams=[
+          {
+            columnName:null,
+            filterValue:this.searchCtrl.value,
+            filterOption:4
+          }
+        ]
+        Object.assign(this.getAllStudent,{filterParams: filterParams});
+      }
+      if(res.direction==""){
+        this.getAllStudent.sortingModel=null;
+        this.callAllStudent();
+        this.getAllStudent=new StudentListModel();
+        this.getAllStudent.sortingModel=null;
+      }else{
+        this.getAllStudent.sortingModel.sortDirection=res.direction;
+        this.callAllStudent();
+      }
+    });
+      //  Searching
+    this.searchCtrl.valueChanges.pipe(debounceTime(500),distinctUntilChanged()).subscribe((term)=>{
+      if(term!='')
+      {
+          let filterParams=[
+          {
+            columnName:null,
+            filterValue:term,
+            filterOption:4
+          }
+        ]
+        if(this.sort.active!=undefined && this.sort.direction!=""){
+          this.getAllStudent.sortingModel.sortColumn=this.sort.active;
+          this.getAllStudent.sortingModel.sortDirection=this.sort.direction;
+        }
+        Object.assign(this.getAllStudent,{filterParams: filterParams});
+        this.getAllStudent.pageNumber=this.pageNumber;
+        this.getAllStudent.pageSize=this.pageSize;
+        this.callAllStudent();
+        }
+        else
+        {
+          this.getAllStudent.pageNumber=this.pageNumber;
+          this.getAllStudent.pageSize=this.pageSize;
+          if(this.sort.active!=undefined && this.sort.direction!=""){
+            this.getAllStudent.sortingModel.sortColumn=this.sort.active;
+            this.getAllStudent.sortingModel.sortDirection=this.sort.direction;
+          }
+          this.callAllStudent();
+        }
+      })
+    }
+
+
   goToAdd(){   
+    this.studentService.setViewGeneralInfoData("");
     this.router.navigate(["school/students/student-generalinfo"]);
   }
 
-  getPageEvent(event){    
-    // this.getAllSchool.pageNumber=event.pageIndex+1;
-    // this.getAllSchool.pageSize=event.pageSize;
-    // this.callAllSchool(this.getAllSchool);
+  getPageEvent(event){
+    if(this.sort.active!=undefined && this.sort.direction!=""){
+      this.getAllStudent.sortingModel.sortColumn=this.sort.active;
+      this.getAllStudent.sortingModel.sortDirection=this.sort.direction;
+    }
+    if(this.searchCtrl.value!=null){
+      let filterParams=[
+        {
+         columnName:null,
+         filterValue:this.searchCtrl.value,
+         filterOption:4
+        }
+      ]
+     Object.assign(this.getAllStudent,{filterParams: filterParams});
+    }
+    this.getAllStudent.pageNumber=event.pageIndex+1;
+    this.getAllStudent.pageSize=event.pageSize;
+    this.callAllStudent();
+  }
+
+  callAllStudent(){
+    if(this.getAllStudent.sortingModel?.sortColumn==""){
+      this.getAllStudent.sortingModel=null
+    }
+    this.studentService.GetAllStudentList(this.getAllStudent).subscribe(data => {
+      if(data._failure){
+        this.snackbar.open('Student information failed. '+ data._message, 'LOL THANKS', {
+        duration: 10000
+        });
+      }else{
+        this.totalCount= data.totalCount;
+        this.pageNumber = data.pageNumber;
+        this.pageSize = data._pageSize;  
+        let filterArr = [];
+        this.allStudentList = data.studentMaster;
+        data.studentMaster.map((value:any) => {
+          var obj = {};
+          var middleName="";
+         if(value.middleName !== null){
+           middleName = value.middleName
+         }
+          obj = {
+            studentName: value.firstGivenName+' '+middleName+' '+value.lastFamilyName,
+            studentId: value.studentId,
+            studentAlternateId: value.alternateId,
+            phone: value.homePhone,
+            }   
+            filterArr.push(obj)               
+        });        
+        this.StudentModelList = new MatTableDataSource(filterArr);      
+        this.getAllStudent=new StudentListModel();     
+      }
+    });
+  }
+
+
+  get visibleColumns() {
+    return this.columns.filter(column => column.visible).map(column => column.property);
+  }
+
+  onFilterChange(value: string) {
+    if (!this.StudentModelList) {
+      return;
+    }
+    value = value.trim();
+    value = value.toLowerCase();
+    this.StudentModelList.filter = value;
   }
 
   toggleColumnVisibility(column, event) {
@@ -74,9 +215,14 @@ export class StudentComponent implements OnInit {
     column.visible = !column.visible;
   }
 
-  get visibleColumns() {
-    return this.columns.filter(column => column.visible).map(column => column.property);
+  viewGeneralInfo(data){  
+    var obj ={}
+    this.allStudentList.map((value:any) => {
+      if(data.studentId === value.studentId){
+        obj = value;
+      }              
+    }); 
+    this.studentService.setViewGeneralInfoData(obj);
+    this.router.navigate(["school/students/student-generalinfo"]); 
   }
-  
-
 }

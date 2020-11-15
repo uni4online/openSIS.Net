@@ -268,7 +268,13 @@ namespace opensis.data.Repository
             try
             {
 
-                var fieldsCategoryList = this.context?.FieldsCategory.Include(x=>x.CustomFields).Where(x => x.TenantId == fieldsCategoryListViewModel.TenantId && x.SchoolId == fieldsCategoryListViewModel.SchoolId && x.Module== fieldsCategoryListViewModel.Module).OrderBy(x => x.SortOrder).ToList();
+                var fieldsCategoryList = this.context?.FieldsCategory
+                    .Include(x=>x.CustomFields)
+                    .ThenInclude(y=>y.CustomFieldsValue)
+                    .Where(x => x.TenantId == fieldsCategoryListViewModel.TenantId && 
+                                x.SchoolId == fieldsCategoryListViewModel.SchoolId && 
+                                x.Module== fieldsCategoryListViewModel.Module)
+                    .OrderBy(x => x.SortOrder).ToList();
                 fieldsCategoryListModel.fieldsCategoryList = fieldsCategoryList;
                 fieldsCategoryListModel._tenantName = fieldsCategoryListViewModel._tenantName;
                 fieldsCategoryListModel._token = fieldsCategoryListViewModel._token;
@@ -281,7 +287,7 @@ namespace opensis.data.Repository
                 fieldsCategoryListModel._tenantName = fieldsCategoryListViewModel._tenantName;
                 fieldsCategoryListModel._token = fieldsCategoryListViewModel._token;
             }
-            fieldsCategoryListModel.fieldsCategoryList.ToList().ForEach(x => x.CustomFields.ToList().ForEach(y => y.FieldsCategory = null));
+            //fieldsCategoryListModel.fieldsCategoryList.ToList().ForEach(x => x.CustomFields.ToList().ForEach(y => y.FieldsCategory = null));
             return fieldsCategoryListModel;
         }
     }

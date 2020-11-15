@@ -6,6 +6,10 @@ namespace opensis.data.Models
 {
    public partial class CustomFields
     {
+        public CustomFields()
+        {
+            CustomFieldsValue = new HashSet<CustomFieldsValue>();
+        }
         public Guid TenantId { get; set; }
         public int SchoolId { get; set; }
         public int CategoryId { get; set; }
@@ -24,5 +28,6 @@ namespace opensis.data.Models
         public string UpdatedBy { get; set; }
         public virtual FieldsCategory FieldsCategory { get; set; }
         public virtual SchoolMaster SchoolMaster { get; set; }
+        public virtual ICollection<CustomFieldsValue> CustomFieldsValue { get; set; }
     }
 }

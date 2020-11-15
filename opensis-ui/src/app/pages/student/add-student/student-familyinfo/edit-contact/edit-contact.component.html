@@ -38,11 +38,6 @@
         </mat-form-field>
 
         <mat-form-field appearance="outline" color="primary">
-            <mat-label>{{'emailAddress' | translate}}</mat-label>
-            <input type="text" name="email_address" matInput required>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" color="primary">
             <mat-label>{{'mobilePhone' | translate}}</mat-label>
             <input type="text" name="mobile_phone" matInput required>
         </mat-form-field>
@@ -56,6 +51,21 @@
             <mat-label>{{'homePhone' | translate}}</mat-label>
             <input type="text" name="home_phone" matInput>
         </mat-form-field>
+
+        <mat-form-field appearance="outline" color="primary">
+            <mat-label>{{'emailAddress' | translate}}</mat-label>
+            <input type="text" name="email_address" matInput required>
+        </mat-form-field>
+        <p class="flex-none -mt-3 mb-4 text-gray"><i class="icon icon-info2"></i> Note: This email address will also be used for login to the system</p>
+
+        <mat-form-field appearance="outline" color="primary">
+            <mat-label>{{'password' | translate}}</mat-label>
+            <input type="password" name="password" matInput>
+        </mat-form-field>
+        <div class="flex flex-auto mb-6">
+            <mat-slide-toggle color="primary" checked="checked">
+                {{'portalAccess' | translate}}</mat-slide-toggle>
+        </div>
 
         <h6 class="text-primary">{{'address' | translate}}</h6>
         <div>
@@ -107,23 +117,10 @@
             </mat-checkbox>
             <mat-checkbox color="primary">{{'busDropoff' | translate}}</mat-checkbox>
         </div>
-        <hr class="-mx-6 my-6">
-        <div class="flex flex-auto">
+        <div class="flex flex-auto mt-3">
             <mat-slide-toggle color="primary" class="mr-4">
                 {{'custodyOfStudent' | translate}}</mat-slide-toggle>
-            <mat-slide-toggle color="primary" checked="checked">
-                {{'portalAccess' | translate}}</mat-slide-toggle>
         </div>
-
-        <mat-form-field appearance="outline" class="mt-6" color="primary">
-            <mat-label>{{'username' | translate}}</mat-label>
-            <input type="text" name="username" matInput>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" color="primary">
-            <mat-label>{{'password' | translate}}</mat-label>
-            <input type="password" name="password" matInput>
-        </mat-form-field>
 
     </mat-dialog-content>
     <mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" class="py-6">

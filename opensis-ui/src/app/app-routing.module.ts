@@ -82,6 +82,17 @@ const routes: Routes = [
         path: '',
         children: [
           {
+            path: 'parents',
+            loadChildren: () => import('./pages/parent/parentinfo/parentinfo.module').then(m => m.ParentinfoModule),
+            //canActivate: [AuthGuard]            
+            
+          }
+        ]
+      },
+      {
+        path: '',
+        children: [
+          {
             path: 'settings',
             loadChildren: () => import('./pages/settings/settings.module').then(m => m.SettingsModule),
             canActivate: [AuthGuard]            

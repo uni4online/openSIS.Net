@@ -22,5 +22,7 @@ namespace opensis.data.Models
         public DateTime? LastUpdated { get; set; }
         public string UpdatedBy { get; set; }
         public virtual StudentMaster StudentMaster { get; set; }
+        public virtual Gradelevels Gradelevels { get; set; }
+        public virtual Sections Sections { get; set; }
     }
 }

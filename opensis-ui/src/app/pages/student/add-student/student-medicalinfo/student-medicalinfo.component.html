@@ -1,0 +1,123 @@
+<mat-card class="w-full">
+    <mat-card-header>
+        <mat-card-title>{{'medicalInfo'|translate}}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <div @stagger fxLayout="column">
+
+            <h4 class="text-primary px-4 pb-2">{{'alertInformation'|translate}}</h4>
+            <div class="mb-2 md:flex md:flex-wrap">
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'criticalAlert'|translate}}</mat-label>
+                        <input name="critical_alert" matInput>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-1 mx-4 md:w-1/2"></div>
+            </div>
+            <div class="mb-2 md:flex md:flex-wrap">
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'alertDescription'|translate}}</mat-label>
+                        <textarea name="alert_description" matInput></textarea>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-1 mx-4 md:w-1/2"></div>
+            </div>
+
+            <h4 class="text-primary px-4 pb-2">{{'providerInformation'|translate}}</h4>
+            <div class="mb-2 md:flex md:flex-wrap">
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'primaryCarePhysician'|translate}}</mat-label>
+                        <input name="critical_alert" matInput>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'primaryCarePhysicianPhone'|translate}}</mat-label>
+                        <input name="critical_alert" matInput>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="mb-2 md:flex md:flex-wrap">
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'preferredMedicalFacility'|translate}}</mat-label>
+                        <input name="critical_alert" matInput>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'preferredMedicalFacilityPhone'|translate}}</mat-label>
+                        <input name="critical_alert" matInput>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="mb-2 md:flex md:flex-wrap">
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'insuranceCompany'|translate}}</mat-label>
+                        <input name="critical_alert" matInput>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'insuranceCompanyPhone'|translate}}</mat-label>
+                        <input name="critical_alert" matInput>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="mb-2 md:flex md:flex-wrap">
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'policyNumber'|translate}}</mat-label>
+                        <input name="critical_alert" matInput>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'policyHolderName'|translate}}</mat-label>
+                        <mat-select name="suffix">
+                            <mat-option value="">Show list of Associated Parents</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="mb-2 md:flex md:flex-wrap">
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'dentist'|translate}}</mat-label>
+                        <input name="critical_alert" matInput>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'dentistsPhone'|translate}}</mat-label>
+                        <input name="critical_alert" matInput>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="mb-2 md:flex md:flex-wrap">
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'vision'|translate}}</mat-label>
+                        <input name="critical_alert" matInput>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'visionProvidersPhone'|translate}}</mat-label>
+                        <input name="critical_alert" matInput>
+                    </mat-form-field>
+                </div>
+            </div>
+
+        </div>
+    </mat-card-content>
+    <mat-card-actions>
+        <div class="px-4 mb-2 text-right">
+            <button color="primary" mat-raised-button>{{'submit'|translate}}</button>
+        </div>
+    </mat-card-actions>
+</mat-card>

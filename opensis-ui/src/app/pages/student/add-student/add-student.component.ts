@@ -17,7 +17,8 @@ import icPoll from '@iconify/icons-ic/outline-poll';
 import icAccessibility from '@iconify/icons-ic/outline-accessibility';
 import icHowToReg from '@iconify/icons-ic/outline-how-to-reg';
 import icBilling from '@iconify/icons-ic/outline-monetization-on';
-
+import { StudentService } from '../../../services/student.service';
+import { StudentAddModel} from '../../../models/studentModel';
 @Component({
   selector: 'vex-add-student',
   templateUrl: './add-student.component.html',
@@ -29,80 +30,124 @@ import icBilling from '@iconify/icons-ic/outline-monetization-on';
   ]
 })
 export class AddStudentComponent implements OnInit {
-
+  clickEventSubscriptionForCrop:Subscription;
+  clickEventSubscriptionForUnCrop:Subscription; 
   icSchool = icSchool;
   icCalendar = icCalendar;
   icAlarm = icAlarm;
   icPoll = icPoll;
   icAccessibility = icAccessibility;
   icHowToReg = icHowToReg;
-  icBilling = icBilling;
+  icBilling = icBilling; 
+  pageId: string;
+  disabledAddress;
+  disabledEnrollment;
+  disabledFamily;
+  disabledLogin;
+  viewGeneralInfo=false;
+  data;
+  image:string='';
+  passImageDataToChildren;
+  isViewMode=false;
+  isEditMode=false;
+  editDataOfGeneralInfo;
+  saveDataFromGeneralInfo;
+  responseImage;
+  modeForImage=true;
+  enableCropTool=true;
+  studentAddModel: StudentAddModel = new StudentAddModel();
+  constructor(private layoutService: LayoutService,
+    private studentService:StudentService,
+    private commonFunction:SharedFunction,
+    private imageCropperService:ImageCropperService) {
 
-  pageTitle = 'General Info';
-  pageId: string = '';
-
-  displayGeneralInfo = true;
-  displayAddressAndContacts = false;
-  displayEnrollmentInfo = false;
-  displayFamilyInfo = false;
-  displayLoginInfo = false;
-
-  GeneralInfoFlag: boolean = true;
-  AddressAndContactsFlag: boolean = false;
-  EnrollmentInfoFlag: boolean = false;
-  FamilyInfoFlag: boolean = false;
-  LoginInfoFlag: boolean = false;
-
-  constructor(private layoutService: LayoutService) {
     this.layoutService.collapseSidenav();
+
+    this.clickEventSubscriptionForCrop=this.imageCropperService.getCroppedEvent().subscribe((res)=>{
+      this.image=res[1];
+    
+    });  
+    this.clickEventSubscriptionForUnCrop=this.imageCropperService.getUncroppedEvent().subscribe((res)=>{    
+      this.image=btoa(res.target.result);    
+    });
+  
   }
 
-  ngOnInit(): void {
-    this.pageId = localStorage.getItem("pageId");
-    this.showPage(this.pageId);
+  ngOnInit(): void {  
+    this.modeForImage=true;
+    this.studentService.currentData.subscribe(data => this.data = data);   
+    if(this.commonFunction.checkEmptyObject(this.data) === true){   
+      localStorage.setItem("pageId","GeneralInfo"); 
+      this.pageId=localStorage.getItem("pageId");   
+      this.isViewMode=true; 
+      this.isEditMode=false;   
+      this.imageResponse(this.data); 
+    }else{  
+      localStorage.setItem("pageId","GeneralInfo"); 
+      this.pageId=localStorage.getItem("pageId");    
+      this.disableSection();   
+      this.isViewMode=false;  
+      this.isEditMode=false;       
+    }     
+   
   }
 
-  showPage(pageId = 'General Info') {
-    this.pageTitle = pageId;
-    if (pageId === 'General Info') {
-      this.displayGeneralInfo = true;
-      this.GeneralInfoFlag = true;
-    } else {
-      this.displayGeneralInfo = false;
-      this.GeneralInfoFlag = false;
+  imageResponse(data){
+    if(this.commonFunction.checkEmptyObject(data) === true){ 
+      this.responseImage = this.data.studentPhoto;
+    }    
+  }
+  disableSection(){
+    
+    if(this.pageId == "GeneralInfo"){     
+      this.disabledAddress=true;
+      this.disabledEnrollment=true;
+      this.disabledFamily=true;
+      this.disabledLogin=true;
+    }else if(this.pageId == "AddressContacts"){     
+      this.disabledEnrollment=true;
+      this.disabledFamily=true;
+      this.disabledLogin=true;
+    }else if(this.pageId == "SchoolEnrollmentInfo"){      
+      this.disabledFamily=true;
+      this.disabledLogin=true;
+    }else if(this.pageId == "FamilyInfo"){
+      this.disabledLogin=true;
     }
+  }
+  showPage(pageId) { 
+    localStorage.setItem("pageId",pageId); 
+    this.pageId=localStorage.getItem("pageId");    
+    this.disableSection();
+  }
+    
+  getEditData(data){
+   if(Object.keys(data).length === 0){
+    this.isEditMode=false;
+    this.isViewMode=false;
+    this.editDataOfGeneralInfo="";
+   }else{
+    this.isEditMode=true;
+    this.isViewMode=false;
+    this.editDataOfGeneralInfo=data;
+    this.responseImage= data.studentPhoto;
+    this.image = this.responseImage;
+   }
+   
 
-    if (pageId === 'Address & Contacts') {
-      this.displayAddressAndContacts = true;
-      this.AddressAndContactsFlag = true;
-    } else {
-      this.displayAddressAndContacts = false;
-      this.AddressAndContactsFlag = false;
-    }
-
-    if (pageId === 'School & Enrollment Info') {
-      this.displayEnrollmentInfo = true;
-      this.EnrollmentInfoFlag = true;
-    } else {
-      this.displayEnrollmentInfo = false;
-      this.EnrollmentInfoFlag = false;
-    }
-
-    if (pageId === 'Family Info') {
-      this.displayFamilyInfo = true;
-      this.FamilyInfoFlag = true;
-    } else {
-      this.displayFamilyInfo = false;
-      this.FamilyInfoFlag = false;
-    }
-
-    if (pageId === 'Login Info') {
-      this.displayLoginInfo = true;
-      this.LoginInfoFlag = true;
-    } else {
-      this.displayLoginInfo = false;
-      this.LoginInfoFlag = false;
+  }
+  editSuccessfull(data){
+    if(data){
+      this.isEditMode=false;
+      this.isViewMode=true;
+    }else{
+      this.isEditMode=true;
+      this.isViewMode=false;
     }
   }
 
+  saveSuccessfullData(data){
+    this.saveDataFromGeneralInfo=data;
+  }
+ 
 }

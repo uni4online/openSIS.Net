@@ -79,7 +79,7 @@ namespace opensis.data.Repository
                     this.context?.Semesters.Add(semester.tableSemesters);
                     this.context?.SaveChanges();
                     semester._failure = false;
-                    semester.tableSemesters.SchoolYears = null;
+                    //semester.tableSemesters.SchoolYears = null;
                 }
                 else
                 {
@@ -104,7 +104,7 @@ namespace opensis.data.Repository
                 var semesterUpdate = this.context?.Semesters.FirstOrDefault(x => x.TenantId == semester.tableSemesters.TenantId && x.SchoolId == semester.tableSemesters.SchoolId && x.MarkingPeriodId == semester.tableSemesters.MarkingPeriodId);
                 var SchoolYear = this.context?.SchoolYears.FirstOrDefault(x => x.TenantId == semesterUpdate.TenantId && x.SchoolId == semesterUpdate.SchoolId && x.MarkingPeriodId == semesterUpdate.YearId);
 
-                if(SchoolYear.StartDate <= semesterUpdate.StartDate && SchoolYear.EndDate >= semesterUpdate.EndDate)
+                if(SchoolYear.StartDate <= semester.tableSemesters.StartDate && SchoolYear.EndDate >= semester.tableSemesters.EndDate)
                 { 
                     semesterUpdate.TenantId = semester.tableSemesters.TenantId;
                     semesterUpdate.SchoolId = semester.tableSemesters.SchoolId;
@@ -213,7 +213,7 @@ namespace opensis.data.Repository
                 this.context?.ProgressPeriods.Add(progressPeriod.tableProgressPeriods);
                 this.context?.SaveChanges();
                 progressPeriod._failure = false;
-                progressPeriod.tableProgressPeriods.Quarters = null;
+                //progressPeriod.tableProgressPeriods.Quarters = null;
             }
             else
             {
@@ -376,26 +376,35 @@ namespace opensis.data.Repository
         {
             try
             {
-                var schoolYearsMaster = this.context?.SchoolYears.FirstOrDefault(x => x.TenantId == schoolYears.tableSchoolYears.TenantId && x.SchoolId == schoolYears.tableSchoolYears.SchoolId && x.MarkingPeriodId == schoolYears.tableSchoolYears.MarkingPeriodId);
-                schoolYearsMaster.SchoolId = schoolYears.tableSchoolYears.SchoolId;
-                schoolYearsMaster.TenantId = schoolYears.tableSchoolYears.TenantId;
-                schoolYearsMaster.AcademicYear = schoolYears.tableSchoolYears.StartDate.HasValue == true ? Convert.ToDecimal(schoolYears.tableSchoolYears.StartDate.Value.Year) : (decimal?)null;
-                schoolYearsMaster.Title = schoolYears.tableSchoolYears.Title;
-                schoolYearsMaster.ShortName = schoolYears.tableSchoolYears.ShortName;
-                schoolYearsMaster.SortOrder = schoolYears.tableSchoolYears.SortOrder;
-                schoolYearsMaster.StartDate = schoolYears.tableSchoolYears.StartDate;
-                schoolYearsMaster.EndDate = schoolYears.tableSchoolYears.EndDate;
-                schoolYearsMaster.PostStartDate = schoolYears.tableSchoolYears.PostStartDate;
-                schoolYearsMaster.PostEndDate = schoolYears.tableSchoolYears.PostEndDate;
-                schoolYearsMaster.DoesGrades = schoolYears.tableSchoolYears.DoesGrades;
-                schoolYearsMaster.DoesExam = schoolYears.tableSchoolYears.DoesExam;
-                schoolYearsMaster.DoesComments = schoolYears.tableSchoolYears.DoesComments;
-                schoolYearsMaster.RolloverId = schoolYears.tableSchoolYears.RolloverId;
-                schoolYears.tableSchoolYears.LastUpdated = DateTime.UtcNow;
-                schoolYearsMaster.UpdatedBy = schoolYears.tableSchoolYears.UpdatedBy;
-                this.context?.SaveChanges();
-                schoolYears._failure = false;
-                
+                var schoolCalendar = this.context?.SchoolCalendars.FirstOrDefault(x => x.SchoolId==schoolYears.tableSchoolYears.SchoolId);
+
+                if(schoolCalendar!= null && (schoolCalendar.StartDate < schoolYears.tableSchoolYears.StartDate || schoolCalendar.EndDate > schoolYears.tableSchoolYears.EndDate))
+                {
+                    schoolYears._failure = true;
+                    schoolYears._message = "Start date cannot be changed because it has its association.";
+                }
+                else
+                {
+                    var schoolYearsMaster = this.context?.SchoolYears.FirstOrDefault(x => x.TenantId == schoolYears.tableSchoolYears.TenantId && x.SchoolId == schoolYears.tableSchoolYears.SchoolId && x.MarkingPeriodId == schoolYears.tableSchoolYears.MarkingPeriodId);
+                    schoolYearsMaster.SchoolId = schoolYears.tableSchoolYears.SchoolId;
+                    schoolYearsMaster.TenantId = schoolYears.tableSchoolYears.TenantId;
+                    schoolYearsMaster.AcademicYear = schoolYears.tableSchoolYears.StartDate.HasValue == true ? Convert.ToDecimal(schoolYears.tableSchoolYears.StartDate.Value.Year) : (decimal?)null;
+                    schoolYearsMaster.Title = schoolYears.tableSchoolYears.Title;
+                    schoolYearsMaster.ShortName = schoolYears.tableSchoolYears.ShortName;
+                    schoolYearsMaster.SortOrder = schoolYears.tableSchoolYears.SortOrder;
+                    schoolYearsMaster.StartDate = schoolYears.tableSchoolYears.StartDate;
+                    schoolYearsMaster.EndDate = schoolYears.tableSchoolYears.EndDate;
+                    schoolYearsMaster.PostStartDate = schoolYears.tableSchoolYears.PostStartDate;
+                    schoolYearsMaster.PostEndDate = schoolYears.tableSchoolYears.PostEndDate;
+                    schoolYearsMaster.DoesGrades = schoolYears.tableSchoolYears.DoesGrades;
+                    schoolYearsMaster.DoesExam = schoolYears.tableSchoolYears.DoesExam;
+                    schoolYearsMaster.DoesComments = schoolYears.tableSchoolYears.DoesComments;
+                    schoolYearsMaster.RolloverId = schoolYears.tableSchoolYears.RolloverId;
+                    schoolYears.tableSchoolYears.LastUpdated = DateTime.UtcNow;
+                    schoolYearsMaster.UpdatedBy = schoolYears.tableSchoolYears.UpdatedBy;
+                    this.context?.SaveChanges();
+                    schoolYears._failure = false;
+                }
             }
             catch (Exception ex)
             {
@@ -416,7 +425,9 @@ namespace opensis.data.Repository
             {
                 var deleteSchoolYear = this.context?.SchoolYears.FirstOrDefault(x => x.TenantId == schoolYears.tableSchoolYears.TenantId && x.SchoolId == schoolYears.tableSchoolYears.SchoolId && x.MarkingPeriodId == schoolYears.tableSchoolYears.MarkingPeriodId);
                 var semester = this.context?.Semesters.FirstOrDefault(z => z.TenantId == deleteSchoolYear.TenantId && z.SchoolId == deleteSchoolYear.SchoolId && z.YearId == deleteSchoolYear.MarkingPeriodId);
-                if(semester!=null)
+                var schoolCalendar = this.context?.SchoolCalendars.FirstOrDefault(x => x.SchoolId == schoolYears.tableSchoolYears.SchoolId);
+
+                if (semester!=null || schoolCalendar!=null)
                 {
                     schoolYears.tableSchoolYears = null;
                     schoolYears._message = "School Year cannot be deleted because it has its association";
@@ -452,7 +463,7 @@ namespace opensis.data.Repository
                     this.context?.Quarters.Add(quarters.tableQuarter);
                     this.context?.SaveChanges();
                     quarters._failure = false;
-                    quarters.tableQuarter.Semesters = null;
+                    //quarters.tableQuarter.Semesters = null;
                 }
                 else
                 {
@@ -585,6 +596,8 @@ namespace opensis.data.Repository
             DropDownViewModel dropDownViewModel = new DropDownViewModel();
             var data = this.context?.SchoolYears.Where(x => x.TenantId == downViewModel.TenantId && x.SchoolId == downViewModel.SchoolId).Select(m => new AcademicYear()
             {
+                StartDate=m.StartDate,
+                EndDate=m.EndDate,
                 Year = m.StartDate.HasValue == true && m.StartDate.Value.Year != m.EndDate.Value.Year && m.EndDate.HasValue == true ? m.StartDate.Value.Year.ToString() + "-" + m.EndDate.Value.Year.ToString() :
                       m.StartDate.HasValue == true && m.StartDate.Value.Year == m.EndDate.Value.Year && m.EndDate.HasValue == true ? m.EndDate.Value.Year.ToString() : m.StartDate.HasValue == true && m.EndDate.HasValue == false ? m.StartDate.Value.Year.ToString()
                       : m.StartDate.HasValue == false && m.EndDate.HasValue == true ? m.EndDate.Value.Year.ToString() : null,AcademyYear=(int)m.AcademicYear

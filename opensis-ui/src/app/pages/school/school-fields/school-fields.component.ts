@@ -7,7 +7,6 @@ import icSearch from '@iconify/icons-ic/search';
 import icFilterList from '@iconify/icons-ic/filter-list';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router} from '@angular/router';
 import { fadeInUp400ms } from '../../../../@vex/animations/fade-in-up.animation';
 import { stagger40ms } from '../../../../@vex/animations/stagger.animation';
 import { TranslateService } from '@ngx-translate/core';
@@ -19,6 +18,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confirm-dialog.component';
 import { LoaderService } from '../../../services/loader.service';
+import { FieldsCategoryListView,FieldsCategoryAddView } from '../../../models/fieldsCategoryModel';
+import {FieldCategoryModuleEnum} from '../../../enums/field-category-module.enum'
 
 @Component({
   selector: 'vex-school-fields',
@@ -44,6 +45,9 @@ export class SchoolFieldsComponent implements OnInit {
   ];
 
   EnrollmentCodeModelList;
+  fieldsCategoryList;
+  currentCategoryId=null;
+  fieldCategoryModuleEnum=FieldCategoryModuleEnum
 
   icMoreVert = icMoreVert;
   icAdd = icAdd;
@@ -52,8 +56,11 @@ export class SchoolFieldsComponent implements OnInit {
   icSearch = icSearch;
   icFilterList = icFilterList;
   loading:boolean;
+  searchKey:string;
   customFieldListViewModel:CustomFieldListViewModel= new CustomFieldListViewModel();
   customFieldAddView:CustomFieldAddView= new CustomFieldAddView()
+  fieldsCategoryListView:FieldsCategoryListView= new FieldsCategoryListView();
+  fieldsCategoryAddView:FieldsCategoryAddView= new FieldsCategoryAddView();
 
   constructor(
     private snackbar: MatSnackBar,
@@ -66,35 +73,31 @@ export class SchoolFieldsComponent implements OnInit {
     this.loaderService.isLoading.subscribe((val) => {
       this.loading = val;
     }); 
-    this.EnrollmentCodeModelList = [
-      {type: 'Default', field_name: 'School NameP', sort_order: 1, field_type: 'TextBox', in_use: 'Yes'},
-      {type: 'Default', field_name: "School No./Code", sort_order: 2, field_type: 'TextBox', in_use: 'Yes'},
-      {type: 'Default', field_name: "Address", sort_order: 3, field_type: 'TextBox', in_use: 'Yes'},
-      {type: 'Default', field_name: "City", sort_order: 4, field_type: 'TextBox', in_use: 'No'},
-      {type: 'Default', field_name: "State", sort_order: 4, field_type: 'TextBox', in_use: 'Yes'},
-      {type: 'Default', field_name: "Zip/Postal Code", sort_order: 4, field_type: 'TextBox', in_use: 'Yes'},
-      {type: 'Default', field_name: "Country", sort_order: 4, field_type: 'TextBox', in_use: 'Yes'},
-      {type: 'Default', field_name: "Principal", sort_order: 4, field_type: 'TextBox', in_use: 'Yes'},
-      {type: 'Default', field_name: "Email", sort_order: 4, field_type: 'TextBox', in_use: 'Yes'},
-      {type: 'Default', field_name: "Website", sort_order: 4, field_type: 'TextBox', in_use: 'No'},
-      {type: 'Default', field_name: "Phone", sort_order: 4, field_type: 'TextBox', in_use: 'Yes'},
-      {type: 'Custom', field_name: "Custom Field 1", sort_order: 4, field_type: 'TextBox', in_use: 'Yes'},
-      {type: 'Custom', field_name: "Custom Field 2", sort_order: 4, field_type: 'TextBox', in_use: 'No'}
-    ]
   }
   customFieldList: MatTableDataSource<any>;
   @ViewChild(MatSort) sort: MatSort;
-
-  ngOnInit(): void {
-    this.getAllCustomField()
+  onSearchClear(){
+    this.searchKey="";
+    this.applyFilter();
   }
-
+  applyFilter(){
+    this.customFieldList.filter = this.searchKey.trim().toLowerCase()
+  }
+  ngOnInit(): void {
+    this.getAllCustomFieldCategory()
+  }
+  selectCategory(element){
+    this.currentCategoryId=element.categoryId;
+    this.customFieldList=new MatTableDataSource(element.customFields) ;
+    this.customFieldList.sort=this.sort;
+  }
    goToAdd(){   
     this.dialog.open(EditSchoolFieldsComponent, {
+      data: {categoryID:this.currentCategoryId},
       width: '600px'
     }).afterClosed().subscribe((data)=>{
       if(data==='submited'){
-        this.getAllCustomField();
+        this.getAllCustomFieldCategory();
       }
     });
    }
@@ -102,14 +105,12 @@ export class SchoolFieldsComponent implements OnInit {
    goToAddCategory(){   
     this.dialog.open(SchoolFieldsCategoryComponent, {
       width: '500px'
+    }).afterClosed().subscribe((data)=>{
+      if(data==='submited'){
+        this.getAllCustomFieldCategory();
+      }
     });
    }
-
-  getPageEvent(event){    
-    // this.getAllSchool.pageNumber=event.pageIndex+1;
-    // this.getAllSchool.pageSize=event.pageSize;
-    // this.callAllSchool(this.getAllSchool);
-  }
 
   toggleColumnVisibility(column, event) {
     event.stopPropagation();
@@ -120,31 +121,8 @@ export class SchoolFieldsComponent implements OnInit {
   get visibleColumns() {
     return this.columns.filter(column => column.visible).map(column => column.property);
   }
-  getAllCustomField(){
-    
-    this.customFieldservice.getAllCustomField(this.customFieldListViewModel).subscribe(
-      (res:CustomFieldListViewModel)=>{
-        if(typeof(res)=='undefined'){
-          this.snackbar.open('Custom Field list failed. ' + sessionStorage.getItem("httpError"), '', {
-            duration: 10000
-          });
-        }
-        else{
-          if (res._failure) {     
-            this.snackbar.open('Custom Field list failed. ' + res._message, 'LOL THANKS', {
-              duration: 10000
-            });
-          } 
-          else { 
-            this.customFieldList=new MatTableDataSource(res.customFieldsList) ;
-           // res.customFieldsList[0].sortOrder
-            this.customFieldList.sort=this.sort;     
-          }
-        }
-      }
-    );
-  }
-  deleteRoomdata(element){
+
+  deleteCustomFieldata(element){
     this.customFieldAddView.customFields=element
     this.customFieldservice.deleteCustomField(this.customFieldAddView).subscribe(
       (res:CustomFieldAddView)=>{
@@ -160,7 +138,7 @@ export class SchoolFieldsComponent implements OnInit {
             });
           } 
           else { 
-            this.getAllCustomField()
+            this.getAllCustomFieldCategory()
           }
         }
       }
@@ -175,19 +153,101 @@ export class SchoolFieldsComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(dialogResult => {
       if(dialogResult){
-        this.deleteRoomdata(element);
+        this.deleteCustomFieldata(element);
       }
    });
 }
 openEditdata(element){
   this.dialog.open(EditSchoolFieldsComponent, {
-    data: element,
+    data: {information:element},
       width: '800px'
   }).afterClosed().subscribe((data)=>{
     if(data==='submited'){
-      this.getAllCustomField();
+      this.getAllCustomFieldCategory();
     }
   })
+}
+getAllCustomFieldCategory(){
+  this.fieldsCategoryListView.module=this.fieldCategoryModuleEnum.School;
+  this.customFieldservice.getAllFieldsCategory(this.fieldsCategoryListView).subscribe(
+    (res:FieldsCategoryListView)=>{
+      if(typeof(res)=='undefined'){
+        this.snackbar.open('Field Category list failed. ' + sessionStorage.getItem("httpError"), '', {
+          duration: 10000
+        });
+      }
+      else{
+        if (res._failure) {
+          this.snackbar.open('Field Category list failed. ' + res._message, 'LOL THANKS', {
+            duration: 10000
+          });
+        } 
+        else{
+          this.fieldsCategoryList= res.fieldsCategoryList 
+          if(this.currentCategoryId==null){
+            this.currentCategoryId=res.fieldsCategoryList[0].categoryId  
+            this.customFieldList=new MatTableDataSource(res.fieldsCategoryList[0].customFields) ;
+            this.customFieldList.sort=this.sort;
+          }   
+          else{
+            let index = this.fieldsCategoryList.findIndex((x) => {
+              return x.categoryId === this.currentCategoryId
+            });
+            this.customFieldList=new MatTableDataSource(res.fieldsCategoryList[index].customFields) ;
+            this.customFieldList.sort=this.sort;
+          }
+        }
+      }
+    }
+  );
+}
+editFieldCategory(element){
+  this.dialog.open(SchoolFieldsCategoryComponent,{ 
+    data: element,
+    width: '800px'
+  }).afterClosed().subscribe((data)=>{
+    if(data==='submited'){
+      this.getAllCustomFieldCategory();
+    }
+  })
+}
+deleteFieldCategory(element){
+  this.fieldsCategoryAddView.fieldsCategory=element
+  this.customFieldservice.deleteFieldsCategory(this.fieldsCategoryAddView).subscribe(
+    (res:FieldsCategoryAddView)=>{
+      if(typeof(res)=='undefined'){
+        this.snackbar.open('Field Category delete failed. ' + sessionStorage.getItem("httpError"), '', {
+          duration: 10000
+        });
+      }
+      else{
+        if (res._failure) {
+          this.snackbar.open('Field Category delete failed. ' + res._message, 'LOL THANKS', {
+            duration: 10000
+          });
+        } 
+        else{
+          this.snackbar.open('' + res._message, 'LOL THANKS', {
+            duration: 10000
+          });
+          this.getAllCustomFieldCategory()
+        }
+      }
+    }
+  )
+}
+confirmDeleteFieldCategory(element){
+  const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+    maxWidth: "400px",
+    data: {
+        title: "Are you sure?",
+        message: "You are about to delete "+element.title+"."}
+  });
+  dialogRef.afterClosed().subscribe(dialogResult => {
+    if(dialogResult){
+      this.deleteFieldCategory(element);
+    }
+ });
 }
 
 }

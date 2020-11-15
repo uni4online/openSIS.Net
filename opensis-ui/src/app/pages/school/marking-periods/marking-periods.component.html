@@ -9,10 +9,11 @@
         <mat-drawer-container class="bg-transparent flex-auto flex flex -mt-16" *ngIf="list.length > 0 ; else noData" vexContainer>
             <mat-drawer [(opened)]="menuOpen" mode="over" class="w-10/12">
                 <mat-card @stagger class="w-full">
-                    <div class="flex items-center pl-0 pb-5" fxLayout="row" fxLayoutAlign="center center">
-                        <h6 class="flex-auto">{{'clickAnItemToViewDetailsOnTheRightSide' | translate}}</h6>
+                    <div class="flex items-center pl-0" fxLayout="row" fxLayoutAlign="center center">
+                        <h6 class="flex-auto">{{'markingPeriodsList' | translate}}</h6>
                         <button (click)="openAddNew()" type="button" color="primary" mat-button><ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 rtl:ml-2 ic-inline" inline="true"></ic-icon></button>
                     </div>
+                    <p class="text-gray text-xs pb-5">{{'clickAnItemToViewDetailsOnTheRightSide' | translate}}</p>
                     <ul class="marking-period-tree">
                         <ng-template #recursiveList let-list>
                             <li *ngFor="let item of list;let indexOfelement=index;">                             
@@ -52,10 +53,11 @@
             </mat-drawer>
             <mat-drawer-content class="flex-auto flex items-start p-gutter">
                 <mat-card @stagger class="hidden md:block mr-6 ng-tns-c284-386 ng-star-inserted md:w-5/12">
-                    <div class="flex items-center pl-0 pb-5" fxLayout="row" fxLayoutAlign="center center">
-                        <h6 class="flex-auto">{{'clickAnItemToViewDetailsOnTheRightSide' | translate}}</h6>
+                    <div class="flex items-center pl-0" fxLayout="row" fxLayoutAlign="center center">
+                        <h6 class="flex-auto">{{'markingPeriodsList' | translate}}</h6>
                         <button (click)="openAddNew()" type="button" color="primary" mat-button><ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2 ic-inline" inline="true"></ic-icon> {{'addMarkingPeriod' | translate}}</button>
                     </div>
+                    <p class="text-gray text-xs pb-5">{{'clickAnItemToViewDetailsOnTheRightSide' | translate}}</p>
                     <ul class="marking-period-tree">
                         <ng-template #recursiveList let-list>
                             <li *ngFor="let item of list;let indexOfelement=index;">
@@ -118,23 +120,23 @@
                     <mat-card-content>
                         <div class="border-t border-b py-3 px-6">
                             <div class="flex align-items-center mr-6">
-                                <div *ngIf="doesGrades;else doesnotGrades">
-                                    <mat-icon [icIcon]="icCheckBox"></mat-icon> <span class="ml-2 mr-6">{{'graded' | translate}}</span>
+                                <div *ngIf="doesGrades;else doesnotGrades" class="mr-6">
+                                    <mat-icon [icIcon]="icCheckBox" class="inline-block align-middle"></mat-icon> {{'graded' | translate}}
                                 </div>
                                 <ng-template #doesnotGrades>
-                                    <mat-icon [icIcon]="icCheckBoxOutlineBlank"></mat-icon> <span class="ml-2 mr-6">{{'graded' | translate}}</span>
+                                    <mat-icon [icIcon]="icCheckBoxOutlineBlank"></mat-icon> <span class="mr-6">{{'graded' | translate}}</span>
                                 </ng-template>
-                                <div *ngIf="doesExam;else doesnotExam">
-                                    <mat-icon [icIcon]="icCheckBox"></mat-icon> <span class="ml-2 mr-6">{{'exam' | translate}}</span>
+                                <div *ngIf="doesExam;else doesnotExam" class="mr-6">
+                                    <mat-icon [icIcon]="icCheckBox" class="inline-block align-middle"></mat-icon> {{'exam' | translate}}
                                 </div>
                                 <ng-template #doesnotExam>
                                     <mat-icon [icIcon]="icCheckBoxOutlineBlank"></mat-icon><span class="ml-2 mr-6">{{'exam' | translate}}</span>                               
                                 </ng-template>
-                                <div *ngIf="doesComments;else doesnotComments">
-                                    <mat-icon [icIcon]="icCheckBox"></mat-icon> <span class="ml-2">{{'comments' | translate}}</span>
+                                <div *ngIf="doesComments;else doesnotComments" class="mr-6">
+                                    <mat-icon [icIcon]="icCheckBox" class="inline-block align-middle"></mat-icon> {{'comments' | translate}}
                                 </div>
                                 <ng-template #doesnotComments>
-                                    <mat-icon [icIcon]="icCheckBoxOutlineBlank"></mat-icon><span class="ml-2 mr-6">{{'comments' | translate}}</span>                               
+                                    <mat-icon [icIcon]="icCheckBoxOutlineBlank"></mat-icon><span class="ml-1 mr-6">{{'comments' | translate}}</span>                               
                                 </ng-template>
                             </div>
                         </div>

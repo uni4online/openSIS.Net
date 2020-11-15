@@ -17,6 +17,7 @@ import icmessage from '@iconify/icons-ic/baseline-mark-email-unread';
 import icactivity from '@iconify/icons-ic/accessibility';
 import icreports from '@iconify/icons-ic/baseline-list-alt';
 import ictools from '@iconify/icons-ic/baseline-construction';
+import icparents from '@iconify/icons-ic/baseline-escalator-warning';
 import { LayoutService } from '../@vex/services/layout.service';
 import { ActivatedRoute } from '@angular/router';
 import { filter, map } from 'rxjs/operators';
@@ -135,19 +136,30 @@ export class AppComponent {
             label: 'Student Information',
             route: '/school/students',
             icon: icinfo
+          },
+          {
+            type: 'link',
+            label: 'Group Assign Student Info',
+            route: '/school/students',
+            icon: icinfo
+          },
+          {
+            type: 'link',
+            label: 'Student Re Enroll',
+            route: '/school/students',
+            icon: icinfo
           }
         ]
+      },
+      { type: 'link',
+        label: 'Parents',
+        icon: icparents,
+        route: '/school/parents'       
       },
       { type: 'dropdown',
         label: 'Users',
         icon: icusers,
         children: [
-          {
-            type: 'link',
-            label: 'Parent Info',
-            route: '/school/parents',
-            icon: icinfo
-          },
           {
             type: 'link',
             label: 'Staff Info',
@@ -156,8 +168,8 @@ export class AppComponent {
           },
           {
             type: 'link',
-            label: 'Preferences',
-            route: '/school/preferences',
+            label: 'Teacher Functions',
+            route: '/school/teacherfunctions',
             icon: icinfo
           }
         ]

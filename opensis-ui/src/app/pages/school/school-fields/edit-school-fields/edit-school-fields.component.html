@@ -26,17 +26,6 @@
         <mat-select name="gender" formControlName="fieldType" required>
             <mat-option value=""></mat-option>
             <mat-option *ngFor="let customFieldOption of customFieldOptionsEnum" [value]="customFieldOption">{{customFieldOption}}</mat-option>
-            <!-- <mat-option value="Teacher & Office">Pull-Down</mat-option>
-            <mat-option value="Office Only">Auto Pull-down</mat-option>
-            <mat-option value="">Edit Pull-Down</mat-option>
-            <mat-option value="">Text</mat-option>
-            <mat-option value="">Checkbox</mat-option>
-            <mat-option value="">Coded Pull-Down</mat-option>
-            <mat-option value="">Number</mat-option>
-            <mat-option value="">Select Multiple from Options</mat-option>
-            <mat-option value="">Date</mat-option>
-            <mat-option value="">Long Text</mat-option> -->
-            
         </mat-select>
         <mat-error *ngIf="form.get('fieldType').hasError('required')">{{'fieldTypeIsRequired'|translate}}</mat-error>
     </mat-form-field>

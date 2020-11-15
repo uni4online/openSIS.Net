@@ -27,13 +27,12 @@ namespace opensis.data.Repository
         /// <returns></returns>
         public CalendarEventAddViewModel AddCalendarEvent(CalendarEventAddViewModel calendarEvent)
         {
+
             int? eventId = Utility.GetMaxPK(this.context, new Func<CalendarEvents, int>(x => x.EventId));
             calendarEvent.schoolCalendarEvent.EventId = (int)eventId;
-
             calendarEvent.schoolCalendarEvent.LastUpdated = DateTime.UtcNow;
             this.context?.CalendarEvents.Add(calendarEvent.schoolCalendarEvent);
             this.context?.SaveChanges();
-
             return calendarEvent;
         }
 
@@ -89,6 +88,7 @@ namespace opensis.data.Repository
                 calendarEventRepository.SchoolDate = calendarEvent.schoolCalendarEvent.SchoolDate;
                 calendarEventRepository.LastUpdated = DateTime.UtcNow;
                 calendarEventRepository.EventColor = calendarEvent.schoolCalendarEvent.EventColor;
+                calendarEventRepository.SystemWideEvent = calendarEvent.schoolCalendarEvent.SystemWideEvent;
                 calendarEventRepository.StartDate = calendarEvent.schoolCalendarEvent.StartDate;
                 calendarEventRepository.EndDate = calendarEvent.schoolCalendarEvent.EndDate;
                 calendarEventRepository.UpdatedBy = calendarEvent.schoolCalendarEvent.UpdatedBy;
@@ -114,7 +114,7 @@ namespace opensis.data.Repository
             CalendarEventListViewModel calendarEventListViewModel = new CalendarEventListViewModel();
             try
             {
-                var eventList = this.context?.CalendarEvents.Where(x => x.TenantId == calendarEventList.TenantId && x.SchoolId == calendarEventList.SchoolId && x.CalendarId == calendarEventList.CalendarId).OrderBy(x => x.Title).ToList();
+                var eventList = this.context?.CalendarEvents.Where(x => x.TenantId == calendarEventList.TenantId && x.SchoolId == calendarEventList.SchoolId && x.AcademicYear == calendarEventList.AcademicYear && ((x.CalendarId == calendarEventList.CalendarId && x.SystemWideEvent == false) || x.SystemWideEvent == true)).OrderBy(x => x.Title).ToList();
                 calendarEventListViewModel.calendarEventList = eventList;
                 calendarEventListViewModel._tenantName = calendarEventList._tenantName;
                 calendarEventListViewModel._token = calendarEventList._token;

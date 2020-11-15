@@ -181,6 +181,11 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasColumnName("start_date")
                         .HasColumnType("date");
 
+                    b.Property<bool?>("SystemWideEvent")
+                        .HasColumnName("system_wide_event")
+                        .HasColumnType("tinyint(1)")
+                        .HasComment("event applicable to all calenders within academic year");
+
                     b.Property<string>("Title")
                         .HasColumnName("title")
                         .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
@@ -1820,6 +1825,71 @@ namespace opensis.data.Migrations.MySqlMigrations
                     b.HasKey("TenantId", "SchoolId", "CategoryId", "FieldId");
 
                     b.ToTable("custom_fields");
+                });
+
+            modelBuilder.Entity("opensis.data.Models.CustomFieldsValue", b =>
+                {
+                    b.Property<Guid>("TenantId")
+                        .HasColumnName("tenant_id")
+                        .HasColumnType("char(36)");
+
+                    b.Property<int>("SchoolId")
+                        .HasColumnName("school_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnName("category_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FieldId")
+                        .HasColumnName("field_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TargetId")
+                        .HasColumnName("target_id")
+                        .HasColumnType("int")
+                        .HasComment("Target_is school/student/staff id for whom custom field value is entered. For School module it will be always school id.");
+
+                    b.Property<string>("Module")
+                        .HasColumnName("module")
+                        .HasColumnType("char(10) CHARACTER SET utf8mb4")
+                        .IsFixedLength(true)
+                        .HasComment("'Student' | 'School' | 'Staff'")
+                        .HasMaxLength(10)
+                        .IsUnicode(false);
+
+                    b.Property<string>("CustomFieldTitle")
+                        .HasColumnName("custom_field_title")
+                        .HasColumnType("varchar(30) CHARACTER SET utf8mb4")
+                        .HasMaxLength(30)
+                        .IsUnicode(false);
+
+                    b.Property<string>("CustomFieldType")
+                        .HasColumnName("custom_field_type")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasComment("'Select' or 'Text'")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("CustomFieldValue")
+                        .HasColumnName("custom_field_value")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4")
+                        .HasComment("User input value...Textbox->textvalue, Select-->Value separated by '|', Date --> Date in string")
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("LastUpdate")
+                        .HasColumnName("last_update")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnName("updated_by")
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
+                        .HasMaxLength(100)
+                        .IsUnicode(false);
+
+                    b.HasKey("TenantId", "SchoolId", "CategoryId", "FieldId", "TargetId", "Module");
+
+                    b.ToTable("custom_fields_value");
                 });
 
             modelBuilder.Entity("opensis.data.Models.FieldsCategory", b =>
@@ -4441,6 +4511,10 @@ namespace opensis.data.Migrations.MySqlMigrations
 
                     b.HasKey("TenantId", "SchoolId", "StudentId");
 
+                    b.HasIndex("TenantId", "SchoolId", "GradeId");
+
+                    b.HasIndex("TenantId", "SchoolId", "SectionId");
+
                     b.ToTable("student_enrollment");
                 });
 
@@ -4563,7 +4637,8 @@ namespace opensis.data.Migrations.MySqlMigrations
 
                     b.Property<int?>("FirstLanguageId")
                         .HasColumnName("first_language_id")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasComment("Plan is language will be displayed in dropdown from language table and selected corresponding id will be stored into table.");
 
                     b.Property<string>("Gender")
                         .HasColumnName("gender")
@@ -4853,7 +4928,8 @@ namespace opensis.data.Migrations.MySqlMigrations
 
                     b.Property<int?>("SecondLanguageId")
                         .HasColumnName("second_language_id")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasComment("Plan is language will be displayed in dropdown from language table and selected corresponding id will be stored into table.");
 
                     b.Property<string>("SecondaryContactAddressLineOne")
                         .HasColumnName("secondary_contact_address_line_one")
@@ -4958,6 +5034,12 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasColumnName("student_photo")
                         .HasColumnType("longblob");
 
+                    b.Property<string>("StudentPortalId")
+                        .HasColumnName("student_portal_id")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
                     b.Property<string>("Suffix")
                         .HasColumnName("suffix")
                         .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
@@ -4966,7 +5048,8 @@ namespace opensis.data.Migrations.MySqlMigrations
 
                     b.Property<int?>("ThirdLanguageId")
                         .HasColumnName("third_language_id")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasComment("Plan is language will be displayed in dropdown from language table and selected corresponding id will be stored into table.");
 
                     b.Property<string>("Twitter")
                         .HasColumnName("twitter")
@@ -4979,6 +5062,12 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .IsUnicode(false);
 
                     b.HasKey("TenantId", "SchoolId", "StudentId");
+
+                    b.HasIndex("FirstLanguageId");
+
+                    b.HasIndex("SecondLanguageId");
+
+                    b.HasIndex("ThirdLanguageId");
 
                     b.ToTable("student_master");
                 });
@@ -4993,12 +5082,7 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasColumnName("school_id")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserId")
-                        .HasColumnName("user_id")
-                        .HasColumnType("int");
-
                     b.Property<string>("EmailAddress")
-                        .IsRequired()
                         .HasColumnName("emailaddress")
                         .HasColumnType("varchar(150) CHARACTER SET utf8mb4")
                         .HasMaxLength(150)
@@ -5042,8 +5126,12 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasMaxLength(100)
                         .IsUnicode(false);
 
-                    b.HasKey("TenantId", "SchoolId", "UserId")
-                        .HasName("PK_user_master");
+                    b.Property<int>("UserId")
+                        .HasColumnName("user_id")
+                        .HasColumnType("int");
+
+                    b.HasKey("TenantId", "SchoolId", "EmailAddress")
+                        .HasName("PK_user_master_1");
 
                     b.HasIndex("LangId");
 
@@ -5089,7 +5177,16 @@ namespace opensis.data.Migrations.MySqlMigrations
                     b.HasOne("opensis.data.Models.FieldsCategory", "FieldsCategory")
                         .WithMany("CustomFields")
                         .HasForeignKey("TenantId", "SchoolId", "CategoryId")
-                        .HasConstraintName("FK_custom_fields_custom_category")
+                        .HasConstraintName("FK_custom_fields_fields_category")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("opensis.data.Models.CustomFieldsValue", b =>
+                {
+                    b.HasOne("opensis.data.Models.CustomFields", "CustomFields")
+                        .WithMany("CustomFieldsValue")
+                        .HasForeignKey("TenantId", "SchoolId", "CategoryId", "FieldId")
+                        .HasConstraintName("FK_custom_fields_value_custom_fields")
                         .IsRequired();
                 });
 
@@ -5215,6 +5312,16 @@ namespace opensis.data.Migrations.MySqlMigrations
 
             modelBuilder.Entity("opensis.data.Models.StudentEnrollment", b =>
                 {
+                    b.HasOne("opensis.data.Models.Gradelevels", "Gradelevels")
+                        .WithMany("StudentEnrollment")
+                        .HasForeignKey("TenantId", "SchoolId", "GradeId")
+                        .HasConstraintName("FK_student_enrollment_gradelevels");
+
+                    b.HasOne("opensis.data.Models.Sections", "Sections")
+                        .WithMany("StudentEnrollment")
+                        .HasForeignKey("TenantId", "SchoolId", "SectionId")
+                        .HasConstraintName("FK_student_enrollment_sections");
+
                     b.HasOne("opensis.data.Models.StudentMaster", "StudentMaster")
                         .WithOne("StudentEnrollment")
                         .HasForeignKey("opensis.data.Models.StudentEnrollment", "TenantId", "SchoolId", "StudentId")
@@ -5224,6 +5331,21 @@ namespace opensis.data.Migrations.MySqlMigrations
 
             modelBuilder.Entity("opensis.data.Models.StudentMaster", b =>
                 {
+                    b.HasOne("opensis.data.Models.Language", "FirstLanguage")
+                        .WithMany("StudentMasterFirstLanguage")
+                        .HasForeignKey("FirstLanguageId")
+                        .HasConstraintName("FK_student_master_language");
+
+                    b.HasOne("opensis.data.Models.Language", "SecondLanguage")
+                        .WithMany("StudentMasterSecondLanguage")
+                        .HasForeignKey("SecondLanguageId")
+                        .HasConstraintName("FK_student_master_language1");
+
+                    b.HasOne("opensis.data.Models.Language", "ThirdLanguage")
+                        .WithMany("StudentMasterThirdLanguage")
+                        .HasForeignKey("ThirdLanguageId")
+                        .HasConstraintName("FK_student_master_language2");
+
                     b.HasOne("opensis.data.Models.SchoolMaster", "SchoolMaster")
                         .WithMany("StudentMaster")
                         .HasForeignKey("TenantId", "SchoolId")

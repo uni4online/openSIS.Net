@@ -18,6 +18,7 @@ namespace opensis.data.Models
         public string Description { get; set; }
         public string VisibleToMembershipId { get; set; }
         public string EventColor { get; set; }
+        public bool? SystemWideEvent { get; set; }
         public DateTime? LastUpdated { get; set; }
         public string UpdatedBy { get; set; }
     }

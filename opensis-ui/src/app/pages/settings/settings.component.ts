@@ -5,6 +5,7 @@ import icUsers from '@iconify/icons-ic/twotone-people';
 import icSchedule from '@iconify/icons-ic/twotone-date-range';
 import icGrade from '@iconify/icons-ic/twotone-leaderboard';
 import icAttendance from '@iconify/icons-ic/twotone-access-alarm';
+import icParents from '@iconify/icons-ic/baseline-escalator-warning';
 
 @Component({
   selector: 'vex-settings',
@@ -19,6 +20,7 @@ export class SettingsComponent implements OnInit {
   icSchedule = icSchedule;
   icGrade = icGrade;
   icAttendance = icAttendance;
+  icParents = icParents;
 
   constructor() { }
 

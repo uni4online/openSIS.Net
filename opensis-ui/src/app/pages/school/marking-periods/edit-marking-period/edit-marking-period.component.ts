@@ -60,6 +60,8 @@ export class EditMarkingPeriodComponent implements OnInit {
     "title": ""
   }
   sentArray=[];
+
+
   constructor(private dialogRef: MatDialogRef<EditMarkingPeriodComponent>,
      private fb: FormBuilder,
      private markingPeriodService:MarkingPeriodService,
@@ -181,15 +183,6 @@ export class EditMarkingPeriodComponent implements OnInit {
   }
 
   
-  dateCompare() {      
-    let openingDate = moment(this.form.controls.startDate.value).format('YYYY-MM-DD');
-    let closingDate = moment(this.form.controls.endDate.value).format('YYYY-MM-DD');
-   
-    if (ValidationService.compareValidation(openingDate, closingDate) === false) {
-      this.form.controls.endDate.setErrors({ compareError: true })      
-    }
-    
-  }
   
   gradeDateCompare(){
     let gradeOpeningDate = this.form.controls.postStartDate.value;
@@ -198,6 +191,20 @@ export class EditMarkingPeriodComponent implements OnInit {
       this.form.controls.postEndDate.setErrors({ compareGradeError: true })      
     }
   }
+
+  checkStartDate(){
+    let startDate = new Date(this.markingPeriodAddModel.tableSchoolYears.startDate).getTime();
+    let dateSchoolOpened = new Date(sessionStorage.getItem("schoolOpened")).getTime();
+
+    if(startDate<dateSchoolOpened){
+      this.form.controls.startDate.setErrors({schoolOpenedNotMatch:true})
+    }else{
+      if(this.form.controls.startDate.errors?.schoolOpenedNotMatch){
+        this.form.controls.startDate.setErrors(null);
+      }
+    }
+  }
+
   checkGrade(data){
  
     if(data === false || data === undefined || data === null){

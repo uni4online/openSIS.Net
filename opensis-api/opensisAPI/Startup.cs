@@ -46,6 +46,8 @@ using opensis.core.Student.Interfaces;
 using opensis.core.Student.Services;
 using opensis.core.CustomField.Interfaces;
 using opensis.core.CustomField.Services;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace opensisAPI
 {
@@ -61,7 +63,10 @@ namespace opensisAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            
+            services.AddControllers()
+                .AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
             services.AddScoped<ISchoolRepository, SchoolRepository>();
             services.AddScoped<INoticeService, NoticeService>();
@@ -107,6 +112,10 @@ namespace opensisAPI
             {
                 services.AddScoped<IDbContextFactory, MySQLContextFactory>(serviceProvider => new MySQLContextFactory(Configuration["ConnectionStringTemplateMySQL"]));
             }
+
+            
+
+
             services.AddCors(c =>
             {
                 c.AddPolicy("AllowOrigin", builder =>
@@ -125,6 +134,7 @@ namespace opensisAPI
             services.AddSwaggerGen(c => {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "OpenSIS2 API", Version = "V1" });
             });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,6 +1,6 @@
 <div class="text-right" *ngIf="schoolCtrl">
   <mat-form-field >
-    <mat-select [formControl]="schoolCtrl" placeholder="School Name" (selectionChange)="changeSchool($event.value.schoolId)">
+    <mat-select [formControl]="schoolCtrl" placeholder="School Name" (selectionChange)="changeSchool($event.value)">
       <mat-option>
         <ngx-mat-select-search  [formControl]="schoolFilterCtrl" ngxMatSelectSearchClear noEntriesFoundLabel="No matching school found" placeholderLabel="Find School..."></ngx-mat-select-search>
       </mat-option>
@@ -14,7 +14,7 @@
   <mat-form-field>
     <mat-select [formControl]="academicYearsCtrl" placeholder="Year" (selectionChange)="changeYear($event)">
       <mat-option *ngIf="this.academicYears?.length==0" [value]=nullValueForDropdown>{{nullValueForDropdown}}</mat-option>
-      <mat-option *ngFor="let year of academicYears" [value]="year.academyYear">
+      <mat-option *ngFor="let year of academicYears" [value]="year">
         {{year.year}}
       </mat-option>
     </mat-select>

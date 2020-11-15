@@ -2,7 +2,7 @@
 
     <div class="flex items-center mx-4" fxLayout="row" fxLayoutAlign="center center">
         <h3 class="flex-auto">{{'addressAndContact' | translate}}</h3>
-        <button mat-button color="primary"><mat-icon [icIcon]="icEdit"></mat-icon> {{'editInformation' |translate}}</button>
+        <button mat-button (click)= "editAddressContactInfo()" color="primary"><mat-icon [icIcon]="icEdit"></mat-icon> {{'editInformation' |translate}}</button>
     </div>
     <mat-card-content>
 
@@ -11,70 +11,80 @@
             <ul class="grid grid-cols-3 col-gap-8 row-gap-10 mt-2 mx-4">
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'streetAddress1' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">2000 Ruth St NW</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.homeAddressLineOne|EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'streetAddress2' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">-</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.homeAddressLineTwo|EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'country' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">USA</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{countryName}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'stateProvinceLocality' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">GA</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.homeAddressState|EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'city' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Atlanta</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.homeAddressCity|EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'zipPostalCode' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">303178</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.homeAddressZip}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'busNo' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">S12</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.busNo|EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'busPickup' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Yes</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.schoolBusPickUp|EmtyBooleanCheckReversePipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'busDropoff' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Yes</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.schoolBusDropOff|EmtyBooleanCheckReversePipe}}</p>
                 </li>
             </ul>
 
 
             <h4 class="text-primary pt-6 pb-2 px-4">{{'studentMailingAddress'|translate}}</h4>
 
-            <div class="mx-4 flex mb-4"><mat-icon [icIcon]="icCheckBox" class="mr-3"></mat-icon> {{'sameAsHomeAddress' | translate}}</div>
+            <div class="mx-4 flex mb-4" *ngIf="mailingAddressSameToHome; else mailingAddressNotSameToHome">
+                <mat-icon [icIcon]="icCheckBox" class="mr-3"></mat-icon>
+                    {{'sameAsHomeAddress' | translate}}
+            </div>
+            <ng-template #mailingAddressNotSameToHome>
+                <div class="mx-4 flex mb-4" >
+                    <mat-icon [icIcon]="icCheckBoxOutlineBlank" class="mr-3"></mat-icon>
+                        {{'sameAsHomeAddress' | translate}}
+                </div>
+            </ng-template>
+           
             <ul class="grid grid-cols-3 col-gap-8 row-gap-10 mt-2 mx-4">
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'streetAddress1' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">2000 Ruth St NW</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.mailingAddressLineOne|EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'streetAddress2' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">-</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.mailingAddressLineTwo|EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'country' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">USA</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{mailingAddressCountry}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'stateProvinceLocality' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">GA</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.mailingAddressState|EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'city' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Atlanta</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.mailingAddressCity|EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'zipPostalCode' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">303178</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.mailingAddressZip}}</p>
                 </li>
             </ul>
 
@@ -83,39 +93,39 @@
             <ul class="grid grid-cols-3 col-gap-8 row-gap-10 mt-2 mx-4">
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'homePhone' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">1234567891</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.homePhone}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'mobilePhone' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">65488799552</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.mobilePhone}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'personalEmail' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">jamesmiller@example.com</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.personalEmail|EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'schoolEmail' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">jamesmiller@school.edu</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.schoolEmail|EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'twitter' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">-</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.twitter|EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'facebook' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">-</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.facebook|EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'instagram' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">-</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.instagram|EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'youtube' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">-</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.youtube|EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'linkedIn' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">-</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.linkedin|EmtyValueCheckPipe}}</p>
                 </li>
             </ul>
         </div>

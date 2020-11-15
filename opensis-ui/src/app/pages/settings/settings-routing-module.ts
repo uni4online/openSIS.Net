@@ -3,6 +3,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { SettingsComponent } from './settings.component';
 import { SchoolSettingsComponent } from '../settings/school-settings/school-settings.component';
 import { StudentSettingsComponent } from '../settings/student-settings/student-settings.component';
+import { ParentSettingsComponent } from '../settings/parent-settings/parent-settings.component';
+import { StaffSettingsComponent } from '../settings/staff-settings/staff-settings.component';
 import { GradeLevelsComponent } from '../school/grade-levels/grade-levels.component';
 import { SectionsComponent } from '../school/sections/sections.component';
 import { RoomsComponent } from '../school/rooms/rooms.component';
@@ -28,6 +30,20 @@ const routes: Routes = [
     component:StudentSettingsComponent,
     children:[     
       {path:'',component:EnrollmentCodesComponent},
+    ]
+  }, 
+  {
+    path:'parent-settings',
+    component:ParentSettingsComponent,
+    children:[     
+      
+    ]
+  }, 
+  {
+    path:'staff-settings',
+    component:StaffSettingsComponent,
+    children:[     
+      
     ]
   }, 
   {

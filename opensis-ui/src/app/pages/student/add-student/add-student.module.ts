@@ -22,6 +22,10 @@ import { StudentAddressandcontactsComponent } from '../add-student/student-addre
 import { StudentEnrollmentinfoComponent } from '../add-student/student-enrollmentinfo/student-enrollmentinfo.component';
 import { StudentFamilyinfoComponent } from '../add-student/student-familyinfo/student-familyinfo.component';
 import { StudentLogininfoComponent } from '../add-student/student-logininfo/student-logininfo.component';
+import { StudentMedicalinfoComponent } from '../add-student/student-medicalinfo/student-medicalinfo.component';
+import { ViewstudentMedicalinfoComponent } from '../add-student/viewstudent-medicalinfo/viewstudent-medicalinfo.component';
+import { StudentCommentsComponent } from '../add-student/student-comments/student-comments.component';
+import { StudentDocumentsComponent } from '../add-student/student-documents/student-documents.component';
 import { ViewstudentGeneralinfoComponent } from '../add-student/viewstudent-generalinfo/viewstudent-generalinfo.component';
 import { ViewstudentAddressandcontactsComponent } from '../add-student/viewstudent-addressandcontacts/viewstudent-addressandcontacts.component';
 import { ViewstudentLogininfoComponent } from '../add-student/viewstudent-logininfo/viewstudent-logininfo.component';
@@ -35,6 +39,14 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { ScrollbarModule } from '../../../../@vex/components/scrollbar/scrollbar.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { NgxDropzoneModule } from 'ngx-dropzone';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 
 
@@ -46,9 +58,13 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     StudentEnrollmentinfoComponent,
     StudentFamilyinfoComponent,
     StudentLogininfoComponent,
+    StudentMedicalinfoComponent,
+    StudentCommentsComponent,
+    StudentDocumentsComponent,
     ViewstudentGeneralinfoComponent,
     ViewstudentAddressandcontactsComponent,
     ViewstudentLogininfoComponent,
+    ViewstudentMedicalinfoComponent,
     StudentContactsComponent,
     SiblingsinfoComponent
   ],
@@ -78,7 +94,15 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     MatCheckboxModule,
     MatExpansionModule,
     ScrollbarModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    NgxDropzoneModule,
+    MatTableModule,
+    MatMenuModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatButtonToggleModule,
+    MatTooltipModule,
+    MatSlideToggleModule
   ]
 })
 export class AddStudentModule { }

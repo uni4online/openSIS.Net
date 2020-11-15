@@ -10,24 +10,6 @@
             <div class="mb-2 md:flex md:flex-wrap">
                 <div class="flex flex-1 mx-4 md:w-1/2">
                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
-                        <mat-label>{{'currentGradeLevel'|translate}}</mat-label>
-                        <mat-select name="current_grade_level">
-                            <mat-option value=""></mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-                <div class="flex flex-1 mx-4 md:w-1/2">
-                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
-                        <mat-label>{{'section'|translate}}</mat-label>
-                        <mat-select name="section">
-                            <mat-option value=""></mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-            </div>
-            <div class="mb-2 md:flex md:flex-wrap">
-                <div class="flex flex-1 mx-4 md:w-1/2">
-                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                         <mat-label>{{'enrollmentCalendar'|translate}}</mat-label>
                         <mat-select name="enrollment_calendar">
                             <mat-option value=""></mat-option>
@@ -63,8 +45,6 @@
                     <mat-checkbox color="primary" class="mr-6">
                         {{'freeLunchEligibility' | translate}}</mat-checkbox>
                     <mat-checkbox color="primary" class="mr-6">
-                        {{'freeLunchEligibility' | translate}}</mat-checkbox>
-                    <mat-checkbox color="primary" class="mr-6">
                         {{'specialEducationIndicator' | translate}}</mat-checkbox>
                     <mat-checkbox color="primary">{{'lepIndicator' | translate}}
                     </mat-checkbox>
@@ -82,12 +62,12 @@
                 <h4 class="text-primary">{{'enrollmentInfo'|translate}}</h4>
                 <div class="text-right">
                     <button mat-raised-button color="primary" (click)="openEnrollToNewSchool()">
-                        <mat-icon [icIcon]="icAdd"></mat-icon> {{'enrollToNewSchool' |translate}}
+                        <mat-icon [icIcon]="icAdd"></mat-icon> {{'addEnrollmentInfo' |translate}}
                     </button>
                 </div>
                 </div>
 
-            <div class="mb-6 md:flex md:flex-wrap">
+            <!--<div class="mb-6 md:flex md:flex-wrap">
                 <div class="flex flex-1 mx-4 md:w-1/2">
                     <mat-accordion class="w-full">
                         <mat-expansion-panel>
@@ -98,17 +78,18 @@
                                 </mat-panel-title>
                             </mat-expansion-panel-header>
                             <div class="border-t -mx-6">
-                                <!-- <button mat-raised-button class="btn-add-enrollment" color="primary" (click)="openEnrollToNewSchool()">
-                                    <span>{{'addEnrollmentInfo' | translate}}</span>
-                                </button> -->
                                 <ul class="enrollment-timeline mt-4">
                                     <li>
                                         <span></span>
                                         <div>
-                                            <button mat-button class="-mt-2 text-green" (click)="openEnrollToNewSchool()">
-                                                <span><i class="icon icon-plus3 mr-2"></i>{{'addEnrollmentInfo' | translate}}</span>
-                                            </button> <span class="mx-2">/</span> <button mat-button class="-mt-2 text-warn" (click)="openEnrollToNewSchool()">
-                                                <span><i class="icon icon-blocked mr-2"></i>{{'dropStudent' | translate}}</span>
+                                            <button mat-button class="-mt-2 text-green"
+                                                (click)="openEnrollToNewSchool()">
+                                                <span><i
+                                                        class="icon icon-plus3 mr-2"></i>{{'addEnrollmentInfo' | translate}}</span>
+                                            </button> <span class="mx-2">/</span> <button mat-button
+                                                class="-mt-2 text-warn" (click)="openEnrollToNewSchool()">
+                                                <span><i
+                                                        class="icon icon-blocked mr-2"></i>{{'dropStudent' | translate}}</span>
                                 </button>
                                         </div>
                                     </li> 
@@ -147,8 +128,10 @@
                                     <li>
                                         <span></span>
                                         <div>
-                                            <button mat-button class="-mt-2 text-green" (click)="openEnrollToNewSchool()">
-                                                <span><i class="icon icon-plus3 mr-2"></i>{{'addEnrollmentInfo' | translate}}</span>
+                                            <button mat-button class="-mt-2 text-green"
+                                                (click)="openEnrollToNewSchool()">
+                                                <span><i
+                                                        class="icon icon-plus3 mr-2"></i>{{'addEnrollmentInfo' | translate}}</span>
                                 </button>
                                         </div>
                                     </li> 
@@ -173,7 +156,7 @@
                         </mat-expansion-panel>
                     </mat-accordion>
                 </div>
-            </div>
+            </div> -->
 
         </div>
     </mat-card-content>

@@ -201,12 +201,12 @@ export class MarkingPeriodsComponent implements OnInit {
             duration: 10000
           });
         } else {
-       
+          this.markingPeriodService.getCurrentYear(true);    
           this.snackbar.open('School Year Deletion Successful.', '', {
             duration: 10000
           }).afterOpened().subscribe(data => {
             this.getMarkingPeriod();
-          });          
+          });   
         }
       }
   
@@ -226,13 +226,13 @@ export class MarkingPeriodsComponent implements OnInit {
             duration: 10000
           });
         } else {
-       
+          this.markingPeriodService.getCurrentYear(true);    
           this.snackbar.open('School Semester Deletion Successful.', '', {
             duration: 10000
           }).afterOpened().subscribe(data => {
             this.getMarkingPeriod();
           });
-          
+      
         }
       }
   
@@ -251,13 +251,12 @@ export class MarkingPeriodsComponent implements OnInit {
               duration: 10000
             });
           } else {
-         
+            this.markingPeriodService.getCurrentYear(true);    
             this.snackbar.open('School Quarter Deletion Successful.', '', {
               duration: 10000
             }).afterOpened().subscribe(data => {
               this.getMarkingPeriod();
             });
-            
           }
         }
     
@@ -275,7 +274,8 @@ export class MarkingPeriodsComponent implements OnInit {
             this.snackbar.open('School Progress Period Deletion failed. ' + data._message, 'LOL THANKS', {
               duration: 10000
             });
-          } else {         
+          } else {   
+            this.markingPeriodService.getCurrentYear(true);    
             this.snackbar.open('School Progress Period Deletion Successful.', '', {
               duration: 10000
             }).afterOpened().subscribe(data => {

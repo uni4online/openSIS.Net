@@ -4,6 +4,7 @@ export class CustomFieldModel {
     tenantId: string;
     schoolId: number;
     fieldId: number;
+    module:string;
     type: string;
     search: boolean;
     title: string;
@@ -23,6 +24,7 @@ export class CustomFieldModel {
         this.type="";
         this.search=true;
         this.title="";
+        this.module="";
         this.sortOrder=0;
         this.selectOptions="";
         this.categoryId=0;
@@ -30,8 +32,8 @@ export class CustomFieldModel {
         this.required=false;
         this.defaultSelection="";
         this.hide=false;
-        this.lastUpdate="2020-10-22T09:14:04.336Z";
-        this.updatedBy="";
+        this.lastUpdate=null;
+        this.updatedBy=null;
     }
   }
 export class CustomFieldAddView extends CommonField{

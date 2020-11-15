@@ -18,6 +18,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { TranslateModule } from '@ngx-translate/core';
 import { SharedModuleModule } from '../../../shared-module/shared-module.module';
 import { MatCardModule } from '@angular/material/card';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle'; 
 
 
 @NgModule({
@@ -40,7 +41,8 @@ import { MatCardModule } from '@angular/material/card';
     TranslateModule,
     MatRadioModule,
     SharedModuleModule,
-    MatCardModule
+    MatCardModule,
+    MatSlideToggleModule
   ]
 })
 export class AddEventModule { }

@@ -28,6 +28,7 @@ namespace opensis.data.Models
         public virtual DbSet<City> City { get; set; }
         public virtual DbSet<Country> Country { get; set; }
         public virtual DbSet<CustomFields> CustomFields { get; set; }
+        public virtual DbSet<CustomFieldsValue> CustomFieldsValue { get; set; }
         public virtual DbSet<FieldsCategory> FieldsCategory { get; set; }
         public virtual DbSet<GradeEquivalency> GradeEquivalency { get; set; }
         public virtual DbSet<Gradelevels> Gradelevels { get; set; }
@@ -198,6 +199,11 @@ namespace opensis.data.Models
                    .HasColumnName("start_date")
                    .HasColumnType("date");
 
+                entity.Property(e => e.SystemWideEvent)
+                    .HasColumnName("system_wide_event")
+                    .HasComment("event applicable to all calenders within academic year");
+
+
                 entity.Property(e => e.Title)
                     .HasColumnName("title")
                     .HasMaxLength(50)
@@ -330,9 +336,65 @@ namespace opensis.data.Models
                    .WithMany(p => p.CustomFields)
                    .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.CategoryId })
                    .OnDelete(DeleteBehavior.ClientSetNull)
-                   .HasConstraintName("FK_custom_fields_custom_category");
+                   .HasConstraintName("FK_custom_fields_fields_category");
             });
 
+            modelBuilder.Entity<CustomFieldsValue>(entity =>
+            {
+                entity.HasKey(e => new { e.TenantId, e.SchoolId, e.CategoryId, e.FieldId, e.TargetId, e.Module });
+
+                entity.ToTable("custom_fields_value");
+
+                entity.Property(e => e.TenantId).HasColumnName("tenant_id");
+
+                entity.Property(e => e.SchoolId).HasColumnName("school_id");
+
+                entity.Property(e => e.CategoryId).HasColumnName("category_id");
+
+                entity.Property(e => e.FieldId).HasColumnName("field_id");
+
+                entity.Property(e => e.TargetId)
+                    .HasColumnName("target_id")
+                    .HasComment("Target_is school/student/staff id for whom custom field value is entered. For School module it will be always school id.");
+
+                entity.Property(e => e.Module)
+                    .HasColumnName("module")
+                    .HasMaxLength(10)
+                    .IsUnicode(false)
+                    .IsFixedLength()
+                    .HasComment("'Student' | 'School' | 'Staff'");
+
+                entity.Property(e => e.CustomFieldTitle)
+                    .HasColumnName("custom_field_title")
+                    .HasMaxLength(30)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CustomFieldType)
+                    .HasColumnName("custom_field_type")
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasComment("'Select' or 'Text'");
+
+                entity.Property(e => e.CustomFieldValue)
+                    .HasColumnName("custom_field_value")
+                    .IsUnicode(false)
+                    .HasComment("User input value...Textbox->textvalue, Select-->Value separated by '|', Date --> Date in string");
+
+                entity.Property(e => e.LastUpdate)
+                    .HasColumnName("last_update")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedBy)
+                    .HasColumnName("updated_by")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.CustomFields)
+                    .WithMany(p => p.CustomFieldsValue)
+                    .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.CategoryId, d.FieldId })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_custom_fields_value_custom_fields");
+            });
             modelBuilder.Entity<FieldsCategory>(entity =>
             {
                 entity.HasKey(e => new { e.TenantId, e.SchoolId, e.CategoryId })
@@ -1492,6 +1554,17 @@ namespace opensis.data.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
+                entity.HasOne(d => d.Gradelevels)
+                   .WithMany(p => p.StudentEnrollment)
+                   .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.GradeId })
+                   .HasConstraintName("FK_student_enrollment_gradelevels");
+
+                entity.HasOne(d => d.Sections)
+                    .WithMany(p => p.StudentEnrollment)
+                    .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.SectionId })
+                    .HasConstraintName("FK_student_enrollment_sections");
+
+
                 entity.HasOne(d => d.StudentMaster)
                     .WithOne(p => p.StudentEnrollment)
                     .HasForeignKey<StudentEnrollment>(d => new { d.TenantId, d.SchoolId, d.StudentId })
@@ -1592,7 +1665,10 @@ namespace opensis.data.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.FirstLanguageId).HasColumnName("first_language_id");
+                entity.Property(e => e.FirstLanguageId)
+                .HasColumnName("first_language_id")
+                .HasComment("Plan is language will be displayed in dropdown from language table and selected corresponding id will be stored into table.");
+                
 
                 entity.Property(e => e.Gender)
                     .HasColumnName("gender")
@@ -1821,7 +1897,10 @@ namespace opensis.data.Models
                     .HasColumnName("school_email")
                     .IsUnicode(false);
 
-                entity.Property(e => e.SecondLanguageId).HasColumnName("second_language_id");
+                entity.Property(e => e.SecondLanguageId)
+                .HasColumnName("second_language_id")
+                .HasComment("Plan is language will be displayed in dropdown from language table and selected corresponding id will be stored into table.");
+
 
                 entity.Property(e => e.SecondaryContactAddressLineOne)
                     .HasColumnName("secondary_contact_address_line_one")
@@ -1905,12 +1984,20 @@ namespace opensis.data.Models
 
                 entity.Property(e => e.StudentPhoto).HasColumnName("student_photo");
 
+                entity.Property(e => e.StudentPortalId)
+                    .HasColumnName("student_portal_id")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Suffix)
                     .HasColumnName("suffix")
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.ThirdLanguageId).HasColumnName("third_language_id");
+                entity.Property(e => e.ThirdLanguageId)
+                .HasColumnName("third_language_id")
+                .HasComment("Plan is language will be displayed in dropdown from language table and selected corresponding id will be stored into table.");
+
 
                 entity.Property(e => e.Twitter)
                     .HasColumnName("twitter")
@@ -1919,6 +2006,21 @@ namespace opensis.data.Models
                 entity.Property(e => e.Youtube)
                     .HasColumnName("youtube")
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.FirstLanguage)
+                   .WithMany(p => p.StudentMasterFirstLanguage)
+                   .HasForeignKey(d => d.FirstLanguageId)
+                   .HasConstraintName("FK_student_master_language");
+
+                entity.HasOne(d => d.SecondLanguage)
+                    .WithMany(p => p.StudentMasterSecondLanguage)
+                    .HasForeignKey(d => d.SecondLanguageId)
+                    .HasConstraintName("FK_student_master_language1");
+
+                entity.HasOne(d => d.ThirdLanguage)
+                    .WithMany(p => p.StudentMasterThirdLanguage)
+                    .HasForeignKey(d => d.ThirdLanguageId)
+                    .HasConstraintName("FK_student_master_language2");
 
                 entity.HasOne(d => d.SchoolMaster)
                     .WithMany(p => p.StudentMaster)
@@ -1929,8 +2031,8 @@ namespace opensis.data.Models
 
             modelBuilder.Entity<UserMaster>(entity =>
             {
-                entity.HasKey(e => new { e.TenantId, e.SchoolId, e.UserId })
-                    .HasName("PK_user_master");
+                entity.HasKey(e => new { e.TenantId, e.SchoolId, e.EmailAddress })
+                   .HasName("PK_user_master_1");
 
                 entity.ToTable("user_master");
 
@@ -1942,7 +2044,6 @@ namespace opensis.data.Models
 
                 entity.Property(e => e.EmailAddress)
                 .HasColumnName("emailaddress")
-                    .IsRequired()
                     .HasMaxLength(150)
                     .IsUnicode(false);
 

@@ -1,8 +1,9 @@
-<mat-card class="w-full">
-
-    <mat-card-header>
-        <mat-card-title>{{'generalInformation'|translate}}</mat-card-title>
-    </mat-card-header>
+<mat-card class="w-full">       
+    <div class="flex items-center mx-4" fxLayout="row" fxLayoutAlign="center center">
+        <h3 class="flex-auto">{{'generalInformation'|translate}}</h3>
+        <button mat-button color="primary" (click)= "editGeneralInfo()"><mat-icon [icIcon]="icEdit"></mat-icon> {{'editInformation' |translate}}</button>
+    </div>
+   
     <mat-card-content>
 
         <div @stagger fxLayout="column">
@@ -10,47 +11,47 @@
             <ul class="grid grid-cols-3 col-gap-8 row-gap-10 mt-2 mx-4">
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'StudentName' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">John</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.firstGivenName}} {{data.middleName}} {{data.lastFamilyName}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'preferredCommonName' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Doe</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.preferredName|EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'previousMaidenName' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Father</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.previousName|EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'studentID' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">45613552</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.studentId}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'alternateID' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">STD45613</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.alternateId|EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'districtID' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">-</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.districtId}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'stateID' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">-</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.stateId}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'admissionNumber' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">-</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.admissionNumber|EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'rollNumber' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">-</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.rollNumber|EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'socialSecurityNumber' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">-</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.socialSecurityNumber|EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'otherGovtIssuedNumber' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">-</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.otherGovtIssuedNumber|EmtyValueCheckPipe}}</p>
                 </li>
             </ul>
 
@@ -59,45 +60,47 @@
             <ul class="grid grid-cols-3 col-gap-8 row-gap-10 mt-2 mx-4">
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'dateOfBirth' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Mar 10, 2009</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.dob}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'gender' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Male</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.gender|EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'race' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">White</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.race|EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'ethnicity' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">American</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.ethnicity|EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'maritalStatus' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Single</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.maritalStatus|EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'countryOfBirth' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">USA</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{countryName}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'nationality' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">American</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{nationality}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'firstLanguage' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">English</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.firstLanguageId}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'secondLanguage' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Spanish</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.secondLanguageId}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'thirdLanguage' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">-</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.thirdLanguageId}}</p>
                 </li>
             </ul>
         </div>
+
+
     </mat-card-content>
 </mat-card>

@@ -7,6 +7,9 @@ namespace opensis.data.Models
     {
         public Language()
         {
+            StudentMasterFirstLanguage = new HashSet<StudentMaster>();
+            StudentMasterSecondLanguage = new HashSet<StudentMaster>();
+            StudentMasterThirdLanguage = new HashSet<StudentMaster>();
             UserMaster = new HashSet<UserMaster>();
         }
 
@@ -16,5 +19,8 @@ namespace opensis.data.Models
         public string LanguageCode { get; set; }
 
         public virtual ICollection<UserMaster> UserMaster { get; set; }
+        public virtual ICollection<StudentMaster> StudentMasterFirstLanguage { get; set; }
+        public virtual ICollection<StudentMaster> StudentMasterSecondLanguage { get; set; }
+        public virtual ICollection<StudentMaster> StudentMasterThirdLanguage { get; set; }
     }
 }

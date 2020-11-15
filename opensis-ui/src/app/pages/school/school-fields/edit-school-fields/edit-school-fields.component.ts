@@ -8,6 +8,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { CustomFieldService } from '../../../../services/custom-field.service';
 import {CustomFieldAddView} from '../../../../models/customFieldModel';
 import { CustomFieldOptionsEnum } from '../../../../enums/custom-field-options.enum';
+import { FieldCategoryModuleEnum } from '../../../../enums/field-category-module.enum'
 import { ValidationService } from '../../../shared/validation.service';
 
 @Component({
@@ -24,10 +25,11 @@ export class EditSchoolFieldsComponent implements OnInit {
   form: FormGroup;
   customFieldTitle;
   buttonType;
+  fieldCategoryModule=FieldCategoryModuleEnum
   customFieldOptionsEnum=Object.keys(CustomFieldOptionsEnum)
   customFieldAddView:CustomFieldAddView= new CustomFieldAddView()
   formfieldcheck=['Dropdown','Editable Dropdown','Multiple SelectBox']
-
+  currentCategoryid;
   constructor(
     private dialogRef: MatDialogRef<EditSchoolFieldsComponent>, 
     @Inject(MAT_DIALOG_DATA) public data:any,
@@ -45,25 +47,25 @@ export class EditSchoolFieldsComponent implements OnInit {
         required:[false],
         hide:[false],
         systemField:[false]
-
       })
-      if(data==null){
+      if(data.information==null){
+        this.currentCategoryid=data.categoryID
         this.customFieldTitle="addCustomField";
         this.buttonType="submit";
       }
       else{
         this.buttonType="update";
-        this.customFieldTitle="editRoom";
-        this.customFieldAddView.customFields=data
-        this.form.controls.fieldId.patchValue(data.fieldId)
-        this.form.controls.title.patchValue(data.title)
-        this.form.controls.selectOptions.patchValue(data.selectOptions.replaceAll(",","\n"))
-        this.form.controls.defaultSelection.patchValue(data.defaultSelection)
-        this.form.controls.sortOrder.patchValue(data.sortOrder)
-        this.form.controls.required.patchValue(data.required)
-        this.form.controls.fieldType.patchValue(data.type)
-        this.form.controls.hide.patchValue(data.hide)
-        this.form.controls.systemField.patchValue(data.systemField)
+        this.customFieldTitle="editCustomField";
+        this.customFieldAddView.customFields=data.information
+        this.form.controls.fieldId.patchValue(data.information.fieldId)
+        this.form.controls.title.patchValue(data.information.title)
+        this.form.controls.selectOptions.patchValue(data.information.selectOptions.replaceAll("|","\n"))
+        this.form.controls.defaultSelection.patchValue(data.information.defaultSelection)
+        this.form.controls.sortOrder.patchValue(data.information.sortOrder)
+        this.form.controls.required.patchValue(data.information.required)
+        this.form.controls.fieldType.patchValue(data.information.type)
+        this.form.controls.hide.patchValue(data.information.hide)
+        this.form.controls.systemField.patchValue(data.information.systemField)
       }
      }
 
@@ -71,21 +73,18 @@ export class EditSchoolFieldsComponent implements OnInit {
   }
   submit(){
     if(this.form.valid){
-
       if(this.form.controls.fieldId.value==0){
-        //temp will replace with category id from selected category id 
-        this.customFieldAddView.customFields.categoryId=1;
-
-
+        this.customFieldAddView.customFields.categoryId=this.currentCategoryid;
         this.customFieldAddView.customFields.fieldId=this.form.controls.fieldId.value;
         this.customFieldAddView.customFields.title=this.form.controls.title.value;
-        this.customFieldAddView.customFields.selectOptions=this.form.controls.selectOptions.value.replaceAll("\n",",");
+        this.customFieldAddView.customFields.selectOptions=this.form.controls.selectOptions.value.replaceAll("\n","|");
         this.customFieldAddView.customFields.defaultSelection=this.form.controls.defaultSelection.value;
         this.customFieldAddView.customFields.sortOrder=this.form.controls.sortOrder.value;
         this.customFieldAddView.customFields.required=this.form.controls.required.value;
         this.customFieldAddView.customFields.hide=this.form.controls.hide.value;
         this.customFieldAddView.customFields.systemField=this.form.controls.systemField.value;
         this.customFieldAddView.customFields.type=this.form.controls.fieldType.value;
+        this.customFieldAddView.customFields.module=this.fieldCategoryModule.School;
         //this.customFieldAddView.customFields.type="Custom";
          this.customFieldService.addCustomField(this.customFieldAddView).subscribe(
           (res:CustomFieldAddView)=>{
@@ -113,13 +112,18 @@ export class EditSchoolFieldsComponent implements OnInit {
       else{
         this.customFieldAddView.customFields.fieldId=this.form.controls.fieldId.value;
         this.customFieldAddView.customFields.title=this.form.controls.title.value;
-        this.customFieldAddView.customFields.selectOptions=this.form.controls.selectOptions.value.replaceAll("\n",",");
+        this.customFieldAddView.customFields.type=this.form.controls.fieldType.value;
+        if((this.form.controls.fieldType.value===this.formfieldcheck[0])||(this.form.controls.fieldType.value===this.formfieldcheck[1])||(this.form.controls.fieldType.value===this.formfieldcheck[2])){
+            this.customFieldAddView.customFields.selectOptions=this.form.controls.selectOptions.value.replaceAll("\n","|");
+          }
+          else{
+            this.customFieldAddView.customFields.selectOptions="";
+          }
         this.customFieldAddView.customFields.defaultSelection=this.form.controls.defaultSelection.value;
         this.customFieldAddView.customFields.sortOrder=this.form.controls.sortOrder.value;
         this.customFieldAddView.customFields.required=this.form.controls.required.value;
         this.customFieldAddView.customFields.hide=this.form.controls.hide.value;
         this.customFieldAddView.customFields.systemField=this.form.controls.systemField.value;
-        this.customFieldAddView.customFields.type=this.form.controls.fieldType.value;
         this.customFieldService.updateCustomField(this.customFieldAddView).subscribe(
           (res:CustomFieldAddView)=>{
             if(typeof(res)=='undefined'){

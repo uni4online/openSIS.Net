@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import {CustomFieldAddView, CustomFieldListViewModel} from '../models/customFieldModel'
+import {CustomFieldAddView, CustomFieldListViewModel} from '../models/customFieldModel';
+import {FieldsCategoryAddView, FieldsCategoryListView} from '../models/fieldsCategoryModel'
 @Injectable({
   providedIn: 'root'
 })
@@ -24,6 +25,22 @@ export class CustomFieldService {
     let apiurl=this.apiUrl+obj._tenantName+"/CustomField/addCustomField" ;
     return this.http.post<CustomFieldAddView>(apiurl,obj)
   }
-  
 
+  addFieldsCategory(obj:FieldsCategoryAddView){
+    let apiurl=this.apiUrl+obj._tenantName+"/CustomField/addFieldsCategory" ;
+    return this.http.post<FieldsCategoryAddView>(apiurl,obj);
+  }
+  updateFieldsCategory(obj:FieldsCategoryAddView){
+    let apiurl=this.apiUrl+obj._tenantName+"/CustomField/updateFieldsCategory" ;
+    return this.http.put<FieldsCategoryAddView>(apiurl,obj);
+  }
+  deleteFieldsCategory(obj:FieldsCategoryAddView){
+    let apiurl=this.apiUrl+obj._tenantName+"/CustomField/deleteFieldsCategory" ;
+    return this.http.post<FieldsCategoryAddView>(apiurl,obj);
+  }
+  getAllFieldsCategory(obj:FieldsCategoryListView){
+    let apiurl=this.apiUrl+obj._tenantName+"/CustomField/getAllFieldsCategory" ;
+    return this.http.post<FieldsCategoryListView>(apiurl,obj);
+  }
+  
 }

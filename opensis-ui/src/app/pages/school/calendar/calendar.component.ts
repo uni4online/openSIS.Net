@@ -10,6 +10,7 @@ import { AddEventComponent } from './add-event/add-event.component';
 import icAdd from '@iconify/icons-ic/add';
 import icEdit from '@iconify/icons-ic/edit';
 import icDelete from '@iconify/icons-ic/delete';
+import icWarning from '@iconify/icons-ic/warning';
 import icChevronLeft from '@iconify/icons-ic/twotone-chevron-left';
 import icChevronRight from '@iconify/icons-ic/twotone-chevron-right';
 import { FormControl } from '@angular/forms';
@@ -58,6 +59,7 @@ const colors: any = {
 
 export class CalendarComponent implements OnInit {
   @ViewChild('modalContent', { static: true }) modalContent: TemplateRef<any>;
+  isMarkingPeriod:string;
   getCalendarList: CalendarListModel = new CalendarListModel();
   getAllMembersList: GetAllMembersList = new GetAllMembersList();
   getAllCalendarEventList: CalendarEventListViewModel = new CalendarEventListViewModel();
@@ -77,6 +79,7 @@ export class CalendarComponent implements OnInit {
   icAdd = icAdd;
   icEdit = icEdit;
   icDelete = icDelete;
+  icWarning=icWarning;
   events$: Observable<CalendarEvent<{ calendar: CalendarEventModel }>[]>;
   refresh: Subject<any> = new Subject();
   calendarFrom: FormControl;
@@ -188,8 +191,11 @@ export class CalendarComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getAllCalendar();
-    this.getAllMemberList();
+    this.isMarkingPeriod=sessionStorage.getItem("markingPeriod");
+    if(this.isMarkingPeriod!="null"){
+      this.getAllCalendar();
+      this.getAllMemberList();
+    }
   }
 
   //open event modal for view
@@ -232,7 +238,7 @@ export class CalendarComponent implements OnInit {
   //Open modal for add new calendar
   openAddNewCalendar() {
     this.dialog.open(AddCalendarComponent, {
-      data: { allMembers: this.getAllMembersList, membercount: this.getAllMembersList.getAllMemberList.length },
+      data: { allMembers: this.getAllMembersList, membercount: this.getAllMembersList.getAllMemberList.length,calendarListCount:this.calendars.length },
       width: '600px'
     }).afterClosed().subscribe(data => {
       if (data === 'submited') {

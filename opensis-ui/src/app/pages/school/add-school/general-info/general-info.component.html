@@ -120,9 +120,10 @@
                     <li>
                 <mat-form-field class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'dateSchoolClosed'|translate}}</mat-label>
-                    <input formControlName="date_school_closed" [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolClosed" [min]="minDate"  name="date_school_closed" [matDatepicker]="dateSchoolClosed" matInput>
+                    <input formControlName="date_school_closed" (dateInput)="checkClosedDate()" [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolClosed" [min]="minDate"  name="date_school_closed" [matDatepicker]="dateSchoolClosed" matInput>
                     <mat-datepicker-toggle [for]="dateSchoolClosed" matSuffix></mat-datepicker-toggle>
                     <mat-datepicker #dateSchoolClosed></mat-datepicker>
+                    <mat-error *ngIf="form.controls.date_school_closed.errors?.nomatch">{{'dateSchoolOpenedAndDateSchoolClosedCannotBeSame'|translate}}</mat-error>                   
                 </mat-form-field>
                     </li>
                     <li>

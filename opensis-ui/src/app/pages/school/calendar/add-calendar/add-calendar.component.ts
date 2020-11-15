@@ -12,7 +12,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ValidationService } from '../../../shared/validation.service';
 import * as moment from 'moment';
 import { SharedFunction } from '../../../shared/shared-function';
-import { MatCheckbox } from '@angular/material/checkbox';
+import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
+import { formatDate} from '@angular/common';
 
 @Component({
   selector: 'vex-add-calendar',
@@ -25,8 +26,9 @@ import { MatCheckbox } from '@angular/material/checkbox';
 })
 export class AddCalendarComponent implements OnInit {
   @ViewChild('checkBox') checkBox:MatCheckbox;
-  checkAll;
+  checkAll:boolean;
   calendarTitle: string;
+  calendarActionButtonTitle="submit";
   getAllMembersList: GetAllMembersList = new GetAllMembersList();
   calendarAddViewModel = new CalendarAddViewModel();
   weekArray: number[] = [];
@@ -48,18 +50,19 @@ export class AddCalendarComponent implements OnInit {
     private fb: FormBuilder, private _membershipService: MembershipService, private commonFunction: SharedFunction,
     private _calendarService: CalendarService, @Inject(MAT_DIALOG_DATA) public data: any, private snackbar: MatSnackBar) {
 
-
   }
 
   ngOnInit(): void {
-
     this.form = this.fb.group({
       title: ['', Validators.required],
       startDate: ['', Validators.required],
       endDate: [''],
       isDefaultCalendar: [false]
     });
-
+    if(this.data.calendarListCount==0){
+      this.calendarAddViewModel.schoolCalendar.startDate=sessionStorage.getItem("markingPeriod");
+    }
+      
     if (this.data == null) {
       this.snackbar.open('Null vallue occur. ', '', {
         duration: 1000
@@ -74,10 +77,11 @@ export class AddCalendarComponent implements OnInit {
       }
       else {
         this.calendarTitle = "editCalendar";
+        this.calendarActionButtonTitle="update";
         this.calendarAddViewModel.schoolCalendar = this.data.calendar;
         this.form.patchValue({ isDefaultCalendar: this.calendarAddViewModel.schoolCalendar.defaultCalender });
         this.weekArray = this.calendarAddViewModel.schoolCalendar.days.split('').map(x => +x);
-        if (this.calendarAddViewModel.schoolCalendar.visibleToMembershipId != null) {
+        if (this.calendarAddViewModel.schoolCalendar.visibleToMembershipId != null && this.calendarAddViewModel.schoolCalendar.visibleToMembershipId !='') {
           var membershipIds: string[] = this.calendarAddViewModel.schoolCalendar.visibleToMembershipId.split(',');
           this.memberArray = membershipIds.map(Number);
         }
@@ -91,7 +95,24 @@ export class AddCalendarComponent implements OnInit {
 
   }
 
+  checkDate(){
+    let markingPeriodDate=new Date(sessionStorage.getItem("markingPeriod")).getTime();
+    let startDate=new Date(this.calendarAddViewModel.schoolCalendar.startDate).getTime(); 
+    if((startDate!=markingPeriodDate && this.form.value.isDefaultCalendar) || (this.data.calenderListCount==0 && startDate!=markingPeriodDate)){
+      this.form.controls.startDate.setErrors({'nomatch': true});
+    }else{
+      if(this.form.controls.startDate.errors?.nomatch){
+        this.form.controls.startDate.setErrors(null);
+      }
+    }
+  }
 
+  showOptions(event:MatCheckboxChange){
+  if(event.checked){
+    this.calendarAddViewModel.schoolCalendar.startDate=sessionStorage.getItem("markingPeriod");
+    this.checkDate();
+  }
+  }
 
   dateCompare() {
     let openingDate = new Date(this.form.controls.startDate.value);
@@ -106,7 +127,7 @@ export class AddCalendarComponent implements OnInit {
   submitCalendar() {
     this.calendarAddViewModel.schoolCalendar.title = this.form.value.title;
     this.calendarAddViewModel.schoolCalendar.defaultCalender = this.form.value.isDefaultCalendar;
-    this.calendarAddViewModel.schoolCalendar.academicYear = new Date(this.form.value.startDate).getFullYear();
+    this.calendarAddViewModel.schoolCalendar.academicYear = +sessionStorage.getItem("academicyear");
     this.calendarAddViewModel.schoolCalendar.days = this.weekArray.toString().replace(/,/g, "");
     this.calendarAddViewModel.schoolCalendar.visibleToMembershipId = this.memberArray.toString();
     this.calendarAddViewModel.schoolCalendar.startDate = this.commonFunction.formatDateSaveWithoutTime(this.form.value.startDate);

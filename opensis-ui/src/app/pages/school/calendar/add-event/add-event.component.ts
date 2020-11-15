@@ -35,6 +35,7 @@ export class AddEventComponent implements OnInit {
   isEditMode: boolean = false;
   checkAll:boolean;
   calendarEventTitle: string;
+  calendarEventActionButtonTitle="submit";
   getAllMembersList: GetAllMembersList = new GetAllMembersList();
   calendarEventAddViewModel = new CalendarEventAddViewModel();
   weekArray: number[] = [];
@@ -66,7 +67,8 @@ export class AddEventComponent implements OnInit {
       startDate: ['', Validators.required],
       endDate: ['', Validators.required],
       notes: ['', Validators.required],
-      eventColor :['']
+      eventColor :[''],
+      systemWideEvent :['',false]
     });
   }
 
@@ -88,13 +90,15 @@ export class AddEventComponent implements OnInit {
       else {
         //show event value in form 
         this.calendarEventTitle = "editEvent";
+        this.calendarEventActionButtonTitle="update";
         this.calendarEventAddViewModel.schoolCalendarEvent = this.data.calendarEvent.meta.calendar;
         this.form.patchValue({ title: this.data.calendarEvent.meta.calendar.title });
         this.form.patchValue({ startDate: this.data.calendarEvent.meta.calendar.startDate });
         this.form.patchValue({ endDate: this.data.calendarEvent.meta.calendar.endDate });
         this.form.patchValue({ notes: this.data.calendarEvent.meta.calendar.description });
         this.form.patchValue({ eventColor: this.data.calendarEvent.meta.calendar.eventColor });
-        if (this.calendarEventAddViewModel.schoolCalendarEvent.visibleToMembershipId != null) {
+        this.form.patchValue({ systemWideEvent: this.data.calendarEvent.meta.calendar.systemWideEvent });
+        if (this.calendarEventAddViewModel.schoolCalendarEvent.visibleToMembershipId != null && this.calendarEventAddViewModel.schoolCalendarEvent.visibleToMembershipId !='') {
           var membershipIds: string[] = this.calendarEventAddViewModel.schoolCalendarEvent.visibleToMembershipId.split(',');
           this.memberArray = membershipIds.map(Number);
          
@@ -171,13 +175,14 @@ export class AddEventComponent implements OnInit {
 //save event
   submitCalendarEvent() {
     this.calendarEventAddViewModel.schoolCalendarEvent.title = this.form.value.title;
-    this.calendarEventAddViewModel.schoolCalendarEvent.academicYear = new Date(this.form.value.startDate).getFullYear();
+    this.calendarEventAddViewModel.schoolCalendarEvent.academicYear = +sessionStorage.getItem("academicyear");
     this.calendarEventAddViewModel.schoolCalendarEvent.description = this.form.value.notes;
     this.calendarEventAddViewModel.schoolCalendarEvent.visibleToMembershipId = this.memberArray.toString();
     this.calendarEventAddViewModel.schoolCalendarEvent.startDate = this.commonFunction.formatDateSaveWithoutTime(this.form.value.startDate);
     this.calendarEventAddViewModel.schoolCalendarEvent.endDate = this.commonFunction.formatDateSaveWithoutTime(this.form.value.endDate);
     this.calendarEventAddViewModel.schoolCalendarEvent.calendarId = this._calendarService.getCalendarId();
     this.calendarEventAddViewModel.schoolCalendarEvent.eventColor = this.form.value.eventColor;
+    this.calendarEventAddViewModel.schoolCalendarEvent.systemWideEvent = this.form.value.systemWideEvent;
     if (this.form.valid) {
       if (this.calendarEventAddViewModel.schoolCalendarEvent.eventId > 0) {
         this._calendarEventService.updateCalendarEvent(this.calendarEventAddViewModel).subscribe(data => {

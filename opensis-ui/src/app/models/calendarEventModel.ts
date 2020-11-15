@@ -14,6 +14,7 @@ export class CalendarEventModel {
     public updatedBy: string;
     public visibleToMembershipId :string;
     public eventColor :string;
+    public systemWideEvent :boolean;
     public startDate :string;
     public endDate : string;
    
@@ -40,6 +41,7 @@ export class CalendarEventListViewModel extends CommonField {
     public tenantId: string;
     public schoolId: number;
     public calendarId: number;
+    public academicYear: number;
     constructor() {
         super();
         this.calendarEventList = [];
@@ -47,6 +49,7 @@ export class CalendarEventListViewModel extends CommonField {
         this.tenantId = sessionStorage.getItem("tenantId");
         this._tenantName = sessionStorage.getItem('tenant');
         this._token= sessionStorage.getItem("token");
+        this.academicYear = +sessionStorage.getItem("academicyear");
     }
 }
 

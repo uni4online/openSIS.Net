@@ -43,6 +43,7 @@ export class CalendarListModel extends CommonField {
     public calendarList: CalendarModel[];
     public tenantId: string;
     public schoolId: number;
+    public academicYear :number;
     constructor() {
         super();
         this.calendarList = [];
@@ -50,5 +51,6 @@ export class CalendarListModel extends CommonField {
         this.tenantId = sessionStorage.getItem("tenantId");
         this._tenantName = sessionStorage.getItem('tenant');
         this._token= sessionStorage.getItem("token");
+        this.academicYear = +sessionStorage.getItem("academicyear");
     }
 }

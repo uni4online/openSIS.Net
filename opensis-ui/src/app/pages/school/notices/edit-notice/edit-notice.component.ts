@@ -86,7 +86,7 @@ export class EditNoticeComponent implements OnInit {
           (res)=>{
             
             this.noticeAddViewModel.notice = res.notice;
-            if(this.noticeAddViewModel.notice.targetMembershipIds!=null){
+            if(this.noticeAddViewModel.notice.targetMembershipIds!=null && this.noticeAddViewModel.notice.targetMembershipIds!=''){
               var membershipIds:string[] = this.noticeAddViewModel.notice.targetMembershipIds.split(',');
           this.memberArray = membershipIds.map(Number);
           if(this.memberArray.length === this.getAllMembersList.getAllMemberList.length){

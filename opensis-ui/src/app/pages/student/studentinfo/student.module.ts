@@ -19,7 +19,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { SharedModuleModule } from '../../shared-module/shared-module.module';
 import { StudentRoutingModule } from '../studentinfo/student-routing-module';
-
+import {MatSortModule} from '@angular/material/sort';
 @NgModule({
   declarations: [StudentComponent],
   imports: [
@@ -42,7 +42,8 @@ import { StudentRoutingModule } from '../studentinfo/student-routing-module';
     MatMenuModule,
     MatButtonToggleModule,
     SharedModuleModule,
-    StudentRoutingModule
+    StudentRoutingModule,
+    MatSortModule
   ]
 })
 export class StudentModule { }

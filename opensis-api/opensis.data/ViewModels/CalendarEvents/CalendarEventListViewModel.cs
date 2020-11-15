@@ -10,5 +10,6 @@ namespace opensis.data.ViewModels.CalendarEvents
         public Guid? TenantId { get; set; }
         public int? SchoolId { get; set; }
         public int? CalendarId { get; set; }
+        public int? AcademicYear { get; set; }
     }
 }
