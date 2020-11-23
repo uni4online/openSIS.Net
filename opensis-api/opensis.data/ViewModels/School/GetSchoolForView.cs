@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
+
 namespace opensis.data.ViewModels.School
 {
     public class GetSchoolForView
@@ -14,6 +15,7 @@ namespace opensis.data.ViewModels.School
         public string StreetAddress1 { get; set; }
         public string NameOfPrincipal { get; set; }
         public string Telephone { get; set; }
-        public bool? Status { get; set; }
+        public bool? Status { get; set; }        
     }
 }
+

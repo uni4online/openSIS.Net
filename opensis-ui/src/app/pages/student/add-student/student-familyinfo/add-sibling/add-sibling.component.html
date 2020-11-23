@@ -9,17 +9,17 @@
     <mat-dialog-content fxLayout="column">
         <mat-form-field class="mt-6" appearance="outline" color="primary">
             <mat-label>{{'firstName' | translate}}</mat-label>
-            <input name="search" type="text" cdkFocusInitial matInput>
+            <input name="search" type="text" cdkFocusInitial matInput required>
         </mat-form-field>
         
         <mat-form-field appearance="outline" color="primary">
             <mat-label>{{'lastName' | translate}}</mat-label>
-            <input name="search" type="text" cdkFocusInitial matInput>
+            <input name="search" type="text" cdkFocusInitial matInput required>
         </mat-form-field>
         
         <mat-form-field appearance="outline" color="primary">
             <mat-label>{{'gradeLevel' | translate}}</mat-label>
-            <mat-select name="country">
+            <mat-select name="country" required>
                 <mat-option>Show Grade Level Entry</mat-option>
             </mat-select>
         </mat-form-field>
@@ -42,6 +42,6 @@
     </mat-dialog-content>
     <mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" class="py-6">
         <button mat-button mat-dialog-close type="button">{{'cancel' | translate}}</button>
-        <button color="primary" mat-raised-button type="submit">{{'search' | translate}}</button>
+        <button color="primary" mat-raised-button type="submit" mat-dialog-close>{{'search' | translate}}</button>
     </mat-dialog-actions>
 </form>

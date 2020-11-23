@@ -19,5 +19,6 @@ namespace opensis.data.Models
 
         public virtual Language Lang { get; set; }
         public virtual Membership Membership { get; set; }
+        public virtual UserSecretQuestions UserSecretQuestions { get; set; }
     }
 }

@@ -111,33 +111,48 @@ namespace opensis.data.Repository
 
                 studentUpdate.StudentPhoto = student.studentMaster.StudentPhoto;
 
-                studentUpdate.PrimaryContactFirstname = student.studentMaster.PrimaryContactFirstname;
-                studentUpdate.PrimaryContactLastname = student.studentMaster.PrimaryContactLastname;
-                studentUpdate.PrimaryContactRelationship = student.studentMaster.PrimaryContactRelationship;
-                studentUpdate.PrimaryContactEmail = student.studentMaster.PrimaryContactEmail;
-                studentUpdate.PrimaryContactMobile = student.studentMaster.PrimaryContactMobile;
-                studentUpdate.PrimaryContactWorkPhone = student.studentMaster.PrimaryContactWorkPhone;
-                studentUpdate.PrimaryContactHomePhone = student.studentMaster.PrimaryContactHomePhone;
-                studentUpdate.PrimaryContactAddressLineOne = student.studentMaster.PrimaryContactAddressLineOne;
-                studentUpdate.PrimaryContactAddressLineTwo = student.studentMaster.PrimaryContactAddressLineTwo;
-                studentUpdate.PrimaryContactCountry = student.studentMaster.PrimaryContactCountry;
-                studentUpdate.PrimaryContactState = student.studentMaster.PrimaryContactState;
-                studentUpdate.PrimaryContactCity = student.studentMaster.PrimaryContactCity;
-                studentUpdate.PrimaryContactZip = student.studentMaster.PrimaryContactZip;
+                studentUpdate.CriticalAlert = student.studentMaster.CriticalAlert;
+                studentUpdate.AlertDescription = student.studentMaster.AlertDescription;
+                studentUpdate.PrimaryCarePhysician = student.studentMaster.PrimaryCarePhysician;
+                studentUpdate.PrimaryCarePhysicianPhone = student.studentMaster.PrimaryCarePhysicianPhone;
+                studentUpdate.MedicalFacility = student.studentMaster.MedicalFacility;
+                studentUpdate.MedicalFacilityPhone = student.studentMaster.MedicalFacilityPhone;
+                studentUpdate.InsuranceCompany = student.studentMaster.InsuranceCompany;
+                studentUpdate.InsuranceCompanyPhone = student.studentMaster.InsuranceCompanyPhone;
+                studentUpdate.PolicyNumber = student.studentMaster.PolicyNumber;
+                studentUpdate.PolicyHolder = student.studentMaster.PolicyHolder;
+                studentUpdate.Dentist = student.studentMaster.Dentist;
+                studentUpdate.DentistPhone = student.studentMaster.DentistPhone;
+                studentUpdate.Vision = student.studentMaster.Vision;
+                studentUpdate.VisionPhone = student.studentMaster.VisionPhone;
 
-                studentUpdate.SecondaryContactFirstname = student.studentMaster.SecondaryContactFirstname;
-                studentUpdate.SecondaryContactLastname = student.studentMaster.SecondaryContactLastname;
-                studentUpdate.SecondaryContactRelationship = student.studentMaster.SecondaryContactRelationship;
-                studentUpdate.SecondaryContactEmail = student.studentMaster.SecondaryContactEmail;
-                studentUpdate.SecondaryContactMobile = student.studentMaster.SecondaryContactMobile;
-                studentUpdate.SecondaryContactWorkPhone = student.studentMaster.SecondaryContactWorkPhone;
-                studentUpdate.SecondaryContactHomePhone = student.studentMaster.SecondaryContactHomePhone;
-                studentUpdate.SecondaryContactAddressLineOne = student.studentMaster.SecondaryContactAddressLineOne;
-                studentUpdate.SecondaryContactAddressLineTwo = student.studentMaster.SecondaryContactAddressLineTwo;
-                studentUpdate.SecondaryContactCountry = student.studentMaster.SecondaryContactCountry;
-                studentUpdate.SecondaryContactState = student.studentMaster.SecondaryContactState;
-                studentUpdate.SecondaryContactCity = student.studentMaster.SecondaryContactCity;
-                studentUpdate.SecondaryContactZip = student.studentMaster.SecondaryContactZip;
+                //studentUpdate.PrimaryContactFirstname = student.studentMaster.PrimaryContactFirstname;
+                //studentUpdate.PrimaryContactLastname = student.studentMaster.PrimaryContactLastname;
+                //studentUpdate.PrimaryContactRelationship = student.studentMaster.PrimaryContactRelationship;
+                //studentUpdate.PrimaryContactEmail = student.studentMaster.PrimaryContactEmail;
+                //studentUpdate.PrimaryContactMobile = student.studentMaster.PrimaryContactMobile;
+                //studentUpdate.PrimaryContactWorkPhone = student.studentMaster.PrimaryContactWorkPhone;
+                //studentUpdate.PrimaryContactHomePhone = student.studentMaster.PrimaryContactHomePhone;
+                //studentUpdate.PrimaryContactAddressLineOne = student.studentMaster.PrimaryContactAddressLineOne;
+                //studentUpdate.PrimaryContactAddressLineTwo = student.studentMaster.PrimaryContactAddressLineTwo;
+                //studentUpdate.PrimaryContactCountry = student.studentMaster.PrimaryContactCountry;
+                //studentUpdate.PrimaryContactState = student.studentMaster.PrimaryContactState;
+                //studentUpdate.PrimaryContactCity = student.studentMaster.PrimaryContactCity;
+                //studentUpdate.PrimaryContactZip = student.studentMaster.PrimaryContactZip;
+
+                //studentUpdate.SecondaryContactFirstname = student.studentMaster.SecondaryContactFirstname;
+                //studentUpdate.SecondaryContactLastname = student.studentMaster.SecondaryContactLastname;
+                //studentUpdate.SecondaryContactRelationship = student.studentMaster.SecondaryContactRelationship;
+                //studentUpdate.SecondaryContactEmail = student.studentMaster.SecondaryContactEmail;
+                //studentUpdate.SecondaryContactMobile = student.studentMaster.SecondaryContactMobile;
+                //studentUpdate.SecondaryContactWorkPhone = student.studentMaster.SecondaryContactWorkPhone;
+                //studentUpdate.SecondaryContactHomePhone = student.studentMaster.SecondaryContactHomePhone;
+                //studentUpdate.SecondaryContactAddressLineOne = student.studentMaster.SecondaryContactAddressLineOne;
+                //studentUpdate.SecondaryContactAddressLineTwo = student.studentMaster.SecondaryContactAddressLineTwo;
+                //studentUpdate.SecondaryContactCountry = student.studentMaster.SecondaryContactCountry;
+                //studentUpdate.SecondaryContactState = student.studentMaster.SecondaryContactState;
+                //studentUpdate.SecondaryContactCity = student.studentMaster.SecondaryContactCity;
+                //studentUpdate.SecondaryContactZip = student.studentMaster.SecondaryContactZip;
 
                 this.context?.SaveChanges();
 
@@ -300,8 +315,8 @@ namespace opensis.data.Repository
                 if (searchContactViewModel.FilterValue != null)
                 {
                     string Columnvalue = searchContactViewModel.FilterValue;
-                    transactionIQ = StudentMasterList.Where(x => x.PrimaryContactFirstname.ToLower().Contains(Columnvalue.ToLower()) || x.PrimaryContactLastname.ToLower().Contains(Columnvalue.ToLower()) || x.PrimaryContactHomePhone.ToLower().Contains(Columnvalue.ToLower()) || x.PrimaryContactWorkPhone.ToLower().Contains(Columnvalue.ToLower()) || x.PrimaryContactMobile.ToLower().Contains(Columnvalue.ToLower()) || x.PrimaryContactEmail.ToLower().Contains(Columnvalue.ToLower())
-                    || x.SecondaryContactFirstname.ToLower().Contains(Columnvalue.ToLower()) || x.SecondaryContactLastname.ToLower().Contains(Columnvalue.ToLower()) || x.SecondaryContactHomePhone.ToLower().Contains(Columnvalue.ToLower()) || x.SecondaryContactWorkPhone.ToLower().Contains(Columnvalue.ToLower()) || x.SecondaryContactMobile.ToLower().Contains(Columnvalue.ToLower()) || x.SecondaryContactEmail.ToLower().Contains(Columnvalue.ToLower()));
+                    //transactionIQ = StudentMasterList.Where(x => x.PrimaryContactFirstname.ToLower().Contains(Columnvalue.ToLower()) || x.PrimaryContactLastname.ToLower().Contains(Columnvalue.ToLower()) || x.PrimaryContactHomePhone.ToLower().Contains(Columnvalue.ToLower()) || x.PrimaryContactWorkPhone.ToLower().Contains(Columnvalue.ToLower()) || x.PrimaryContactMobile.ToLower().Contains(Columnvalue.ToLower()) || x.PrimaryContactEmail.ToLower().Contains(Columnvalue.ToLower())
+                    //|| x.SecondaryContactFirstname.ToLower().Contains(Columnvalue.ToLower()) || x.SecondaryContactLastname.ToLower().Contains(Columnvalue.ToLower()) || x.SecondaryContactHomePhone.ToLower().Contains(Columnvalue.ToLower()) || x.SecondaryContactWorkPhone.ToLower().Contains(Columnvalue.ToLower()) || x.SecondaryContactMobile.ToLower().Contains(Columnvalue.ToLower()) || x.SecondaryContactEmail.ToLower().Contains(Columnvalue.ToLower()));
 
                     int checkCount = transactionIQ.Count();
                     if (checkCount < 1)
@@ -339,6 +354,157 @@ namespace opensis.data.Repository
 
         }
 
+        /// <summary>
+        /// Add StudentDocument
+        /// </summary>
+        /// <param name="studentDocumentAddViewModel"></param>
+        /// <returns></returns>
+        public StudentDocumentAddViewModel AddStudentDocument(StudentDocumentAddViewModel studentDocumentAddViewModel)
+        {
+            try
+            {
+                int? MasterDocumentId = Utility.GetMaxPK(this.context, new Func<StudentDocuments, int>(x => x.DocumentId));
+                studentDocumentAddViewModel.studentDocument.DocumentId = (int)MasterDocumentId;
+                studentDocumentAddViewModel.studentDocument.UploadedOn = DateTime.UtcNow;
+                this.context?.StudentDocuments.Add(studentDocumentAddViewModel.studentDocument);
+                this.context?.SaveChanges();
+                studentDocumentAddViewModel._failure = false;
+            }
+            catch (Exception es)
+            {
+                studentDocumentAddViewModel._failure = true;
+                studentDocumentAddViewModel._message = es.Message;
+            }
+            return studentDocumentAddViewModel;
+        }
+
+        /// <summary>
+        /// Update StudentDocument
+        /// </summary>
+        /// <param name="studentDocumentAddViewModel"></param>
+        /// <returns></returns>
+        public StudentDocumentAddViewModel UpdateStudentDocument(StudentDocumentAddViewModel studentDocumentAddViewModel)
+        {
+            try
+            {
+                var studentDocumentUpdate = this.context?.StudentDocuments.FirstOrDefault(x => x.TenantId == studentDocumentAddViewModel.studentDocument.TenantId && x.SchoolId == studentDocumentAddViewModel.studentDocument.SchoolId && x.StudentId == studentDocumentAddViewModel.studentDocument.StudentId && x.DocumentId == studentDocumentAddViewModel.studentDocument.DocumentId);
+                studentDocumentUpdate.FileUploaded = studentDocumentAddViewModel.studentDocument.FileUploaded;
+                studentDocumentUpdate.UploadedOn = DateTime.UtcNow;
+                studentDocumentUpdate.UploadedBy = studentDocumentAddViewModel.studentDocument.UploadedBy;
+                this.context?.SaveChanges();
+                studentDocumentAddViewModel._failure = false;
+                studentDocumentAddViewModel._message = "Updated Successfully";
+            }
+            catch (Exception es)
+            {
+                studentDocumentAddViewModel._failure = true;
+                studentDocumentAddViewModel._message = es.Message;
+            }
+            return studentDocumentAddViewModel;
+        }
+
+        /// <summary>
+        /// Get All StudentDocuments List
+        /// </summary>
+        /// <param name="studentDocumentListViewModel"></param>
+        /// <returns></returns>
+        public StudentDocumentListViewModel GetAllStudentDocumentsList(StudentDocumentListViewModel studentDocumentListViewModel)
+        {
+            StudentDocumentListViewModel studentDocumentsList = new StudentDocumentListViewModel();
+            try
+            {
+
+                var StudentDocumentsAll = this.context?.StudentDocuments.Where(x => x.TenantId == studentDocumentListViewModel.TenantId && x.SchoolId == studentDocumentListViewModel.SchoolId && x.StudentId== studentDocumentListViewModel.StudentId).ToList();
+                studentDocumentsList.studentDocumentList = StudentDocumentsAll;
+                studentDocumentsList._tenantName = studentDocumentListViewModel._tenantName;
+                studentDocumentsList._token = studentDocumentListViewModel._token;
+                studentDocumentsList._failure = false;
+            }
+            catch (Exception es)
+            {
+                studentDocumentsList._message = es.Message;
+                studentDocumentsList._failure = true;
+                studentDocumentsList._tenantName = studentDocumentListViewModel._tenantName;
+                studentDocumentsList._token = studentDocumentListViewModel._token;
+            }
+            return studentDocumentsList;
+        }
+
+        /// <summary>
+        /// Delete StudentDocument
+        /// </summary>
+        /// <param name="studentDocumentAddViewModel"></param>
+        /// <returns></returns>
+        public StudentDocumentAddViewModel DeleteStudentDocument(StudentDocumentAddViewModel studentDocumentAddViewModel)
+        {
+            try
+            {
+                var studentDocumentDelete = this.context?.StudentDocuments.FirstOrDefault(x => x.TenantId == studentDocumentAddViewModel.studentDocument.TenantId && x.SchoolId == studentDocumentAddViewModel.studentDocument.SchoolId && x.StudentId == studentDocumentAddViewModel.studentDocument.StudentId && x.DocumentId== studentDocumentAddViewModel.studentDocument.DocumentId);
+                this.context?.StudentDocuments.Remove(studentDocumentDelete);
+                this.context?.SaveChanges();
+                studentDocumentAddViewModel._failure = false;
+                studentDocumentAddViewModel._message = "Deleted Successfully";
+            }
+            catch (Exception es)
+            {
+                studentDocumentAddViewModel._failure = true;
+                studentDocumentAddViewModel._message = es.Message;
+            }
+            return studentDocumentAddViewModel;
+        }
+        /// <summary>
+        /// Add Student Login Info
+        /// </summary>
+        /// <param name="student"></param>
+        /// <returns></returns>
+        public LoginInfoAddModel AddStudentLoginInfo(LoginInfoAddModel login)
+        {
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(login.userMaster.PasswordHash) && !string.IsNullOrWhiteSpace(login.userMaster.EmailAddress))
+                {
+                    var decrypted = Utility.Decrypt(login.userMaster.PasswordHash);
+                    string passwordHash = Utility.GetHashedPassword(decrypted);
+
+                    var loginInfo = this.context?.UserMaster.FirstOrDefault(x => x.TenantId == login.userMaster.TenantId && x.SchoolId == login.userMaster.SchoolId && x.EmailAddress == login.userMaster.EmailAddress);
+
+                    if (loginInfo == null)
+                    {
+                        var membership = this.context?.Membership.FirstOrDefault(x => x.TenantId == login.userMaster.TenantId && x.SchoolId == login.userMaster.SchoolId && x.Profile == "Student");
+
+                        login.userMaster.UserId = login.StudentId;
+                        login.userMaster.LangId = 1;
+                        login.userMaster.MembershipId = membership.MembershipId;
+                        login.userMaster.PasswordHash = passwordHash;
+                        login.userMaster.LastUpdated = DateTime.UtcNow;
+                        login.userMaster.IsActive = true;
+
+                        if (login.userMaster.UserSecretQuestions != null)
+                        {
+                            login.userMaster.UserSecretQuestions.UserId = login.StudentId;
+                            login.userMaster.UserSecretQuestions.LastUpdated = DateTime.UtcNow;
+                        }
+
+                        this.context?.UserMaster.Add(login.userMaster);
+                        this.context?.SaveChanges();
+                        
+                        //Update StudentPortalId in Studentmaster table.
+                        var student = this.context?.StudentMaster.FirstOrDefault(x => x.TenantId == login.userMaster.TenantId && x.SchoolId == login.userMaster.SchoolId && x.StudentId == login.StudentId);
+                        student.StudentPortalId = login.userMaster.EmailAddress;
+
+                        this.context?.SaveChanges();
+                    }
+                }
+                login._failure = false;
+            }
+            catch (Exception es)
+            {
+                login._failure = true;
+                login._message = es.Message;
+            }
+
+            return login;
+        }
 
 
         /// <summary>

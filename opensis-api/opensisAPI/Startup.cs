@@ -48,6 +48,8 @@ using opensis.core.CustomField.Interfaces;
 using opensis.core.CustomField.Services;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using opensis.core.ParentInfo.Interfaces;
+using opensis.core.ParentInfo.Services;
 
 namespace opensisAPI
 {
@@ -100,6 +102,8 @@ namespace opensisAPI
             services.AddScoped<IAttendanceCodeRepository, AttendanceCodeRepository>();
             services.AddScoped<ICustomFieldService, CustomFieldService>();
             services.AddScoped<ICustomFieldRepository, CustomFieldRepository>();
+            services.AddScoped<IParentInfoRegisterService, ParentInfoRegister>();
+            services.AddScoped<IParentInfoRepository, ParentInfoRepository>();
 
 
 

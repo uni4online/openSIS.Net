@@ -6,12 +6,18 @@ namespace opensis.data.Models
 {
    public partial class StudentMaster
     {
+        public StudentMaster()
+        {
+            ParentInfo = new HashSet<ParentInfo>();
+            StudentComments = new HashSet<StudentComments>();
+            StudentDocuments = new HashSet<StudentDocuments>();
+        }
         public Guid TenantId { get; set; }
         public int SchoolId { get; set; }
         public int StudentId { get; set; }
         public string AlternateId { get; set; }
-        public int? DistrictId { get; set; }
-        public int? StateId { get; set; }
+        public string DistrictId { get; set; }
+        public string StateId { get; set; }
         public string AdmissionNumber { get; set; }
         public string RollNumber { get; set; }
         public string Salutation { get; set; }
@@ -60,44 +66,28 @@ namespace opensis.data.Models
         public string MailingAddressCity { get; set; }
         public string MailingAddressState { get; set; }
         public string MailingAddressZip { get; set; }
-        public string PrimaryContactRelationship { get; set; }
-        public string PrimaryContactFirstname { get; set; }
-        public string PrimaryContactLastname { get; set; }
-        public string PrimaryContactHomePhone { get; set; }
-        public string PrimaryContactWorkPhone { get; set; }
-        public string PrimaryContactMobile { get; set; }
-        public string PrimaryContactEmail { get; set; }
-        public bool? IsPrimaryCustodian { get; set; }
-        public bool? IsPrimaryPortalUser { get; set; }
-        public string PrimaryPortalUserId { get; set; }
-        public bool? PrimaryContactStudentAddressSame { get; set; }
-        public string PrimaryContactAddressLineOne { get; set; }
-        public string PrimaryContactAddressLineTwo { get; set; }
-        public string PrimaryContactCountry { get; set; }
-        public string PrimaryContactCity { get; set; }
-        public string PrimaryContactState { get; set; }
-        public string PrimaryContactZip { get; set; }
-        public string SecondaryContactRelationship { get; set; }
-        public string SecondaryContactFirstname { get; set; }
-        public string SecondaryContactLastname { get; set; }
-        public string SecondaryContactHomePhone { get; set; }
-        public string SecondaryContactWorkPhone { get; set; }
-        public string SecondaryContactMobile { get; set; }
-        public string SecondaryContactEmail { get; set; }
-        public bool? IsSecondaryCustodian { get; set; }
-        public bool? IsSecondaryPortalUser { get; set; }
-        public string SecondaryPortalUserId { get; set; }
-        public bool? SecondaryContactStudentAddressSame { get; set; }
-        public string SecondaryContactAddressLineOne { get; set; }
-        public string SecondaryContactAddressLineTwo { get; set; }
-        public string SecondaryContactCountry { get; set; }
-        public string SecondaryContactCity { get; set; }
-        public string SecondaryContactState { get; set; }
-        public string SecondaryContactZip { get; set; }
+        public string CriticalAlert { get; set; }
+        public string AlertDescription { get; set; }
+        public string PrimaryCarePhysician { get; set; }
+        public string PrimaryCarePhysicianPhone { get; set; }
+        public string MedicalFacility { get; set; }
+        public string MedicalFacilityPhone { get; set; }
+        public string InsuranceCompany { get; set; }
+        public string InsuranceCompanyPhone { get; set; }
+        public string PolicyNumber { get; set; }
+        public string PolicyHolder { get; set; }
+        public string Dentist { get; set; }
+        public string DentistPhone { get; set; }
+        public string Vision { get; set; }
+        public string VisionPhone { get; set; }
+        public string Associationship { get; set; }
         public virtual Language FirstLanguage { get; set; }
         public virtual SchoolMaster SchoolMaster { get; set; }
         public virtual Language SecondLanguage { get; set; }
         public virtual Language ThirdLanguage { get; set; }
         public virtual StudentEnrollment StudentEnrollment { get; set; }
+        public virtual ICollection<ParentInfo> ParentInfo { get; set; }
+        public virtual ICollection<StudentComments> StudentComments { get; set; }
+        public virtual ICollection<StudentDocuments> StudentDocuments { get; set; }
     }
 }

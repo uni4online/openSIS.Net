@@ -39,7 +39,7 @@
 
         <mat-form-field appearance="outline" color="primary">
             <mat-label>{{'mobilePhone' | translate}}</mat-label>
-            <input type="text" name="mobile_phone" matInput required>
+            <input type="text" name="mobile_phone" matInput>
         </mat-form-field>
 
         <mat-form-field appearance="outline" color="primary">
@@ -50,6 +50,14 @@
         <mat-form-field appearance="outline" color="primary">
             <mat-label>{{'homePhone' | translate}}</mat-label>
             <input type="text" name="home_phone" matInput>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" color="primary">
+            <mat-label>{{'userProfile' | translate}}</mat-label>
+            <mat-select name="country" required>
+                <mat-option>Parent</mat-option>
+                <mat-option>Show Parent & Custom Parent Profiles</mat-option>
+            </mat-select>
         </mat-form-field>
 
         <mat-form-field appearance="outline" color="primary">

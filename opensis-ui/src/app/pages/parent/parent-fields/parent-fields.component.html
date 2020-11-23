@@ -4,17 +4,12 @@
             <div class="px-gutter py-4">
                 <h4 class="text-primary p-0 mb-4">{{'categories'|translate}}</h4>
 
-                <div class="mt-2 mb-4 flex flex-wrap justify-between">
-                    <a routerLink="" class="font-bold">General Information</a>
-                </div>
-                <div class="mt-2 mb-4 flex flex-wrap justify-between">
-                    <a routerLink="">Address Information</a>
-                </div>
-                <div class="mt-2 flex flex-wrap justify-between">
-                    <a routerLink="">Other Information</a>
-                    <div>
-                        <a routerLink="" class="mr-3"><mat-icon [icIcon]="icEdit"></mat-icon></a>
-                        <a routerLink=""><mat-icon [icIcon]="icDelete"></mat-icon></a>
+
+                <div *ngFor="let fieldsCategory of fieldsCategoryList" class="mt-2 flex flex-wrap justify-between">
+                    <a class="cursor-pointer" [ngClass]="{'font-bold':currentCategoryId === fieldsCategory.categoryId}" (click)="selectCategory(fieldsCategory)">{{fieldsCategory.title}} </a>
+                    <div *ngIf="!fieldsCategory.isSystemCategory">
+                        <a class="cursor-pointer mr-3" (click)="editFieldCategory(fieldsCategory)"><mat-icon [icIcon]="icEdit"></mat-icon></a>
+                        <a class="cursor-pointer" (click)="confirmDeleteFieldCategory(fieldsCategory)"><mat-icon [icIcon]="icDelete"></mat-icon></a>
                     </div>
                 </div>
                 <hr class="my-3"/>
@@ -36,10 +31,18 @@
                         fxLayoutAlign="start center">
 
                         <div class="flex">
-                            <input class="px-4 py-3 border-0 outline-none w-full bg-transparent" placeholder="Search..."
-                                type="search">
-                            <button class="ml-4" fxFlex="none" fxHide.gt-xs mat-icon-button type="button">
-                                <mat-icon [icIcon]="icSearch"></mat-icon>
+                            <input
+                            matInput
+                            [(ngModel)]="searchKey"
+                            (keyup)="applyFilter()"
+                            class="py-3 border-0 outline-none w-full bg-transparent"
+                            appearance="outline" color="primary"
+                             placeholder="Search..."
+                            type="search">
+                            <button mat-button matSuffix mat-icon-button aria-label="clear"
+                            *ngIf="searchKey"
+                            (click)="onSearchClear()">
+                            <mat-icon>close</mat-icon>
                             </button>
                         </div>
                     </div>
@@ -61,30 +64,30 @@
                 </div>
             </div>
 
-            <table @stagger mat-table [dataSource]="StudentFieldsModelList" class="mat-elevation-z8 table-auto w-full"
+            <table @stagger mat-table [dataSource]="customFieldList" class="mat-elevation-z8 table-auto w-full"
                 matSort>
                 
-                <ng-container matColumnDef="type">
+                <!-- <ng-container matColumnDef="type">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="uppercase"></th>
                     <td mat-cell *matCellDef="let element">
                         <span *ngIf="element.type === 'Default'; else elseBlock" class="text-gray">{{element.type}}</span>
                         <ng-template #elseBlock><span class="text-green">{{element.type}}</span></ng-template>
                     </td>
-                </ng-container>
+                </ng-container> -->
 
                 <ng-container matColumnDef="field_name">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="uppercase">{{'fieldName'|translate}}</th>
                     <td mat-cell *matCellDef="let element">
-                        {{element.field_name}}
+                        {{element.title}}
                     </td>
                 </ng-container>
 
                 <!-- Body -->
-                <ng-container matColumnDef="sort_order">
+                <ng-container matColumnDef="sortOrder">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="uppercase">{{'sortOrder'|translate}}
                     </th>
                     <td mat-cell *matCellDef="let element">
-                        {{element.sort_order}}
+                        {{element.sortOrder}}
                     </td>
                 </ng-container>
 
@@ -92,28 +95,50 @@
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="uppercase">{{'fieldType'|translate}}
                     </th>
                     <td mat-cell *matCellDef="let element">
-                        {{element.field_type}}
+                        {{element.type}}
                     </td>
                 </ng-container>
 
-                <ng-container matColumnDef="in_use">
+                <ng-container matColumnDef="selectOptions">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="uppercase">{{'selectOptions'|translate}}
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.selectOptions|EmtyValueCheckPipe}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="required">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="uppercase">{{'required'|translate}}</th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.required|EmtyBooleanCheckPipe}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="inUsed">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="uppercase">{{'inUse'|translate}}</th>
                     <td mat-cell *matCellDef="let element">
-                        {{element.in_use}}
+                        {{element.hide|EmtyBooleanCheckReversePipe}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="systemField">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="uppercase">{{'systemField'|translate}}</th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.systemField|EmtyBooleanCheckPipe}}
                     </td>
                 </ng-container>
 
                 <ng-container matColumnDef="action">
                     <th mat-header-cell *matHeaderCellDef class="uppercase">{{'action'|translate}}</th>
                     <td mat-cell *matCellDef="let element">
-                        <span *ngIf="element.type === 'Custom'">
-                        <a routerLink="" class="mr-3 cursor-pointer">
+                        <!-- <span *ngIf="element.type === 'Custom'"> -->
+                        <a class="mr-3 cursor-pointer" (click)="openEditdata(element)">
                             <mat-icon [icIcon]="icEdit"></mat-icon>
                         </a>
-                        <a routerLink="" class="mr-3 cursor-pointer">
+                        <a class="cursor-pointer"(click)="confirmDelete(element)">
                             <mat-icon [icIcon]="icDelete"></mat-icon>
                         </a>
-                        </span>
+                        <!-- </span> -->
                     </td>
                 </ng-container>
 

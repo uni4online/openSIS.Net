@@ -7,6 +7,7 @@ import { TranslateService } from '@ngx-translate/core';
 import icEdit from '@iconify/icons-ic/twotone-edit';
 import icDelete from '@iconify/icons-ic/twotone-delete';
 import icAdd from '@iconify/icons-ic/baseline-add';
+import icPrint from '@iconify/icons-ic/baseline-print';
 import icComment from '@iconify/icons-ic/twotone-comment';
 import { MatDialog } from '@angular/material/dialog';
 import { EditCommentComponent } from './edit-comment/edit-comment.component';
@@ -28,6 +29,7 @@ export class StudentCommentsComponent implements OnInit {
   icDelete = icDelete;
   icAdd = icAdd;
   icComment = icComment;
+  icPrint = icPrint;
 
   constructor(private fb: FormBuilder, private dialog: MatDialog, public translateService:TranslateService) {
     translateService.use('en');

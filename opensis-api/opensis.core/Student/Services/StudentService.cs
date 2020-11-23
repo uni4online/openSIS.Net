@@ -136,6 +136,103 @@ namespace opensis.core.Student.Services
 
             return contactViewModel;
         }
+        /// <summary>
+        /// Save StudentDocument
+        /// </summary>
+        /// <param name="studentDocumentAddViewModel"></param>
+        /// <returns></returns>
+        public StudentDocumentAddViewModel SaveStudentDocument(StudentDocumentAddViewModel studentDocumentAddViewModel)
+        {
+            StudentDocumentAddViewModel studentDocumentAdd = new StudentDocumentAddViewModel();
+            if (TokenManager.CheckToken(studentDocumentAddViewModel._tenantName, studentDocumentAddViewModel._token))
+            {
+                studentDocumentAdd = this.studentRepository.AddStudentDocument(studentDocumentAddViewModel);
+            }
+            else
+            {
+                studentDocumentAdd._failure = true;
+                studentDocumentAdd._message = TOKENINVALID;
+            }
+            return studentDocumentAdd;
+        }
+        /// <summary>
+        /// Update StudentDocument
+        /// </summary>
+        /// <param name="studentDocumentAddViewModel"></param>
+        /// <returns></returns>
+        public StudentDocumentAddViewModel UpdateStudentDocument(StudentDocumentAddViewModel studentDocumentAddViewModel)
+        {
+            StudentDocumentAddViewModel studentDocumentUpdate = new StudentDocumentAddViewModel();
+            if (TokenManager.CheckToken(studentDocumentAddViewModel._tenantName, studentDocumentAddViewModel._token))
+            {
+                studentDocumentUpdate = this.studentRepository.UpdateStudentDocument(studentDocumentAddViewModel);
+            }
+            else
+            {
+                studentDocumentUpdate._failure = true;
+                studentDocumentUpdate._message = TOKENINVALID;
+            }
+            return studentDocumentUpdate;
+        }
+        /// <summary>
+        /// Get All StudentDocuments List
+        /// </summary>
+        /// <param name="studentDocumentListViewModel"></param>
+        /// <returns></returns>
+        public StudentDocumentListViewModel GetAllStudentDocumentsList(StudentDocumentListViewModel studentDocumentListViewModel)
+        {
+            StudentDocumentListViewModel studentDocumentsList = new StudentDocumentListViewModel();
+            if (TokenManager.CheckToken(studentDocumentListViewModel._tenantName, studentDocumentListViewModel._token))
+            {
+                studentDocumentsList = this.studentRepository.GetAllStudentDocumentsList(studentDocumentListViewModel);
+            }
+            else
+            {
+                studentDocumentsList._failure = true;
+                studentDocumentsList._message = TOKENINVALID;
+            }
+            return studentDocumentsList;
+        }
+        /// <summary>
+        /// Delete StudentDocument
+        /// </summary>
+        /// <param name="studentDocumentAddViewModel"></param>
+        /// <returns></returns>
+        public StudentDocumentAddViewModel DeleteStudentDocument(StudentDocumentAddViewModel studentDocumentAddViewModel)
+        {
+            StudentDocumentAddViewModel studentDocumentdelete = new StudentDocumentAddViewModel();
+            if (TokenManager.CheckToken(studentDocumentAddViewModel._tenantName, studentDocumentAddViewModel._token))
+            {
+                studentDocumentdelete = this.studentRepository.DeleteStudentDocument(studentDocumentAddViewModel);
+            }
+            else
+            {
+                studentDocumentdelete._failure = true;
+                studentDocumentdelete._message = TOKENINVALID;
+            }
+            return studentDocumentdelete;
+        }
+
+        /// <summary>
+        /// Add Student Login Info
+        /// </summary>
+        /// <param name="login"></param>
+        /// <returns></returns>
+        public LoginInfoAddModel AddStudentLoginInfo(LoginInfoAddModel login)
+        {
+            LoginInfoAddModel loginInfo = new LoginInfoAddModel();
+            if (TokenManager.CheckToken(login._tenantName, login._token))
+            {
+
+                loginInfo = this.studentRepository.AddStudentLoginInfo(login);
+            }
+            else
+            {
+                loginInfo._failure = true;
+                loginInfo._message = TOKENINVALID;
+            }
+            return loginInfo;
+        }
         ///// <summary>
         ///// Student View By Id
         ///// </summary>

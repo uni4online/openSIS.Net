@@ -50,10 +50,10 @@ export class StudentDocumentsComponent implements OnInit {
   constructor(private router: Router, private fb: FormBuilder, public translateService:TranslateService) {
     translateService.use('en');
     this.StudentDocumentsList = [
-      {file: 'certificate.pdf', uploaded_by: 'Super Administrator', uploaded_on: 'Mar 10, 2020'},
-      {file: 'grade9_marksheet.pdf', uploaded_by: 'Super Administrator', uploaded_on: 'Mar 10, 2020'},
-      {file: 'birth_certificate.pdf', uploaded_by: 'Super Administrator', uploaded_on: 'Mar 11, 2020'},
-      {file: 'certificate_2.pdf', uploaded_by: 'Super Administrator', uploaded_on: 'Mar 10, 2020'}
+      {file: 'certificate.pdf', uploaded_by: 'Super Administrator', uploaded_on: 'Mar 10, 2020, 10:19 AM'},
+      {file: 'grade9_marksheet.pdf', uploaded_by: 'Super Administrator', uploaded_on: 'Mar 10, 2020, 11:27 AM'},
+      {file: 'birth_certificate.pdf', uploaded_by: 'Super Administrator', uploaded_on: 'Mar 11, 2020, 2:37 PM'},
+      {file: 'certificate_2.pdf', uploaded_by: 'Super Administrator', uploaded_on: 'Mar 10, 2020, 12:59 PM'}
     ]
    }
 

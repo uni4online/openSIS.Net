@@ -50,7 +50,6 @@ namespace opensisAPI.Controllers
         }
 
         [HttpPut("updateStudent")]
-
         public ActionResult<StudentAddViewModel> UpdateStudent(StudentAddViewModel student)
         {
             StudentAddViewModel studentUpdate = new StudentAddViewModel();
@@ -77,7 +76,6 @@ namespace opensisAPI.Controllers
         }
 
         [HttpPost("getAllStudentList")]
-
         public ActionResult<StudentListModel> GetAllStudentList(PageResult pageResult)
         {
             StudentListModel studentList = new StudentListModel();
@@ -94,7 +92,6 @@ namespace opensisAPI.Controllers
         }
 
         [HttpPost("searchContactForStudent")]
-
         public ActionResult<SearchContactViewModel> SearchContactForStudent(SearchContactViewModel searchContactViewModel)
         {
             SearchContactViewModel contactViewModel = new SearchContactViewModel();
@@ -108,6 +105,132 @@ namespace opensisAPI.Controllers
                 contactViewModel._failure = true;
             }
             return contactViewModel;
+        }
+
+
+        [HttpPost("addStudentDocument")]
+        public ActionResult<StudentDocumentAddViewModel> AddStudentDocument(StudentDocumentAddViewModel studentDocumentAddViewModel)
+        {
+            StudentDocumentAddViewModel studentDocoumentAdd = new StudentDocumentAddViewModel();
+            try
+            {
+                if (studentDocumentAddViewModel.studentDocument.SchoolId > 0)
+                {
+                    studentDocoumentAdd = _studentService.SaveStudentDocument(studentDocumentAddViewModel);
+                }
+                else
+                {
+                    studentDocoumentAdd._token = studentDocumentAddViewModel._token;
+                    studentDocoumentAdd._tenantName = studentDocumentAddViewModel._tenantName;
+                    studentDocoumentAdd._failure = true;
+                    studentDocoumentAdd._message = "Please enter valid school id";
+                }
+            }
+            catch (Exception es)
+            {
+                studentDocoumentAdd._failure = true;
+                studentDocoumentAdd._message = es.Message;
+            }
+            return studentDocoumentAdd;
+        }
+
+        [HttpPut("updateStudentDocument")]
+
+        public ActionResult<StudentDocumentAddViewModel> UpdateStudentDocument(StudentDocumentAddViewModel studentDocumentAddViewModel)
+        {
+            StudentDocumentAddViewModel studentDocumentUpdate = new StudentDocumentAddViewModel();
+            try
+            {
+                if (studentDocumentAddViewModel.studentDocument.SchoolId > 0)
+                {
+                    studentDocumentUpdate = _studentService.UpdateStudentDocument(studentDocumentAddViewModel);
+                }
+                else
+                {
+                    studentDocumentUpdate._token = studentDocumentAddViewModel._token;
+                    studentDocumentUpdate._tenantName = studentDocumentAddViewModel._tenantName;
+                    studentDocumentUpdate._failure = true;
+                    studentDocumentUpdate._message = "Please enter valid scholl id";
+                }
+            }
+            catch (Exception es)
+            {
+                studentDocumentUpdate._failure = true;
+                studentDocumentUpdate._message = es.Message;
+            }
+            return studentDocumentUpdate;
+        }
+
+
+        [HttpPost("getAllStudentDocumentsList")]
+
+        public ActionResult<StudentDocumentListViewModel> GetAllStudentDocumentsList(StudentDocumentListViewModel studentDocumentsListViewModel)
+        {
+            StudentDocumentListViewModel studentDocumentsList = new StudentDocumentListViewModel();
+            try
+            {
+                studentDocumentsList = _studentService.GetAllStudentDocumentsList(studentDocumentsListViewModel);
+            }
+            catch (Exception es)
+            {
+                studentDocumentsList._message = es.Message;
+                studentDocumentsList._failure = true;
+            }
+            return studentDocumentsList;
+        }
+
+
+        [HttpPost("deleteStudentDocument")]
+        public ActionResult<StudentDocumentAddViewModel> DeleteStudentDocument(StudentDocumentAddViewModel studentDocumentAddViewModel)
+        {
+            StudentDocumentAddViewModel studentDocoumentdelete = new StudentDocumentAddViewModel();
+            try
+            {
+                if (studentDocumentAddViewModel.studentDocument.SchoolId > 0)
+                {
+                    studentDocoumentdelete = _studentService.DeleteStudentDocument(studentDocumentAddViewModel);
+                }
+                else
+                {
+                    studentDocoumentdelete._token = studentDocumentAddViewModel._token;
+                    studentDocoumentdelete._tenantName = studentDocumentAddViewModel._tenantName;
+                    studentDocoumentdelete._failure = true;
+                    studentDocoumentdelete._message = "Please enter valid school id";
+                }
+            }
+            catch (Exception es)
+            {
+                studentDocoumentdelete._failure = true;
+                studentDocoumentdelete._message = es.Message;
+            }
+            return studentDocoumentdelete;
+        }
+
+
+        [HttpPost("addStudentLoginInfo")]
+        public ActionResult<LoginInfoAddModel> AddStudentLoginInfo(LoginInfoAddModel login)
+        {
+            LoginInfoAddModel loginInfo = new LoginInfoAddModel();
+            try
+            {
+                if (login.userMaster.SchoolId > 0)
+                {
+                    loginInfo = _studentService.AddStudentLoginInfo(login);
+                }
+                else
+                {
+                    loginInfo._token = login._token;
+                    loginInfo._tenantName = login._tenantName;
+                    loginInfo._failure = true;
+                    loginInfo._message = "Please enter valid scholl id";
+                }
+            }
+            catch (Exception es)
+            {
+                loginInfo._failure = true;
+                loginInfo._message = es.Message;
+            }
+            return loginInfo;
         }
 
         //[HttpPost("viewStudent")]

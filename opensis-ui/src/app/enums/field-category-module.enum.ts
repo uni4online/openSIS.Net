@@ -1,5 +1,6 @@
 export enum FieldCategoryModuleEnum{
     "School"="School",
     "Student"="Student",
-    //"Staff"="Staff"
+    "Parent"="Parent",
+    "Staff"="Staff"
 }

@@ -35,6 +35,7 @@ namespace opensis.data.Models
         public virtual DbSet<Language> Language { get; set; }
         public virtual DbSet<Membership> Membership { get; set; }
         public virtual DbSet<Notice> Notice { get; set; }
+        public virtual DbSet<ParentInfo> ParentInfo { get; set; }
         public virtual DbSet<Plans> Plans { get; set; }
         public virtual DbSet<ProgressPeriods> ProgressPeriods { get; set; }
         public virtual DbSet<Quarters> Quarters { get; set; }
@@ -47,10 +48,13 @@ namespace opensis.data.Models
         public virtual DbSet<Sections> Sections { get; set; }
         public virtual DbSet<Semesters> Semesters { get; set; }
         public virtual DbSet<State> State { get; set; }
+        public virtual DbSet<StudentComments> StudentComments { get; set; }
+        public virtual DbSet<StudentDocuments> StudentDocuments { get; set; }
         public virtual DbSet<StudentEnrollment> StudentEnrollment { get; set; }
         public virtual DbSet<StudentEnrollmentCode> StudentEnrollmentCode { get; set; }
         public virtual DbSet<StudentMaster> StudentMaster { get; set; }
         public virtual DbSet<UserMaster> UserMaster { get; set; }
+        public virtual DbSet<UserSecretQuestions> UserSecretQuestions { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
@@ -657,6 +661,134 @@ namespace opensis.data.Models
                     .HasColumnName("valid_to")
                     .HasColumnType("date");
             });
+
+            modelBuilder.Entity<ParentInfo>(entity =>
+            {
+                entity.HasKey(e => new { e.TenantId, e.SchoolId, e.StudentId, e.ParentId });
+
+                entity.ToTable("parent_info");
+
+                entity.Property(e => e.TenantId).HasColumnName("tenant_id");
+
+                entity.Property(e => e.SchoolId).HasColumnName("school_id");
+
+                entity.Property(e => e.StudentId).HasColumnName("student_id");
+
+                entity.Property(e => e.ParentId).HasColumnName("parent_id");
+
+                entity.Property(e => e.AddressLineOne)
+                    .HasColumnName("address_line_one")
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.AddressLineTwo)
+                    .HasColumnName("address_line_two")
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Associationship)
+                    .HasColumnName("associationship")
+                    .IsUnicode(false)
+                    .HasComment("tenantid#schoolid#studentid | tenantid#schoolid#studentid | ....");
+
+                entity.Property(e => e.BusDropoff).HasColumnName("bus_dropoff");
+
+                entity.Property(e => e.BusNo)
+                    .HasColumnName("bus_No")
+                    .HasMaxLength(15)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.BusPickup).HasColumnName("bus_pickup");
+
+                entity.Property(e => e.City)
+                    .HasColumnName("city")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ContactType)
+                    .HasColumnName("contact_type")
+                    .HasMaxLength(9)
+                    .IsUnicode(false)
+                    .HasComment("Primary | Secondary | Other");
+
+                entity.Property(e => e.Country)
+                    .HasColumnName("country")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Email)
+                    .HasColumnName("email")
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Firstname)
+                    .HasColumnName("firstname")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.HomePhone)
+                    .HasColumnName("home_phone")
+                    .HasMaxLength(15)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.IsCustodian).HasColumnName("is_custodian");
+
+                entity.Property(e => e.IsPortalUser).HasColumnName("is_portal_user");
+
+                entity.Property(e => e.LastUpdated)
+                    .HasColumnName("last_updated")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.Lastname)
+                    .HasColumnName("lastname")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Mobile)
+                    .HasColumnName("mobile")
+                    .HasMaxLength(15)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PortalUserId)
+                    .HasColumnName("portal_user_id")
+                    .HasMaxLength(150)
+                    .IsUnicode(false)
+                    .HasComment("emailaddress mapped to user_master");
+
+                entity.Property(e => e.Relationship)
+                    .HasColumnName("relationship")
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.State)
+                    .HasColumnName("state")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.StudentAddressSame).HasColumnName("student_address_same");
+
+                entity.Property(e => e.UpdatedBy)
+                    .HasColumnName("updated_by")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.WorkPhone)
+                    .HasColumnName("work_phone")
+                    .HasMaxLength(15)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Zip)
+                    .HasColumnName("zip")
+                    .HasMaxLength(15)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.StudentMaster)
+                    .WithMany(p => p.ParentInfo)
+                    .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.StudentId })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_parent_info_student_master");
+            });
+
 
             modelBuilder.Entity<Plans>(entity =>
             {
@@ -1509,6 +1641,73 @@ namespace opensis.data.Models
 
             });
 
+            modelBuilder.Entity<StudentComments>(entity =>
+            {
+                entity.HasKey(e => new { e.TenantId, e.SchoolId, e.StudentId, e.CommentId });
+
+                entity.ToTable("student_comments");
+
+                entity.Property(e => e.TenantId).HasColumnName("tenant_id");
+
+                entity.Property(e => e.SchoolId).HasColumnName("school_id");
+
+                entity.Property(e => e.StudentId).HasColumnName("student_id");
+
+                entity.Property(e => e.CommentId).HasColumnName("comment_id");
+
+                entity.Property(e => e.Comment)
+                    .HasColumnName("comment")
+                    .IsUnicode(false);
+
+                entity.Property(e => e.LastUpdated)
+                   .HasColumnName("last_updated")
+                   .HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedBy)
+                    .HasColumnName("updated_by")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.StudentMaster)
+                    .WithMany(p => p.StudentComments)
+                    .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.StudentId })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_student_comments_student_master");
+            });
+
+            modelBuilder.Entity<StudentDocuments>(entity =>
+            {
+                entity.HasKey(e => new { e.TenantId, e.SchoolId, e.StudentId, e.DocumentId });
+
+                entity.ToTable("student_documents");
+
+                entity.Property(e => e.TenantId).HasColumnName("tenant_id");
+
+                entity.Property(e => e.SchoolId).HasColumnName("school_id");
+
+                entity.Property(e => e.StudentId).HasColumnName("student_id");
+
+                entity.Property(e => e.DocumentId).HasColumnName("document_id");
+
+                entity.Property(e => e.FileUploaded).HasColumnName("file_uploaded");
+
+                entity.Property(e => e.UploadedBy)
+                    .HasColumnName("uploaded_by")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UploadedOn)
+                    .HasColumnName("uploaded_on")
+                    .HasColumnType("datetime");
+
+                entity.HasOne(d => d.StudentMaster)
+                    .WithMany(p => p.StudentDocuments)
+                    .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.StudentId })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_student_documents_student_master");
+            });
+
+
             modelBuilder.Entity<StudentEnrollment>(entity =>
             {
                 entity.HasKey(e => new { e.TenantId, e.SchoolId, e.StudentId });
@@ -1633,6 +1832,10 @@ namespace opensis.data.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
+                entity.Property(e => e.AlertDescription)
+                    .HasColumnName("alert_description")
+                    .IsUnicode(false);
+
                 entity.Property(e => e.AlternateId)
                     .HasColumnName("alternate_id")
                     .HasMaxLength(50)
@@ -1644,8 +1847,26 @@ namespace opensis.data.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.CountryOfBirth).HasColumnName("country_of_birth");
-             
-                entity.Property(e => e.DistrictId).HasColumnName("district_id");
+
+                entity.Property(e => e.CriticalAlert)
+                    .HasColumnName("critical_alert")
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Dentist)
+                    .HasColumnName("dentist")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.DentistPhone)
+                    .HasColumnName("dentist_phone")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.DistrictId)
+                    .HasColumnName("district_id")
+                    .HasMaxLength(50)
+                    .IsFixedLength(); ;
 
                 entity.Property(e => e.Dob)
                     .HasColumnName("dob")
@@ -1714,13 +1935,15 @@ namespace opensis.data.Models
                     .HasColumnName("instagram")
                     .IsUnicode(false);
 
-                entity.Property(e => e.IsPrimaryCustodian).HasColumnName("is_primary_custodian");
+                entity.Property(e => e.InsuranceCompany)
+                     .HasColumnName("insurance_company")
+                     .HasMaxLength(200)
+                     .IsUnicode(false);
 
-                entity.Property(e => e.IsPrimaryPortalUser).HasColumnName("is_primary_portal_user");
-
-                entity.Property(e => e.IsSecondaryCustodian).HasColumnName("is_secondary_custodian");
-
-                entity.Property(e => e.IsSecondaryPortalUser).HasColumnName("is_secondary_portal_user");
+                entity.Property(e => e.InsuranceCompanyPhone)
+                    .HasColumnName("insurance_company_phone")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.LastFamilyName)
                     .HasColumnName("last_family_name")
@@ -1770,6 +1993,16 @@ namespace opensis.data.Models
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
+                entity.Property(e => e.MedicalFacility)
+                   .HasColumnName("medical_facility")
+                   .HasMaxLength(100)
+                   .IsUnicode(false);
+
+                entity.Property(e => e.MedicalFacilityPhone)
+                    .HasColumnName("medical_facility_phone")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.MiddleName)
                     .HasColumnName("middle_name")
                     .HasMaxLength(50)
@@ -1791,6 +2024,16 @@ namespace opensis.data.Models
                     .HasColumnName("personal_email")
                     .IsUnicode(false);
 
+                entity.Property(e => e.PolicyHolder)
+                   .HasColumnName("policy_holder")
+                   .HasMaxLength(100)
+                   .IsUnicode(false);
+
+                entity.Property(e => e.PolicyNumber)
+                    .HasColumnName("policy_number")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.PreferredName)
                     .HasColumnName("preferred_name")
                     .HasMaxLength(50)
@@ -1801,78 +2044,15 @@ namespace opensis.data.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.PrimaryContactAddressLineOne)
-                    .HasColumnName("primary_contact_address_line_one")
-                    .HasMaxLength(200)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.PrimaryContactAddressLineTwo)
-                    .HasColumnName("primary_contact_address_line_two")
-                    .HasMaxLength(200)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.PrimaryContactCity)
-                    .HasColumnName("primary_contact_city")
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.PrimaryContactCountry)
-                   .HasColumnName("primary_contact_country")
-                   .HasMaxLength(50)
+                entity.Property(e => e.PrimaryCarePhysician)
+                   .HasColumnName("primary_care_physician")
+                   .HasMaxLength(200)
                    .IsUnicode(false);
 
-                entity.Property(e => e.PrimaryContactEmail)
-                    .HasColumnName("primary_contact_email")
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.PrimaryContactFirstname)
-                    .HasColumnName("primary_contact_firstname")
+                entity.Property(e => e.PrimaryCarePhysicianPhone)
+                    .HasColumnName("primary_care_physician_phone")
                     .HasMaxLength(50)
                     .IsUnicode(false);
-
-                entity.Property(e => e.PrimaryContactHomePhone)
-                    .HasColumnName("primary_contact_home_phone")
-                    .HasMaxLength(15)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.PrimaryContactLastname)
-                    .HasColumnName("primary_contact_lastname")
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.PrimaryContactMobile)
-                    .HasColumnName("primary_contact_mobile")
-                    .HasMaxLength(15)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.PrimaryContactRelationship)
-                    .HasColumnName("primary_contact_relationship")
-                    .HasMaxLength(20)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.PrimaryContactState)
-                    .HasColumnName("primary_contact_state")
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.PrimaryContactStudentAddressSame).HasColumnName("primary_contact_student_address_same");
-
-                entity.Property(e => e.PrimaryContactWorkPhone)
-                    .HasColumnName("primary_contact_work_phone")
-                    .HasMaxLength(15)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.PrimaryContactZip)
-                    .HasColumnName("primary_contact_zip")
-                    .HasMaxLength(15)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.PrimaryPortalUserId)
-                    .HasColumnName("primary_portal_user_id")
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasComment("user_master table-->user_id, membership table --> profile:Parent");
 
                 entity.Property(e => e.Race)
                     .HasColumnName("race")
@@ -1902,85 +2082,17 @@ namespace opensis.data.Models
                 .HasComment("Plan is language will be displayed in dropdown from language table and selected corresponding id will be stored into table.");
 
 
-                entity.Property(e => e.SecondaryContactAddressLineOne)
-                    .HasColumnName("secondary_contact_address_line_one")
-                    .HasMaxLength(200)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.SecondaryContactAddressLineTwo)
-                    .HasColumnName("secondary_contact_address_line_two")
-                    .HasMaxLength(200)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.SecondaryContactCity)
-                    .HasColumnName("secondary_contact_city")
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.SecondaryContactCountry)
-                   .HasColumnName("secondary_contact_country")
-                   .HasMaxLength(50)
-                   .IsUnicode(false);
-
-                entity.Property(e => e.SecondaryContactEmail)
-                    .HasColumnName("secondary_contact_email")
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.SecondaryContactFirstname)
-                    .HasColumnName("secondary_contact_firstname")
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.SecondaryContactHomePhone)
-                    .HasColumnName("secondary_contact_home_phone")
-                    .HasMaxLength(15)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.SecondaryContactLastname)
-                    .HasColumnName("secondary_contact_lastname")
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.SecondaryContactMobile)
-                    .HasColumnName("secondary_contact_mobile")
-                    .HasMaxLength(15)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.SecondaryContactRelationship)
-                    .HasColumnName("secondary_contact_relationship")
-                    .HasMaxLength(20)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.SecondaryContactState)
-                    .HasColumnName("secondary_contact_state")
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.SecondaryContactStudentAddressSame).HasColumnName("secondary_contact_student_address_same");
-
-                entity.Property(e => e.SecondaryContactWorkPhone)
-                    .HasColumnName("secondary_contact_work_phone")
-                    .HasMaxLength(15)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.SecondaryContactZip)
-                    .HasColumnName("secondary_contact_zip")
-                    .HasMaxLength(15)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.SecondaryPortalUserId)
-                    .HasColumnName("secondary_portal_user_id")
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasComment("user_master table-->user_id, membership table --> profile:Parent");
+               
 
                 entity.Property(e => e.SocialSecurityNumber)
                     .HasColumnName("social_security_number")
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.StateId).HasColumnName("state_id");
+                entity.Property(e => e.StateId)
+                    .HasColumnName("state_id")
+                    .HasMaxLength(50)
+                    .IsFixedLength();
 
                 entity.Property(e => e.StudentPhoto).HasColumnName("student_photo");
 
@@ -2001,6 +2113,16 @@ namespace opensis.data.Models
 
                 entity.Property(e => e.Twitter)
                     .HasColumnName("twitter")
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Vision)
+                    .HasColumnName("vision")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.VisionPhone)
+                    .HasColumnName("vision_phone")
+                    .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Youtube)
@@ -2090,6 +2212,63 @@ namespace opensis.data.Models
                    
             });
 
+            modelBuilder.Entity<UserSecretQuestions>(entity =>
+            {
+                entity.HasKey(e => new { e.TenantId, e.SchoolId, e.Emailaddress });
+
+                entity.ToTable("user_secret_questions");
+
+                entity.Property(e => e.TenantId).HasColumnName("tenant_id");
+
+                entity.Property(e => e.SchoolId).HasColumnName("school_id");
+
+                entity.Property(e => e.Emailaddress)
+                    .HasColumnName("emailaddress")
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Book)
+                    .HasColumnName("book")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Cartoon)
+                    .HasColumnName("cartoon")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.City)
+                    .HasColumnName("city")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Hero)
+                    .HasColumnName("hero")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.LastUpdated)
+                    .HasColumnName("last_updated")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.Movie)
+                    .HasColumnName("movie")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UpdatedBy)
+                    .HasColumnName("updated_by")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UserId).HasColumnName("user_id");
+
+                entity.HasOne(d => d.UserMaster)
+                    .WithOne(p => p.UserSecretQuestions)
+                    .HasForeignKey<UserSecretQuestions>(d => new { d.TenantId, d.SchoolId, d.Emailaddress })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_user_secret_questions_user_master");
+            });
             LanguageSeedData(modelBuilder);
             CountrySeedData(modelBuilder);
             GradeEquivalencySeedData(modelBuilder);

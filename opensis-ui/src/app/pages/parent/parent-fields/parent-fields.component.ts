@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import icMoreVert from '@iconify/icons-ic/twotone-more-vert';
 import icAdd from '@iconify/icons-ic/baseline-add';
 import icEdit from '@iconify/icons-ic/twotone-edit';
@@ -13,6 +13,14 @@ import { stagger40ms } from '../../../../@vex/animations/stagger.animation';
 import { TranslateService } from '@ngx-translate/core';
 import { EditParentFieldsComponent } from './edit-parent-fields/edit-parent-fields.component';
 import { ParentFieldsCategoryComponent } from './parent-fields-category/parent-fields-category.component';
+import { CustomFieldService } from '../../../services/custom-field.service';
+import {CustomFieldAddView, CustomFieldListViewModel} from '../../../models/customFieldModel';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
+import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confirm-dialog.component';
+import { LoaderService } from '../../../services/loader.service';
+import { FieldsCategoryListView,FieldsCategoryAddView } from '../../../models/fieldsCategoryModel';
+import {FieldCategoryModuleEnum} from '../../../enums/field-category-module.enum'
 
 @Component({
   selector: 'vex-parent-fields',
@@ -26,16 +34,20 @@ import { ParentFieldsCategoryComponent } from './parent-fields-category/parent-f
 export class ParentFieldsComponent implements OnInit {
   @Input()
   columns = [
-    { label: '', property: 'type', type: 'text', visible: true },
-    { label: 'Field Name', property: 'field_name', type: 'text', visible: true },
-    { label: 'Sort Order', property: 'sort_order', type: 'number', visible: true },
-    { label: 'Field Type', property: 'field_type', type: 'text', visible: true },
-    { label: 'In Use', property: 'in_use', type: 'checkbox', visible: true },
-    { label: 'action', property: 'action', type: 'text', visible: true }
+   /* { label: '', property: 'type', type: 'text', visible: true }, */
+   { label: 'Field Name', property: 'field_name', type: 'text', visible: true },
+   { label: 'Sort Order', property: 'sortOrder', type: 'number', visible: false },
+   { label: 'Field Type', property: 'field_type', type: 'text', visible: true },
+   { label: 'Select Options', property: 'selectOptions', type: 'text', visible: true },
+   { label: 'Required', property: 'required', type: 'checkbox', visible: false },
+   { label: 'In Used', property: 'inUsed', type: 'checkbox', visible: true },
+   { label: 'System Field', property: 'systemField', type: 'checkbox', visible: false },
+   { label: 'Action', property: 'action', type: 'text', visible: true }
   ];
 
-  StudentFieldsModelList;
-
+  fieldsCategoryList;
+  currentCategoryId=null;
+  fieldCategoryModuleEnum=FieldCategoryModuleEnum
   icMoreVert = icMoreVert;
   icAdd = icAdd;
   icEdit = icEdit;
@@ -43,31 +55,61 @@ export class ParentFieldsComponent implements OnInit {
   icSearch = icSearch;
   icFilterList = icFilterList;
   loading:Boolean;
+  searchKey:string;
+  customFieldListViewModel:CustomFieldListViewModel= new CustomFieldListViewModel();
+  customFieldAddView:CustomFieldAddView= new CustomFieldAddView()
+  fieldsCategoryListView:FieldsCategoryListView= new FieldsCategoryListView();
+  fieldsCategoryAddView:FieldsCategoryAddView= new FieldsCategoryAddView();
 
-  constructor(private router: Router,private dialog: MatDialog,public translateService:TranslateService) {
+  constructor(
+    private router: Router,
+    private dialog: MatDialog,
+    public translateService:TranslateService,
+    private snackbar: MatSnackBar,
+    private customFieldservice:CustomFieldService,
+    private loaderService:LoaderService
+    ) {
     translateService.use('en');
-    this.StudentFieldsModelList = [
-      {type: 'Default', field_name: 'First Name', sort_order: 1, field_type: 'TextBox', in_use: 'Yes'},
-      {type: 'Default', field_name: "Last Name", sort_order: 2, field_type: 'TextBox', in_use: 'Yes'},
-      {type: 'Default', field_name: "Email Address", sort_order: 3, field_type: 'TextBox', in_use: 'Yes'},
-      {type: 'Default', field_name: "Mobile Phone", sort_order: 4, field_type: 'TextBox', in_use: 'Yes'},
-      {type: 'Default', field_name: "Work Phone", sort_order: 5, field_type: 'TextBox', in_use: 'Yes'},
-      {type: 'Default', field_name: "Home Phone", sort_order: 6, field_type: 'TextBox', in_use: 'Yes'}
-    ]
+    this.loaderService.isLoading.subscribe((val) => {
+      this.loading = val;
+    });
   }
-
+  customFieldList: MatTableDataSource<any>;
+  @ViewChild(MatSort) sort: MatSort;
+  onSearchClear(){
+    this.searchKey="";
+    this.applyFilter();
+  }
+  applyFilter(){
+    this.customFieldList.filter = this.searchKey.trim().toLowerCase()
+  }
   ngOnInit(): void {
+    this.getAllCustomFieldCategory()
+  }
+  selectCategory(element){
+    this.currentCategoryId=element.categoryId;
+    this.customFieldList=new MatTableDataSource(element.customFields) ;
+    this.customFieldList.sort=this.sort;
   }
 
    goToAdd(){   
     this.dialog.open(EditParentFieldsComponent, {
+      data: {categoryID:this.currentCategoryId},
       width: '600px'
+    }).afterClosed().subscribe((data)=>{
+      if(data==='submited'){
+        this.getAllCustomFieldCategory();
+      }
     });
    }
 
    goToAddCategory(){   
     this.dialog.open(ParentFieldsCategoryComponent, {
       width: '500px'
+    }).afterClosed().subscribe((data)=>{
+      if(data==='submited'){
+        this.getAllCustomFieldCategory();
+      }
     });
    }
 
@@ -86,5 +128,131 @@ export class ParentFieldsComponent implements OnInit {
   get visibleColumns() {
     return this.columns.filter(column => column.visible).map(column => column.property);
   }
-
+  deleteCustomFieldata(element){
+    this.customFieldAddView.customFields=element
+    this.customFieldservice.deleteCustomField(this.customFieldAddView).subscribe(
+      (res:CustomFieldAddView)=>{
+        if(typeof(res)=='undefined'){
+          this.snackbar.open('Custom Field failed. ' + sessionStorage.getItem("httpError"), '', {
+            duration: 10000
+          });
+        }
+        else{
+          if (res._failure) {
+            this.snackbar.open('Custom Field failed. ' + res._message, 'LOL THANKS', {
+              duration: 10000
+            });
+          } 
+          else { 
+            this.getAllCustomFieldCategory()
+          }
+        }
+      }
+    )
+  }
+  confirmDelete(element){
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      maxWidth: "400px",
+      data: {
+          title: "Are you sure?",
+          message: "You are about to delete "+element.title+"."}
+    });
+    dialogRef.afterClosed().subscribe(dialogResult => {
+      if(dialogResult){
+        this.deleteCustomFieldata(element);
+      }
+   });
+  }
+  openEditdata(element){
+    this.dialog.open(EditParentFieldsComponent, {
+      data: {information:element},
+        width: '800px'
+    }).afterClosed().subscribe((data)=>{
+      if(data==='submited'){
+        this.getAllCustomFieldCategory();
+      }
+    })
+  }
+  getAllCustomFieldCategory(){
+    this.fieldsCategoryListView.module=this.fieldCategoryModuleEnum.Parent;
+    this.customFieldservice.getAllFieldsCategory(this.fieldsCategoryListView).subscribe(
+      (res:FieldsCategoryListView)=>{
+        if(typeof(res)=='undefined'){
+          this.snackbar.open('Field Category list failed. ' + sessionStorage.getItem("httpError"), '', {
+            duration: 10000
+          });
+        }
+        else{
+          if (res._failure) {
+            this.snackbar.open('Field Category list failed. ' + res._message, 'LOL THANKS', {
+              duration: 10000
+            });
+          } 
+          else{
+            this.fieldsCategoryList= res.fieldsCategoryList 
+            if(this.currentCategoryId==null){
+              this.currentCategoryId=res.fieldsCategoryList[0].categoryId  
+              this.customFieldList=new MatTableDataSource(res.fieldsCategoryList[0].customFields) ;
+              this.customFieldList.sort=this.sort;
+            }   
+            else{
+              let index = this.fieldsCategoryList.findIndex((x) => {
+                return x.categoryId === this.currentCategoryId
+              });
+              this.customFieldList=new MatTableDataSource(res.fieldsCategoryList[index].customFields) ;
+              this.customFieldList.sort=this.sort;
+            }
+          }
+        }
+      }
+    );
+  }
+  editFieldCategory(element){
+    this.dialog.open(ParentFieldsCategoryComponent,{ 
+      data: element,
+      width: '800px'
+    }).afterClosed().subscribe((data)=>{
+      if(data==='submited'){
+        this.getAllCustomFieldCategory();
+      }
+    })
+  }
+  deleteFieldCategory(element){
+    this.fieldsCategoryAddView.fieldsCategory=element
+    this.customFieldservice.deleteFieldsCategory(this.fieldsCategoryAddView).subscribe(
+      (res:FieldsCategoryAddView)=>{
+        if(typeof(res)=='undefined'){
+          this.snackbar.open('Field Category delete failed. ' + sessionStorage.getItem("httpError"), '', {
+            duration: 10000
+          });
+        }
+        else{
+          if (res._failure) {
+            this.snackbar.open('Field Category delete failed. ' + res._message, 'LOL THANKS', {
+              duration: 10000
+            });
+          } 
+          else{
+            this.snackbar.open('' + res._message, 'LOL THANKS', {
+              duration: 10000
+            });
+            this.getAllCustomFieldCategory()
+          }
+        }
+      }
+    )
+  }
+  confirmDeleteFieldCategory(element){
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      maxWidth: "400px",
+      data: {
+          title: "Are you sure?",
+          message: "You are about to delete "+element.title+"."}
+    });
+    dialogRef.afterClosed().subscribe(dialogResult => {
+      if(dialogResult){
+        this.deleteFieldCategory(element);
+      }
+   });
+  }
 }

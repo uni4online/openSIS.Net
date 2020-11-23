@@ -2,9 +2,13 @@
 
     <div class="flex items-center mx-4" fxLayout="row" fxLayoutAlign="center center">
         <h3 class="flex-auto">{{'comments' | translate}}</h3>
-        <button mat-raised-button color="primary"  (click)='openAddNew()'>
-            <mat-icon [icIcon]="icEdit"></mat-icon> {{'addComment' |translate}}
+        <div>
+            <a routerLink="" class="cursor-pointer p-1 mt-1 mr-3 inline-block align-middle" matTooltip="Export as Excel"><i class="icon icon-file-excel text-lg"></i></a>
+            <a routerLink="" class="cursor-pointer p-1 mt-1 mr-3 inline-block align-middle" matTooltip="Print"><mat-icon [icIcon]="icPrint"></mat-icon></a>
+            <button mat-raised-button color="primary" class="align-middle" (click)='openAddNew()'>
+                <mat-icon [icIcon]="icAdd"></mat-icon> {{'addComment' |translate}}
         </button>
+    </div>
     </div>
     <mat-card-content>
         <div @stagger fxLayout="column">
@@ -16,7 +20,7 @@
                         </div>
                         <div class="overflow-hidden" fxFlex="auto">
                             <div class="flex justify-between w-full">
-                                <div class="pt-2"><h3 class="font-normal"><span class="text-primary font-medium">Simon Davis</span> Commented on Mar 10, 2020  10:45 AM</h3></div>
+                                <div class="pt-2"><h3 class="font-normal"><span class="text-primary font-medium">Simon Davis</span> Commented on Mar 10, 2020, 10:45 AM</h3></div>
                                 <div>
                                     <button mat-icon-button matTooltip="Filter Columns" type="button">
                                         <mat-icon [icIcon]="icEdit" class="mr-2"></mat-icon>
@@ -41,7 +45,7 @@
                         </div>
                         <div class="overflow-hidden" fxFlex="auto">
                             <div class="flex justify-between w-full">
-                                <div class="pt-2"><h3 class="font-normal"><span class="text-primary font-medium">Simon Davis</span> Commented on Mar 15, 2020  12:13 PM</h3></div>
+                                <div class="pt-2"><h3 class="font-normal"><span class="text-primary font-medium">Simon Davis</span> Commented on Mar 15, 2020, 12:13 PM</h3></div>
                                 <div>
                                     <button mat-icon-button matTooltip="Filter Columns" type="button">
                                         <mat-icon [icIcon]="icEdit" class="mr-2"></mat-icon>
