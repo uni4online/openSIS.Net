@@ -1,0 +1,223 @@
+<mat-card class="w-full">
+
+    <mat-card-header>
+        <mat-card-title>{{'addressAndContact'|translate}}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+
+        <div @stagger fxLayout="column">
+            <h4 class="text-primary px-4 pb-2 pt-2">{{'personalContactInformation'|translate}}</h4>
+            <ul class="grid grid-cols-2 col-gap-8 row-gap-2 mt-2 mx-4">
+                <li>
+                    <mat-form-field class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'homePhone'|translate}}</mat-label>
+                        <input name="home_phone" matInput>
+                    </mat-form-field>
+                </li>
+                <li>
+                    <mat-form-field class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'mobilePhone'|translate}}</mat-label>
+                        <input name="mobile_phone" matInput>
+                    </mat-form-field>
+                </li>
+                <li>
+                    <mat-form-field class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'officePhone'|translate}}</mat-label>
+                        <input name="office_phone" matInput>
+                    </mat-form-field>
+                </li>
+                <li>
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'personalEmail'|translate}}</mat-label>
+                        <input name="personal_email" matInput>
+                    </mat-form-field>
+                </li>
+                <li>
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'schoolEmail'|translate}}</mat-label>
+                        <input name="school_email" matInput>
+                    </mat-form-field>
+                </li>
+                <li>
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'twitter'|translate}}</mat-label>
+                        <input name="twitter" matInput>
+                    </mat-form-field>
+                </li>
+                <li>
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'facebook'|translate}}</mat-label>
+                        <input name="facebook" matInput>
+                    </mat-form-field>
+                </li>
+                <li>
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'instagram'|translate}}</mat-label>
+                        <input name="instagram" matInput>
+                    </mat-form-field>
+                </li>
+                <li>
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'youtube'|translate}}</mat-label>
+                        <input name="youtube" matInput>
+                    </mat-form-field>
+                </li>
+                <li>
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'linkedIn'|translate}}</mat-label>
+                        <input name="linkedin" matInput>
+                    </mat-form-field>
+                </li>
+            </ul>
+
+            <hr class="-mx-4 mt-6">
+
+
+            <h4 class="text-primary px-4 pb-2 pt-6">{{'homeAddress'|translate}}</h4>
+            <ul class="grid grid-cols-2 col-gap-8 row-gap-2 mt-2 mx-4">
+                <li>
+                    <mat-form-field class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'streetAddress1'|translate}}</mat-label>
+                        <input name="street_address_1" matInput required>
+                    </mat-form-field>
+                </li>
+                <li>
+                    <mat-form-field class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'streetAddress2'|translate}}</mat-label>
+                        <input name="street_address_2" matInput>
+                    </mat-form-field>
+                </li>
+                <li>
+                    <mat-form-field class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'country'|translate}}</mat-label>
+                        <mat-select name="country" required>
+                            <mat-option>Provide Country List</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </li>
+                <li>
+                    <mat-form-field class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'stateProvinceLocality'|translate}}</mat-label>
+                        <input name="state_province_locality" matInput required>
+                    </mat-form-field>
+                </li>
+                <li>
+                    <mat-form-field class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'city'|translate}}</mat-label>
+                        <input name="city" matInput required>
+                    </mat-form-field>
+                </li>
+                <li>
+                    <mat-form-field class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'zipPostalCode'|translate}}</mat-label>
+                        <input name="city" matInput required>
+                    </mat-form-field>
+                </li>
+            </ul>
+
+            <hr class="-mx-4 mt-6">
+
+            <h4 class="text-primary px-4 pb-2 pt-6">{{'mailingAddress'|translate}}</h4>
+            <div class="px-4 pb-3">
+                <mat-checkbox color="primary">{{'sameAsHomeAddress' | translate}}</mat-checkbox>
+            </div>
+            <ul class="grid grid-cols-2 col-gap-8 row-gap-2 mt-2 mx-4">
+                <li>
+                    <mat-form-field class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'streetAddress1'|translate}}</mat-label>
+                        <input name="street_address_1" matInput>
+                    </mat-form-field>
+                </li>
+                <li>
+                    <mat-form-field class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'streetAddress2'|translate}}</mat-label>
+                        <input name="street_address_2" matInput>
+                    </mat-form-field>
+                </li>
+                <li>
+                    <mat-form-field class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'country'|translate}}</mat-label>
+                        <mat-select name="country">
+                            <mat-option>Provide Country List</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </li>
+                <li>
+                    <mat-form-field class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'stateProvinceLocality'|translate}}</mat-label>
+                        <input name="state_province_locality" matInput>
+                    </mat-form-field>
+                </li>
+                <li>
+                    <mat-form-field class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'city'|translate}}</mat-label>
+                        <input name="city" matInput>
+                    </mat-form-field>
+                </li>
+                <li>
+                    <mat-form-field class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'zip/Postal Code'|translate}}</mat-label>
+                        <input name="city" matInput>
+                    </mat-form-field>
+                </li>
+            </ul>
+
+            <hr class="-mx-4 mt-6">
+
+
+            <h4 class="text-primary px-4 pb-2 pt-6">{{'emergencyContactInfo'|translate}}</h4>
+            <ul class="grid grid-cols-2 col-gap-8 row-gap-2 mt-2 mx-4">
+                <li>
+                    <mat-form-field class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'firstName'|translate}}</mat-label>
+                        <input name="firstName" matInput>
+                    </mat-form-field>
+                </li>
+                <li>
+                    <mat-form-field class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'lastName'|translate}}</mat-label>
+                        <input name="lastName" matInput>
+                    </mat-form-field>
+                </li>
+                <li>
+                    <mat-form-field class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'relationshipToStaff'|translate}}</mat-label>
+                        <mat-select name="country">
+                            <mat-option>Provide List</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </li>
+                <li>
+                    <mat-form-field class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'homePhone'|translate}}</mat-label>
+                        <input name="homePhone" matInput>
+                    </mat-form-field>
+                </li>
+                <li>
+                    <mat-form-field class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'workPhone'|translate}}</mat-label>
+                        <input name="workPhone" matInput>
+                    </mat-form-field>
+                </li>
+                <li>
+                    <mat-form-field class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'mobilePhone'|translate}}</mat-label>
+                        <input name="mobilePhone" matInput>
+                    </mat-form-field>
+                </li>
+                <li>
+                    <mat-form-field class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'email'|translate}}</mat-label>
+                        <input name="email" matInput>
+                    </mat-form-field>
+                </li>
+            </ul>
+        </div>
+    </mat-card-content>
+    <mat-card-actions>
+        <div class="px-4 mb-2 text-right">
+            <button color="primary" mat-raised-button>{{'submit'|translate}}</button>
+        </div>
+    </mat-card-actions>
+
+</mat-card>

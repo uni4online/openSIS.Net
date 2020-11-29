@@ -3,17 +3,19 @@ import { environment } from '../../environments/environment';
 import { HttpClient} from '@angular/common/http';
 import { SchoolAddViewModel } from '../models/schoolMasterModel';
 import { AllSchoolListModel, GetAllSchoolModel, OnlySchoolListModel } from '../models/getAllSchoolModel';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SchoolService {
   private schoolId;
+  private schoolDetails;
   private messageSource = new BehaviorSubject(false);
   currentMessage = this.messageSource.asObservable();
   apiUrl:string = environment.apiURL;
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+  }
 
   GetAllSchoolList(obj: GetAllSchoolModel){
     let apiurl = this.apiUrl + obj._tenantName+ "/School/getAllSchoolList";   
@@ -31,27 +33,20 @@ export class SchoolService {
   }  
 
   AddSchool(obj: SchoolAddViewModel){  
-   
-   if(obj.schoolMaster.longitude != null){
-    obj.schoolMaster.longitude=+obj.schoolMaster.longitude;
-  }
-  if(obj.schoolMaster.latitude != null){
-    obj.schoolMaster.latitude=+obj.schoolMaster.latitude;
-  }
+    obj.schoolMaster.schoolDetail[0].schoolLogo= this.schoolImage;
     let apiurl = this.apiUrl + obj._tenantName+ "/School/addSchool"; 
     return this.http.post<SchoolAddViewModel>(apiurl,obj)
   }  
   UpdateSchool(obj: SchoolAddViewModel){  
-    if(obj.schoolMaster.longitude != null){
-      obj.schoolMaster.longitude=+obj.schoolMaster.longitude;
-    }
-    if(obj.schoolMaster.latitude != null){
-      obj.schoolMaster.latitude=+obj.schoolMaster.latitude;
-    }
-  
+    obj.schoolMaster.schoolDetail[0].schoolLogo= this.schoolImage;
     let apiurl = this.apiUrl + obj._tenantName+ "/School/updateSchool"; 
     return this.http.put<SchoolAddViewModel>(apiurl,obj)
   }  
+
+  private schoolImage;
+  setSchoolImage(imageInBase64){
+    this.schoolImage=imageInBase64;
+  }
 
    setSchoolId(id: number) {
      this.schoolId=id
@@ -60,9 +55,32 @@ export class SchoolService {
     return this.schoolId;
     }
 
+    setSchoolDetails(data){
+      this.schoolDetails=data;
+    }
+    getSchoolDetails(){
+      return this.schoolDetails;
+    }
+
   changeMessage(message: boolean) {
     this.messageSource.next(message)
   } 
+
+// Change Category in School
+  private category = new Subject;
+  categoryToSend=this.category.asObservable();
+
+  changeCategory(category:number){
+      this.category.next(category);
+  }
+
+// to Update school details in General Info in first view mode.
+  private schoolDetailsForGeneral = new Subject;
+  getSchoolDetailsForGeneral=this.schoolDetailsForGeneral.asObservable();
+
+  sendDetails(schoolDetailsForGeneral){
+      this.schoolDetailsForGeneral.next(schoolDetailsForGeneral);
+  }
   
 
 

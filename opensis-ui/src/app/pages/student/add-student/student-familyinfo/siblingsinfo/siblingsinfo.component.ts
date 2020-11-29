@@ -5,7 +5,7 @@ import { stagger60ms } from '../../../../../../@vex/animations/stagger.animation
 import { fadeInRight400ms } from '../../../../../../@vex/animations/fade-in-right.animation';
 import { TranslateService } from '@ngx-translate/core';
 import icEdit from '@iconify/icons-ic/twotone-edit';
-import icDelete from '@iconify/icons-ic/twotone-delete';
+import icRemove from '@iconify/icons-ic/remove-circle';
 import icAdd from '@iconify/icons-ic/baseline-add';
 import { MatDialog } from '@angular/material/dialog';
 import { AddSiblingComponent } from '../add-sibling/add-sibling.component';
@@ -24,7 +24,7 @@ import { ViewSiblingComponent } from '../view-sibling/view-sibling.component';
 export class SiblingsinfoComponent implements OnInit {
 
   icEdit = icEdit;
-  icDelete = icDelete;
+  icRemove = icRemove;
   icAdd = icAdd;
 
   constructor(private fb: FormBuilder, private dialog: MatDialog,
@@ -36,13 +36,14 @@ export class SiblingsinfoComponent implements OnInit {
 
   openAddNew() {
     this.dialog.open(AddSiblingComponent, {
-      width: '600px'
+      width: '800px',
+      disableClose: true
     });
   }
 
   openViewDetails() {
     this.dialog.open(ViewSiblingComponent, {
-      width: '600px'
+      width: '800px'
     });
   }
 

@@ -1,8 +1,10 @@
 <div class="flex container-sidenav-secondary">
+<vex-mat-spinner-overlay *ngIf="loading" color="accent"></vex-mat-spinner-overlay>
     <div class="sidenav-secondary">
         <vex-scrollbar class="flex-auto">
         <div class="h-45 flex items-center sm:px-0" fxLayout="row" fxLayoutAlign="start center">
-            <vex-profile-image [enableCropTool]="enableCropTool" [responseImage]="responseImage" [mode]="modeForImage"></vex-profile-image>
+            <vex-profile-image [enableCropTool]="enableCropTool" [responseImage]="responseImage"></vex-profile-image>
+            <span *ngIf="criticalAlert"><mat-icon [icIcon]="icHospital" class="mr-3"></mat-icon></span>
         </div>
 
         <mat-accordion>
@@ -12,71 +14,16 @@
                             <mat-icon [icIcon]="icSchool" class="mr-3"></mat-icon> Student Details
                         </mat-panel-title>
                 </mat-expansion-panel-header>
-                <div *ngIf = "isViewMode; else addEdit">
+                <div>
                     <ul class="nav-sub-item">
-                        <li>
-                            <a  [ngClass]=" pageId =='GeneralInfo' ? 'text-primary' : ''" @fadeInRight (click)='showPage("GeneralInfo")'>General Info</a>
-                        </li>
-                        <li>
-                           
-                            <a [ngClass]=" pageId =='AddressContacts' ? 'text-primary' : ''" @fadeInRight  (click)='showPage("AddressContacts")'  >Address & Contact</a>
-                            
-                        </li>
-    
-                        <li>
-                            
-                            <a [ngClass]=" pageId =='SchoolEnrollmentInfo' ? 'text-primary' : ''" @fadeInRight  (click)='showPage("SchoolEnrollmentInfo")'  >School & Enrollment Info</a>
-                          
-                        </li>
-                        <li>
-                            
-                            <a [ngClass]=" pageId =='FamilyInfo' ? 'text-primary' : ''" @fadeInRight (click)='showPage("FamilyInfo")'  >Family Info</a>
-                          
-                        </li>
-                        <li>                        
-                            <a [ngClass]=" pageId =='LoginInfo' ? 'text-primary' : ''" @fadeInRight (click)='showPage("LoginInfo")'  >Login Info</a>                      
+                        <li *ngFor="let field of fieldsCategory" (click)="changeCategory(field)">
+                            <a  [ngClass]="currentCategory==field.categoryId?'text-primary' : ''" @fadeInRight>{{field.title}}</a>
                         </li>
                     </ul>
                 </div>
-                
-                <ng-template #addEdit>
-                    <ul class="nav-sub-item">
-                        <li>
-                            <a  [ngClass]=" pageId =='GeneralInfo' ? 'text-primary' : ''" @fadeInRight (click)='showPage("GeneralInfo")'>General Info</a>
-                        </li>
-                        <li>
-                            <a  *ngIf="disabledAddress; else enableAddress"  >Address & Contact</a>
-                            <ng-template #enableAddress>
-                                <a [ngClass]=" pageId =='AddressContacts' ? 'text-primary' : ''" @fadeInRight  (click)='showPage("AddressContacts")'  >Address & Contact</a>
-                            </ng-template>
-                        </li>
-    
-                        <li>
-                            <a  *ngIf="disabledEnrollment; else enableEnrollment" >School & Enrollment Info</a>
-                            <ng-template #enableEnrollment>
-                                <a [ngClass]=" pageId =='SchoolEnrollmentInfo' ? 'text-primary' : ''" @fadeInRight  (click)='showPage("SchoolEnrollmentInfo")'  >School & Enrollment Info</a>
-                            </ng-template>
-                        </li>
-                        <li >
-                            <a   *ngIf="disabledFamily; else enableFamily"  >Family Info</a>
-                            <ng-template #enableFamily>
-                                <a [ngClass]=" pageId =='FamilyInfo' ? 'text-primary' : ''" @fadeInRight (click)='showPage("FamilyInfo")'  >Family Info</a>
-                            </ng-template>
-                        </li >
-                        <li>
-                            <a  *ngIf="disabledLogin; else enableLogin"  >Login Info</a>
-                            <ng-template #enableLogin>
-                                <a [ngClass]=" pageId =='LoginInfo' ? 'text-primary' : ''" @fadeInRight (click)='showPage("LoginInfo")'  >Login Info</a>
-                            </ng-template>
-                        </li>
-                        <li><a routerLink="" @fadeInRight (click)='showPage("Medical Info")'>Medical Info</a></li>
-                    <li><a routerLink="" @fadeInRight (click)='showPage("Comments")'>Comments</a></li>
-                    <li><a routerLink="" @fadeInRight (click)='showPage("Documents")'>Documents</a></li>
-                    </ul>
-                </ng-template>
-               
               </mat-expansion-panel>
         </mat-accordion>
+
         <div class="px-gutter sm:px-0">
                 <a @fadeInRight class="list-item mt-2 no-underline flex items-center" matRipple>
                     <mat-icon [icIcon]="icCalendar" class="mr-3"></mat-icon> Schedule
@@ -111,113 +58,44 @@
             <vex-page-layout-content class="-mt-14">
         <mat-drawer-container class="bg-transparent flex-auto flex -mt-16">
             <mat-drawer-content class="flex-auto flex items-start">
-                <div class="w-full" fxFlex="auto"  *ngIf = "isViewMode === true; else addEditComponent">                    
-                    <div  *ngIf="pageId =='GeneralInfo';else address">
-                        <vex-viewstudent-generalinfo 
-                        [data]=data
-                         (editData)="getEditData($event)"
-                        ></vex-viewstudent-generalinfo>
-                    </div>
-                    <ng-template #address>
-                        <div *ngIf="pageId =='AddressContacts';else enrollment">
-                            <vex-viewstudent-addressandcontacts 
-                            [data]=data 
-                             (editData)="getEditData($event)"
-                             ></vex-viewstudent-addressandcontacts>
-                        </div>
-                    </ng-template>
+                <div class="w-full" fxFlex="auto">                    
+                    <vex-student-generalinfo *ngIf="currentCategory==3"
+                    [studentCreateMode]="studentCreateMode"
+                    [studentDetailsForViewAndEdit]="studentAddModel">
+                    </vex-student-generalinfo>
 
-                    <ng-template #enrollment>
-                        <div *ngIf="pageId =='SchoolEnrollmentInfo';else family">
-                            <vex-student-enrollmentinfo></vex-student-enrollmentinfo>
-                        </div>
-                    </ng-template>
+                    <vex-student-addressandcontacts *ngIf="currentCategory==4"
+                    [studentCreateMode]="studentCreateMode"
+                    [studentDetailsForViewAndEdit]="studentAddModel">
+                    </vex-student-addressandcontacts>
 
-                    <ng-template #family>
-                        <div *ngIf="pageId =='FamilyInfo';else login">
-                            <vex-student-familyinfo></vex-student-familyinfo>
-                        </div>
-                    </ng-template>
-                    <ng-template #login>
-                        <div *ngIf="pageId =='LoginInfo'">
-                            <vex-viewstudent-logininfo></vex-viewstudent-logininfo>
-                        </div>
-                    </ng-template>                     
+                    <vex-student-enrollmentinfo *ngIf="currentCategory==5">
+                    </vex-student-enrollmentinfo>
+                   
+                    <vex-student-familyinfo *ngIf="currentCategory==6">
+                    </vex-student-familyinfo>
+
+                    <vex-student-logininfo *ngIf="currentCategory==7">
+                    </vex-student-logininfo>  
+
+                    <vex-student-medicalinfo *ngIf="currentCategory==8"
+                    [studentCreateMode]="studentCreateMode"
+                    [studentDetailsForViewAndEdit]="studentAddModel"
+                    (studentDetailsForParent)="checkCriticalAlertFromMedical($event)">
+                    </vex-student-medicalinfo>
+                    
+                    <vex-student-comments *ngIf="currentCategory==9"
+                        [studentCreateMode]="studentCreateMode"
+                        [studentDetailsForViewAndEdit]="studentAddModel">
+                    </vex-student-comments>
+                    
+                    <vex-student-documents *ngIf="currentCategory==10"
+                        [studentCreateMode]="studentCreateMode"
+                        [studentDetailsForViewAndEdit]="studentAddModel">
+                    </vex-student-documents>
+
+
                 </div>
-                <ng-template #addEditComponent>
-                  
-                    <div class="w-full" fxFlex="auto" *ngIf = "isEditMode === false; else Edit">
-                    
-                        <div  *ngIf="pageId =='GeneralInfo';else address">
-                            <vex-student-generalinfo (pageIdFromChild)="showPage($event)" [image]="image" (saveSuccessfullData)="saveSuccessfullData($event)"></vex-student-generalinfo>
-                        </div>
-                        <ng-template #address>
-                            <div *ngIf="pageId =='AddressContacts';else enrollment">
-                                <vex-student-addressandcontacts (pageIdFromChild)="showPage($event)" [saveDataFromGeneralInfo]="saveDataFromGeneralInfo" ></vex-student-addressandcontacts>
-                            </div>
-                        </ng-template>
-    
-                        <ng-template #enrollment>
-                            <div *ngIf="pageId =='SchoolEnrollmentInfo';else family">
-                                <vex-student-enrollmentinfo></vex-student-enrollmentinfo>
-                            </div>
-                        </ng-template>
-    
-                        <ng-template #family>
-                            <div *ngIf="pageId =='FamilyInfo';else login">
-                                <vex-student-familyinfo></vex-student-familyinfo>
-                            </div>
-                        </ng-template>
-                        <ng-template #login>
-                            <div *ngIf="pageId =='LoginInfo'">
-                                <vex-student-logininfo></vex-student-logininfo>
-                            </div>
-                        </ng-template>   
-                                
-                    </div>
-                    
-                </ng-template>
-                <ng-template #Edit>
-                        
-                    <div class="w-full" fxFlex="auto">
-                    
-                        <div  *ngIf="pageId =='GeneralInfo';else address">
-                            <vex-student-generalinfo 
-                             (pageIdFromChild)="showPage($event)" 
-                             (editSuccessfull)="editSuccessfull($event)" 
-                             [editDataOfGeneralInfo] ="editDataOfGeneralInfo"                             
-                             [image]="image"></vex-student-generalinfo>
-                        </div>
-                        <ng-template #address>
-                            <div *ngIf="pageId =='AddressContacts';else enrollment">
-                                <vex-student-addressandcontacts 
-                                (editSuccessfull)="editSuccessfull($event)" 
-                                [editDataOfGeneralInfo] ="editDataOfGeneralInfo"
-                               
-                                [image]="image"></vex-student-addressandcontacts>
-                            </div>
-                        </ng-template>
-    
-                        <ng-template #enrollment>
-                            <div *ngIf="pageId =='SchoolEnrollmentInfo';else family">
-                                <vex-student-enrollmentinfo></vex-student-enrollmentinfo>
-                            </div>
-                        </ng-template>
-    
-                        <ng-template #family>
-                            <div *ngIf="pageId =='FamilyInfo';else login">
-                                <vex-student-familyinfo></vex-student-familyinfo>
-                            </div>
-                        </ng-template>
-                        <ng-template #login>
-                            <div *ngIf="pageId =='LoginInfo'">
-                                <vex-student-logininfo></vex-student-logininfo>
-                            </div>
-                        </ng-template>   
-                                
-                    </div>
-                
-                </ng-template>
             </mat-drawer-content>
         </mat-drawer-container>
     </vex-page-layout-content>

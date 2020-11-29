@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser'
 import { CommonModule } from '@angular/common';
 import { AddSchoolComponent } from './add-school.component';
 import { MatIconModule } from '@angular/material/icon';
@@ -15,6 +16,7 @@ import { PageLayoutModule } from '../../../../@vex/components/page-layout/page-l
 import { ContainerModule } from '../../../../@vex/directives/container/container.module';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatInputModule } from '@angular/material/input';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
 import{GeneralInfoComponent} from '../add-school/general-info/general-info.component';
 import{WashInfoComponent} from '../add-school/wash-info/wash-info.component';
@@ -22,14 +24,17 @@ import { TranslateModule } from '@ngx-translate/core';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModuleModule } from '../../shared-module/shared-module.module';
-import { ViewGeneralInfoComponent } from './view-general-info/view-general-info.component';
-import { ViewWashInfoComponent } from './view-wash-info/view-wash-info.component';
+import { CustomFieldModule } from "../../../common/custom-field/custom-field.module";
+import { CustomFieldWithoutFormModule } from "../../../common/custom-field-without-form/custom-field-without-form.module";
+
+
 @NgModule({
-  declarations: [AddSchoolComponent,GeneralInfoComponent,WashInfoComponent, ViewGeneralInfoComponent, ViewWashInfoComponent],
+  declarations: [AddSchoolComponent,GeneralInfoComponent,WashInfoComponent],
   imports: [
     CommonModule,
     MatIconModule,
     MatInputModule,
+    MatCheckboxModule,
     MatSelectModule,
     IconModule,
     MatButtonModule,   
@@ -47,7 +52,9 @@ import { ViewWashInfoComponent } from './view-wash-info/view-wash-info.component
     BrowserAnimationsModule,
     ReactiveFormsModule,
     FormsModule,
-    SharedModuleModule
+    SharedModuleModule,
+    CustomFieldModule,
+    CustomFieldWithoutFormModule
    
   ]
 })

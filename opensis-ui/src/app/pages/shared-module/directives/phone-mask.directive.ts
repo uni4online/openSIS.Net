@@ -4,7 +4,7 @@ import { NgControl } from '@angular/forms';
 
 
 @Directive({
-  selector: '[formControlName][appPhoneMask]',
+  selector: '[appPhoneMask]',
 })
 export class PhoneMaskDirective {
 

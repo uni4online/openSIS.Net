@@ -1,0 +1,8 @@
+.students-list::after {
+    content: ', ';
+    display: inline-block;
+    padding-right: 5px;
+}
+.students-list:last-child:after {
+    display: none;
+}

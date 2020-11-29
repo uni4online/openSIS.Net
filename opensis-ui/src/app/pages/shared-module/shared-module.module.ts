@@ -18,9 +18,14 @@ import { MatCardModule } from '@angular/material/card';
 import { TranslateModule } from '@ngx-translate/core';
 import {InvalidControlScrollDirective} from './directives/invalid-control-scroll.directive';
 import {EmtyBooleanCheckReversePipe} from './user-define-pipe/emty-boolean-check.reverse.pipe';
+import { SafePipe } from './user-define-pipe/safeHtml.pipe';
+import { TransformDateTimePipe } from './user-define-pipe/transform-datetime-pipe';
+import {EmailvalidatorDirective} from './user-defined-directives/emailvalidator.directive';
+import {PhonevalidatorDirective} from './user-defined-directives/phonevalidator.directive';
 @NgModule({
   declarations: [MatSpinnerOverlayComponent, ProfileImageComponent,PhoneMaskDirective,EmtyBooleanCheckPipe,EmtyBooleanCheckReversePipe,
-    EmtyValueCheckPipe,EmtyNumberCheckPipe, ConfirmDialogComponent,InvalidControlScrollDirective],
+    EmtyValueCheckPipe,EmtyNumberCheckPipe, ConfirmDialogComponent,InvalidControlScrollDirective,TransformDateTimePipe,EmailvalidatorDirective,
+    PhonevalidatorDirective,SafePipe],
   imports: [
     CommonModule,
     MatProgressSpinnerModule,
@@ -33,6 +38,7 @@ import {EmtyBooleanCheckReversePipe} from './user-define-pipe/emty-boolean-check
     MatCardModule,
     TranslateModule
   ],
-  exports:[MatSpinnerOverlayComponent, ProfileImageComponent,PhoneMaskDirective,EmtyBooleanCheckPipe,EmtyValueCheckPipe,EmtyNumberCheckPipe,InvalidControlScrollDirective,EmtyBooleanCheckReversePipe]
+  exports:[MatSpinnerOverlayComponent, ProfileImageComponent,PhoneMaskDirective,EmtyBooleanCheckPipe,EmtyValueCheckPipe,EmtyNumberCheckPipe,InvalidControlScrollDirective,
+    EmtyBooleanCheckReversePipe,TransformDateTimePipe,EmailvalidatorDirective,PhonevalidatorDirective,SafePipe]
 })
 export class SharedModuleModule { }

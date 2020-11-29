@@ -18,42 +18,14 @@
                 </div>
                 <div class="flex flex-1 mx-4 md:w-1/2">
                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
-                        <mat-label>{{'estimatedGraduationDate'|translate}}</mat-label>
-                        <input name="estimated_graduation_date" matInput>
-                        <mat-datepicker-toggle [for]="datepickerRef" matSuffix></mat-datepicker-toggle>
-                        <mat-datepicker #datepickerRef></mat-datepicker>
-                    </mat-form-field>
-                </div>
-            </div>
-            <div class="mb-2 md:flex md:flex-wrap">
-                <div class="flex flex-1 mx-4 md:w-1/2">
-                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                         <mat-label>{{'rollingRetentionOption'|translate}}</mat-label>
                         <mat-select name="rolling_retention_option">
                             <mat-option value=""></mat-option>
                         </mat-select>
                     </mat-form-field>
                 </div>
-                <div class="flex flex-1 mx-4 md:w-1/2"></div>
-            </div>
-            <div class="mb-2 mx-4">
-                <div class="flex flex-wrap">
-                    <mat-checkbox color="primary" class="mr-6">
-                        {{'504Eligibility' | translate}}</mat-checkbox>
-                    <mat-checkbox color="primary" class="mr-6">
-                        {{'economicDisadvantage' | translate}}</mat-checkbox>
-                    <mat-checkbox color="primary" class="mr-6">
-                        {{'freeLunchEligibility' | translate}}</mat-checkbox>
-                    <mat-checkbox color="primary" class="mr-6">
-                        {{'specialEducationIndicator' | translate}}</mat-checkbox>
-                    <mat-checkbox color="primary">{{'lepIndicator' | translate}}
-                    </mat-checkbox>
-                </div>
             </div>
 
-            <div class="px-4 pt-3 mb-4 text-right">
-                <button color="primary" mat-raised-button>{{'submit'|translate}}</button>
-            </div>
 
             <hr class="-mx-3 mt-6"/>
 
@@ -67,330 +39,164 @@
                 </div>
                 </div>
 
-            <div>
-                <ul class="enrollment-timeline mt-4">
-                    <!-- <li>
-                        <span></span>
-                        <div>
-                            <button mat-button class="-mt-2 text-green"
-                                (click)="openEnrollToNewSchool()">
-                                <span><i
-                                        class="icon icon-plus3 mr-2"></i>{{'addEnrollmentInfo' | translate}}</span>
-                            </button> <span class="mx-2">/</span> <button mat-button
-                                class="-mt-2 text-warn" (click)="openEnrollToNewSchool()">
-                                <span><i
-                                        class="icon icon-blocked mr-2"></i>{{'dropStudent' | translate}}</span>
-                            </button>
-                        </div>
-                    </li> -->
-                    <li>
-                        <span>2017-2018</span>
-                        <div class="-mt-2">
-                            <mat-accordion class="w-full">
-                                <mat-expansion-panel>
-                                    <mat-expansion-panel-header>
-                                        <mat-panel-title class="font-semibold">
-                                            <div class="flex justify-between w-full">
-                                                <h5 class="pt-1 font-medium"><i class="icon icon-checkmark-circle text-green mr-4" matTooltip="Home School"></i> Pech State High School</h5>
-                                                <div class="font-normal text-gray pt-1">Enrolled as <span class="font-medium">Existing Student</span> at <span class="font-medium">Grade 10</span> on Apr 10, 2017</div>
-                                            </div>
-                                        </mat-panel-title>
-                                    </mat-expansion-panel-header>
-                                    <div class="border-t -mx-6 px-2 pt-3">
-                                        <ul class="grid grid-cols-4 col-gap-8 row-gap-10 mt-2 mx-4">
-                                            <li>
-                                                <label class="text-sm leading-5 text-gray">{{'gradeLevel' | translate}}</label>
-                                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Grade 9</p>
-                                            </li>
-                                            <li>
-                                                <label class="text-sm leading-5 text-gray">{{'section' | translate}}</label>
-                                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Section A</p>
-                                            </li>
-                                            <li>
-                                                <label class="text-sm leading-5 text-gray">{{'startDate' | translate}}</label>
-                                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Mar 10, 2020</p>
-                                            </li>
-                                            <li>
-                                                <label class="text-sm leading-5 text-gray">{{'enrollmentCode' | translate}}</label>
-                                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Existing</p>
-                                            </li>
-                                        </ul>
-                                        <div class="mx-4 mt-3 flex"><a href="" class="text-green underline hover:no-underline mr-3">Transfer Out to Other School</a> <span class="text-gray">/</span> <a href="" class="text-green underline hover:no-underline mx-3">Student Rolled Over</a> <span class="text-gray">/</span> <a href="" class="text-green underline hover:no-underline ml-3">Student Dropped Out</a></div>
+            <div class="mx-4">
+                <div class="bg-white shadow-md border border-primary-light hover:border-primary rounded px-4 pt-3 mb-4">
+                    <div class="flex flex-wrap w-full -mx-4">
+                        <div class="w-11/12 ">
+                            <div class="mx-4">
+                                <div class="flex flex-wrap -mx-4">
+                                    <div class="sm:w-1/2 lg:w-1/4 px-4">
+                                        <mat-form-field fxFlex="auto" class="w-full" appearance="outline"
+                                            color="primary" floatLabel="never">
+                                            <mat-label>{{'school'|translate}}</mat-label>
+                                            <mat-select name="suffix">
+                                                <mat-option value="">Southpoint High School</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
                                     </div>
-                                </mat-expansion-panel>
-                                <mat-expansion-panel>
-                                    <mat-expansion-panel-header>
-                                        <mat-panel-title class="font-semibold">
-                                            <div class="flex justify-between w-full">
-                                                <h5 class="pt-1 font-medium">Georgia Safe Schools Coalition</h5>
-                                                <div class="font-normal text-gray pt-1">Enrolled as <span class="font-medium">Existing Student</span> at <span class="font-medium">Grade 10</span> on Apr 10, 2017</div>
-                                            </div>
-                                        </mat-panel-title>
-                                    </mat-expansion-panel-header>
-                                    <div class="border-t -mx-6">
-                                        <ul class="grid grid-cols-4 col-gap-8 row-gap-10 mt-2 mx-4">
-                                            <li>
-                                                <label class="text-sm leading-5 text-gray">{{'gradeLevel' | translate}}</label>
-                                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Grade 9</p>
-                                            </li>
-                                            <li>
-                                                <label class="text-sm leading-5 text-gray">{{'section' | translate}}</label>
-                                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Section A</p>
-                                            </li>
-                                            <li>
-                                                <label class="text-sm leading-5 text-gray">{{'startDate' | translate}}</label>
-                                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Mar 10, 2020</p>
-                                            </li>
-                                            <li>
-                                                <label class="text-sm leading-5 text-gray">{{'enrollmentCode' | translate}}</label>
-                                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Existing</p>
-                                            </li>
-                                        </ul>
-                                        <div class="mx-4 mt-3 flex"><a href="" class="text-green underline hover:no-underline mr-3">Transfer Out to Other School</a> <span class="text-gray">/</span> <a href="" class="text-green underline hover:no-underline mx-3">Student Rolled Over</a> <span class="text-gray">/</span> <a href="" class="text-green underline hover:no-underline ml-3">Student Dropped Out</a></div>
+                                    <div class="sm:w-1/2 lg:w-1/4 px-4">
+                                        <mat-form-field fxFlex="auto" class="w-full" appearance="outline"
+                                            color="primary" floatLabel="never">
+                                            <mat-label>{{'gradeLevel'|translate}}</mat-label>
+                                            <mat-select name="suffix">
+                                                <mat-option value="">Grade 9</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
                                     </div>
-                                </mat-expansion-panel>
-                            </mat-accordion>
-                        </div>
-                    </li>
-                    <li>
-                        <span>2016-2017</span>
-                        <div class="-mt-2">
-                            <mat-accordion class="w-full">
-                                <mat-expansion-panel>
-                                    <mat-expansion-panel-header>
-                                        <mat-panel-title class="font-semibold">
-                                            <div class="flex justify-between w-full">
-                                                <h5 class="pt-1 font-medium"><i class="icon icon-checkmark-circle text-green mr-4" matTooltip="Home School"></i> Pech State High School</h5>
-                                                <div class="font-normal text-gray pt-1">Enrolled as <span class="font-medium">Existing Student</span> at <span class="font-medium">Grade 9</span> on Apr 03, 2016</div>
-                                            </div>
-                                        </mat-panel-title>
-                                    </mat-expansion-panel-header>
-                                    <div class="border-t -mx-6 px-2 pt-3">
-                                        <ul class="grid grid-cols-4 col-gap-8 row-gap-10 mt-2 mx-4">
-                                            <li>
-                                                <label class="text-sm leading-5 text-gray">{{'gradeLevel' | translate}}</label>
-                                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Grade 9</p>
-                                            </li>
-                                            <li>
-                                                <label class="text-sm leading-5 text-gray">{{'section' | translate}}</label>
-                                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Section A</p>
-                                            </li>
-                                            <li>
-                                                <label class="text-sm leading-5 text-gray">{{'startDate' | translate}}</label>
-                                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Mar 10, 2020</p>
-                                            </li>
-                                            <li>
-                                                <label class="text-sm leading-5 text-gray">{{'enrollmentCode' | translate}}</label>
-                                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Existing</p>
-                                            </li>
-                                        </ul>
-                                        <div class="mx-4 mt-3 flex"><a href="" class="text-green underline hover:no-underline mr-3">Transfer Out to Other School</a> <span class="text-gray">/</span> <a href="" class="text-green underline hover:no-underline mx-3">Student Rolled Over</a> <span class="text-gray">/</span> <a href="" class="text-green underline hover:no-underline ml-3">Student Dropped Out</a></div>
+                                    <div class="sm:w-1/2 lg:w-1/4 px-4">
+                                        <mat-form-field fxFlex="auto" class="w-full" appearance="outline"
+                                            color="primary" floatLabel="never">
+                                            <mat-label>{{'enrollmentDate'|translate}}</mat-label>
+                                            <input name="date_of_birth" matInput>
+                                            <mat-datepicker-toggle [for]="datepickerRef" matSuffix>
+                                            </mat-datepicker-toggle>
+                                            <mat-datepicker #datepickerRef></mat-datepicker>
+                                        </mat-form-field>
                                     </div>
-                                </mat-expansion-panel>
-                                <mat-expansion-panel>
-                                    <mat-expansion-panel-header>
-                                        <mat-panel-title class="font-semibold">
-                                            <div class="flex justify-between w-full">
-                                                <h5 class="pt-1 font-medium">Georgia Safe Schools Coalition</h5>
-                                                <div class="font-normal text-gray pt-1">Enrolled as <span class="font-medium">New Student</span> at <span class="font-medium">Grade 9</span> on Aug 12, 2016</div>
-                                            </div>
-                                        </mat-panel-title>
-                                    </mat-expansion-panel-header>
-                                    <div class="border-t -mx-6">
-                                        <ul class="grid grid-cols-4 col-gap-8 row-gap-10 mt-2 mx-4">
-                                            <li>
-                                                <label class="text-sm leading-5 text-gray">{{'gradeLevel' | translate}}</label>
-                                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Grade 9</p>
-                                            </li>
-                                            <li>
-                                                <label class="text-sm leading-5 text-gray">{{'section' | translate}}</label>
-                                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Section A</p>
-                                            </li>
-                                            <li>
-                                                <label class="text-sm leading-5 text-gray">{{'startDate' | translate}}</label>
-                                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Mar 10, 2020</p>
-                                            </li>
-                                            <li>
-                                                <label class="text-sm leading-5 text-gray">{{'enrollmentCode' | translate}}</label>
-                                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Existing</p>
-                                            </li>
-                                        </ul>
-                                        <div class="mx-4 mt-3 flex"><a href="" class="text-green underline hover:no-underline mr-3">Transfer Out to Other School</a> <span class="text-gray">/</span> <a href="" class="text-green underline hover:no-underline mx-3">Student Rolled Over</a> <span class="text-gray">/</span> <a href="" class="text-green underline hover:no-underline ml-3">Student Dropped Out</a></div>
+                                    <div class="sm:w-1/2 lg:w-1/4 px-4">
+                                        <mat-form-field fxFlex="auto" class="w-full" appearance="outline"
+                                            color="primary" floatLabel="never">
+                                            <mat-label>{{'enrollmentCode'|translate}}</mat-label>
+                                            <mat-select name="suffix">
+                                                <mat-option value="">New Enrollment</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
                                     </div>
-                                </mat-expansion-panel>
-                            </mat-accordion>
-                        </div>
-                    </li>
-                    <li>
-                        <span>2015-2016</span>
-                        <div class="-mt-2">
-                            <mat-accordion class="w-full">
-                                <mat-expansion-panel>
-                                    <mat-expansion-panel-header>
-                                        <mat-panel-title class="font-semibold">
-                                            <div class="flex justify-between w-full">
-                                                <h5 class="pt-1 font-medium"><i class="icon icon-checkmark-circle text-green mr-4" matTooltip="Home School"></i> Pech State High School</h5>
-                                                <div class="font-normal text-gray pt-1">Enrolled as <span class="font-medium">Existing Student</span> at <span class="font-medium">Grade 8</span> on Apr 08, 2015</div>
-                                            </div>
-                                        </mat-panel-title>
-                                    </mat-expansion-panel-header>
-                                    <div class="border-t -mx-6 px-2 pt-3">
-                                        <ul class="grid grid-cols-4 col-gap-8 row-gap-10 mt-2 mx-4">
-                                            <li>
-                                                <label class="text-sm leading-5 text-gray">{{'gradeLevel' | translate}}</label>
-                                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Grade 9</p>
-                                            </li>
-                                            <li>
-                                                <label class="text-sm leading-5 text-gray">{{'section' | translate}}</label>
-                                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Section A</p>
-                                            </li>
-                                            <li>
-                                                <label class="text-sm leading-5 text-gray">{{'startDate' | translate}}</label>
-                                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Mar 10, 2020</p>
-                                            </li>
-                                            <li>
-                                                <label class="text-sm leading-5 text-gray">{{'enrollmentCode' | translate}}</label>
-                                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Existing</p>
-                                            </li>
-                                        </ul>
-                                        <div class="mx-4 mt-3 flex"><a href="" class="text-green underline hover:no-underline mr-3">Transfer Out to Other School</a> <span class="text-gray">/</span> <a href="" class="text-green underline hover:no-underline mx-3">Student Rolled Over</a> <span class="text-gray">/</span> <a href="" class="text-green underline hover:no-underline ml-3">Student Dropped Out</a></div>
-                                    </div>
-                                </mat-expansion-panel>
-                            </mat-accordion>
-                        </div>
-                    </li>
-                    <li>
-                        <span>2014-2015</span>
-                        <div class="-mt-2">
-                            <mat-accordion class="w-full">
-                                <mat-expansion-panel>
-                                    <mat-expansion-panel-header>
-                                        <mat-panel-title class="font-semibold">
-                                            <div class="flex justify-between w-full">
-                                                <h5 class="pt-1 font-medium"><i class="icon icon-checkmark-circle text-green mr-4" matTooltip="Home School"></i> Pech State High School</h5>
-                                                <div class="font-normal text-gray pt-1">Enrolled as <span class="font-medium">Existing Student</span> at <span class="font-medium">Grade 7</span> on Apr 01, 2014</div>
-                                            </div>
-                                        </mat-panel-title>
-                                    </mat-expansion-panel-header>
-                                    <div class="border-t -mx-6 px-2 pt-3">
-                                        <ul class="grid grid-cols-4 col-gap-8 row-gap-10 mt-2 mx-4">
-                                            <li>
-                                                <label class="text-sm leading-5 text-gray">{{'gradeLevel' | translate}}</label>
-                                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Grade 9</p>
-                                            </li>
-                                            <li>
-                                                <label class="text-sm leading-5 text-gray">{{'section' | translate}}</label>
-                                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Section A</p>
-                                            </li>
-                                            <li>
-                                                <label class="text-sm leading-5 text-gray">{{'startDate' | translate}}</label>
-                                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Mar 10, 2020</p>
-                                            </li>
-                                            <li>
-                                                <label class="text-sm leading-5 text-gray">{{'enrollmentCode' | translate}}</label>
-                                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Existing</p>
-                                            </li>
-                                        </ul>
-                                        <div class="mx-4 mt-3 flex"><a href="" class="text-green underline hover:no-underline mr-3">Transfer Out to Other School</a> <span class="text-gray">/</span> <a href="" class="text-green underline hover:no-underline mx-3">Student Rolled Over</a> <span class="text-gray">/</span> <a href="" class="text-green underline hover:no-underline ml-3">Student Dropped Out</a></div>
-                                    </div>
-                                </mat-expansion-panel>
-                            </mat-accordion>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-
-            <!--<div class="mb-6 md:flex md:flex-wrap">
-                <div class="flex flex-1 mx-4 md:w-1/2">
-                    <mat-accordion class="w-full">
-                        <mat-expansion-panel>
-                            <mat-expansion-panel-header>
-                                <mat-panel-title class="font-semibold">
-                                    <span class="text-green mr-4"><i class="icon icon-checkmark-circle"></i></span>Pech
-                                    State High School
-                                </mat-panel-title>
-                            </mat-expansion-panel-header>
-                            <div class="border-t -mx-6">
-                                <ul class="enrollment-timeline mt-4">
-                                    <li>
-                                        <span></span>
-                                        <div>
-                                            <button mat-button class="-mt-2 text-green"
-                                                (click)="openEnrollToNewSchool()">
-                                                <span><i
-                                                        class="icon icon-plus3 mr-2"></i>{{'addEnrollmentInfo' | translate}}</span>
-                                            </button> <span class="mx-2">/</span> <button mat-button
-                                                class="-mt-2 text-warn" (click)="openEnrollToNewSchool()">
-                                                <span><i
-                                                        class="icon icon-blocked mr-2"></i>{{'dropStudent' | translate}}</span>
-                                </button>
-                                        </div>
-                                    </li> 
-                                    <li>
-                                        <span>2018</span>
-                                        <div>Promoted to Grade 12 on Aug 12, 2018</div>
-                                    </li>
-                                    <li>
-                                        <span>2017</span>
-                                        <div>Promoted to Grade 11 on Aug 22, 2017</div>
-                                    </li>
-                                    <li>
-                                        <span>2016</span>
-                                        <div>Promoted to Grade 10 on Sep 01, 2016</div>
-                                    </li>
-                                    <li>
-                                        <span>2015</span>
-                                        <div>Enrolled as New Student at Grade 9 on Nov 1, 2015</div>
-                                    </li>                                    
-                                </ul>
-
-                </div>
-                        </mat-expansion-panel>
-                    </mat-accordion>
-            </div>
-                <div class="flex flex-1 mx-4 md:w-1/2">
-                    <mat-accordion class="w-full">
-                        <mat-expansion-panel class="border">
-                            <mat-expansion-panel-header>
-                                <mat-panel-title class="font-semibold">
-                                    Pech Tree High School
-                                </mat-panel-title>
-                            </mat-expansion-panel-header>
-                            <div class="border-t -mx-6">
-                                <ul class="enrollment-timeline mt-4">                                    
-                                    <li>
-                                        <span></span>
-                                        <div>
-                                            <button mat-button class="-mt-2 text-green"
-                                                (click)="openEnrollToNewSchool()">
-                                                <span><i
-                                                        class="icon icon-plus3 mr-2"></i>{{'addEnrollmentInfo' | translate}}</span>
-                                </button>
-                                        </div>
-                                    </li> 
-                                    <li>
-                                        <span>2014</span>
-                                        <div>Dropped from Pech Tree High School on Dec 12, 2014</div>
-                                    </li>
-                                    <li>
-                                        <span>2014</span>
-                                        <div>Promoted to Grade 8 on Aug 12, 2014</div>
-                                    </li>
-                                    <li>
-                                        <span>2013</span>
-                                        <div>Promoted to Grade 7 on Aug 22, 2013</div>
-                                    </li>
-                                    <li>
-                                        <span>2012</span>
-                                        <div>Enrolled as Existing Student at Grade 6 on Aug 12, 2012</div>
-                                    </li>
-                                </ul>
+                                </div>
                             </div>
-                        </mat-expansion-panel>
-                    </mat-accordion>
-                </div>
-            </div> -->
+                        </div>
+                        <div class="w-1/12 text-right pt-2">
+                            <div class=" mx-4">
+                                <a routerLink="" class="cursor-pointer">
+                                    <mat-icon [icIcon]="icClear"></mat-icon>
+                                </a>
+                        </div>
+                                    </div>
+                        </div>
+            </div>
 
+                <div class="bg-white shadow-md border border-primary-light hover:border-primary rounded px-4 pt-3 mb-4">
+                    <div class="flex flex-wrap w-full -mx-4">
+                        <div class="w-11/12 ">
+                            <div class="mx-4">
+                                <div class="flex flex-wrap -mx-4">
+                                    <div class="sm:w-1/2 lg:w-1/4 px-4">
+                                        <mat-form-field fxFlex="auto" class="w-full" appearance="outline"
+                                            color="primary" floatLabel="never">
+                                            <mat-label>{{'school'|translate}}</mat-label>
+                                            <mat-select name="suffix">
+                                                <mat-option value="">Southpoint High School</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="sm:w-1/2 lg:w-1/4 px-4">
+                                        <mat-form-field fxFlex="auto" class="w-full" appearance="outline"
+                                            color="primary" floatLabel="never">
+                                            <mat-label>{{'gradeLevel'|translate}}</mat-label>
+                                            <mat-select name="suffix">
+                                                <mat-option value="">Grade 9</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="sm:w-1/2 lg:w-1/4 px-4">
+                                        <mat-form-field fxFlex="auto" class="w-full" appearance="outline"
+                                            color="primary" floatLabel="never">
+                                            <mat-label>{{'enrollmentDate'|translate}}</mat-label>
+                                            <input matInput [matDatepicker]="enrollmentDate">
+                                            <mat-datepicker-toggle matSuffix [for]="enrollmentDate"></mat-datepicker-toggle>
+                                            <mat-datepicker #enrollmentDate></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="sm:w-1/2 lg:w-1/4 px-4">
+                                        <mat-form-field fxFlex="auto" class="w-full" appearance="outline"
+                                            color="primary" floatLabel="never">
+                                            <mat-label>{{'enrollmentCode'|translate}}</mat-label>
+                                            <mat-select name="suffix">
+                                                <mat-option value="">Promoted</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="flex flex-wrap -mx-4">
+                                    <div class="sm:w-1/2 lg:w-1/4 px-4">
+                                        <mat-form-field fxFlex="auto" class="w-full" appearance="outline"
+                                            color="primary" floatLabel="never">
+                                            <mat-label>{{'exitDate'|translate}}</mat-label>
+                                            <input matInput [matDatepicker]="endDate">
+                                            <mat-datepicker-toggle matSuffix [for]="endDate"></mat-datepicker-toggle>
+                                            <mat-datepicker #endDate></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="sm:w-1/2 lg:w-1/4 px-4">
+                                        <mat-form-field fxFlex="auto" class="w-full" appearance="outline"
+                                            color="primary" floatLabel="never">
+                                            <mat-label>{{'exitCode'|translate}}</mat-label>
+                                            <mat-select name="suffix">
+                                                <mat-option value="">Transferred Out</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="sm:w-1/2 lg:w-1/4 px-4">
+                                        <mat-form-field fxFlex="auto" class="w-full" appearance="outline"
+                                            color="primary" floatLabel="never">
+                                            <mat-label>{{'transferToSchool'|translate}}</mat-label>
+                                            <mat-select name="suffix">
+                                                <mat-option value="">Peachtree High School</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="sm:w-1/2 lg:w-1/4 px-4">
+                                        <mat-form-field fxFlex="auto" class="w-full" appearance="outline"
+                                            color="primary" floatLabel="never">
+                                            <mat-label>{{'gradeLevel'|translate}}</mat-label>
+                                            <mat-select name="suffix">
+                                                <mat-option value="">Grade 9</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-1/12 text-right pt-2">
+                            <div class=" mx-4">
+                                <a routerLink="" class="cursor-pointer text-skyblue-light">
+                                    <mat-icon [icIcon]="icClear"></mat-icon>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                                        </div>
+                                        </div>
+
+
+            <div class="w-full overflow-x-auto block">
+                <div class="table w-full">
+                            </div>
+                </div>
+
+            <div class="px-4 pt-3 mb-4 text-right">
+                <button color="primary" mat-raised-button>{{'submit'|translate}}</button>
+            </div>
         </div>
     </mat-card-content>
 </mat-card>

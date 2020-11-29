@@ -6,5 +6,7 @@ namespace opensis.data.ViewModels.School
     public class SchoolAddViewModel : CommonFields
     {
         public SchoolMaster schoolMaster { get; set; }
+
+        public int? SelectedCategoryId { get; set; }
     }
 }

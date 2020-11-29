@@ -58,31 +58,31 @@ namespace opensis.data.Repository
         /// </summary>
         /// <param name="customFieldAddViewModel"></param>
         /// <returns></returns>
-        public CustomFieldAddViewModel ViewCustomField(CustomFieldAddViewModel customFieldAddViewModel)
-        {
-            CustomFieldAddViewModel customFieldView = new CustomFieldAddViewModel();
-            try
-            {
-                var CustomField = this.context?.CustomFields.FirstOrDefault(x => x.TenantId == customFieldAddViewModel.customFields.TenantId && x.SchoolId == customFieldAddViewModel.customFields.SchoolId && x.FieldId == customFieldAddViewModel.customFields.FieldId);
-                if (CustomField != null)
-                {
-                    customFieldView.customFields = CustomField;
-                    customFieldView._failure = false;
-                }
-                else
-                {
-                    customFieldView._failure = true;
-                    customFieldView._message = NORECORDFOUND;
-                }
-            }
-            catch (Exception es)
-            {
-                customFieldView._failure = true;
-                customFieldView._message = es.Message;
-            }
-            return customFieldView;
+        //public CustomFieldAddViewModel ViewCustomField(CustomFieldAddViewModel customFieldAddViewModel)
+        //{
+        //    CustomFieldAddViewModel customFieldView = new CustomFieldAddViewModel();
+        //    try
+        //    {
+        //        var CustomField = this.context?.CustomFields.FirstOrDefault(x => x.TenantId == customFieldAddViewModel.customFields.TenantId && x.SchoolId == customFieldAddViewModel.customFields.SchoolId && x.FieldId == customFieldAddViewModel.customFields.FieldId);
+        //        if (CustomField != null)
+        //        {
+        //            customFieldView.customFields = CustomField;
+        //            customFieldView._failure = false;
+        //        }
+        //        else
+        //        {
+        //            customFieldView._failure = true;
+        //            customFieldView._message = NORECORDFOUND;
+        //        }
+        //    }
+        //    catch (Exception es)
+        //    {
+        //        customFieldView._failure = true;
+        //        customFieldView._message = es.Message;
+        //    }
+        //    return customFieldView;
 
-        }
+        //}
 
         /// <summary>
         /// Update Custom Field
@@ -179,31 +179,31 @@ namespace opensis.data.Repository
         /// </summary>
         /// <param name="fieldsCategoryAddViewModel"></param>
         /// <returns></returns>
-        public FieldsCategoryAddViewModel ViewFieldsCategory(FieldsCategoryAddViewModel fieldsCategoryAddViewModel)
-        {
-            FieldsCategoryAddViewModel fieldsCategoryViewModel = new FieldsCategoryAddViewModel();
-            try
-            {
-                var fieldsCategoryView = this.context?.FieldsCategory.FirstOrDefault(x => x.TenantId == fieldsCategoryAddViewModel.fieldsCategory.TenantId && x.SchoolId == fieldsCategoryAddViewModel.fieldsCategory.SchoolId && x.CategoryId == fieldsCategoryAddViewModel.fieldsCategory.CategoryId);
-                if (fieldsCategoryView != null)
-                {
-                    fieldsCategoryViewModel.fieldsCategory = fieldsCategoryView;
-                    fieldsCategoryViewModel._failure = false;
-                }
-                else
-                {
-                    fieldsCategoryViewModel._failure = true;
-                    fieldsCategoryViewModel._message = NORECORDFOUND;
-                }
-            }
-            catch (Exception es)
-            {
+        //public FieldsCategoryAddViewModel ViewFieldsCategory(FieldsCategoryAddViewModel fieldsCategoryAddViewModel)
+        //{
+        //    FieldsCategoryAddViewModel fieldsCategoryViewModel = new FieldsCategoryAddViewModel();
+        //    try
+        //    {
+        //        var fieldsCategoryView = this.context?.FieldsCategory.FirstOrDefault(x => x.TenantId == fieldsCategoryAddViewModel.fieldsCategory.TenantId && x.SchoolId == fieldsCategoryAddViewModel.fieldsCategory.SchoolId && x.CategoryId == fieldsCategoryAddViewModel.fieldsCategory.CategoryId);
+        //        if (fieldsCategoryView != null)
+        //        {
+        //            fieldsCategoryViewModel.fieldsCategory = fieldsCategoryView;
+        //            fieldsCategoryViewModel._failure = false;
+        //        }
+        //        else
+        //        {
+        //            fieldsCategoryViewModel._failure = true;
+        //            fieldsCategoryViewModel._message = NORECORDFOUND;
+        //        }
+        //    }
+        //    catch (Exception es)
+        //    {
 
-                fieldsCategoryViewModel._failure = true;
-                fieldsCategoryViewModel._message = es.Message;
-            }
-            return fieldsCategoryViewModel;
-        }
+        //        fieldsCategoryViewModel._failure = true;
+        //        fieldsCategoryViewModel._message = es.Message;
+        //    }
+        //    return fieldsCategoryViewModel;
+        //}
         /// <summary>
         /// Update FieldsCategory 
         /// </summary>
@@ -274,8 +274,10 @@ namespace opensis.data.Repository
                     .Where(x => x.TenantId == fieldsCategoryListViewModel.TenantId && 
                                 x.SchoolId == fieldsCategoryListViewModel.SchoolId && 
                                 x.Module== fieldsCategoryListViewModel.Module)
-                    .OrderBy(x => x.SortOrder).ToList();
+                    .OrderByDescending(x => x.IsSystemCategory).ThenBy(x=>x.SortOrder).ToList();
+                var customFields = fieldsCategoryList.FirstOrDefault().CustomFields.OrderByDescending(y => y.SystemField).ThenBy(y => y.SortOrder).ToList();
                 fieldsCategoryListModel.fieldsCategoryList = fieldsCategoryList;
+                fieldsCategoryListModel.fieldsCategoryList.FirstOrDefault().CustomFields = customFields;
                 fieldsCategoryListModel._tenantName = fieldsCategoryListViewModel._tenantName;
                 fieldsCategoryListModel._token = fieldsCategoryListViewModel._token;
                 fieldsCategoryListModel._failure = false;

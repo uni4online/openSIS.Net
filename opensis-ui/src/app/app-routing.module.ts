@@ -85,7 +85,16 @@ const routes: Routes = [
             path: 'parents',
             loadChildren: () => import('./pages/parent/parentinfo/parentinfo.module').then(m => m.ParentinfoModule),
             //canActivate: [AuthGuard]            
-            
+          }
+        ]
+      },
+      {
+        path: '',
+        children: [
+          {
+            path: 'staff',
+            loadChildren: () => import('./pages/staff/staffinfo/staffinfo.module').then(m => m.StaffinfoModule),
+            //canActivate: [AuthGuard]            
           }
         ]
       },

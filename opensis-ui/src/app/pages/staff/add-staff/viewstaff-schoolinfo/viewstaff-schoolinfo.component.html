@@ -1,0 +1,83 @@
+<mat-card class="w-full">
+
+    <div class="flex items-center mx-4" fxLayout="row" fxLayoutAlign="center center">
+        <h3 class="flex-auto">{{'schoolInformation' | translate}}</h3>
+        <button mat-button color="primary"><mat-icon [icIcon]="icEdit"></mat-icon> {{'editInformation' |translate}}</button>
+    </div>
+    <mat-card-content>
+
+        <div @stagger fxLayout="column">
+            <h4 class="text-primary pt-6 pb-2 px-4">{{'officialInformation'|translate}}</h4>
+            <ul class="grid grid-cols-3 col-gap-8 row-gap-10 mt-2 mx-4">
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'opensisProfile' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Teacher</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'jobTitle' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Senior Teacher</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'homeroomTeacher' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Yes</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'joiningDate' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Mar 10, 2019</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'endDate' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Dec 30, 2024</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'primaryGradeLevelTaught' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Grade 9</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'otherGradeLevelTaught' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Grade 6, Grade 7, Grade 8, Grade 10</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'primarySubjectTaught' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Mathematics</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'otherSubjectTaught' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Chemistry, Physical Science</p>
+                </li>
+            </ul>
+
+            <hr class="-mx-4 mt-6">
+            <h4 class="text-primary pt-6 pb-2 px-4">{{'schoolInformation'|translate}}</h4>
+            <div class="mx-4 mb-3">
+                <table class="w-full table-auto border-collapse border">
+                    <thead>
+                        <tr>
+                            <th class="text-left p-3 border-b">{{'school'|translate}}</th>
+                            <th class="text-left p-3 border-b">{{'profile'|translate}}</th>
+                            <th class="text-left p-3 border-b">{{'startDate'|translate}}</th>
+                            <th class="text-left p-3 border-b">{{'endDate'|translate}}</th>
+                            <th class="text-left p-3 border-b">{{'status'|translate}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="p-3">Peach State Middle School</td>
+                            <td class="p-3">Teacher</td>
+                            <td class="p-3">Jan 01, 2020</td>
+                            <td class="p-3">Dec 30, 2020</td>
+                            <td class="p-3"><span class="text-green">Active</span></td>
+                        </tr>
+                        <tr>
+                            <td class="p-3">Peach State Primary School</td>
+                            <td class="p-3">Teacher</td>
+                            <td class="p-3">Jan 01, 2016</td>
+                            <td class="p-3">Dec 30, 2018</td>
+                            <td class="p-3"><span class="text-deep-orange">Inactive</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>

@@ -32,7 +32,7 @@
                             visibleFrom="{{list.validFrom | date }} - {{list.validTo | date }}"
                             visibleTo={{list.targetMembershipIds}}>
                             <div class="px-gutter pt-4 pb-6">
-                                <div [innerHTML]="list.body"></div>
+                                <div class="ql-editor" [innerHTML]="list.body|safe:'html'"></div>
                             </div>
                         </vex-notice-cards>
                     </div>

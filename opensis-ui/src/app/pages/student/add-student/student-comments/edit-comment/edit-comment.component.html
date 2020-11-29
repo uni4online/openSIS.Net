@@ -1,5 +1,5 @@
 <div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
-    <h2 class="headline m-0" fxFlex="auto">{{'addComment' | translate}}</h2>
+    <h2 class="headline m-0" fxFlex="auto">{{commentTitle | translate}}</h2>
     <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
         <mat-icon [icIcon]="icClose"></mat-icon>
     </button>
@@ -7,13 +7,15 @@
 <mat-divider class="-mx-6 text-border"></mat-divider>
 <form [formGroup]="form">
     <mat-dialog-content fxLayout="column">
-        <mat-form-field class="mt-6" appearance="outline" color="primary">
+        <div class="mt-6" appearance="outline" color="primary">
             <mat-label>{{'enterComment' | translate}}</mat-label>
-            <textarea matInput cdkFocusInitial name="comment">Replace this textarea with QUILL editor</textarea>
-        </mat-form-field>
+            <quill-editor formControlName="Body" name="Body"  (onEditorChanged)="changedEditor($event)" ></quill-editor>
+            
+        </div>
+        <mat-error *ngIf="(form.get('Body').touched && form.get('Body').hasError('required'))">{{'commentIsRequired'|translate}}</mat-error>
     </mat-dialog-content>
     <mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" class="py-6">
         <button mat-button mat-dialog-close type="button">{{'cancel' | translate}}</button>
-        <button color="primary" mat-raised-button type="submit">{{'submit' | translate}}</button>
+        <button color="primary" (click)="submit()" mat-raised-button type="submit">{{buttonType | translate}}</button>
     </mat-dialog-actions>
 </form>

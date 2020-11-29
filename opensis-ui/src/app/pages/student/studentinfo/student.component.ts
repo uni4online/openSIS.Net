@@ -54,7 +54,7 @@ export class StudentComponent implements OnInit {
   @ViewChild(MatSort) sort:MatSort
 
   constructor(
-    private studentService: StudentService,
+    private _studentService: StudentService,
     private snackbar: MatSnackBar,
     private router: Router,
     private loaderService:LoaderService
@@ -134,10 +134,13 @@ export class StudentComponent implements OnInit {
       })
     }
 
-
   goToAdd(){   
-    this.studentService.setViewGeneralInfoData("");
     this.router.navigate(["school/students/student-generalinfo"]);
+  }
+
+  viewStudentDetails(id){  
+    this._studentService.setStudentId(id)
+    this.router.navigate(["school/students/student-generalinfo"]); 
   }
 
   getPageEvent(event){
@@ -164,7 +167,7 @@ export class StudentComponent implements OnInit {
     if(this.getAllStudent.sortingModel?.sortColumn==""){
       this.getAllStudent.sortingModel=null
     }
-    this.studentService.GetAllStudentList(this.getAllStudent).subscribe(data => {
+    this._studentService.GetAllStudentList(this.getAllStudent).subscribe(data => {
       if(data._failure){
         this.snackbar.open('Student information failed. '+ data._message, 'LOL THANKS', {
         duration: 10000
@@ -215,14 +218,4 @@ export class StudentComponent implements OnInit {
     column.visible = !column.visible;
   }
 
-  viewGeneralInfo(data){  
-    var obj ={}
-    this.allStudentList.map((value:any) => {
-      if(data.studentId === value.studentId){
-        obj = value;
-      }              
-    }); 
-    this.studentService.setViewGeneralInfoData(obj);
-    this.router.navigate(["school/students/student-generalinfo"]); 
-  }
 }

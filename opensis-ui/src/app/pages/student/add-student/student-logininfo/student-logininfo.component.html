@@ -1,4 +1,4 @@
-<mat-card class="w-full">
+<mat-card class="w-full" *ngIf="studentCreateMode==StudentCreate.EDIT || studentCreateMode==StudentCreate.ADD">
     <mat-card-header>
         <mat-card-title>{{'loginInformation'|translate}}</mat-card-title>
     </mat-card-header>
@@ -6,13 +6,10 @@
         <div @stagger fxLayout="column">
             <div class="mb-2 md:flex md:flex-wrap">
                 <div class="flex-1 mx-4 md:w-1/2">
-                    <mat-form-field class="flex-none w-full mb-0" appearance="outline" color="primary">
-                        <mat-label>{{'email'|translate}}</mat-label>
-                        <mat-select name="suffix">
-                            <mat-option value="Jr.">List value items</mat-option>
-                        </mat-select>
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'username'|translate}}</mat-label>
+                        <input name="username" matInput required>
                     </mat-form-field>
-                    <p class="flex-none -mt-3 mb-4 text-gray"><i class="icon icon-info2"></i> Select an email as username from the list which you have entered in Address & Contacts</p>
                 </div>
                 <div class="flex-1 mx-4 md:w-1/2">
                     <mat-form-field class="flex-none w-full mb-0" appearance="outline" color="primary">
@@ -26,7 +23,6 @@
                     <p class="flex-none -mt-3 mb-4"><a routerLink="http://www.google.com" class="text-primary underline">Auto Generate Password</a></p>
                 </div>
             </div>
-            <div class="mb-6 mx-4"><mat-slide-toggle color="primary" checked="checked" class="mb-4">{{'portalAccess' | translate}}</mat-slide-toggle></div>
             <h4 class="text-primary pt-6 pb-2 px-4">{{'secretQuestionAndAnswer'|translate}}</h4>
             <div class="mb-2 md:flex md:flex-wrap">
                 <div class="flex flex-1 mx-4 md:w-1/2">
@@ -115,4 +111,56 @@
             <button color="primary" mat-raised-button>{{'submit'|translate}}</button>
         </div>
     </mat-card-actions>
+</mat-card>
+
+<mat-card class="w-full" *ngIf="studentCreateMode == StudentCreate.VIEW">
+
+    <div class="flex items-center mx-4" fxLayout="row" fxLayoutAlign="center center">
+        <h3 class="flex-auto">{{'loginInformation' | translate}}</h3>
+        <button mat-button color="primary"><mat-icon [icIcon]="icEdit"></mat-icon>{{'editInformation' |translate}}</button>
+    </div>
+    <mat-card-content>
+
+        <div @stagger fxLayout="column">
+            <ul class="grid grid-cols-2 col-gap-8 row-gap-10 mt-2 mx-4">
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'username' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">simondavis@example.com</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'password' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2"><a href="" class="text-primary pointer">Reset Password</a></p>
+                </li>
+                <li>
+                    <mat-slide-toggle color="primary" class="mb-4">{{'portalAccess' | translate}}</mat-slide-toggle>
+                </li>
+            </ul>
+
+            <h4 class="text-primary pt-6 pb-0 px-4">{{'secretQuestionAndAnswer'|translate}}</h4>
+            <p class="pb-3 pb-2 px-4 text-gray">( {{'answersAreHiddenForSecurityReasons' | translate}} )</p>
+            <ul class="grid grid-cols-2 col-gap-8 row-gap-10 mt-2 mx-4">
+                <li>
+                    <label class="text-sm leading-5 text-gray">Your Favourite Movie?</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">*****</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">In which city were you born?</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">*****</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">Who was your childhood hero?</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">*****</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">What is your favourite book?</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">*****</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">Who is your favourite cartoon character?</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">*****</p>
+                </li>
+            </ul>
+
+        </div>
+    </mat-card-content>
 </mat-card>

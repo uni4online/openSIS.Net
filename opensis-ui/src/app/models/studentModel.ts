@@ -1,7 +1,6 @@
 import { CommonField } from "../models/commonField";
 
 export class StudentMasterModel {
-
     public tenantId: string;
     public schoolId: number;
     public studentId: number;
@@ -88,6 +87,21 @@ export class StudentMasterModel {
     public secondaryContactZip: string;
     public homeAddressCountry: number;
     public mailingAddressCountry:number;
+    
+    public criticalAlert: string;
+    public alertDescription: string;
+    public primaryCarePhysician: string;
+    public primaryCarePhysicianPhone: string;
+    public medicalFacility: string;
+    public medicalFacilityPhone: string;
+    public insuranceCompany: string;
+    public insuranceCompanyPhone: string;
+    public policyNumber: string;
+    public policyHolder: string;
+    public dentist: string;
+    public dentistPhone: string;
+    public vision: string;
+    public visionPhone: string;
     constructor() {     
         this.tenantId = sessionStorage.getItem("tenantId");
         this.schoolId = +sessionStorage.getItem("selectedSchoolId");   
@@ -131,7 +145,6 @@ export class StudentListModel extends CommonField{
     public pageSize: number;
     public sortingModel: sorting;
     public filterParams: filterParams;
-
     constructor() {
         super();        
         this.tenantId= sessionStorage.getItem("tenantId");
@@ -142,10 +155,10 @@ export class StudentListModel extends CommonField{
         this.filterParams=null;
         this._tenantName= sessionStorage.getItem("tenant");
         this._token=sessionStorage.getItem("token");
-    }
-        
-      
+    }    
 }
+
+
 class sorting{
     sortColumn:string;
     sortDirection:string;
@@ -164,3 +177,54 @@ export class filterParams{
      this.filterValue=null;
  }
 }
+export class StudentDocumentListModel {   
+    public tenantId: string;
+    public schoolId: number;
+    public studentId:number;
+    public documentId: number;
+    public fileUploaded: string;
+    public uploadedOn: string;
+    public uploadedBy: string;
+    public studentMaster: {};
+    constructor() {     
+        this.tenantId = sessionStorage.getItem("tenantId");
+        this.schoolId = +sessionStorage.getItem("selectedSchoolId"); 
+        this.studentId = +localStorage.getItem("studentId");   
+    }
+}
+
+export class GetAllStudentDocumentsList extends CommonField {   
+    public studentDocumentsList: [];  
+    public tenantId: string;
+    public schoolId: number;
+    public studentId:number;
+   
+    constructor() { 
+        super();        
+        this.tenantId = sessionStorage.getItem("tenantId");
+        this.schoolId = +sessionStorage.getItem("selectedSchoolId"); 
+        this.studentId = +localStorage.getItem("studentId");   
+        this._tenantName= sessionStorage.getItem("tenant");
+        this._token=sessionStorage.getItem("token");
+    }
+}
+
+export class StudentDocumentAddModel extends CommonField {   
+    public studentDocuments:Array<string>;    
+    public tenantId: string;
+    public schoolId: number;
+    public studentId:number;
+    public documentId: number;
+    public fileUploaded: string;
+    public uploadedOn: string;
+    public uploadedBy: string;
+    public studentMaster: {};
+    constructor() {  
+        super();  
+        this._tenantName= sessionStorage.getItem("tenant");
+        this._token=sessionStorage.getItem("token");      
+    }
+}
+
+
+

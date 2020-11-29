@@ -3,7 +3,7 @@ import {
     HostListener,
     ElementRef
   } from "@angular/core";
-  import { FormGroupDirective } from "@angular/forms";
+  import { FormGroupDirective, NgForm } from "@angular/forms";
   
   @Directive({
     selector: "[appInvalidControlScroll]"
@@ -12,7 +12,7 @@ import {
    
     constructor(
       private el: ElementRef,
-      private formGroupDir: FormGroupDirective
+      private formGroupDir: NgForm
     ) {}
   
     @HostListener("ngSubmit") onSubmit() {

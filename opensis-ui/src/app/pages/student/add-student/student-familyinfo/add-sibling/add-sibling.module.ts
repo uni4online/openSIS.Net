@@ -18,6 +18,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import {MatRadioModule} from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 
 
@@ -41,7 +42,8 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     TranslateModule,
     MatRadioModule,
     MatSelectModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    MatExpansionModule
   ]
 })
 export class AddSiblingModule { }

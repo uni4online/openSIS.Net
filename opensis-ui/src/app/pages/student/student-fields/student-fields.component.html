@@ -5,11 +5,13 @@
                 <h4 class="text-primary p-0 mb-4">{{'categories'|translate}}</h4>
 
                 
-                <div *ngFor="let fieldsCategory of fieldsCategoryList" class="mt-2 flex flex-wrap justify-between">
-                    <a class="cursor-pointer" [ngClass]="{'font-bold':currentCategoryId === fieldsCategory.categoryId}" (click)="selectCategory(fieldsCategory)">{{fieldsCategory.title}} </a>
-                    <div *ngIf="!fieldsCategory.isSystemCategory">
-                        <a class="cursor-pointer mr-3" (click)="editFieldCategory(fieldsCategory)"><mat-icon [icIcon]="icEdit"></mat-icon></a>
-                        <a class="cursor-pointer" (click)="confirmDeleteFieldCategory(fieldsCategory)"><mat-icon [icIcon]="icDelete"></mat-icon></a>
+                <div *ngFor="let fieldsCategory of fieldsCategoryList" >
+                    <div *ngIf="!restrictedCategoryid.includes(fieldsCategory.categoryId)" class="mt-2 flex flex-wrap justify-between">
+                        <a class="cursor-pointer" [ngClass]="{'font-bold':currentCategoryId === fieldsCategory.categoryId}" (click)="selectCategory(fieldsCategory)">{{fieldsCategory.title}} </a>
+                        <div *ngIf="!fieldsCategory.isSystemCategory">
+                            <a class="cursor-pointer mr-3" (click)="editFieldCategory(fieldsCategory)"><mat-icon [icIcon]="icEdit"></mat-icon></a>
+                            <a class="cursor-pointer" (click)="confirmDeleteFieldCategory(fieldsCategory)"><mat-icon [icIcon]="icDelete"></mat-icon></a>
+                        </div>
                     </div>
                 </div>
                 <hr class="my-3"/>
@@ -54,6 +56,7 @@
                         </button>
 
                         <button color="primary" class="ml-4" fxFlex="none" mat-raised-button type="button"
+                        [disabled]="restrictedCategoryid.includes(currentCategoryId)"
                             (click)='goToAdd()'>
                             <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true"
                                 size="24px">

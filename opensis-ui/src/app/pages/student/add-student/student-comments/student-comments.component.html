@@ -7,61 +7,43 @@
             <a routerLink="" class="cursor-pointer p-1 mt-1 mr-3 inline-block align-middle" matTooltip="Print"><mat-icon [icIcon]="icPrint"></mat-icon></a>
             <button mat-raised-button color="primary" class="align-middle" (click)='openAddNew()'>
                 <mat-icon [icIcon]="icAdd"></mat-icon> {{'addComment' |translate}}
-        </button>
-    </div>
+            </button>
+        </div>
     </div>
     <mat-card-content>
         <div @stagger fxLayout="column">
             <div class="mt-6 mx-4">
-                <div class="border border-solid rounded p-4  mb-4">
-                    <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="16px">
-                        <div class="relative" fxFlex="none">
-                            <mat-icon [icIcon]="icComment" class="mt-3 mx-3"></mat-icon>
-                        </div>
-                        <div class="overflow-hidden" fxFlex="auto">
-                            <div class="flex justify-between w-full">
-                                <div class="pt-2"><h3 class="font-normal"><span class="text-primary font-medium">Simon Davis</span> Commented on Mar 10, 2020, 10:45 AM</h3></div>
-                                <div>
-                                    <button mat-icon-button matTooltip="Filter Columns" type="button">
-                                        <mat-icon [icIcon]="icEdit" class="mr-2"></mat-icon>
-                                    </button>
-                                    <button mat-icon-button matTooltip="Filter Columns" type="button">
-                                        <mat-icon [icIcon]="icDelete"></mat-icon>
-                                    </button>
+                <div class="mb-4" *ngFor="let studentComment of studentCommentsListViewModel.studentCommentsList">
+                    <mat-accordion class="w-full">
+                        <mat-expansion-panel>
+                            <mat-expansion-panel-header>
+                                <mat-panel-title class="font-semibold h-full">
+                                    <div class="flex w-full justify-between items-center h-full">
+                                        <h5 class="inline-block font-medium"><mat-icon [icIcon]="icComment" class="inline-block align-middle mr-3"></mat-icon><span class="text-primary font-medium">{{studentComment.updatedBy}}</span> Commented on {{studentComment.lastUpdated|date:'MMM d, y, h:mm a'}} <!--Mar 10, 2020, 10:45 AM --></h5>
+                                        <div class="font-normal pt-1">
+                                            <button mat-icon-button matTooltip="Filter Columns" (click)="editComment(studentComment)" type="button">
+                                                <mat-icon [icIcon]="icEdit" class="mr-2"></mat-icon>
+                                            </button>
+                                            <button mat-icon-button matTooltip="Delete Column" (click)="confirmDelete(studentComment)"type="button">
+                                                <mat-icon [icIcon]="icDelete"></mat-icon>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <div class="border-t -mx-6">
+                                <div class="mx-6 mt-3">
+                                    <div class="ql-container">
+                                        <div class="mt-2 ql-snow">
+                                            <div class="ql-editor" [innerHTML]="studentComment.comment|safe:'html'"></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="mt-2">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc accumsan, mauris ut mattis tincidunt, enim urna tempus orci, eu commodo mi ligula vitae neque. Vestibulum quis urna vitae eros lacinia semper congue nec sem. Sed nibh lectus, congue vitae ipsum quis, accumsan aliquam leo. Sed lacinia facilisis maximus. Mauris in sollicitudin tortor, non faucibus eros. Ut placerat, lacus vel rutrum luctus, mi risus tincidunt orci, non ultricies nulla quam sit amet nisi. Nulla nec enim non quam scelerisque aliquet. Proin ac ornare tellus, tempus congue nisi. Duis eu metus molestie, pretium neque eget, aliquet lectus. Morbi egestas, purus quis maximus porta, tortor tortor fermentum nisl, id facilisis justo tellus at elit. Fusce vitae odio nibh. Pellentesque vestibulum dolor nec neque eleifend tempus. Suspendisse accumsan laoreet est sit amet lobortis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae;</p>
-                                <p>Maecenas sem arcu, faucibus bibendum diam eu, condimentum gravida ex. Suspendisse ut leo in quam tincidunt accumsan nec non ante. Ut pellentesque, dolor at mollis semper, diam justo interdum ante, quis feugiat libero ligula vel neque. Nunc et diam in nulla cursus varius id id turpis. Quisque sagittis eros in neque pharetra, id vehicula augue varius. Curabitur eget risus et ligula vulputate laoreet. Donec odio justo, elementum non faucibus in, fermentum sed nisi. Nunc luctus felis sit amet fringilla hendrerit. Nunc a dictum augue. Fusce at orci vestibulum, lacinia tellus nec, rutrum dolor.</p>
-                            </div>
-                        </div>
-                    </div>
+                        </mat-expansion-panel>
+                    </mat-accordion>
                 </div>
 
-                <div class="border border-solid rounded p-4  mb-4">
-                    <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="16px">
-                        <div class="relative" fxFlex="none">
-                            <mat-icon [icIcon]="icComment" class="mt-3 mx-3"></mat-icon>
-                        </div>
-                        <div class="overflow-hidden" fxFlex="auto">
-                            <div class="flex justify-between w-full">
-                                <div class="pt-2"><h3 class="font-normal"><span class="text-primary font-medium">Simon Davis</span> Commented on Mar 15, 2020, 12:13 PM</h3></div>
-                                <div>
-                                    <button mat-icon-button matTooltip="Filter Columns" type="button">
-                                        <mat-icon [icIcon]="icEdit" class="mr-2"></mat-icon>
-                                    </button>
-                                    <button mat-icon-button matTooltip="Filter Columns" type="button">
-                                        <mat-icon [icIcon]="icDelete"></mat-icon>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="mt-2">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc accumsan, mauris ut mattis tincidunt, enim urna tempus orci, eu commodo mi ligula vitae neque. Vestibulum quis urna vitae eros lacinia semper congue nec sem. Sed nibh lectus, congue vitae ipsum quis, accumsan aliquam leo. Sed lacinia facilisis maximus. Mauris in sollicitudin tortor, non faucibus eros. Ut placerat, lacus vel rutrum luctus, mi risus tincidunt orci, non ultricies nulla quam sit amet nisi. Nulla nec enim non quam scelerisque aliquet. Proin ac ornare tellus, tempus congue nisi. Duis eu metus molestie, pretium neque eget, aliquet lectus. Morbi egestas, purus quis maximus porta, tortor tortor fermentum nisl, id facilisis justo tellus at elit. Fusce vitae odio nibh. Pellentesque vestibulum dolor nec neque eleifend tempus. Suspendisse accumsan laoreet est sit amet lobortis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae;</p>
-                                <p>Maecenas sem arcu, faucibus bibendum diam eu, condimentum gravida ex. Suspendisse ut leo in quam tincidunt accumsan nec non ante. Ut pellentesque, dolor at mollis semper, diam justo interdum ante, quis feugiat libero ligula vel neque. Nunc et diam in nulla cursus varius id id turpis. Quisque sagittis eros in neque pharetra, id vehicula augue varius. Curabitur eget risus et ligula vulputate laoreet. Donec odio justo, elementum non faucibus in, fermentum sed nisi. Nunc luctus felis sit amet fringilla hendrerit. Nunc a dictum augue. Fusce at orci vestibulum, lacinia tellus nec, rutrum dolor.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </mat-card-content>

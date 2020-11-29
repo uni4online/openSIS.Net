@@ -15,7 +15,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormGroupDirective, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { SharedModuleModule } from '../../../shared-module/shared-module.module';
@@ -51,6 +51,7 @@ import {MatSortModule} from '@angular/material/sort';
       provide: DateAdapter,
       useFactory: adapterFactory
     }),
-  ]
+  ],
+  providers: [FormGroupDirective]
 })
 export class SchoolDetailsModule { }

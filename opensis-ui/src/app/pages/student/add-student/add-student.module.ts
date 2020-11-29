@@ -23,12 +23,8 @@ import { StudentEnrollmentinfoComponent } from '../add-student/student-enrollmen
 import { StudentFamilyinfoComponent } from '../add-student/student-familyinfo/student-familyinfo.component';
 import { StudentLogininfoComponent } from '../add-student/student-logininfo/student-logininfo.component';
 import { StudentMedicalinfoComponent } from '../add-student/student-medicalinfo/student-medicalinfo.component';
-import { ViewstudentMedicalinfoComponent } from '../add-student/viewstudent-medicalinfo/viewstudent-medicalinfo.component';
 import { StudentCommentsComponent } from '../add-student/student-comments/student-comments.component';
 import { StudentDocumentsComponent } from '../add-student/student-documents/student-documents.component';
-import { ViewstudentGeneralinfoComponent } from '../add-student/viewstudent-generalinfo/viewstudent-generalinfo.component';
-import { ViewstudentAddressandcontactsComponent } from '../add-student/viewstudent-addressandcontacts/viewstudent-addressandcontacts.component';
-import { ViewstudentLogininfoComponent } from '../add-student/viewstudent-logininfo/viewstudent-logininfo.component';
 import { StudentContactsComponent } from '../add-student/student-familyinfo/student-contacts/student-contacts.component';
 import { SiblingsinfoComponent } from '../add-student/student-familyinfo/siblingsinfo/siblingsinfo.component';
 import { TranslateModule } from '@ngx-translate/core';
@@ -47,6 +43,11 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { ViewstudentLogininfoComponent } from './viewstudent-logininfo/viewstudent-logininfo.component';
+import { ViewstudentGeneralinfoComponent } from './viewstudent-generalinfo/viewstudent-generalinfo.component';
+import { ViewstudentEnrollmentinfoComponent } from './viewstudent-enrollmentinfo/viewstudent-enrollmentinfo.component';
+
+
 
 
 
@@ -61,12 +62,12 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     StudentMedicalinfoComponent,
     StudentCommentsComponent,
     StudentDocumentsComponent,
-    ViewstudentGeneralinfoComponent,
-    ViewstudentAddressandcontactsComponent,
-    ViewstudentLogininfoComponent,
-    ViewstudentMedicalinfoComponent,
     StudentContactsComponent,
-    SiblingsinfoComponent
+    SiblingsinfoComponent,
+    ViewstudentLogininfoComponent,
+    ViewstudentGeneralinfoComponent,
+    ViewstudentEnrollmentinfoComponent,
+    ViewstudentGeneralinfoComponent
   ],
   imports: [
     CommonModule,

@@ -20,6 +20,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { SharedModuleModule } from '../../shared-module/shared-module.module';
 import { ParentRoutingModule } from '../parentinfo/parent-routing-module';
 import { TranslateModule } from '@ngx-translate/core';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 
@@ -47,7 +48,8 @@ import { TranslateModule } from '@ngx-translate/core';
     MatButtonToggleModule,
     SharedModuleModule,
     ParentRoutingModule,
-    TranslateModule
+    TranslateModule,
+    MatTooltipModule
   ]
 })
 export class ParentinfoModule { }

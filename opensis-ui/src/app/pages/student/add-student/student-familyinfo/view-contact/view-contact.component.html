@@ -1,5 +1,5 @@
 <div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
-    <h2 class="headline m-0" fxFlex="auto">John Doe</h2>
+    <h2 class="headline m-0" fxFlex="auto">Mr. John Doe</h2>
     <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
         <mat-icon [icIcon]="icClose"></mat-icon>
     </button>
@@ -8,20 +8,12 @@
 <mat-dialog-content>
     <ul class="grid grid-cols-2 col-gap-8 row-gap-10 mt-6">
         <li>
-            <label class="text-sm leading-5 text-gray">{{'firstName' | translate}}</label>
-            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">John</p>
-        </li>
-        <li>
-            <label class="text-sm leading-5 text-gray">{{'lastName' | translate}}</label>
-            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Doe</p>
+            <label class="text-sm leading-5 text-gray">{{'fullName' | translate}}</label>
+            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Mr. John Doe</p>
         </li>
         <li>
             <label class="text-sm leading-5 text-gray">{{'contactRelationship' | translate}}</label>
             <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Father</p>
-        </li>
-        <li>
-            <label class="text-sm leading-5 text-gray">{{'emailAddress' | translate}}</label>
-            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">johndoe2020@example.com</p>
         </li>
         <li>
             <label class="text-sm leading-5 text-gray">{{'mobilePhone' | translate}}</label>
@@ -34,6 +26,26 @@
         <li>
             <label class="text-sm leading-5 text-gray">{{'homePhone' | translate}}</label>
             <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">3216549870</p>
+        </li>
+        <li>
+            <label class="text-sm leading-5 text-gray">{{'personalEmail' | translate}}</label>
+            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">johndoe2020@example.com</p>
+        </li>
+        <li>
+            <label class="text-sm leading-5 text-gray">{{'workEmail' | translate}}</label>
+            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">johndoe@company.com</p>
+        </li>
+        <li>
+            <label class="text-sm leading-5 text-gray">{{'userProfile' | translate}}</label>
+            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Teacher</p>
+        </li>
+        <li>
+            <label class="text-sm leading-5 text-gray">{{'portalAccess' | translate}}</label>
+            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Yes</p>
+        </li>
+        <li>
+            <label class="text-sm leading-5 text-gray">{{'loginUsername' | translate}}</label>
+            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">johndoe@company.com</p>
         </li>
     </ul>
     

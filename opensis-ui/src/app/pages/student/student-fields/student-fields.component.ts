@@ -49,7 +49,7 @@ export class StudentFieldsComponent implements OnInit {
   fieldsCategoryList;
   currentCategoryId=null;
   fieldCategoryModuleEnum=FieldCategoryModuleEnum
-
+  restrictedCategoryid=[4,6,7,9,10] //All the catagory where Custom field cannot insert
   icMoreVert = icMoreVert;
   icAdd = icAdd;
   icEdit = icEdit;

@@ -49,10 +49,10 @@ namespace opensis.data.Repository
             try
             {
                
-                var studentEnrollmentCodeById = this.context?.StudentEnrollmentCode.FirstOrDefault(x => x.TenantId == studentEnrollmentCodeAddViewModel.studentEnrollmentCode.TenantId && x.SchoolId == studentEnrollmentCodeAddViewModel.studentEnrollmentCode.SchoolId && x.EnrollmentCode == studentEnrollmentCodeAddViewModel.studentEnrollmentCode.EnrollmentCode);
-                if (studentEnrollmentCodeById != null)
+                var studentEnrollmentCodeData = this.context?.StudentEnrollmentCode.FirstOrDefault(x => x.TenantId == studentEnrollmentCodeAddViewModel.studentEnrollmentCode.TenantId && x.SchoolId == studentEnrollmentCodeAddViewModel.studentEnrollmentCode.SchoolId && x.EnrollmentCode == studentEnrollmentCodeAddViewModel.studentEnrollmentCode.EnrollmentCode);
+                if (studentEnrollmentCodeData != null)
                 {
-                    studentEnrollmentCodeView.studentEnrollmentCode = studentEnrollmentCodeById;
+                    studentEnrollmentCodeView.studentEnrollmentCode = studentEnrollmentCodeData;
                 }
                 else
                 {

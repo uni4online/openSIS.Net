@@ -1,18 +1,29 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { Component, OnInit,Input,ViewChild } from '@angular/core';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
 import { fadeInRight400ms } from '../../../../../@vex/animations/fade-in-right.animation';
-import { TranslateService } from '@ngx-translate/core';
-import { Router} from '@angular/router';
 import icEdit from '@iconify/icons-ic/twotone-edit';
 import icDelete from '@iconify/icons-ic/twotone-delete';
-import icAdd from '@iconify/icons-ic/baseline-add';
-import icComment from '@iconify/icons-ic/twotone-comment';
+import icSearch from '@iconify/icons-ic/twotone-search';
+import icAdd from '@iconify/icons-ic/twotone-add';
+import icFilterList from '@iconify/icons-ic/twotone-filter-list';
+import { TranslateService } from '@ngx-translate/core';
+import { MatTableDataSource } from '@angular/material/table';
+import { LoaderService } from '../../../../services/loader.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSort } from '@angular/material/sort';
 import icMoreVert from '@iconify/icons-ic/twotone-more-vert';
-import icSearch from '@iconify/icons-ic/search';
-import icFilterList from '@iconify/icons-ic/filter-list';
-import icUpload from '@iconify/icons-ic/publish';
+import icComment from '@iconify/icons-ic/comment';
+import icUpload from '@iconify/icons-ic/baseline-cloud-upload';
+import {GetAllStudentDocumentsList} from '../../../../models/studentModel';
+import {StudentDocumentAddModel} from '../../../../models/studentModel';
+import {StudentService} from '../../../../services/student.service';
+import {ConfirmDialogComponent } from '../../../shared-module/confirm-dialog/confirm-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import * as _moment from 'moment';
+import { default as _rollupMoment } from 'moment';
+const moment =  _rollupMoment || _moment;
+import { SchoolCreate } from 'src/app/enums/school-create.enum';
 
 @Component({
   selector: 'vex-student-documents',
@@ -25,16 +36,19 @@ import icUpload from '@iconify/icons-ic/publish';
   ]
 })
 export class StudentDocumentsComponent implements OnInit {
+  StudentCreate=SchoolCreate;
+  @Input() studentCreateMode:SchoolCreate;
+  @Input() studentDetailsForViewAndEdit;
   @Input()
   columns = [
-    { label: 'File', property: 'file', type: 'text', visible: true },
-    { label: 'Uploaded By', property: 'uploaded_by', type: 'number', visible: true },
-    { label: 'Uploaded On', property: 'uploaded_on', type: 'text', visible: true },
+    { label: 'File', property: 'fileUploaded', type: 'text', visible: true },
+    { label: 'Uploaded By', property: 'uploadedBy', type: 'number', visible: true },
+    { label: 'Uploaded On', property: 'uploadedOn', type: 'text', visible: true },
     { label: 'Action', property: 'action', type: 'text', visible: true }
   ];
 
   StudentDocumentsList;
-
+  
   icEdit = icEdit;
   icDelete = icDelete;
   icAdd = icAdd;
@@ -45,36 +59,187 @@ export class StudentDocumentsComponent implements OnInit {
   icUpload = icUpload;
   isShowDiv = true;
   loading:Boolean;
-  files: File[] = [];
+  files: File[] = [];  
+  base64;
+  base64Arr=[];
+  uploadSuccessfull = false;
+  totalCount:Number;pageNumber:Number;pageSize:Number;
+  getAllStudentDocumentsList: GetAllStudentDocumentsList = new GetAllStudentDocumentsList();   
+  StudentDocumentModelList: MatTableDataSource<any>;
+  studentDocumentAddModel: StudentDocumentAddModel = new StudentDocumentAddModel();
 
-  constructor(private router: Router, private fb: FormBuilder, public translateService:TranslateService) {
-    translateService.use('en');
-    this.StudentDocumentsList = [
-      {file: 'certificate.pdf', uploaded_by: 'Super Administrator', uploaded_on: 'Mar 10, 2020, 10:19 AM'},
-      {file: 'grade9_marksheet.pdf', uploaded_by: 'Super Administrator', uploaded_on: 'Mar 10, 2020, 11:27 AM'},
-      {file: 'birth_certificate.pdf', uploaded_by: 'Super Administrator', uploaded_on: 'Mar 11, 2020, 2:37 PM'},
-      {file: 'certificate_2.pdf', uploaded_by: 'Super Administrator', uploaded_on: 'Mar 10, 2020, 12:59 PM'}
-    ]
-   }
+  @ViewChild(MatSort) sort: MatSort;
+  constructor(   
+    public translateService:TranslateService, 
+    private loaderService:LoaderService,
+    private studentService:StudentService,
+    private snackbar: MatSnackBar,
+    private dialog: MatDialog,
+  ) {
+    translateService.use('en');    
+    this.loaderService.isLoading.subscribe((val) => {
+       this.loading = val;
+     });
+    
+  }
 
 
   ngOnInit(): void {
+    
+    console.log("ffff",this.studentDetailsForViewAndEdit.studentMaster.studentId)
+    this.getAllDocumentsList();
+  }  
+
+  HandleReaderLoaded(e) {     
+    this.base64 = btoa(e.target.result); 
+    this.base64Arr.push(this.base64);
+    
   }
- 
-  onSelect(event) {
-    console.log(event);
-    this.files.push(...event.addedFiles);
+  onSelect(event) {   
+    console.log(event)
+    this.files.push(...event.addedFiles);  
+    let count = this.files.length;
+    let prevCount = count-1;    
+    
+    this.files.forEach((value, index) => {
+      if(index === prevCount){       
+        const reader = new FileReader();      
+        reader.onload = this.HandleReaderLoaded.bind(this);       
+        reader.readAsBinaryString(value);       
+      }     
+    })
   }
+
   
-  onRemove(event) {
-    console.log(event);
+  onRemove(event) {    
     this.files.splice(this.files.indexOf(event), 1);
   }
 
-  getPageEvent(event){    
-    // this.getAllSchool.pageNumber=event.pageIndex+1;
-    // this.getAllSchool.pageSize=event.pageSize;
-    // this.callAllSchool(this.getAllSchool);
+  confirmDelete(deleteDetails)
+  { 
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      maxWidth: "400px",
+      data: {
+          title: "Are you sure?",
+          message: "You are about to delete File "+deleteDetails.fileUploaded+"."}
+    });
+    
+    dialogRef.afterClosed().subscribe(dialogResult => {      
+      if(dialogResult){
+        this.deleteFile(deleteDetails);
+      }
+    });
+  }
+  deleteFile(deleteDetails){
+    let studentDocument = [];
+    var obj = {};   
+    obj = {     
+      tenantId: deleteDetails.tenantId,
+      schoolId: deleteDetails.schoolId,
+      studentId: deleteDetails.studentId,
+      documentId:deleteDetails.documentId,
+      fileUploaded:deleteDetails.fileUploaded,
+      uploadedOn:deleteDetails.uploadedOn,
+      uploadedBy:deleteDetails.uploadedBy,
+      studentMaster: null
+    }   
+    studentDocument.push(obj);
+    this.studentDocumentAddModel.studentDocuments=studentDocument
+    this.studentService.DeleteStudentDocument(this.studentDocumentAddModel).subscribe(data => {
+      if (typeof (data) == 'undefined') {
+        this.snackbar.open('File Deletion failed. ' + sessionStorage.getItem("httpError"), '', {
+          duration: 10000
+        });
+      }
+      else {
+        if (data._failure) {
+          this.snackbar.open('File Deletion failed. ' + data._message, 'LOL THANKS', {
+            duration: 10000
+          });
+        } else {
+          this.snackbar.open('File Deletion Successful.', '', {
+            duration: 10000
+          }).afterOpened().subscribe(data => {
+            this.getAllDocumentsList();
+          });
+        }
+      }
+  
+    })
+  }
+
+  uploadFile(){
+  let studentDocument = [];    
+  this.base64Arr.forEach((value, index) => {
+      var obj = {};   
+        obj = {     
+          tenantId: sessionStorage.getItem("tenantId"),
+          schoolId: +sessionStorage.getItem("selectedSchoolId") ,
+          studentId: this.studentDetailsForViewAndEdit.studentMaster.studentId,
+          documentId: 0,
+          fileUploaded:value,          
+          uploadedBy:sessionStorage.getItem("email"),
+          studentMaster: null
+        }   
+        studentDocument.push(obj);    
+    });  
+    if(studentDocument.length > 0){
+      this.studentDocumentAddModel.studentDocuments=studentDocument;
+      this.studentService.AddStudentDocument(this.studentDocumentAddModel).subscribe(data => {
+        if (typeof (data) == 'undefined') {
+          this.snackbar.open('Student Document Upload failed. ' + sessionStorage.getItem("httpError"), '', {
+            duration: 10000
+          });
+        }
+        else {
+          if (data._failure) {
+            this.snackbar.open('Student Document Upload failed. ' + data._message, 'LOL THANKS', {
+              duration: 10000
+            });
+          } else {          
+            this.snackbar.open('Student Document Upload Successful.', '', {
+              duration: 10000
+            }).afterOpened().subscribe(data => {
+              this.uploadSuccessfull = true;
+              this.isShowDiv=true;
+              this.getAllDocumentsList();
+            });                  
+          }
+        }
+      });
+    } else{
+      this.snackbar.open('Please Select File', 'LOL THANKS', {
+        duration: 1000
+      });
+    }
+    
+  }
+
+  downloadFile(content){
+    var filetype = "docx";
+    var filename="demo";
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:image/jpg;base64,' + content);
+    element.setAttribute('download', filename);
+    element.style.display = 'none';
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+}
+  getAllDocumentsList(){
+    this.getAllStudentDocumentsList.studentId = this.studentDetailsForViewAndEdit.studentMaster.studentId;
+    this.studentService.GetAllStudentDocumentsList(this.getAllStudentDocumentsList).subscribe(data => {
+      if(data._failure){
+        this.snackbar.open('Student Document Information failed. '+ data._message, 'LOL THANKS', {
+        duration: 10000
+        });
+      }else{   
+        
+        this.StudentDocumentModelList = new MatTableDataSource(data.studentDocumentsList);
+        console.log(data)
+        this.StudentDocumentModelList.sort=this.sort;      
+      }
+    });
   }
 
   toggleColumnVisibility(column, event) {

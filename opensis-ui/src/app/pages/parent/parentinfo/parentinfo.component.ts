@@ -5,6 +5,7 @@ import icEdit from '@iconify/icons-ic/twotone-edit';
 import icDelete from '@iconify/icons-ic/twotone-delete';
 import icSearch from '@iconify/icons-ic/search';
 import icFilterList from '@iconify/icons-ic/filter-list';
+import icImpersonate from '@iconify/icons-ic/twotone-account-circle';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router} from '@angular/router';
@@ -24,10 +25,11 @@ import { TranslateService } from '@ngx-translate/core';
 export class ParentinfoComponent implements OnInit {
   @Input()
   columns = [
-    { label: 'Parent Name', property: 'name', type: 'text', visible: true },
+    { label: 'Parent’s Name', property: 'name', type: 'text', visible: true },
+    { label: 'Profile', property: 'profile', type: 'text', visible: true },
     { label: 'Email Address', property: 'email_address', type: 'text', visible: true },
     { label: 'Mobile Phone', property: 'mobile_phone', type: 'number', visible: true },
-    { label: 'Username', property: 'username', type: 'text', visible: true },
+    { label: 'Associated Students', property: 'students', type: 'text', visible: true },
     { label: 'action', property: 'action', type: 'text', visible: true }
   ];
 
@@ -39,21 +41,22 @@ export class ParentinfoComponent implements OnInit {
   icDelete = icDelete;
   icSearch = icSearch;
   icFilterList = icFilterList;
+  icImpersonate = icImpersonate;
   loading:Boolean;
 
   constructor(private router: Router,private dialog: MatDialog,public translateService:TranslateService) {
     translateService.use('en');
     this.ParentFieldsModelList = [
-      {name: 'Danielle Boucher', email_address: 'danielle.boucher@example.com', mobile_phone: '1234567980', username: 'danielleb'},
-      {name: 'Andrew Brown', email_address: 'andrew_brown@example.com', mobile_phone: '1234567980', username: 'andrewbrown'},
-      {name: 'Ella Brown', email_address: 'ella_brown@example.com', mobile_phone: '1234567980', username: 'ellabrown'},
-      {name: 'Lian Fang', email_address: 'lian_fang@example.com', mobile_phone: '1234567980', username: 'lianfang'},
-      {name: 'Adriana Garcia', email_address: 'adriana.garcia@example.com', mobile_phone: '1234567980', username: 'adrianagarcia'},
-      {name: 'Olivia Jones', email_address: 'olivia.jones@example.com', mobile_phone: '1234567980', username: 'oliviajones'},
-      {name: 'Amare Keita', email_address: 'amare_keita@example.com', mobile_phone: '1234567980', username: 'amarekeita'},
-      {name: 'Amber Keita', email_address: 'amber_keita@example.com', mobile_phone: '1234567980', username: 'amberkeita'},
-      {name: 'Alyssa Kimathi', email_address: 'alyssa_kimathi@example.com', mobile_phone: '1234567980', username: 'alyssakimathi'},
-      {name: 'Robert Miller', email_address: 'robert_miller@example.com', mobile_phone: '1234567980', username: 'robertmiller'}
+      {name: 'Danielle Boucher', profile: 'Parent', email_address: 'danielle.boucher@example.com', mobile_phone: '1234567980', students: [{'student_name' : 'William Boucher', 'student_id' : '1'}]},
+      {name: 'Andrew Brown', profile: 'Parent', email_address: 'andrew_brown@example.com', mobile_phone: '1234567980', students: [{'student_name' : 'Natalie Brown', 'student_id' : '1'},{'student_name' : 'Gabriel Brown', 'student_id' : '1'}]},
+      {name: 'Ella Brown', profile: 'Parent', email_address: 'ella_brown@example.com', mobile_phone: '1234567980', students: [{'student_name' : 'Lilly Brown', 'student_id' : '1'}]},
+      {name: 'Lian Fang', profile: 'Parent', email_address: 'lian_fang@example.com', mobile_phone: '1234567980', students: [{'student_name' : 'Liliana Fang', 'student_id' : '1'}]},
+      {name: 'Adriana Garcia', profile: 'Parent', email_address: 'adriana.garcia@example.com', mobile_phone: '1234567980', students: [{'student_name' : 'Melissa Garcia', 'student_id' : '1'},{'student_name' : 'Delaney Garcia', 'student_id' : '1'}]},
+      {name: 'Olivia Jones', profile: 'Parent', email_address: 'olivia.jones@example.com', mobile_phone: '1234567980', students: [{'student_name' : 'Erick Jones', 'student_id' : '1'}]},
+      {name: 'Amare Keita', profile: 'Parent', email_address: 'amare_keita@example.com', mobile_phone: '1234567980', students: [{'student_name' : 'Braylen Keita', 'student_id' : '1'}]},
+      {name: 'Amber Keita', profile: 'Parent', email_address: 'amber_keita@example.com', mobile_phone: '1234567980', students: [{'student_name' : 'amberkeita', 'student_id' : '1'}]},
+      {name: 'Alyssa Kimathi', profile: 'Parent', email_address: 'alyssa_kimathi@example.com', mobile_phone: '1234567980', students: [{'student_name' : 'Athena Kimathi', 'student_id' : '1'}]},
+      {name: 'Robert Miller', profile: 'Parent', email_address: 'robert_miller@example.com', mobile_phone: '1234567980', students: [{'student_name' : 'Patrick Miller', 'student_id' : '1'}]}
     ]
   }
 

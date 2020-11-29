@@ -1,71 +1,48 @@
-
 <vex-page-layout>
-    <vex-page-layout-header class="pb-16" fxLayout="column" fxLayoutAlign="center start">        
+    <vex-mat-spinner-overlay *ngIf="loading"></vex-mat-spinner-overlay>
+    <vex-page-layout-header class="pb-16" fxLayout="column" fxLayoutAlign="center start">
         <vex-secondary-toolbar current={{schoolTitle}} class="w-full">
             <vex-breadcrumbs [crumbs]="['School',pageStatus]" class="flex-auto"></vex-breadcrumbs>
         </vex-secondary-toolbar>
-    </vex-page-layout-header>    
+    </vex-page-layout-header>
     <vex-page-layout-content class="-mt-6">
         <mat-drawer-container class="bg-transparent flex-auto flex -mt-16">
             <mat-drawer-content class="flex-auto flex items-start">
                 <div class="hidden sm:block mr-6 ng-tns-c284-386 ng-star-inserted w-1/6">
                     <div class="max-w-xxxs w-full">
-                        <div class="h-45 mb-6 flex items-center justify-center bg-white sm:px-0" fxLayout="row" fxLayoutAlign="start center">
-                            <vex-profile-image [enableCropTool]="enableCropTool" [responseImage]="responseImage" [mode]="modeForImage"></vex-profile-image>
+                        <div class="h-45 mb-6 flex items-center justify-center bg-white sm:px-0" fxLayout="row"
+                            fxLayoutAlign="start center">
+                            <vex-profile-image [enableCropTool]="enableCropTool" [responseImage]="responseImage"
+                                [mode]="modeForImage"></vex-profile-image>
                         </div>
 
                         <div class="px-gutter sm:px-0">
-                            <a @fadeInRight [ngClass]=" generalFlag ? 'list-item mt-2 no-underline flex items-center bg-primary hover:bg-primary text-white' : 'list-item mt-2 no-underline flex items-center'" (click) = "isViewMode ? showViewGeneralInfo() : showGeneralEdit()" matRipple>
-                                <!-- <ic-icon [icon]="item.icon" [ngClass]="item.classes?.icon" class="ltr:mr-3 rtl:ml-3" size="24px"></ic-icon> -->
-                                <span>General Information</span>
-                            </a>
-                            <button class="w-full" @fadeInRight [ngClass]=" washFlag ? 'list-item mt-2 no-underline flex items-center bg-primary hover:bg-primary text-white' : 'list-item mt-2 no-underline flex items-center'" (click) = "isViewMode? showViewWashInfo() : showWashEdit($event)" [disabled]="disabledWashInfo"  matRipple>
-                                <span>WASH Information</span>
-                            </button>
-                            <a @fadeInRight class="list-item mt-2 no-underline flex items-center" matRipple>
-                                <!-- <ic-icon [icon]="item.icon" [ngClass]="item.classes?.icon" class="ltr:mr-3 rtl:ml-3" size="24px"></ic-icon> -->
-                                <span>Other Information</span>
-                            </a>
-                            
+                            <p *ngFor="let field of fieldsCategory;let index=index">
+                                <button @fadeInRight
+                                    [ngClass]="currentCategory == field.categoryId?'list-item mt-2 no-underline flex items-center bg-primary hover:bg-primary text-white' : 'list-item mt-2 no-underline flex items-center'"
+                                    (click)="changeCategory(field,index)" matRipple>
+                                    <span>{{field.title}}</span>
+                                </button>
+                            </p>
+
                         </div>
                     </div>
                 </div>
                 <div class="w-full" fxFlex="auto">
-                    <div  *ngIf="displayGeneral">
-                        <vex-general-info (parentShowWash)="showWashEdit($event)"
-                            [dataOfgeneralInfoFromWash]="dataOfgeneralInfoFromWash"
-                            [dataOfwashInfoFromGeneral]="dataOfwashInfoFromGeneral"
-                            [dataOfgeneralInfoFromView]="dataOfgeneralInfoFromView" 
-                            (dataOfgeneralInfo) = "getDataOfgeneralInfo($event)" 
-                            [isEditMode]="isEditMode"
-                            [image]="image"
-                            (onViewMode)="showViewGeneralInfo()">
-                        </vex-general-info>
-                     </div>
-                     <div  *ngIf="displayWash">
-                        <vex-wash-info  
-                            [dataOfgeneralInfo]="dataOfgeneralInfo" 
-                            [dataOfWashInfoFromView]="dataOfWashInfoFromView" >
-                        </vex-wash-info>
-                     </div>  
-                     <div *ngIf="displayViewGeneral" >
-                        <vex-view-general-info                            
-                            (parentShowWash)="showGeneralEdit()" 
-                            (dataOfgeneralInfoFromView)= "getDataOfgeneralInfoFromView($event)"
-                            [generalAndWashInfoData]="generalAndWashInfoData"
-                            >
+                    <vex-general-info *ngIf="currentCategory==1" [schoolCreateMode]="schoolCreateMode"
+                        [schoolDetailsForViewAndEdit]="schoolAddViewModel" [categoryId]="indexOfCategory">
+                    </vex-general-info>
 
-                        </vex-view-general-info>
-                     </div> 
-                     <div *ngIf="displayViewWash" >
-                        <vex-view-wash-info                           
-                            (parentShowWash)="showWashEdit($event)" 
-                            (dataOfWashInfoFromView)= "getDataOfWashInfoFromView($event)" 
-                            [generalAndWashInfoData]="generalAndWashInfoData"
-                            >
-                        </vex-view-wash-info>
-                     </div> 
-                             
+                    <vex-wash-info *ngIf="currentCategory==2" [schoolCreateMode]="schoolCreateMode"
+                        [schoolDetailsForViewAndEdit]="schoolAddViewModel" [categoryId]="indexOfCategory">
+                    </vex-wash-info>
+                    <div *ngFor="let field of fieldsCategory;let index=index">
+                        <vex-custom-field *ngIf="field.categoryId == currentCategory && indexOfCategory > 1" [categoryTitle]="field.title"
+                            [schoolCreateMode]="schoolCreateMode" [schoolDetailsForViewAndEdit]="schoolAddViewModel"
+                            [categoryId]="indexOfCategory">
+                        </vex-custom-field>
+                    </div>
+
                 </div>
             </mat-drawer-content>
         </mat-drawer-container>

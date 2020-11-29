@@ -20,11 +20,11 @@ export class ProfileImageComponent implements OnInit {
   @ViewChild('modalClickButton') modalClickButton: TemplateRef<any>;
 
   icCrop=icCrop;
-  preview:String='';originalFileName:String;
-  imageChangedEvent: any = '';
-  croppedImage: any = '';
-  showCropTool:Boolean=false;
-  showCropperandButton:Boolean;
+  preview:string='';originalFileName:string;
+  imageChangedEvent= '';
+  croppedImage= '';
+  showCropTool:boolean=false;
+  showCropperandButton:boolean;
   // afterConvertingBase64toFile;
   fileUploader:any;
   hideCropperToolButton:Boolean=true;
@@ -35,14 +35,14 @@ export class ProfileImageComponent implements OnInit {
   @Input() mode; 
 
   constructor(private dialog:MatDialog,
-    private _ImageCropperService:ImageCropperService,
+    private _imageCropperService:ImageCropperService,
     private snackbar: MatSnackBar,
     private schoolService:SchoolService) {
      }
 
      ngOnInit(): void {
       if(this.mode){
-        this._ImageCropperService.sharedMessage.subscribe((message) => {
+        this._imageCropperService.sharedMessage.subscribe((message) => {
           this.enableUpload = message
           let id;
           
@@ -68,7 +68,7 @@ export class ProfileImageComponent implements OnInit {
     this.croppedImage = event.base64;
     let base64ImageSplit=this.croppedImage.split(',')
     let sendCropImage=(croppedImage)=>{
-      this._ImageCropperService.sendCroppedEvent(croppedImage);
+      this._imageCropperService.sendCroppedEvent(croppedImage);
       } 
     sendCropImage(base64ImageSplit);
   }
@@ -146,7 +146,7 @@ export class ProfileImageComponent implements OnInit {
   HandleReaderLoaded(e) {
     this.croppedImage='';
     let sendImageData2 =(e)=>{
-      this._ImageCropperService.sendUncroppedEvent(e);
+      this._imageCropperService.sendUncroppedEvent(e);
       this.fileUploader.value=null;
       }
       sendImageData2(e);

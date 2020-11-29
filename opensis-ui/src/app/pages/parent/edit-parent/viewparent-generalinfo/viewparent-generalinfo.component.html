@@ -1,0 +1,114 @@
+<mat-card class="w-full">
+
+    <div class="flex items-center mx-4" fxLayout="row" fxLayoutAlign="center center">
+        <h3 class="flex-auto">{{'generalInformation' | translate}}</h3>
+        <button mat-button color="primary"><mat-icon [icIcon]="icEdit"></mat-icon> {{'editInformation' |translate}}</button>
+    </div>
+    <mat-card-content>
+
+        <div @stagger fxLayout="column">
+            <h4 class="text-primary pt-6 pb-2 px-4">{{'identificationInformation'|translate}}</h4>
+            <ul class="grid grid-cols-3 col-gap-8 row-gap-10 mt-2 mx-4">
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'Name' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Mr. John Doe Jr.</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'preferredCommonName' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">John</p>
+                </li>
+            </ul>
+
+
+            <hr class="-mx-4 mt-6">
+
+            <h4 class="text-primary pt-8 pb-2 px-4">{{'associatedStudents'|translate}}</h4>
+            <div class="md:grid md:grid-cols-2 ld:grid lg:grid-cols-2 xl:grid-cols-3 md:col-gap-8 md:row-gap-6 mx-4">
+                <div class="border border-solid rounded p-4 mb-4">
+                    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px">
+                        <div class="relative cursor-pointer" fxFlex="none" (click)='openViewDetails()'>
+                            <img src="assets/img/default.jpg" class="avatar">
+                        </div>
+                        <div class="overflow-hidden cursor-pointer" fxFlex="auto" (click)='openViewDetails()'>
+                            <div class="subheading-2 leading-snug text-primary">John Doe</div>
+                            <div class="body-1 text-secondary truncate contact-type">Grade: 9<span
+                                    class="separator"></span> <span>Peachtree High School</span></div>
+                        </div>
+                        <div fxFlex="none" fxLayout="column" fxLayoutAlign="center end">
+                            <button mat-icon-button matTooltip="Remove Association" type="button" class="text-gray">
+                                <mat-icon [icIcon]="icRemove"></mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="border border-solid rounded p-4 mb-4">
+                    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px">
+                        <div class="relative cursor-pointer" fxFlex="none" (click)='openViewDetails()'>
+                            <img src="assets/img/default.jpg" class="avatar">
+                        </div>
+                        <div class="overflow-hidden cursor-pointer" fxFlex="auto" (click)='openViewDetails()'>
+                            <div class="subheading-2 leading-snug text-primary">Jeniffer Doe</div>
+                            <div class="body-1 text-secondary truncate contact-type">Grade: 12<span
+                                    class="separator"></span> <span>Mactree Middle School</span></div>
+                        </div>
+                        <div fxFlex="none" fxLayout="column" fxLayoutAlign="center end">
+                            <button mat-icon-button matTooltip="Remove Association" type="button" class="text-gray">
+                                <mat-icon [icIcon]="icRemove"></mat-icon>
+                            </button>
+                    </div>
+                </div>
+            </div>
+                <div class="border flex items-center border-dashed border-blue rounded hover:bg-skyblue-light p-4 mb-4 text-center cursor-pointer">
+                    <span class="text-center w-full text-primary"><mat-icon [icIcon]="icAdd" class="mr-3 inline-block align-middle"></mat-icon>Associate Student</span>
+                </div>
+            </div>
+
+
+            <hr class="-mx-4 mt-6">
+
+
+            <h4 class="text-primary pt-6 pb-2 px-4">{{'contactInformation'|translate}}</h4>
+            <ul class="grid grid-cols-3 col-gap-8 row-gap-10 mt-2 mx-4">
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'homePhone' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">1234567890</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'mobilePhone' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">1234567890</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'workEmail' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">johndoe@workemail.com</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'personalEmail' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">johndoe@example.com</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'workEmail' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">johndoe@company.com</p>
+                </li>
+            </ul>
+
+
+            <hr class="-mx-4 mt-6">
+
+            <h4 class="text-primary pt-6 pb-2 px-4">{{'accessInformation'|translate}}</h4>
+            <ul class="grid grid-cols-3 col-gap-8 row-gap-10 my-2 mx-4">
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'loginEmailAddress' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">johndoe@example.com</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'password' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2"><a href="" class="text-primary pointer">Reset Password</a></p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'portalAccess' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2 text-green">Yes</p>
+                </li>
+            </ul>
+        </div>
+    </mat-card-content>
+</mat-card>

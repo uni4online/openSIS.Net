@@ -26,24 +26,52 @@ namespace opensis.data.Repository
         /// <returns></returns>
         public StudentAddViewModel AddStudent(StudentAddViewModel student)
         {
-            try
+            using (var transaction = this.context.Database.BeginTransaction())
             {
-                int? MasterStudentId = Utility.GetMaxPK(this.context, new Func<StudentMaster, int>(x => x.StudentId));
-                student.studentMaster.StudentId = (int)MasterStudentId;
+                try
+                {
+                    int? MasterStudentId = Utility.GetMaxPK(this.context, new Func<StudentMaster, int>(x => x.StudentId));
+                    student.studentMaster.StudentId = (int)MasterStudentId;
 
-                int? MasterEnrollmentId = Utility.GetMaxPK(this.context, new Func<StudentEnrollment, int>(x => (int)x.EnrollmentId));
-                student.studentMaster.StudentEnrollment = new StudentEnrollment() { TenantId = student.studentMaster.TenantId, SchoolId = student.studentMaster.SchoolId, StudentId = student.studentMaster.StudentId, EnrollmentId = (int)MasterEnrollmentId };
+                    int? MasterEnrollmentId = Utility.GetMaxPK(this.context, new Func<StudentEnrollment, int>(x => (int)x.EnrollmentId));
+                    student.studentMaster.StudentEnrollment = new StudentEnrollment() { TenantId = student.studentMaster.TenantId, SchoolId = student.studentMaster.SchoolId, StudentId = student.studentMaster.StudentId, EnrollmentId = (int)MasterEnrollmentId };
 
-                this.context?.StudentMaster.Add(student.studentMaster);
-                this.context?.SaveChanges();
-                student._failure = false;
+                    this.context?.StudentMaster.Add(student.studentMaster);
+                    this.context?.SaveChanges();
+
+                    if (student.fieldsCategoryList != null && student.fieldsCategoryList.ToList().Count > 0)
+                    {
+                        var fieldsCategory = student.fieldsCategoryList.FirstOrDefault(x => x.CategoryId == student.SelectedCategoryId);
+                        if (fieldsCategory != null)
+                        {
+                            foreach (var customFields in fieldsCategory.CustomFields.ToList())
+                            {
+                                if (customFields.CustomFieldsValue != null && customFields.CustomFieldsValue.ToList().Count > 0)
+                                {
+                                    customFields.CustomFieldsValue.FirstOrDefault().Module = "Student";
+                                    customFields.CustomFieldsValue.FirstOrDefault().CategoryId = customFields.CategoryId;
+                                    customFields.CustomFieldsValue.FirstOrDefault().FieldId = customFields.FieldId;
+                                    customFields.CustomFieldsValue.FirstOrDefault().CustomFieldTitle = customFields.Title;
+                                    customFields.CustomFieldsValue.FirstOrDefault().CustomFieldType = customFields.Type;
+                                    customFields.CustomFieldsValue.FirstOrDefault().SchoolId = student.studentMaster.SchoolId;
+                                    customFields.CustomFieldsValue.FirstOrDefault().TargetId = student.studentMaster.StudentId;
+                                    this.context?.CustomFieldsValue.AddRange(customFields.CustomFieldsValue);
+                                    this.context?.SaveChanges();
+                                }
+                            }
+                            
+                        }
+                    }
+                    transaction.Commit();
+                    student._failure = false;
+                }
+                catch (Exception es)
+                {
+                    transaction.Rollback();
+                    student._failure = true;
+                    student._message = es.Message;
+                }
             }
-            catch (Exception es)
-            {
-                student._failure = true;
-                student._message = es.Message;
-            }
-
             return student;
         }
 
@@ -54,144 +82,149 @@ namespace opensis.data.Repository
         /// <returns></returns>
         public StudentAddViewModel UpdateStudent(StudentAddViewModel student)
         {
-            try
+            using (var transaction = this.context.Database.BeginTransaction())
             {
-                var studentUpdate = this.context?.StudentMaster.FirstOrDefault(x => x.TenantId == student.studentMaster.TenantId && x.SchoolId == student.studentMaster.SchoolId && x.StudentId == student.studentMaster.StudentId);
-
-                studentUpdate.Salutation = student.studentMaster.Salutation;
-                studentUpdate.Suffix = student.studentMaster.Suffix;
-                studentUpdate.FirstGivenName = student.studentMaster.FirstGivenName;
-                studentUpdate.MiddleName = student.studentMaster.MiddleName;
-                studentUpdate.LastFamilyName = student.studentMaster.LastFamilyName;
-                studentUpdate.PreferredName = student.studentMaster.PreferredName;
-                studentUpdate.PreviousName = student.studentMaster.PreviousName;
-                studentUpdate.AlternateId = student.studentMaster.AlternateId;
-                studentUpdate.DistrictId = student.studentMaster.DistrictId;
-                studentUpdate.StateId = student.studentMaster.StateId;
-                studentUpdate.AdmissionNumber = student.studentMaster.AdmissionNumber;
-                studentUpdate.RollNumber = student.studentMaster.RollNumber;
-                studentUpdate.SocialSecurityNumber = student.studentMaster.SocialSecurityNumber;
-                studentUpdate.OtherGovtIssuedNumber = student.studentMaster.OtherGovtIssuedNumber;
-                studentUpdate.Dob = student.studentMaster.Dob;
-                studentUpdate.Gender = student.studentMaster.Gender;
-                studentUpdate.Race = student.studentMaster.Race;
-                studentUpdate.Ethnicity = student.studentMaster.Ethnicity;
-                studentUpdate.MaritalStatus = student.studentMaster.MaritalStatus;
-                studentUpdate.CountryOfBirth = student.studentMaster.CountryOfBirth;
-                studentUpdate.Nationality = student.studentMaster.Nationality;
-                studentUpdate.FirstLanguageId = student.studentMaster.FirstLanguageId;
-                studentUpdate.SecondLanguageId = student.studentMaster.SecondLanguageId;
-                studentUpdate.ThirdLanguageId = student.studentMaster.ThirdLanguageId;
-
-                studentUpdate.HomeAddressLineOne = student.studentMaster.HomeAddressLineOne;
-                studentUpdate.HomeAddressLineTwo = student.studentMaster.HomeAddressLineTwo;
-                studentUpdate.HomeAddressCountry = student.studentMaster.HomeAddressCountry;
-                studentUpdate.HomeAddressState = student.studentMaster.HomeAddressState;
-                studentUpdate.HomeAddressCity = student.studentMaster.HomeAddressCity;
-                studentUpdate.HomeAddressZip = student.studentMaster.HomeAddressZip;
-                studentUpdate.BusNo = student.studentMaster.BusNo;
-                studentUpdate.SchoolBusPickUp = student.studentMaster.SchoolBusPickUp;
-                studentUpdate.SchoolBusDropOff = student.studentMaster.SchoolBusDropOff;
-                studentUpdate.MailingAddressSameToHome = student.studentMaster.MailingAddressSameToHome;
-                studentUpdate.MailingAddressLineOne = student.studentMaster.MailingAddressLineOne;
-                studentUpdate.MailingAddressLineTwo = student.studentMaster.MailingAddressLineTwo;
-                studentUpdate.MailingAddressCountry = student.studentMaster.MailingAddressCountry;
-                studentUpdate.MailingAddressState = student.studentMaster.MailingAddressState;
-                studentUpdate.MailingAddressCity = student.studentMaster.MailingAddressCity;
-                studentUpdate.MailingAddressZip = student.studentMaster.MailingAddressZip;
-                studentUpdate.HomePhone = student.studentMaster.HomePhone;
-                studentUpdate.MobilePhone = student.studentMaster.MobilePhone;
-                studentUpdate.PersonalEmail = student.studentMaster.PersonalEmail;
-                studentUpdate.SchoolEmail = student.studentMaster.SchoolEmail;
-                studentUpdate.Twitter = student.studentMaster.Twitter;
-                studentUpdate.Facebook = student.studentMaster.Facebook;
-                studentUpdate.Instagram = student.studentMaster.Instagram;
-                studentUpdate.Youtube = student.studentMaster.Youtube;
-                studentUpdate.Linkedin = student.studentMaster.Linkedin;
-
-                studentUpdate.StudentPhoto = student.studentMaster.StudentPhoto;
-
-                studentUpdate.CriticalAlert = student.studentMaster.CriticalAlert;
-                studentUpdate.AlertDescription = student.studentMaster.AlertDescription;
-                studentUpdate.PrimaryCarePhysician = student.studentMaster.PrimaryCarePhysician;
-                studentUpdate.PrimaryCarePhysicianPhone = student.studentMaster.PrimaryCarePhysicianPhone;
-                studentUpdate.MedicalFacility = student.studentMaster.MedicalFacility;
-                studentUpdate.MedicalFacilityPhone = student.studentMaster.MedicalFacilityPhone;
-                studentUpdate.InsuranceCompany = student.studentMaster.InsuranceCompany;
-                studentUpdate.InsuranceCompanyPhone = student.studentMaster.InsuranceCompanyPhone;
-                studentUpdate.PolicyNumber = student.studentMaster.PolicyNumber;
-                studentUpdate.PolicyHolder = student.studentMaster.PolicyHolder;
-                studentUpdate.Dentist = student.studentMaster.Dentist;
-                studentUpdate.DentistPhone = student.studentMaster.DentistPhone;
-                studentUpdate.Vision = student.studentMaster.Vision;
-                studentUpdate.VisionPhone = student.studentMaster.VisionPhone;
-
-                //studentUpdate.PrimaryContactFirstname = student.studentMaster.PrimaryContactFirstname;
-                //studentUpdate.PrimaryContactLastname = student.studentMaster.PrimaryContactLastname;
-                //studentUpdate.PrimaryContactRelationship = student.studentMaster.PrimaryContactRelationship;
-                //studentUpdate.PrimaryContactEmail = student.studentMaster.PrimaryContactEmail;
-                //studentUpdate.PrimaryContactMobile = student.studentMaster.PrimaryContactMobile;
-                //studentUpdate.PrimaryContactWorkPhone = student.studentMaster.PrimaryContactWorkPhone;
-                //studentUpdate.PrimaryContactHomePhone = student.studentMaster.PrimaryContactHomePhone;
-                //studentUpdate.PrimaryContactAddressLineOne = student.studentMaster.PrimaryContactAddressLineOne;
-                //studentUpdate.PrimaryContactAddressLineTwo = student.studentMaster.PrimaryContactAddressLineTwo;
-                //studentUpdate.PrimaryContactCountry = student.studentMaster.PrimaryContactCountry;
-                //studentUpdate.PrimaryContactState = student.studentMaster.PrimaryContactState;
-                //studentUpdate.PrimaryContactCity = student.studentMaster.PrimaryContactCity;
-                //studentUpdate.PrimaryContactZip = student.studentMaster.PrimaryContactZip;
-
-                //studentUpdate.SecondaryContactFirstname = student.studentMaster.SecondaryContactFirstname;
-                //studentUpdate.SecondaryContactLastname = student.studentMaster.SecondaryContactLastname;
-                //studentUpdate.SecondaryContactRelationship = student.studentMaster.SecondaryContactRelationship;
-                //studentUpdate.SecondaryContactEmail = student.studentMaster.SecondaryContactEmail;
-                //studentUpdate.SecondaryContactMobile = student.studentMaster.SecondaryContactMobile;
-                //studentUpdate.SecondaryContactWorkPhone = student.studentMaster.SecondaryContactWorkPhone;
-                //studentUpdate.SecondaryContactHomePhone = student.studentMaster.SecondaryContactHomePhone;
-                //studentUpdate.SecondaryContactAddressLineOne = student.studentMaster.SecondaryContactAddressLineOne;
-                //studentUpdate.SecondaryContactAddressLineTwo = student.studentMaster.SecondaryContactAddressLineTwo;
-                //studentUpdate.SecondaryContactCountry = student.studentMaster.SecondaryContactCountry;
-                //studentUpdate.SecondaryContactState = student.studentMaster.SecondaryContactState;
-                //studentUpdate.SecondaryContactCity = student.studentMaster.SecondaryContactCity;
-                //studentUpdate.SecondaryContactZip = student.studentMaster.SecondaryContactZip;
-
-                this.context?.SaveChanges();
-
-                if(!string.IsNullOrWhiteSpace(student.PasswordHash) && !string.IsNullOrWhiteSpace(student.studentMaster.PersonalEmail))
+                try
                 {
-                    UserMaster userMaster = new UserMaster();
+                    var studentUpdate = this.context?.StudentMaster.FirstOrDefault(x => x.TenantId == student.studentMaster.TenantId && x.SchoolId == student.studentMaster.SchoolId && x.StudentId == student.studentMaster.StudentId);
 
-                    var decrypted = Utility.Decrypt(student.PasswordHash);
-                    string passwordHash = Utility.GetHashedPassword(decrypted);
+                    studentUpdate.Salutation = student.studentMaster.Salutation;
+                    studentUpdate.Suffix = student.studentMaster.Suffix;
+                    studentUpdate.FirstGivenName = student.studentMaster.FirstGivenName;
+                    studentUpdate.MiddleName = student.studentMaster.MiddleName;
+                    studentUpdate.LastFamilyName = student.studentMaster.LastFamilyName;
+                    studentUpdate.PreferredName = student.studentMaster.PreferredName;
+                    studentUpdate.PreviousName = student.studentMaster.PreviousName;
+                    studentUpdate.AlternateId = student.studentMaster.AlternateId;
+                    studentUpdate.DistrictId = student.studentMaster.DistrictId;
+                    studentUpdate.StateId = student.studentMaster.StateId;
+                    studentUpdate.AdmissionNumber = student.studentMaster.AdmissionNumber;
+                    studentUpdate.RollNumber = student.studentMaster.RollNumber;
+                    studentUpdate.SocialSecurityNumber = student.studentMaster.SocialSecurityNumber;
+                    studentUpdate.OtherGovtIssuedNumber = student.studentMaster.OtherGovtIssuedNumber;
+                    studentUpdate.Dob = student.studentMaster.Dob;
+                    studentUpdate.Gender = student.studentMaster.Gender;
+                    studentUpdate.Race = student.studentMaster.Race;
+                    studentUpdate.Ethnicity = student.studentMaster.Ethnicity;
+                    studentUpdate.MaritalStatus = student.studentMaster.MaritalStatus;
+                    studentUpdate.CountryOfBirth = student.studentMaster.CountryOfBirth;
+                    studentUpdate.Nationality = student.studentMaster.Nationality;
+                    studentUpdate.FirstLanguageId = student.studentMaster.FirstLanguageId;
+                    studentUpdate.SecondLanguageId = student.studentMaster.SecondLanguageId;
+                    studentUpdate.ThirdLanguageId = student.studentMaster.ThirdLanguageId;
 
-                    var loginInfo = this.context?.UserMaster.FirstOrDefault(x => x.TenantId == student.studentMaster.TenantId && x.SchoolId == student.studentMaster.SchoolId && x.EmailAddress==student.studentMaster.PersonalEmail);
+                    studentUpdate.HomeAddressLineOne = student.studentMaster.HomeAddressLineOne;
+                    studentUpdate.HomeAddressLineTwo = student.studentMaster.HomeAddressLineTwo;
+                    studentUpdate.HomeAddressCountry = student.studentMaster.HomeAddressCountry;
+                    studentUpdate.HomeAddressState = student.studentMaster.HomeAddressState;
+                    studentUpdate.HomeAddressCity = student.studentMaster.HomeAddressCity;
+                    studentUpdate.HomeAddressZip = student.studentMaster.HomeAddressZip;
+                    studentUpdate.BusNo = student.studentMaster.BusNo;
+                    studentUpdate.SchoolBusPickUp = student.studentMaster.SchoolBusPickUp;
+                    studentUpdate.SchoolBusDropOff = student.studentMaster.SchoolBusDropOff;
+                    studentUpdate.MailingAddressSameToHome = student.studentMaster.MailingAddressSameToHome;
+                    studentUpdate.MailingAddressLineOne = student.studentMaster.MailingAddressLineOne;
+                    studentUpdate.MailingAddressLineTwo = student.studentMaster.MailingAddressLineTwo;
+                    studentUpdate.MailingAddressCountry = student.studentMaster.MailingAddressCountry;
+                    studentUpdate.MailingAddressState = student.studentMaster.MailingAddressState;
+                    studentUpdate.MailingAddressCity = student.studentMaster.MailingAddressCity;
+                    studentUpdate.MailingAddressZip = student.studentMaster.MailingAddressZip;
+                    studentUpdate.HomePhone = student.studentMaster.HomePhone;
+                    studentUpdate.MobilePhone = student.studentMaster.MobilePhone;
+                    studentUpdate.PersonalEmail = student.studentMaster.PersonalEmail;
+                    studentUpdate.SchoolEmail = student.studentMaster.SchoolEmail;
+                    studentUpdate.Twitter = student.studentMaster.Twitter;
+                    studentUpdate.Facebook = student.studentMaster.Facebook;
+                    studentUpdate.Instagram = student.studentMaster.Instagram;
+                    studentUpdate.Youtube = student.studentMaster.Youtube;
+                    studentUpdate.Linkedin = student.studentMaster.Linkedin;
 
-                    if (loginInfo == null)
+                    studentUpdate.StudentPhoto = student.studentMaster.StudentPhoto;
+
+                    studentUpdate.CriticalAlert = student.studentMaster.CriticalAlert;
+                    studentUpdate.AlertDescription = student.studentMaster.AlertDescription;
+                    studentUpdate.PrimaryCarePhysician = student.studentMaster.PrimaryCarePhysician;
+                    studentUpdate.PrimaryCarePhysicianPhone = student.studentMaster.PrimaryCarePhysicianPhone;
+                    studentUpdate.MedicalFacility = student.studentMaster.MedicalFacility;
+                    studentUpdate.MedicalFacilityPhone = student.studentMaster.MedicalFacilityPhone;
+                    studentUpdate.InsuranceCompany = student.studentMaster.InsuranceCompany;
+                    studentUpdate.InsuranceCompanyPhone = student.studentMaster.InsuranceCompanyPhone;
+                    studentUpdate.PolicyNumber = student.studentMaster.PolicyNumber;
+                    studentUpdate.PolicyHolder = student.studentMaster.PolicyHolder;
+                    studentUpdate.Dentist = student.studentMaster.Dentist;
+                    studentUpdate.DentistPhone = student.studentMaster.DentistPhone;
+                    studentUpdate.Vision = student.studentMaster.Vision;
+                    studentUpdate.VisionPhone = student.studentMaster.VisionPhone;
+
+                    this.context?.SaveChanges();
+
+                    if (student.fieldsCategoryList != null && student.fieldsCategoryList.ToList().Count > 0)
                     {
-                        var membership = this.context?.Membership.FirstOrDefault(x => x.TenantId == student.studentMaster.TenantId && x.SchoolId == student.studentMaster.SchoolId && x.Profile == "Student");
+                        var fieldsCategory = student.fieldsCategoryList.FirstOrDefault(x => x.CategoryId == student.SelectedCategoryId);
+                        if (fieldsCategory != null)
+                        {
+                            foreach (var customFields in fieldsCategory.CustomFields.ToList())
+                            {
+                                var customFieldValueData = this.context?.CustomFieldsValue.FirstOrDefault(x => x.TenantId == student.studentMaster.TenantId && x.SchoolId == student.studentMaster.SchoolId && x.CategoryId == customFields.CategoryId && x.FieldId == customFields.FieldId && x.Module == "Student" && x.TargetId == student.studentMaster.StudentId);
+                                if (customFieldValueData != null)
+                                {
+                                    this.context?.CustomFieldsValue.RemoveRange(customFieldValueData);
+                                }
+                                if (customFields.CustomFieldsValue != null && customFields.CustomFieldsValue.ToList().Count > 0)
+                                {
+                                    customFields.CustomFieldsValue.FirstOrDefault().Module = "Student";
+                                    customFields.CustomFieldsValue.FirstOrDefault().CategoryId = customFields.CategoryId;
+                                    customFields.CustomFieldsValue.FirstOrDefault().FieldId = customFields.FieldId;
+                                    customFields.CustomFieldsValue.FirstOrDefault().CustomFieldTitle = customFields.Title;
+                                    customFields.CustomFieldsValue.FirstOrDefault().CustomFieldType = customFields.Type;
+                                    customFields.CustomFieldsValue.FirstOrDefault().SchoolId = student.studentMaster.SchoolId;
+                                    customFields.CustomFieldsValue.FirstOrDefault().TargetId = student.studentMaster.StudentId;
+                                    this.context?.CustomFieldsValue.AddRange(customFields.CustomFieldsValue);
+                                    this.context?.SaveChanges();
+                                }
+                            }
+                        }                        
+                        //if(!string.IsNullOrWhiteSpace(student.PasswordHash) && !string.IsNullOrWhiteSpace(student.studentMaster.PersonalEmail))
+                        //{
+                        //    UserMaster userMaster = new UserMaster();
 
-                        userMaster.SchoolId = student.studentMaster.SchoolId;
-                        userMaster.TenantId = student.studentMaster.TenantId;
-                        userMaster.UserId = student.studentMaster.StudentId;
-                        userMaster.LangId = 1;
-                        userMaster.MembershipId = membership.MembershipId;
-                        userMaster.EmailAddress = student.studentMaster.PersonalEmail;
-                        userMaster.PasswordHash = passwordHash;
-                        userMaster.Name = student.studentMaster.FirstGivenName;
+                        //    var decrypted = Utility.Decrypt(student.PasswordHash);
+                        //    string passwordHash = Utility.GetHashedPassword(decrypted);
 
-                        this.context?.UserMaster.Add(userMaster);
-                        this.context?.SaveChanges();
+                        //    var loginInfo = this.context?.UserMaster.FirstOrDefault(x => x.TenantId == student.studentMaster.TenantId && x.SchoolId == student.studentMaster.SchoolId && x.EmailAddress==student.studentMaster.PersonalEmail);
+
+                        //    if (loginInfo == null)
+                        //    {
+                        //        var membership = this.context?.Membership.FirstOrDefault(x => x.TenantId == student.studentMaster.TenantId && x.SchoolId == student.studentMaster.SchoolId && x.Profile == "Student");
+
+                        //        userMaster.SchoolId = student.studentMaster.SchoolId;
+                        //        userMaster.TenantId = student.studentMaster.TenantId;
+                        //        userMaster.UserId = student.studentMaster.StudentId;
+                        //        userMaster.LangId = 1;
+                        //        userMaster.MembershipId = membership.MembershipId;
+                        //        userMaster.EmailAddress = student.studentMaster.PersonalEmail;
+                        //        userMaster.PasswordHash = passwordHash;
+                        //        userMaster.Name = student.studentMaster.FirstGivenName;
+
+                        //        this.context?.UserMaster.Add(userMaster);
+                        //        this.context?.SaveChanges();
+                        //    }
+                        //}
+
+
                     }
+                    transaction.Commit();
+                    student._failure = false;
+
                 }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    student.studentMaster = null;
+                    student._failure = true;
+                    student._message = ex.Message;
 
-                student._failure = false;
-
-            }
-            catch (Exception ex)
-            {
-                student.studentMaster = null;
-                student._failure = true;
-                student._message = ex.Message;
-
+                }
             }
             return student;
 
@@ -221,7 +254,7 @@ namespace opensis.data.Repository
                     {
                         string Columnvalue = pageResult.FilterParams.ElementAt(0).FilterValue;
                         transactionIQ = StudentMasterList.Where(x => x.FirstGivenName.ToLower().Contains(Columnvalue.ToLower()) || x.MiddleName.ToLower().Contains(Columnvalue.ToLower()) || x.LastFamilyName.ToLower().Contains(Columnvalue.ToLower()) || x.StudentId.ToString().Contains(Columnvalue) || x.AlternateId.Contains(Columnvalue) || x.HomePhone.Contains(Columnvalue) || x.MobilePhone.Contains(Columnvalue));
-                        
+
                         var childGradeFilter = StudentMasterList.Where(x => x.StudentEnrollment.Gradelevels != null ? x.StudentEnrollment.Gradelevels.Title.ToLower().Contains(Columnvalue.ToLower()) : string.Empty.Contains(Columnvalue));
                         if (childGradeFilter.ToList().Count > 0)
                         {
@@ -277,7 +310,7 @@ namespace opensis.data.Repository
                 int totalCount = transactionIQ.Count();
                 transactionIQ = transactionIQ.Skip((pageResult.PageNumber - 1) * pageResult.PageSize).Take(pageResult.PageSize);
                 var studentList = transactionIQ.ToList();
-                
+
                 studentListModel.TenantId = pageResult.TenantId;
                 studentListModel.SchoolId = pageResult.SchoolId;
                 studentListModel.studentMaster = studentList;
@@ -363,11 +396,23 @@ namespace opensis.data.Repository
         {
             try
             {
-                int? MasterDocumentId = Utility.GetMaxPK(this.context, new Func<StudentDocuments, int>(x => x.DocumentId));
-                studentDocumentAddViewModel.studentDocument.DocumentId = (int)MasterDocumentId;
-                studentDocumentAddViewModel.studentDocument.UploadedOn = DateTime.UtcNow;
-                this.context?.StudentDocuments.Add(studentDocumentAddViewModel.studentDocument);
-                this.context?.SaveChanges();
+                int? MasterDocumentId = 0;
+
+                if (studentDocumentAddViewModel.studentDocuments != null && studentDocumentAddViewModel.studentDocuments.ToList().Count > 0)
+                {
+                    MasterDocumentId = Utility.GetMaxPK(this.context, new Func<StudentDocuments, int>(x => x.DocumentId));
+
+                    foreach (var data in studentDocumentAddViewModel.studentDocuments.ToList())
+                    {
+                        data.DocumentId = (int)MasterDocumentId;
+                        data.UploadedOn = DateTime.UtcNow;
+                        this.context?.StudentDocuments.Add(data);
+                        MasterDocumentId++;
+                    }
+
+                    this.context?.SaveChanges();
+                }
+
                 studentDocumentAddViewModel._failure = false;
             }
             catch (Exception es)
@@ -387,10 +432,10 @@ namespace opensis.data.Repository
         {
             try
             {
-                var studentDocumentUpdate = this.context?.StudentDocuments.FirstOrDefault(x => x.TenantId == studentDocumentAddViewModel.studentDocument.TenantId && x.SchoolId == studentDocumentAddViewModel.studentDocument.SchoolId && x.StudentId == studentDocumentAddViewModel.studentDocument.StudentId && x.DocumentId == studentDocumentAddViewModel.studentDocument.DocumentId);
-                studentDocumentUpdate.FileUploaded = studentDocumentAddViewModel.studentDocument.FileUploaded;
+                var studentDocumentUpdate = this.context?.StudentDocuments.FirstOrDefault(x => x.TenantId == studentDocumentAddViewModel.studentDocuments.FirstOrDefault().TenantId && x.SchoolId == studentDocumentAddViewModel.studentDocuments.FirstOrDefault().SchoolId && x.StudentId == studentDocumentAddViewModel.studentDocuments.FirstOrDefault().StudentId && x.DocumentId == studentDocumentAddViewModel.studentDocuments.FirstOrDefault().DocumentId);
+                studentDocumentUpdate.FileUploaded = studentDocumentAddViewModel.studentDocuments.FirstOrDefault().FileUploaded;
                 studentDocumentUpdate.UploadedOn = DateTime.UtcNow;
-                studentDocumentUpdate.UploadedBy = studentDocumentAddViewModel.studentDocument.UploadedBy;
+                studentDocumentUpdate.UploadedBy = studentDocumentAddViewModel.studentDocuments.FirstOrDefault().UploadedBy;
                 this.context?.SaveChanges();
                 studentDocumentAddViewModel._failure = false;
                 studentDocumentAddViewModel._message = "Updated Successfully";
@@ -414,8 +459,8 @@ namespace opensis.data.Repository
             try
             {
 
-                var StudentDocumentsAll = this.context?.StudentDocuments.Where(x => x.TenantId == studentDocumentListViewModel.TenantId && x.SchoolId == studentDocumentListViewModel.SchoolId && x.StudentId== studentDocumentListViewModel.StudentId).ToList();
-                studentDocumentsList.studentDocumentList = StudentDocumentsAll;
+                var StudentDocumentsAll = this.context?.StudentDocuments.Where(x => x.TenantId == studentDocumentListViewModel.TenantId && x.SchoolId == studentDocumentListViewModel.SchoolId && x.StudentId == studentDocumentListViewModel.StudentId).OrderByDescending(x=>x.DocumentId).ToList();
+                studentDocumentsList.studentDocumentsList = StudentDocumentsAll;
                 studentDocumentsList._tenantName = studentDocumentListViewModel._tenantName;
                 studentDocumentsList._token = studentDocumentListViewModel._token;
                 studentDocumentsList._failure = false;
@@ -439,7 +484,7 @@ namespace opensis.data.Repository
         {
             try
             {
-                var studentDocumentDelete = this.context?.StudentDocuments.FirstOrDefault(x => x.TenantId == studentDocumentAddViewModel.studentDocument.TenantId && x.SchoolId == studentDocumentAddViewModel.studentDocument.SchoolId && x.StudentId == studentDocumentAddViewModel.studentDocument.StudentId && x.DocumentId== studentDocumentAddViewModel.studentDocument.DocumentId);
+                var studentDocumentDelete = this.context?.StudentDocuments.FirstOrDefault(x => x.TenantId == studentDocumentAddViewModel.studentDocuments.FirstOrDefault().TenantId && x.SchoolId == studentDocumentAddViewModel.studentDocuments.FirstOrDefault().SchoolId && x.StudentId == studentDocumentAddViewModel.studentDocuments.FirstOrDefault().StudentId && x.DocumentId == studentDocumentAddViewModel.studentDocuments.FirstOrDefault().DocumentId);
                 this.context?.StudentDocuments.Remove(studentDocumentDelete);
                 this.context?.SaveChanges();
                 studentDocumentAddViewModel._failure = false;
@@ -487,7 +532,7 @@ namespace opensis.data.Repository
 
                         this.context?.UserMaster.Add(login.userMaster);
                         this.context?.SaveChanges();
-                        
+
                         //Update StudentPortalId in Studentmaster table.
                         var student = this.context?.StudentMaster.FirstOrDefault(x => x.TenantId == login.userMaster.TenantId && x.SchoolId == login.userMaster.SchoolId && x.StudentId == login.StudentId);
                         student.StudentPortalId = login.userMaster.EmailAddress;
@@ -504,6 +549,102 @@ namespace opensis.data.Repository
             }
 
             return login;
+        }
+        /// <summary>
+        /// Add Student Comment
+        /// </summary>
+        /// <param name="studentCommentAddViewModel"></param>
+        /// <returns></returns>
+        public StudentCommentAddViewModel AddStudentComment(StudentCommentAddViewModel studentCommentAddViewModel)
+        {
+            try
+            {
+                int? MasterCommentId = Utility.GetMaxPK(this.context, new Func<StudentComments, int>(x => x.CommentId));
+                studentCommentAddViewModel.studentComments.CommentId = (int)MasterCommentId;
+                studentCommentAddViewModel.studentComments.LastUpdated = DateTime.UtcNow;
+                this.context?.StudentComments.Add(studentCommentAddViewModel.studentComments);
+                this.context?.SaveChanges();
+                studentCommentAddViewModel._failure = false;
+            }
+            catch (Exception es)
+            {
+                studentCommentAddViewModel._failure = true;
+                studentCommentAddViewModel._message = es.Message;
+            }
+            return studentCommentAddViewModel;
+        }
+        /// <summary>
+        /// Update Student Comment
+        /// </summary>
+        /// <param name="studentCommentAddViewModel"></param>
+        /// <returns></returns>
+        public StudentCommentAddViewModel UpdateStudentComment(StudentCommentAddViewModel studentCommentAddViewModel)
+        {
+            try
+            {
+                var studentCommentUpdate = this.context?.StudentComments.FirstOrDefault(x => x.TenantId == studentCommentAddViewModel.studentComments.TenantId && x.SchoolId == studentCommentAddViewModel.studentComments.SchoolId && x.StudentId == studentCommentAddViewModel.studentComments.StudentId && x.CommentId == studentCommentAddViewModel.studentComments.CommentId);
+
+                studentCommentUpdate.Comment = studentCommentAddViewModel.studentComments.Comment;
+                studentCommentUpdate.LastUpdated = DateTime.UtcNow;
+                studentCommentUpdate.UpdatedBy = studentCommentAddViewModel.studentComments.UpdatedBy;
+                this.context?.SaveChanges();
+                studentCommentAddViewModel._failure = false;
+                studentCommentAddViewModel._message = "Updated Successfully";
+            }
+            catch (Exception es)
+            {
+                studentCommentAddViewModel._failure = true;
+                studentCommentAddViewModel._message = es.Message;
+            }
+            return studentCommentAddViewModel;
+        }
+        /// <summary>
+        /// Get All Student Comments List
+        /// </summary>
+        /// <param name="studentCommentListViewModel"></param>
+        /// <returns></returns>
+        public StudentCommentListViewModel GetAllStudentCommentsList(StudentCommentListViewModel studentCommentListViewModel)
+        {
+            StudentCommentListViewModel studentCommentsList = new StudentCommentListViewModel();
+            try
+            {
+
+                var StudentCommentsAll = this.context?.StudentComments.Where(x => x.TenantId == studentCommentListViewModel.TenantId && x.SchoolId == studentCommentListViewModel.SchoolId && x.StudentId == studentCommentListViewModel.StudentId).OrderByDescending(x => x.CommentId).ToList();
+                studentCommentsList.studentCommentsList = StudentCommentsAll;
+                studentCommentsList._tenantName = studentCommentListViewModel._tenantName;
+                studentCommentsList._token = studentCommentListViewModel._token;
+                studentCommentsList._failure = false;
+            }
+            catch (Exception es)
+            {
+                studentCommentsList._message = es.Message;
+                studentCommentsList._failure = true;
+                studentCommentsList._tenantName = studentCommentListViewModel._tenantName;
+                studentCommentsList._token = studentCommentListViewModel._token;
+            }
+            return studentCommentsList;
+        }
+        /// <summary>
+        /// Delete Student Comment
+        /// </summary>
+        /// <param name="studentCommentAddViewModel"></param>
+        /// <returns></returns>
+        public StudentCommentAddViewModel DeleteStudentComment(StudentCommentAddViewModel studentCommentAddViewModel)
+        {
+            try
+            {
+                var studentCommentDelete = this.context?.StudentComments.FirstOrDefault(x => x.TenantId == studentCommentAddViewModel.studentComments.TenantId && x.SchoolId == studentCommentAddViewModel.studentComments.SchoolId && x.StudentId == studentCommentAddViewModel.studentComments.StudentId && x.CommentId == studentCommentAddViewModel.studentComments.CommentId);
+                this.context?.StudentComments.Remove(studentCommentDelete);
+                this.context?.SaveChanges();
+                studentCommentAddViewModel._failure = false;
+                studentCommentAddViewModel._message = "Deleted Successfully";
+            }
+            catch (Exception es)
+            {
+                studentCommentAddViewModel._failure = true;
+                studentCommentAddViewModel._message = es.Message;
+            }
+            return studentCommentAddViewModel;
         }
 
 
@@ -573,36 +714,78 @@ namespace opensis.data.Repository
         //        return student;
 
         //    }
-        //    /// <summary>
-        //    /// View Student By Id
-        //    /// </summary>
-        //    /// <param name="student"></param>
-        //    /// <returns></returns>
 
-        //    public StudentAddViewModel ViewStudent(StudentAddViewModel student)
-        //    {
-        //        StudentAddViewModel studentView = new StudentAddViewModel();
-        //        try
-        //        {
+        /// <summary>
+        /// View Student By Id
+        /// </summary>
+        /// <param name="student"></param>
+        /// <returns></returns>
 
-        //            var studentById = this.context?.StudentEnrollment.FirstOrDefault(x => x.TenantId == student.studentEnrollment.TenantId && x.SchoolId == student.studentEnrollment.SchoolId && x.StudentId == student.studentEnrollment.StudentId);
-        //            if (studentById != null)
-        //            {
-        //                studentView.studentEnrollment = studentById;                    
-        //            }
-        //            else
-        //            {
-        //                studentView._failure = true;
-        //                studentView._message = NORECORDFOUND;           
-        //            }
-        //        }
-        //        catch (Exception es)
-        //        {
-        //            studentView._failure = true;
-        //            studentView._message=es.Message;
-        //        }
-        //        return studentView;
-        //    }
+        public StudentAddViewModel ViewStudent(StudentAddViewModel student)
+        {
+            StudentAddViewModel studentView = new StudentAddViewModel();
+            try
+            {
+
+                var studentData = this.context?.StudentMaster.FirstOrDefault(x => x.TenantId == student.studentMaster.TenantId && x.SchoolId == student.studentMaster.SchoolId && x.StudentId == student.studentMaster.StudentId);
+                if (studentData != null)
+                {
+                    studentView.studentMaster = studentData;
+
+                    var customFields = this.context?.FieldsCategory.Where(x => x.TenantId == student.studentMaster.TenantId && x.SchoolId == student.studentMaster.SchoolId && x.Module == "Student")
+                        .Select(y => new FieldsCategory
+                        {
+                            TenantId = y.TenantId,
+                            SchoolId = y.SchoolId,
+                            CategoryId = y.CategoryId,
+                            IsSystemCategory = y.IsSystemCategory,
+                            Search = y.Search,
+                            Title = y.Title,
+                            Module = y.Module,
+                            SortOrder = y.SortOrder,
+                            Required = y.Required,
+                            Hide = y.Hide,
+                            LastUpdate = y.LastUpdate,
+                            UpdatedBy = y.UpdatedBy,
+                            CustomFields = y.CustomFields.Select(z => new CustomFields
+                            {
+                                TenantId = z.TenantId,
+                                SchoolId = z.SchoolId,
+                                CategoryId = z.CategoryId,
+                                FieldId = z.FieldId,
+                                Module = z.Module,
+                                Type = z.Type,
+                                Search = z.Search,
+                                Title = z.Title,
+                                SortOrder = z.SortOrder,
+                                SelectOptions = z.SelectOptions,
+                                SystemField = z.SystemField,
+                                Required = z.Required,
+                                DefaultSelection = z.DefaultSelection,
+                                LastUpdate = z.LastUpdate,
+                                UpdatedBy = z.UpdatedBy,
+                                CustomFieldsValue = z.CustomFieldsValue.Where(w => w.TargetId == student.studentMaster.StudentId).ToList()
+                            }).ToList()
+                        })
+                        .ToList();
+
+
+
+                    studentView.fieldsCategoryList = customFields;
+                }
+                else
+                {
+                    studentView._failure = true;
+                    studentView._message = NORECORDFOUND;
+                }
+            }
+            catch (Exception es)
+            {
+                studentView._failure = true;
+                studentView._message = es.Message;
+            }
+            return studentView;
+        }
 
         //    /// <summary>
         //    /// Delete Student
@@ -627,6 +810,138 @@ namespace opensis.data.Repository
         //        }
         //        return student;
         //    }
+
+        /// <summary>
+        /// Search Sibling For Student
+        /// </summary>
+        /// <param name="studentSiblingListViewModel"></param>
+        /// <returns></returns>
+        public SiblingSearchForStudentListModel SearchSiblingForStudent(SiblingSearchForStudentListModel studentSiblingListViewModel)
+        {
+            SiblingSearchForStudentListModel StudentSiblingList = new SiblingSearchForStudentListModel();
+            try
+            {
+                var StudentSibling = this.context?.StudentMaster.Where(x => x.FirstGivenName == studentSiblingListViewModel.FirstGivenName && x.LastFamilyName == studentSiblingListViewModel.LastFamilyName && x.TenantId==studentSiblingListViewModel.TenantId && x.SchoolId==studentSiblingListViewModel.SchoolId).ToList();
+                if (StudentSibling.Count > 0)
+                {
+                    StudentSiblingList.studentMasterList = StudentSibling;
+                    StudentSiblingList._tenantName = studentSiblingListViewModel._tenantName;
+                    StudentSiblingList._token = studentSiblingListViewModel._token;
+                    StudentSiblingList._failure = false;
+                }
+                else
+                {
+                    StudentSiblingList._failure = true;
+                    StudentSiblingList._message = NORECORDFOUND;
+                }
+            }
+            catch (Exception es)
+            {
+                StudentSiblingList._message = es.Message;
+                StudentSiblingList._failure = true;
+                StudentSiblingList._tenantName = studentSiblingListViewModel._tenantName;
+                StudentSiblingList._token = studentSiblingListViewModel._token;
+            }
+            return StudentSiblingList;
+        }
+
+        /// <summary>
+        /// Association Sibling
+        /// </summary>
+        /// <param name="siblingAddUpdateForStudentModel"></param>
+        /// <returns></returns>
+        public SiblingAddUpdateForStudentModel AssociationSibling(SiblingAddUpdateForStudentModel siblingAddUpdateForStudentModel)
+        {
+            SiblingAddUpdateForStudentModel siblingAddUpdateForStudent = new SiblingAddUpdateForStudentModel();
+            try
+            {
+                if (siblingAddUpdateForStudentModel.studentMaster.StudentId > 0)
+                {
+                    var studentAssociateTo = this.context?.StudentMaster.FirstOrDefault(x => x.StudentId == siblingAddUpdateForStudentModel.studentMaster.StudentId);
+                    var studentAssociateBy = this.context?.StudentMaster.FirstOrDefault(x => x.StudentId == siblingAddUpdateForStudentModel.StudentId);
+                    if (studentAssociateTo != null)
+                    {
+                        if (studentAssociateTo.Associationship != null)
+                        {
+                            studentAssociateTo.Associationship = studentAssociateTo.Associationship + " | " + siblingAddUpdateForStudentModel.studentMaster.TenantId + "#" + siblingAddUpdateForStudentModel.studentMaster.SchoolId + "#" + siblingAddUpdateForStudentModel.StudentId;
+                        }
+                        else
+                        {
+                            studentAssociateTo.Associationship = siblingAddUpdateForStudentModel.studentMaster.TenantId + "#" + siblingAddUpdateForStudentModel.studentMaster.SchoolId + "#" + siblingAddUpdateForStudentModel.StudentId;
+                        }
+                        //this.context?.SaveChanges();
+                    }
+                    else
+                    {
+                        siblingAddUpdateForStudentModel._failure = true;
+                        siblingAddUpdateForStudentModel._message = NORECORDFOUND;
+                    }
+
+                    if (studentAssociateBy != null)
+                    {
+                        if (studentAssociateBy.Associationship != null)
+                        {
+                            studentAssociateBy.Associationship = studentAssociateBy.Associationship + " | " + siblingAddUpdateForStudentModel.studentMaster.TenantId + "#" + siblingAddUpdateForStudentModel.studentMaster.SchoolId + "#" + siblingAddUpdateForStudentModel.studentMaster.StudentId;
+                        }
+                        else
+                        {
+                            studentAssociateBy.Associationship = siblingAddUpdateForStudentModel.studentMaster.TenantId + "#" + siblingAddUpdateForStudentModel.studentMaster.SchoolId + "#" + siblingAddUpdateForStudentModel.studentMaster.StudentId;
+                        }
+                        //this.context?.SaveChanges();
+                    }
+                    else
+                    {
+                        siblingAddUpdateForStudentModel._failure = true;
+                        siblingAddUpdateForStudentModel._message = NORECORDFOUND;
+                    }
+                    this.context?.SaveChanges();
+                }
+            }
+            catch (Exception es)
+            {
+
+                siblingAddUpdateForStudentModel._message = es.Message;
+                siblingAddUpdateForStudentModel._failure = true;
+                siblingAddUpdateForStudentModel._tenantName = siblingAddUpdateForStudentModel._tenantName;
+                siblingAddUpdateForStudentModel._token = siblingAddUpdateForStudentModel._token;
+            }
+            return siblingAddUpdateForStudentModel;
+        }
+
+        /// <summary>
+        /// View All Sibling
+        /// </summary>
+        /// <param name="studentListModel"></param>
+        /// <returns></returns>
+        public StudentListModel ViewAllSibling(StudentListModel studentListModel)
+        {
+            StudentListModel studentList = new StudentListModel();
+            try
+            {
+                var Associationship = studentListModel.TenantId + "#" + studentListModel.SchoolId + "#" + studentListModel.StudentId;
+                var studentAssociationship = this.context?.StudentMaster.Where(x => x.Associationship.Contains(Associationship)).ToList();
+                if (studentAssociationship.Count > 0)
+                {
+                    studentList.studentMaster = studentAssociationship;
+                    studentList._tenantName = studentListModel._tenantName;
+                    studentList._token = studentListModel._token;
+                    studentList._failure = false;
+                }
+                else
+                {
+                    studentList._failure = true;
+                    studentList._message = NORECORDFOUND;                    
+                }
+            }
+            catch (Exception es)
+            {
+                studentList._message = es.Message;
+                studentList._failure = true;
+                studentList._tenantName = studentListModel._tenantName;
+                studentList._token = studentListModel._token;
+            }
+            return studentList;
+        }
     }
 }
 

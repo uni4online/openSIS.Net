@@ -20,6 +20,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { LoaderService } from '../../../../services/loader.service';
 import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { SchoolAddViewModel } from '../../../../models/schoolMasterModel';
 
 @Component({
   selector: 'vex-school-details',
@@ -38,7 +39,7 @@ export class SchoolDetailsComponent implements OnInit {
     { label: 'Phone', property: 'telephone', type: 'text', visible: true, cssClasses: ['text-secondary', 'font-medium'] },
     { label: 'Status', property: 'status', type: 'text', visible: true }
   ];
-
+  schoolAddViewModel: SchoolAddViewModel = new SchoolAddViewModel();
   selection = new SelectionModel<any>(true, []);
   totalCount:number=0;
   pageNumber:number;
@@ -199,4 +200,6 @@ export class SchoolDetailsComponent implements OnInit {
     event.stopImmediatePropagation();
     column.visible = !column.visible;
   }
+
+
 }

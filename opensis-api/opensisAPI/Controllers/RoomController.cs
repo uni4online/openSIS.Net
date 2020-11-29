@@ -39,7 +39,7 @@ namespace opensisAPI.Controllers
                     roomAdd._token = room._token;
                     roomAdd._tenantName = room._tenantName;
                     roomAdd._failure = true;
-                    roomAdd._message = "Please enter valid scholl id";
+                    roomAdd._message = "Please enter valid school id";
                 }
             }
             catch (Exception es)
@@ -65,7 +65,7 @@ namespace opensisAPI.Controllers
                     roomAdd._token = room._token;
                     roomAdd._tenantName = room._tenantName;
                     roomAdd._failure = true;
-                    roomAdd._message = "Please enter valid scholl id";
+                    roomAdd._message = "Please enter valid school id";
                 }
             }
             catch (Exception es)
@@ -91,7 +91,7 @@ namespace opensisAPI.Controllers
                     RoomAdd._token = room._token;
                     RoomAdd._tenantName = room._tenantName;
                     RoomAdd._failure = true;
-                    RoomAdd._message = "Please enter valid scholl id";
+                    RoomAdd._message = "Please enter valid school id";
                 }
             }
             catch (Exception es)
@@ -117,7 +117,7 @@ namespace opensisAPI.Controllers
                     roomList._token = room._token;
                     roomList._tenantName = room._tenantName;
                     roomList._failure = true;
-                    roomList._message = "Please enter valid scholl id";
+                    roomList._message = "Please enter valid school id";
                 }
             }
             catch (Exception es)
@@ -143,7 +143,7 @@ namespace opensisAPI.Controllers
                     roomlDelete._token = room._token;
                     roomlDelete._tenantName = room._tenantName;
                     roomlDelete._failure = true;
-                    roomlDelete._message = "Please enter valid scholl id";
+                    roomlDelete._message = "Please enter valid school id";
                 }
             }
             catch (Exception es)

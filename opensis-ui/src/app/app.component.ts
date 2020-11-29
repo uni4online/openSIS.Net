@@ -157,13 +157,13 @@ export class AppComponent {
         route: '/school/parents'       
       },
       { type: 'dropdown',
-        label: 'Users',
+        label: 'Staff',
         icon: icusers,
         children: [
           {
             type: 'link',
             label: 'Staff Info',
-            route: '/school/staffs',
+            route: '/school/staff',
             icon: icinfo
           },
           {

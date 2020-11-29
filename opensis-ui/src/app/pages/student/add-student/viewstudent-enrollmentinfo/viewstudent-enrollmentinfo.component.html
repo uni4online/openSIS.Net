@@ -1,0 +1,353 @@
+<mat-card class="w-full">
+
+    <mat-card-header>
+        <mat-card-title>{{'schoolAndEnrollmentInfo'|translate}}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+
+        <div @stagger fxLayout="column">
+            <ul class="grid grid-cols-3 col-gap-8 row-gap-10 mt-2 mx-4">
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'enrollmentCalendar' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">School Main Calendar</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'rollingRetentionOption' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Next Grade at Current School</p>
+                </li>
+            </ul>
+
+
+            <hr class="-mx-3 mt-6" />
+
+
+            <div class="w-full px-4 pb-2 pt-10">
+                <h4 class="text-primary">{{'enrollmentInfo'|translate}}</h4>
+            </div>
+
+            <ul class="enrollment-timeline mt-4">
+                <li>
+                    <span>2020-2021</span>
+                    <div class="-mt-2">
+                        <mat-accordion class="w-full">
+                            <mat-expansion-panel>
+                                <mat-expansion-panel-header class="pl-0">
+                                    <mat-panel-title class="font-semibold h-full">
+                                        <div class="flex w-full justify-between items-center h-full">
+                                            <div class="h-full">
+                                                <span class="bg-green inline-block align-middle h-full px-2 pt-3 pb-2 mr-2">
+                                                    <mat-icon [icIcon]="icPromoted" class="text-white"
+                                                        matTooltip="Promoted"></mat-icon>
+                                                </span>
+                                                <h5 class="inline-block font-medium">Pech State High School<mat-icon [icIcon]="icHomeSchool" class="text-deep-purple align-middle ml-2 text-sm mt-2" matTooltip="Home School"></mat-icon></h5>
+                                            </div>
+                                            <div class="inline-block justify-self-stretch text-right font-normal pt-1">
+                                                Promoted to <span class="font-medium">Grade 11</span> on Aug 3, 2020
+                                            </div>
+                                        </div>
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header>
+                                <div class="border-t -mx-6 px-2 pt-3">
+                                    <ul class="grid grid-cols-4 col-gap-8 row-gap-10 mt-2 mx-4">
+                                        <li>
+                                            <label
+                                                class="text-sm leading-5 text-gray">{{'gradeLevel' | translate}}</label>
+                                            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Grade 9</p>
+                                        </li>
+                                        <li>
+                                            <label
+                                                class="text-sm leading-5 text-gray">{{'enrollmentDate' | translate}}</label>
+                                            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Mar 10, 2020</p>
+                                        </li>
+                                        <li>
+                                            <label
+                                                class="text-sm leading-5 text-gray">{{'enrollmentCode' | translate}}</label>
+                                            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Existing</p>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                    </div>
+                </li>
+                <li>
+                    <span>2020-2021</span>
+                    <div class="-mt-2">
+                        <mat-accordion class="w-full">
+                            <mat-expansion-panel>
+                                <mat-expansion-panel-header class="pl-0">
+                                    <mat-panel-title class="font-semibold h-full">
+                                        <div class="flex w-full justify-between items-center h-full">
+                                            <div class="h-full">
+                                                <span class="bg-blue inline-block align-middle h-full px-2 pt-3 pb-2 mr-2">
+                                                    <mat-icon [icIcon]="icExternal" class="text-white"
+                                                        matTooltip="External Student"></mat-icon>
+                                                </span>
+                                                <h5 class="inline-block font-medium">South Point High School</h5>
+                                            </div>
+                                            <div class="font-normal pt-1">
+                                                Enrolled as <span class="font-medium">External Student</span> at <span class="font-medium">Grade 11</span> on Aug 3, 2020
+                                            </div>
+                                        </div>
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header>
+                                <div class="border-t -mx-6 px-2 pt-3">
+                                    <ul class="grid grid-cols-4 col-gap-8 row-gap-10 mt-2 mx-4">
+                                        <li>
+                                            <label
+                                                class="text-sm leading-5 text-gray">{{'gradeLevel' | translate}}</label>
+                                            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Grade 9</p>
+                                        </li>
+                                        <li>
+                                            <label
+                                                class="text-sm leading-5 text-gray">{{'enrollmentDate' | translate}}</label>
+                                            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Mar 10, 2020</p>
+                                        </li>
+                                        <li>
+                                            <label
+                                                class="text-sm leading-5 text-gray">{{'enrollmentCode' | translate}}</label>
+                                            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Existing</p>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                    </div>
+                </li>
+            </ul>
+
+            <div class="text-center mb-4"><a routerLink="" class="text-primary cursor-pointer"><span class="underline">{{'enrollmentHistory' | translate}}</span> <mat-icon [icIcon]="icExpand" class="align-middle"></mat-icon></a></div>
+
+
+            <div class="w-full overflow-x-auto block">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="text-left">{{'schoolYear' | translate}}</th>
+                            <th class="text-left">{{'enrollmentDateAndCode' | translate}}</th>
+                            <th class="text-left">{{'gradeLevel' | translate}}</th>
+                            <th class="text-left">{{'exitDateAndCode' | translate}}</th>
+                            <th class="text-left">{{'schoolName' | translate}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2020-21</td>
+                            <td>Aug 3, 2020 <mat-icon [icIcon]="icExternal" class="text-blue align-middle mx-2"></mat-icon> Enrolled as External Student</td>
+                            <td>Grade 11</td>
+                            <td></td>
+                            <td>South Point High School</td>
+                        </tr>
+                        <tr>
+                            <td>2020-21</td>
+                            <td>Aug 3, 2020 <mat-icon [icIcon]="icPromoted" class="text-green align-middle mx-2"></mat-icon> Promoted</td>
+                            <td>Grade 11</td>
+                            <td></td>
+                            <td>Peachtree High School</td>
+                        </tr>
+                        <tr>
+                            <td>2019-20</td>
+                            <td>Aug 5, 2019 <mat-icon [icIcon]="icPromoted" class="text-green align-middle mx-2"></mat-icon> Promoted</td>
+                            <td>Grade 10</td>
+                            <td></td>
+                            <td>Peachtree High School</td>
+                        </tr>
+                        <tr>
+                            <td>2018-19</td>
+                            <td>Aug 6, 2018 <mat-icon [icIcon]="icRetained" class="text-warn align-middle mx-2"></mat-icon> Retained</td>
+                            <td>Grade 9</td>
+                            <td></td>
+                            <td>Peachtree High School</td>
+                        </tr>
+                        <tr>
+                            <td>2017-18</td>
+                            <td>Aug 7, 2017 <mat-icon [icIcon]="icTrasnferIn" class="text-blue align-middle mx-2"></mat-icon> Transfer In</td>
+                            <td>Grade 9</td>
+                            <td></td>
+                            <td>Peachtree High School</td>
+                        </tr>
+                        <tr class="bg-skyblue-light">
+                            <td>2017-18</td>
+                            <td></td>
+                            <td></td>
+                            <td>Aug 07, 2017 <mat-icon [icIcon]="icTrasnferOut" class="text-deep-orange align-middle mx-2"></mat-icon> Transfer Out</td>
+                            <td>Meadow Creek Middle School</td>
+                        </tr>
+                        <tr>
+                            <td>2016-17</td>
+                            <td>Aug 8, 2016 <mat-icon [icIcon]="icPromoted" class="text-green align-middle mx-2"></mat-icon> Promoted</td>
+                            <td>Grade 8</td>
+                            <td></td>
+                            <td>Meadow Creek Middle School</td>
+                        </tr>
+                        <tr>
+                            <td>2015-16</td>
+                            <td>Jan 4, 2016 <mat-icon [icIcon]="icTrasnferIn" class="text-blue align-middle mx-2"></mat-icon> Transfer In</td>
+                            <td>Grade 7</td>
+                            <td></td>
+                            <td>Meadow Creek Middle School</td>
+                        </tr>
+                        <tr class="bg-skyblue-light">
+                            <td>2015-16</td>
+                            <td></td>
+                            <td></td>
+                            <td>Dec 20, 2015 <mat-icon [icIcon]="icTrasnferOut" class="text-deep-orange align-middle mx-2"></mat-icon> Transfer Out</td>
+                            <td>Mason Middle School</td>
+                        </tr>
+                        <tr>
+                            <td>2014-15</td>
+                            <td>Aug 11, 2014 <mat-icon [icIcon]="icPromoted" class="text-green align-middle mx-2"></mat-icon> Promoted</td>
+                            <td>Grade 7</td>
+                            <td></td>
+                            <td>Mason Middle School</td>
+                        </tr>
+                        <tr>
+                            <td>2014-15</td>
+                            <td>Aug 11, 2014 <mat-icon [icIcon]="icTrasnferIn" class="text-blue align-middle mx-2"></mat-icon> Transfer In</td>
+                            <td>Grade 6</td>
+                            <td></td>
+                            <td>Mason Middle School</td>
+                        </tr>
+                        <tr class="bg-skyblue-light">
+                            <td>2014-15</td>
+                            <td></td>
+                            <td></td>
+                            <td>Aug 09, 2014 <mat-icon [icIcon]="icTrasnferOut" class="text-deep-orange align-middle mx-2"></mat-icon> Transfer Out</td>
+                            <td>Jackson Elementary School</td>
+                        </tr>
+                        <tr>
+                            <td>2013-14</td>
+                            <td>Aug 12, 2013 <mat-icon [icIcon]="icPromoted" class="text-green align-middle mx-2"></mat-icon> Promoted</td>
+                            <td>Grade 5</td>
+                            <td></td>
+                            <td>Jackson Elementary School</td>
+                        </tr>
+                        <tr>
+                            <td>2012-13</td>
+                            <td>Aug 6, 2012 <mat-icon [icIcon]="icRetained" class="text-warn align-middle mx-2"></mat-icon> Retained</td>
+                            <td>Grade 4</td>
+                            <td></td>
+                            <td>Jackson Elementary School</td>
+                        </tr>
+                        <tr>
+                            <td>2011-12</td>
+                            <td>Aug 8, 2011 <mat-icon [icIcon]="icPromoted" class="text-green align-middle mx-2"></mat-icon> Promoted</td>
+                            <td>Grade 4</td>
+                            <td></td>
+                            <td>Jackson Elementary School</td>
+                        </tr>
+                        <tr>
+                            <td>2010-11</td>
+                            <td>Aug 9, 2010 <mat-icon [icIcon]="icPromoted" class="text-green align-middle mx-2"></mat-icon> Promoted</td>
+                            <td>Grade 3</td>
+                            <td></td>
+                            <td>Jackson Elementary School</td>
+                        </tr>
+                        <tr>
+                            <td>2009-10</td>
+                            <td>Aug 10, 2009 <mat-icon [icIcon]="icAdd" class="text-blue align-middle mx-2"></mat-icon> New Student</td>
+                            <td>Grade 2</td>
+                            <td></td>
+                            <td>Jackson Elementary School</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+
+
+
+            <!-- <div class="mb-6 md:flex md:flex-wrap">
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-accordion class="w-full">
+                        <mat-expansion-panel>
+                            <mat-expansion-panel-header>
+                                <mat-panel-title class="font-semibold">
+                                    <span class="text-green mr-4"><i class="icon icon-checkmark-circle"></i></span>Pech
+                                    State High School
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <div class="border-t -mx-6">
+                                <ul class="enrollment-timeline mt-4">
+                                    <li>
+                                        <span></span>
+                                        <div>
+                                            <button mat-button class="-mt-2 text-green"
+                                                (click)="openEnrollToNewSchool()">
+                                                <span><i
+                                                        class="icon icon-plus3 mr-2"></i>{{'addEnrollmentInfo' | translate}}</span>
+                                            </button> <span class="mx-2">/</span> <button mat-button
+                                                class="-mt-2 text-warn" (click)="openEnrollToNewSchool()">
+                                                <span><i
+                                                        class="icon icon-blocked mr-2"></i>{{'dropStudent' | translate}}</span>
+                                            </button>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <span>2018</span>
+                                        <div>Promoted to Grade 12 on Aug 12, 2018</div>
+                                    </li>
+                                    <li>
+                                        <span>2017</span>
+                                        <div>Promoted to Grade 11 on Aug 22, 2017</div>
+                                    </li>
+                                    <li>
+                                        <span>2016</span>
+                                        <div>Promoted to Grade 10 on Sep 01, 2016</div>
+                                    </li>
+                                    <li>
+                                        <span>2015</span>
+                                        <div>Enrolled as New Student at Grade 9 on Nov 1, 2015</div>
+                                    </li>
+                                </ul>
+
+                            </div>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                </div>
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-accordion class="w-full">
+                        <mat-expansion-panel class="border">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title class="font-semibold">
+                                    Pech Tree High School
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <div class="border-t -mx-6">
+                                <ul class="enrollment-timeline mt-4">
+                                    <li>
+                                        <span></span>
+                                        <div>
+                                            <button mat-button class="-mt-2 text-green"
+                                                (click)="openEnrollToNewSchool()">
+                                                <span><i
+                                                        class="icon icon-plus3 mr-2"></i>{{'addEnrollmentInfo' | translate}}</span>
+                                            </button>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <span>2014</span>
+                                        <div>Dropped from Pech Tree High School on Dec 12, 2014</div>
+                                    </li>
+                                    <li>
+                                        <span>2014</span>
+                                        <div>Promoted to Grade 8 on Aug 12, 2014</div>
+                                    </li>
+                                    <li>
+                                        <span>2013</span>
+                                        <div>Promoted to Grade 7 on Aug 22, 2013</div>
+                                    </li>
+                                    <li>
+                                        <span>2012</span>
+                                        <div>Enrolled as Existing Student at Grade 6 on Aug 12, 2012</div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                </div>
+            </div> -->
+
+        </div>
+    </mat-card-content>
+</mat-card>

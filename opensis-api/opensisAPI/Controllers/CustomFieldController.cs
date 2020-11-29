@@ -48,32 +48,32 @@ namespace opensisAPI.Controllers
         }
 
 
-        [HttpPost("viewCustomField")]
+        //[HttpPost("viewCustomField")]
 
-        public ActionResult<CustomFieldAddViewModel> ViewCustomField(CustomFieldAddViewModel customFieldAddViewModel)
-        {
-            CustomFieldAddViewModel customFieldView = new CustomFieldAddViewModel();
-            try
-            {
-                if (customFieldAddViewModel.customFields.SchoolId > 0)
-                {
-                    customFieldView = _customFieldService.ViewCustomField(customFieldAddViewModel);
-                }
-                else
-                {
-                    customFieldView._token = customFieldAddViewModel._token;
-                    customFieldView._tenantName = customFieldAddViewModel._tenantName;
-                    customFieldView._failure = true;
-                    customFieldView._message = "Please enter valid scholl id";
-                }
-            }
-            catch (Exception es)
-            {
-                customFieldView._failure = true;
-                customFieldView._message = es.Message;
-            }
-            return customFieldView;
-        }
+        //public ActionResult<CustomFieldAddViewModel> ViewCustomField(CustomFieldAddViewModel customFieldAddViewModel)
+        //{
+        //    CustomFieldAddViewModel customFieldView = new CustomFieldAddViewModel();
+        //    try
+        //    {
+        //        if (customFieldAddViewModel.customFields.SchoolId > 0)
+        //        {
+        //            customFieldView = _customFieldService.ViewCustomField(customFieldAddViewModel);
+        //        }
+        //        else
+        //        {
+        //            customFieldView._token = customFieldAddViewModel._token;
+        //            customFieldView._tenantName = customFieldAddViewModel._tenantName;
+        //            customFieldView._failure = true;
+        //            customFieldView._message = "Please enter valid scholl id";
+        //        }
+        //    }
+        //    catch (Exception es)
+        //    {
+        //        customFieldView._failure = true;
+        //        customFieldView._message = es.Message;
+        //    }
+        //    return customFieldView;
+        //}
 
 
         [HttpPut("updateCustomField")]
@@ -125,22 +125,22 @@ namespace opensisAPI.Controllers
             }
             return fieldsCategoryAdd;
         }
-        [HttpPost("viewFieldsCategory")]
+        //[HttpPost("viewFieldsCategory")]
 
-        public ActionResult<FieldsCategoryAddViewModel> ViewFieldsCategory(FieldsCategoryAddViewModel fieldsCategoryAddViewModel)
-        {
-            FieldsCategoryAddViewModel fieldsCategoryView = new FieldsCategoryAddViewModel();
-            try
-            {
-                fieldsCategoryView = _customFieldService.ViewFieldsCategory(fieldsCategoryAddViewModel);
-            }
-            catch (Exception es)
-            {
-                fieldsCategoryView._failure = true;
-                fieldsCategoryView._message = es.Message;
-            }
-            return fieldsCategoryView;
-        }
+        //public ActionResult<FieldsCategoryAddViewModel> ViewFieldsCategory(FieldsCategoryAddViewModel fieldsCategoryAddViewModel)
+        //{
+        //    FieldsCategoryAddViewModel fieldsCategoryView = new FieldsCategoryAddViewModel();
+        //    try
+        //    {
+        //        fieldsCategoryView = _customFieldService.ViewFieldsCategory(fieldsCategoryAddViewModel);
+        //    }
+        //    catch (Exception es)
+        //    {
+        //        fieldsCategoryView._failure = true;
+        //        fieldsCategoryView._message = es.Message;
+        //    }
+        //    return fieldsCategoryView;
+        //}
         [HttpPut("updateFieldsCategory")]
 
         public ActionResult<FieldsCategoryAddViewModel> UpdateFieldsCategory(FieldsCategoryAddViewModel fieldsCategoryAddViewModel)

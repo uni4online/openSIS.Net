@@ -1,5 +1,5 @@
 
-<form (ngSubmit)="f.form.valid && submit()" #f="ngForm" novalidate>
+<form (ngSubmit)="submit()" #f="ngForm" novalidate *ngIf="studentCreateMode==StudentCreate.EDIT || studentCreateMode==StudentCreate.ADD">
     <mat-card class="w-full">
     
         <mat-card-header>
@@ -125,6 +125,10 @@
                         </mat-form-field>
                     </div>
                 </div>
+
+            <hr class="-mx-4 mt-6">
+
+
                 <h4 class="text-primary pt-6 pb-2 px-4">{{'demographicInformation'|translate}}</h4>
                 <div class="mb-2 md:flex md:flex-wrap">
                     <div class="flex flex-1 mx-4 md:w-1/2">
@@ -235,13 +239,183 @@
                         </mat-form-field>
                     </div>
                 </div>
+
+            <hr class="-mx-4 mt-6">
+
+
+            <h4 class="text-primary pt-6 pb-2 px-4">{{'schoolInformation'|translate}}</h4>
+            <div class="mb-2 md:flex md:flex-wrap">
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'section'|translate}}</mat-label>
+                        <mat-select  name="section">
+                            <mat-option value=""></mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'estimatedGraduationDate'|translate}}</mat-label>
+                        <input name="egd" [matDatepicker]="egd" matInput>
+                        <mat-datepicker-toggle [for]="egd" matSuffix></mat-datepicker-toggle>
+                        <mat-datepicker #egd></mat-datepicker>        
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="mb-2 mx-4">
+                <div class="flex flex-wrap">
+                    <mat-checkbox color="primary" class="mr-6">
+                        {{'504Eligibility' | translate}}</mat-checkbox>
+                    <mat-checkbox color="primary" class="mr-6">
+                        {{'economicDisadvantage' | translate}}</mat-checkbox>
+                    <mat-checkbox color="primary" class="mr-6">
+                        {{'freeLunchEligibility' | translate}}</mat-checkbox>
+                    <mat-checkbox color="primary" class="mr-6">
+                        {{'specialEducationIndicator' | translate}}</mat-checkbox>
+                    <mat-checkbox color="primary">{{'lepIndicator' | translate}}
+                    </mat-checkbox>
+                </div>
+            </div>
+
+            <hr class="-mx-4 mt-6">
+            
+            <h4 class="text-primary pt-6 pb-2 px-4">{{'accessInformation'|translate}}</h4>
+            <div class="mb-2 md:flex md:flex-wrap">
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'loginEmailAddress'|translate}}</mat-label>
+                        <input name="login_email" matInput>
+                    </mat-form-field>
+                </div>
+                <div class="flex-1 mx-4 md:w-1/2">
+                    <mat-form-field class="flex-none w-full mb-0" appearance="outline" color="primary">
+                        <mat-label>{{'password'|translate}}</mat-label>
+                        <input [type]="inputType" name="password" matInput>
+                        <button (click)="toggleVisibility()" mat-icon-button matSuffix matTooltip="Toggle Visibility" type="button">
+                            <mat-icon *ngIf="visible" [icIcon]="icVisibility"></mat-icon>
+                            <mat-icon *ngIf="!visible" [icIcon]="icVisibilityOff"></mat-icon>
+                        </button>
+                    </mat-form-field>
+                    <p class="flex-none -mt-3 mb-4"><a routerLink="http://www.google.com" class="text-primary underline cursor-pointer">Auto Generate Password</a></p>
+                </div>
+            </div>
+            <div class="mb-6 mx-4"><mat-slide-toggle color="primary" checked="checked" class="mb-4">{{'portalAccess' | translate}}</mat-slide-toggle></div>
             </div>
         </mat-card-content>
         <mat-card-actions>
             <div class="px-4 mb-2 text-right">
-                <button color="primary" mat-raised-button>{{'submit'|translate}}</button>
+                <button mat-button type="button" *ngIf="studentCreateMode == StudentCreate.EDIT" (click)="cancelEdit()">{{'cancel'|translate}}</button>
+                <button color="primary" mat-raised-button>{{'saveAndNext'|translate}}</button>
             </div>
         </mat-card-actions>
     
     </mat-card>
     </form>
+
+    <mat-card class="w-full" *ngIf="studentCreateMode == StudentCreate.VIEW">       
+        <div class="flex items-center mx-4" fxLayout="row" fxLayoutAlign="center center">
+            <h3 class="flex-auto">{{'generalInformation'|translate}}</h3>
+            <button mat-button color="primary" (click)= "editGeneralInfo()"><mat-icon [icIcon]="icEdit"></mat-icon> {{'editInformation' |translate}}</button>
+        </div>
+       
+        <mat-card-content>
+    
+            <div @stagger fxLayout="column">
+                <h4 class="text-primary pt-6 pb-2 px-4">{{'identificationInformation'|translate}}</h4>
+                <ul class="grid grid-cols-3 col-gap-8 row-gap-10 mt-2 mx-4">
+                    <li>
+                        <label class="text-sm leading-5 text-gray">{{'StudentName' | translate}}</label>
+                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.firstGivenName}} {{data.middleName}} {{data.lastFamilyName}}</p>
+                    </li>
+                    <li>
+                        <label class="text-sm leading-5 text-gray">{{'preferredCommonName' | translate}}</label>
+                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.preferredName|EmtyValueCheckPipe}}</p>
+                    </li>
+                    <li>
+                        <label class="text-sm leading-5 text-gray">{{'previousMaidenName' | translate}}</label>
+                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.previousName|EmtyValueCheckPipe}}</p>
+                    </li>
+                    <li>
+                        <label class="text-sm leading-5 text-gray">{{'studentID' | translate}}</label>
+                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.studentId}}</p>
+                    </li>
+                    <li>
+                        <label class="text-sm leading-5 text-gray">{{'alternateID' | translate}}</label>
+                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.alternateId|EmtyValueCheckPipe}}</p>
+                    </li>
+                    <li>
+                        <label class="text-sm leading-5 text-gray">{{'districtID' | translate}}</label>
+                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.districtId}}</p>
+                    </li>
+                    <li>
+                        <label class="text-sm leading-5 text-gray">{{'stateID' | translate}}</label>
+                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.stateId}}</p>
+                    </li>
+                    <li>
+                        <label class="text-sm leading-5 text-gray">{{'admissionNumber' | translate}}</label>
+                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.admissionNumber|EmtyValueCheckPipe}}</p>
+                    </li>
+                    <li>
+                        <label class="text-sm leading-5 text-gray">{{'rollNumber' | translate}}</label>
+                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.rollNumber|EmtyValueCheckPipe}}</p>
+                    </li>
+                    <li>
+                        <label class="text-sm leading-5 text-gray">{{'socialSecurityNumber' | translate}}</label>
+                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.socialSecurityNumber|EmtyValueCheckPipe}}</p>
+                    </li>
+                    <li>
+                        <label class="text-sm leading-5 text-gray">{{'otherGovtIssuedNumber' | translate}}</label>
+                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.otherGovtIssuedNumber|EmtyValueCheckPipe}}</p>
+                    </li>
+                </ul>
+    
+    
+                <h4 class="text-primary pt-6 pb-2 px-4">{{'demographicInformation'|translate}}</h4>
+                <ul class="grid grid-cols-3 col-gap-8 row-gap-10 mt-2 mx-4">
+                    <li>
+                        <label class="text-sm leading-5 text-gray">{{'dateOfBirth' | translate}}</label>
+                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.dob|date:'mediumDate'}}</p>
+                    </li>
+                    <li>
+                        <label class="text-sm leading-5 text-gray">{{'gender' | translate}}</label>
+                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.gender|EmtyValueCheckPipe}}</p>
+                    </li>
+                    <li>
+                        <label class="text-sm leading-5 text-gray">{{'race' | translate}}</label>
+                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.race|EmtyValueCheckPipe}}</p>
+                    </li>
+                    <li>
+                        <label class="text-sm leading-5 text-gray">{{'ethnicity' | translate}}</label>
+                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.ethnicity|EmtyValueCheckPipe}}</p>
+                    </li>
+                    <li>
+                        <label class="text-sm leading-5 text-gray">{{'maritalStatus' | translate}}</label>
+                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.maritalStatus|EmtyValueCheckPipe}}</p>
+                    </li>
+                    <li>
+                        <label class="text-sm leading-5 text-gray">{{'countryOfBirth' | translate}}</label>
+                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{countryName}}</p>
+                    </li>
+                    <li>
+                        <label class="text-sm leading-5 text-gray">{{'nationality' | translate}}</label>
+                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{nationality}}</p>
+                    </li>
+                    <li>
+                        <label class="text-sm leading-5 text-gray">{{'firstLanguage' | translate}}</label>
+                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.firstLanguageId}}</p>
+                    </li>
+                    <li>
+                        <label class="text-sm leading-5 text-gray">{{'secondLanguage' | translate}}</label>
+                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.secondLanguageId}}</p>
+                    </li>
+                    <li>
+                        <label class="text-sm leading-5 text-gray">{{'thirdLanguage' | translate}}</label>
+                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.thirdLanguageId}}</p>
+                    </li>
+                </ul>
+            </div>
+    
+    
+        </mat-card-content>
+    </mat-card>
+    

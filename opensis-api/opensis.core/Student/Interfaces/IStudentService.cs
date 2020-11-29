@@ -20,7 +20,17 @@ namespace opensis.core.Student.Interfaces
         public StudentDocumentListViewModel GetAllStudentDocumentsList(StudentDocumentListViewModel studentDocumentListViewModel);
         public StudentDocumentAddViewModel DeleteStudentDocument(StudentDocumentAddViewModel studentDocumentAddViewModel);
 
+        public StudentCommentAddViewModel SaveStudentComment(StudentCommentAddViewModel studentCommentAddViewModel);
+        public StudentCommentAddViewModel UpdateStudentComment(StudentCommentAddViewModel studentCommentAddViewModel);
+        public StudentCommentListViewModel GetAllStudentCommentsList(StudentCommentListViewModel studentCommentListViewModel);
+        public StudentCommentAddViewModel DeleteStudentComment(StudentCommentAddViewModel studentCommentAddViewModel);
+
         //public StudentAddViewModel ViewStudent(StudentAddViewModel student);
+        public StudentAddViewModel ViewStudent(StudentAddViewModel student);
         //public StudentAddViewModel DeleteStudent(StudentAddViewModel student);
+
+        public SiblingSearchForStudentListModel SearchSiblingForStudent(SiblingSearchForStudentListModel studentSiblingListViewModel);
+        public SiblingAddUpdateForStudentModel AssociationSibling(SiblingAddUpdateForStudentModel siblingAddUpdateForStudentModel);
+        public StudentListModel ViewAllSibling(StudentListModel studentListModel);
     }
 }

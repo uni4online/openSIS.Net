@@ -1,9 +1,9 @@
-<mat-card class="w-full">       
+<mat-card class="w-full">
+
     <div class="flex items-center mx-4" fxLayout="row" fxLayoutAlign="center center">
-        <h3 class="flex-auto">{{'generalInformation'|translate}}</h3>
-        <button mat-button color="primary" (click)= "editGeneralInfo()"><mat-icon [icIcon]="icEdit"></mat-icon> {{'editInformation' |translate}}</button>
+        <h3 class="flex-auto">{{'generalInformation' | translate}}</h3>
+        <button mat-button color="primary"><mat-icon [icIcon]="icEdit"></mat-icon> {{'editInformation' |translate}}</button>
     </div>
-   
     <mat-card-content>
 
         <div @stagger fxLayout="column">
@@ -11,15 +11,15 @@
             <ul class="grid grid-cols-3 col-gap-8 row-gap-10 mt-2 mx-4">
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'StudentName' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.firstGivenName}} {{data.middleName}} {{data.lastFamilyName}}</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.firstGivenName}} {{data.lastFamilyName}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'preferredCommonName' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.preferredName|EmtyValueCheckPipe}}</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.preferredName}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'previousMaidenName' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.previousName|EmtyValueCheckPipe}}</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.previousName}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'studentID' | translate}}</label>
@@ -27,7 +27,7 @@
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'alternateID' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.alternateId|EmtyValueCheckPipe}}</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.alternateId}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'districtID' | translate}}</label>
@@ -39,21 +39,23 @@
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'admissionNumber' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.admissionNumber|EmtyValueCheckPipe}}</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.admissionNumber}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'rollNumber' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.rollNumber|EmtyValueCheckPipe}}</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.rollNumber}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'socialSecurityNumber' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.socialSecurityNumber|EmtyValueCheckPipe}}</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.socialSecurityNumber}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'otherGovtIssuedNumber' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.otherGovtIssuedNumber|EmtyValueCheckPipe}}</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.otherGovtIssuedNumber}}</p>
                 </li>
             </ul>
+
+            <hr class="-mx-4 mt-6">
 
 
             <h4 class="text-primary pt-6 pb-2 px-4">{{'demographicInformation'|translate}}</h4>
@@ -64,27 +66,27 @@
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'gender' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.gender|EmtyValueCheckPipe}}</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.gender}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'race' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.race|EmtyValueCheckPipe}}</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.race}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'ethnicity' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.ethnicity|EmtyValueCheckPipe}}</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.ethnicity}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'maritalStatus' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.maritalStatus|EmtyValueCheckPipe}}</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.maritalStatus}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'countryOfBirth' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{countryName}}</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.countryOfBirth}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'nationality' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{nationality}}</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.nationality}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'firstLanguage' | translate}}</label>
@@ -99,8 +101,60 @@
                     <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.thirdLanguageId}}</p>
                 </li>
             </ul>
+
+            <hr class="-mx-4 mt-6">
+
+            <h4 class="text-primary pt-6 pb-2 px-4">{{'schoolInformation'|translate}}</h4>
+            <ul class="grid grid-cols-3 col-gap-8 row-gap-10 my-2 mx-4">
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'section' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Section A</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'estimatedGraduationDate' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Apr 10, 2021</p>
+                </li>
+            </ul>
+            <div class="flex flex-wrap items-start mx-4 mt-10 mb-2">
+                <div class="mr-4">
+                    <mat-icon [icIcon]="icCheckbox" class="inline-block align-middle mr-2"></mat-icon> <span
+                        class="inline-block align-middle">{{'504Eligibility' |translate}}</span>
+                </div>
+                <div class="mr-4">
+                    <mat-icon [icIcon]="icCheckbox" class="inline-block align-middle mr-2"></mat-icon> <span
+                        class="inline-block align-middle">{{'economicDisadvantage' |translate}}</span>
+                </div>
+                <div class="mr-4">
+                    <mat-icon [icIcon]="icCheckboxOutline" class="inline-block align-middle mr-2"></mat-icon> <span
+                        class="inline-block align-middle">{{'freeLunchEligibility' |translate}}</span>
+                </div>
+                <div class="mr-4">
+                    <mat-icon [icIcon]="icCheckbox" class="inline-block align-middle mr-2"></mat-icon> <span
+                        class="inline-block align-middle">{{'specialEducationIndicator' |translate}}</span>
+                </div>
+                <div>
+                    <mat-icon [icIcon]="icCheckboxOutline" class="inline-block align-middle mr-2"></mat-icon> <span
+                        class="inline-block align-middle">{{'lepIndicator' |translate}}</span>
+                </div>
+            </div>
+
+            <hr class="-mx-4 mt-6">
+
+            <h4 class="text-primary pt-6 pb-2 px-4">{{'accessInformation'|translate}}</h4>
+            <ul class="grid grid-cols-3 col-gap-8 row-gap-10 my-2 mx-4">
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'loginEmailAddress' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">simondavis@example.com</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'password' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2"><a href="" class="text-primary pointer">Reset Password</a></p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'portalAccess' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2 text-green">Yes</p>
+                </li>
+            </ul>
         </div>
-
-
     </mat-card-content>
 </mat-card>

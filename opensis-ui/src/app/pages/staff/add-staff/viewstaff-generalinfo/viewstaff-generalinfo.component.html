@@ -1,0 +1,120 @@
+<mat-card class="w-full">
+
+    <div class="flex items-center mx-4" fxLayout="row" fxLayoutAlign="center center">
+        <h3 class="flex-auto">{{'generalInformation' | translate}}</h3>
+        <button mat-button color="primary"><mat-icon [icIcon]="icEdit"></mat-icon> {{'editInformation' |translate}}</button>
+    </div>
+    <mat-card-content>
+
+        <div @stagger fxLayout="column">
+            <h4 class="text-primary pt-6 pb-2 px-4">{{'identificationInformation'|translate}}</h4>
+            <ul class="grid grid-cols-3 col-gap-8 row-gap-10 mt-2 mx-4">
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'staffName' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Mr. Danielle Boucher</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'staffId' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">45622254</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'alternateId' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">ST18</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'districtId' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">-</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'stateId' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">-</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'preferredCommonName' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">-</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'previousMaidenName' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">-</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'socialSecurityNumber' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">XXX-XX-4561</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'otherGovtIssuedNumber' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">-</p>
+                </li>
+            </ul>
+
+            <hr class="-mx-4 mt-6">
+            <h4 class="text-primary pt-6 pb-2 px-4">{{'demographicInformation'|translate}}</h4>
+
+            <ul class="grid grid-cols-3 col-gap-8 row-gap-10 mt-2 mx-4">
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'gender' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Female</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'race' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">White</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'ethnicity' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">American</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'maritalStatus' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Married</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'dateOfBirth' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Feb 28, 1984  |  37 years 9 months </p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'countryOfBirth' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">USA</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'nationality' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">American</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'firstLanguage' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">English</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'secondLanguage' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">-</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'thirdLanguage' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">-</p>
+                </li>
+            </ul>
+
+
+            <hr class="-mx-4 mt-6">
+
+            <h4 class="text-primary pt-6 pb-2 px-4">{{'accessInformation'|translate}}</h4>
+            <ul class="grid grid-cols-3 col-gap-8 row-gap-10 my-2 mx-4">
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'loginEmailAddress' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">danielle.boucher@example.com</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'password' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2"><a href="" class="text-primary pointer">Reset Password</a></p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'portalAccess' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2 text-green">Yes</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'lastLogin' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Aug 20, 2020, 10:30 AM</p>
+                </li>
+            </ul>
+        </div>
+    </mat-card-content>
+</mat-card>

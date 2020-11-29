@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ParentinfoComponent } from './parentinfo.component';
-//import { AddStudentComponent } from '../add-student/add-student.component';
+import { EditParentComponent } from '../edit-parent/edit-parent.component';
 
 
 const routes: Routes = [
@@ -9,8 +9,10 @@ const routes: Routes = [
      path:'',
      component: ParentinfoComponent
  },
- //{path:'student-generalinfo',component:AddStudentComponent},
- 
+  {
+    path: 'parent-generalinfo',
+    component: EditParentComponent
+  },
 ];
 
 

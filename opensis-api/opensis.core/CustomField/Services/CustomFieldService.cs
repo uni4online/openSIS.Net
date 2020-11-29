@@ -49,28 +49,28 @@ namespace opensis.core.CustomField.Services
         /// <param name="customFieldAddViewModel"></param>
         /// <returns></returns>
 
-        public CustomFieldAddViewModel ViewCustomField(CustomFieldAddViewModel customFieldAddViewModel)
-        {
-            CustomFieldAddViewModel customFieldView = new CustomFieldAddViewModel();
-            try
-            {
-                if (TokenManager.CheckToken(customFieldAddViewModel._tenantName, customFieldAddViewModel._token))
-                {
-                    customFieldView = this.customFieldRepository.ViewCustomField(customFieldAddViewModel);
-                }
-                else
-                {
-                    customFieldView._failure = true;
-                    customFieldView._message = TOKENINVALID;
-                }
-            }
-            catch (Exception es)
-            {
-                customFieldView._failure = true;
-                customFieldView._message = es.Message;
-            }
-            return customFieldView;
-        }
+        //public CustomFieldAddViewModel ViewCustomField(CustomFieldAddViewModel customFieldAddViewModel)
+        //{
+        //    CustomFieldAddViewModel customFieldView = new CustomFieldAddViewModel();
+        //    try
+        //    {
+        //        if (TokenManager.CheckToken(customFieldAddViewModel._tenantName, customFieldAddViewModel._token))
+        //        {
+        //            customFieldView = this.customFieldRepository.ViewCustomField(customFieldAddViewModel);
+        //        }
+        //        else
+        //        {
+        //            customFieldView._failure = true;
+        //            customFieldView._message = TOKENINVALID;
+        //        }
+        //    }
+        //    catch (Exception es)
+        //    {
+        //        customFieldView._failure = true;
+        //        customFieldView._message = es.Message;
+        //    }
+        //    return customFieldView;
+        //}
 
         /// <summary>
         /// Update Custom Field
@@ -164,28 +164,28 @@ namespace opensis.core.CustomField.Services
         /// </summary>
         /// <param name="fieldsCategoryAddViewModel"></param>
         /// <returns></returns>
-        public FieldsCategoryAddViewModel ViewFieldsCategory(FieldsCategoryAddViewModel fieldsCategoryAddViewModel)
-        {
-            FieldsCategoryAddViewModel fieldsCategoryViewModel = new FieldsCategoryAddViewModel();
-            try
-            {
-                if (TokenManager.CheckToken(fieldsCategoryAddViewModel._tenantName, fieldsCategoryAddViewModel._token))
-                {
-                    fieldsCategoryViewModel = this.customFieldRepository.ViewFieldsCategory(fieldsCategoryAddViewModel);
-                }
-                else
-                {
-                    fieldsCategoryViewModel._failure = true;
-                    fieldsCategoryViewModel._message = TOKENINVALID;
-                }
-            }
-            catch (Exception es)
-            {
-                fieldsCategoryViewModel._failure = true;
-                fieldsCategoryViewModel._message = es.Message;
-            }
-            return fieldsCategoryViewModel;
-        }
+        //public FieldsCategoryAddViewModel ViewFieldsCategory(FieldsCategoryAddViewModel fieldsCategoryAddViewModel)
+        //{
+        //    FieldsCategoryAddViewModel fieldsCategoryViewModel = new FieldsCategoryAddViewModel();
+        //    try
+        //    {
+        //        if (TokenManager.CheckToken(fieldsCategoryAddViewModel._tenantName, fieldsCategoryAddViewModel._token))
+        //        {
+        //            fieldsCategoryViewModel = this.customFieldRepository.ViewFieldsCategory(fieldsCategoryAddViewModel);
+        //        }
+        //        else
+        //        {
+        //            fieldsCategoryViewModel._failure = true;
+        //            fieldsCategoryViewModel._message = TOKENINVALID;
+        //        }
+        //    }
+        //    catch (Exception es)
+        //    {
+        //        fieldsCategoryViewModel._failure = true;
+        //        fieldsCategoryViewModel._message = es.Message;
+        //    }
+        //    return fieldsCategoryViewModel;
+        //}
         /// <summary>
         /// Update FieldsCategory
         /// </summary>

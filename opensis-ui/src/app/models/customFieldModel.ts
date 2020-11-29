@@ -1,5 +1,6 @@
 
 import { CommonField } from "../models/commonField";
+import { CustomFieldsValueModel } from './customFieldsValueModel';
 export class CustomFieldModel {
     tenantId: string;
     schoolId: number;
@@ -17,6 +18,7 @@ export class CustomFieldModel {
     hide: boolean;
     lastUpdate: string;
     updatedBy: string;
+    customFieldsValue :CustomFieldsValueModel[]
     constructor(){
         this.tenantId=sessionStorage.getItem('tenantId');
         this.schoolId=+sessionStorage.getItem('selectedSchoolId');
@@ -34,6 +36,7 @@ export class CustomFieldModel {
         this.hide=false;
         this.lastUpdate=null;
         this.updatedBy=null;
+        this.customFieldsValue =[];
     }
   }
 export class CustomFieldAddView extends CommonField{

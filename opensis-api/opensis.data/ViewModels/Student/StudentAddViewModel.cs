@@ -8,6 +8,8 @@ namespace opensis.data.ViewModels.Student
     public class StudentAddViewModel : CommonFields
     {
         public StudentMaster studentMaster { get; set; }
-        public string PasswordHash {get; set;}
+        public List<FieldsCategory> fieldsCategoryList { get; set; }
+        public int? SelectedCategoryId { get; set; }
+        //public string PasswordHash {get; set;}
     }
 }

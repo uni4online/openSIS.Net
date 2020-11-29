@@ -233,6 +233,84 @@ namespace opensis.core.Student.Services
             }
             return loginInfo;
         }
+
+        /// <summary>
+        /// Save StudentComment
+        /// </summary>
+        /// <param name="studentCommentAddViewModel"></param>
+        /// <returns></returns>
+        public StudentCommentAddViewModel SaveStudentComment(StudentCommentAddViewModel studentCommentAddViewModel)
+        {
+            StudentCommentAddViewModel studentCommentAdd = new StudentCommentAddViewModel();
+            if (TokenManager.CheckToken(studentCommentAddViewModel._tenantName, studentCommentAddViewModel._token))
+            {
+                studentCommentAdd = this.studentRepository.AddStudentComment(studentCommentAddViewModel);
+            }
+            else
+            {
+                studentCommentAdd._failure = true;
+                studentCommentAdd._message = TOKENINVALID;
+            }
+            return studentCommentAdd;
+        }
+        /// <summary>
+        /// Update StudentComment
+        /// </summary>
+        /// <param name="studentCommentAddViewModel"></param>
+        /// <returns></returns>
+        public StudentCommentAddViewModel UpdateStudentComment(StudentCommentAddViewModel studentCommentAddViewModel)
+        {
+            StudentCommentAddViewModel studentCommentUpdate = new StudentCommentAddViewModel();
+            if (TokenManager.CheckToken(studentCommentAddViewModel._tenantName, studentCommentAddViewModel._token))
+            {
+                studentCommentUpdate = this.studentRepository.UpdateStudentComment(studentCommentAddViewModel);
+            }
+            else
+            {
+                studentCommentUpdate._failure = true;
+                studentCommentUpdate._message = TOKENINVALID;
+            }
+            return studentCommentUpdate;
+        }
+        /// <summary>
+        /// GetAll StudentCommentsList
+        /// </summary>
+        /// <param name="studentCommentListViewModel"></param>
+        /// <returns></returns>
+        public StudentCommentListViewModel GetAllStudentCommentsList(StudentCommentListViewModel studentCommentListViewModel)
+        {
+            StudentCommentListViewModel studentCommentsList = new StudentCommentListViewModel();
+            if (TokenManager.CheckToken(studentCommentListViewModel._tenantName, studentCommentListViewModel._token))
+            {
+                studentCommentsList = this.studentRepository.GetAllStudentCommentsList(studentCommentListViewModel);
+            }
+            else
+            {
+                studentCommentsList._failure = true;
+                studentCommentsList._message = TOKENINVALID;
+            }
+            return studentCommentsList;
+        }
+        /// <summary>
+        /// Delete StudentComment
+        /// </summary>
+        /// <param name="studentCommentAddViewModel"></param>
+        /// <returns></returns>
+        public StudentCommentAddViewModel DeleteStudentComment(StudentCommentAddViewModel studentCommentAddViewModel)
+        {
+            StudentCommentAddViewModel studentCommentDelete = new StudentCommentAddViewModel();
+            if (TokenManager.CheckToken(studentCommentAddViewModel._tenantName, studentCommentAddViewModel._token))
+            {
+                studentCommentDelete = this.studentRepository.DeleteStudentComment(studentCommentAddViewModel);
+            }
+            else
+            {
+                studentCommentDelete._failure = true;
+                studentCommentDelete._message = TOKENINVALID;
+            }
+            return studentCommentDelete;
+        }
+
         ///// <summary>
         ///// Student View By Id
         ///// </summary>
@@ -243,16 +321,26 @@ namespace opensis.core.Student.Services
         //    StudentAddViewModel studentView = new StudentAddViewModel();
         //    if (TokenManager.CheckToken(student._tenantName, student._token))
         //    {
+        /// <summary>
+        /// Student View By Id
+        /// </summary>
+        /// <param name="student"></param>
+        /// <returns></returns>
+        public StudentAddViewModel ViewStudent(StudentAddViewModel student)
+        {
+            StudentAddViewModel studentView = new StudentAddViewModel();
+            if (TokenManager.CheckToken(student._tenantName, student._token))
+            {
 
-        //        studentView = this.studentRepository.ViewStudent(student);
-        //    }
-        //    else
-        //    {
-        //        studentView._failure = true;
-        //        studentView._message = TOKENINVALID;     
-        //    }
-        //    return studentView;
-        //}
+                studentView = this.studentRepository.ViewStudent(student);
+            }
+            else
+            {
+                studentView._failure = true;
+                studentView._message = TOKENINVALID;
+            }
+            return studentView;
+        }
 
         //public StudentAddViewModel DeleteStudent(StudentAddViewModel student)
         //{
@@ -278,6 +366,89 @@ namespace opensis.core.Student.Services
         //    return studentDelete;
         //}
 
+        /// <summary>
+        /// Search Sibling For Student
+        /// </summary>
+        /// <param name="studentSiblingListViewModel"></param>
+        /// <returns></returns>
 
+        public SiblingSearchForStudentListModel SearchSiblingForStudent(SiblingSearchForStudentListModel studentSiblingListViewModel)
+        {
+            SiblingSearchForStudentListModel studentSiblingList = new SiblingSearchForStudentListModel();
+            if (TokenManager.CheckToken(studentSiblingListViewModel._tenantName, studentSiblingListViewModel._token))
+            {
+                studentSiblingList = this.studentRepository.SearchSiblingForStudent(studentSiblingListViewModel);
+            }
+            else
+            {
+                studentSiblingList._failure = true;
+                studentSiblingList._message = TOKENINVALID;
+            }
+            return studentSiblingList;
+        }
+
+        /// <summary>
+        /// Association Sibling
+        /// </summary>
+        /// <param name="siblingAddUpdateForStudentModel"></param>
+        /// <returns></returns>
+        public SiblingAddUpdateForStudentModel AssociationSibling(SiblingAddUpdateForStudentModel siblingAddUpdateForStudentModel)
+        {
+            SiblingAddUpdateForStudentModel siblingAddUpdateForStudent = new SiblingAddUpdateForStudentModel();
+            try
+            {
+                if (TokenManager.CheckToken(siblingAddUpdateForStudentModel._tenantName, siblingAddUpdateForStudentModel._token))
+                {
+                    siblingAddUpdateForStudent = this.studentRepository.AssociationSibling(siblingAddUpdateForStudentModel);
+                }
+                else
+                {
+                    siblingAddUpdateForStudent._failure = true;
+                    siblingAddUpdateForStudent._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                siblingAddUpdateForStudent._failure = true;
+                siblingAddUpdateForStudent._message = es.Message;
+            }
+            return siblingAddUpdateForStudent;
+        }
+
+        /// <summary>
+        /// View All Sibling
+        /// </summary>
+        /// <param name="studentListModel"></param>
+        /// <returns></returns>
+        public StudentListModel ViewAllSibling(StudentListModel studentListModel)
+        {
+            logger.Info("Method ViewSibling called.");
+            StudentListModel studentList = new StudentListModel();
+            try
+            {
+                if (TokenManager.CheckToken(studentListModel._tenantName, studentListModel._token))
+                {
+                    studentList = this.studentRepository.ViewAllSibling(studentListModel);
+                    studentList._message = SUCCESS;
+                    studentList._failure = false;
+                    logger.Info("Method ViewSibling end with success.");
+                }
+
+                else
+                {
+                    studentList._failure = true;
+                    studentList._message = TOKENINVALID;
+                    return studentList;
+                }
+            }
+            catch (Exception ex)
+            {
+                studentList._message = ex.Message;
+                studentList._failure = true;
+                logger.Error("Method getAllStudent end with error :" + ex.Message);
+            }
+
+            return studentList;
+        }
     }
 }

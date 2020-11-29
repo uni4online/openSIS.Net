@@ -1,12 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
 import { fadeInRight400ms } from '../../../../../@vex/animations/fade-in-right.animation';
 import { MatDialog } from '@angular/material/dialog';
 import icAdd from '@iconify/icons-ic/baseline-add';
+import icClear from '@iconify/icons-ic/baseline-clear';
 import { EnrollToSchoolComponent } from './enroll-to-school/enroll-to-school.component';
 import { EditEnrollmentComponent } from './edit-enrollment/edit-enrollment.component';
+import { SchoolCreate } from '../../../../enums/school-create.enum';
 
 @Component({
   selector: 'vex-student-enrollmentinfo',
@@ -19,8 +21,14 @@ import { EditEnrollmentComponent } from './edit-enrollment/edit-enrollment.compo
   ],
 })
 export class StudentEnrollmentinfoComponent implements OnInit {
-
+  StudentCreate=SchoolCreate;
+  @Input() studentCreateMode:SchoolCreate;
   icAdd = icAdd;
+  icClear = icClear;
+
+  // options: FormGroup;
+  // hideRequiredControl = new FormControl(false);
+  // floatLabelControl = new FormControl('auto');
 
   //form: FormGroup;
 

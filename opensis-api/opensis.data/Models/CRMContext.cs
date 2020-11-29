@@ -1841,6 +1841,11 @@ namespace opensis.data.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
+                entity.Property(e => e.Associationship)
+                    .HasColumnName("associationship")
+                    .IsUnicode(false)
+                    .HasComment("tenantid#schoolid#studentid | tenantid#schoolid#studentid | ....");
+
                 entity.Property(e => e.BusNo)
                     .HasColumnName("bus_No")
                     .HasMaxLength(15)
@@ -2747,8 +2752,8 @@ namespace opensis.data.Models
             if (!optionsBuilder.IsConfigured)
             {
                 string[] tenants = new string[] { "TenantA" };
-                string connectionString = "Server=DESKTOP-7SUI58K\\SQLEXPRESS;Database={tenant};User Id=sa; Password=admin@123;MultipleActiveResultSets=true";
-                optionsBuilder.UseSqlServer(connectionString.Replace("{tenant}", "opensisv2test"));
+                string connectionString = "Server=SABYA\\SQLEXPRESS;Database={tenant};User Id=sa; Password=admin@123;MultipleActiveResultSets=true";
+                optionsBuilder.UseSqlServer(connectionString.Replace("{tenant}", "opensisv2_dev"));
 
                 //foreach (string tenant in tenants)
                 //{

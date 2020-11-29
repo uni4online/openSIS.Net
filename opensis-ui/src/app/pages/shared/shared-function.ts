@@ -55,6 +55,16 @@ export class SharedFunction {
         }
         
       }
+      serverToLocalDateAndTime(date){
+        console.log(date);
+        if(date !== "" && date !== null && date!== undefined && date !="-"){
+          let localDate = new Date('date');
+          console.log(localDate);
+           return localDate;
+        }else{
+          return date;
+        }
+      }
     checkEmptyObject(data){
       if (data && (Object.keys(data).length !== 0 || Object.keys(data).length > 0) ){
         return true;

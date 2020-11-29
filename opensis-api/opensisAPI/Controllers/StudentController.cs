@@ -114,7 +114,7 @@ namespace opensisAPI.Controllers
             StudentDocumentAddViewModel studentDocoumentAdd = new StudentDocumentAddViewModel();
             try
             {
-                if (studentDocumentAddViewModel.studentDocument.SchoolId > 0)
+                if (studentDocumentAddViewModel.studentDocuments.FirstOrDefault().SchoolId > 0)
                 {
                     studentDocoumentAdd = _studentService.SaveStudentDocument(studentDocumentAddViewModel);
                 }
@@ -141,7 +141,7 @@ namespace opensisAPI.Controllers
             StudentDocumentAddViewModel studentDocumentUpdate = new StudentDocumentAddViewModel();
             try
             {
-                if (studentDocumentAddViewModel.studentDocument.SchoolId > 0)
+                if (studentDocumentAddViewModel.studentDocuments.FirstOrDefault().SchoolId > 0)
                 {
                     studentDocumentUpdate = _studentService.UpdateStudentDocument(studentDocumentAddViewModel);
                 }
@@ -186,7 +186,7 @@ namespace opensisAPI.Controllers
             StudentDocumentAddViewModel studentDocoumentdelete = new StudentDocumentAddViewModel();
             try
             {
-                if (studentDocumentAddViewModel.studentDocument.SchoolId > 0)
+                if (studentDocumentAddViewModel.studentDocuments.FirstOrDefault().SchoolId > 0)
                 {
                     studentDocoumentdelete = _studentService.DeleteStudentDocument(studentDocumentAddViewModel);
                 }
@@ -233,32 +233,132 @@ namespace opensisAPI.Controllers
             return loginInfo;
         }
 
-        //[HttpPost("viewStudent")]
 
-        //public ActionResult<StudentAddViewModel> ViewStudent(StudentAddViewModel student)
-        //{
-        //    StudentAddViewModel studentView = new StudentAddViewModel();
-        //    try
-        //    {
-        //        if (student.studentMaster.SchoolId > 0)
-        //        {
-        //            studentView = _studentService.ViewStudent(student);
-        //        }
-        //        else
-        //        {
-        //            studentView._token = student._token;
-        //            studentView._tenantName = student._tenantName;
-        //            studentView._failure = true;
-        //            studentView._message = "Please enter valid scholl id";
-        //        }
-        //    }
-        //    catch (Exception es)
-        //    {
-        //        studentView._failure = true;
-        //        studentView._message = es.Message;
-        //    }
-        //    return studentView;
-        //}
+        [HttpPost("addStudentComment")]
+        public ActionResult<StudentCommentAddViewModel> AddStudentComment(StudentCommentAddViewModel studentCommentAddViewModel)
+        {
+            StudentCommentAddViewModel studentCommentAdd = new StudentCommentAddViewModel();
+            try
+            {
+                if (studentCommentAddViewModel.studentComments.SchoolId > 0)
+                {
+                    studentCommentAdd = _studentService.SaveStudentComment(studentCommentAddViewModel);
+                }
+                else
+                {
+                    studentCommentAdd._token = studentCommentAddViewModel._token;
+                    studentCommentAdd._tenantName = studentCommentAddViewModel._tenantName;
+                    studentCommentAdd._failure = true;
+                    studentCommentAdd._message = "Please enter valid school id";
+                }
+            }
+            catch (Exception es)
+            {
+                studentCommentAdd._failure = true;
+                studentCommentAdd._message = es.Message;
+            }
+            return studentCommentAdd;
+        }
+
+        [HttpPut("updateStudentComment")]
+
+        public ActionResult<StudentCommentAddViewModel> UpdateStudentComment(StudentCommentAddViewModel studentCommentAddViewModel)
+        {
+            StudentCommentAddViewModel studentCommentUpdate = new StudentCommentAddViewModel();
+            try
+            {
+                if (studentCommentAddViewModel.studentComments.SchoolId > 0)
+                {
+                    studentCommentUpdate = _studentService.UpdateStudentComment(studentCommentAddViewModel);
+                }
+                else
+                {
+                    studentCommentUpdate._token = studentCommentAddViewModel._token;
+                    studentCommentUpdate._tenantName = studentCommentAddViewModel._tenantName;
+                    studentCommentUpdate._failure = true;
+                    studentCommentUpdate._message = "Please enter valid scholl id";
+                }
+            }
+            catch (Exception es)
+            {
+                studentCommentUpdate._failure = true;
+                studentCommentUpdate._message = es.Message;
+            }
+            return studentCommentUpdate;
+        }
+
+
+        [HttpPost("getAllStudentCommentsList")]
+
+        public ActionResult<StudentCommentListViewModel> GetAllStudentCommentsList(StudentCommentListViewModel studentCommentListViewModel)
+        {
+            StudentCommentListViewModel studentCommentsList = new StudentCommentListViewModel();
+            try
+            {
+                studentCommentsList = _studentService.GetAllStudentCommentsList(studentCommentListViewModel);
+            }
+            catch (Exception es)
+            {
+                studentCommentsList._message = es.Message;
+                studentCommentsList._failure = true;
+            }
+            return studentCommentsList;
+        }
+
+
+        [HttpPost("deleteStudentComment")]
+        public ActionResult<StudentCommentAddViewModel> DeleteStudentComment(StudentCommentAddViewModel studentCommentAddViewModel)
+        {
+            StudentCommentAddViewModel studentCommentDelete = new StudentCommentAddViewModel();
+            try
+            {
+                if (studentCommentAddViewModel.studentComments.SchoolId > 0)
+                {
+                    studentCommentDelete = _studentService.DeleteStudentComment(studentCommentAddViewModel);
+                }
+                else
+                {
+                    studentCommentDelete._token = studentCommentAddViewModel._token;
+                    studentCommentDelete._tenantName = studentCommentAddViewModel._tenantName;
+                    studentCommentDelete._failure = true;
+                    studentCommentDelete._message = "Please enter valid school id";
+                }
+            }
+            catch (Exception es)
+            {
+                studentCommentDelete._failure = true;
+                studentCommentDelete._message = es.Message;
+            }
+            return studentCommentDelete;
+        }
+
+        //[HttpPost("viewStudent")]
+        [HttpPost("viewStudent")]
+
+        public ActionResult<StudentAddViewModel> ViewStudent(StudentAddViewModel student)
+        {
+            StudentAddViewModel studentView = new StudentAddViewModel();
+            try
+            {
+                if (student.studentMaster.SchoolId > 0)
+                {
+                    studentView = _studentService.ViewStudent(student);
+                }
+                else
+                {
+                    studentView._token = student._token;
+                    studentView._tenantName = student._tenantName;
+                    studentView._failure = true;
+                    studentView._message = "Please enter valid scholl id";
+                }
+            }
+            catch (Exception es)
+            {
+                studentView._failure = true;
+                studentView._message = es.Message;
+            }
+            return studentView;
+        }
 
 
 
@@ -290,6 +390,54 @@ namespace opensisAPI.Controllers
         //}
 
 
+        [HttpPost("siblingSearch")]
 
+        public ActionResult<SiblingSearchForStudentListModel> ViewStudentSiblingList(SiblingSearchForStudentListModel studentSiblingListViewModel)
+        {
+            SiblingSearchForStudentListModel studentSiblingsList = new SiblingSearchForStudentListModel();
+            try
+            {
+                studentSiblingsList = _studentService.SearchSiblingForStudent(studentSiblingListViewModel);
+            }
+            catch (Exception es)
+            {
+                studentSiblingsList._message = es.Message;
+                studentSiblingsList._failure = true;
+            }
+            return studentSiblingsList;
+        }
+
+        [HttpPost("associationSibling")]
+        public ActionResult<SiblingAddUpdateForStudentModel> AssociationSibling(SiblingAddUpdateForStudentModel siblingAddUpdateForStudentModel)
+        {
+            SiblingAddUpdateForStudentModel siblingAddUpdateForStudent = new SiblingAddUpdateForStudentModel();
+            try
+            {
+                siblingAddUpdateForStudent = _studentService.AssociationSibling(siblingAddUpdateForStudentModel);
+            }
+            catch (Exception es)
+            {
+                siblingAddUpdateForStudent._failure = true;
+                siblingAddUpdateForStudent._message = es.Message;
+            }
+            return siblingAddUpdateForStudent;
+        }
+
+        [HttpPost("viewSibling")]
+
+        public ActionResult<StudentListModel> ViewSibling(StudentListModel studentListModel)
+        {
+            StudentListModel studentList = new StudentListModel();
+            try
+            {
+                studentList = _studentService.ViewAllSibling(studentListModel);
+            }
+            catch (Exception es)
+            {
+                studentList._message = es.Message;
+                studentList._failure = true;
+            }
+            return studentList;
+        }
     }
 }

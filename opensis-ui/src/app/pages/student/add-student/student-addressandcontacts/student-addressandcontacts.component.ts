@@ -1,5 +1,5 @@
-import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, EventEmitter, Output, Input ,ViewChild} from '@angular/core';
+import { FormBuilder, NgForm, Validators } from '@angular/forms';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
 import { fadeInRight400ms } from '../../../../../@vex/animations/fade-in-right.animation';
@@ -18,6 +18,11 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/materia
 import { MY_FORMATS } from '../../../shared/format-datepicker';
 import { SharedFunction } from '../../../shared/shared-function';
 import { salutation,suffix,gender,race,ethnicity,maritalStatus } from '../../../../enums/studentAdd.enum';
+import { SchoolCreate } from '../../../../enums/school-create.enum';
+import icCheckBox from '@iconify/icons-ic/check-box';
+import icCheckBoxOutlineBlank from '@iconify/icons-ic/check-box-outline-blank';
+import icEdit from '@iconify/icons-ic/edit';
+
 @Component({
   selector: 'vex-student-addressandcontacts',
   templateUrl: './student-addressandcontacts.component.html',
@@ -29,15 +34,21 @@ import { salutation,suffix,gender,race,ethnicity,maritalStatus } from '../../../
   ],
 })
 export class StudentAddressandcontactsComponent implements OnInit {
-  @Input() saveDataFromGeneralInfo;
-  @Output() pageIdFromChild: EventEmitter<string> = new EventEmitter();
-  @Output() editSuccessfull: EventEmitter<boolean> = new EventEmitter();
-  @Input() editDataOfGeneralInfo;
- 
-  @Input() image;
+  @Input() studentDetailsForViewAndEdit;
+  @ViewChild('f') currentForm: NgForm;
+  f: NgForm;
+  icEdit = icEdit;
+  icCheckBox = icCheckBox;
+  icCheckBoxOutlineBlank = icCheckBoxOutlineBlank;
+  mailingAddressSameToHome:boolean=false;
+  countryListArr=[]; 
+  countryName="-";
+  mailingAddressCountry="-";
+  countryModel: CountryModel = new CountryModel();
+  data;
+  StudentCreate=SchoolCreate;
+  @Input() studentCreateMode:SchoolCreate;
   studentAddModel: StudentAddModel = new StudentAddModel();
-  countryModel:CountryModel = new CountryModel(); 
-  countryListArr=[];
   languageList;
   checkBoxChecked = false;  
 
@@ -50,16 +61,31 @@ export class StudentAddressandcontactsComponent implements OnInit {
       translateService.use('en');
     }
 
-  ngOnInit(): void {    
-    this.getAllCountry();
-    if(this.saveDataFromGeneralInfo !== undefined && Object.keys(this.saveDataFromGeneralInfo).length !== 0){
-      this.studentAddModel.studentMaster = this.saveDataFromGeneralInfo.studentMaster;       
-    }else if(this.editDataOfGeneralInfo !== undefined && Object.keys(this.editDataOfGeneralInfo).length !== 0){
-      this.studentAddModel.studentMaster = this.editDataOfGeneralInfo;     
-      this.studentAddModel.studentMaster.homeAddressCountry= +this.studentAddModel.studentMaster.homeAddressCountry; 
-      this.studentAddModel.studentMaster.mailingAddressCountry= +this.studentAddModel.studentMaster.mailingAddressCountry;   
+  ngOnInit(): void {  
+    if(this.studentCreateMode==this.StudentCreate.VIEW){
+      this.data=this.studentDetailsForViewAndEdit?.studentMaster;
+      this.studentAddModel = this.studentDetailsForViewAndEdit;
+      if(this.data.mailingAddressSameToHome){
+        this.mailingAddressSameToHome = true;
+      }else{
+        this.mailingAddressSameToHome = false;
+      }
+      this.getAllCountry();   
+    }else{
+      this.studentAddModel = this.studentService.getStudentDetails();
     }
+
+    this.getAllCountry();
   }
+  
+  editAddressContactInfo(){
+    this.studentCreateMode=this.StudentCreate.EDIT
+  }
+
+  cancelEdit(){
+    this.studentCreateMode = this.StudentCreate.VIEW
+  }
+
   copyHomeAddress(check){
   
     if(this.studentAddModel.studentMaster.mailingAddressSameToHome === false || this.studentAddModel.studentMaster.mailingAddressSameToHome === undefined){
@@ -101,17 +127,24 @@ export class StudentAddressandcontactsComponent implements OnInit {
           this.countryListArr=[];
         } else {        
           this.countryListArr=data.tableCountry;    
-         
+         if(this.studentCreateMode==this.StudentCreate.VIEW){
+          this.countryListArr.map((val) => {
+            var countryInNumber = +this.data.homeAddressCountry;  
+            var mailingAddressCountry=+this.data.mailingAddressCountry; 
+              if(val.id === countryInNumber){
+                this.countryName= val.name;
+              }
+              if(val.id === mailingAddressCountry){
+                this.mailingAddressCountry= val.name;
+              }
+            })  
+         }
         }        
       }
     }) 
   }
   submit(){
-
-    this.studentService.UpdateStudent(this.studentAddModel).subscribe(data => { 
-      
-        this.studentAddModel.studentMaster.studentPhoto= this.image;
-                       
+    this.studentService.UpdateStudent(this.studentAddModel).subscribe(data => {                        
       if (typeof (data) == 'undefined') {
         this.snackbar.open('Student Updation failed. ' + sessionStorage.getItem("httpError"), '', {
           duration: 10000
@@ -126,8 +159,7 @@ export class StudentAddressandcontactsComponent implements OnInit {
           this.snackbar.open('Student Update Successful.', '', {
             duration: 10000
           });
-          this.pageIdFromChild.emit("SchoolEnrollmentInfo");   
-          this.editSuccessfull.emit(true);
+          
         }
       }
   

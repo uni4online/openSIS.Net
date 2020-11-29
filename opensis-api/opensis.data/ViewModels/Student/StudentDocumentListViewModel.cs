@@ -7,7 +7,7 @@ namespace opensis.data.ViewModels.Student
 {
     public class StudentDocumentListViewModel : CommonFields
     {
-        public List<StudentDocuments> studentDocumentList { get; set; }
+        public List<StudentDocuments> studentDocumentsList { get; set; }
         public Guid? TenantId { get; set; }
         public int? SchoolId { get; set; }
         public int? StudentId { get; set; }
