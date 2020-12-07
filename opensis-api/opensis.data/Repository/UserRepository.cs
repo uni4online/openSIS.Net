@@ -82,5 +82,21 @@ namespace opensis.data.Repository
             return ReturnModel;
         }
 
+        public CheckUserEmailAddressViewModel CheckUserLoginEmail(CheckUserEmailAddressViewModel checkUserEmailAddressViewModel)
+        {
+            var checkEmailAddress = this.context?.UserMaster.Where(x => x.TenantId == checkUserEmailAddressViewModel.TenantId && x.EmailAddress == checkUserEmailAddressViewModel.EmailAddress).ToList();
+            if (checkEmailAddress.Count() > 0)
+            {
+                checkUserEmailAddressViewModel.IsValidEmailAddress = false;
+                checkUserEmailAddressViewModel._message = "User Login Email Address Already Exist";
+            }
+            else
+            {
+                checkUserEmailAddressViewModel.IsValidEmailAddress = true;
+                checkUserEmailAddressViewModel._message = "User Login Email Address Is Valid";
+            }
+            return checkUserEmailAddressViewModel;
+        }
+
     }
 }

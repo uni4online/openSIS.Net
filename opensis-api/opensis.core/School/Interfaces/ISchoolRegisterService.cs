@@ -22,5 +22,6 @@ namespace opensis.core.School.Interfaces
         public SchoolListModel GetAllSchools(SchoolListModel school);
 
         public SchoolListModel GetAllSchoolList(PageResult pageResult);
+        public CheckSchoolInternalIdViewModel CheckSchoolInternalId(CheckSchoolInternalIdViewModel checkSchoolInternalIdViewModel);
     }
 }

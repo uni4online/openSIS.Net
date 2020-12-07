@@ -6,11 +6,11 @@
 
     
     <div class="mx-6 mb-6" [hidden]="isShowDiv">
-        <ngx-dropzone (change)="onSelect($event)" [accept]="'image/*,application/pdf,.txt,.docx,.doc,.psd,.xls,.xlsx'" [maxFileSize]='19456' class="custom-dropzone">
+        <ngx-dropzone (change)="onSelect($event)" [accept]="'image/*,application/pdf,.txt,.docx,.doc,.psd,.xls,.xlsx'" class="custom-dropzone">
             <ngx-dropzone-label>
-                <p class="text-lg mt-12"><span class="text-primary">Click here</span> to browse files(20 MB max)</p>
+                <p class="text-lg mt-12"><span class="text-primary">{{'clickHere' | translate}}</span> {{ 'toBrowseFiles' | translate}}(20 MB max)</p>
                 <p class="my-2">or</p>
-                <p class="text-lg">Drop files here to upload(20 MB max)</p>
+                <p class="text-lg">{{ 'dropFilesHereToUpload' | translate}}(20 MB max)</p>
             </ngx-dropzone-label>
             <ngx-dropzone-preview *ngFor="let f of files" [removable]="true" (removed)="onRemove(f)">
                 <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
@@ -25,7 +25,7 @@
         <ng-container matColumnDef="fileUploaded">
             <th mat-header-cell *matHeaderCellDef mat-sort-header class="uppercase">{{'file'|translate}}</th>
             <td mat-cell *matCellDef="let element">
-                <a (click)="downloadFile(element.fileUploaded)" class="text-primary cursor-pointer"></a>
+                <a (click)="downloadFile(element.filename,element.filetype,element.fileUploaded)" class="text-primary cursor-pointer"> {{element.filename}}</a>
             </td>
         </ng-container>
 

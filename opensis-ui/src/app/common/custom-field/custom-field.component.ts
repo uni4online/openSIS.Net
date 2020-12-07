@@ -15,6 +15,8 @@ import { SchoolAddViewModel } from '../../../../src/app/models/schoolMasterModel
 import { SchoolService } from '../../../../src/app/services/school.service';
 import { CustomFieldsValueModel } from '../../../../src/app/models/customFieldsValueModel';
 import { Router } from '@angular/router';
+import { StudentAddModel } from '../../../../src/app/models/studentModel';
+import { StudentService } from '../../../../src/app/services/student.service';
 
 @Component({
   selector: 'vex-custom-field',
@@ -29,13 +31,16 @@ import { Router } from '@angular/router';
 export class CustomFieldComponent implements OnInit {
   SchoolCreate = SchoolCreate;
   @Input() schoolCreateMode;
+  @Input() studentCreateMode;
   @Input() categoryTitle;
   @Input() categoryId;
   @Input() schoolDetailsForViewAndEdit;
+  @Input() module;
   icEdit = icEdit;
   icAdd = icAdd;
   viewInfo: boolean = true;
   editInfo: boolean = false;
+  studentAddViewModel: StudentAddModel = new StudentAddModel();
   schoolAddViewModel: SchoolAddViewModel = new SchoolAddViewModel();
   @ViewChild('f') currentForm: NgForm;
   f: NgForm;
@@ -43,26 +48,38 @@ export class CustomFieldComponent implements OnInit {
   constructor(
     private snackbar: MatSnackBar,
     private commonFunction: SharedFunction,
-    private customFieldservice: CustomFieldService,
+    private _studentService:StudentService,
     private _schoolService: SchoolService,
     private router: Router,
   ) {
-
-    this._schoolService.getSchoolDetailsForGeneral.subscribe((res: SchoolAddViewModel) => {
-      this.schoolAddViewModel = res;
-      this.checkCustomValue();
-    });
+    if (this.module === 'School') {
+      this._schoolService.getSchoolDetailsForGeneral.subscribe((res: SchoolAddViewModel) => {
+        this.schoolAddViewModel = res;
+        this.checkCustomValue();
+      });
+    }
   }
 
   ngOnInit(): void {
-    this.checkNgOnInitCustomValue();
+    if (this.module === 'Student') {
+      this.studentAddViewModel = this.schoolDetailsForViewAndEdit;
+      this.checkStudentCustomValue();
 
+    }
+    else if(this.module === 'School'){
+      this.checkNgOnInitCustomValue();
+    }
   }
 
   submit() {
     this.currentForm.form.markAllAsTouched();
     if (this.currentForm.form.valid) {
-      this.updateSchool();
+      if (this.module === 'School') {
+        this.updateSchool();
+      }
+      else if (this.module === 'Student') {
+        this.updateStudent();
+      }
     }
   }
 
@@ -82,7 +99,25 @@ export class CustomFieldComponent implements OnInit {
     }
   }
 
+
+  checkStudentCustomValue() {
+    if (this.studentAddViewModel !== undefined) {
+      let catId = this.categoryId;
+      if (this.studentAddViewModel.fieldsCategoryList !== undefined) {
+
+        for (let i = 0; i < this.studentAddViewModel.fieldsCategoryList[this.categoryId]?.customFields.length; i++) {
+          if (this.studentAddViewModel.fieldsCategoryList[catId].customFields[i]?.customFieldsValue.length == 0) {
+
+            this.studentAddViewModel.fieldsCategoryList[catId]?.customFields[i]?.customFieldsValue.push(new CustomFieldsValueModel());
+          }
+        }
+
+      }
+    }
+  }
+
   checkCustomValue() {
+    
     if (this.schoolAddViewModel !== undefined) {
       let catId = this.categoryId;
       if (this.schoolAddViewModel.schoolMaster.fieldsCategory !== undefined) {
@@ -97,7 +132,33 @@ export class CustomFieldComponent implements OnInit {
       }
     }
   }
-
+  updateStudent(){
+    this.studentAddViewModel.selectedCategoryId= this.studentAddViewModel.fieldsCategoryList[this.categoryId].categoryId;
+    this.studentAddViewModel._tenantName=sessionStorage.getItem("tenant");
+    this.studentAddViewModel._token=sessionStorage.getItem("token");
+    this._studentService.UpdateStudent(this.studentAddViewModel).subscribe(data => {                        
+      if (typeof (data) == 'undefined') {
+        this.snackbar.open(this.categoryTitle + ' Updation failed. ' + sessionStorage.getItem("httpError"), '', {
+          duration: 10000
+        });
+      }
+      else {
+        if (data._failure) {
+          this.snackbar.open(this.categoryTitle + ' Updation failed. ' + data._message, 'LOL THANKS', {
+            duration: 10000
+          });
+        } else {    
+          this.snackbar.open(this.categoryTitle + ' Updated Successfully.', '', {
+            duration: 10000
+          });
+          
+          
+        }
+      }
+  
+    })
+  }
+  
 
   updateSchool() {
     this.schoolAddViewModel.selectedCategoryId = this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].categoryId;
@@ -106,23 +167,21 @@ export class CustomFieldComponent implements OnInit {
     this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolClosed = this.commonFunction.formatDateSaveWithoutTime(this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolClosed);
     this._schoolService.UpdateSchool(this.schoolAddViewModel).subscribe(data => {
       if (typeof (data) == 'undefined') {
-        this.snackbar.open(this.categoryTitle +' '+  sessionStorage.getItem("httpError"), '', {
+        this.snackbar.open(this.categoryTitle + ' ' + sessionStorage.getItem("httpError"), '', {
           duration: 10000
         });
       }
       else {
         if (data._failure) {
-          this.snackbar.open(this.categoryTitle +' '+ + data._message, 'LOL THANKS', {
+          this.snackbar.open(this.categoryTitle + ' ' + + data._message, 'LOL THANKS', {
             duration: 10000
           });
         } else {
 
-          this.snackbar.open(this.categoryTitle +" ", '', {
+          this.snackbar.open(this.categoryTitle + " " + 'Updation Successful', '', {
             duration: 10000
           });
-          this.router.navigateByUrl("school/schoolinfo");
-          //this._schoolService.changeMessage(true);
-          //this._schoolService.changeCategory(true);
+          this._schoolService.changeMessage(true);
         }
       }
 
@@ -132,6 +191,7 @@ export class CustomFieldComponent implements OnInit {
 
   editOtherInfo() {
     this.schoolCreateMode = this.SchoolCreate.EDIT;
+    this.studentCreateMode = this.SchoolCreate.EDIT;
     this.formActionButtonTitle = "update";
   }
 }

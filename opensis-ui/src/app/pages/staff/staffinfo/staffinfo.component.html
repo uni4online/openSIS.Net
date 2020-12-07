@@ -14,7 +14,7 @@
                         fxLayoutAlign="start center">
 
                         <div class="flex">
-                            <input class="px-4 py-3 border-0 outline-none w-full bg-transparent" placeholder="Search..."
+                            <input class="pr-4 py-3 border-0 outline-none w-full bg-transparent" placeholder="Search..."
                                 type="search">
                             <button class="ml-4" fxFlex="none" fxHide.gt-xs mat-icon-button type="button">
                                 <mat-icon [icIcon]="icSearch"></mat-icon>
@@ -44,47 +44,56 @@
                 matSort>
                 
                 <ng-container matColumnDef="name">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="uppercase">{{'name'|translate}}</th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'name'|translate}}</th>
                     <td mat-cell *matCellDef="let element">
                         <a routerLink="./parent-generalinfo" class="text-primary cursor-pointer">{{element.name}}</a>
                     </td>
                 </ng-container>
 
                 <ng-container matColumnDef="staff_id">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="uppercase">{{'staffId'|translate}}</th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'staffId'|translate}}</th>
                     <td mat-cell *matCellDef="let element">
                         {{element.staff_id}}
                     </td>
                 </ng-container>
                 
                 <ng-container matColumnDef="profile">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="uppercase">{{'profile'|translate}}</th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'openSISProfile'|translate}}</th>
                     <td mat-cell *matCellDef="let element">
                         {{element.profile}}
                     </td>
                 </ng-container>
 
-                <ng-container matColumnDef="email_address">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="uppercase">{{'emailAddress'|translate}}</th>
+                <ng-container matColumnDef="job_title">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'jobTitle'|translate}}</th>
                     <td mat-cell *matCellDef="let element">
-                        {{element.email_address}}
+                        {{element.job_title}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="school_email">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'schoolEmail'|translate}}</th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.school_email}}
                     </td>
                 </ng-container>
 
                 <!-- Body -->
                 <ng-container matColumnDef="mobile_phone">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="uppercase">{{'mobilePhone'|translate}}
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'mobilePhone'|translate}}
                     </th>
                     <td mat-cell *matCellDef="let element">
                         {{element.mobile_phone}}
                     </td>
                 </ng-container>
 
-                <ng-container matColumnDef="last_login">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="uppercase">{{'lastLogin'|translate}}
+                <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'action'|translate}}
                     </th>
                     <td mat-cell *matCellDef="let element">
-                        {{element.last_login}}
+                        <a routerLink="" matTooltip="Impersonate as Parent" class="mr-3 cursor-pointer">
+                            <mat-icon [icIcon]="icImpersonate"></mat-icon>
+                        </a>
                     </td>
                 </ng-container>
 

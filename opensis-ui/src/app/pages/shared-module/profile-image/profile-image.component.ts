@@ -1,11 +1,14 @@
-import { Component, OnInit, ViewChild, TemplateRef, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef, Input, OnDestroy } from '@angular/core';
 import {ImageCroppedEvent,base64ToFile} from 'ngx-image-cropper';
 import { MatDialog,MatDialogConfig } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {fadeInRight400ms} from '../../../../@vex/animations/fade-in-right.animation';
 import icCrop from '@iconify/icons-ic/crop';
+import icClose from '@iconify/icons-ic/twotone-close';
 import { ImageCropperService } from '../../../services/image-cropper.service';
 import { SchoolService } from '../../../services/school.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'vex-profile-image',
@@ -15,11 +18,12 @@ import { SchoolService } from '../../../services/school.service';
     fadeInRight400ms
   ]
 })
-export class ProfileImageComponent implements OnInit {
+export class ProfileImageComponent implements OnInit,OnDestroy {
   @ViewChild('mytemplate') mytemplate: TemplateRef<any>;
   @ViewChild('modalClickButton') modalClickButton: TemplateRef<any>;
 
   icCrop=icCrop;
+  icClose = icClose;
   preview:string='';originalFileName:string;
   imageChangedEvent= '';
   croppedImage= '';
@@ -30,6 +34,7 @@ export class ProfileImageComponent implements OnInit {
   hideCropperToolButton:Boolean=true;
   enableUpload:boolean;
   inputType:string="file";
+  destroySubject$: Subject<void> = new Subject();
   @Input() enableCropTool=true;
   @Input() responseImage; 
   @Input() mode; 
@@ -42,12 +47,9 @@ export class ProfileImageComponent implements OnInit {
 
      ngOnInit(): void {
       if(this.mode){
-        this._imageCropperService.sharedMessage.subscribe((message) => {
+        this._imageCropperService.sharedMessage.pipe(takeUntil(this.destroySubject$)).subscribe((message) => {
           this.enableUpload = message
-          let id;
-          
-          id=this.schoolService.getSchoolId();
-          
+          let id=this.schoolService.getSchoolId();
           if(this.enableUpload){
             this.inputType ="none";
             if(id!=null){
@@ -167,6 +169,9 @@ onClose(){
   this.fileUploader.value=null;
   // this.showCropperandButton=true;
   this.dialog.closeAll();
+}
+ngOnDestroy(): void {
+  this.destroySubject$.next();
 }
 
 }

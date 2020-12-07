@@ -129,6 +129,11 @@
   }
 }
 
+.mat-slide-toggle-thumb {
+  box-shadow: 0 0 2px rgba(0,0,0,0.3);
+  border: 1px solid rgba(0,0,0,0.2);
+}
+
 .mat-form-field:not(.mat-form-field-appearance-legacy) .mat-form-field-prefix .mat-icon-button,
 .mat-form-field:not(.mat-form-field-appearance-legacy) .mat-form-field-suffix .mat-icon-button {
   width: 1.5em !important;

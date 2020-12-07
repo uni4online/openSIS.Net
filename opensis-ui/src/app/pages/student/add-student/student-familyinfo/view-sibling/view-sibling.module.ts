@@ -10,7 +10,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { MatNativeDateModule } from '@angular/material/core';
 import { TranslateModule } from '@ngx-translate/core';
-
+import {SharedModuleModule} from '../../../../shared-module/shared-module.module';
 
 
 @NgModule({
@@ -25,7 +25,8 @@ import { TranslateModule } from '@ngx-translate/core';
     FlexLayoutModule,
     MatDividerModule,
     MatMenuModule,
-    TranslateModule
+    TranslateModule,
+    SharedModuleModule
   ]
 })
 export class ViewSiblingModule { }

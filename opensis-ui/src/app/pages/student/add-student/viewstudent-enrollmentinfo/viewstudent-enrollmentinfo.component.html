@@ -1,8 +1,9 @@
 <mat-card class="w-full">
 
-    <mat-card-header>
-        <mat-card-title>{{'schoolAndEnrollmentInfo'|translate}}</mat-card-title>
-    </mat-card-header>
+    <div class="flex items-center mx-4" fxLayout="row" fxLayoutAlign="center center">
+        <h3 class="flex-auto">{{'schoolAndEnrollmentInfo' | translate}}</h3>
+        <button mat-button color="primary"><mat-icon [icIcon]="icEdit"></mat-icon> {{'editInformation' |translate}}</button>
+    </div>
     <mat-card-content>
 
         <div @stagger fxLayout="column">

@@ -12,5 +12,6 @@ namespace opensis.data.Interface
         //public UserViewModel ValidateLogin(UserViewModel objmodel);
 
         public LoginViewModel ValidateUserLogin(LoginViewModel objmodel);
+        public CheckUserEmailAddressViewModel CheckUserLoginEmail(CheckUserEmailAddressViewModel checkUserEmailAddressViewModel);
     }
 }

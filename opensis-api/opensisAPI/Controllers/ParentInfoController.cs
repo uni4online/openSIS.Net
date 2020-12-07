@@ -162,5 +162,31 @@ namespace opensisAPI.Controllers
             }
             return parentInfoAdd;
         }
+
+        [HttpPost("removeAssociatedParent")]
+        public ActionResult<ParentInfoDeleteViewModel> RemoveAssociatedParent(ParentInfoDeleteViewModel parentInfoDeleteViewModel)
+        {
+            ParentInfoDeleteViewModel parentAssociationshipDelete = new ParentInfoDeleteViewModel();
+            try
+            {
+                if (parentInfoDeleteViewModel.parentInfo.SchoolId > 0)
+                {
+                    parentAssociationshipDelete = _parentInfoRegisterService.RemoveAssociatedParent(parentInfoDeleteViewModel);
+                }
+                else
+                {
+                    parentAssociationshipDelete._token = parentInfoDeleteViewModel._token;
+                    parentAssociationshipDelete._tenantName = parentInfoDeleteViewModel._tenantName;
+                    parentAssociationshipDelete._failure = true;
+                    parentAssociationshipDelete._message = "Please enter valid school id";
+                }
+            }
+            catch (Exception es)
+            {
+                parentAssociationshipDelete._failure = true;
+                parentAssociationshipDelete._message = es.Message;
+            }
+            return parentAssociationshipDelete;
+        }
     }
 }

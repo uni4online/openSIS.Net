@@ -33,5 +33,22 @@ namespace opensisAPI.Controllers
         {
             return  _userService.ValidateUserLogin(objModel);
         }
+
+        [HttpPost("checkUserLoginEmail")]
+        public ActionResult<CheckUserEmailAddressViewModel> CheckUserLoginEmail(CheckUserEmailAddressViewModel checkUserEmailAddressViewModel)
+        {
+            CheckUserEmailAddressViewModel checkUserEmailAddress = new CheckUserEmailAddressViewModel();
+            try
+            {
+                checkUserEmailAddress = _userService.CheckUserLoginEmail(checkUserEmailAddressViewModel);
+
+            }
+            catch (Exception es)
+            {
+                checkUserEmailAddress._message = es.Message;
+                checkUserEmailAddress._failure = true;
+            }
+            return checkUserEmailAddress;
+        }
     }
 }

@@ -17,6 +17,7 @@ namespace opensis.data.Interface
         public SchoolListModel GetAllSchoolList(PageResult pageResult);
 
         public SchoolListModel GetAllSchools(SchoolListModel school);
+        public CheckSchoolInternalIdViewModel CheckSchoolInternalId(CheckSchoolInternalIdViewModel checkSchoolInternalIdViewModel);
         //Task<SchoolLogoUpdateModel> updateSchoolLogo(Guid guid, SchoolLogoUpdateModel schoolLogoUpdateModel);
     }
 }

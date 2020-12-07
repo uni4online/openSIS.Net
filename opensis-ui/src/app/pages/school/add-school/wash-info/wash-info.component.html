@@ -74,7 +74,8 @@
                         </mat-form-field>
                     </li>
                 </ul>
-            </div>
+                <vex-custom-field-without-form  [schoolDetailsForViewAndEdit]="schoolAddViewModel" [categoryId] = "categoryId" [module] = "module" [schoolCreateMode]="schoolCreateMode"></vex-custom-field-without-form>
+           </div>
             <div class="pb-6" @stagger fxLayout="column">
                 <div class="px-4 pb-3">
                     <h4 class="text-primary">{{'femaleToiletInformation'|translate}}</h4>
@@ -216,7 +217,7 @@
                         </mat-form-field>
                     </li>
                 </ul>
-                <vex-custom-field-without-form  [schoolDetailsForViewAndEdit]="schoolAddViewModel" [categoryId] = "categoryId" [schoolCreateMode]="schoolCreateMode"></vex-custom-field-without-form>
+                <vex-custom-field-without-form  [schoolDetailsForViewAndEdit]="schoolAddViewModel" [categoryId] = "categoryId" [module] = "module" [schoolCreateMode]="schoolCreateMode"></vex-custom-field-without-form>
             </div>
         </mat-card-content>
         <mat-card-actions>
@@ -280,7 +281,7 @@
                         </p>
                     </li>
                 </ul>
-                <vex-custom-field-without-form  [schoolDetailsForViewAndEdit]="schoolAddViewModel" [categoryId] = "categoryId" [schoolCreateMode]="schoolCreateMode"></vex-custom-field-without-form>
+                <vex-custom-field-without-form  [schoolDetailsForViewAndEdit]="schoolAddViewModel" [categoryId] = "categoryId" [module] = "module" [schoolCreateMode]="schoolCreateMode"></vex-custom-field-without-form>
             </div>
             <div class="mt-12">
                 <div class="pb-4">

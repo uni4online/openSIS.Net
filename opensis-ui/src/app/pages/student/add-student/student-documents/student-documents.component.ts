@@ -62,6 +62,8 @@ export class StudentDocumentsComponent implements OnInit {
   files: File[] = [];  
   base64;
   base64Arr=[];
+  filesName=[];
+  filesType=[];
   uploadSuccessfull = false;
   totalCount:Number;pageNumber:Number;pageSize:Number;
   getAllStudentDocumentsList: GetAllStudentDocumentsList = new GetAllStudentDocumentsList();   
@@ -82,11 +84,7 @@ export class StudentDocumentsComponent implements OnInit {
      });
     
   }
-
-
-  ngOnInit(): void {
-    
-    console.log("ffff",this.studentDetailsForViewAndEdit.studentMaster.studentId)
+  ngOnInit(): void {  
     this.getAllDocumentsList();
   }  
 
@@ -95,19 +93,21 @@ export class StudentDocumentsComponent implements OnInit {
     this.base64Arr.push(this.base64);
     
   }
-  onSelect(event) {   
-    console.log(event)
-    this.files.push(...event.addedFiles);  
+  onSelect(event) {  
+    this.files.push(...event.addedFiles);
     let count = this.files.length;
     let prevCount = count-1;    
     
     this.files.forEach((value, index) => {
-      if(index === prevCount){       
+      if(index === prevCount){   
+        this.filesName.push(value.name);
+        this.filesType.push(value.type);
         const reader = new FileReader();      
         reader.onload = this.HandleReaderLoaded.bind(this);       
         reader.readAsBinaryString(value);       
       }     
     })
+   
   }
 
   
@@ -169,58 +169,59 @@ export class StudentDocumentsComponent implements OnInit {
   }
 
   uploadFile(){
-  let studentDocument = [];    
-  this.base64Arr.forEach((value, index) => {
-      var obj = {};   
-        obj = {     
-          tenantId: sessionStorage.getItem("tenantId"),
-          schoolId: +sessionStorage.getItem("selectedSchoolId") ,
-          studentId: this.studentDetailsForViewAndEdit.studentMaster.studentId,
-          documentId: 0,
-          fileUploaded:value,          
-          uploadedBy:sessionStorage.getItem("email"),
-          studentMaster: null
-        }   
-        studentDocument.push(obj);    
-    });  
-    if(studentDocument.length > 0){
-      this.studentDocumentAddModel.studentDocuments=studentDocument;
-      this.studentService.AddStudentDocument(this.studentDocumentAddModel).subscribe(data => {
-        if (typeof (data) == 'undefined') {
-          this.snackbar.open('Student Document Upload failed. ' + sessionStorage.getItem("httpError"), '', {
-            duration: 10000
-          });
-        }
-        else {
-          if (data._failure) {
-            this.snackbar.open('Student Document Upload failed. ' + data._message, 'LOL THANKS', {
+    let studentDocument = [];    
+    this.base64Arr.forEach((value, index) => {
+        var obj = {};
+          obj = {     
+            tenantId: sessionStorage.getItem("tenantId"),
+            schoolId: +sessionStorage.getItem("selectedSchoolId") ,
+            studentId: this.studentDetailsForViewAndEdit.studentMaster.studentId,
+            documentId: 0,
+            filename: this.filesName[index],
+            filetype: this.filesType[index],
+            fileUploaded:value,          
+            uploadedBy:sessionStorage.getItem("email"),
+            studentMaster: null
+          }   
+          studentDocument.push(obj);    
+      });  
+      if(studentDocument.length > 0){
+        this.studentDocumentAddModel.studentDocuments=studentDocument;
+        this.studentService.AddStudentDocument(this.studentDocumentAddModel).subscribe(data => {
+          if (typeof (data) == 'undefined') {
+            this.snackbar.open('Student Document Upload failed. ' + sessionStorage.getItem("httpError"), '', {
               duration: 10000
             });
-          } else {          
-            this.snackbar.open('Student Document Upload Successful.', '', {
-              duration: 10000
-            }).afterOpened().subscribe(data => {
-              this.uploadSuccessfull = true;
-              this.isShowDiv=true;
-              this.getAllDocumentsList();
-            });                  
           }
-        }
-      });
-    } else{
-      this.snackbar.open('Please Select File', 'LOL THANKS', {
-        duration: 1000
-      });
-    }
-    
+          else {
+            if (data._failure) {
+              this.snackbar.open('Student Document Upload failed. ' + data._message, 'LOL THANKS', {
+                duration: 10000
+              });
+            } else {          
+              this.snackbar.open('Student Document Upload Successful.', '', {
+                duration: 10000
+              }).afterOpened().subscribe(data => {
+                this.uploadSuccessfull = true;
+                this.isShowDiv=true;
+                this.getAllDocumentsList();
+              });                  
+            }
+          }
+        });
+      } else{
+        this.snackbar.open('Please Select File', 'LOL THANKS', {
+          duration: 1000
+        });
+      }
+      
   }
 
-  downloadFile(content){
-    var filetype = "docx";
-    var filename="demo";
+  downloadFile(name,type,content){
+    let fileType = "data:"+type+";base64," + content;   
     var element = document.createElement('a');
-    element.setAttribute('href', 'data:image/jpg;base64,' + content);
-    element.setAttribute('download', filename);
+    element.setAttribute('href', fileType);
+    element.setAttribute('download', name);
     element.style.display = 'none';
     document.body.appendChild(element);
     element.click();
@@ -236,7 +237,7 @@ export class StudentDocumentsComponent implements OnInit {
       }else{   
         
         this.StudentDocumentModelList = new MatTableDataSource(data.studentDocumentsList);
-        console.log(data)
+       
         this.StudentDocumentModelList.sort=this.sort;      
       }
     });

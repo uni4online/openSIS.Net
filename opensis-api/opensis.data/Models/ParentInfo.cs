@@ -4,19 +4,23 @@ using System.Text;
 
 namespace opensis.data.Models
 {
-   public partial class ParentInfo
+    public partial class ParentInfo
     {
         public Guid TenantId { get; set; }
         public int SchoolId { get; set; }
         public int StudentId { get; set; }
         public int ParentId { get; set; }
         public string Relationship { get; set; }
+        public string Salutation { get; set; }
         public string Firstname { get; set; }
+        public string Middlename { get; set; }
         public string Lastname { get; set; }
         public string HomePhone { get; set; }
         public string WorkPhone { get; set; }
         public string Mobile { get; set; }
-        public string Email { get; set; }
+        public string PersonalEmail { get; set; }
+        public string WorkEmail { get; set; }
+        public string UserProfile { get; set; }
         public bool? StudentAddressSame { get; set; }
         public string AddressLineOne { get; set; }
         public string AddressLineTwo { get; set; }
@@ -26,7 +30,8 @@ namespace opensis.data.Models
         public string Zip { get; set; }
         public bool IsCustodian { get; set; }
         public bool IsPortalUser { get; set; }
-        public string PortalUserId { get; set; }
+        public string LoginEmail { get; set; }
+        public string Suffix { get; set; }
         public string BusNo { get; set; }
         public bool? BusPickup { get; set; }
         public bool? BusDropoff { get; set; }

@@ -100,42 +100,7 @@ namespace opensis.core.Student.Services
 
             return studentList;
         }
-        /// <summary>
-        /// SearchContact For Student
-        /// </summary>
-        /// <param name="searchContactViewModel"></param>
-        /// <returns></returns>
 
-        public SearchContactViewModel SearchContactForStudent(SearchContactViewModel searchContactViewModel)
-        {
-            logger.Info("Method SearchContactForStudent called.");
-            SearchContactViewModel contactViewModel = new SearchContactViewModel();
-            try
-            {
-                if (TokenManager.CheckToken(searchContactViewModel._tenantName, searchContactViewModel._token))
-                {
-                    contactViewModel = this.studentRepository.SearchContactForStudent(searchContactViewModel);
-                    //contactViewModel._message = SUCCESS;
-                    //contactViewModel._failure = false;
-                    logger.Info("Method SearchContactForStudent end with success.");
-                }
-
-                else
-                {
-                    contactViewModel._failure = true;
-                    contactViewModel._message = TOKENINVALID;
-                    return contactViewModel;
-                }
-            }
-            catch (Exception ex)
-            {
-                contactViewModel._message = ex.Message;
-                contactViewModel._failure = true;
-                logger.Error("Method SearchContactForStudent end with error :" + ex.Message);
-            }
-
-            return contactViewModel;
-        }
         /// <summary>
         /// Save StudentDocument
         /// </summary>
@@ -449,6 +414,97 @@ namespace opensis.core.Student.Services
             }
 
             return studentList;
+        }
+
+        /// <summary>
+        /// Remove Sibling
+        /// </summary>
+        /// <param name="siblingAddUpdateForStudentModel"></param>
+        /// <returns></returns>
+        public SiblingAddUpdateForStudentModel RemoveSibling(SiblingAddUpdateForStudentModel siblingAddUpdateForStudentModel)
+        {
+            SiblingAddUpdateForStudentModel associationshipDelete = new SiblingAddUpdateForStudentModel();
+            try
+            {
+                if (TokenManager.CheckToken(siblingAddUpdateForStudentModel._tenantName, siblingAddUpdateForStudentModel._token))
+                {
+                    associationshipDelete = this.studentRepository.RemoveSibling(siblingAddUpdateForStudentModel);
+                }
+                else
+                {
+                    associationshipDelete._failure = true;
+                    associationshipDelete._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                associationshipDelete._failure = true;
+                associationshipDelete._message = es.Message;
+            }
+            return associationshipDelete;
+        }
+
+        /// <summary>
+        ///  Check Student InternalId Exist or Not
+        /// </summary>
+        /// <param name="checkStudentInternalIdViewModel"></param>
+        /// <returns></returns>
+        public CheckStudentInternalIdViewModel CheckStudentInternalId(CheckStudentInternalIdViewModel checkStudentInternalIdViewModel)
+        {
+            CheckStudentInternalIdViewModel checkInternalId = new CheckStudentInternalIdViewModel();
+            if (TokenManager.CheckToken(checkStudentInternalIdViewModel._tenantName, checkStudentInternalIdViewModel._token))
+            {
+                checkInternalId = this.studentRepository.CheckStudentInternalId(checkStudentInternalIdViewModel);
+            }
+            else
+            {
+                checkInternalId._failure = true;
+                checkInternalId._message = TOKENINVALID;
+            }
+            return checkInternalId;
+        }
+        /// <summary>
+        /// Add Student Enrollment
+        /// </summary>
+        /// <param name="studentEnrollmentAddViewModel"></param>
+        /// <returns></returns>
+        public StudentEnrollmentListModel AddStudentEnrollment(StudentEnrollmentListModel studentEnrollmentListModel)
+        {
+            StudentEnrollmentListModel studentEnrollmentAddModel = new StudentEnrollmentListModel();
+            if (TokenManager.CheckToken(studentEnrollmentListModel._tenantName, studentEnrollmentListModel._token))
+            {
+                studentEnrollmentAddModel = this.studentRepository.AddStudentEnrollment(studentEnrollmentListModel);
+            }
+            else
+            {
+                studentEnrollmentAddModel._failure = true;
+                studentEnrollmentAddModel._message = TOKENINVALID;
+            }
+            return studentEnrollmentAddModel;
+        }
+
+        public StudentEnrollmentListModel GetAllStudentEnrollment(StudentEnrollmentListModel studentEnrollmentListModel)
+        {
+            StudentEnrollmentListModel studentEnrollmentListView = new StudentEnrollmentListModel();
+            try
+            {
+                if (TokenManager.CheckToken(studentEnrollmentListModel._tenantName, studentEnrollmentListModel._token))
+                {
+                    studentEnrollmentListView = this.studentRepository.GetAllStudentEnrollment(studentEnrollmentListModel);
+                }
+                else
+                {
+                    studentEnrollmentListView._failure = true;
+                    studentEnrollmentListView._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                studentEnrollmentListView._failure = true;
+                studentEnrollmentListView._message = es.Message;
+            }
+
+            return studentEnrollmentListView;
         }
     }
 }

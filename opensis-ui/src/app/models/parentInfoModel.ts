@@ -1,6 +1,7 @@
 import { CommonField } from "../models/commonField";
+import { StudentMasterModel } from "./studentModel";
 
-class ParentInfoModel{
+export class ParentInfoModel{
     public tenantId:string;
     public schoolId: number;
     public studentId: number;
@@ -29,8 +30,10 @@ class ParentInfoModel{
     public associationship: string;
     public lastUpdated: string;
     public updatedBy: string;
+    getStudentForView:[StudentMasterModel];
     constructor(){
         this.updatedBy=sessionStorage.getItem("email");
+        this.getStudentForView=null;
     }
 }
 
@@ -46,4 +49,34 @@ export class ViewParentInfoModel extends CommonField{
         this.tenantId=sessionStorage.getItem("tenantId");
         this._token=sessionStorage.getItem("token");
     }
+}
+export class GetAllParentModel extends CommonField{
+    tenantId:string;
+    schoolId:number;
+    pageNumber: number;
+    _pageSize: number;
+    totalCount:number;
+    filterParams:filterParams;
+    public parentInfoForView:[ParentInfoModel]
+    constructor() {
+        super();
+        this.tenantId= sessionStorage.getItem("tenantId");
+        this.schoolId= +sessionStorage.getItem("selectedSchoolId");
+        this.pageNumber=1;
+        this._pageSize=10;
+        this.totalCount=0;
+        this.filterParams=null;
+        this._tenantName=sessionStorage.getItem("tenant");
+        this._token=sessionStorage.getItem("token");
+    }
+}
+export class filterParams{
+    columnName: string;
+    filterValue: string;
+    filterOption: number;
+ constructor(){
+     this.columnName=null;
+     this.filterOption=3;
+     this.filterValue=null;
+ }
 }

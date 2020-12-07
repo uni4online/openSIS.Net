@@ -32,6 +32,7 @@ export class AddSchoolComponent implements OnInit, OnDestroy {
   pageStatus = "Add School"
   responseImage: string;
   image: string = '';
+  module ="School";
   fieldsCategory = [];
   fieldsCategoryListView = new FieldsCategoryListView();
   schoolId: number = null;

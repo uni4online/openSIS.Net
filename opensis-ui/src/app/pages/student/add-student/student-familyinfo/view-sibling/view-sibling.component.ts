@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
-import { FormBuilder,FormGroup, Validators } from '@angular/forms';
+import { Component, Inject, OnInit, Optional } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import icClose from '@iconify/icons-ic/twotone-close';
 import { fadeInUp400ms } from '../../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../../@vex/animations/stagger.animation';
@@ -15,12 +14,17 @@ import { stagger60ms } from '../../../../../../@vex/animations/stagger.animation
   ]
 })
 export class ViewSiblingComponent implements OnInit {
-
   icClose = icClose;
-  form: FormGroup;
-  constructor(private dialogRef: MatDialogRef<ViewSiblingComponent>, private fb: FormBuilder) { }
+  address:string="";
+  constructor(private dialogRef: MatDialogRef<ViewSiblingComponent>,
+    @Optional() @Inject(MAT_DIALOG_DATA) public data: any) {}
+
 
   ngOnInit(): void {
+    this.address=this.data.siblingDetails.homeAddressLineOne
+                  +","+this.data.siblingDetails.homeAddressCity
+                  +","+this.data.siblingDetails.homeAddressState
+                  +","+this.data.siblingDetails.homeAddressZip+" "
   }
 
 }

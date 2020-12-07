@@ -20,7 +20,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { SharedModuleModule } from '../../shared-module/shared-module.module';
 import { StudentRoutingModule } from '../studentinfo/student-routing-module';
 import { MatTooltipModule } from '@angular/material/tooltip';
-
+import {MatSortModule} from '@angular/material/sort';
 @NgModule({
   declarations: [StudentComponent],
   imports: [
@@ -44,7 +44,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatButtonToggleModule,
     SharedModuleModule,
     StudentRoutingModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatSortModule
   ]
 })
 export class StudentModule { }

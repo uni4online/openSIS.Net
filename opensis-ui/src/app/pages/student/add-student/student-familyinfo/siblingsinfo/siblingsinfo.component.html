@@ -1,40 +1,26 @@
 <div class="md:grid md:grid-cols-2 md:col-gap-8 md:row-gap-6">
-    <div class="border border-solid rounded p-4">
+    <div class="border border-solid rounded p-4" *ngFor="let sibling of studentViewSibling.studentMaster">
         <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px">
-            <div class="relative cursor-pointer" fxFlex="none" (click)='openViewDetails()'>
-                <img src="assets/img/default.jpg" class="avatar">
+            <div class="relative cursor-pointer" fxFlex="none" (click)='openViewDetails(sibling)'>
+                <img src="{{'data:image/png;base64,'+ sibling.studentPhoto}}" class="avatar" />
             </div>
-            <div class="overflow-hidden cursor-pointer" fxFlex="auto" (click)='openViewDetails()'>
-                <div class="subheading-2 leading-snug text-primary">Simon Davis</div>
-                <div class="body-1 text-secondary truncate contact-type">Peach State High School <span
-                        class="separator"></span> Grade 9</div>
+            <div class="overflow-hidden cursor-pointer" fxFlex="auto" (click)='openViewDetails(sibling)'>
+                <div class="subheading-2 leading-snug text-primary">{{sibling.firstGivenName +' '+ sibling.lastFamilyName}}</div>
+                <div class="body-1 text-secondary truncate contact-type">{{sibling.schoolMaster.schoolName}}<span
+                        class="separator"></span>9</div>
             </div>
             <div fxFlex="none" fxLayout="column" fxLayoutAlign="center end">
-                <button mat-icon-button matTooltip="Remove Association" type="button" class="text-gray">
+                <button mat-icon-button matTooltip="Remove Association" (click)="confirmDelete(sibling)" type="button" class="text-gray">
                     <mat-icon [icIcon]="icRemove"></mat-icon>
                 </button>
             </div>
         </div>
     </div>
-    <div class="border border-solid rounded p-4">
-        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px">
-            <div class="relative cursor-pointer" fxFlex="none" (click)='openViewDetails()'>
-                <img src="assets/img/default.jpg" class="avatar">
-            </div>
-            <div class="overflow-hidden cursor-pointer" fxFlex="auto" (click)='openViewDetails()'>
-                <div class="subheading-2 leading-snug text-primary">Jeniffer Davis</div>
-                <div class="body-1 text-secondary truncate contact-type">Peach State High School <span
-                        class="separator"></span> Grade 4</div>
-            </div>
-            <div fxFlex="none" fxLayout="column" fxLayoutAlign="center end">
-                <button mat-icon-button matTooltip="Remove Association" type="button" class="text-gray">
-                    <mat-icon [icIcon]="icRemove"></mat-icon>
-                </button>
-            </div>
-        </div>
-    </div>
+    
 </div>
-
+<div class="text-center" *ngIf="studentViewSibling.studentMaster==null">
+    No Sibling Found!
+</div>
 <div class="text-center mt-6">
     <button color="primary" mat-raised-button type="button" (click)='openAddNew()'>
         <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true" size="24px"></ic-icon>

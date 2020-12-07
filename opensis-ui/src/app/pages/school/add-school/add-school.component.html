@@ -39,7 +39,7 @@
                     <div *ngFor="let field of fieldsCategory;let index=index">
                         <vex-custom-field *ngIf="field.categoryId == currentCategory && indexOfCategory > 1" [categoryTitle]="field.title"
                             [schoolCreateMode]="schoolCreateMode" [schoolDetailsForViewAndEdit]="schoolAddViewModel"
-                            [categoryId]="indexOfCategory">
+                            [categoryId]="indexOfCategory"  [module] = "module">
                         </vex-custom-field>
                     </div>
 

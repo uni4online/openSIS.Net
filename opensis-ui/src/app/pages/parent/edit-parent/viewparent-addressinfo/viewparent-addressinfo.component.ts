@@ -6,6 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import icEdit from '@iconify/icons-ic/edit';
 import icDelete from '@iconify/icons-ic/delete';
 import icCheckBox from '@iconify/icons-ic/check-box';
+import icCheckCircle from '@iconify/icons-ic/twotone-done';
 import icCheckBoxOutlineBlank from '@iconify/icons-ic/check-box-outline-blank';
 
 @Component({
@@ -23,6 +24,7 @@ export class ViewparentAddressinfoComponent implements OnInit {
   icDelete = icDelete;
   icCheckBox = icCheckBox;
   icCheckBoxOutlineBlank = icCheckBoxOutlineBlank;
+  icCheckCircle = icCheckCircle;
 
   constructor(public translateService:TranslateService) {
     translateService.use('en');

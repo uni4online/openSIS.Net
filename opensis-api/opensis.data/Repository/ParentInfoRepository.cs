@@ -57,20 +57,28 @@ namespace opensis.data.Repository
                         parentInfoAddViewModel.parentInfo.ParentId = (int)ParentId;
                         parentInfoAddViewModel.parentInfo.Associationship = parentInfoAddViewModel.parentInfo.TenantId + "#" + parentInfoAddViewModel.parentInfo.SchoolId + "#" + parentInfoAddViewModel.parentInfo.StudentId;
                         parentInfoAddViewModel.parentInfo.LastUpdated = DateTime.UtcNow;
-                        parentInfoAddViewModel.parentInfo.PortalUserId = parentInfoAddViewModel.parentInfo.Email;
+                        //Add LoginEmail in ParentInfo Table
+                        if (!string.IsNullOrWhiteSpace(parentInfoAddViewModel.PasswordHash) && !string.IsNullOrWhiteSpace(parentInfoAddViewModel.parentInfo.LoginEmail))
+                        {
+                            parentInfoAddViewModel.parentInfo.LoginEmail = parentInfoAddViewModel.parentInfo.LoginEmail;                  
+                        }
+                        else
+                        {
+                            parentInfoAddViewModel.parentInfo.LoginEmail = null;
+                        }
                         this.context?.ParentInfo.Add(parentInfoAddViewModel.parentInfo);
                     }
 
                     this.context?.SaveChanges();
 
-                    if (!string.IsNullOrWhiteSpace(parentInfoAddViewModel.PasswordHash) && !string.IsNullOrWhiteSpace(parentInfoAddViewModel.parentInfo.Email))
+                    if (!string.IsNullOrWhiteSpace(parentInfoAddViewModel.PasswordHash) && !string.IsNullOrWhiteSpace(parentInfoAddViewModel.parentInfo.LoginEmail))
                     {
                         UserMaster userMaster = new UserMaster();
 
                         var decrypted = Utility.Decrypt(parentInfoAddViewModel.PasswordHash);
                         string passwordHash = Utility.GetHashedPassword(decrypted);
 
-                        var loginInfo = this.context?.UserMaster.FirstOrDefault(x => x.TenantId == parentInfoAddViewModel.parentInfo.TenantId && x.SchoolId == parentInfoAddViewModel.parentInfo.SchoolId && x.EmailAddress == parentInfoAddViewModel.parentInfo.Email);
+                        var loginInfo = this.context?.UserMaster.FirstOrDefault(x => x.TenantId == parentInfoAddViewModel.parentInfo.TenantId && x.SchoolId == parentInfoAddViewModel.parentInfo.SchoolId && x.EmailAddress == parentInfoAddViewModel.parentInfo.LoginEmail);
 
                         if (loginInfo == null)
                         {
@@ -81,7 +89,7 @@ namespace opensis.data.Repository
                             userMaster.UserId = parentInfoAddViewModel.parentInfo.StudentId;
                             userMaster.LangId = 1;
                             userMaster.MembershipId = membership.MembershipId;
-                            userMaster.EmailAddress = parentInfoAddViewModel.parentInfo.Email;
+                            userMaster.EmailAddress = parentInfoAddViewModel.parentInfo.LoginEmail;
                             userMaster.PasswordHash = passwordHash;
                             userMaster.Name = parentInfoAddViewModel.parentInfo.Firstname;
 
@@ -151,12 +159,15 @@ namespace opensis.data.Repository
                     var parentInfoUpdate = this.context?.ParentInfo.FirstOrDefault(x => x.TenantId == parentInfoAddViewModel.parentInfo.TenantId && x.SchoolId == parentInfoAddViewModel.parentInfo.SchoolId && x.ParentId == parentInfoAddViewModel.parentInfo.ParentId);
 
                     parentInfoUpdate.Relationship = parentInfoAddViewModel.parentInfo.Relationship;
+                    parentInfoUpdate.Salutation = parentInfoAddViewModel.parentInfo.Salutation;
                     parentInfoUpdate.Firstname = parentInfoAddViewModel.parentInfo.Firstname;
+                    parentInfoUpdate.Middlename = parentInfoAddViewModel.parentInfo.Middlename;
                     parentInfoUpdate.Lastname = parentInfoAddViewModel.parentInfo.Lastname;
                     parentInfoUpdate.HomePhone = parentInfoAddViewModel.parentInfo.HomePhone;
                     parentInfoUpdate.WorkPhone = parentInfoAddViewModel.parentInfo.WorkPhone;
                     parentInfoUpdate.Mobile = parentInfoAddViewModel.parentInfo.Mobile;
-                    parentInfoUpdate.Email = parentInfoAddViewModel.parentInfo.Mobile;
+                    parentInfoUpdate.PersonalEmail = parentInfoAddViewModel.parentInfo.PersonalEmail;
+                    parentInfoUpdate.WorkEmail = parentInfoAddViewModel.parentInfo.WorkEmail;
                     parentInfoUpdate.StudentAddressSame = parentInfoAddViewModel.parentInfo.StudentAddressSame;
                     parentInfoUpdate.AddressLineOne = parentInfoAddViewModel.parentInfo.AddressLineOne;
                     parentInfoUpdate.AddressLineTwo = parentInfoAddViewModel.parentInfo.AddressLineTwo;
@@ -166,24 +177,31 @@ namespace opensis.data.Repository
                     parentInfoUpdate.Zip = parentInfoAddViewModel.parentInfo.Zip;
                     parentInfoUpdate.IsCustodian = parentInfoAddViewModel.parentInfo.IsCustodian;
                     parentInfoUpdate.IsPortalUser = parentInfoAddViewModel.parentInfo.IsPortalUser;
-                    //parentInfoUpdate.PortalUserId = parentInfoAddViewModel.parentInfo.Email;
+                    parentInfoUpdate.Suffix = parentInfoAddViewModel.parentInfo.Suffix;
+                    parentInfoUpdate.LoginEmail = parentInfoAddViewModel.parentInfo.LoginEmail;
                     parentInfoUpdate.BusPickup = parentInfoAddViewModel.parentInfo.BusPickup;
                     parentInfoUpdate.BusDropoff = parentInfoAddViewModel.parentInfo.BusDropoff;
                     parentInfoUpdate.ContactType = parentInfoAddViewModel.parentInfo.ContactType;
-                    //parentInfoUpdate.Associationship=parentInfoUpdate.Associationship+"#"+ parentInfoAddViewModel.parentInfo.TenantId + "#" + parentInfoAddViewModel.parentInfo.SchoolId + "#" + parentInfoAddViewModel.parentInfo.StudentId;
+                    parentInfoUpdate.Associationship = parentInfoAddViewModel.parentInfo.Associationship;
                     parentInfoUpdate.LastUpdated = DateTime.UtcNow;
                     parentInfoUpdate.UpdatedBy = parentInfoAddViewModel.parentInfo.UpdatedBy;
                     parentInfoUpdate.BusNo = parentInfoAddViewModel.parentInfo.BusNo;
+                    //Add LoginEmail in ParentInfo Table
+                    if (!string.IsNullOrWhiteSpace(parentInfoAddViewModel.PasswordHash) && !string.IsNullOrWhiteSpace(parentInfoAddViewModel.parentInfo.LoginEmail))
+                    {
+                        parentInfoUpdate.LoginEmail = parentInfoAddViewModel.parentInfo.LoginEmail;
+                    }
+                    parentInfoUpdate.IsPortalUser = parentInfoAddViewModel.parentInfo.IsPortalUser;
                     this.context?.SaveChanges();
 
-                    if (!string.IsNullOrWhiteSpace(parentInfoAddViewModel.PasswordHash) && !string.IsNullOrWhiteSpace(parentInfoAddViewModel.parentInfo.Email))
+                    if (!string.IsNullOrWhiteSpace(parentInfoAddViewModel.PasswordHash) && !string.IsNullOrWhiteSpace(parentInfoAddViewModel.parentInfo.LoginEmail))
                     {
                         UserMaster userMaster = new UserMaster();
 
                         var decrypted = Utility.Decrypt(parentInfoAddViewModel.PasswordHash);
                         string passwordHash = Utility.GetHashedPassword(decrypted);
 
-                        var loginInfo = this.context?.UserMaster.FirstOrDefault(x => x.TenantId == parentInfoAddViewModel.parentInfo.TenantId && x.SchoolId == parentInfoAddViewModel.parentInfo.SchoolId && x.EmailAddress == parentInfoAddViewModel.parentInfo.Email);
+                        var loginInfo = this.context?.UserMaster.FirstOrDefault(x => x.TenantId == parentInfoAddViewModel.parentInfo.TenantId && x.SchoolId == parentInfoAddViewModel.parentInfo.SchoolId && x.EmailAddress == parentInfoAddViewModel.parentInfo.LoginEmail);
 
                         if (loginInfo == null)
                         {
@@ -194,7 +212,7 @@ namespace opensis.data.Repository
                             userMaster.UserId = parentInfoAddViewModel.parentInfo.StudentId;
                             userMaster.LangId = 1;
                             userMaster.MembershipId = membership.MembershipId;
-                            userMaster.EmailAddress = parentInfoAddViewModel.parentInfo.Email;
+                            userMaster.EmailAddress = parentInfoAddViewModel.parentInfo.LoginEmail;
                             userMaster.PasswordHash = null;
                             userMaster.Name = parentInfoAddViewModel.parentInfo.Firstname;
 
@@ -251,7 +269,10 @@ namespace opensis.data.Repository
                     if (pageResult.FilterParams != null && pageResult.FilterParams.ElementAt(0).ColumnName == null && pageResult.FilterParams.Count == 1)
                     {
                         string Columnvalue = pageResult.FilterParams.ElementAt(0).FilterValue;
-                        transactionIQ = ParentInfoList.Where(x => x.Firstname.ToLower().Contains(Columnvalue.ToLower()) || x.Lastname.ToLower().Contains(Columnvalue.ToLower()) || x.Email.ToLower().Contains(Columnvalue.ToLower()) || x.Mobile.Contains(Columnvalue)).AsQueryable();
+                        transactionIQ = ParentInfoList.Where(x => x.Firstname != null && x.Firstname.ToLower().Contains(Columnvalue.ToLower()) ||
+                                        x.Lastname != null && x.Lastname.ToLower().Contains(Columnvalue.ToLower()) ||
+                                        x.PersonalEmail != null && x.PersonalEmail.ToLower().Contains(Columnvalue.ToLower()) ||
+                                        x.Mobile != null && x.Mobile.Contains(Columnvalue)).AsQueryable();
                     }
                     else
                     {
@@ -267,8 +288,9 @@ namespace opensis.data.Repository
                     TenantId = y.TenantId,
                     Firstname = y.Firstname,
                     Lastname = y.Lastname,
-                    Email=y.Email,
+                    PersonalEmail=y.PersonalEmail,
                     Mobile=y.Mobile,
+                    UserProfile=y.UserProfile,
                     Associationship=y.Associationship,
                     AddressLineOne = ToFullAddress(y.AddressLineOne, y.AddressLineTwo,
                         int.TryParse(y.City, out resultData) == true ? this.context.City.Where(x => x.Id == Convert.ToInt32(y.City)).FirstOrDefault().Name : y.City,
@@ -285,7 +307,7 @@ namespace opensis.data.Repository
                     {                        
                         char studentId = studentAssociateWithParent.Last();
                         var student = this.context?.StudentMaster.FirstOrDefault(x => x.StudentId == int.Parse(studentId.ToString()));
-                        var studentForView = new GetStudentForView() {StudentId=student.StudentId,SchoolId=student.SchoolId,TenantId=student.TenantId ,FirstGivenName = student.FirstGivenName, MiddleName = student.MiddleName, LastFamilyName = student.LastFamilyName };
+                        var studentForView = new GetStudentForView() {StudentId=student.StudentId,StudentInternalId=student.StudentInternalId,SchoolId=student.SchoolId,TenantId=student.TenantId ,FirstGivenName = student.FirstGivenName, MiddleName = student.MiddleName, LastFamilyName = student.LastFamilyName };
 
                         ParentInfo.getStudentForView.Add(studentForView);
                     }
@@ -340,12 +362,21 @@ namespace opensis.data.Repository
             try
             {
                 int resultData;
-                var ParentInfoList = this.context?.ParentInfo.ToList().Where(x => x.TenantId == getAllParentInfoListForView.TenantId && x.SchoolId== getAllParentInfoListForView.SchoolId);                
+                var ParentInfoList = this.context?.ParentInfo.ToList().Where(x => x.TenantId == getAllParentInfoListForView.TenantId && (getAllParentInfoListForView.Firstname == null || (x.Firstname == getAllParentInfoListForView.Firstname)) && (getAllParentInfoListForView.Lastname == null || (x.Lastname == getAllParentInfoListForView.Lastname)) && (getAllParentInfoListForView.Email == null || (x.PersonalEmail == getAllParentInfoListForView.Email)) && (getAllParentInfoListForView.Mobile == null || (x.Mobile == getAllParentInfoListForView.Mobile)) && (getAllParentInfoListForView.StreetAddress == null || (x.AddressLineOne == getAllParentInfoListForView.StreetAddress)) && (getAllParentInfoListForView.City == null || (x.City == getAllParentInfoListForView.City)) && (getAllParentInfoListForView.State == null || (x.State == getAllParentInfoListForView.State)) && (getAllParentInfoListForView.Zip == null || (x.Zip == getAllParentInfoListForView.Zip)));                
                 var parentInfo = ParentInfoList.Select(y => new GetParentInfoForView
                 {
                     SchoolId = y.SchoolId,
                     Firstname = y.Firstname,
                     Lastname = y.Lastname,
+                    Mobile=y.Mobile,
+                    WorkPhone=y.WorkPhone,
+                    HomePhone=y.HomePhone,
+                    PersonalEmail=y.PersonalEmail,
+                    WorkEmail=y.WorkEmail,
+                    LoginEmail=y.LoginEmail,
+                    UserProfile=y.UserProfile,
+                    IsPortalUser=y.IsPortalUser,
+                    IsCustodian=y.IsCustodian,
                     TenantId = y.TenantId,
                     AddressLineOne = ToFullAddress(y.AddressLineOne, y.AddressLineTwo,
                 int.TryParse(y.City, out resultData) == true ? this.context.City.Where(x => x.Id == Convert.ToInt32(y.City)).FirstOrDefault().Name : y.City,
@@ -387,7 +418,7 @@ namespace opensis.data.Repository
                     {
                         char studentId = studentAssociateWithParent.Last();
                         var student = this.context?.StudentMaster.FirstOrDefault(x => x.StudentId == int.Parse(studentId.ToString()));
-                        var studentForView = new GetStudentForView() { StudentId = student.StudentId, FirstGivenName = student.FirstGivenName, MiddleName = student.MiddleName, LastFamilyName = student.LastFamilyName };
+                        var studentForView = new GetStudentForView() { StudentId = student.StudentId, StudentInternalId=student.StudentInternalId, FirstGivenName = student.FirstGivenName, MiddleName = student.MiddleName, LastFamilyName = student.LastFamilyName };
 
                         parentInfoViewModel.getStudentForView.Add(studentForView);
                     }
@@ -421,7 +452,7 @@ namespace opensis.data.Repository
                 int? ParentId = Utility.GetMaxPK(this.context, new Func<ParentInfo, int>(x => x.ParentId));
                 parentInfoAddViewModel.parentInfo.ParentId = (int)ParentId;
                 parentInfoAddViewModel.parentInfo.LastUpdated = DateTime.UtcNow;
-                parentInfoAddViewModel.parentInfo.PortalUserId = parentInfoAddViewModel.parentInfo.Email;
+                parentInfoAddViewModel.parentInfo.LoginEmail = parentInfoAddViewModel.parentInfo.LoginEmail;
                 this.context?.ParentInfo.Add(parentInfoAddViewModel.parentInfo);
                 this.context?.SaveChanges();
                 parentInfoAddViewModel._failure = false;
@@ -432,6 +463,50 @@ namespace opensis.data.Repository
                 parentInfoAddViewModel._message = es.Message;
             }
             return parentInfoAddViewModel;
+        }
+
+        /// <summary>
+        /// Remove Associated Parent
+        /// </summary>
+        /// <param name="parentInfoDeleteViewModel"></param>
+        /// <returns></returns>
+        public ParentInfoDeleteViewModel RemoveAssociatedParent(ParentInfoDeleteViewModel parentInfoDeleteViewModel)
+        {
+            try
+            {
+                string AssociateParentAfterDel;
+                var AssociationshipDataToDel = parentInfoDeleteViewModel.parentInfo.TenantId + "#" + parentInfoDeleteViewModel.parentInfo.SchoolId + "#" + parentInfoDeleteViewModel.StudentId;
+
+                var ParentInfo = this.context?.ParentInfo.FirstOrDefault(x => x.TenantId == parentInfoDeleteViewModel.parentInfo.TenantId && x.SchoolId == parentInfoDeleteViewModel.parentInfo.SchoolId && x.ParentId == parentInfoDeleteViewModel.parentInfo.ParentId);
+
+                if (ParentInfo != null)
+                {
+                    var AssociationshipData = ParentInfo.Associationship;
+                    string[] studentAssociateWithParents = AssociationshipData.Split(" | ", StringSplitOptions.RemoveEmptyEntries);
+                    studentAssociateWithParents = studentAssociateWithParents.Where(w => w != AssociationshipDataToDel).ToArray();
+                    if (studentAssociateWithParents.Count() > 1)
+                    {
+                        AssociateParentAfterDel = string.Join(" | ", studentAssociateWithParents);
+                    }
+                    else if (studentAssociateWithParents.Count() == 1)
+                    {
+                        AssociateParentAfterDel = string.Concat(studentAssociateWithParents);
+                    }
+                    else
+                    {
+                        AssociateParentAfterDel = null;
+                    }
+                    ParentInfo.Associationship = AssociateParentAfterDel;
+                    this.context?.SaveChanges();
+                    parentInfoDeleteViewModel._message = "Associationship Remove Successfully";
+                }
+            }
+            catch (Exception es)
+            {
+                parentInfoDeleteViewModel._failure = true;
+                parentInfoDeleteViewModel._message = es.Message;
+            }
+            return parentInfoDeleteViewModel;
         }
     }
 }

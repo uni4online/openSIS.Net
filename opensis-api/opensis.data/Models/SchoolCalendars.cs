@@ -5,6 +5,10 @@ namespace opensis.data.Models
 {
     public partial class SchoolCalendars
     {
+        public SchoolCalendars()
+        {
+            StudentEnrollment = new HashSet<StudentEnrollment>();
+        }
         public Guid TenantId { get; set; }
         public int SchoolId { get; set; }
         public int CalenderId { get; set; }
@@ -21,5 +25,6 @@ namespace opensis.data.Models
         public string UpdatedBy { get; set; }
 
         public virtual SchoolMaster SchoolMaster { get; set; }
+        public virtual ICollection<StudentEnrollment> StudentEnrollment { get; set; }
     }
 }

@@ -43,11 +43,11 @@
 
             <table @stagger mat-table [dataSource]="StudentModelList" class="mat-elevation-z8 table-auto w-full" matSort>
                
-                <ng-container matColumnDef="studentName">
+                <ng-container matColumnDef="firstGivenName">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>NAME</th>
                     <td mat-cell *matCellDef="let element">
                         <a (click) ="viewStudentDetails(element.studentId)" class="text-blue cursor-pointer">
-                            {{element.studentName}}</a>
+                            {{element.firstGivenName}}</a>
                     </td>
                 </ng-container>
 
@@ -55,23 +55,23 @@
                 <ng-container matColumnDef="studentId">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>STUDENT ID</th>
                     <td mat-cell *matCellDef="let element">
-                        {{element.studentId}}
+                        {{element.studentInternalId}}
                     </td>
                 </ng-container>
 
-                <ng-container matColumnDef="studentAlternateId">
+                <ng-container matColumnDef="alternateId">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>ALTERNATE ID</th>
                     <td mat-cell *matCellDef="let element">
-                        {{element.studentAlternateId}}
+                        {{element.alternateId}}
                     </td>
                 </ng-container>
 
                 
 
-                <ng-container matColumnDef="phone">
+                <ng-container matColumnDef="homePhone">
                     <th mat-header-cell *matHeaderCellDef  mat-sort-header>PHONE</th>
                     <td mat-cell *matCellDef="let element">
-                        {{element.phone}}
+                        {{element.homePhone}}
                     </td>
                 </ng-container>              
               

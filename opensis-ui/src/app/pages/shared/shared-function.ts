@@ -35,6 +35,17 @@ export class SharedFunction {
         return dt;    
       }
     }
+
+    autoGeneratePassword() {
+      var chars = "abcdefghijklmnopqrstuvwxyz!@#$%^&*()-+<>ABCDEFGHIJKLMNOP1234567890";
+      var pass= "";
+      for (var x = 0; x < 8; x++) {
+        var i = Math.random() * chars.length;
+        pass += chars.charAt(i);
+      }
+      
+      return pass;
+    }
     
     formatDate(date){      
         if(date !== "" && date !== null && date!== undefined && date !="-"){
@@ -55,16 +66,15 @@ export class SharedFunction {
         }
         
       }
-      serverToLocalDateAndTime(date){
-        console.log(date);
-        if(date !== "" && date !== null && date!== undefined && date !="-"){
-          let localDate = new Date('date');
-          console.log(localDate);
-           return localDate;
+      serverToLocalDateAndTime(utcDate){
+        if(utcDate !== "" && utcDate !== null && utcDate!== undefined && utcDate !="-"){
+        let localTime=moment.utc(utcDate).local().format('YYYY-MM-DD HH:mm:ss');
+        return localTime;
         }else{
-          return date;
+        return utcDate;
         }
       }
+      
     checkEmptyObject(data){
       if (data && (Object.keys(data).length !== 0 || Object.keys(data).length > 0) ){
         return true;

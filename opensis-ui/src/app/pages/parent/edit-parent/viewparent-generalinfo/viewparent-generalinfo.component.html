@@ -2,7 +2,9 @@
 
     <div class="flex items-center mx-4" fxLayout="row" fxLayoutAlign="center center">
         <h3 class="flex-auto">{{'generalInformation' | translate}}</h3>
-        <button mat-button color="primary"><mat-icon [icIcon]="icEdit"></mat-icon> {{'editInformation' |translate}}</button>
+        <button mat-button color="primary">
+            <mat-icon [icIcon]="icEdit"></mat-icon> {{'editInformation' |translate}}
+        </button>
     </div>
     <mat-card-content>
 
@@ -18,50 +20,6 @@
                     <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">John</p>
                 </li>
             </ul>
-
-
-            <hr class="-mx-4 mt-6">
-
-            <h4 class="text-primary pt-8 pb-2 px-4">{{'associatedStudents'|translate}}</h4>
-            <div class="md:grid md:grid-cols-2 ld:grid lg:grid-cols-2 xl:grid-cols-3 md:col-gap-8 md:row-gap-6 mx-4">
-                <div class="border border-solid rounded p-4 mb-4">
-                    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px">
-                        <div class="relative cursor-pointer" fxFlex="none" (click)='openViewDetails()'>
-                            <img src="assets/img/default.jpg" class="avatar">
-                        </div>
-                        <div class="overflow-hidden cursor-pointer" fxFlex="auto" (click)='openViewDetails()'>
-                            <div class="subheading-2 leading-snug text-primary">John Doe</div>
-                            <div class="body-1 text-secondary truncate contact-type">Grade: 9<span
-                                    class="separator"></span> <span>Peachtree High School</span></div>
-                        </div>
-                        <div fxFlex="none" fxLayout="column" fxLayoutAlign="center end">
-                            <button mat-icon-button matTooltip="Remove Association" type="button" class="text-gray">
-                                <mat-icon [icIcon]="icRemove"></mat-icon>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="border border-solid rounded p-4 mb-4">
-                    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px">
-                        <div class="relative cursor-pointer" fxFlex="none" (click)='openViewDetails()'>
-                            <img src="assets/img/default.jpg" class="avatar">
-                        </div>
-                        <div class="overflow-hidden cursor-pointer" fxFlex="auto" (click)='openViewDetails()'>
-                            <div class="subheading-2 leading-snug text-primary">Jeniffer Doe</div>
-                            <div class="body-1 text-secondary truncate contact-type">Grade: 12<span
-                                    class="separator"></span> <span>Mactree Middle School</span></div>
-                        </div>
-                        <div fxFlex="none" fxLayout="column" fxLayoutAlign="center end">
-                            <button mat-icon-button matTooltip="Remove Association" type="button" class="text-gray">
-                                <mat-icon [icIcon]="icRemove"></mat-icon>
-                            </button>
-                    </div>
-                </div>
-            </div>
-                <div class="border flex items-center border-dashed border-blue rounded hover:bg-skyblue-light p-4 mb-4 text-center cursor-pointer">
-                    <span class="text-center w-full text-primary"><mat-icon [icIcon]="icAdd" class="mr-3 inline-block align-middle"></mat-icon>Associate Student</span>
-                </div>
-            </div>
 
 
             <hr class="-mx-4 mt-6">
@@ -102,13 +60,70 @@
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'password' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2"><a href="" class="text-primary pointer">Reset Password</a></p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2"><a href=""
+                            class="text-primary pointer">Reset Password</a></p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'portalAccess' | translate}}</label>
                     <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2 text-green">Yes</p>
                 </li>
             </ul>
+
+
+            <hr class="-mx-4 mt-6">
+
+            <h4 class="text-primary pt-8 pb-2 px-4">{{'associatedStudents'|translate}}</h4>
+            <div class="md:grid md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 md:col-gap-8 md:row-gap-2 mx-4">
+                <div class="border border-solid rounded mb-4">
+                    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px">
+                        <div class="relative cursor-pointer py-4 pl-4" fxFlex="none" (click)='openViewDetails()'>
+                            <img src="assets/img/default.jpg" class="avatar">
+                        </div>
+                        <div class="overflow-hidden cursor-pointer py-2" fxFlex="auto" (click)='openViewDetails()'>
+                            <div class="subheading-2 leading-snug text-primary">John Doe</div>
+                            <div class="body-1 text-secondary truncate contact-type">Grade: 9<span
+                                    class="separator"></span>Peachtree High School</div>
+                        </div>
+                        <div fxFlex="none" fxLayout="column" fxLayoutAlign="center end" class="pr-3">
+                            <div class="flex items-center">
+                                <span class="custody"><img src="../../../../assets/img/icons/mother.svg"
+                                        matTooltip="Custody of Student"
+                                        class="w-6 mr-3 inline-block align-middle" /></span>
+                            <button mat-icon-button matTooltip="Remove Association" type="button" class="text-gray">
+                                <mat-icon [icIcon]="icRemove"></mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                <div class="border border-solid rounded mb-4">
+                    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px">
+                        <div class="relative cursor-pointer py-4 pl-4" fxFlex="none" (click)='openViewDetails()'>
+                            <img src="assets/img/default.jpg" class="avatar">
+                        </div>
+                        <div class="overflow-hidden cursor-pointer" fxFlex="auto" (click)='openViewDetails()'>
+                            <div class="subheading-2 leading-snug text-primary">Jeniffer Doe</div>
+                            <div class="body-1 text-secondary truncate contact-type">Grade: 12<span
+                                    class="separator"></span> <span>Mactree Middle School</span></div>
+                        </div>
+                        <div fxFlex="none" fxLayout="column" fxLayoutAlign="center end" class="pr-3">
+                            <div class="flex items-center">
+                                <span class="no-custody" matTooltip="No Custody"><img src="../../../../assets/img/icons/mother.svg"
+                                        class="w-6 mr-3 inline-block align-middle" /></span>
+                            <button mat-icon-button matTooltip="Remove Association" type="button" class="text-gray">
+                                <mat-icon [icIcon]="icRemove"></mat-icon>
+                            </button>
+                    </div>
+                </div>
+            </div>
+                </div>
+                <div
+                    class="border flex items-center border-dashed border-blue rounded hover:bg-skyblue-light p-4 mb-4 text-center cursor-pointer">
+                    <span class="text-center w-full text-primary">
+                        <mat-icon [icIcon]="icAdd" class="mr-3 inline-block align-middle"></mat-icon>Associate Student
+                    </span>
+                </div>
+            </div>
         </div>
     </mat-card-content>
 </mat-card>

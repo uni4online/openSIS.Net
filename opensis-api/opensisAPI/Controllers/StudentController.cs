@@ -91,23 +91,6 @@ namespace opensisAPI.Controllers
             return studentList;
         }
 
-        [HttpPost("searchContactForStudent")]
-        public ActionResult<SearchContactViewModel> SearchContactForStudent(SearchContactViewModel searchContactViewModel)
-        {
-            SearchContactViewModel contactViewModel = new SearchContactViewModel();
-            try
-            {
-                contactViewModel = _studentService.SearchContactForStudent(searchContactViewModel);
-            }
-            catch (Exception es)
-            {
-                contactViewModel._message = es.Message;
-                contactViewModel._failure = true;
-            }
-            return contactViewModel;
-        }
-
-
         [HttpPost("addStudentDocument")]
         public ActionResult<StudentDocumentAddViewModel> AddStudentDocument(StudentDocumentAddViewModel studentDocumentAddViewModel)
         {
@@ -438,6 +421,65 @@ namespace opensisAPI.Controllers
                 studentList._failure = true;
             }
             return studentList;
+        }
+
+        [HttpPost("checkStudentInternalId")]
+        public ActionResult<CheckStudentInternalIdViewModel> CheckStudentInternalId(CheckStudentInternalIdViewModel checkStudentInternalIdViewModel)
+        {
+            CheckStudentInternalIdViewModel checkInternalId = new CheckStudentInternalIdViewModel();
+            try
+            {
+                checkInternalId = _studentService.CheckStudentInternalId(checkStudentInternalIdViewModel);
+            }
+            catch (Exception es)
+            {
+                checkInternalId._message = es.Message;
+                checkInternalId._failure = true;
+            }
+            return checkInternalId;
+        }
+
+        [HttpPost("addStudentEnrollment")]
+        public ActionResult<StudentEnrollmentListModel> AddStudentEnrollment(StudentEnrollmentListModel studentEnrollmentListModel)
+        {
+            StudentEnrollmentListModel studentEnrollmentAdd = new StudentEnrollmentListModel();
+            try
+            {
+
+                if (studentEnrollmentListModel.studentEnrollments.Count > 0)
+                {
+                    studentEnrollmentAdd = _studentService.AddStudentEnrollment(studentEnrollmentListModel);
+                }
+                else
+                {
+                    studentEnrollmentAdd._token = studentEnrollmentListModel._token;
+                    studentEnrollmentAdd._tenantName = studentEnrollmentListModel._tenantName;
+                    studentEnrollmentAdd._failure = true;                    
+                }
+            }
+            catch (Exception es)
+            {
+
+                studentEnrollmentAdd._failure = true;
+                studentEnrollmentAdd._message = es.Message;
+            }
+            return studentEnrollmentAdd;
+        }
+        [HttpPost("getAllStudentEnrollment")]
+
+        public ActionResult<StudentEnrollmentListModel> GetAllStudentEnrollment(StudentEnrollmentListModel studentEnrollmentListModel)
+        {
+            StudentEnrollmentListModel studentEnrollmentList = new StudentEnrollmentListModel();
+            try
+            {
+                    studentEnrollmentList = _studentService.GetAllStudentEnrollment(studentEnrollmentListModel);
+            }
+            catch (Exception es)
+            {
+                studentEnrollmentList._message = es.Message;
+                studentEnrollmentList._failure = true;
+            }
+            return studentEnrollmentList;
         }
     }
 }

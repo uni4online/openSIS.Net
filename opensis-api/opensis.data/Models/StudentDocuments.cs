@@ -10,6 +10,8 @@ namespace opensis.data.Models
         public int SchoolId { get; set; }
         public int StudentId { get; set; }
         public int DocumentId { get; set; }
+        public string Filename { get; set; }
+        public string Filetype { get; set; }
         public byte[] FileUploaded { get; set; }
         public DateTime? UploadedOn { get; set; }
         public string UploadedBy { get; set; }

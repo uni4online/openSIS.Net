@@ -5,10 +5,7 @@ namespace opensis.data.Models
 {
     public partial class Gradelevels
     {
-        public Gradelevels()
-        {
-            StudentEnrollment = new HashSet<StudentEnrollment>();
-        }
+       
         public Guid TenantId { get; set; }
         public int SchoolId { get; set; }
         public int GradeId { get; set; }
@@ -22,6 +19,6 @@ namespace opensis.data.Models
 
         public virtual GradeEquivalency IscedGradeLevelNavigation { get; set; }
         public virtual SchoolMaster SchoolMaster { get; set; }
-        public virtual ICollection<StudentEnrollment> StudentEnrollment { get; set; }
+       
     }
 }

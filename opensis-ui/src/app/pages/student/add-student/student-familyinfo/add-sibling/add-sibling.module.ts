@@ -19,7 +19,7 @@ import {MatRadioModule} from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatExpansionModule } from '@angular/material/expansion';
-
+import { SharedModuleModule } from '../../../../shared-module/shared-module.module';
 
 
 @NgModule({
@@ -43,7 +43,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatRadioModule,
     MatSelectModule,
     MatSlideToggleModule,
-    MatExpansionModule
+    MatExpansionModule,
+    SharedModuleModule
   ]
 })
 export class AddSiblingModule { }

@@ -3469,12 +3469,6 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .HasMaxLength(50)
                         .IsUnicode(false);
 
-                    b.Property<string>("Email")
-                        .HasColumnName("email")
-                        .HasColumnType("varchar(150)")
-                        .HasMaxLength(150)
-                        .IsUnicode(false);
-
                     b.Property<string>("Firstname")
                         .HasColumnName("firstname")
                         .HasColumnType("varchar(50)")
@@ -3505,21 +3499,39 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .HasMaxLength(50)
                         .IsUnicode(false);
 
+                    b.Property<string>("LoginEmail")
+                        .HasColumnName("login_email")
+                        .HasColumnType("varchar(150)")
+                        .HasComment("emailaddress mapped to user_master")
+                        .HasMaxLength(150)
+                        .IsUnicode(false);
+
+                    b.Property<string>("Middlename")
+                        .HasColumnName("middlename")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
                     b.Property<string>("Mobile")
                         .HasColumnName("mobile")
                         .HasColumnType("varchar(15)")
                         .HasMaxLength(15)
                         .IsUnicode(false);
 
-                    b.Property<string>("PortalUserId")
-                        .HasColumnName("portal_user_id")
+                    b.Property<string>("PersonalEmail")
+                        .HasColumnName("personal_email")
                         .HasColumnType("varchar(150)")
-                        .HasComment("emailaddress mapped to user_master")
                         .HasMaxLength(150)
                         .IsUnicode(false);
 
                     b.Property<string>("Relationship")
                         .HasColumnName("relationship")
+                        .HasColumnType("varchar(20)")
+                        .HasMaxLength(20)
+                        .IsUnicode(false);
+
+                    b.Property<string>("Salutation")
+                        .HasColumnName("salutation")
                         .HasColumnType("varchar(20)")
                         .HasMaxLength(20)
                         .IsUnicode(false);
@@ -3534,10 +3546,28 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .HasColumnName("student_address_same")
                         .HasColumnType("bit");
 
+                    b.Property<string>("Suffix")
+                        .HasColumnName("suffix")
+                        .HasColumnType("varchar(20)")
+                        .HasMaxLength(20)
+                        .IsUnicode(false);
+
                     b.Property<string>("UpdatedBy")
                         .HasColumnName("updated_by")
                         .HasColumnType("varchar(100)")
                         .HasMaxLength(100)
+                        .IsUnicode(false);
+
+                    b.Property<string>("UserProfile")
+                        .HasColumnName("user_profile")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("WorkEmail")
+                        .HasColumnName("work_email")
+                        .HasColumnType("varchar(150)")
+                        .HasMaxLength(150)
                         .IsUnicode(false);
 
                     b.Property<string>("WorkPhone")
@@ -4667,6 +4697,19 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .HasColumnName("file_uploaded")
                         .HasColumnType("varbinary(max)");
 
+                    b.Property<string>("Filename")
+                        .HasColumnName("filename")
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100)
+                        .IsUnicode(false);
+
+                    b.Property<string>("Filetype")
+                        .HasColumnName("filetype")
+                        .HasColumnType("char(50)")
+                        .IsFixedLength(true)
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
                     b.Property<string>("UploadedBy")
                         .HasColumnName("uploaded_by")
                         .HasColumnType("varchar(100)")
@@ -4696,49 +4739,68 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .HasColumnName("student_id")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CalendarId")
-                        .HasColumnName("calendar_id")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("DropCode")
-                        .HasColumnName("drop_code")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("EndDate")
-                        .HasColumnName("end_date")
-                        .HasColumnType("date");
-
-                    b.Property<int?>("EnrollmentCode")
-                        .HasColumnName("enrollment_code")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("EnrollmentId")
+                    b.Property<int>("EnrollmentId")
                         .HasColumnName("enrollment_id")
                         .HasColumnType("int");
 
-                    b.Property<int?>("GradeId")
-                        .HasColumnName("grade_id")
+                    b.Property<int?>("CalenderId")
+                        .HasColumnName("calender_id")
                         .HasColumnType("int");
 
-                    b.Property<int?>("LastSchool")
-                        .HasColumnName("last_school")
-                        .HasColumnType("int");
+                    b.Property<string>("EnrollmentCode")
+                        .HasColumnName("enrollment_code")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("EnrollmentDate")
+                        .HasColumnName("enrollment_date")
+                        .HasColumnType("date");
+
+                    b.Property<string>("ExitCode")
+                        .HasColumnName("exit_code")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("ExitDate")
+                        .HasColumnName("exit_date")
+                        .HasColumnType("date");
+
+                    b.Property<string>("GradeLevelTitle")
+                        .HasColumnName("grade_level_title")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
 
                     b.Property<DateTime?>("LastUpdated")
                         .HasColumnName("last_updated")
                         .HasColumnType("datetime");
 
-                    b.Property<int?>("NextSchool")
-                        .HasColumnName("next_school")
-                        .HasColumnType("int");
+                    b.Property<string>("RollingOption")
+                        .HasColumnName("rolling_option")
+                        .HasColumnType("varchar(50)")
+                        .HasComment("LOV of N/A, Transferred In,Rolled Over,New")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
 
-                    b.Property<int?>("SectionId")
-                        .HasColumnName("section_id")
-                        .HasColumnType("int");
+                    b.Property<string>("SchoolName")
+                        .HasColumnName("school_name")
+                        .HasColumnType("varchar(200)")
+                        .HasMaxLength(200)
+                        .IsUnicode(false);
 
-                    b.Property<DateTime?>("StartDate")
-                        .HasColumnName("start_date")
-                        .HasColumnType("date");
+                    b.Property<string>("SchoolTransferred")
+                        .HasColumnName("school_transferred")
+                        .HasColumnType("varchar(200)")
+                        .HasMaxLength(200)
+                        .IsUnicode(false);
+
+                    b.Property<string>("TransferredGrade")
+                        .HasColumnName("transferred_grade")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
 
                     b.Property<string>("UpdatedBy")
                         .HasColumnName("updated_by")
@@ -4746,11 +4808,9 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .HasMaxLength(100)
                         .IsUnicode(false);
 
-                    b.HasKey("TenantId", "SchoolId", "StudentId");
+                    b.HasKey("TenantId", "SchoolId", "StudentId", "EnrollmentId");
 
-                    b.HasIndex("TenantId", "SchoolId", "GradeId");
-
-                    b.HasIndex("TenantId", "SchoolId", "SectionId");
+                    b.HasIndex("TenantId", "SchoolId", "CalenderId");
 
                     b.ToTable("student_enrollment");
                 });
@@ -4878,12 +4938,24 @@ namespace opensis.data.Migrations.SqlServerMigrations
 
                     b.Property<string>("DistrictId")
                         .HasColumnName("district_id")
-                        .HasColumnType("nchar(50)")
-                        .IsFixedLength(true)
-                        .HasMaxLength(50);
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
 
                     b.Property<DateTime?>("Dob")
                         .HasColumnName("dob")
+                        .HasColumnType("date");
+
+                    b.Property<bool?>("EconomicDisadvantage")
+                        .HasColumnName("economic_disadvantage")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("Eligibility504")
+                        .HasColumnName("eligibility_504")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("EstimatedGradDate")
+                        .HasColumnName("estimated_grad_date")
                         .HasColumnType("date");
 
                     b.Property<string>("Ethnicity")
@@ -4907,6 +4979,10 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .HasColumnName("first_language_id")
                         .HasColumnType("int")
                         .HasComment("Plan is language will be displayed in dropdown from language table and selected corresponding id will be stored into table.");
+
+                    b.Property<bool?>("FreeLunchEligibility")
+                        .HasColumnName("free_lunch_eligibility")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Gender")
                         .HasColumnName("gender")
@@ -4978,6 +5054,14 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .HasColumnType("varchar(50)")
                         .HasMaxLength(50)
                         .IsUnicode(false);
+
+                    b.Property<DateTime?>("LastUpdated")
+                        .HasColumnName("last_updated")
+                        .HasColumnType("datetime");
+
+                    b.Property<bool?>("LepIndicator")
+                        .HasColumnName("lep_indicator")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Linkedin")
                         .HasColumnName("linkedin")
@@ -5142,17 +5226,31 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .HasColumnType("int")
                         .HasComment("Plan is language will be displayed in dropdown from language table and selected corresponding id will be stored into table.");
 
+                    b.Property<int?>("SectionId")
+                        .HasColumnName("section_id")
+                        .HasColumnType("int");
+
                     b.Property<string>("SocialSecurityNumber")
                         .HasColumnName("social_security_number")
                         .HasColumnType("varchar(50)")
                         .HasMaxLength(50)
                         .IsUnicode(false);
 
+                    b.Property<bool?>("SpecialEducationIndicator")
+                        .HasColumnName("special_education_indicator")
+                        .HasColumnType("bit");
+
                     b.Property<string>("StateId")
                         .HasColumnName("state_id")
-                        .HasColumnType("nchar(50)")
-                        .IsFixedLength(true)
-                        .HasMaxLength(50);
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("StudentInternalId")
+                        .HasColumnName("student_internal_id")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
 
                     b.Property<byte[]>("StudentPhoto")
                         .HasColumnName("student_photo")
@@ -5180,6 +5278,12 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .HasColumnType("varchar(max)")
                         .IsUnicode(false);
 
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnName("updated_by")
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100)
+                        .IsUnicode(false);
+
                     b.Property<string>("Vision")
                         .HasColumnName("vision")
                         .HasColumnType("varchar(100)")
@@ -5204,6 +5308,8 @@ namespace opensis.data.Migrations.SqlServerMigrations
                     b.HasIndex("SecondLanguageId");
 
                     b.HasIndex("ThirdLanguageId");
+
+                    b.HasIndex("TenantId", "SchoolId", "SectionId");
 
                     b.ToTable("student_master");
                 });
@@ -5540,19 +5646,14 @@ namespace opensis.data.Migrations.SqlServerMigrations
 
             modelBuilder.Entity("opensis.data.Models.StudentEnrollment", b =>
                 {
-                    b.HasOne("opensis.data.Models.Gradelevels", "Gradelevels")
+                    b.HasOne("opensis.data.Models.SchoolCalendars", "SchoolCalendars")
                         .WithMany("StudentEnrollment")
-                        .HasForeignKey("TenantId", "SchoolId", "GradeId")
-                        .HasConstraintName("FK_student_enrollment_gradelevels");
-
-                    b.HasOne("opensis.data.Models.Sections", "Sections")
-                        .WithMany("StudentEnrollment")
-                        .HasForeignKey("TenantId", "SchoolId", "SectionId")
-                        .HasConstraintName("FK_student_enrollment_sections");
+                        .HasForeignKey("TenantId", "SchoolId", "CalenderId")
+                        .HasConstraintName("FK_student_enrollment_school_calendars");
 
                     b.HasOne("opensis.data.Models.StudentMaster", "StudentMaster")
-                        .WithOne("StudentEnrollment")
-                        .HasForeignKey("opensis.data.Models.StudentEnrollment", "TenantId", "SchoolId", "StudentId")
+                        .WithMany("StudentEnrollment")
+                        .HasForeignKey("TenantId", "SchoolId", "StudentId")
                         .HasConstraintName("FK_student_enrollment_student_master")
                         .IsRequired();
                 });
@@ -5579,6 +5680,11 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .HasForeignKey("TenantId", "SchoolId")
                         .HasConstraintName("FK_student_master_school_master")
                         .IsRequired();
+
+                    b.HasOne("opensis.data.Models.Sections", "Sections")
+                        .WithMany("StudentMaster")
+                        .HasForeignKey("TenantId", "SchoolId", "SectionId")
+                        .HasConstraintName("FK_student_master_sections");
                 });
 
             modelBuilder.Entity("opensis.data.Models.UserMaster", b =>

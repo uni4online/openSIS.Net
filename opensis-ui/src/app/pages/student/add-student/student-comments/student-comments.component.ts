@@ -16,6 +16,7 @@ import {StudentCommentsListViewModel, StudentCommentsAddView} from '../../../../
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmDialogComponent } from '../../../../pages/shared-module/confirm-dialog/confirm-dialog.component';
 import { SchoolCreate } from '../../../../enums/school-create.enum';
+import { SharedFunction } from '../../../../pages/shared/shared-function';
 
 
 @Component({
@@ -46,7 +47,8 @@ export class StudentCommentsComponent implements OnInit {
     private dialog: MatDialog, 
     public translateService:TranslateService,
     private snackbar: MatSnackBar,
-    private studentService:StudentService
+    private studentService:StudentService,
+    private commonFunction:SharedFunction
     ) {
     translateService.use('en');
   }
@@ -82,6 +84,9 @@ export class StudentCommentsComponent implements OnInit {
           }
           else {       
             this.studentCommentsListViewModel.studentCommentsList=res.studentCommentsList
+            this.studentCommentsListViewModel.studentCommentsList.map(n=>{
+              n.lastUpdated=this.commonFunction.serverToLocalDateAndTime(n.lastUpdated)
+            })
           }
         }
       }

@@ -1,75 +1,38 @@
 <div class="md:grid md:grid-cols-2 md:col-gap-8 md:row-gap-6">
-    <div class="border border-solid rounded p-4">
+    <div class="border border-solid rounded p-4" *ngFor="let parent of parentListArray">
         <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px">
-            <div class="relative cursor-pointer" fxFlex="none" (click)='openViewDetails()'>
+            <div class="relative cursor-pointer" fxFlex="none" (click)='openViewDetails(parent)'>
                 <img src="assets/img/default.jpg" class="avatar">
             </div>
-            <div class="overflow-hidden cursor-pointer" fxFlex="auto" (click)='openViewDetails()'>
-                <div class="subheading-2 leading-snug text-primary">John Doe</div>
-                <div class="body-1 text-secondary truncate contact-type">Father <span
-                        class="separator"></span> <span class="text-warn">Primary Contact</span></div>
+            <div class="overflow-hidden cursor-pointer" fxFlex="auto" (click)='openViewDetails(parent)'>
+                <div class="subheading-2 leading-snug text-primary">{{parent.firstname}} {{parent.lastname}}</div>
+                <div class="body-1 text-secondary truncate contact-type">{{parent.relationship}} 
+                    <span class="separator"></span> 
+                    <div *ngIf="parent.contactType==='Primary'; else other"> 
+                        <span class="text-warn">{{parent.contactType}}</span>
+                    </div>
+                    <ng-template #other>
+                        <span class="text-green">{{parent.contactType}}</span>
+                    </ng-template>
+                </div>
             </div>
             <div fxFlex="none" fxLayout="column" fxLayoutAlign="center end">
-                <button mat-icon-button matTooltip="Filter Columns" type="button">
-                    <mat-icon [icIcon]="icEdit" class="mr-2"></mat-icon>
+                <button mat-icon-button matTooltip="Edit" type="button">
+                    <mat-icon (click) = "editParentInfo(parent)" [icIcon]="icEdit" class="mr-2"></mat-icon>
                 </button>
             </div>
             <div fxFlex="none" fxLayout="column" fxLayoutAlign="center end">
-                <button mat-icon-button matTooltip="Filter Columns" type="button">
-                    <mat-icon [icIcon]="icDelete"></mat-icon>
+                <button mat-icon-button matTooltip="Delete" type="button">
+                    <mat-icon (click) = "confirmDelete(parent)" [icIcon]="icDelete"></mat-icon>
                 </button>
             </div>
         </div>
-    </div>
-    <div class="border border-solid rounded p-4">
-        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px">
-            <div class="relative cursor-pointer" fxFlex="none" (click)='openViewDetails()'>
-                <img src="assets/img/default.jpg" class="avatar">
-            </div>
-            <div class="overflow-hidden cursor-pointer" fxFlex="auto" (click)='openViewDetails()'>
-                <div class="subheading-2 leading-snug text-primary">Jeniffer Doe</div>
-                <div class="body-1 text-secondary truncate contact-type">Mother <span
-                        class="separator"></span> <span class="text-green">Secondary Contact</span></div>
-            </div>
-            <div fxFlex="none" fxLayout="column" fxLayoutAlign="center end">
-                <button mat-icon-button matTooltip="Filter Columns" type="button">
-                    <mat-icon [icIcon]="icEdit" class="mr-2"></mat-icon>
-                </button>
-            </div>
-            <div fxFlex="none" fxLayout="column" fxLayoutAlign="center end">
-                <button mat-icon-button matTooltip="Filter Columns" type="button">
-                    <mat-icon [icIcon]="icDelete"></mat-icon>
-                </button>
-            </div>
-        </div>
-    </div>
-    <div class="border border-solid rounded p-4">
-        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px">
-            <div class="relative cursor-pointer" fxFlex="none" (click)='openViewDetails()'>
-                <img src="assets/img/default.jpg" class="avatar">
-            </div>
-            <div class="overflow-hidden cursor-pointer" fxFlex="auto" (click)='openViewDetails()'>
-                <div class="subheading-2 leading-snug text-primary">Olivia Taylor</div>
-                <div class="body-1 text-secondary truncate contact-type">Mother <span
-                        class="separator"></span> Other Contact</div>
-            </div>
-            <div fxFlex="none" fxLayout="column" fxLayoutAlign="center end">
-                <button mat-icon-button matTooltip="Filter Columns" type="button">
-                    <mat-icon [icIcon]="icEdit" class="mr-2"></mat-icon>
-                </button>
-            </div>
-            <div fxFlex="none" fxLayout="column" fxLayoutAlign="center end">
-                <button mat-icon-button matTooltip="Filter Columns" type="button">
-                    <mat-icon [icIcon]="icDelete"></mat-icon>
-                </button>
-            </div>
-        </div>
-    </div>
+    </div> 
 </div>
 
 <div class="text-center mt-6">
     <button color="primary" mat-raised-button type="button" (click)='openAddNew()'>
         <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true" size="24px"></ic-icon>
-        <span>Add Other Contact</span>
+        <span>Add {{contactType}} Contact</span>
     </button>
 </div>

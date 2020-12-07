@@ -12,9 +12,10 @@
                 <div class="flex w-full justify-between">
                     <div class="py-3" fxFlex="300px" fxFlex.lt-md="auto" fxHide.xs fxLayout="row"
                         fxLayoutAlign="start center">
-
                         <div class="flex">
-                            <input class="px-4 py-3 border-0 outline-none w-full bg-transparent" placeholder="Search..."
+                            <input
+                                [formControl]="searchCtrl"
+                                class="px-4 py-3 border-0 outline-none w-full bg-transparent" placeholder="Search..."
                                 type="search">
                             <button class="ml-4" fxFlex="none" fxHide.gt-xs mat-icon-button type="button">
                                 <mat-icon [icIcon]="icSearch"></mat-icon>
@@ -37,48 +38,48 @@
                 matSort>
                 
                 <ng-container matColumnDef="name">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="uppercase">{{'parentsName'|translate}}</th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'parentsName'|translate}}</th>
                     <td mat-cell *matCellDef="let element">
-                        <a routerLink="./parent-generalinfo" class="text-primary cursor-pointer">{{element.name}}</a>
+                        <a routerLink="./parent-generalinfo" class="text-primary cursor-pointer">
+                            {{element.firstname+' '+element.lastname}}</a>
                     </td>
                 </ng-container>
                 
                 <ng-container matColumnDef="profile">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="uppercase">{{'profile'|translate}}</th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'profile'|translate}}</th>
                     <td mat-cell *matCellDef="let element">
-                        {{element.profile}}
+                        Parent
                     </td>
                 </ng-container>
 
                 <ng-container matColumnDef="email_address">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="uppercase">{{'emailAddress'|translate}}</th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'emailAddress'|translate}}</th>
                     <td mat-cell *matCellDef="let element">
-                        {{element.email_address}}
+                        {{element.email}}
                     </td>
                 </ng-container>
 
                 <!-- Body -->
                 <ng-container matColumnDef="mobile_phone">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="uppercase">{{'mobilePhone'|translate}}
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'mobilePhone'|translate}}
                     </th>
                     <td mat-cell *matCellDef="let element">
-                        {{element.mobile_phone}}
+                        {{element.mobile}}
                     </td>
                 </ng-container>
 
                 <ng-container matColumnDef="students">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="uppercase">{{'associatedStudents'|translate}}
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'associatedStudents'|translate}}
                     </th>
                     <td mat-cell *matCellDef="let element">
-                        <span *ngFor="let student of element.students" class="students-list">
-                            <a routerLink="" class="text-primary hover:underline cursor-pointer">{{student.student_name}}</a>
+                        <span *ngFor="let student of element.getStudentForView" class="students-list">
+                            <a routerLink="" class="text-primary hover:underline cursor-pointer">{{student.firstGivenName+' '+student.lastFamilyName}}</a>
                         </span>
-                        
                     </td>
                 </ng-container>
 
                 <ng-container matColumnDef="action">
-                    <th mat-header-cell *matHeaderCellDef class="uppercase">{{'action'|translate}}</th>
+                    <th mat-header-cell *matHeaderCellDef>{{'actions'|translate}}</th>
                     <td mat-cell *matCellDef="let element">
                         <a routerLink="" matTooltip="Impersonate as Parent" class="mr-3 cursor-pointer">
                             <mat-icon [icIcon]="icImpersonate"></mat-icon>
@@ -88,17 +89,25 @@
 
                 <ng-container matColumnDef="loading">
                     <mat-footer-cell *matFooterCellDef colspan="6">
-                        <vex-mat-spinner-overlay *ngIf="loading" color="accent"></vex-mat-spinner-overlay>
+                      <vex-mat-spinner-overlay *ngIf="loading" color="accent"></vex-mat-spinner-overlay>
                     </mat-footer-cell>
-                </ng-container>
+                  </ng-container>
+                  <ng-container matColumnDef="noData">
+                    <td mat-footer-cell *matFooterCellDef colspan="6">
+                      {{loading?'Fetching Data...':'No Data'}}
+                    </td>
+                  </ng-container>
 
                 <tr mat-header-row *matHeaderRowDef="visibleColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: visibleColumns" @fadeInUp></tr>
-                <!-- <mat-footer-row *matFooterRowDef="['loading']" [class.hide]="!loading"></mat-footer-row> -->
+                
+                <tr mat-footer-row *matFooterRowDef="['loading']" [class.hide]="!loading"></tr>
+                <tr mat-footer-row *matFooterRowDef="['noData']" [class.hide]="totalCount!=0"></tr>
 
             </table>
-            <!-- <mat-paginator [length]="totalCount" [pageSize]="pageSize" [pageSizeOptions]="[10, 20, 30, 40]" showFirstLastButtons (page)='getPageEvent($event)'></mat-paginator> -->
-            <!-- <mat-paginator [length]="totalCount" [pageSize]="pageSize" [pageSizeOptions]="[10, 20, 30, 40]" showFirstLastButtons (page)='getPageEvent($event)'></mat-paginator> -->
+            <mat-paginator [class.hide]="totalCount==0" [length]="totalCount" [pageSize]="pageSize"
+                [pageSizeOptions]="[10, 20, 30, 40]" showFirstLastButtons (page)='getPageEvent($event)'>
+            </mat-paginator>
         </div>
 
     </vex-page-layout-content>

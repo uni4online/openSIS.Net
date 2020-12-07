@@ -48,3 +48,12 @@ export enum maritalStatus{
     "Married"="Married",
     "Partnered"="Partnered"
 }
+
+export enum relationShip{
+    "Father"="Father",
+    "Grand Father"="Grand Father",
+    "Step Father"="Step Father",
+    "Step Mother"="Step Mother",
+    "Legal Guardian"="Legal Guardian",
+    "Other"="Other"
+}

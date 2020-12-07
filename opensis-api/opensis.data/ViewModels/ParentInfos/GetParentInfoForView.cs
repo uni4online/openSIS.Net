@@ -19,7 +19,14 @@ namespace opensis.data.ViewModels.ParentInfos
         public string Firstname { get; set; }
         public string Lastname { get; set; }
         public string Mobile { get; set; }
-        public string Email { get; set; }
+        public string WorkPhone { get; set; }
+        public string HomePhone { get; set; }        
+        public string PersonalEmail { get; set; }
+        public string WorkEmail { get; set; }
+        public string LoginEmail { get; set; }
+        public string UserProfile { get; set; }
+        public bool IsPortalUser { get; set; }
+        public bool IsCustodian { get; set; }
         public string AddressLineOne { get; set; }
         public List<GetStudentForView> getStudentForView { get; set; }
         

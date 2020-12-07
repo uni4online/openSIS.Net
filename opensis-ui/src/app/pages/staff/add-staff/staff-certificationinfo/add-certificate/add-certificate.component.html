@@ -1,0 +1,57 @@
+<div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
+    <h2 class="headline m-0" fxFlex="auto">{{'addNewCertificate' | translate}}</h2>
+    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+        <mat-icon [icIcon]="icClose"></mat-icon>
+    </button>
+</div>
+<mat-divider class="-mx-6 text-border"></mat-divider>
+
+<mat-dialog-content fxLayout="column">
+    
+    <mat-form-field class="mt-6" appearance="outline" color="primary">
+        <mat-label>{{'certificationName' | translate}}</mat-label>
+        <input cdkFocusInitial matInput name="certificationName">
+    </mat-form-field>
+    
+    <mat-form-field appearance="outline" color="primary">
+        <mat-label>{{'certificationShortName' | translate}}</mat-label>
+        <input cdkFocusInitial matInput name="certificationShortName">
+    </mat-form-field>
+    
+    <mat-form-field appearance="outline" color="primary">
+        <mat-label>{{'certificationCode' | translate}}</mat-label>
+        <input cdkFocusInitial matInput name="certificationCode">
+    </mat-form-field>
+    
+    <mat-form-field appearance="outline" color="primary">
+        <mat-label>{{'primaryCertificationIndicator' | translate}}</mat-label>
+        <mat-select name="primaryCertificationIndicator">
+            <mat-option value="">Yes</mat-option>
+            <mat-option value="">No</mat-option>
+        </mat-select>
+    </mat-form-field>
+    
+    <mat-form-field appearance="outline" color="primary">
+        <mat-label>{{'certificationDate' | translate}}</mat-label>
+        <input matInput [matDatepicker]="certificationDate">
+        <mat-datepicker-toggle matSuffix [for]="certificationDate"></mat-datepicker-toggle>
+        <mat-datepicker #certificationDate></mat-datepicker>
+    </mat-form-field>
+    
+    <mat-form-field appearance="outline" color="primary">
+        <mat-label>{{'certificationExpiryDate' | translate}}</mat-label>
+        <input matInput [matDatepicker]="certificationExpiryDate">
+        <mat-datepicker-toggle matSuffix [for]="certificationExpiryDate"></mat-datepicker-toggle>
+        <mat-datepicker #certificationExpiryDate></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" color="primary">
+        <mat-label>{{'certificationDescription' | translate}}</mat-label>
+        <textarea matInput placeholder="certificationDescription"></textarea>
+    </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" class="py-6">
+    <button mat-button type="button">{{'cancel' | translate}}</button>
+    <button color="primary" mat-raised-button type="submit">SUBMIT</button>
+</mat-dialog-actions>

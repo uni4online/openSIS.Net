@@ -7,3 +7,34 @@
     margin: 0 10px;
     vertical-align: middle;
 }
+
+.no-custody {
+    display: inline-block;
+    position: relative;
+    
+    img {
+        opacity: 0.4;
+        filter: grayscale(100%);
+    }
+
+    &:before {
+        content: '';
+        width: 32px;
+        height: 32px;
+        position: absolute;
+        border: 2px solid rgba(218, 15, 15, 0.6);
+        border-radius: 50%;
+        top: -2px;
+        left: -3px;
+    }
+
+    &:after {
+        content: '/';
+        font-size: 38px;
+        position: absolute;
+        top: -2px;
+        left: 6px;
+        line-height: 30px;
+        color: rgba(218, 15, 15, 0.6);
+    }
+}

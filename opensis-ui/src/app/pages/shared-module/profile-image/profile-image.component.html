@@ -1,35 +1,41 @@
-<div class="row" style="margin-top: 1%;display:none" *ngIf="enableCropTool">
-    <div class="text-center col-md-12">
+<div class="text-center" style="display:none" *ngIf="enableCropTool">
       <ng-template #mytemplate>
-        <div class="d-flex justify-content-end">
-          <button mat-raised-button color="warn" (click)="onClose()">Close</button>
+    <div class="flex justify-between">
+      <h2 class="text-center">Crop Image</h2>
+      <button class="text-secondary" (click)="onClose()" mat-icon-button type="button">
+        <mat-icon [icIcon]="icClose"></mat-icon>
+      </button>
         </div>
-        <h2 class="text-center">Crop Image</h2>
-        <div class="d-flex justify-content-around">
+    <div class="flex justify-around">
           <div>
             <image-cropper (imageCropped)="imageCropped($event)" [imageChangedEvent]="imageChangedEvent"
-              [maintainAspectRatio]="false" (imageLoaded)="imageLoaded()" (cropperReady)="cropperReady()"
+              [maintainAspectRatio]="true" [aspectRatio]="1/1" (imageLoaded)="imageLoaded()" (cropperReady)="cropperReady()"
               [onlyScaleDown]="false" (loadImageFailed)="loadImageFailed()">
             </image-cropper>
           </div>
           <div>
-            <img [src]="croppedImage" style="border: 4px solid white;" width="200px" height="200px" />
+        <img [src]="croppedImage" width="200px" height="200px" />
           </div>
         </div>
       </ng-template>
     </div>
+<div class="input-group" style="display: none;">
+  <input [type]="inputType" (change)="uploadFile($event,fileUpload)" #fileUpload
+    accept="image/jpg, image/jpeg, image/png">
   </div>
-  <div class="input-group" style="display: none;">
-    <input [type]="inputType" (change)="uploadFile($event,fileUpload)" #fileUpload accept="image/jpg, image/jpeg, image/png">
+<div @fadeInRight class="d-flex justify-center cursor-pointer photo-upload" (click)="fileUpload.click();unsetImage()">
+  <div @fadeInRight class="py-4 pl-8 pr-8" *ngIf="croppedImage=='' && preview=='' && (responseImage==null || responseImage.length==0)">
+    <img src="../../../../assets/img/UploadPhoto.svg" width="200" height="200" class="rounded-full"
+      alt="Upload School Logo">
   </div>
-  <div @fadeInRight class="d-flex justify-content-center" (click)="fileUpload.click();unsetImage()" style="cursor: pointer;">
-    <img @fadeInRight *ngIf="croppedImage=='' && preview=='' && (responseImage==null || responseImage.length==0)" src="../../../../assets/img/upload-school-logo.jpg" width="200"
-      height="200" style="border: 5px solid white;" alt="Upload School Logo">
-      <img @fadeInRight *ngIf="preview!='' && croppedImage==''" [src]="preview" style="border: 5px solid white;" width="200px"
-      height="200px" />
-      <img @fadeInRight *ngIf="responseImage" [src]="'data:image/jpeg;base64,'+responseImage" style="border: 5px solid white;" width="200px"
-      height="200px" />
-    <div *ngIf="croppedImage!=''">
-      <img @fadeInRight [src]="croppedImage" style="border: 5px solid white;" width="200" height="200" />
+  <div @fadeInRight class="py-4 pl-8 pr-8" *ngIf="preview!='' && croppedImage==''">
+    <img [src]="preview" class="rounded-full border-2 border-gray-light" width="200" height="200" />
+  </div>
+  <div @fadeInRight *ngIf="responseImage" class="py-4 pl-8 pr-8">
+    <img [src]="'data:image/jpeg;base64,'+responseImage" class="rounded-full border-2 border-gray-light" width="200"
+      height="200" />
     </div>
+  <div *ngIf="croppedImage!=''" class="py-4 pl-8 pr-8">
+    <img @fadeInRight [src]="croppedImage" class="rounded-full border border-1 border-gray-light" width="200" height="200" />
   </div>
+</div>

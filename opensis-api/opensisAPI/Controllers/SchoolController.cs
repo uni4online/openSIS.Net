@@ -110,7 +110,23 @@ namespace opensisAPI.Controllers
             }
             return schoolList;
         }
-    
+
+        [HttpPost("checkSchoolInternalId")]
+        public ActionResult<CheckSchoolInternalIdViewModel> CheckSchoolInternalId(CheckSchoolInternalIdViewModel checkSchoolInternalIdViewModel)
+        {
+            CheckSchoolInternalIdViewModel checkInternalId = new CheckSchoolInternalIdViewModel();
+            try
+            {
+                checkInternalId = _schoolRegisterService.CheckSchoolInternalId(checkSchoolInternalIdViewModel);
+            }
+            catch (Exception es)
+            {
+                checkInternalId._message = es.Message;
+                checkInternalId._failure = true;
+            }
+            return checkInternalId;
+        }
+
 
     }
 }

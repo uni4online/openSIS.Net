@@ -14,6 +14,7 @@ namespace opensis.core.User.Services
     {
         private static string SUCCESS = "success";
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly string TOKENINVALID = "Token not Valid";
         public IUserRepository userRepository;
 
         public UserService(IUserRepository userRepository)
@@ -45,6 +46,21 @@ namespace opensis.core.User.Services
 
 
             return ReturnModel;
+        }
+
+        public CheckUserEmailAddressViewModel CheckUserLoginEmail(CheckUserEmailAddressViewModel checkUserEmailAddressViewModel)
+        {
+            CheckUserEmailAddressViewModel checkUserLoginEmail = new CheckUserEmailAddressViewModel();
+            if (TokenManager.CheckToken(checkUserEmailAddressViewModel._tenantName, checkUserEmailAddressViewModel._token))
+            {
+                checkUserLoginEmail = this.userRepository.CheckUserLoginEmail(checkUserEmailAddressViewModel);
+            }
+            else
+            {
+                checkUserLoginEmail._failure = true;
+                checkUserLoginEmail._message = TOKENINVALID;
+            }
+            return checkUserLoginEmail;
         }
     }
 }

@@ -16,7 +16,7 @@
                 </mat-expansion-panel-header>
                 <div>
                     <ul class="nav-sub-item">
-                        <li *ngFor="let field of fieldsCategory" (click)="changeCategory(field)">
+                        <li *ngFor="let field of fieldsCategory; let index =index" (click)="changeCategory(field,index)">
                             <a  [ngClass]="currentCategory==field.categoryId?'text-primary' : ''" @fadeInRight>{{field.title}}</a>
                         </li>
                     </ul>
@@ -51,8 +51,8 @@
 
 <vex-page-layout>
             <vex-page-layout-header class="pb-16 pt-6" fxLayoutAlign="center start">
-        <vex-secondary-toolbar current="Add Student Information" class="w-full">
-            <vex-breadcrumbs [crumbs]="['Student','Add Student']" class="flex-auto"></vex-breadcrumbs>
+        <vex-secondary-toolbar current={{studentTitle}} class="w-full">
+            <vex-breadcrumbs [crumbs]="['Student',pageStatus]" class="flex-auto"></vex-breadcrumbs>
         </vex-secondary-toolbar>
     </vex-page-layout-header>    
             <vex-page-layout-content class="-mt-14">
@@ -61,7 +61,7 @@
                 <div class="w-full" fxFlex="auto">                    
                     <vex-student-generalinfo *ngIf="currentCategory==3"
                     [studentCreateMode]="studentCreateMode"
-                    [studentDetailsForViewAndEdit]="studentAddModel">
+                    [studentDetailsForViewAndEdit]="studentAddModel" [categoryId]="indexOfCategory">
                     </vex-student-generalinfo>
 
                     <vex-student-addressandcontacts *ngIf="currentCategory==4"
@@ -80,7 +80,7 @@
 
                     <vex-student-medicalinfo *ngIf="currentCategory==8"
                     [studentCreateMode]="studentCreateMode"
-                    [studentDetailsForViewAndEdit]="studentAddModel"
+                    [studentDetailsForViewAndEdit]="studentAddModel" [categoryId]="indexOfCategory"
                     (studentDetailsForParent)="checkCriticalAlertFromMedical($event)">
                     </vex-student-medicalinfo>
                     
@@ -94,6 +94,13 @@
                         [studentDetailsForViewAndEdit]="studentAddModel">
                     </vex-student-documents>
 
+
+                    <div *ngFor="let field of fieldsCategory;let index=index">
+                        <vex-custom-field *ngIf="field.categoryId == currentCategory && indexOfCategory > 7" [categoryTitle]="field.title"
+                            [studentCreateMode]="studentCreateMode" [schoolDetailsForViewAndEdit]="studentAddModel"
+                            [categoryId]="indexOfCategory" [module] = "module">
+                        </vex-custom-field>
+                    </div>
 
                 </div>
             </mat-drawer-content>

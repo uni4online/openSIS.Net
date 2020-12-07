@@ -11,10 +11,12 @@ namespace opensis.data.Models
             ParentInfo = new HashSet<ParentInfo>();
             StudentComments = new HashSet<StudentComments>();
             StudentDocuments = new HashSet<StudentDocuments>();
+            StudentEnrollment = new HashSet<StudentEnrollment>();
         }
         public Guid TenantId { get; set; }
         public int SchoolId { get; set; }
         public int StudentId { get; set; }
+        public string StudentInternalId { get; set; }
         public string AlternateId { get; set; }
         public string DistrictId { get; set; }
         public string StateId { get; set; }
@@ -41,6 +43,13 @@ namespace opensis.data.Models
         public int? FirstLanguageId { get; set; }
         public int? SecondLanguageId { get; set; }
         public int? ThirdLanguageId { get; set; }
+        public int? SectionId { get; set; }
+        public DateTime? EstimatedGradDate { get; set; }
+        public bool? Eligibility504 { get; set; }
+        public bool? EconomicDisadvantage { get; set; }
+        public bool? FreeLunchEligibility { get; set; }
+        public bool? SpecialEducationIndicator { get; set; }
+        public bool? LepIndicator { get; set; }
         public string HomePhone { get; set; }
         public string MobilePhone { get; set; }
         public string PersonalEmail { get; set; }
@@ -81,11 +90,15 @@ namespace opensis.data.Models
         public string Vision { get; set; }
         public string VisionPhone { get; set; }
         public string Associationship { get; set; }
+        public DateTime? LastUpdated { get; set; }
+        public string UpdatedBy { get; set; }
+
         public virtual Language FirstLanguage { get; set; }
         public virtual SchoolMaster SchoolMaster { get; set; }
         public virtual Language SecondLanguage { get; set; }
         public virtual Language ThirdLanguage { get; set; }
-        public virtual StudentEnrollment StudentEnrollment { get; set; }
+        public virtual Sections Sections { get; set; }
+        public virtual ICollection<StudentEnrollment> StudentEnrollment { get; set; }
         public virtual ICollection<ParentInfo> ParentInfo { get; set; }
         public virtual ICollection<StudentComments> StudentComments { get; set; }
         public virtual ICollection<StudentDocuments> StudentDocuments { get; set; }

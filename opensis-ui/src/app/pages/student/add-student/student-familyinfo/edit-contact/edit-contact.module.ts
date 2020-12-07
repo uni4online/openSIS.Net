@@ -18,7 +18,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import {MatRadioModule} from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 
 @NgModule({
@@ -41,7 +42,9 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     TranslateModule,
     MatRadioModule,
     MatSelectModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    NgxMatSelectSearchModule,
+    MatExpansionModule
   ]
 })
 export class EditContactModule { }

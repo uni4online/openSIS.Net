@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient} from '@angular/common/http';
-import { SchoolAddViewModel } from '../models/schoolMasterModel';
+import { CheckSchoolInternalIdViewModel, SchoolAddViewModel } from '../models/schoolMasterModel';
 import { AllSchoolListModel, GetAllSchoolModel, OnlySchoolListModel } from '../models/getAllSchoolModel';
 import { BehaviorSubject, Subject } from 'rxjs';
 
@@ -41,6 +41,10 @@ export class SchoolService {
     obj.schoolMaster.schoolDetail[0].schoolLogo= this.schoolImage;
     let apiurl = this.apiUrl + obj._tenantName+ "/School/updateSchool"; 
     return this.http.put<SchoolAddViewModel>(apiurl,obj)
+  }  
+  checkSchoolInternalId(obj: CheckSchoolInternalIdViewModel){
+    let apiurl = this.apiUrl + obj._tenantName+ "/School/checkSchoolInternalId"; 
+    return this.http.post<CheckSchoolInternalIdViewModel>(apiurl,obj)
   }  
 
   private schoolImage;

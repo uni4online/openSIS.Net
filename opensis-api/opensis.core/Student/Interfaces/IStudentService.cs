@@ -13,8 +13,6 @@ namespace opensis.core.Student.Interfaces
         public LoginInfoAddModel AddStudentLoginInfo(LoginInfoAddModel login);
         public StudentListModel GetAllStudentList(PageResult pageResult);
 
-        public SearchContactViewModel SearchContactForStudent(SearchContactViewModel searchContactViewModel);
-
         public StudentDocumentAddViewModel SaveStudentDocument(StudentDocumentAddViewModel studentDocumentAddViewModel);
         public StudentDocumentAddViewModel UpdateStudentDocument(StudentDocumentAddViewModel studentDocumentAddViewModel);
         public StudentDocumentListViewModel GetAllStudentDocumentsList(StudentDocumentListViewModel studentDocumentListViewModel);
@@ -32,5 +30,9 @@ namespace opensis.core.Student.Interfaces
         public SiblingSearchForStudentListModel SearchSiblingForStudent(SiblingSearchForStudentListModel studentSiblingListViewModel);
         public SiblingAddUpdateForStudentModel AssociationSibling(SiblingAddUpdateForStudentModel siblingAddUpdateForStudentModel);
         public StudentListModel ViewAllSibling(StudentListModel studentListModel);
+        public SiblingAddUpdateForStudentModel RemoveSibling(SiblingAddUpdateForStudentModel siblingAddUpdateForStudentModel);
+        public CheckStudentInternalIdViewModel CheckStudentInternalId(CheckStudentInternalIdViewModel checkStudentInternalIdViewModel);
+        public StudentEnrollmentListModel AddStudentEnrollment(StudentEnrollmentListModel studentEnrollmentListModel);
+        public StudentEnrollmentListModel GetAllStudentEnrollment(StudentEnrollmentListModel studentEnrollmentListModel);
     }
 }

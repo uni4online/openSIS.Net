@@ -270,5 +270,34 @@ namespace opensis.core.ParentInfo.Services
             }
             return ParentInfoAddModel;
         }
+
+        /// <summary>
+        /// Remove Associated Parent
+        /// </summary>
+        /// <param name="parentInfoDeleteViewModel"></param>
+        /// <returns></returns>
+        public ParentInfoDeleteViewModel RemoveAssociatedParent(ParentInfoDeleteViewModel parentInfoDeleteViewModel)
+        {
+            ParentInfoDeleteViewModel parentAssociationshipDelete = new ParentInfoDeleteViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(parentInfoDeleteViewModel._tenantName, parentInfoDeleteViewModel._token))
+                {
+                    parentAssociationshipDelete = this.parentInfoRepository.RemoveAssociatedParent(parentInfoDeleteViewModel);
+                }
+                else
+                {
+                    parentAssociationshipDelete._failure = true;
+                    parentAssociationshipDelete._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                parentAssociationshipDelete._failure = true;
+                parentAssociationshipDelete._message = es.Message;
+            }
+
+            return parentAssociationshipDelete;
+        }
     }
 }

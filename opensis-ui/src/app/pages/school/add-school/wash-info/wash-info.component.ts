@@ -36,6 +36,7 @@ export class WashInfoComponent implements OnInit {
   washinfo = WashInfoEnum;
   @ViewChild('f') currentForm: NgForm;
   f: NgForm;
+  module = "School";
   schoolAddViewModel: SchoolAddViewModel = new SchoolAddViewModel();
   loading: boolean;
   formActionButtonTitle = "submit";

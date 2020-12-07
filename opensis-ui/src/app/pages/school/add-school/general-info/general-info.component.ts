@@ -1,6 +1,6 @@
 import { Component, OnInit, EventEmitter, Output, Input, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
 import { FormBuilder, NgForm, Validators } from '@angular/forms';
-import { SchoolAddViewModel } from '../../../../models/schoolMasterModel';
+import { CheckSchoolInternalIdViewModel, SchoolAddViewModel } from '../../../../models/schoolMasterModel';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
 import { fadeInRight400ms } from '../../../../../@vex/animations/fade-in-right.animation';
@@ -64,6 +64,7 @@ export class GeneralInfoComponent implements OnInit, OnDestroy {
   destroySubject$: Subject<void> = new Subject();
   customFieldModel = new CustomFieldListViewModel();
   schoolAddViewModel: SchoolAddViewModel = new SchoolAddViewModel();
+  checkSchoolInternalIdViewModel : CheckSchoolInternalIdViewModel = new CheckSchoolInternalIdViewModel();
   countryModel: CountryModel = new CountryModel();
   stateModel: StateModel = new StateModel();
   cityModel: CityModel = new CityModel();
@@ -71,8 +72,9 @@ export class GeneralInfoComponent implements OnInit, OnDestroy {
   stateListArr = [];
   cityListArr = [];
   countryName = "";
+  module = "School";
   stateName = "";
-  status:string;
+  status: string;
   generalInfo = WashInfoEnum;
   statusInfo = status;
   city: number;
@@ -131,7 +133,7 @@ export class GeneralInfoComponent implements OnInit, OnDestroy {
     }
     else if (this.schoolCreateMode == this.SchoolCreate.VIEW) {
       this.schoolAddViewModel = this.schoolDetailsForViewAndEdit;
-      this.status= this.schoolAddViewModel.schoolMaster.schoolDetail[0].status?'Active':'Inactive';
+      this.status = this.schoolAddViewModel.schoolMaster.schoolDetail[0].status ? 'Active' : 'Inactive';
     }
     else if (this.schoolCreateMode == this.SchoolCreate.EDIT && (this.schoolDetailsForViewAndEdit != undefined || this.schoolDetailsForViewAndEdit != null)) {
       this.formActionButtonTitle = "update";
@@ -200,15 +202,29 @@ export class GeneralInfoComponent implements OnInit, OnDestroy {
     }
   }
 
-  checkGradeLevelsOnEdit(){
-    let lowGradeIndex=this.gradeLevel.findIndex((val)=>{
-      return val.id==this.schoolAddViewModel.schoolMaster.schoolDetail[0].lowestGradeLevel;
+  checkSchoolInternalId(event){
+    let internalId= event.target.value;
+   
+    this.checkSchoolInternalIdViewModel.schoolInternalId = internalId;
+    this._schoolService.checkSchoolInternalId(this.checkSchoolInternalIdViewModel).subscribe( data =>{
+      if (data.isValidInternalId) {
+        this.currentForm.form.controls.school_id.setErrors(null);
+      }
+      else {
+        this.currentForm.form.controls.school_id.setErrors({ 'nomatch': true });
+      }
     });
-    this.selectedLowGradeLevelIndex=lowGradeIndex;
-    let highGradeIndex=this.gradeLevel.findIndex((val)=>{
-      return val.id==this.schoolAddViewModel.schoolMaster.schoolDetail[0].highestGradeLevel;
+  }
+
+  checkGradeLevelsOnEdit() {
+    let lowGradeIndex = this.gradeLevel.findIndex((val) => {
+      return val.id == this.schoolAddViewModel.schoolMaster.schoolDetail[0].lowestGradeLevel;
     });
-    this.selectedHighGradeLevelIndex=highGradeIndex;
+    this.selectedLowGradeLevelIndex = lowGradeIndex;
+    let highGradeIndex = this.gradeLevel.findIndex((val) => {
+      return val.id == this.schoolAddViewModel.schoolMaster.schoolDetail[0].highestGradeLevel;
+    });
+    this.selectedHighGradeLevelIndex = highGradeIndex;
   }
 
   dateCompare() {
@@ -247,34 +263,126 @@ export class GeneralInfoComponent implements OnInit, OnDestroy {
     this.countryName = this.countryListArr[index]?.name;
   }
 
-  getAllStateByCountry(event) {
+  getAllStateByCountry(data) {
+    if (this.stateCount > 0) {
+      if ((this.commonFunction.checkEmptyObject(this.schoolDetailsForViewAndEdit) === true)
+        || (this.commonFunction.checkEmptyObject(this.schoolDetailsForViewAndEdit) === true)
+        || (this.commonFunction.checkEmptyObject(this.schoolDetailsForViewAndEdit) === true)) {
 
-  }
-  getAllCitiesByState(event) {
+        if (data.value === "") {
+          this.stateModel.countryId = 0;
+          this.countryName = '';
+          this.cityListArr = [];
+          this.stateListArr = [];
+        } else {
+          if (data.value === undefined && data) {
+            this.stateModel.countryId = data;
+            this.countryName = data.toString();
+          } else {
+            this.stateModel.countryId = data.value;
+            this.countryName = data.value.toString();
+          }
+        }
+      } else {
+        if (data.value === "") {
+          this.stateModel.countryId = 0;
+          this.countryName = '';
+          this.cityListArr = [];
+          this.stateListArr = [];
+        } else {
+          this.stateModel.countryId = data.value;
+          this.countryName = data.value.toString();
+        }
+      }
 
+      if (this.stateModel.countryId !== 0) {
+
+        this.commonService.GetAllState(this.stateModel).subscribe(data => {
+          if (typeof (data) == 'undefined') {
+            this.stateListArr = [];
+          }
+          else {
+            if (data._failure) {
+              this.stateListArr = [];
+
+            } else {
+              this.cityListArr = [];
+              this.stateListArr = data.tableState;
+
+            }
+          }
+
+        })
+      }
+    }
   }
-  onStatusChange(event){
+  getAllCitiesByState(data) {
+    if ((this.commonFunction.checkEmptyObject(this.schoolDetailsForViewAndEdit) === true)
+      || (this.commonFunction.checkEmptyObject(this.schoolDetailsForViewAndEdit) === true)
+      || (this.commonFunction.checkEmptyObject(this.schoolDetailsForViewAndEdit) === true)) {
+      if (data.value === "") {
+        this.cityModel.stateId = 0;
+        this.stateName = '';
+        this.cityListArr = [];
+      } else {
+        if (data.value === undefined && data) {
+          this.cityModel.stateId = data;
+          this.stateName = data.toString();
+        } else {
+          this.cityModel.stateId = data.value;
+          this.stateName = data.value.toString();
+        }
+      }
+    } else {
+      if (data.value === "") {
+        this.cityModel.stateId = 0;
+        this.stateName = '';
+        this.cityListArr = [];
+      } else {
+        this.cityModel.stateId = data.value;
+        this.stateName = data.value.toString();
+      }
+    }
+
+
+    if (this.cityModel.stateId !== 0) {
+      this.commonService.GetAllCity(this.cityModel).subscribe(val => {
+        if (typeof (val) == 'undefined') {
+          this.cityListArr = [];
+        }
+        else {
+          if (val._failure) {
+            this.cityListArr = [];
+          } else {
+            this.cityListArr = val.tableCity;
+          }
+        }
+
+      })
+    }
+  }
+  onStatusChange(event:boolean){
     let schoolClosedDate=this.currentForm.value.date_school_closed;
-    if(!event && (schoolClosedDate==null || schoolClosedDate==undefined)){
+    if(event===false && (schoolClosedDate==null || schoolClosedDate==undefined)){
       this.currentForm.controls.date_school_closed.setValidators(Validators.required);
-      this.currentForm.controls.date_school_closed.setErrors({required: true})
+      this.currentForm.controls.date_school_closed.setErrors({ required: true })
       this.currentForm.controls.date_school_closed.markAsTouched();
-    }else{
-      if(this.currentForm.controls.date_school_closed.errors?.required){
+    } else {
+      if (this.currentForm.controls.date_school_closed.errors?.required) {
         this.currentForm.controls.date_school_closed.setErrors(null);
       }
     }
   }
 
-  checkClosedDate(){
-    let startDate=new Date(this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolOpened).getTime();
-    let closedDate=new Date(this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolClosed).getTime();
-    if(closedDate<=startDate && startDate!=null && closedDate!=0){
-      this.currentForm.controls.date_school_closed.setErrors({'nomatch':true});
-    }else{
-      if(this.currentForm.controls.date_school_closed.errors?.nomatch){
+  checkClosedDate() {
+    let startDate = new Date(this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolOpened).getTime();
+    let closedDate = new Date(this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolClosed).getTime();
+    if (closedDate <= startDate && startDate != null && closedDate != 0) {
+      this.currentForm.controls.date_school_closed.setErrors({ 'nomatch': true });
+    } else {
+      if (this.currentForm.controls.date_school_closed.errors?.nomatch) {
         this.currentForm.controls.date_school_closed.setErrors(null);
-      }
+      }      
     }
     this.onStatusChange(this.schoolAddViewModel.schoolMaster.schoolDetail[0].status);
   }
@@ -283,7 +391,7 @@ export class GeneralInfoComponent implements OnInit, OnDestroy {
     this.currentForm.form.markAllAsTouched();
     if (this.currentForm.form.valid) {
       if (this.schoolCreateMode == this.SchoolCreate.EDIT) {
-      this.schoolAddViewModel.selectedCategoryId = this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].categoryId;
+        this.schoolAddViewModel.selectedCategoryId = this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].categoryId;
         this.updateSchool();
       } else {
         this.addSchool();

@@ -11,5 +11,6 @@ namespace opensis.core.User.Interfaces
     {
         
         public LoginViewModel ValidateUserLogin(LoginViewModel ObjModel);
+        public CheckUserEmailAddressViewModel CheckUserLoginEmail(CheckUserEmailAddressViewModel checkUserEmailAddressViewModel);
     }
 }

@@ -7,7 +7,8 @@ namespace opensis.data.Models
     {
         public Sections()
         {
-            StudentEnrollment = new HashSet<StudentEnrollment>();
+           
+            StudentMaster = new HashSet<StudentMaster>();
         }
         public Guid TenantId { get; set; }
         public int SchoolId { get; set; }
@@ -16,6 +17,7 @@ namespace opensis.data.Models
         public int? SortOrder { get; set; }
         public DateTime? LastUpdated { get; set; }
         public string UpdatedBy { get; set; }
-        public virtual ICollection<StudentEnrollment> StudentEnrollment { get; set; }
+        
+        public virtual ICollection<StudentMaster> StudentMaster { get; set; }
     }
 }

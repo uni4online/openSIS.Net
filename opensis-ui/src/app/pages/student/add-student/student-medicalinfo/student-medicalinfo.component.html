@@ -113,7 +113,7 @@
                     </mat-form-field>
                 </div>
             </div>
-
+            <vex-custom-field-without-form  [schoolDetailsForViewAndEdit]="studentAddModel" [module] = "module" [categoryId] = "categoryId" [studentCreateMode]="studentCreateMode"></vex-custom-field-without-form>
         </div>
     </mat-card-content>
     <mat-card-actions>
@@ -200,6 +200,7 @@
                     <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{studentAddModel.studentMaster.visionPhone|EmtyValueCheckPipe}}</p>
                 </li>
             </ul>
+            <vex-custom-field-without-form  [schoolDetailsForViewAndEdit]="studentAddModel" [module] = "module" [categoryId] = "categoryId" [studentCreateMode]="studentCreateMode"></vex-custom-field-without-form>
             </div>
         </div>
     </mat-card-content>

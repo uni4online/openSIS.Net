@@ -198,8 +198,15 @@
                     </mat-form-field>
                 </li>
                 <li>
-                    <div><mat-slide-toggle color="primary" class="mb-2" checked="checked">{{'physicallyDisabled' | translate}}
-                    </mat-slide-toggle></div>
+                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'physicalDisability'|translate}}</mat-label>
+                        <mat-select name="thirdLanguage">
+                            <mat-option value="Yes">Yes</mat-option>
+                            <mat-option value="No" selected>No</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </li>
+                <li>
                     <mat-form-field class="w-full" appearance="outline" color="primary">
                         <mat-label>{{'disabilityDescription'|translate}}</mat-label>
                         <textarea matInput></textarea>

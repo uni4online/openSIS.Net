@@ -81,7 +81,7 @@ export class SchoolDetailsComponent implements OnInit {
       this.getAllSchool.pageNumber=this.pageNumber
       this.getAllSchool.pageSize=this.pageSize;
       this.getAllSchool.sortingModel.sortColumn=res.active;
-      if(this.searchCtrl.value!=null){
+      if(this.searchCtrl.value!=null && this.searchCtrl.value!=""){
         let filterParams=[
           {
            columnName:null,
@@ -117,11 +117,13 @@ export class SchoolDetailsComponent implements OnInit {
       this.getAllSchool.sortingModel.sortDirection=this.sort.direction;
     }
      Object.assign(this.getAllSchool,{filterParams: filterParams});
-     this.getAllSchool.pageNumber=this.pageNumber;
+     this.getAllSchool.pageNumber=1;
+     this.paginator.pageIndex=0;
      this.getAllSchool.pageSize=this.pageSize;
      this.callAllSchool();
     }else{
-      this.getAllSchool.pageNumber=this.pageNumber;
+      Object.assign(this.getAllSchool,{filterParams: null});
+      this.getAllSchool.pageNumber=this.paginator.pageIndex+1;
      this.getAllSchool.pageSize=this.pageSize;
       if(this.sort.active!=undefined && this.sort.direction!=""){
         this.getAllSchool.sortingModel.sortColumn=this.sort.active;
@@ -143,7 +145,7 @@ export class SchoolDetailsComponent implements OnInit {
       this.getAllSchool.sortingModel.sortColumn=this.sort.active;
       this.getAllSchool.sortingModel.sortDirection=this.sort.direction;
     }
-    if(this.searchCtrl.value!=null){
+    if(this.searchCtrl.value!=null && this.searchCtrl.value!=""){
       let filterParams=[
         {
          columnName:null,
@@ -175,8 +177,8 @@ export class SchoolDetailsComponent implements OnInit {
         this.totalCount=data.totalCount;
         this.pageNumber = data.pageNumber;
         this.pageSize = data._pageSize;
+
         this.SchoolModelList = new MatTableDataSource(data.getSchoolForView);
-        // if(this.getAllSchool.filterParams!=null)
         this.getAllSchool=new GetAllSchoolModel();
       }
     });

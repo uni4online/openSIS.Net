@@ -44,12 +44,10 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { ViewstudentLogininfoComponent } from './viewstudent-logininfo/viewstudent-logininfo.component';
-import { ViewstudentGeneralinfoComponent } from './viewstudent-generalinfo/viewstudent-generalinfo.component';
 import { ViewstudentEnrollmentinfoComponent } from './viewstudent-enrollmentinfo/viewstudent-enrollmentinfo.component';
-
-
-
-
+import { CustomFieldModule } from '../../../../../src/app/common/custom-field/custom-field.module';
+import { CustomFieldWithoutFormModule } from '../../../../../src/app/common/custom-field-without-form/custom-field-without-form.module';
+import {MatTabsModule} from '@angular/material/tabs';
 
 @NgModule({
   declarations: [
@@ -65,9 +63,7 @@ import { ViewstudentEnrollmentinfoComponent } from './viewstudent-enrollmentinfo
     StudentContactsComponent,
     SiblingsinfoComponent,
     ViewstudentLogininfoComponent,
-    ViewstudentGeneralinfoComponent,
-    ViewstudentEnrollmentinfoComponent,
-    ViewstudentGeneralinfoComponent
+    ViewstudentEnrollmentinfoComponent
   ],
   imports: [
     CommonModule,
@@ -103,7 +99,10 @@ import { ViewstudentEnrollmentinfoComponent } from './viewstudent-enrollmentinfo
     MatSortModule,
     MatButtonToggleModule,
     MatTooltipModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    CustomFieldModule,
+    CustomFieldWithoutFormModule,
+    MatTabsModule
   ]
 })
 export class AddStudentModule { }

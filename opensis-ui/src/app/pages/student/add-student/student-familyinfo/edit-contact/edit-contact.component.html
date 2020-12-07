@@ -1,183 +1,596 @@
-<div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
-    <h2 class="headline m-0" fxFlex="auto">{{'addAndLinkContact' | translate}}</h2>
-    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
-        <mat-icon [icIcon]="icClose"></mat-icon>
-    </button>
+
+<div *ngIf="mode==='view'; else add">
+    <div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
+        <h2 class="headline m-0" fxFlex="auto">Mr. John Doe</h2>
+        <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+            <mat-icon [icIcon]="icClose"></mat-icon>
+        </button>
+    </div>
+    <mat-divider class="-mx-6 text-border"></mat-divider>
+    <mat-dialog-content>
+        <ul class="grid grid-cols-2 col-gap-8 row-gap-10 mt-6">
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'fullName' | translate}}</label>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.firstname+' '+viewData.lastname}}</p>
+            </li>
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'contactRelationship' | translate}}</label>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.relationship}}</p>
+            </li>
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'mobilePhone' | translate}}</label>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.mobile}}</p>
+            </li>
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'workPhone' | translate}}</label>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.workPhone}}</p>
+            </li>
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'homePhone' | translate}}</label>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.workPhone}}</p>
+            </li>
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'personalEmail' | translate}}</label>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.email}}</p>
+            </li>
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'workEmail' | translate}}</label>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.email}}</p>
+            </li>
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'userProfile' | translate}}</label>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.email}}</p>
+            </li>
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'portalAccess' | translate}}</label>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.isPortalUser}}</p>
+            </li>
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'loginUsername' | translate}}</label>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.portalUserId}}</p>
+            </li>
+        </ul>
+        
+        <h6 class="text-primary mt-10 mb-3">{{'address' | translate}}</h6>
+        <ul class="grid grid-cols-2 col-gap-8 row-gap-10">
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'streetAddress1' | translate}}</label>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.addressLineOne}}</p>
+            </li>
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'streetAddress2' | translate}}</label>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.addressLineTwo}}</p>
+            </li>
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'country' | translate}}</label>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.country}}</p>
+            </li>
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'stateProvinceLocality' | translate}}</label>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.state}}</p>
+            </li>
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'city' | translate}}</label>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.city}}</p>
+            </li>
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'zipPostalCode' | translate}}</label>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.zip}}</p>
+            </li>
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'busNo' | translate}}</label>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.busNo}}</p>
+            </li>
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'busPickup' | translate}}</label>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.busPickup}}</p>
+            </li>
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'busDropoff' | translate}}</label>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.busDropoff}}</p>
+            </li>
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'custodyOfStudent' | translate}}</label>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.isCustodian}}</p>
+            </li>
+        </ul>
+    </mat-dialog-content>
+    <mat-dialog-actions class="py-6"></mat-dialog-actions>
 </div>
-<mat-divider class="-mx-6 text-border"></mat-divider>
-<form [formGroup]="form">
-    <mat-dialog-content fxLayout="column">
-        <mat-form-field class="mt-6" appearance="outline" color="primary">
-            <mat-label>{{'searchContact' | translate}}</mat-label>
-            <input name="search" type="text" cdkFocusInitial matInput>
+<ng-template #add>
+    <div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
+        <h2 class="headline m-0" fxFlex="auto">{{'addAndLinkContact' | translate}}</h2>
+        <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+            <mat-icon [icIcon]="icClose"></mat-icon>
+        </button>
+    </div>
+    <mat-divider class="-mx-6 text-border"></mat-divider>
+    <form [formGroup]="form" (ngSubmit)="submit()">
+        <mat-dialog-content fxLayout="column" class="pt-4">
+    
+            <button mat-raised-button type="button" color="primary" class="w-full mb-4">
+                Lookup for Existing Contact
+            </button>
+    
+            <p class="text-center my-6">- {{'orAddAsNewContactBelow' | translate}} -</p>
+    
+            <h6 _ngcontent-jcs-c331="" class="text-primary ng-tns-c331-71">{{'generalInfo' | translate}}</h6>
+            <mat-form-field appearance="outline" class="mt-3" color="primary">
+                <mat-label>{{'salutation'|translate}}</mat-label>
+                <mat-select formControlName="salutation"  [(ngModel)]="addParentInfoModel.parentInfo.salutation" name="salutation">
+                    <mat-option value=""></mat-option>
+                    <mat-option *ngFor="let salutation of salutationEnum" [value]="salutation">{{salutation}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+    
+            <mat-form-field appearance="outline" color="primary">
+                <mat-label>{{'firstGivenName' | translate}}</mat-label>
+                <input formControlName="firstname"  [(ngModel)]="addParentInfoModel.parentInfo.firstname" type="text" name="firstname" matInput required>
+            </mat-form-field>
+    
+            <mat-form-field appearance="outline" color="primary">
+                <mat-label>{{'middleName' | translate}}</mat-label>
+                <input formControlName="middleName"  [(ngModel)]="addParentInfoModel.parentInfo.middleName" type="text" name="middleName" matInput>
+            </mat-form-field>
+    
+            <mat-form-field appearance="outline" color="primary">
+                <mat-label>{{'lastFamilyName' | translate}}</mat-label>
+                <input formControlName="lastname"  [(ngModel)]="addParentInfoModel.parentInfo.lastname" type="text" name="lastname" matInput required>
+            </mat-form-field>
+    
+            <mat-form-field appearance="outline" color="primary">
+                <mat-label>{{'suffix'|translate}}</mat-label>
+                <mat-select formControlName="suffix"  [(ngModel)]="addParentInfoModel.parentInfo.suffix" name="suffix">
+                    <mat-option value=""></mat-option>
+                    <mat-option *ngFor="let suffix of suffixEnum" [value]="suffix">{{suffix}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+    
+            <div class="flex w-full">
+                <div class="flex-1">
+                    <mat-form-field appearance="outline" color="primary" class="w-full">
+                <mat-label>{{'contactRelationship' | translate}}</mat-label>
+                <mat-select formControlName="relationShip"  [(ngModel)]="addParentInfoModel.parentInfo.relationShip" name="relationShip">
+                    <mat-option value=""></mat-option>
+                    <mat-option *ngFor="let relationShip of relationShipEnum" [value]="relationShip">{{relationShip}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+                </div>
+                <div class="flex-1 pl-8 pt-3">
+                    <mat-slide-toggle  color="primary" class="mr-4">{{'custodyOfStudent' | translate}}</mat-slide-toggle>
+                </div>
+            </div>
+    
+            <mat-form-field appearance="outline" color="primary">
+                <mat-label>{{'mobilePhone' | translate}}</mat-label>
+                <input formControlName="mobile"  [(ngModel)]="addParentInfoModel.parentInfo.mobile" type="text" name="mobile" matInput>
+            </mat-form-field>
+    
+            <mat-form-field appearance="outline" color="primary">
+                <mat-label>{{'workPhone' | translate}}</mat-label>
+                <input formControlName="workPhone"  [(ngModel)]="addParentInfoModel.parentInfo.workPhone" type="text" name="workPhone" matInput>
+            </mat-form-field>
+    
+            <mat-form-field appearance="outline" color="primary">
+                <mat-label>{{'homePhone' | translate}}</mat-label>
+                <input formControlName="homePhone"  [(ngModel)]="addParentInfoModel.parentInfo.homePhone" type="text" name="homePhone" matInput>
+            </mat-form-field>
+    
+            <mat-form-field appearance="outline" color="primary">
+                <mat-label>{{'personalEmail' | translate}}</mat-label>
+                <input formControlName="personalEmail"  [(ngModel)]="addParentInfoModel.parentInfo.personalEmail" type="text" name="personalEmail" matInput>
+            </mat-form-field>
+            <a class="cursor-pointer text-primary -mt-3 mb-6" routerLink="">{{'usePersonalEmailAsLoginEmail' | translate}}</a>
+    
+            <mat-form-field appearance="outline" color="primary">
+                <mat-label>{{'workEmail' | translate}}</mat-label>
+                <input formControlName="workEmail"  [(ngModel)]="addParentInfoModel.parentInfo.workEmail" type="text" name="workEmail" matInput>
+            </mat-form-field>
+            <a class="cursor-pointer text-primary -mt-3 mb-6" routerLink="">{{'useWorkEmailAsLoginEmail' | translate}}</a>
+    
+            <mat-form-field appearance="outline" color="primary">
+                <mat-label>{{'userProfile' | translate}}</mat-label>
+                <mat-select formControlName="userProfile"  [(ngModel)]="addParentInfoModel.parentInfo.userProfile" name="userProfile" >
+                    <mat-option>Parent</mat-option>
+                    <mat-option>Show Parent & Custom Parent Profiles</mat-option>
+                </mat-select>
+            </mat-form-field>
+    
+            <div class="flex flex-auto mb-3">
+                <mat-slide-toggle color="primary">{{'portalAccess' | translate}}</mat-slide-toggle>
+            </div>
+    
+            <mat-form-field appearance="outline" color="primary">
+                <mat-label>{{'loginEmailAddress' | translate}}</mat-label>
+                <input formControlName="loginEmail"  [(ngModel)]="addParentInfoModel.parentInfo.loginEmail" type="email" name="loginEmail" matInput>
+            </mat-form-field>
+    
+            <mat-form-field appearance="outline" color="primary" class=" mb-6">
+                <mat-label>{{'password' | translate}}</mat-label>
+                <input formControlName="passwordHash"  [(ngModel)]="addParentInfoModel.passwordHash" type="password" name="passwordHash" matInput>
+            </mat-form-field>
+    
+            <h6 class="text-primary">{{'address' | translate}}</h6>
+            <div>
+                <mat-radio-group aria-label="Select an option" color="primary">
+                    <mat-radio-button   class="mr-3">{{'sameAsStudentsHomeAddress' | translate}}</mat-radio-button>
+                    <mat-radio-button  >{{'addNewAddress' | translate}}</mat-radio-button>
+                </mat-radio-group>
+            </div>
+    
+            <mat-form-field fxFlex="auto" class="mt-4" appearance="outline" color="primary">
+                <mat-label>{{'streetAddress1'|translate}}</mat-label>
+                <input formControlName="addressLineOne"  [(ngModel)]="addParentInfoModel.parentInfo.addressLineOne" name="street_address_1" matInput>
+            </mat-form-field>
+    
+            <mat-form-field fxFlex="auto" appearance="outline" color="primary">
+                <mat-label>{{'streetAddress2'|translate}}</mat-label>
+                <input formControlName="addressLineTwo"  [(ngModel)]="addParentInfoModel.parentInfo.addressLineTwo" name="addressLineTwo" matInput>
+            </mat-form-field>
+    
+            <mat-form-field fxFlex="auto" appearance="outline" color="primary">
+                <mat-label>{{'country'|translate}}</mat-label>
+                <mat-select formControlName="country"  [(ngModel)]="addParentInfoModel.parentInfo.country" name="country">
+                    <mat-option>Provide Country List</mat-option>
+                </mat-select>
+            </mat-form-field>
+    
+            <mat-form-field fxFlex="auto" appearance="outline" color="primary">
+                <mat-label>{{'stateProvinceLocality'|translate}}</mat-label>
+                <input formControlName="state"  [(ngModel)]="addParentInfoModel.parentInfo.state" name="state" matInput>
+            </mat-form-field>
+    
+            <mat-form-field fxFlex="auto" appearance="outline" color="primary">
+                <mat-label>{{'city'|translate}}</mat-label>
+                <input formControlName="city"  [(ngModel)]="addParentInfoModel.parentInfo.city" name="city" matInput>
+            </mat-form-field>
+    
+            <mat-form-field fxFlex="auto" appearance="outline" color="primary">
+                <mat-label>{{'zipPostalCode'|translate}}</mat-label>
+                <input formControlName="zip"  [(ngModel)]="addParentInfoModel.parentInfo.zip" name="zip" matInput>
+            </mat-form-field>
+    
+        </mat-dialog-content>
+        <mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" class="py-6">
+            <button mat-button mat-dialog-close type="button">{{'cancel' | translate}}</button>
+            <button color="primary" mat-raised-button type="submit">{{'submit' | translate}}</button>
+        </mat-dialog-actions>
+    </form>
+    
+</ng-template>
+
+<!-- Search form start -->
+<ng-template #search>
+    <div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
+        <h2 class="headline m-0" fxFlex="auto"><a mat-dialog-close
+            class="text-primary cursor-pointer inline-block align-middle mr-3" @fadeInRight>
+            <mat-icon [icIcon]="icBack"></mat-icon>
+        </a> {{'searchContact' | translate}}</h2>
+        <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+            <mat-icon [icIcon]="icClose"></mat-icon>
+        </button>
+    </div>
+    <mat-divider class="-mx-6 text-border"></mat-divider>
+    <mat-dialog-content fxLayout="column" class="pt-4">
+        <h5 class="mb-4">Search for an existing portal user (parent/guardian) to associate with the student.</h5>
+
+        <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+            <mat-label>{{'firstName' | translate}}</mat-label>
+            <input name="firstName" type="text" matInput>
         </mat-form-field>
-
-        <p class="text-center">- {{'orAddAsNewContactBelow' | translate}} -</p>
-
-        <mat-form-field appearance="outline" class="mt-3" color="primary">
-            <mat-label>{{'salutation'|translate}}</mat-label>
-            <mat-select name="salutation">
-                <mat-option value="">Mr.</mat-option>
-                <mat-option value="">Miss.</mat-option>
-                <mat-option value="">Mrs.</mat-option>
-                <mat-option value="">Ms.</mat-option>
-                <mat-option value="">Dr.</mat-option>
-                <mat-option value="">Rev.</mat-option>
-                <mat-option value="">Prof.</mat-option>
-                <mat-option value="">Sir.</mat-option>
-                <mat-option value="">Lord </mat-option>
-            </mat-select>
+        <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+            <mat-label>{{'lastName' | translate}}</mat-label>
+            <input name="lastName" type="text" matInput>
         </mat-form-field>
-
-        <mat-form-field appearance="outline" color="primary">
-            <mat-label>{{'firstGivenName' | translate}}</mat-label>
-            <input type="text" name="first_name" matInput required>
+        <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+            <mat-label>{{'emailAddress' | translate}}</mat-label>
+            <input name="emailAddress" type="email" matInput>
         </mat-form-field>
-
-        <mat-form-field appearance="outline" color="primary">
-            <mat-label>{{'middleName' | translate}}</mat-label>
-            <input type="text" name="middle_name" matInput>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" color="primary">
-            <mat-label>{{'lastFamilyName' | translate}}</mat-label>
-            <input type="text" name="last_name" matInput required>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" color="primary">
-            <mat-label>{{'suffix'|translate}}</mat-label>
-            <mat-select name="suffix">
-                <mat-option value=""></mat-option>
-                <mat-option value="">Jr.</mat-option>
-                <mat-option value="">Sr</mat-option>
-                <mat-option value="">II</mat-option>
-                <mat-option value="">III</mat-option>
-                <mat-option value="">IV</mat-option>
-                <mat-option value="">V</mat-option>
-                <mat-option value="">PhD</mat-option>
-            </mat-select>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" color="primary">
-            <mat-label>{{'contactRelationship' | translate}}</mat-label>
-            <mat-select name="country">
-                <mat-option>Father</mat-option>
-                <mat-option>Mother</mat-option>
-                <mat-option>Grand Father</mat-option>
-                <mat-option>Step Father</mat-option>
-                <mat-option>Step Mother</mat-option>
-                <mat-option>Legal Guardian</mat-option>
-                <mat-option>Other</mat-option>
-            </mat-select>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" color="primary">
+        <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
             <mat-label>{{'mobilePhone' | translate}}</mat-label>
-            <input type="text" name="mobile_phone" matInput>
+            <input name="mobilePhone" type="text" matInput>
         </mat-form-field>
-
-        <mat-form-field appearance="outline" color="primary">
-            <mat-label>{{'workPhone' | translate}}</mat-label>
-            <input type="text" name="work_phone" matInput>
+        <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+            <mat-label>{{'streetAddress' | translate}}</mat-label>
+            <input name="streetAddress" type="text" matInput>
         </mat-form-field>
-
-        <mat-form-field appearance="outline" color="primary">
-            <mat-label>{{'homePhone' | translate}}</mat-label>
-            <input type="text" name="home_phone" matInput>
+        <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+            <mat-label>{{'city' | translate}}</mat-label>
+            <input name="city" type="text" matInput>
         </mat-form-field>
-
-        <mat-form-field appearance="outline" color="primary">
-            <mat-label>{{'personalEmail' | translate}}</mat-label>
-            <input type="text" name="personal_email" matInput>
+        <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+            <mat-label>{{'state' | translate}}</mat-label>
+            <input name="state" type="text" matInput>
         </mat-form-field>
-        <mat-checkbox color="primary" class="-mt-3 mb-4">{{'usePersonalEmailAsLoginEmail' | translate}}</mat-checkbox>
-
-        <mat-form-field appearance="outline" color="primary">
-            <mat-label>{{'workEmail' | translate}}</mat-label>
-            <input type="text" name="work_email" matInput>
+        <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+            <mat-label>{{'zip' | translate}}</mat-label>
+            <input name="zip" type="text" matInput>
         </mat-form-field>
-        <mat-checkbox color="primary" class="-mt-3 mb-4">{{'useWorkEmailAsLoginEmail' | translate}}</mat-checkbox>
-
-        <mat-form-field appearance="outline" color="primary">
-            <mat-label>{{'userProfile' | translate}}</mat-label>
-            <mat-select name="country" required>
-                <mat-option>Parent</mat-option>
-                <mat-option>Show Parent & Custom Parent Profiles</mat-option>
-            </mat-select>
-        </mat-form-field>
-
-        <div class="flex flex-auto mb-3">
-            <mat-slide-toggle color="primary">{{'portalAccess' | translate}}</mat-slide-toggle>
-        </div>
-
-        <mat-form-field appearance="outline" color="primary">
-            <mat-label>{{'loginEmailAddress' | translate}}</mat-label>
-            <input type="email" name="login_email" matInput>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" color="primary" class=" mb-6">
-            <mat-label>{{'password' | translate}}</mat-label>
-            <input type="password" name="password" matInput>
-        </mat-form-field>
-
-        <h6 class="text-primary">{{'address' | translate}}</h6>
-        <div>
-            <mat-radio-group aria-label="Select an option" color="primary">
-                <mat-radio-button value="1" class="mr-3">{{'sameAsStudentsHomeAddress' | translate}}</mat-radio-button>
-                <mat-radio-button value="2" checked="checked">{{'addNewAddress' | translate}}</mat-radio-button>
-            </mat-radio-group>
-        </div>
-
-        <mat-form-field fxFlex="auto" class="mt-4" appearance="outline" color="primary">
-            <mat-label>{{'streetAddress1'|translate}}</mat-label>
-            <input name="street_address_1" matInput>
-        </mat-form-field>
-
-        <mat-form-field fxFlex="auto" appearance="outline" color="primary">
-            <mat-label>{{'streetAddress2'|translate}}</mat-label>
-            <input name="street_address_2" matInput>
-        </mat-form-field>
-
-        <mat-form-field fxFlex="auto" appearance="outline" color="primary">
-            <mat-label>{{'country'|translate}}</mat-label>
-            <mat-select name="country">
-                <mat-option>Provide Country List</mat-option>
-            </mat-select>
-        </mat-form-field>
-
-        <mat-form-field fxFlex="auto" appearance="outline" color="primary">
-            <mat-label>{{'stateProvinceLocality'|translate}}</mat-label>
-            <input name="state_province_locality" matInput>
-        </mat-form-field>
-
-        <mat-form-field fxFlex="auto" appearance="outline" color="primary">
-            <mat-label>{{'city'|translate}}</mat-label>
-            <input name="city" matInput>
-        </mat-form-field>
-
-        <mat-form-field fxFlex="auto" appearance="outline" color="primary">
-            <mat-label>{{'zipPostalCode'|translate}}</mat-label>
-            <input name="city" matInput>
-        </mat-form-field>
-
-        <mat-form-field fxFlex="auto" appearance="outline" color="primary">
-            <mat-label>{{'busNo'|translate}}</mat-label>
-            <input name="city" matInput>
-        </mat-form-field>
-
-        <div>
-            <mat-checkbox color="primary" class="mr-6">{{'busPickup' | translate}}
-            </mat-checkbox>
-            <mat-checkbox color="primary">{{'busDropoff' | translate}}</mat-checkbox>
-        </div>
-        <div class="flex flex-auto mt-3">
-            <mat-slide-toggle color="primary" class="mr-4">
-                {{'custodyOfStudent' | translate}}</mat-slide-toggle>
-        </div>
-
     </mat-dialog-content>
     <mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" class="py-6">
         <button mat-button mat-dialog-close type="button">{{'cancel' | translate}}</button>
-        <button color="primary" mat-raised-button type="submit">{{'submit' | translate}}</button>
+        <button color="primary" mat-raised-button type="submit">{{'search' | translate}}</button>
     </mat-dialog-actions>
-</form>
+</ng-template>
+<!-- Search form end -->
+
+
+<!-- Single search result -->
+<ng-template #singleResult>
+    <div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
+        <h2 class="headline m-0" fxFlex="auto"><a mat-dialog-close
+            class="text-primary cursor-pointer inline-block align-middle mr-3" @fadeInRight>
+            <mat-icon [icIcon]="icBack"></mat-icon>
+        </a> Mr. John Doe</h2>
+        <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+            <mat-icon [icIcon]="icClose"></mat-icon>
+        </button>
+    </div>
+    <mat-divider class="-mx-6 text-border"></mat-divider>
+    <mat-dialog-content>
+        <div class="md:flex md:flex-wrap mt-4">
+            <div class="pr-4 md:w-2/3">
+                <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                    <mat-label>{{'contactRelationship' | translate}}</mat-label>
+                    <mat-select name="contactRelationship">
+                        <mat-option>Show Contact Relationship Options</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="pl-4 md:w-1/3 pt-3">
+                <mat-checkbox color="primary" formControlName="busPickup" [(ngModel)]="addParentInfoModel.parentInfo.busPickup">{{'custody' | translate}}</mat-checkbox>
+            </div>
+        </div>
+        <ul class="grid grid-cols-2 col-gap-8 row-gap-8 mt-6">
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'fullName' | translate}}</label>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Mr. John Doe</p>
+            </li>
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'mobilePhone' | translate}}</label>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">1234567890</p>
+            </li>
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'workPhone' | translate}}</label>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">1324567890</p>
+            </li>
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'homePhone' | translate}}</label>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">1324567980</p>
+            </li>
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'personalEmail' | translate}}</label>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">johndoe@example.com</p>
+            </li>
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'workEmail' | translate}}</label>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">johndoe@company.com</p>
+            </li>
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'userProfile' | translate}}</label>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Parent</p>
+            </li>
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'portalAccess' | translate}}</label>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Yes</p>
+            </li>
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'loginEmail' | translate}}</label>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">johndoe@example.com</p>
+            </li>
+            <li class="col-start-1 col-end-3">
+                <label class="text-sm leading-5 text-gray">{{'Address' | translate}}</label>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2"><a routerLink="" class="text-blue cursor-pointer">123 Main Street, Atlanta, GA, 300378, USA<i class="icon icon-sphere ml-2"></i></a></p>
+            </li>
+        </ul>
+    </mat-dialog-content>
+    <mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" class="py-6">
+        <button color="primary" mat-raised-button type="submit">{{'associateWithStudent' | translate}}</button>
+    </mat-dialog-actions>
+</ng-template>
+
+<!-- Multiple search result -->
+<ng-template #multipleResult>
+    <div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
+        <h2 class="headline m-0" fxFlex="auto"><a mat-dialog-close
+            class="text-primary cursor-pointer inline-block align-middle mr-3" @fadeInRight>
+            <mat-icon [icIcon]="icBack"></mat-icon>
+        </a> Multiple Results Found.</h2>
+        <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+            <mat-icon [icIcon]="icClose"></mat-icon>
+        </button>
+    </div>
+    <mat-divider class="-mx-6 text-border"></mat-divider>
+    <mat-dialog-content>
+        <div class="md:flex md:flex-wrap my-4">
+            <div class="pr-4 md:w-2/3">
+                <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                    <mat-label>{{'contactRelationship' | translate}}</mat-label>
+                    <mat-select name="contactRelationship">
+                        <mat-option>Show Contact Relationship Options</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="pl-4 md:w-1/3 pt-3">
+                <mat-checkbox color="primary" formControlName="busPickup" [(ngModel)]="addParentInfoModel.parentInfo.busPickup">{{'custody' | translate}}</mat-checkbox>
+            </div>
+        </div>
+        <h4 class="text-primary mb-3">The following parent matched your search criteria:</h4>
+        <mat-accordion class="w-full">
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title class="font-semibold h-full">
+                        <div class="flex w-full justify-between items-center h-full">
+                            <h5 class="inline-block font-medium">John Doe</h5>
+                        </div>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div class="border-t -mx-6">
+                    <div class="mx-6">
+                        <ul class="grid grid-cols-2 col-gap-8 row-gap-8 mt-6">
+                            <li>
+                                <label class="text-sm leading-5 text-gray">{{'fullName' | translate}}</label>
+                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Mr. John Doe</p>
+                            </li>
+                            <li>
+                                <label class="text-sm leading-5 text-gray">{{'mobilePhone' | translate}}</label>
+                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">1234567890</p>
+                            </li>
+                            <li>
+                                <label class="text-sm leading-5 text-gray">{{'workPhone' | translate}}</label>
+                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">1324567890</p>
+                            </li>
+                            <li>
+                                <label class="text-sm leading-5 text-gray">{{'homePhone' | translate}}</label>
+                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">1324567980</p>
+                            </li>
+                            <li>
+                                <label class="text-sm leading-5 text-gray">{{'personalEmail' | translate}}</label>
+                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">johndoe@example.com</p>
+                            </li>
+                            <li>
+                                <label class="text-sm leading-5 text-gray">{{'workEmail' | translate}}</label>
+                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">johndoe@company.com</p>
+                            </li>
+                            <li>
+                                <label class="text-sm leading-5 text-gray">{{'userProfile' | translate}}</label>
+                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Parent</p>
+                            </li>
+                            <li>
+                                <label class="text-sm leading-5 text-gray">{{'portalAccess' | translate}}</label>
+                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Yes</p>
+                            </li>
+                            <li>
+                                <label class="text-sm leading-5 text-gray">{{'loginEmail' | translate}}</label>
+                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">johndoe@example.com</p>
+                            </li>
+                            <li class="col-start-1 col-end-3">
+                                <label class="text-sm leading-5 text-gray">{{'address' | translate}}</label>
+                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2"><a routerLink="" class="text-blue cursor-pointer">123 Main Street, Atlanta, GA, 300378, USA<i class="icon icon-sphere ml-2"></i></a></p>
+                            </li>
+                        </ul>
+                        <div class="pt-6 w-full text-right">
+                            <button color="primary" mat-raised-button>{{'associateWithStudent' | translate}}</button>
+                        </div>
+                    </div>
+                </div>
+            </mat-expansion-panel>
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title class="font-semibold h-full">
+                        <div class="flex w-full justify-between items-center h-full">
+                            <h5 class="inline-block font-medium">John Davis</h5>
+                        </div>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div class="border-t -mx-6">
+                    <div class="mx-6">
+                        <ul class="grid grid-cols-2 col-gap-8 row-gap-8 mt-6">
+                            <li>
+                                <label class="text-sm leading-5 text-gray">{{'fullName' | translate}}</label>
+                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Mr. John Doe</p>
+                            </li>
+                            <li>
+                                <label class="text-sm leading-5 text-gray">{{'mobilePhone' | translate}}</label>
+                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">1234567890</p>
+                            </li>
+                            <li>
+                                <label class="text-sm leading-5 text-gray">{{'workPhone' | translate}}</label>
+                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">1324567890</p>
+                            </li>
+                            <li>
+                                <label class="text-sm leading-5 text-gray">{{'homePhone' | translate}}</label>
+                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">1324567980</p>
+                            </li>
+                            <li>
+                                <label class="text-sm leading-5 text-gray">{{'personalEmail' | translate}}</label>
+                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">johndoe@example.com</p>
+                            </li>
+                            <li>
+                                <label class="text-sm leading-5 text-gray">{{'workEmail' | translate}}</label>
+                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">johndoe@company.com</p>
+                            </li>
+                            <li>
+                                <label class="text-sm leading-5 text-gray">{{'userProfile' | translate}}</label>
+                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Parent</p>
+                            </li>
+                            <li>
+                                <label class="text-sm leading-5 text-gray">{{'portalAccess' | translate}}</label>
+                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Yes</p>
+                            </li>
+                            <li>
+                                <label class="text-sm leading-5 text-gray">{{'loginEmail' | translate}}</label>
+                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">johndoe@example.com</p>
+                            </li>
+                            <li class="col-start-1 col-end-3">
+                                <label class="text-sm leading-5 text-gray">{{'address' | translate}}</label>
+                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2"><a routerLink="" class="text-blue cursor-pointer">123 Main Street, Atlanta, GA, 300378, USA<i class="icon icon-sphere ml-2"></i></a></p>
+                            </li>
+                        </ul>
+                        <div class="pt-6 w-full text-right">
+                            <button color="primary" mat-raised-button>{{'associateWithStudent' | translate}}</button>
+                        </div>
+                    </div>
+                </div>
+            </mat-expansion-panel>
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title class="font-semibold h-full">
+                        <div class="flex w-full justify-between items-center h-full">
+                            <h5 class="inline-block font-medium">John Smith</h5>
+                        </div>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div class="border-t -mx-6">
+                    <div class="mx-6">
+                        <ul class="grid grid-cols-2 col-gap-8 row-gap-8 mt-6">
+                            <li>
+                                <label class="text-sm leading-5 text-gray">{{'fullName' | translate}}</label>
+                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Mr. John Doe</p>
+                            </li>
+                            <li>
+                                <label class="text-sm leading-5 text-gray">{{'mobilePhone' | translate}}</label>
+                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">1234567890</p>
+                            </li>
+                            <li>
+                                <label class="text-sm leading-5 text-gray">{{'workPhone' | translate}}</label>
+                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">1324567890</p>
+                            </li>
+                            <li>
+                                <label class="text-sm leading-5 text-gray">{{'homePhone' | translate}}</label>
+                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">1324567980</p>
+                            </li>
+                            <li>
+                                <label class="text-sm leading-5 text-gray">{{'personalEmail' | translate}}</label>
+                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">johndoe@example.com</p>
+                            </li>
+                            <li>
+                                <label class="text-sm leading-5 text-gray">{{'workEmail' | translate}}</label>
+                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">johndoe@company.com</p>
+                            </li>
+                            <li>
+                                <label class="text-sm leading-5 text-gray">{{'userProfile' | translate}}</label>
+                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Parent</p>
+                            </li>
+                            <li>
+                                <label class="text-sm leading-5 text-gray">{{'portalAccess' | translate}}</label>
+                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Yes</p>
+                            </li>
+                            <li>
+                                <label class="text-sm leading-5 text-gray">{{'loginEmail' | translate}}</label>
+                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">johndoe@example.com</p>
+                            </li>
+                            <li class="col-start-1 col-end-3">
+                                <label class="text-sm leading-5 text-gray">{{'address' | translate}}</label>
+                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2"><a routerLink="" class="text-blue cursor-pointer">123 Main Street, Atlanta, GA, 300378, USA<i class="icon icon-sphere ml-2"></i></a></p>
+                            </li>
+                        </ul>
+                        <div class="pt-6 w-full text-right">
+                            <button color="primary" mat-raised-button>{{'associateWithStudent' | translate}}</button>
+                        </div>
+                    </div>
+                </div>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </mat-dialog-content>
+</ng-template>

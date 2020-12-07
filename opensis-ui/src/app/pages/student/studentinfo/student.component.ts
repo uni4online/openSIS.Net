@@ -28,10 +28,10 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 })
 export class StudentComponent implements OnInit { 
   columns = [
-    { label: 'Name', property: 'studentName', type: 'text', visible: true },
+    { label: 'Name', property: 'firstGivenName', type: 'text', visible: true },
     { label: 'Student ID', property: 'studentId', type: 'text', visible: true },
-    { label: 'Alternate ID', property: 'studentAlternateId', type: 'text', visible: true },    
-    { label: 'Phone', property: 'phone', type: 'text', visible: true }
+    { label: 'Alternate ID', property: 'alternateId', type: 'text', visible: true },    
+    { label: 'Phone', property: 'homePhone', type: 'text', visible: true }
   ];
 
   selection = new SelectionModel<any>(true, []);
@@ -75,13 +75,12 @@ export class StudentComponent implements OnInit {
 
   ngAfterViewInit() {
     //  Sorting
-    console.log(this.sort)
     this.getAllStudent=new StudentListModel();
     this.sort.sortChange.subscribe((res) => {
       this.getAllStudent.pageNumber=this.pageNumber
       this.getAllStudent.pageSize=this.pageSize;
       this.getAllStudent.sortingModel.sortColumn=res.active;
-      if(this.searchCtrl.value!=null){
+      if(this.searchCtrl.value!=null && this.searchCtrl.value!=""){
         let filterParams=[
           {
             columnName:null,
@@ -117,13 +116,15 @@ export class StudentComponent implements OnInit {
           this.getAllStudent.sortingModel.sortDirection=this.sort.direction;
         }
         Object.assign(this.getAllStudent,{filterParams: filterParams});
-        this.getAllStudent.pageNumber=this.pageNumber;
+        this.getAllStudent.pageNumber=1;
+        this.paginator.pageIndex=0;
         this.getAllStudent.pageSize=this.pageSize;
         this.callAllStudent();
         }
         else
         {
-          this.getAllStudent.pageNumber=this.pageNumber;
+        Object.assign(this.getAllStudent,{filterParams: null});
+          this.getAllStudent.pageNumber=this.paginator.pageIndex+1;
           this.getAllStudent.pageSize=this.pageSize;
           if(this.sort.active!=undefined && this.sort.direction!=""){
             this.getAllStudent.sortingModel.sortColumn=this.sort.active;
@@ -148,7 +149,7 @@ export class StudentComponent implements OnInit {
       this.getAllStudent.sortingModel.sortColumn=this.sort.active;
       this.getAllStudent.sortingModel.sortDirection=this.sort.direction;
     }
-    if(this.searchCtrl.value!=null){
+    if(this.searchCtrl.value!=null && this.searchCtrl.value!=""){
       let filterParams=[
         {
          columnName:null,
@@ -177,21 +178,24 @@ export class StudentComponent implements OnInit {
         this.pageNumber = data.pageNumber;
         this.pageSize = data._pageSize;  
         let filterArr = [];
-        this.allStudentList = data.studentMaster;
-        data.studentMaster.map((value:any) => {
-          var obj = {};
-          var middleName="";
-         if(value.middleName !== null){
-           middleName = value.middleName
-         }
-          obj = {
-            studentName: value.firstGivenName+' '+middleName+' '+value.lastFamilyName,
-            studentId: value.studentId,
-            studentAlternateId: value.alternateId,
-            phone: value.homePhone,
-            }   
-            filterArr.push(obj)               
-        });        
+        this.allStudentList = data.getStudentListForViews;
+        if(data.getStudentListForViews!=null){
+          data.getStudentListForViews.map((value:any) => {
+            var obj = {};
+            var middleName="";
+           if(value.middleName !== null){
+             middleName = value.middleName
+           }
+            obj = {
+              firstGivenName: value.firstGivenName+' '+middleName+' '+value.lastFamilyName,
+              studentInternalId: value.studentInternalId,
+              alternateId: value.alternateId,
+              homePhone: value.mobilePhone,
+              studentId:value.studentId
+              }   
+              filterArr.push(obj)               
+          }); 
+        }     
         this.StudentModelList = new MatTableDataSource(filterArr);      
         this.getAllStudent=new StudentListModel();     
       }

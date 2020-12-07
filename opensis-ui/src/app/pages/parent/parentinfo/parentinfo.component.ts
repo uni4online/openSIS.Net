@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input,AfterViewInit } from '@angular/core';
 import icMoreVert from '@iconify/icons-ic/twotone-more-vert';
 import icAdd from '@iconify/icons-ic/baseline-add';
 import icEdit from '@iconify/icons-ic/twotone-edit';
@@ -12,6 +12,12 @@ import { Router} from '@angular/router';
 import { fadeInUp400ms } from '../../../../@vex/animations/fade-in-up.animation';
 import { stagger40ms } from '../../../../@vex/animations/stagger.animation';
 import { TranslateService } from '@ngx-translate/core';
+import {ParentInfoService} from '../../../services/parent-info.service';
+import { GetAllParentModel } from "../../../models/parentInfoModel";
+import { LoaderService } from '../../../services/loader.service';
+import { FormControl } from '@angular/forms';
+import { MatTableDataSource } from '@angular/material/table';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'vex-parentinfo',
@@ -22,18 +28,21 @@ import { TranslateService } from '@ngx-translate/core';
     stagger40ms
   ]
 })
-export class ParentinfoComponent implements OnInit {
+export class ParentinfoComponent implements OnInit,AfterViewInit {
   @Input()
   columns = [
-    { label: 'Parent’s Name', property: 'name', type: 'text', visible: true },
+    { label: 'Parentï¿½s Name', property: 'name', type: 'text', visible: true },
     { label: 'Profile', property: 'profile', type: 'text', visible: true },
     { label: 'Email Address', property: 'email_address', type: 'text', visible: true },
     { label: 'Mobile Phone', property: 'mobile_phone', type: 'number', visible: true },
     { label: 'Associated Students', property: 'students', type: 'text', visible: true },
     { label: 'action', property: 'action', type: 'text', visible: true }
   ];
-
-  ParentFieldsModelList;
+  
+  totalCount:number;
+  pageNumber:number;
+  pageSize:number;
+  searchCtrl: FormControl;
 
   icMoreVert = icMoreVert;
   icAdd = icAdd;
@@ -43,30 +52,44 @@ export class ParentinfoComponent implements OnInit {
   icFilterList = icFilterList;
   icImpersonate = icImpersonate;
   loading:Boolean;
+  getAllParentModel:GetAllParentModel= new GetAllParentModel()
+  ParentFieldsModelList: MatTableDataSource<any>;
 
-  constructor(private router: Router,private dialog: MatDialog,public translateService:TranslateService) {
+  constructor(
+    private router: Router,
+    private dialog: MatDialog,
+    private parentInfoService:ParentInfoService,
+    private snackbar: MatSnackBar,
+    private loaderService:LoaderService,
+    public translateService:TranslateService
+    ) {
     translateService.use('en');
-    this.ParentFieldsModelList = [
-      {name: 'Danielle Boucher', profile: 'Parent', email_address: 'danielle.boucher@example.com', mobile_phone: '1234567980', students: [{'student_name' : 'William Boucher', 'student_id' : '1'}]},
-      {name: 'Andrew Brown', profile: 'Parent', email_address: 'andrew_brown@example.com', mobile_phone: '1234567980', students: [{'student_name' : 'Natalie Brown', 'student_id' : '1'},{'student_name' : 'Gabriel Brown', 'student_id' : '1'}]},
-      {name: 'Ella Brown', profile: 'Parent', email_address: 'ella_brown@example.com', mobile_phone: '1234567980', students: [{'student_name' : 'Lilly Brown', 'student_id' : '1'}]},
-      {name: 'Lian Fang', profile: 'Parent', email_address: 'lian_fang@example.com', mobile_phone: '1234567980', students: [{'student_name' : 'Liliana Fang', 'student_id' : '1'}]},
-      {name: 'Adriana Garcia', profile: 'Parent', email_address: 'adriana.garcia@example.com', mobile_phone: '1234567980', students: [{'student_name' : 'Melissa Garcia', 'student_id' : '1'},{'student_name' : 'Delaney Garcia', 'student_id' : '1'}]},
-      {name: 'Olivia Jones', profile: 'Parent', email_address: 'olivia.jones@example.com', mobile_phone: '1234567980', students: [{'student_name' : 'Erick Jones', 'student_id' : '1'}]},
-      {name: 'Amare Keita', profile: 'Parent', email_address: 'amare_keita@example.com', mobile_phone: '1234567980', students: [{'student_name' : 'Braylen Keita', 'student_id' : '1'}]},
-      {name: 'Amber Keita', profile: 'Parent', email_address: 'amber_keita@example.com', mobile_phone: '1234567980', students: [{'student_name' : 'amberkeita', 'student_id' : '1'}]},
-      {name: 'Alyssa Kimathi', profile: 'Parent', email_address: 'alyssa_kimathi@example.com', mobile_phone: '1234567980', students: [{'student_name' : 'Athena Kimathi', 'student_id' : '1'}]},
-      {name: 'Robert Miller', profile: 'Parent', email_address: 'robert_miller@example.com', mobile_phone: '1234567980', students: [{'student_name' : 'Patrick Miller', 'student_id' : '1'}]}
-    ]
+    this.getAllParentModel.filterParams=null;
+    this.loaderService.isLoading.subscribe((val) => {
+      this.loading = val;
+    });
+    this.getAllparentList();
+    
   }
 
   ngOnInit(): void {
+    this.searchCtrl = new FormControl();
   }
 
-  getPageEvent(event){    
-    // this.getAllSchool.pageNumber=event.pageIndex+1;
-    // this.getAllSchool.pageSize=event.pageSize;
-    // this.callAllSchool(this.getAllSchool);
+  getPageEvent(event){
+    if(this.searchCtrl.value!=null){
+      let filterParams=[
+        {
+         columnName:null,
+         filterValue:this.searchCtrl.value,
+         filterOption:1
+        }
+      ]
+     Object.assign(this.getAllParentModel,{filterParams: filterParams});
+    }
+    this.getAllParentModel.pageNumber=event.pageIndex+1;
+    this.getAllParentModel._pageSize=event.pageSize;
+    this.getAllparentList();
   }
 
   toggleColumnVisibility(column, event) {
@@ -78,5 +101,60 @@ export class ParentinfoComponent implements OnInit {
   get visibleColumns() {
     return this.columns.filter(column => column.visible).map(column => column.property);
   }
+  getAllparentList(){
+    this.parentInfoService.getAllParentInfo(this.getAllParentModel).subscribe(
+      (res:GetAllParentModel)=>{
+        if(typeof(res)=='undefined'){
+          this.snackbar.open('Parent list failed. ' + sessionStorage.getItem("httpError"), '', {
+            duration: 10000
+          });
+        }
+        else{
+          if (res._failure) {     
+            this.snackbar.open('Parent list failed. ' + res._message, 'LOL THANKS', {
+              duration: 10000
+            });
+          } 
+          else { 
+            this.totalCount=res.totalCount;
+
+            this.pageNumber = res.pageNumber;
+            this.pageSize = res._pageSize;
+            this.ParentFieldsModelList=new MatTableDataSource(res.parentInfoForView);   
+          }
+        }
+      }
+    )
+  }
+    ngAfterViewInit() {
+    
+      //  Searching
+      this.searchCtrl.valueChanges.pipe(debounceTime(500),distinctUntilChanged()).subscribe(
+        
+        (term)=>{
+          if(term!=''){
+            
+            let filterParams=[
+              {
+                columnName:null,
+                filterValue:term,
+                filterOption:1
+              }
+            ]
+            Object.assign(this.getAllParentModel,{filterParams: filterParams});
+            this.getAllParentModel.pageNumber=this.pageNumber;
+            this.getAllParentModel._pageSize=this.pageSize;
+            this.getAllparentList();
+          }
+          else{
+            Object.assign(this.getAllParentModel,{filterParams: null});
+            this.getAllParentModel.pageNumber=this.pageNumber;
+            this.getAllParentModel._pageSize=this.pageSize; 
+            
+            this.getAllparentList()
+          }
+        }
+      )
+    }
 
 }

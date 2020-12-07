@@ -26,61 +26,65 @@ import { ParentInfoService } from '../../../../services/parent-info.service';
   ]
 })
 export class StudentMedicalinfoComponent implements OnInit {
-  StudentCreate=SchoolCreate;
-  @Input() studentCreateMode:SchoolCreate;
+  StudentCreate = SchoolCreate;
+  @Input() studentCreateMode: SchoolCreate;
+  @Input() categoryId;
   @Input() studentDetailsForViewAndEdit;
-  @Output() studentDetailsForParent=new EventEmitter<StudentAddModel>();
+  @Output() studentDetailsForParent = new EventEmitter<StudentAddModel>();
   studentAddModel: StudentAddModel = new StudentAddModel();
-  parentInfoModel:ViewParentInfoModel = new ViewParentInfoModel();
+  parentInfoModel: ViewParentInfoModel = new ViewParentInfoModel();
   icEdit = icEdit;
-  icDelete = icDelete; 
+  icDelete = icDelete;
+  module = 'Student';
   icAdd = icAdd;
   icComment = icComment;
-  parentsFullName=[];
-  constructor(private fb: FormBuilder, 
-    public translateService:TranslateService,
-    private _studentService:StudentService,
+  parentsFullName = [];
+  constructor(private fb: FormBuilder,
+    public translateService: TranslateService,
+    private _studentService: StudentService,
     private snackbar: MatSnackBar,
-    private _parentInfoService:ParentInfoService) {
+    private _parentInfoService: ParentInfoService) {
     translateService.use('en');
 
-   }
+  }
 
   ngOnInit(): void {
-    if(this.studentCreateMode==this.StudentCreate.VIEW){
+    if (this.studentCreateMode == this.StudentCreate.VIEW) {
       this.studentAddModel = this.studentDetailsForViewAndEdit;
-    }else{
+    } else {
       this.getAllParents();
       this.studentAddModel = this._studentService.getStudentDetails();
     }
   }
 
-  editMedicalInfo(){
+  editMedicalInfo() {
     this.getAllParents();
     this.studentCreateMode = this.StudentCreate.EDIT
   }
 
-  cancelEdit(){
+  cancelEdit() {
     this.studentCreateMode = this.StudentCreate.VIEW
   }
 
-  getAllParents(){
-  this.parentInfoModel.studentId=this.studentAddModel.studentMaster.studentId;
-  this._parentInfoService.ViewParentListForStudent(this.parentInfoModel).subscribe((res)=>{
-    this.concatenateParentsName(res.parentInfoList);
-  })
+  getAllParents() {
+    this.parentInfoModel.studentId = this.studentAddModel.studentMaster.studentId;
+    this._parentInfoService.ViewParentListForStudent(this.parentInfoModel).subscribe((res) => {
+      this.concatenateParentsName(res.parentInfoList);
+    })
   }
 
-  concatenateParentsName(parentDetails){
-      this.parentsFullName=parentDetails?.map((item)=>{
-        return item.firstname + ' ' + item.lastname
-      });
-    }
+  concatenateParentsName(parentDetails) {
+    this.parentsFullName = parentDetails?.map((item) => {
+      return item.firstname + ' ' + item.lastname
+    });
+  }
 
-  submit(){
-    this.studentAddModel._tenantName=sessionStorage.getItem("tenant");
-    this.studentAddModel._token=sessionStorage.getItem("token");
-    this._studentService.UpdateStudent(this.studentAddModel).subscribe(data => {                        
+  submit() {
+    this.studentAddModel.selectedCategoryId= this.studentAddModel.fieldsCategoryList[this.categoryId].categoryId;
+    
+    this.studentAddModel._tenantName = sessionStorage.getItem("tenant");
+    this.studentAddModel._token = sessionStorage.getItem("token");
+    this._studentService.UpdateStudent(this.studentAddModel).subscribe(data => {
       if (typeof (data) == 'undefined') {
         this.snackbar.open('Medical Information Updation failed. ' + sessionStorage.getItem("httpError"), '', {
           duration: 10000
@@ -91,15 +95,15 @@ export class StudentMedicalinfoComponent implements OnInit {
           this.snackbar.open('Medical Information Updation failed. ' + data._message, 'LOL THANKS', {
             duration: 10000
           });
-        } else {    
+        } else {
           this.snackbar.open('Medical Information Update Successfully.', '', {
             duration: 10000
           });
           this.studentDetailsForParent.emit(data);
-          
+
         }
       }
-  
+
     })
   }
 

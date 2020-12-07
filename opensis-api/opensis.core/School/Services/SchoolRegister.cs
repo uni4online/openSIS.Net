@@ -152,6 +152,26 @@ namespace opensis.core.School.Services
 
         }
 
+        /// <summary>
+        /// Check School InternalId Exist or Not
+        /// </summary>
+        /// <param name="checkSchoolInternalIdViewModel"></param>
+        /// <returns></returns>
+        public CheckSchoolInternalIdViewModel CheckSchoolInternalId(CheckSchoolInternalIdViewModel checkSchoolInternalIdViewModel)
+        {
+            CheckSchoolInternalIdViewModel checkInternalId = new CheckSchoolInternalIdViewModel();
+            if (TokenManager.CheckToken(checkSchoolInternalIdViewModel._tenantName, checkSchoolInternalIdViewModel._token))
+            {
+                checkInternalId = this.schoolRepository.CheckSchoolInternalId(checkSchoolInternalIdViewModel);
+            }
+            else
+            {
+                checkInternalId._failure = true;
+                checkInternalId._message = TOKENINVALID;
+            }
+            return checkInternalId;
+        }
+
         //public bool IsMandatoryFieldsArePresent(Schools schools)
         //{
         //    bool isvalid = false;
@@ -162,6 +182,6 @@ namespace opensis.core.School.Services
 
         //    return isvalid;
         //}
-        
+
     }
 }

@@ -11,9 +11,11 @@
                         <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'schoolId'|translate}}</mat-label>
                             <input #school_id="ngModel" [(ngModel)]="schoolAddViewModel.schoolMaster.schoolInternalId"
-                                name="school_id" maxlength="50" required matInput>
+                            (keyup)="checkSchoolInternalId($event)" name="school_id" maxlength="50" required matInput>
                                 <mat-error *ngIf="school_id.errors?.required">
                                     {{'schoolIdIsRequired'|translate}}</mat-error>
+                                    <mat-error *ngIf="school_id.errors?.nomatch">
+                                        {{'schoolIdAlreadyExist'|translate}}</mat-error>
                         </mat-form-field>
                     </li>
 
@@ -165,6 +167,8 @@
                                 [min]="minDate" name="date_school_closed" [matDatepicker]="dateSchoolClosed" matInput>
                             <mat-datepicker-toggle [for]="dateSchoolClosed" matSuffix></mat-datepicker-toggle>
                             <mat-datepicker #dateSchoolClosed></mat-datepicker>
+                            <mat-error *ngIf="date_school_closed.errors?.required">
+                                {{'schoolClosedDateIsRequired'|translate}}</mat-error>
                         </mat-form-field>
                     </li>
                     <li>
@@ -222,7 +226,7 @@
                         </mat-form-field>
                     </li>
                      </ul>
-                     <vex-custom-field-without-form  [schoolDetailsForViewAndEdit]="schoolAddViewModel" [categoryId] = "categoryId" [schoolCreateMode]="schoolCreateMode"></vex-custom-field-without-form>
+                     <vex-custom-field-without-form  [schoolDetailsForViewAndEdit]="schoolAddViewModel" [categoryId] = "categoryId" [module] = "module" [schoolCreateMode]="schoolCreateMode"></vex-custom-field-without-form>
                
             </div>
            
@@ -570,7 +574,7 @@
                     </li> -->
                     
                 </ul>
-                <vex-custom-field-without-form  [schoolDetailsForViewAndEdit]="schoolAddViewModel" [categoryId] = "categoryId" [schoolCreateMode]="schoolCreateMode"></vex-custom-field-without-form>
+                <vex-custom-field-without-form  [schoolDetailsForViewAndEdit]="schoolAddViewModel" [categoryId] = "categoryId" [module] = "module" [schoolCreateMode]="schoolCreateMode"></vex-custom-field-without-form>
             </div>
             <div class="mt-12">
                 <div class="flex w-full justify-between pb-4">

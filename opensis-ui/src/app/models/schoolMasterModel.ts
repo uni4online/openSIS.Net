@@ -54,8 +54,20 @@ export class SchoolAddViewModel extends CommonField {
     this.schoolMaster.longitude = null;
     this._tenantName = sessionStorage.getItem('tenant');
     this._token = sessionStorage.getItem('token');
-    this.selectedCategoryId =0;
+    this.selectedCategoryId = 0;
 
+  }
+}
+
+export class CheckSchoolInternalIdViewModel extends CommonField {
+  public tenantId: string;
+  public schoolInternalId: string;
+  public isValidInternalId: boolean;
+  constructor() {
+    super();
+    this.tenantId = sessionStorage.getItem("tenantId");
+    this._tenantName = sessionStorage.getItem("tenant");
+    this._token = sessionStorage.getItem("token");
   }
 }
 

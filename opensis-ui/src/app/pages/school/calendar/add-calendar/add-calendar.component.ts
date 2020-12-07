@@ -98,7 +98,7 @@ export class AddCalendarComponent implements OnInit {
   checkDate(){
     let markingPeriodDate=new Date(sessionStorage.getItem("markingPeriod")).getTime();
     let startDate=new Date(this.calendarAddViewModel.schoolCalendar.startDate).getTime(); 
-    if((startDate!=markingPeriodDate && this.form.value.isDefaultCalendar) || (this.data.calenderListCount==0 && startDate!=markingPeriodDate)){
+    if((startDate!=markingPeriodDate && this.form.value.isDefaultCalendar) || (this.data.calendarListCount==0 && startDate!=markingPeriodDate)){
       this.form.controls.startDate.setErrors({'nomatch': true});
     }else{
       if(this.form.controls.startDate.errors?.nomatch){

@@ -22,10 +22,11 @@ import { SafePipe } from './user-define-pipe/safeHtml.pipe';
 import { TransformDateTimePipe } from './user-define-pipe/transform-datetime-pipe';
 import {EmailvalidatorDirective} from './user-defined-directives/emailvalidator.directive';
 import {PhonevalidatorDirective} from './user-defined-directives/phonevalidator.directive';
+import { AgePipe } from './user-define-pipe/age-calculator-pipe';
 @NgModule({
   declarations: [MatSpinnerOverlayComponent, ProfileImageComponent,PhoneMaskDirective,EmtyBooleanCheckPipe,EmtyBooleanCheckReversePipe,
     EmtyValueCheckPipe,EmtyNumberCheckPipe, ConfirmDialogComponent,InvalidControlScrollDirective,TransformDateTimePipe,EmailvalidatorDirective,
-    PhonevalidatorDirective,SafePipe],
+    PhonevalidatorDirective,SafePipe,AgePipe],
   imports: [
     CommonModule,
     MatProgressSpinnerModule,
@@ -39,6 +40,6 @@ import {PhonevalidatorDirective} from './user-defined-directives/phonevalidator.
     TranslateModule
   ],
   exports:[MatSpinnerOverlayComponent, ProfileImageComponent,PhoneMaskDirective,EmtyBooleanCheckPipe,EmtyValueCheckPipe,EmtyNumberCheckPipe,InvalidControlScrollDirective,
-    EmtyBooleanCheckReversePipe,TransformDateTimePipe,EmailvalidatorDirective,PhonevalidatorDirective,SafePipe]
+    EmtyBooleanCheckReversePipe,TransformDateTimePipe,EmailvalidatorDirective,PhonevalidatorDirective,SafePipe,AgePipe]
 })
 export class SharedModuleModule { }
