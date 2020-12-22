@@ -40,14 +40,14 @@ export class ProfileImageComponent implements OnInit,OnDestroy {
   @Input() mode; 
 
   constructor(private dialog:MatDialog,
-    private _imageCropperService:ImageCropperService,
+    private imageCropperService:ImageCropperService,
     private snackbar: MatSnackBar,
     private schoolService:SchoolService) {
      }
 
      ngOnInit(): void {
       if(this.mode){
-        this._imageCropperService.sharedMessage.pipe(takeUntil(this.destroySubject$)).subscribe((message) => {
+        this.imageCropperService.sharedMessage.pipe(takeUntil(this.destroySubject$)).subscribe((message) => {
           this.enableUpload = message
           let id=this.schoolService.getSchoolId();
           if(this.enableUpload){
@@ -70,7 +70,7 @@ export class ProfileImageComponent implements OnInit,OnDestroy {
     this.croppedImage = event.base64;
     let base64ImageSplit=this.croppedImage.split(',')
     let sendCropImage=(croppedImage)=>{
-      this._imageCropperService.sendCroppedEvent(croppedImage);
+      this.imageCropperService.sendCroppedEvent(croppedImage);
       } 
     sendCropImage(base64ImageSplit);
   }
@@ -148,7 +148,7 @@ export class ProfileImageComponent implements OnInit,OnDestroy {
   HandleReaderLoaded(e) {
     this.croppedImage='';
     let sendImageData2 =(e)=>{
-      this._imageCropperService.sendUncroppedEvent(e);
+      this.imageCropperService.sendUncroppedEvent(e);
       this.fileUploader.value=null;
       }
       sendImageData2(e);

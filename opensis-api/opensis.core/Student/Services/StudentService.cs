@@ -482,10 +482,14 @@ namespace opensis.core.Student.Services
             }
             return studentEnrollmentAddModel;
         }
-
-        public StudentEnrollmentListModel GetAllStudentEnrollment(StudentEnrollmentListModel studentEnrollmentListModel)
+        /// <summary>
+        /// Get All Student Enrollment
+        /// </summary>
+        /// <param name="studentEnrollmentListModel"></param>
+        /// <returns></returns>
+        public StudentEnrollmentListViewModel GetAllStudentEnrollment(StudentEnrollmentListViewModel studentEnrollmentListModel)
         {
-            StudentEnrollmentListModel studentEnrollmentListView = new StudentEnrollmentListModel();
+            StudentEnrollmentListViewModel studentEnrollmentListView = new StudentEnrollmentListViewModel();
             try
             {
                 if (TokenManager.CheckToken(studentEnrollmentListModel._tenantName, studentEnrollmentListModel._token))
@@ -505,6 +509,26 @@ namespace opensis.core.Student.Services
             }
 
             return studentEnrollmentListView;
+        }
+        /// <summary>
+        /// Update Student Enrollment
+        /// </summary>
+        /// <param name="studentEnrollmentListModel"></param>
+        /// <returns></returns>
+        public StudentEnrollmentListModel UpdateStudentEnrollment(StudentEnrollmentListModel studentEnrollmentListModel)
+        {
+            StudentEnrollmentListModel studentEnrollmentUpdate = new StudentEnrollmentListModel();
+            if (TokenManager.CheckToken(studentEnrollmentListModel._tenantName, studentEnrollmentListModel._token))
+            {
+
+                studentEnrollmentUpdate = this.studentRepository.UpdateStudentEnrollment(studentEnrollmentListModel);
+            }
+            else
+            {
+                studentEnrollmentUpdate._failure = true;
+                studentEnrollmentUpdate._message = TOKENINVALID;
+            }
+            return studentEnrollmentUpdate;
         }
     }
 }

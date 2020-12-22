@@ -54,7 +54,7 @@ export class StudentComponent implements OnInit {
   @ViewChild(MatSort) sort:MatSort
 
   constructor(
-    private _studentService: StudentService,
+    private studentService: StudentService,
     private snackbar: MatSnackBar,
     private router: Router,
     private loaderService:LoaderService
@@ -140,7 +140,7 @@ export class StudentComponent implements OnInit {
   }
 
   viewStudentDetails(id){  
-    this._studentService.setStudentId(id)
+    this.studentService.setStudentId(id)
     this.router.navigate(["school/students/student-generalinfo"]); 
   }
 
@@ -168,7 +168,7 @@ export class StudentComponent implements OnInit {
     if(this.getAllStudent.sortingModel?.sortColumn==""){
       this.getAllStudent.sortingModel=null
     }
-    this._studentService.GetAllStudentList(this.getAllStudent).subscribe(data => {
+    this.studentService.GetAllStudentList(this.getAllStudent).subscribe(data => {
       if(data._failure){
         this.snackbar.open('Student information failed. '+ data._message, 'LOL THANKS', {
         duration: 10000

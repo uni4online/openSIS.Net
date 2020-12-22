@@ -53,7 +53,7 @@ export class SchoolDetailsComponent implements OnInit {
   tenant = "";
   loading:Boolean;
   getAllSchool: GetAllSchoolModel = new GetAllSchoolModel();
-  SchoolModelList: MatTableDataSource<AllSchoolListModel>;
+  SchoolModelList: MatTableDataSource<any>;
 
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator; 
   @ViewChild(MatSort) sort:MatSort

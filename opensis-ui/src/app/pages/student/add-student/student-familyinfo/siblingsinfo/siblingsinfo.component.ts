@@ -33,7 +33,7 @@ export class SiblingsinfoComponent implements OnInit {
   removeStudentSibling:StudentSiblingAssociation = new StudentSiblingAssociation();
   studentViewSibling:StudentViewSibling=new StudentViewSibling();
   constructor(private fb: FormBuilder, private dialog: MatDialog,
-    public translateService:TranslateService, private _studentService:StudentService,
+    public translateService:TranslateService, private studentService:StudentService,
     private snackbar: MatSnackBar) { }
 
   ngOnInit(): void {
@@ -61,8 +61,8 @@ export class SiblingsinfoComponent implements OnInit {
   }
 
   getAllSiblings(){
-    this.studentViewSibling.studentId=this._studentService.getStudentId();
-    this._studentService.viewSibling(this.studentViewSibling).subscribe((res)=>{
+    this.studentViewSibling.studentId=this.studentService.getStudentId();
+    this.studentService.viewSibling(this.studentViewSibling).subscribe((res)=>{
       if (typeof (res) == 'undefined') {
         this.snackbar.open('Siblings failed to fetch. ' + sessionStorage.getItem("httpError"), '', {
           duration: 10000
@@ -98,8 +98,8 @@ export class SiblingsinfoComponent implements OnInit {
   removeSibling(siblingDetails){
     this.removeStudentSibling.studentMaster.studentId=siblingDetails.studentId;
     this.removeStudentSibling.studentMaster.schoolId=siblingDetails.schoolId;
-    this.removeStudentSibling.studentId=this._studentService.getStudentId();
-    this._studentService.removeSibling(this.removeStudentSibling).subscribe((res)=>{
+    this.removeStudentSibling.studentId=this.studentService.getStudentId();
+    this.studentService.removeSibling(this.removeStudentSibling).subscribe((res)=>{
       if (typeof (res) == 'undefined') {
         this.snackbar.open('Sibling is failed to remove.' + sessionStorage.getItem("httpError"), '', {
           duration: 10000

@@ -87,27 +87,25 @@ export class StudentDocumentsComponent implements OnInit {
   ngOnInit(): void {  
     this.getAllDocumentsList();
   }  
-
+  //Split base 64 data from its datatype then push to base64 array
   HandleReaderLoaded(e) {     
-    this.base64 = btoa(e.target.result); 
-    this.base64Arr.push(this.base64);
+    let str = e.substr(e.indexOf(",") + 1);
+    this.base64Arr.push(str);
     
   }
   onSelect(event) {  
     this.files.push(...event.addedFiles);
     let count = this.files.length;
-    let prevCount = count-1;    
-    
-    this.files.forEach((value, index) => {
-      if(index === prevCount){   
-        this.filesName.push(value.name);
-        this.filesType.push(value.type);
-        const reader = new FileReader();      
-        reader.onload = this.HandleReaderLoaded.bind(this);       
-        reader.readAsBinaryString(value);       
-      }     
-    })
-   
+    let prevCount = count-1;
+    for(let i=0; i<this.files.length;i++){
+      this.filesName.push(this.files[i].name)
+      this.filesType.push(this.files[i].type)
+      const reader = new FileReader();
+      reader.readAsDataURL(this.files[i]);
+      reader.onload=()=>{
+        this.HandleReaderLoaded(reader.result)
+      }
+    }  
   }
 
   
@@ -121,7 +119,7 @@ export class StudentDocumentsComponent implements OnInit {
       maxWidth: "400px",
       data: {
           title: "Are you sure?",
-          message: "You are about to delete File "+deleteDetails.fileUploaded+"."}
+          message: "You are about to delete File "+deleteDetails.filename+"."}
     });
     
     dialogRef.afterClosed().subscribe(dialogResult => {      
@@ -205,6 +203,7 @@ export class StudentDocumentsComponent implements OnInit {
                 this.uploadSuccessfull = true;
                 this.isShowDiv=true;
                 this.getAllDocumentsList();
+                this.files = [];
               });                  
             }
           }
@@ -251,6 +250,7 @@ export class StudentDocumentsComponent implements OnInit {
 
   toggleDisplayDiv() {
     this.isShowDiv = !this.isShowDiv;
+    this.uploadSuccessfull = false;
   }
 
   get visibleColumns() {

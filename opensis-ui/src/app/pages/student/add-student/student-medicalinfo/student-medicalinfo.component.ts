@@ -41,9 +41,9 @@ export class StudentMedicalinfoComponent implements OnInit {
   parentsFullName = [];
   constructor(private fb: FormBuilder,
     public translateService: TranslateService,
-    private _studentService: StudentService,
+    private studentService: StudentService,
     private snackbar: MatSnackBar,
-    private _parentInfoService: ParentInfoService) {
+    private parentInfoService: ParentInfoService) {
     translateService.use('en');
 
   }
@@ -53,7 +53,7 @@ export class StudentMedicalinfoComponent implements OnInit {
       this.studentAddModel = this.studentDetailsForViewAndEdit;
     } else {
       this.getAllParents();
-      this.studentAddModel = this._studentService.getStudentDetails();
+      this.studentAddModel = this.studentService.getStudentDetails();
     }
   }
 
@@ -68,7 +68,7 @@ export class StudentMedicalinfoComponent implements OnInit {
 
   getAllParents() {
     this.parentInfoModel.studentId = this.studentAddModel.studentMaster.studentId;
-    this._parentInfoService.ViewParentListForStudent(this.parentInfoModel).subscribe((res) => {
+    this.parentInfoService.ViewParentListForStudent(this.parentInfoModel).subscribe((res) => {
       this.concatenateParentsName(res.parentInfoList);
     })
   }
@@ -84,7 +84,7 @@ export class StudentMedicalinfoComponent implements OnInit {
     
     this.studentAddModel._tenantName = sessionStorage.getItem("tenant");
     this.studentAddModel._token = sessionStorage.getItem("token");
-    this._studentService.UpdateStudent(this.studentAddModel).subscribe(data => {
+    this.studentService.UpdateStudent(this.studentAddModel).subscribe(data => {
       if (typeof (data) == 'undefined') {
         this.snackbar.open('Medical Information Updation failed. ' + sessionStorage.getItem("httpError"), '', {
           duration: 10000

@@ -11,7 +11,7 @@ class tableLanguage {
 
 export class LanguageModel extends CommonField {
     
-    public tableLanguage : tableLanguage;
+    public tableLanguage : [];
    
     constructor() {
         super();

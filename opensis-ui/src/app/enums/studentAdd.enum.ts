@@ -57,3 +57,13 @@ export enum relationShip{
     "Legal Guardian"="Legal Guardian",
     "Other"="Other"
 }
+
+export enum userProfile{
+    "Parent"="Parent"
+   
+}
+
+export enum Custody {
+    "Yes"=JSON.parse("true"),
+    "No"=JSON.parse("false"),
+}

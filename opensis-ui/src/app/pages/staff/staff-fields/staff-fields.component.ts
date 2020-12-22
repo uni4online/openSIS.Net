@@ -41,7 +41,7 @@ export class StaffFieldsComponent implements OnInit {
    { label: 'Select Options', property: 'selectOptions', type: 'text', visible: true },
    { label: 'Required', property: 'required', type: 'checkbox', visible: false },
    { label: 'In Used', property: 'inUsed', type: 'checkbox', visible: true },
-   { label: 'System Field', property: 'systemField', type: 'checkbox', visible: false },
+   { label: 'All Schools', property: 'allSchools', type: 'checkbox', visible: false },
    { label: 'Action', property: 'action', type: 'text', visible: true }
   ];
 

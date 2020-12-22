@@ -16,15 +16,23 @@ import { stagger60ms } from '../../../../../../@vex/animations/stagger.animation
 export class ViewSiblingComponent implements OnInit {
   icClose = icClose;
   address:string="";
+  schoolName;
   constructor(private dialogRef: MatDialogRef<ViewSiblingComponent>,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: any) {}
 
 
-  ngOnInit(): void {
-    this.address=this.data.siblingDetails.homeAddressLineOne
+  ngOnInit(): void { 
+    if(this.data.flag === "Parent"){
+      this.schoolName = this.data.siblingDetails.schoolName;
+      this.address = this.data.siblingDetails.address;
+    }else{
+      this.schoolName = this.data.siblingDetails.schoolMaster.schoolName;
+      this.address=this.data.siblingDetails.homeAddressLineOne
                   +","+this.data.siblingDetails.homeAddressCity
                   +","+this.data.siblingDetails.homeAddressState
                   +","+this.data.siblingDetails.homeAddressZip+" "
+    } 
+    
   }
 
 }

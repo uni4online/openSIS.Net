@@ -9,6 +9,7 @@ namespace opensis.data.Models
         {
             AttendanceCodeCategories = new HashSet<AttendanceCodeCategories>();
             CustomFields = new HashSet<CustomFields>();
+            DpdownValuelist = new HashSet<DpdownValuelist>();
             FieldsCategory = new HashSet<FieldsCategory>();
             Gradelevels = new HashSet<Gradelevels>();
             Membership = new HashSet<Membership>();
@@ -18,6 +19,7 @@ namespace opensis.data.Models
             SchoolPeriods = new HashSet<SchoolPeriods>();
             SchoolYears = new HashSet<SchoolYears>();
             Semesters = new HashSet<Semesters>();
+            StaffMaster = new HashSet<StaffMaster>();
             StudentMaster = new HashSet<StudentMaster>();
         }
 
@@ -54,6 +56,7 @@ namespace opensis.data.Models
         public virtual Plans Plans { get; set; }
         public virtual ICollection<AttendanceCodeCategories> AttendanceCodeCategories { get; set; }
         public virtual ICollection<CustomFields> CustomFields { get; set; }
+        public virtual ICollection<DpdownValuelist> DpdownValuelist { get; set; }
         public virtual ICollection<FieldsCategory> FieldsCategory { get; set; }
         public virtual ICollection<Gradelevels> Gradelevels { get; set; }
         public virtual ICollection<Membership> Membership { get; set; }
@@ -63,6 +66,7 @@ namespace opensis.data.Models
         public virtual ICollection<SchoolPeriods> SchoolPeriods { get; set; }
         public virtual ICollection<SchoolYears> SchoolYears { get; set; }
         public virtual ICollection<Semesters> Semesters { get; set; }
+        public virtual ICollection<StaffMaster> StaffMaster { get; set; }
         public virtual ICollection<StudentMaster> StudentMaster { get; set; }
     }
 }

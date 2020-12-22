@@ -111,7 +111,7 @@
                 <tr mat-footer-row *matFooterRowDef="['noData']" [class.hide]="totalCount!=0"></tr>
 
               </table>
-              <mat-paginator [length]="totalCount" [pageSize]="pageSize"
+              <mat-paginator [class.hide]="totalCount==0" [length]="totalCount" [pageSize]="pageSize"
                    [pageSizeOptions]="[10, 20, 30, 40]" showFirstLastButtons (page)='getPageEvent($event)'></mat-paginator>
         </div>
         

@@ -423,6 +423,22 @@ namespace opensisAPI.Controllers
             return studentList;
         }
 
+        [HttpPost("removeSibling")]
+        public ActionResult<SiblingAddUpdateForStudentModel> RemoveSibling(SiblingAddUpdateForStudentModel siblingAddUpdateForStudentModel)
+        {
+            SiblingAddUpdateForStudentModel siblingRemove = new SiblingAddUpdateForStudentModel();
+            try
+            {
+                siblingRemove = _studentService.RemoveSibling(siblingAddUpdateForStudentModel);
+            }
+            catch (Exception es)
+            {
+                siblingRemove._message = es.Message;
+                siblingRemove._failure = true;
+            }
+            return siblingRemove;
+        }
+
         [HttpPost("checkStudentInternalId")]
         public ActionResult<CheckStudentInternalIdViewModel> CheckStudentInternalId(CheckStudentInternalIdViewModel checkStudentInternalIdViewModel)
         {
@@ -467,9 +483,9 @@ namespace opensisAPI.Controllers
         }
         [HttpPost("getAllStudentEnrollment")]
 
-        public ActionResult<StudentEnrollmentListModel> GetAllStudentEnrollment(StudentEnrollmentListModel studentEnrollmentListModel)
+        public ActionResult<StudentEnrollmentListViewModel> GetAllStudentEnrollment(StudentEnrollmentListViewModel studentEnrollmentListModel)
         {
-            StudentEnrollmentListModel studentEnrollmentList = new StudentEnrollmentListModel();
+            StudentEnrollmentListViewModel studentEnrollmentList = new StudentEnrollmentListViewModel();
             try
             {
                     studentEnrollmentList = _studentService.GetAllStudentEnrollment(studentEnrollmentListModel);
@@ -480,6 +496,23 @@ namespace opensisAPI.Controllers
                 studentEnrollmentList._failure = true;
             }
             return studentEnrollmentList;
+        }
+
+        [HttpPut("updateStudentEnrollment")]
+
+        public ActionResult<StudentEnrollmentListModel> UpdateStudentEnrollment(StudentEnrollmentListModel studentEnrollmentListModel)
+        {
+            StudentEnrollmentListModel studentEnrollmentUpdate = new StudentEnrollmentListModel();
+            try
+            {
+                studentEnrollmentUpdate = _studentService.UpdateStudentEnrollment(studentEnrollmentListModel);            
+            }
+            catch (Exception es)
+            {
+                studentEnrollmentUpdate._failure = true;
+                studentEnrollmentUpdate._message = es.Message;
+            }
+            return studentEnrollmentUpdate;
         }
     }
 }

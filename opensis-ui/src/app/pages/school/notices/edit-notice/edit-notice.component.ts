@@ -53,7 +53,7 @@ export class EditNoticeComponent implements OnInit {
   constructor(private dialogRef: MatDialogRef<EditNoticeComponent>, 
     @Inject(MAT_DIALOG_DATA) public data:any,
     private router: Router, private Activeroute: ActivatedRoute, private fb: FormBuilder,
-     private _noticeService: NoticeService,private _membershipService: MembershipService,
+     private noticeService: NoticeService,private membershipService: MembershipService,
       public translateService: TranslateService, private snackbar: MatSnackBar,
       private commonFunction:SharedFunction,
       private loaderService: LoaderService) {
@@ -82,7 +82,7 @@ export class EditNoticeComponent implements OnInit {
         this.noticeModalActionTitle="update";
         this.noticeAddViewModel.notice=this.data.notice
         
-        this._noticeService.viewNotice(this.noticeAddViewModel).subscribe(
+        this.noticeService.viewNotice(this.noticeAddViewModel).subscribe(
           (res)=>{
             
             this.noticeAddViewModel.notice = res.notice;
@@ -102,8 +102,8 @@ export class EditNoticeComponent implements OnInit {
     this.form = this.fb.group({
       Title: ['', Validators.required],
       Body: [''],
-      valid_from: ['', Validators.required],
-      valid_to: ['', Validators.required],
+      validFrom: ['', Validators.required],
+      validTo: ['', Validators.required],
       TargetMembershipIds: ['']
     });
   }
@@ -113,14 +113,14 @@ export class EditNoticeComponent implements OnInit {
   submitNotice() {
     this.noticeAddViewModel.notice.body = this.form.value.Body;
     this.noticeAddViewModel.notice.title = this.form.value.Title;
-    this.noticeAddViewModel.notice.validFrom = this.commonFunction.formatDateSaveWithoutTime(this.form.value.valid_from);
-    this.noticeAddViewModel.notice.validTo = this.commonFunction.formatDateSaveWithoutTime(this.form.value.valid_to);
+    this.noticeAddViewModel.notice.validFrom = this.commonFunction.formatDateSaveWithoutTime(this.form.value.validFrom);
+    this.noticeAddViewModel.notice.validTo = this.commonFunction.formatDateSaveWithoutTime(this.form.value.validTo);
     this.noticeAddViewModel.notice.targetMembershipIds = this.memberArray.toString();
   
     if (this.form.valid) {
       if (this.noticeAddViewModel.notice.noticeId > 0) {
         
-          this._noticeService.updateNotice(this.noticeAddViewModel).subscribe(data => {
+          this.noticeService.updateNotice(this.noticeAddViewModel).subscribe(data => {
             if (data._failure) {
               this.snackbar.open('Notice updating failed. ' + data._message,'', {
                 duration: 10000
@@ -129,7 +129,7 @@ export class EditNoticeComponent implements OnInit {
               this.snackbar.open('Notice updated successful. ','', {
                 duration: 10000
               });
-              this._noticeService.changeNotice(true)
+              this.noticeService.changeNotice(true)
               this.dialogRef.close();
             }
   
@@ -139,7 +139,7 @@ export class EditNoticeComponent implements OnInit {
       
         this.noticeAddViewModel.notice.validFrom=this.commonFunction.formatDateSaveWithoutTime(this.noticeAddViewModel.notice.validFrom)
         this.noticeAddViewModel.notice.validTo=this.commonFunction.formatDateSaveWithoutTime(this.noticeAddViewModel.notice.validTo)
-          this._noticeService.addNotice(this.noticeAddViewModel).subscribe(data => {
+          this.noticeService.addNotice(this.noticeAddViewModel).subscribe(data => {
             if (data._failure) {
               this.snackbar.open('Notice saving failed. ' + data._message, '', {
                 duration: 10000
@@ -219,11 +219,11 @@ export class EditNoticeComponent implements OnInit {
 
   dateCompare() {
    
-    let openingDate = this.form.controls.valid_from.value
-    let closingDate = this.form.controls.valid_to.value
+    let openingDate = this.form.controls.validFrom.value
+    let closingDate = this.form.controls.validTo.value
    
     if (ValidationService.compareValidation(openingDate, closingDate) === false) {
-      this.form.controls.valid_to.setErrors({ compareError: true })
+      this.form.controls.validTo.setErrors({ compareError: true })
       
     }
 

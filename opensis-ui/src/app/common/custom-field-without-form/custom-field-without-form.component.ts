@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { NgForm, ControlContainer } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SchoolAddViewModel } from '../../../../src/app/models/schoolMasterModel';
 import { SchoolCreate } from '../../../../src/app/enums/school-create.enum';
@@ -12,13 +12,15 @@ import { CustomFieldsValueModel } from '../../../../src/app/models/customFieldsV
 import { stagger60ms } from '../../../../src/@vex/animations/stagger.animation';
 import { StudentAddModel } from '../../../../src/app/models/studentModel';
 import { StudentService } from '../../../../src/app/services/student.service';
+import { StaffAddModel } from '../../models/staffModel';
+import { StaffService } from '../../services/staff.service';
 
 @Component({
   selector: 'vex-custom-field-without-form',
   templateUrl: './custom-field-without-form.component.html',
   styleUrls: ['./custom-field-without-form.component.scss'],
-  animations: [
-    stagger60ms]
+  animations: [stagger60ms],
+  viewProviders: [{ provide: ControlContainer, useExisting: NgForm }]
 })
 export class CustomFieldWithoutFormComponent implements OnInit {
   schoolCreate = SchoolCreate;
@@ -27,8 +29,10 @@ export class CustomFieldWithoutFormComponent implements OnInit {
   editInfo: boolean = false;
   schoolAddViewModel: SchoolAddViewModel = new SchoolAddViewModel();
   studentAddModel: StudentAddModel = new StudentAddModel();
+  staffAddModel: StaffAddModel = new StaffAddModel();
   @Input() schoolCreateMode;
   @Input() studentCreateMode;
+  @Input() staffCreateMode;
   @Input() module;
   customFieldListViewModel = new CustomFieldListViewModel();
   headerTitle: string = "Other Information";
@@ -41,15 +45,20 @@ export class CustomFieldWithoutFormComponent implements OnInit {
     private customFieldservice: CustomFieldService,
     private _schoolService: SchoolService,
     private _studentService: StudentService,
+    private _staffService : StaffService
   ) {
-      this._schoolService.getSchoolDetailsForGeneral.subscribe((res: SchoolAddViewModel) => {
-        this.schoolAddViewModel = res;
-        this.checkCustomValue();
-      });
-      this._studentService.getStudentDetailsForGeneral.subscribe((res:StudentAddModel)=>{
-        this.studentAddModel=res;
-        this.checkStudentCustomValue();
-      })
+    this._schoolService.getSchoolDetailsForGeneral.subscribe((res: SchoolAddViewModel) => {
+      this.schoolAddViewModel = res;
+      this.checkCustomValue();
+    });
+    this._studentService.getStudentDetailsForGeneral.subscribe((res: StudentAddModel) => {
+      this.studentAddModel = res;
+      this.checkStudentCustomValue();
+    })
+    this._staffService.getStaffDetailsForGeneral.subscribe((res: StaffAddModel) => {
+      this.staffAddModel = res;
+      this.checkStaffCustomValue();
+    })
   }
 
   ngOnInit(): void {
@@ -61,17 +70,38 @@ export class CustomFieldWithoutFormComponent implements OnInit {
     else if (this.module === 'School') {
       this.checkNgOnInitCustomValue();
     }
+    else if(this.module === 'Staff') {
+      this.staffAddModel = this.schoolDetailsForViewAndEdit;
+      this.checkStaffCustomValue();
+
+    }
   }
 
   checkStudentCustomValue() {
     if (this.studentAddModel !== undefined) {
       let catId = this.categoryId;
-      if (this.studentAddModel.fieldsCategoryList !== undefined) {
+      if (this.studentAddModel.fieldsCategoryList !== undefined && this.studentAddModel.fieldsCategoryList !== null) {
 
         for (let i = 0; i < this.studentAddModel.fieldsCategoryList[this.categoryId]?.customFields.length; i++) {
           if (this.studentAddModel.fieldsCategoryList[catId].customFields[i]?.customFieldsValue.length == 0) {
 
             this.studentAddModel.fieldsCategoryList[catId]?.customFields[i]?.customFieldsValue.push(new CustomFieldsValueModel());
+          }
+        }
+
+      }
+    }
+  }
+
+  checkStaffCustomValue(){
+    if (this.staffAddModel !== undefined) {
+      let catId = this.categoryId;
+      if (this.staffAddModel.fieldsCategoryList !== undefined && this.staffAddModel.fieldsCategoryList !== null) {
+
+        for (let i = 0; i < this.staffAddModel.fieldsCategoryList[this.categoryId]?.customFields.length; i++) {
+          if (this.staffAddModel.fieldsCategoryList[catId].customFields[i]?.customFieldsValue.length == 0) {
+
+            this.staffAddModel.fieldsCategoryList[catId]?.customFields[i]?.customFieldsValue.push(new CustomFieldsValueModel());
           }
         }
 
@@ -103,7 +133,7 @@ export class CustomFieldWithoutFormComponent implements OnInit {
   checkCustomValue() {
     if (this.schoolAddViewModel !== undefined) {
       let catId = this.categoryId;
-      if (this.schoolAddViewModel.schoolMaster.fieldsCategory !== undefined) {
+      if (this.schoolAddViewModel.schoolMaster.fieldsCategory !== undefined && this.schoolAddViewModel.schoolMaster.fieldsCategory !== null) {
 
         if (this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId]?.customFields !== undefined) {
 

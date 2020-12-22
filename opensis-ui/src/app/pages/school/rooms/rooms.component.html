@@ -47,7 +47,7 @@
                 </div>
             </div>
 
-            <table @stagger class="mat-elevation-z8" [dataSource]="roomModelList"  mat-table matSort>
+    <table @stagger class="w-full" [dataSource]="roomModelList" mat-table matSort>
                 <ng-container matColumnDef="title" >
                     
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'title' | translate}}</th>

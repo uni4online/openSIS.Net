@@ -8,7 +8,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { IconModule } from '@visurel/iconify-angular';
-import { ReactiveFormsModule } from '@angular/forms';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -20,8 +19,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { MatExpansionModule } from '@angular/material/expansion';
-
-
+import { FormsModule }   from '@angular/forms';
+import { SharedModuleModule } from '../../../../shared-module/shared-module.module';
 @NgModule({
   declarations: [EditContactComponent],
   imports: [
@@ -38,13 +37,14 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatMenuModule,
     MatFormFieldModule,
     MatCheckboxModule,
-    ReactiveFormsModule,
     TranslateModule,
     MatRadioModule,
     MatSelectModule,
     MatSlideToggleModule,
     NgxMatSelectSearchModule,
-    MatExpansionModule
+    MatExpansionModule,
+    FormsModule,
+    SharedModuleModule
   ]
 })
 export class EditContactModule { }

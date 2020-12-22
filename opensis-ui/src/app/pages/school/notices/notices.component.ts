@@ -37,8 +37,8 @@ export class NoticesComponent implements OnInit {
   loading:boolean;
   constructor(private dialog: MatDialog, 
     public translateService: TranslateService, 
-    private _noticeService: NoticeService,
-    private _membershipService:MembershipService, 
+    private noticeService: NoticeService,
+    private membershipService:MembershipService, 
     private snackbar: MatSnackBar,
     private loaderService: LoaderService,
     private cdr: ChangeDetectorRef) {
@@ -46,7 +46,7 @@ export class NoticesComponent implements OnInit {
     this.loaderService.isLoading.subscribe((v) => {
       this.loading = v;
     });
-    this._noticeService.currentNotice.subscribe(
+    this.noticeService.currentNotice.subscribe(
       res=>{
         if(res){
           this.showRecords('All');
@@ -64,7 +64,7 @@ export class NoticesComponent implements OnInit {
     this.cdr.detectChanges();
  }
   getMemberList(){
-    this._membershipService.getAllMembers(this.getAllMembersList).subscribe(
+    this.membershipService.getAllMembers(this.getAllMembersList).subscribe(
       (res) => {
         if(typeof(res)=='undefined'){
           this.snackbar.open('No Member Found. ' + sessionStorage.getItem("httpError"), '', {
@@ -84,7 +84,7 @@ export class NoticesComponent implements OnInit {
     });
   }
   showRecords(event) {
-    this._noticeService.getAllNotice(this.noticeListViewModel).subscribe(
+    this.noticeService.getAllNotice(this.noticeListViewModel).subscribe(
       (res) => {
       this.noticeList = res.noticeList;
       if (event != 'All') {

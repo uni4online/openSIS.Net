@@ -60,7 +60,7 @@ export class AddEventComponent implements OnInit {
   icMoreVertical = icMoreVertical;
   icDone = icDone;
   form: FormGroup;
-  constructor(private dialog: MatDialog, private commonFunction:SharedFunction, private dialogRef: MatDialogRef<AddEventComponent>, @Inject(MAT_DIALOG_DATA) public data: any, public translate: TranslateService, private snackbar: MatSnackBar, private _calendarService: CalendarService, private _calendarEventService: CalendarEventService, private fb: FormBuilder) {
+  constructor(private dialog: MatDialog, private commonFunction:SharedFunction, private dialogRef: MatDialogRef<AddEventComponent>, @Inject(MAT_DIALOG_DATA) public data: any, public translate: TranslateService, private snackbar: MatSnackBar, private calendarService: CalendarService, private calendarEventService: CalendarEventService, private fb: FormBuilder) {
     this.translate.setDefaultLang('en');
     this.form = this.fb.group({
       title: ['', Validators.required],
@@ -154,7 +154,7 @@ export class AddEventComponent implements OnInit {
     let id = this.data.calendarEvent.id;
     if (id > 0) {
       this.calendarEventAddViewModel.schoolCalendarEvent.eventId = id;
-      this._calendarEventService.deleteCalendarEvent(this.calendarEventAddViewModel).subscribe(
+      this.calendarEventService.deleteCalendarEvent(this.calendarEventAddViewModel).subscribe(
         (res) => {
           if (res._failure) {
             this.snackbar.open('Event Deletion failed. ' + res._message, '', {
@@ -164,7 +164,7 @@ export class AddEventComponent implements OnInit {
             this.snackbar.open('Event Deleted Successfully. ', '', {
               duration: 10000
             });
-            this._calendarEventService.changeEvent(true);
+            this.calendarEventService.changeEvent(true);
           }
         });
 
@@ -180,12 +180,12 @@ export class AddEventComponent implements OnInit {
     this.calendarEventAddViewModel.schoolCalendarEvent.visibleToMembershipId = this.memberArray.toString();
     this.calendarEventAddViewModel.schoolCalendarEvent.startDate = this.commonFunction.formatDateSaveWithoutTime(this.form.value.startDate);
     this.calendarEventAddViewModel.schoolCalendarEvent.endDate = this.commonFunction.formatDateSaveWithoutTime(this.form.value.endDate);
-    this.calendarEventAddViewModel.schoolCalendarEvent.calendarId = this._calendarService.getCalendarId();
+    this.calendarEventAddViewModel.schoolCalendarEvent.calendarId = this.calendarService.getCalendarId();
     this.calendarEventAddViewModel.schoolCalendarEvent.eventColor = this.form.value.eventColor;
     this.calendarEventAddViewModel.schoolCalendarEvent.systemWideEvent = this.form.value.systemWideEvent;
     if (this.form.valid) {
       if (this.calendarEventAddViewModel.schoolCalendarEvent.eventId > 0) {
-        this._calendarEventService.updateCalendarEvent(this.calendarEventAddViewModel).subscribe(data => {
+        this.calendarEventService.updateCalendarEvent(this.calendarEventAddViewModel).subscribe(data => {
           if (data._failure) {
             this.snackbar.open('Event updating failed. ' + data._message, '', {
               duration: 10000
@@ -200,7 +200,7 @@ export class AddEventComponent implements OnInit {
         });
       }
       else {
-        this._calendarEventService.addCalendarEvent(this.calendarEventAddViewModel).subscribe(data => {
+        this.calendarEventService.addCalendarEvent(this.calendarEventAddViewModel).subscribe(data => {
           if (data._failure) {
             this.snackbar.open('Event saving failed. ' + data._message, '', {
               duration: 10000

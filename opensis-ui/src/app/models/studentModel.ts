@@ -127,6 +127,7 @@ export class StudentAddModel extends CommonField {
     public selectedCategoryId: number;
     public loginEmail: string;
     public passwordHash: string;
+    public portalAccess: boolean;
     public studentEnrollment: {};
     constructor() {
         super();
@@ -263,6 +264,7 @@ export class StudentSiblingSearch extends CommonField {
     gradeLevel: string;
     studentInternalId: string;
     dob: string;
+    gradeLevelTitle: string;
     constructor() {
         super();
         this.schoolId = +sessionStorage.getItem("selectedSchoolId");
@@ -300,101 +302,6 @@ export class StudentSiblingAssociation extends CommonField {
     }
 }
 
-
-export class GetAllParentInfoModel extends CommonField {
-    public parentInfoList: [];
-    public tenantId: string;
-    public schoolId: number;
-    public studentId: number;
-    constructor() {
-        super();
-        this.tenantId = sessionStorage.getItem("tenantId");
-        this.schoolId = +sessionStorage.getItem("selectedSchoolId");
-        this.studentId = +localStorage.getItem("studentId");
-        this._tenantName = sessionStorage.getItem("tenant");
-        this._token = sessionStorage.getItem("token");
-    }
-}
-
-export class ParentInfoModel {
-    public tenantId: string;
-    public schoolId: number;
-    public studentId: number;
-    public parentId: number;
-    public relationShip: string;
-    public firstname: string;
-    public lastname: string;
-    public homePhone: string;
-    public workPhone: string;
-    public mobile: string;
-    public email: string;
-    public studentAddressSame: boolean;
-    public addressLineOne: string;
-    public addressLineTwo: string;
-    public country: string;
-    public city: string;
-    public state: string;
-    public zip: string;
-    public isCustodian: boolean;
-    public isPortalUser: boolean;
-    public portalUserId: string;
-    public busNo: string;
-    public busPickup: boolean;
-    public busDropoff: boolean;
-    public contactType: string;
-    public associationship: string;
-    public lastUpdated: string;
-    public updatedBy: string;
-    public salutation: string;
-    public middleName: string;
-    public personalEmail: string;
-    public workEmail: string;
-    public userProfile: string;
-    public loginEmail: string;
-    public suffix: string;
-    public studentMaster: {};
-    constructor() {
-
-        this.tenantId = sessionStorage.getItem("tenantId");
-        this.schoolId = +sessionStorage.getItem("selectedSchoolId");
-        this.studentId = +localStorage.getItem("studentId");
-
-    }
-}
-
-export class AddParentInfoModel extends CommonField {
-    public parentInfo: ParentInfoModel;
-    public passwordHash: number;
-    public getStudentForView: [];
-
-    constructor() {
-        super();
-        this.parentInfo = new ParentInfoModel();
-        this._tenantName = sessionStorage.getItem("tenant");
-        this._token = sessionStorage.getItem("token");
-
-    }
-}
-
-export class ParentInfoList extends CommonField {
-    public parentInfoForView: [];
-    public tenantId: string;
-    public schoolId: number;
-    public totalCount: number;
-    public pageNumber: number;
-    public _pageSize: number;
-
-    constructor() {
-        super();
-        this.tenantId = sessionStorage.getItem("tenantId");
-        this.schoolId = +sessionStorage.getItem("selectedSchoolId");
-        this.totalCount = 0;
-        this.pageNumber = 0;
-        this._pageSize = 0;
-        this._tenantName = sessionStorage.getItem("tenant");
-        this._token = sessionStorage.getItem("token");
-    }
-}
 
 
 

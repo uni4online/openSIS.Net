@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit ,Input} from '@angular/core';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
 import { fadeInRight400ms } from '../../../../../@vex/animations/fade-in-right.animation';
@@ -6,7 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import icEdit from '@iconify/icons-ic/twotone-edit';
 import icDelete from '@iconify/icons-ic/twotone-delete';
 import icAdd from '@iconify/icons-ic/baseline-add';
-
+import { SchoolCreate } from '../../../../enums/school-create.enum';
 @Component({
   selector: 'vex-student-familyinfo',
   templateUrl: './student-familyinfo.component.html',
@@ -18,15 +18,17 @@ import icAdd from '@iconify/icons-ic/baseline-add';
   ]
 })
 export class StudentFamilyinfoComponent implements OnInit {
-
+  @Input() studentCreateMode:SchoolCreate;
+  @Input() studentDetailsForViewAndEdit;
   icEdit = icEdit;
   icDelete = icDelete;
   icAdd = icAdd;
-
+  studentDetailsForViewAndEditData;
   constructor(public translateService:TranslateService) { 
   }
 
   ngOnInit(): void {
+    this.studentDetailsForViewAndEditData = this.studentDetailsForViewAndEdit;
   }
 
 

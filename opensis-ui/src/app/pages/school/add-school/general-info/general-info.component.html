@@ -10,11 +10,11 @@
                     <li>
                         <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'schoolId'|translate}}</mat-label>
-                            <input #school_id="ngModel" [(ngModel)]="schoolAddViewModel.schoolMaster.schoolInternalId"
-                            (keyup)="checkSchoolInternalId($event)" name="school_id" maxlength="50" required matInput>
-                                <mat-error *ngIf="school_id.errors?.required">
+                            <input #schoolId="ngModel" [(ngModel)]="schoolAddViewModel.schoolMaster.schoolInternalId"
+                            (keyup)="checkSchoolInternalId($event)" name="schoolId" maxlength="50" required matInput>
+                                <mat-error *ngIf="schoolId.errors?.required">
                                     {{'schoolIdIsRequired'|translate}}</mat-error>
-                                    <mat-error *ngIf="school_id.errors?.nomatch">
+                                    <mat-error *ngIf="schoolId.errors?.nomatch">
                                         {{'schoolIdAlreadyExist'|translate}}</mat-error>
                         </mat-form-field>
                     </li>
@@ -109,9 +109,9 @@
                     <li>
                         <mat-form-field class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'lowestGradeLevel'|translate}}</mat-label>
-                            <mat-select #lowest_grade_level="ngModel" (selectionChange)="checkLowGradeLevel($event)"
+                            <mat-select #lowestGradeLevel="ngModel" (selectionChange)="checkLowGradeLevel($event)"
                                 [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].lowestGradeLevel"
-                                name="lowest_grade_level" required>
+                                name="lowestGradeLevel" required>
 
                                 <mat-option *ngFor="let lowestGradeLevel of gradeLevel" [value]="lowestGradeLevel.id"
                                     [disabled]="lowestGradeLevel.id==schoolAddViewModel.schoolMaster.schoolDetail[0].highestGradeLevel">
@@ -119,20 +119,20 @@
                                 </mat-option>
                             </mat-select>
                           
-                                <mat-error  *ngIf="lowest_grade_level.errors?.required">
+                                <mat-error  *ngIf="lowestGradeLevel.errors?.required">
                                     {{'lowestGradeLevelIsRequired'|translate}}</mat-error>
                                    
                             
-                            <mat-error class="text-red" *ngIf="lowest_grade_level.errors?.nomatch">
+                            <mat-error class="text-red" *ngIf="lowestGradeLevel.errors?.nomatch">
                                 {{'lowestGradeLevelCannotBeGreaterThanHighestGrade'|translate}}</mat-error>
                         </mat-form-field>
                     </li>
                     <li>
                         <mat-form-field class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'highestGradeLevel'|translate}}</mat-label>
-                            <mat-select #highest_grade_level="ngModel" (selectionChange)="checkHighGradeLevel($event)"
+                            <mat-select #highestGradeLevel="ngModel" (selectionChange)="checkHighGradeLevel($event)"
                                 [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].highestGradeLevel"
-                                name="highest_grade_level" required>
+                                name="highestGradeLevel" required>
 
                                 <mat-option *ngFor="let highestGradeLevel of gradeLevel" [value]="highestGradeLevel.id"
                                     [disabled]="highestGradeLevel.id==schoolAddViewModel.schoolMaster.schoolDetail[0].lowestGradeLevel">
@@ -140,10 +140,10 @@
                                 </mat-option>
                             </mat-select>
                             
-                                <mat-error *ngIf="highest_grade_level.errors?.required">
+                                <mat-error *ngIf="highestGradeLevel.errors?.required">
                                     {{'highestGradeLevelIsRequired'|translate}}</mat-error>
                                  
-                            <mat-error *ngIf="highest_grade_level.errors?.nomatch">
+                            <mat-error *ngIf="highestGradeLevel.errors?.nomatch">
                                 {{'highestGradeLevelCannotBeLowerThanLowestGrade'|translate}}</mat-error>
                         </mat-form-field>
                     </li>

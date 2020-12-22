@@ -17,6 +17,8 @@ import { CustomFieldsValueModel } from '../../../../src/app/models/customFieldsV
 import { Router } from '@angular/router';
 import { StudentAddModel } from '../../../../src/app/models/studentModel';
 import { StudentService } from '../../../../src/app/services/student.service';
+import { StaffAddModel } from '../../models/staffModel';
+import { StaffService } from '../../services/staff.service';
 
 @Component({
   selector: 'vex-custom-field',
@@ -32,6 +34,7 @@ export class CustomFieldComponent implements OnInit {
   SchoolCreate = SchoolCreate;
   @Input() schoolCreateMode;
   @Input() studentCreateMode;
+  @Input() staffCreateMode;
   @Input() categoryTitle;
   @Input() categoryId;
   @Input() schoolDetailsForViewAndEdit;
@@ -42,14 +45,16 @@ export class CustomFieldComponent implements OnInit {
   editInfo: boolean = false;
   studentAddViewModel: StudentAddModel = new StudentAddModel();
   schoolAddViewModel: SchoolAddViewModel = new SchoolAddViewModel();
+  staffAddViewModel: StaffAddModel = new StaffAddModel();
   @ViewChild('f') currentForm: NgForm;
   f: NgForm;
   formActionButtonTitle: string;
   constructor(
     private snackbar: MatSnackBar,
     private commonFunction: SharedFunction,
-    private _studentService:StudentService,
+    private _studentService: StudentService,
     private _schoolService: SchoolService,
+    private _staffService : StaffService,
     private router: Router,
   ) {
     if (this.module === 'School') {
@@ -66,8 +71,13 @@ export class CustomFieldComponent implements OnInit {
       this.checkStudentCustomValue();
 
     }
-    else if(this.module === 'School'){
+    else if (this.module === 'School') {
       this.checkNgOnInitCustomValue();
+    }
+    else if (this.module === 'Staff') {
+      this.staffAddViewModel = this.schoolDetailsForViewAndEdit;
+      this.checkStaffCustomValue();
+
     }
   }
 
@@ -79,6 +89,9 @@ export class CustomFieldComponent implements OnInit {
       }
       else if (this.module === 'Student') {
         this.updateStudent();
+      }
+      else if (this.module === 'Staff') {
+        this.updateStaff();
       }
     }
   }
@@ -116,8 +129,24 @@ export class CustomFieldComponent implements OnInit {
     }
   }
 
+  checkStaffCustomValue() {
+    if (this.staffAddViewModel !== undefined) {
+      let catId = this.categoryId;
+      if (this.staffAddViewModel.fieldsCategoryList !== undefined) {
+
+        for (let i = 0; i < this.staffAddViewModel.fieldsCategoryList[this.categoryId]?.customFields.length; i++) {
+          if (this.staffAddViewModel.fieldsCategoryList[catId].customFields[i]?.customFieldsValue.length == 0) {
+
+            this.staffAddViewModel.fieldsCategoryList[catId]?.customFields[i]?.customFieldsValue.push(new CustomFieldsValueModel());
+          }
+        }
+
+      }
+    }
+  }
+
   checkCustomValue() {
-    
+
     if (this.schoolAddViewModel !== undefined) {
       let catId = this.categoryId;
       if (this.schoolAddViewModel.schoolMaster.fieldsCategory !== undefined) {
@@ -132,11 +161,11 @@ export class CustomFieldComponent implements OnInit {
       }
     }
   }
-  updateStudent(){
-    this.studentAddViewModel.selectedCategoryId= this.studentAddViewModel.fieldsCategoryList[this.categoryId].categoryId;
-    this.studentAddViewModel._tenantName=sessionStorage.getItem("tenant");
-    this.studentAddViewModel._token=sessionStorage.getItem("token");
-    this._studentService.UpdateStudent(this.studentAddViewModel).subscribe(data => {                        
+  updateStudent() {
+    this.studentAddViewModel.selectedCategoryId = this.studentAddViewModel.fieldsCategoryList[this.categoryId].categoryId;
+    this.studentAddViewModel._tenantName = sessionStorage.getItem("tenant");
+    this.studentAddViewModel._token = sessionStorage.getItem("token");
+    this._studentService.UpdateStudent(this.studentAddViewModel).subscribe(data => {
       if (typeof (data) == 'undefined') {
         this.snackbar.open(this.categoryTitle + ' Updation failed. ' + sessionStorage.getItem("httpError"), '', {
           duration: 10000
@@ -147,18 +176,18 @@ export class CustomFieldComponent implements OnInit {
           this.snackbar.open(this.categoryTitle + ' Updation failed. ' + data._message, 'LOL THANKS', {
             duration: 10000
           });
-        } else {    
+        } else {
           this.snackbar.open(this.categoryTitle + ' Updated Successfully.', '', {
             duration: 10000
           });
-          
-          
+
+
         }
       }
-  
+
     })
   }
-  
+
 
   updateSchool() {
     this.schoolAddViewModel.selectedCategoryId = this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].categoryId;
@@ -188,10 +217,37 @@ export class CustomFieldComponent implements OnInit {
     });
   }
 
+  updateStaff() {
+    this.staffAddViewModel.selectedCategoryId = this.staffAddViewModel.fieldsCategoryList[this.categoryId].categoryId;
+    this.staffAddViewModel._token = sessionStorage.getItem("token");
+    this.staffAddViewModel._tenantName = sessionStorage.getItem("tenant");
+    this._staffService.updateStaff(this.staffAddViewModel).subscribe(data => {
+      if (typeof (data) == 'undefined') {
+        this.snackbar.open(this.categoryTitle + ' ' + sessionStorage.getItem("httpError"), '', {
+          duration: 10000
+        });
+      }
+      else {
+        if (data._failure) {
+          this.snackbar.open(this.categoryTitle + ' ' + + data._message, 'LOL THANKS', {
+            duration: 10000
+          });
+        } else {
+          this.snackbar.open(this.categoryTitle + " " + 'Updation Successful', '', {
+            duration: 10000
+          });
+          this.staffCreateMode = this.SchoolCreate.VIEW;
+        }
+      }
+
+    })
+  }
+
 
   editOtherInfo() {
     this.schoolCreateMode = this.SchoolCreate.EDIT;
     this.studentCreateMode = this.SchoolCreate.EDIT;
+    this.staffCreateMode = this.SchoolCreate.EDIT;
     this.formActionButtonTitle = "update";
   }
 }

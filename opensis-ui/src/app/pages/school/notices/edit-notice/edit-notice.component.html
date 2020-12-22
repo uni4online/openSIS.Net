@@ -22,21 +22,21 @@
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'visibleFromDate' |translate}}</mat-label>
-                    <input formControlName="valid_from"  [(ngModel)]="noticeAddViewModel.notice.validFrom" name="valid_from" [matDatepicker]="begins" matInput required>
+                    <input formControlName="validFrom"  [(ngModel)]="noticeAddViewModel.notice.validFrom" name="validFrom" [matDatepicker]="begins" matInput required>
                     <mat-datepicker-toggle [for]="begins" matSuffix></mat-datepicker-toggle>
                     <mat-datepicker #begins></mat-datepicker>
-                    <mat-error *ngIf="form.get('valid_from').hasError('required')">{{'visibleFromDateIsRequired' | translate}}</mat-error>
+                    <mat-error *ngIf="form.get('validFrom').hasError('required')">{{'visibleFromDateIsRequired' | translate}}</mat-error>
                     
                 </mat-form-field>
             </div>
             <div class="flex flex-1 mx-6 md:w-1/2">
                 <mat-form-field class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'visibleToDate' | translate}}</mat-label>
-                    <input formControlName="valid_to" (dateChange)="dateCompare()" [(ngModel)]="noticeAddViewModel.notice.validTo" name="valid_to" [matDatepicker]="ends" matInput required>
+                    <input formControlName="validTo" (dateChange)="dateCompare()" [(ngModel)]="noticeAddViewModel.notice.validTo" name="validTo" [matDatepicker]="ends" matInput required>
                     <mat-datepicker-toggle [for]="ends" matSuffix></mat-datepicker-toggle>
                     <mat-datepicker #ends></mat-datepicker>
-                    <mat-error *ngIf="form.get('valid_to').hasError('required')">{{'visibleToDateIsRequired' | translate}}</mat-error>
-                    <mat-error *ngIf="form.get('valid_to').hasError('compareError')">{{"visibleToDateCannotBeEarlierThenVisibleFromDate"|translate}}</mat-error>
+                    <mat-error *ngIf="form.get('validTo').hasError('required')">{{'visibleToDateIsRequired' | translate}}</mat-error>
+                    <mat-error *ngIf="form.get('validTo').hasError('compareError')">{{"visibleToDateCannotBeEarlierThenVisibleFromDate"|translate}}</mat-error>
                 </mat-form-field>
             </div>
         </div>

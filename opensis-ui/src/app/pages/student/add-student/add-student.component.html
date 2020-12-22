@@ -64,39 +64,41 @@
                     [studentDetailsForViewAndEdit]="studentAddModel" [categoryId]="indexOfCategory">
                     </vex-student-generalinfo>
 
-                    <vex-student-addressandcontacts *ngIf="currentCategory==4"
+                    <vex-student-addressandcontacts *ngIf="currentCategory==5"
                     [studentCreateMode]="studentCreateMode"
                     [studentDetailsForViewAndEdit]="studentAddModel">
                     </vex-student-addressandcontacts>
 
-                    <vex-student-enrollmentinfo *ngIf="currentCategory==5">
+                    <vex-student-enrollmentinfo *ngIf="currentCategory==4">
                     </vex-student-enrollmentinfo>
                    
-                    <vex-student-familyinfo *ngIf="currentCategory==6">
+                    <vex-student-familyinfo *ngIf="currentCategory==6" 
+                    [studentCreateMode]="studentCreateMode"
+                    [studentDetailsForViewAndEdit]="studentAddModel">
                     </vex-student-familyinfo>
 
-                    <vex-student-logininfo *ngIf="currentCategory==7">
-                    </vex-student-logininfo>  
+                   <!-- <vex-student-logininfo *ngIf="currentCategory==7">
+                    </vex-student-logininfo> --> 
 
-                    <vex-student-medicalinfo *ngIf="currentCategory==8"
+                    <vex-student-medicalinfo *ngIf="currentCategory==7"
                     [studentCreateMode]="studentCreateMode"
                     [studentDetailsForViewAndEdit]="studentAddModel" [categoryId]="indexOfCategory"
                     (studentDetailsForParent)="checkCriticalAlertFromMedical($event)">
                     </vex-student-medicalinfo>
                     
-                    <vex-student-comments *ngIf="currentCategory==9"
+                    <vex-student-comments *ngIf="currentCategory==8"
                         [studentCreateMode]="studentCreateMode"
                         [studentDetailsForViewAndEdit]="studentAddModel">
                     </vex-student-comments>
                     
-                    <vex-student-documents *ngIf="currentCategory==10"
+                    <vex-student-documents *ngIf="currentCategory==9"
                         [studentCreateMode]="studentCreateMode"
                         [studentDetailsForViewAndEdit]="studentAddModel">
                     </vex-student-documents>
 
 
                     <div *ngFor="let field of fieldsCategory;let index=index">
-                        <vex-custom-field *ngIf="field.categoryId == currentCategory && indexOfCategory > 7" [categoryTitle]="field.title"
+                        <vex-custom-field *ngIf="field.categoryId == currentCategory && indexOfCategory > 6" [categoryTitle]="field.title"
                             [studentCreateMode]="studentCreateMode" [schoolDetailsForViewAndEdit]="studentAddModel"
                             [categoryId]="indexOfCategory" [module] = "module">
                         </vex-custom-field>

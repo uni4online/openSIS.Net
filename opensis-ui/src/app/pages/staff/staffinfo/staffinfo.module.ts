@@ -20,8 +20,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { SharedModuleModule } from '../../shared-module/shared-module.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { StaffinfoRoutingModule } from './staffinfo-routing-module';
-
-
+import { MatSortModule } from '@angular/material/sort';
 
 @NgModule({
   declarations: [StaffinfoComponent],
@@ -47,7 +46,8 @@ import { StaffinfoRoutingModule } from './staffinfo-routing-module';
     SharedModuleModule,
     TranslateModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatSortModule
   ]
 })
 export class StaffinfoModule { }

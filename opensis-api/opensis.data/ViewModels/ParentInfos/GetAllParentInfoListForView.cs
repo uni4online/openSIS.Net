@@ -11,7 +11,8 @@ namespace opensis.data.ViewModels.ParentInfos
         public List<GetParentInfoForView> parentInfoForView { get; set; }
         
         public Guid? TenantId { get; set; }
-        public int? SchoolId { get; set; }
+        public int? SchoolId { get; set; }      
+        public int? StudentId { get; set; }
         public string Firstname { get; set; }
         public string Lastname { get; set; }
         public string Mobile { get; set; }

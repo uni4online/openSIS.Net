@@ -4,7 +4,6 @@ import { HttpClient } from '@angular/common/http';
 import { StudentAddModel, StudentListModel, StudentResponseListModel, GetAllStudentDocumentsList, StudentDocumentAddModel, StudentSiblingSearch, StudentSiblingAssociation, StudentViewSibling, CheckStudentInternalIdViewModel } from '../models/studentModel';
 import { StudentCommentsAddView, StudentCommentsListViewModel } from '../models/studentCommentsModel'
 import { BehaviorSubject, Subject } from 'rxjs';
-import { GetAllParentInfoModel, AddParentInfoModel, ParentInfoList } from '../models/studentModel';
 import { CryptoService } from './Crypto.service';
 @Injectable({
   providedIn: 'root'
@@ -112,24 +111,6 @@ export class StudentService {
   DeleteStudentDocument(obj: StudentDocumentAddModel) {
     let apiurl = this.apiUrl + obj._tenantName + "/Student/deleteStudentDocument";
     return this.http.post<StudentDocumentAddModel>(apiurl, obj)
-  }
-
-  viewParentListForStudent(obj: GetAllParentInfoModel) {
-    let apiurl = this.apiUrl + obj._tenantName + "/ParentInfo/viewParentListForStudent";
-    return this.http.post<GetAllParentInfoModel>(apiurl, obj)
-  }
-  addParentForStudent(obj: AddParentInfoModel) {
-    let apiurl = this.apiUrl + obj._tenantName + "/ParentInfo/addParentForStudent";
-    return this.http.post<AddParentInfoModel>(apiurl, obj)
-  }
-  deleteParentInfo(obj: AddParentInfoModel) {
-    let apiurl = this.apiUrl + obj._tenantName + "/ParentInfo/deleteParentInfo";
-    return this.http.post<AddParentInfoModel>(apiurl, obj)
-  }
-
-  searchParentInfoForStudent(obj: ParentInfoList) {
-    let apiurl = this.apiUrl + obj._tenantName + "/ParentInfo/searchParentInfoForStudent";
-    return this.http.post<ParentInfoList>(apiurl, obj)
   }
 
   // Student Sibling

@@ -50,6 +50,8 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using opensis.core.ParentInfo.Interfaces;
 using opensis.core.ParentInfo.Services;
+using opensis.core.Staff.Services;
+using opensis.core.Staff.Interfaces;
 
 namespace opensisAPI
 {
@@ -104,6 +106,8 @@ namespace opensisAPI
             services.AddScoped<ICustomFieldRepository, CustomFieldRepository>();
             services.AddScoped<IParentInfoRegisterService, ParentInfoRegister>();
             services.AddScoped<IParentInfoRepository, ParentInfoRepository>();
+            services.AddScoped<IStaffRepository, StaffRepository>();
+            services.AddScoped<IStaffService, StaffService>();
 
 
 

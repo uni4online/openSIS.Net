@@ -17,3 +17,15 @@ export class UserViewModel extends CommonField {
         this.password = "";
     }
 }
+
+export class CheckUserEmailAddressViewModel extends CommonField {
+    public tenantId: string;
+    public emailAddress: string;
+    public isValidEmailAddress: boolean;
+    constructor() {
+        super();
+        this.tenantId = sessionStorage.getItem("tenantId");
+        this._tenantName = sessionStorage.getItem("tenant");
+        this._token = sessionStorage.getItem("token");
+    }
+}

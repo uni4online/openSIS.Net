@@ -1,4 +1,4 @@
-<form (ngSubmit)="submit()" #f="ngForm" novalidate appInvalidControlScroll
+<form (ngSubmit)="submit()" #f="ngForm" appInvalidControlScroll
     *ngIf="studentCreateMode==StudentCreate.EDIT || studentCreateMode==StudentCreate.ADD">
     <mat-card class="w-full">
 
@@ -80,13 +80,13 @@
                     <div class="flex flex-1 mx-4 md:w-1/2">
                         <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'studentID'|translate}}</mat-label>
-                            <input (keyup)="checkInternalId($event)" #studentInternalId ="ngModel"
+                            <input (keyup)="checkInternalId($event)" #studentInternalId="ngModel"
                                 [(ngModel)]="studentAddModel.studentMaster.studentInternalId" name="studentInternalId"
                                 matInput>
-                        <mat-error *ngIf="studentInternalId.errors?.required">
-                            {{'studentInternalIdIsRequired'|translate}}</mat-error>
-                        <mat-error *ngIf="studentInternalId.errors?.nomatch">
-                            {{'studentInternalIdAlreadyExist'|translate}}</mat-error>
+                            <mat-error *ngIf="studentInternalId.errors?.required">
+                                {{'studentInternalIdIsRequired'|translate}}</mat-error>
+                            <mat-error *ngIf="studentInternalId.errors?.nomatch">
+                                {{'studentInternalIdAlreadyExist'|translate}}</mat-error>
                         </mat-form-field>
                     </div>
                     <div class="flex flex-1 mx-4 md:w-1/2">
@@ -322,10 +322,12 @@
                         <div class="flex flex-1 mx-4 md:w-1/2">
                             <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                                 <mat-label>{{'loginEmailAddress'|translate}}</mat-label>
-                                <input #loginEmail="ngModel" name="loginEmail" [(ngModel)]="studentAddModel.loginEmail"
-                                    matInput [required]="hideAccess ? true : null " [readonly]="fieldDisabled">
+                                <input #loginEmail="ngModel" name="loginEmail" (keyup)="checkLoginEmail($event)" [(ngModel)]="studentAddModel.loginEmail"
+                                    matInput [required]="hideAccess ? true : null ">
                                 <mat-error class="text-red" *ngIf="loginEmail.errors?.required && hideAccess">
                                     {{'loginEmailAddressIsRequired'|translate}}</mat-error>
+                                    <mat-error *ngIf="loginEmail.errors?.nomatch">
+                                        {{'loginEmailAddressAlreadyExist'|translate}}</mat-error>
                             </mat-form-field>
                         </div>
                         <div class="flex-1 mx-4 md:w-1/2">
@@ -348,7 +350,7 @@
                     </div>
                 </div>
                 <div class="mb-6 mx-4">
-                    <mat-slide-toggle color="primary" [disabled]="fieldDisabled" [checked]="portalAccess"
+                    <mat-slide-toggle color="primary" [checked]="studentAddModel.portalAccess"
                         (change)="isPortalAccess($event)" class="mb-4">
                         {{'portalAccess' | translate}}
                     </mat-slide-toggle>
@@ -398,7 +400,8 @@
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'studentID' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{studentAddModel?.studentMaster.studentId}}
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                        {{studentAddModel?.studentMaster.studentInternalId}}
                     </p>
                 </li>
                 <li>
@@ -445,7 +448,7 @@
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'dateOfBirth' | translate}}</label>
                     <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
-                        {{studentAddModel?.studentMaster.dob|date:'mediumDate'}}</p>
+                        {{studentAddModel?.studentMaster.dob|date:'mediumDate'}} {{studentAge}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'gender' | translate}}</label>
@@ -585,7 +588,8 @@
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'portalAccess' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2 text-green">{{portalAccess}}</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2 text-green">{{studentAddModel?.portalAccess}}
+                    </p>
                 </li>
             </ul>
         </div>

@@ -7,7 +7,7 @@
         <mat-tab-group>
             <mat-tab label="{{'contacts'|translate}}">
               <ng-template matTabContent>
-                <vex-student-contacts></vex-student-contacts>
+                <vex-student-contacts [studentDetailsForViewAndEditData]="studentDetailsForViewAndEditData"></vex-student-contacts>
             </ng-template>
             </mat-tab>
             <mat-tab label="{{'siblingInfo'|translate}}">

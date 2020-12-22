@@ -1,0 +1,81 @@
+<div class="mb-2 lg:flex lg:flex-wrap">
+    <div class="lg:w-3/12 lg:pr-4">
+        <mat-card class="w-full p-0" fxFlex="auto">
+            <div class="px-gutter py-4">
+                <h4 class="text-primary p-0 mb-4">{{'blockRotationDays'|translate}}</h4>
+
+                <div class="mt-2 flex flex-wrap justify-between">
+                    <a class="cursor-pointer text-primary" routerLink="#">All Days</a>
+                </div>
+
+                <div class="mt-2 flex flex-wrap justify-between">
+                    <a class="cursor-pointer">A</a>
+                    <div>
+                        <a class="cursor-pointer mr-3">
+                            <mat-icon [icIcon]="icEdit"></mat-icon>
+                        </a>
+                        <a class="cursor-pointer">
+                            <mat-icon [icIcon]="icDelete"></mat-icon>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="mt-2 flex flex-wrap justify-between">
+                    <a class="cursor-pointer">B</a>
+                    <div>
+                        <a class="cursor-pointer mr-3">
+                            <mat-icon [icIcon]="icEdit"></mat-icon>
+                        </a>
+                        <a class="cursor-pointer">
+                            <mat-icon [icIcon]="icDelete"></mat-icon>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="mt-2 flex flex-wrap justify-between">
+                    <a class="cursor-pointer">Mon-Thr</a>
+                    <div>
+                        <a class="cursor-pointer mr-3">
+                            <mat-icon [icIcon]="icEdit"></mat-icon>
+                        </a>
+                        <a class="cursor-pointer">
+                            <mat-icon [icIcon]="icDelete"></mat-icon>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="mt-2 flex flex-wrap justify-between">
+                    <a class="cursor-pointer">Fri</a>
+                    <div>
+                        <a class="cursor-pointer mr-3">
+                            <mat-icon [icIcon]="icEdit"></mat-icon>
+                        </a>
+                        <a class="cursor-pointer">
+                            <mat-icon [icIcon]="icDelete"></mat-icon>
+                        </a>
+                    </div>
+                </div>
+                <hr class="my-3" />
+                <button color="" class="w-full text-primary" mat-button type="button" (click)='goToAddBlock()'>
+                    <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true" size="24px">
+                    </ic-icon>
+                    <span>{{'addBlockRotationDay'|translate}}</span>
+                </button>
+            </div>
+        </mat-card>
+    </div>
+    <div class="lg:w-9/12 lg:pl-4">
+        <mat-card class="w-full p-0" fxFlex="auto">
+            <!-- <div class="flex justify-between mx-6 py-4">
+                <h4>Showing All Day Rotation</h4>
+                <button color="" class="text-primary" mat-button type="button" (click)='goToAddBlock()'>
+                    <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true" size="24px">
+                    </ic-icon>
+                    <span>{{'addBlockRotationDay'|translate}}</span>
+                </button>
+            </div>
+            <hr/> -->
+            <vex-periods-list></vex-periods-list>
+        </mat-card>
+    </div>
+</div>

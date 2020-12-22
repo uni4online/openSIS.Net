@@ -41,6 +41,8 @@ import { StaffAddressinfoComponent } from './staff-addressinfo/staff-addressinfo
 import { ViewstaffAddressinfoComponent } from './viewstaff-addressinfo/viewstaff-addressinfo.component';
 import { StaffCertificationinfoComponent } from './staff-certificationinfo/staff-certificationinfo.component';
 import { ViewstaffCertificationinfoComponent } from './viewstaff-certificationinfo/viewstaff-certificationinfo.component';
+import { CustomFieldModule } from '../../../../../src/app/common/custom-field/custom-field.module';
+import { CustomFieldWithoutFormModule } from '../../../../../src/app/common/custom-field-without-form/custom-field-without-form.module';
 
 
 
@@ -91,7 +93,9 @@ import { ViewstaffCertificationinfoComponent } from './viewstaff-certificationin
     //MatButtonToggleModule,
     MatTableModule,
     MatTooltipModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    CustomFieldModule,
+    CustomFieldWithoutFormModule
   ]
 })
 export class StaffinfoModule { }

@@ -9,6 +9,9 @@ import icGeneralInfo from '@iconify/icons-ic/outline-account-circle';
 import icAddress from '@iconify/icons-ic/outline-location-on';
 import icAccessInfo from '@iconify/icons-ic/outline-lock-open';
 import { ImageCropperService } from 'src/app/services/image-cropper.service';
+import { SchoolCreate } from 'src/app/enums/school-create.enum';
+import { ParentInfoService } from 'src/app/services/parent-info.service';
+import { AddParentInfoModel } from 'src/app/models/parentInfoModel';
 
 @Component({
   selector: 'vex-edit-parent',
@@ -26,12 +29,40 @@ export class EditParentComponent implements OnInit {
   icAddress = icAddress;
   icAccessInfo = icAccessInfo;
   pageId = 'General Info';
-
-  constructor(private layoutService: LayoutService) {
+  parentCreate = SchoolCreate;
+  parentId: number;
+  parentCreateMode: SchoolCreate = SchoolCreate.VIEW;
+  addParentInfoModel: AddParentInfoModel = new AddParentInfoModel();
+  parentTitle;
+  constructor(private layoutService: LayoutService,
+    private _parentInfoService:ParentInfoService,) {
     this.layoutService.collapseSidenav();
   }
 
   ngOnInit(): void {
+
+    this.parentCreateMode = this.parentCreate.VIEW;
+    this.parentId = this._parentInfoService.getParentId();
+   
+    this.getParentDetailsUsingId();
+
+  }
+
+  getParentDetailsUsingId(){
+    this.addParentInfoModel.parentInfo.parentId = this.parentId;
+    this._parentInfoService.viewParentInfo(this.addParentInfoModel).subscribe(data => {
+      this.addParentInfoModel = data;
+      this._parentInfoService.sendDetails(this.addParentInfoModel);
+      this.parentTitle = this.addParentInfoModel.parentInfo.salutation + " " +this.addParentInfoModel.parentInfo.firstname + " " + this.addParentInfoModel.parentInfo.middlename+ " " + this.addParentInfoModel.parentInfo.lastname;
+     // this._parentInfoService.sendDetails(this.addParentInfoModel);
+      //console.log("parentId",this.addParentInfoModel);
+      //this.fieldsCategory = data.fieldsCategoryList;
+      //
+      //this.responseImage = this.addParentInfoModel.parentInfo.studentPhoto;
+      //this.studentTitle = this.addParentInfoModel.parentInfo.firstGivenName + " " + this.addParentInfoModel.parentInfo.lastFamilyName;
+      //this._parentInfoService.setStudentImage(this.responseImage);
+      //this.checkCriticalAlertFromMedical(this.addParentInfoModel);
+    });
   }
 
   showPage(pageId) {    

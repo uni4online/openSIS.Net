@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { fadeInUp400ms } from '../../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../../@vex/animations/stagger.animation';
@@ -9,9 +9,8 @@ import icDelete from '@iconify/icons-ic/twotone-delete';
 import icAdd from '@iconify/icons-ic/baseline-add';
 import { MatDialog } from '@angular/material/dialog';
 import { EditContactComponent } from '../edit-contact/edit-contact.component';
-import { ViewContactComponent } from '../view-contact/view-contact.component';
-import { GetAllParentInfoModel,AddParentInfoModel  } from '../../../../../models/studentModel';
-import { StudentService  } from '../../../../../services/student.service';
+import { GetAllParentInfoModel,AddParentInfoModel  } from '../../../../../models/parentInfoModel';
+import { ParentInfoService } from '../../../../../services/parent-info.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmDialogComponent } from '../../../../shared-module/confirm-dialog/confirm-dialog.component';
 @Component({
@@ -25,6 +24,7 @@ import { ConfirmDialogComponent } from '../../../../shared-module/confirm-dialog
   ]
 })
 export class StudentContactsComponent implements OnInit {
+  @Input() studentDetailsForViewAndEditData;
   icEdit = icEdit;
   icDelete = icDelete;
   icAdd = icAdd;
@@ -35,7 +35,7 @@ export class StudentContactsComponent implements OnInit {
   constructor(
     private fb: FormBuilder, private dialog: MatDialog,
     public translateService:TranslateService,
-    public studentService:StudentService,
+    public parentInfoService:ParentInfoService,
     private snackbar: MatSnackBar) { }
 
   ngOnInit(): void {
@@ -43,10 +43,12 @@ export class StudentContactsComponent implements OnInit {
     this.viewParentListForStudent();
   }
 
-  openAddNew() {
+  openAddNew(ctype) {
+   
     this.dialog.open(EditContactComponent, {
       data: {
-        contactType:this.contactType,
+        contactType:ctype,
+        studentDetailsForViewAndEditData:this.studentDetailsForViewAndEditData,
         mode:'add' },
       width: '600px'
     }).afterClosed().subscribe(data => {
@@ -55,18 +57,27 @@ export class StudentContactsComponent implements OnInit {
       }      
     });
   }
-
+  
   openViewDetails(parentInfo) {
     this.dialog.open(EditContactComponent, {
       data: {
+        contactType:this.contactType,
+        studentDetailsForViewAndEditData:this.studentDetailsForViewAndEditData,
         parentInfo:parentInfo,
         mode:'view'},
       width: '600px'
     });
   }
 
-  editParentInfo(studentId){
-
+  editParentInfo(parentInfo){
+   
+    this.dialog.open(EditContactComponent, {
+      data: {
+        parentInfo:parentInfo,
+        studentDetailsForViewAndEditData:this.studentDetailsForViewAndEditData,
+        mode:'edit'},
+      width: '600px'
+    });
   }
   confirmDelete(deleteDetails){    
     // call our modal window
@@ -87,7 +98,8 @@ export class StudentContactsComponent implements OnInit {
   }
   deleteParentInfo(parentId){
     this.addParentInfoModel.parentInfo.parentId=parentId;
-    this.studentService.deleteParentInfo(this.addParentInfoModel).subscribe(
+    this.addParentInfoModel.parentInfo.studentId=this.studentDetailsForViewAndEditData.studentMaster.studentId;
+    this.parentInfoService.deleteParentInfo(this.addParentInfoModel).subscribe(
       data => { 
         if(typeof(data)=='undefined'){
           this.snackbar.open('Parent Information failed. ' + sessionStorage.getItem("httpError"), '', {
@@ -113,7 +125,8 @@ export class StudentContactsComponent implements OnInit {
       })
   }
   viewParentListForStudent(){
-    this.studentService.viewParentListForStudent(this.getAllParentInfoModel).subscribe(
+    this.getAllParentInfoModel.studentId=this.studentDetailsForViewAndEditData.studentMaster.studentId;
+    this.parentInfoService.viewParentListForStudent(this.getAllParentInfoModel).subscribe(
       data => { 
         if(typeof(data)=='undefined'){
           this.snackbar.open('Parent Information failed. ' + sessionStorage.getItem("httpError"), '', {
@@ -129,11 +142,23 @@ export class StudentContactsComponent implements OnInit {
             });
           } 
           else { 
-            this.parentListArray= data.parentInfoList;  
-            if(this.parentListArray.length === 1){
-              this.contactType = "Secondary"
+            this.parentListArray= data.parentInfoList; 
+            var var1 = 0;
+            var var2 = 0;
+            this.parentListArray.forEach(val=>{             
+              if(val.contactType === "Primary"){
+                var1++;
+                
+              }else if(val.contactType === "Secondary"){
+                var2++;               
+              }             
+           })         
+            if(var1 > 0 && var2 > 0 ) {
+              this.contactType = "Other";
+            }else if(var1 > 0){
+              this.contactType = "Secondary";
             }else{
-              this.contactType = "Other"
+              this.contactType = "Primary";
             }          
           }
         }

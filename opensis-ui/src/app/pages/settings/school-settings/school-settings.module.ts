@@ -25,6 +25,8 @@ import { MatTableModule } from '@angular/material/table';
 import { GradeLevelsComponent } from '../../school/grade-levels/grade-levels.component';
 import { SectionsComponent } from '../../school/sections/sections.component';
 import { RoomsComponent } from '../../school/rooms/rooms.component';
+import { PeriodsComponent } from '../../school/periods/periods.component';
+import { PeriodsListComponent } from '../../school/periods/periods-list/periods-list.component';
 import { SchoolFieldsComponent } from '../../school/school-fields/school-fields.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
@@ -34,7 +36,7 @@ import {MatSortModule} from '@angular/material/sort';
 import { SharedModuleModule } from '../../../pages/shared-module/shared-module.module';
 
 @NgModule({
-  declarations: [SchoolSettingsComponent,GradeLevelsComponent,SectionsComponent, RoomsComponent,SchoolFieldsComponent],
+  declarations: [SchoolSettingsComponent,GradeLevelsComponent,SectionsComponent, RoomsComponent,SchoolFieldsComponent, PeriodsComponent, PeriodsListComponent],
   imports: [
     CommonModule,
     MatIconModule,

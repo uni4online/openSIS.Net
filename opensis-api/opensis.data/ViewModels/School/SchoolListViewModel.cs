@@ -7,6 +7,7 @@ namespace opensis.data.ViewModels.School
 {
     public class SchoolListViewModel: CommonFields
     {
-       
+        public List<SchoolMaster> schoolMaster { get; set; }
+        public Guid? TenantId { get; set; }
     }
 }

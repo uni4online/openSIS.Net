@@ -8,9 +8,9 @@
                 <div class="subheading-2 leading-snug text-primary">{{parent.firstname}} {{parent.lastname}}</div>
                 <div class="body-1 text-secondary truncate contact-type">{{parent.relationship}} 
                     <span class="separator"></span> 
-                    <div *ngIf="parent.contactType==='Primary'; else other"> 
-                        <span class="text-warn">{{parent.contactType}}</span>
-                    </div>
+                    
+                        <span *ngIf="parent.contactType==='Primary'; else other" class="text-warn">{{parent.contactType}}</span>
+                   
                     <ng-template #other>
                         <span class="text-green">{{parent.contactType}}</span>
                     </ng-template>
@@ -30,9 +30,35 @@
     </div> 
 </div>
 
-<div class="text-center mt-6">
-    <button color="primary" mat-raised-button type="button" (click)='openAddNew()'>
+<div class="text-center mt-6" *ngIf="contactType ==='Primary'; else secondary">
+    <button color="primary" mat-raised-button type="button" (click)='openAddNew("Primary")'>
         <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true" size="24px"></ic-icon>
-        <span>Add {{contactType}} Contact</span>
-    </button>
+        <span>Add Primary Contact</span>
+    </button>    
 </div>
+<ng-template #secondary>
+    <div *ngIf="contactType ==='Secondary'; else other">
+        <div class="text-center mt-6" >
+            <button color="primary" mat-raised-button type="button" (click)='openAddNew("Secondary")'>
+                <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true" size="24px"></ic-icon>
+                <span>Add Secondary Contact</span>
+            </button>    
+        </div>   
+        <div class="text-center mt-6">
+            <button color="primary" mat-raised-button type="button" (click)='openAddNew("Other")'>
+                <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true" size="24px"></ic-icon>
+                <span>Add Other Contact</span>
+            </button>    
+        </div>
+    </div>
+    <ng-template #other>
+        <div class="text-center mt-6">
+            <button color="primary" mat-raised-button type="button" (click)='openAddNew("Other")'>
+                <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true" size="24px"></ic-icon>
+                <span>Add Other Contact</span>
+            </button>    
+        </div>
+    </ng-template>
+    
+</ng-template>
+

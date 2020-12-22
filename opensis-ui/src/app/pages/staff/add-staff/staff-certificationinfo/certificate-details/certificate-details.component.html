@@ -11,31 +11,31 @@
     <ul class="md:grid md:grid-cols-2 md:col-gap-8 md:row-gap-10 mt-6">
         <li>
             <label class="text-sm leading-5 text-gray">{{'certificationName' | translate}}</label>
-            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Bachelor of Science</p>
+            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{certificateDetails.info.certificationName}}</p>
         </li>
         <li>
             <label class="text-sm leading-5 text-gray">{{'certificationShortName' | translate}}</label>
-            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">B.Sc.</p>
+            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{certificateDetails.info.shortName}}</p>
         </li>
         <li>
             <label class="text-sm leading-5 text-gray">{{'certificationCode' | translate}}</label>
-            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">GD452</p>
+            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{certificateDetails.info.certificationCode|EmtyValueCheckPipe}}</p>
         </li>
         <li>
             <label class="text-sm leading-5 text-gray">{{'primaryCertificationIndicator' | translate}}</label>
-            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">No</p>
+            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{certificateDetails.info.primaryCertification|EmtyBooleanCheckPipe}}</p>
         </li>
         <li>
             <label class=" text-sm leading-5 text-gray">{{'certificationDate' | translate}}</label>
-            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Mar 10, 2001</p>
+            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{certificateDetails.info.certificationDate|date:'MMM dd, y'|EmtyValueCheckPipe}}</p>
         </li>
         <li>
             <label class=" text-sm leading-5 text-gray">{{'certificationExpiryDate' | translate}}</label>
-            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">-</p>
+            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{certificateDetails.info.certificationExpiryDate|date:'MMM dd, y'|EmtyValueCheckPipe}}</p>
         </li>  
         <li class="col-start-1 col-end-3">
             <label class=" text-sm leading-5 text-gray">{{'certificationDescription' | translate}}</label>
-        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vel aliquam sapien, ut egestas metus. Praesent porttitor ante vitae nibh venenatis, ut feugiat eros sodales. Duis non dolor faucibus nibh posuere venenatis. Vestibulum ac rutrum odio, sit amet volutpat justo. Proin gravida augue ac risus porta, eget euismod libero efficitur.</p>
+        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{certificateDetails.info.certificationDescription}}</p>
         </li>       
     </ul>
 </mat-dialog-content>

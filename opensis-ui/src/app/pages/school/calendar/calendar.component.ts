@@ -85,10 +85,10 @@ export class CalendarComponent implements OnInit {
   calendarFrom: FormControl;
   cssClass: string;
   constructor(private http: HttpClient, private dialog: MatDialog,
-    private snackbar: MatSnackBar, public translate: TranslateService, private _membershipService: MembershipService,
-    private _calendarEventService: CalendarEventService, private _calendarService: CalendarService) {
+    private snackbar: MatSnackBar, public translate: TranslateService, private membershipService: MembershipService,
+    private calendarEventService: CalendarEventService, private calendarService: CalendarService) {
     this.translate.setDefaultLang('en');
-    this._calendarEventService.currentEvent.subscribe(
+    this.calendarEventService.currentEvent.subscribe(
       res => {
         if (res) {
           this.getAllCalendarEvent();
@@ -99,13 +99,13 @@ export class CalendarComponent implements OnInit {
 
   changeCalendar(event) {
     this.getDays(event.days);
-    this._calendarService.setCalendarId(event.calenderId);
+    this.calendarService.setCalendarId(event.calenderId);
     this.getAllCalendarEvent();
   }
 
   //Show all members
   getAllMemberList() {
-    this._membershipService.getAllMembers(this.getAllMembersList).subscribe(
+    this.membershipService.getAllMembers(this.getAllMembersList).subscribe(
       (res) => {
         if (typeof (res) == 'undefined') {
           this.snackbar.open('No Member Found. ' + sessionStorage.getItem("httpError"), '', {
@@ -126,7 +126,7 @@ export class CalendarComponent implements OnInit {
   }
   //Show all calendar
   getAllCalendar() {
-    this._calendarService.getAllCalendar(this.getCalendarList).subscribe((data) => {
+    this.calendarService.getAllCalendar(this.getCalendarList).subscribe((data) => {
       this.calendars = data.calendarList;
       this.showCalendarView = false;
       if (this.calendars.length !== 0) {
@@ -134,7 +134,7 @@ export class CalendarComponent implements OnInit {
         const defaultCalender = this.calendars.find(element => element.defaultCalender === true);
         if (defaultCalender != null) {
           this.selectedCalendar = defaultCalender;
-          this._calendarService.setCalendarId(this.selectedCalendar.calenderId);
+          this.calendarService.setCalendarId(this.selectedCalendar.calenderId);
           this.getDays(this.selectedCalendar.days);
           this.getAllCalendarEvent();
         }
@@ -147,8 +147,8 @@ export class CalendarComponent implements OnInit {
 
   // Rendar all events in calendar
   getAllCalendarEvent() {
-    this.getAllCalendarEventList.calendarId = this._calendarService.getCalendarId();
-    this.events$ = this._calendarEventService.getAllCalendarEvent(this.getAllCalendarEventList).pipe(
+    this.getAllCalendarEventList.calendarId = this.calendarService.getCalendarId();
+    this.events$ = this.calendarEventService.getAllCalendarEvent(this.getAllCalendarEventList).pipe(
       map(({ calendarEventList }: { calendarEventList: CalendarEventModel[] }) => {
         return calendarEventList.map((calendar: CalendarEventModel) => {
 
@@ -225,7 +225,7 @@ export class CalendarComponent implements OnInit {
     this.calendarEventAddViewModel.schoolCalendarEvent = event.meta.calendar;
     this.calendarEventAddViewModel.schoolCalendarEvent.startDate = this.formatDate(newEnd);
     this.calendarEventAddViewModel.schoolCalendarEvent.endDate = this.formatDate(newStart);
-    this._calendarEventService.updateCalendarEvent(this.calendarEventAddViewModel).subscribe(data => {
+    this.calendarEventService.updateCalendarEvent(this.calendarEventAddViewModel).subscribe(data => {
       if (data._failure) {
         this.snackbar.open('Event dragging failed. ' + data._message, '', {
           duration: 10000
@@ -268,7 +268,7 @@ export class CalendarComponent implements OnInit {
 
   deleteCalendar(id: number) {
     this.calendarAddViewModel.schoolCalendar.calenderId = id;
-    this._calendarService.deleteCalendar(this.calendarAddViewModel).subscribe(
+    this.calendarService.deleteCalendar(this.calendarAddViewModel).subscribe(
       (res) => {
         if (res._failure) {
           this.snackbar.open('Calendar Deletion failed. ' + res._message, '', {

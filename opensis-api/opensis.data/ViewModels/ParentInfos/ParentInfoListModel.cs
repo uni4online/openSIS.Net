@@ -7,9 +7,15 @@ namespace opensis.data.ViewModels.ParentInfos
 {
     public class ParentInfoListModel : CommonFields
     {
-        public List<ParentInfo> parentInfoList { get; set; }        
+        public ParentInfoListModel()
+        {
+            parentInfoListForView = new List<ParentInfoListForView>();
+        }
+        public List<ParentInfoListForView> parentInfoListForView { get; set; }
         public Guid? TenantId { get; set; }
         public int? SchoolId { get; set; }
-        public int StudentId { get; set; }        
+        public int StudentId { get; set; }
+
     }
 }
+

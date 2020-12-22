@@ -1,4 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
+import {StaffCertificateListModel,StaffCertificateModel } from './../../../../models/staffModel';
+import { StaffService } from '../../../../services/staff.service';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import icMoreVert from '@iconify/icons-ic/twotone-more-vert';
 import icAdd from '@iconify/icons-ic/baseline-add';
 import icEdit from '@iconify/icons-ic/twotone-edit';
@@ -14,6 +16,10 @@ import { stagger40ms } from '../../../../../@vex/animations/stagger.animation';
 import { TranslateService } from '@ngx-translate/core';
 import { AddCertificateComponent } from './add-certificate/add-certificate.component';
 import { CertificateDetailsComponent } from './certificate-details/certificate-details.component';
+import { MatTableDataSource } from '@angular/material/table';
+import { ConfirmDialogComponent } from '../../../shared-module/confirm-dialog/confirm-dialog.component';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'vex-staff-certificationinfo',
@@ -27,15 +33,14 @@ import { CertificateDetailsComponent } from './certificate-details/certificate-d
 export class StaffCertificationinfoComponent implements OnInit {
   @Input()
   columns = [
-    { label: 'Certification Name', property: 'certification_name', type: 'text', visible: true },
-    { label: 'Short Name', property: 'short_name', type: 'text', visible: true },
-    { label: 'Primary Certification Indicator', property: 'primary_certification_indicator', type: 'text', visible: true },
-    { label: 'Certification Date', property: 'certification_date', type: 'text', visible: true },
-    { label: 'Certification Expiry Date', property: 'certification_expiry_date', type: 'text', visible: true },
+    { label: 'Certification Name', property: 'certificationName', type: 'text', visible: true },
+    { label: 'Short Name', property: 'shortName', type: 'text', visible: true },
+    { label: 'Primary Certification Indicator', property: 'primaryCertification', type: 'text', visible: true },
+    { label: 'Certification Date', property: 'certificationDate', type: 'text', visible: true },
+    { label: 'Certification Expiry Date', property: 'certificationExpiryDate', type: 'text', visible: true },
     { label: 'Actions', property: 'actions', type: 'text', visible: true }
   ];
 
-  StaffCertificationFieldsModelList;
 
   icMoreVert = icMoreVert;
   icAdd = icAdd;
@@ -45,16 +50,26 @@ export class StaffCertificationinfoComponent implements OnInit {
   icImpersonate = icImpersonate;
   icFilterList = icFilterList;
   loading:Boolean;
-
-  constructor(private router: Router,private dialog: MatDialog,public translateService:TranslateService) {
+  staffCertificateListModel:StaffCertificateListModel= new StaffCertificateListModel();
+  staffCertificateModel:StaffCertificateModel= new StaffCertificateModel();
+  staffid;
+  staffCertificateList: MatTableDataSource<any>;
+  @ViewChild(MatPaginator) paginator:MatPaginator
+  @ViewChild(MatSort) sort: MatSort;
+  searchKey: string;
+  constructor(private router: Router,
+    private dialog: MatDialog,
+    public translateService:TranslateService,
+    private snackbar: MatSnackBar,
+    private staffService:StaffService
+    ) {
     translateService.use('en');
-    this.StaffCertificationFieldsModelList = [
-      {certification_name: 'Masters of Science', short_name: 'M.Sc.', primary_certification_indicator: 'No', certification_date: 'Mar 10, 2001', certification_expiry_date: '-'},
-      {certification_name: 'Bachelor of Science', short_name: 'B.Sc.', primary_certification_indicator: 'Yes', certification_date: 'Mar 01, 2004', certification_expiry_date: '-'},
-    ]
+    
   }
 
   ngOnInit(): void {
+    this.staffid=this.staffService.getStaffId();
+    this.getAllStaffCertificateInfo();
   }
 
   getPageEvent(event){    
@@ -62,19 +77,39 @@ export class StaffCertificationinfoComponent implements OnInit {
     // this.getAllSchool.pageSize=event.pageSize;
     // this.callAllSchool(this.getAllSchool);
   }
-
+  onSearchClear(){
+    this.searchKey="";
+    this.applyFilter();
+  }
+  applyFilter(){
+    this.staffCertificateList.filter = this.searchKey.trim().toLowerCase()
+  }
   openAddNew() {
     this.dialog.open(AddCertificateComponent, {
       data: null,
       width: '600px'
+    }).afterClosed().subscribe((data)=>{
+      if(data==='submited'){
+        this.getAllStaffCertificateInfo();
+      }
     });
   }
-
-  openViewDetails() {
-    this.dialog.open(CertificateDetailsComponent, {
-      data: null,
+  openEditdata(element) {
+    
+    this.dialog.open(AddCertificateComponent, {
+      data: element,
       width: '600px'
-    });
+    }).afterClosed().subscribe((data)=>{
+      if(data==='submited'){
+        this.getAllStaffCertificateInfo();
+      }
+    })
+  }
+  openViewDetails(element) {
+    this.dialog.open(CertificateDetailsComponent, {
+      data: {info:element},
+      width: '600px'
+    })
   }
 
   toggleColumnVisibility(column, event) {
@@ -82,9 +117,67 @@ export class StaffCertificationinfoComponent implements OnInit {
     event.stopImmediatePropagation();
     column.visible = !column.visible;
   }
+  getAllStaffCertificateInfo(){
+    this.staffCertificateListModel.staffId=this.staffService.getStaffId();
+    this.staffService.getAllStaffCertificateInfo(this.staffCertificateListModel).subscribe(
+      (res:StaffCertificateListModel)=>{
+        if(typeof(res)=='undefined'){
+          this.snackbar.open('Staff Certificate List failed. ' + sessionStorage.getItem("httpError"), '', {
+            duration: 10000
+          });
+        }
+        else{
+          if (res._failure) {     
+            this.snackbar.open('Staff Certificate List failed. ' + res._message, 'LOL THANKS', {
+              duration: 10000
+            });
+          } 
+          else { 
+            this.staffCertificateList=new MatTableDataSource(res.staffCertificateInfoList) ;
+            this.staffCertificateList.sort=this.sort;    
+          }
+        }
+      }
+    );
+  }
 
   get visibleColumns() {
     return this.columns.filter(column => column.visible).map(column => column.property);
   }
+  deleteStaffCertificatedata(element){
+    this.staffCertificateModel.staffCertificateInfo=element
+    this.staffService.deleteStaffCertificateInfo(this.staffCertificateModel).subscribe(
+      (res:StaffCertificateModel)=>{
+        if(typeof(res)=='undefined'){
+          this.snackbar.open('Staff Certificate Delete failed. ' + sessionStorage.getItem("httpError"), '', {
+            duration: 10000
+          });
+        }
+        else{
+          if (res._failure) {
+            this.snackbar.open('Staff Certificate Delete failed. ' + res._message, 'LOL THANKS', {
+              duration: 10000
+            });
+          } 
+          else { 
+            this.getAllStaffCertificateInfo()
+          }
+        }
+      }
+    )
+  }
+  confirmDelete(element){
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      maxWidth: "400px",
+      data: {
+          title: "Are you sure?",
+          message: "You are about to delete "+element.title+"."}
+    });
+    dialogRef.afterClosed().subscribe(dialogResult => {
+      if(dialogResult){
+        this.deleteStaffCertificatedata(element);
+      }
+   });
+}
 
 }

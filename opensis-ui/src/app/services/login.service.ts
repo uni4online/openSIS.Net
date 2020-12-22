@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { UserViewModel } from '../models/userModel';
+import { CheckUserEmailAddressViewModel, UserViewModel } from '../models/userModel';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { CryptoService } from '../services/Crypto.service';
 import { LanguageModel } from '../models/languageModel';
@@ -28,6 +28,11 @@ export class LoginService {
   public isAuthenticated(): boolean {
     const token = sessionStorage.getItem('token');
     return !this.jwtHelper.isTokenExpired(token);
+  }
+
+  checkUserLoginEmail(obj : CheckUserEmailAddressViewModel){
+    let apiurl = this.apiUrl + obj._tenantName + "/User/checkUserLoginEmail";
+    return this.http.post<CheckUserEmailAddressViewModel>(apiurl, obj)
   }
 
 }

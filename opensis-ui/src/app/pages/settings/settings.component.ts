@@ -6,6 +6,7 @@ import icSchedule from '@iconify/icons-ic/twotone-date-range';
 import icGrade from '@iconify/icons-ic/twotone-leaderboard';
 import icAttendance from '@iconify/icons-ic/twotone-access-alarm';
 import icParents from '@iconify/icons-ic/baseline-escalator-warning';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'vex-settings',
@@ -22,7 +23,9 @@ export class SettingsComponent implements OnInit {
   icAttendance = icAttendance;
   icParents = icParents;
 
-  constructor() { }
+  constructor(public translateService:TranslateService) {
+    translateService.use('en');
+  }
 
   ngOnInit(): void {
   }

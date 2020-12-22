@@ -64,7 +64,7 @@ export class GeneralInfoComponent implements OnInit, OnDestroy {
   destroySubject$: Subject<void> = new Subject();
   customFieldModel = new CustomFieldListViewModel();
   schoolAddViewModel: SchoolAddViewModel = new SchoolAddViewModel();
-  checkSchoolInternalIdViewModel : CheckSchoolInternalIdViewModel = new CheckSchoolInternalIdViewModel();
+  checkSchoolInternalIdViewModel: CheckSchoolInternalIdViewModel = new CheckSchoolInternalIdViewModel();
   countryModel: CountryModel = new CountryModel();
   stateModel: StateModel = new StateModel();
   cityModel: CityModel = new CityModel();
@@ -72,6 +72,7 @@ export class GeneralInfoComponent implements OnInit, OnDestroy {
   stateListArr = [];
   cityListArr = [];
   countryName = "";
+  schoolInternalId = '';
   module = "School";
   stateName = "";
   status: string;
@@ -121,6 +122,7 @@ export class GeneralInfoComponent implements OnInit, OnDestroy {
     translateService.use('en');
     this._schoolService.getSchoolDetailsForGeneral.pipe(takeUntil(this.destroySubject$)).subscribe((res: SchoolAddViewModel) => {
       this.schoolAddViewModel = res;
+      this.schoolInternalId = res.schoolMaster.schoolInternalId;
       if (this.schoolAddViewModel.schoolMaster.country) {
         this.getAllCountry();
       }
@@ -170,14 +172,14 @@ export class GeneralInfoComponent implements OnInit, OnDestroy {
     });
     this.selectedLowGradeLevelIndex = index;
     if (index == -1) {
-      this.currentForm.form.controls.lowest_grade_level.markAsTouched();
+      this.currentForm.form.controls.lowestGradeLevel.markAsTouched();
     } else {
       if (index > this.selectedHighGradeLevelIndex) {
-        this.currentForm.form.controls.lowest_grade_level.setErrors({ 'nomatch': true });
+        this.currentForm.form.controls.lowestGradeLevel.setErrors({ 'nomatch': true });
       } else {
-        this.currentForm.controls.lowest_grade_level.setErrors(null);
-        if (this.currentForm.controls.highest_grade_level.errors != null) {
-          this.currentForm.controls.highest_grade_level.errors.nomatch = false;
+        this.currentForm.controls.lowestGradeLevel.setErrors(null);
+        if (this.currentForm.controls.highestGradeLevel.errors != null) {
+          this.currentForm.controls.highestGradeLevel.errors.nomatch = false;
         }
       }
     }
@@ -189,31 +191,37 @@ export class GeneralInfoComponent implements OnInit, OnDestroy {
     });
     this.selectedHighGradeLevelIndex = index;
     if (index == -1) {
-      this.currentForm.form.controls.highest_grade_level.markAsTouched();
+      this.currentForm.form.controls.highestGradeLevel.markAsTouched();
     } else {
       if (this.selectedLowGradeLevelIndex > index) {
-        this.currentForm.form.controls.highest_grade_level.setErrors({ 'nomatch': true });
+        this.currentForm.form.controls.highestGradeLevel.setErrors({ 'nomatch': true });
       } else {
-        this.currentForm.controls.highest_grade_level.setErrors(null);
-        if (this.currentForm.form.controls.lowest_grade_level.errors != null) {
-          this.currentForm.form.controls.lowest_grade_level.errors.nomatch = false;
+        this.currentForm.controls.highestGradeLevel.setErrors(null);
+        if (this.currentForm.form.controls.lowestGradeLevel.errors != null) {
+          this.currentForm.form.controls.lowestGradeLevel.errors.nomatch = false;
         }
       }
     }
   }
 
-  checkSchoolInternalId(event){
-    let internalId= event.target.value;
-   
-    this.checkSchoolInternalIdViewModel.schoolInternalId = internalId;
-    this._schoolService.checkSchoolInternalId(this.checkSchoolInternalIdViewModel).subscribe( data =>{
-      if (data.isValidInternalId) {
-        this.currentForm.form.controls.school_id.setErrors(null);
-      }
-      else {
-        this.currentForm.form.controls.school_id.setErrors({ 'nomatch': true });
-      }
-    });
+  checkSchoolInternalId(event) {
+    let internalId = event.target.value;
+    if (this.schoolInternalId === internalId) {
+      this.currentForm.form.controls.schoolId.setErrors(null);
+    }
+    else {
+      this.checkSchoolInternalIdViewModel.schoolInternalId = internalId;
+      this._schoolService.checkSchoolInternalId(this.checkSchoolInternalIdViewModel).subscribe(data => {
+        if (data.isValidInternalId) {
+          this.currentForm.form.controls.schoolId.setErrors(null);
+        }
+        else {
+          this.currentForm.form.controls.schoolId.setErrors({ 'nomatch': true });
+        }
+      });
+    }
+
+
   }
 
   checkGradeLevelsOnEdit() {
@@ -361,9 +369,9 @@ export class GeneralInfoComponent implements OnInit, OnDestroy {
       })
     }
   }
-  onStatusChange(event:boolean){
-    let schoolClosedDate=this.currentForm.value.date_school_closed;
-    if(event===false && (schoolClosedDate==null || schoolClosedDate==undefined)){
+  onStatusChange(event: boolean) {
+    let schoolClosedDate = this.currentForm.value.date_school_closed;
+    if (event === false && (schoolClosedDate == null || schoolClosedDate == undefined)) {
       this.currentForm.controls.date_school_closed.setValidators(Validators.required);
       this.currentForm.controls.date_school_closed.setErrors({ required: true })
       this.currentForm.controls.date_school_closed.markAsTouched();
@@ -382,7 +390,7 @@ export class GeneralInfoComponent implements OnInit, OnDestroy {
     } else {
       if (this.currentForm.controls.date_school_closed.errors?.nomatch) {
         this.currentForm.controls.date_school_closed.setErrors(null);
-      }      
+      }
     }
     this.onStatusChange(this.schoolAddViewModel.schoolMaster.schoolDetail[0].status);
   }

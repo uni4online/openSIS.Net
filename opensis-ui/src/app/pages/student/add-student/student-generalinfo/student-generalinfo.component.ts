@@ -29,6 +29,7 @@ import icCheckboxOutline from '@iconify/icons-ic/baseline-check-box-outline-blan
 import { SectionService } from '../../../../services/section.service';
 import { GetAllSectionModel, TableSectionList } from '../../../../models/sectionModel';
 import { CryptoService } from '../../../../services/Crypto.service';
+import { CheckUserEmailAddressViewModel } from '../../../../models/userModel';
 
 @Component({
   selector: 'vex-student-generalinfo',
@@ -64,7 +65,8 @@ export class StudentGeneralinfoComponent implements OnInit, OnDestroy {
 
   form: FormGroup;
   studentAddModel: StudentAddModel = new StudentAddModel();
-  checkStudentInternalIdViewModel : CheckStudentInternalIdViewModel = new CheckStudentInternalIdViewModel();
+  checkStudentInternalIdViewModel: CheckStudentInternalIdViewModel = new CheckStudentInternalIdViewModel();
+  checkUserEmailAddressViewModel: CheckUserEmailAddressViewModel = new CheckUserEmailAddressViewModel();
   section: GetAllSectionModel = new GetAllSectionModel();
   sectionList: [TableSectionList];
   languages: LanguageModel = new LanguageModel();
@@ -78,7 +80,7 @@ export class StudentGeneralinfoComponent implements OnInit, OnDestroy {
   genderEnum = Object.keys(gender);
   module = 'Student';
   saveAndNext = 'saveAndNext';
-  pageStatus : string;
+  pageStatus: string;
   raceEnum = Object.keys(race);
   ethnicityEnum = Object.keys(ethnicity);
   maritalStatusEnum = Object.keys(maritalStatus);
@@ -86,50 +88,55 @@ export class StudentGeneralinfoComponent implements OnInit, OnDestroy {
   icVisibility = icVisibility;
   icVisibilityOff = icVisibilityOff;
   inputType = 'password';
+  studentInternalId = '';
+  studentPortalId = '';
   visible = false;
   pass: string = "";
-  portalAccess: boolean = false;
   hidePasswordAccess: boolean = false;
   hideAccess: boolean = false;
   fieldDisabled: boolean = false;
-
+  studentAge;
 
   constructor(
     private fb: FormBuilder,
     public translateService: TranslateService,
     private snackbar: MatSnackBar,
-    private _studentService: StudentService,
+    private studentService: StudentService,
     private commonService: CommonService,
     private loginService: LoginService,
     private commonFunction: SharedFunction,
     private sectionService: SectionService,
     private cd: ChangeDetectorRef) {
     translateService.use('en');
-    this._studentService.getStudentDetailsForGeneral.pipe(takeUntil(this.destroySubject$)).subscribe((res: StudentAddModel) => {
+    this.studentService.getStudentDetailsForGeneral.pipe(takeUntil(this.destroySubject$)).subscribe((res: StudentAddModel) => {
       this.studentAddModel = res;
       this.studentAddModel.loginEmail = this.studentAddModel.studentMaster.studentPortalId;
       this.data = this.studentAddModel?.studentMaster;
+      this.studentInternalId = this.data.studentInternalId;
+      this.studentPortalId = this.data.studentPortalId;
       this.accessPortal();
+
       if (this.studentCreateMode == this.StudentCreate.VIEW) {
         this.renderCheckBox();
-
+        this.studentAge = this.commonFunction.getAge(this.studentAddModel?.studentMaster.dob);
         this.getAllSection();
       }
       this.getAllCountry();
     })
   }
-
+ 
   ngOnInit(): void {
     this.getAllSection();
-
+        
     if (this.studentCreateMode == this.StudentCreate.ADD) {
       this.getAllCountry();
       this.GetAllLanguage();
     } else if (this.studentCreateMode == this.StudentCreate.VIEW) {
-
       this.studentAddModel = this.studentDetailsForViewAndEdit;
-      this.data = this.studentDetailsForViewAndEdit?.studentMaster;
+      this.data = this.studentDetailsForViewAndEdit?.studentMaster;      
       this.renderCheckBox();
+      
+    
     } else if (this.studentCreateMode == this.StudentCreate.EDIT && (this.studentDetailsForViewAndEdit != undefined || this.studentDetailsForViewAndEdit != null)) {
       this.studentAddModel = this.studentDetailsForViewAndEdit;
 
@@ -138,7 +145,6 @@ export class StudentGeneralinfoComponent implements OnInit, OnDestroy {
 
         this.hideAccess = true;
         this.fieldDisabled = true;
-        this.portalAccess = true;
 
       }
     }
@@ -174,15 +180,15 @@ export class StudentGeneralinfoComponent implements OnInit, OnDestroy {
 
   accessPortal() {
     if (this.data.studentPortalId !== null) {
-      this.portalAccess = true;
       this.hideAccess = true;
       this.fieldDisabled = true;
       this.hidePasswordAccess = false;
+
     } else {
-      this.portalAccess = false;
       this.hideAccess = false;
       this.fieldDisabled = false;
       this.hidePasswordAccess = false;
+
     }
   }
 
@@ -210,27 +216,61 @@ export class StudentGeneralinfoComponent implements OnInit, OnDestroy {
 
   isPortalAccess(event) {
     if (event.checked) {
+      if (this.studentCreateMode == this.StudentCreate.ADD) {
+        this.hidePasswordAccess = true;
+      }
+      else {
+        if (this.data.studentPortalId !== null) {
+          this.hidePasswordAccess = false;
+        }
+        else {
+          this.hidePasswordAccess = true;
+        }
+      }
       this.hideAccess = true;
-      this.hidePasswordAccess = true;
+      this.studentAddModel.portalAccess = true;
     }
     else {
       this.hideAccess = false;
       this.hidePasswordAccess = false;
+      this.studentAddModel.portalAccess = false;
     }
   }
 
-  checkInternalId(event){
-    let internalId= event.target.value;
-   
-    this.checkStudentInternalIdViewModel.studentInternalId = internalId;
-    this._studentService.checkStudentInternalId(this.checkStudentInternalIdViewModel).subscribe( data =>{
-      if (data.isValidInternalId) {
-        this.currentForm.form.controls.studentInternalId.setErrors(null);
-      }
-      else {
-        this.currentForm.form.controls.studentInternalId.setErrors({ 'nomatch': true });
-      }
-    });
+  checkLoginEmail(event) {
+    let emailId = event.target.value;
+    if (this.studentPortalId === emailId) {
+      this.currentForm.form.controls.loginEmail.setErrors(null);
+    }
+    else {
+      this.checkUserEmailAddressViewModel.emailAddress = emailId;
+      this.loginService.checkUserLoginEmail(this.checkUserEmailAddressViewModel).subscribe(data => {
+        if (data.isValidEmailAddress) {
+          this.currentForm.form.controls.loginEmail.setErrors(null);
+        }
+        else {
+          this.currentForm.form.controls.loginEmail.setErrors({ 'nomatch': true });
+        }
+      });
+    }
+  }
+
+  checkInternalId(event) {
+    let internalId = event.target.value;
+    if (this.studentInternalId === internalId) {
+      this.currentForm.form.controls.studentInternalId.setErrors(null);
+    }
+    else {
+      this.checkStudentInternalIdViewModel.studentInternalId = internalId;
+      this.studentService.checkStudentInternalId(this.checkStudentInternalIdViewModel).subscribe(data => {
+        if (data.isValidInternalId) {
+          this.currentForm.form.controls.studentInternalId.setErrors(null);
+        }
+        else {
+          this.currentForm.form.controls.studentInternalId.setErrors({ 'nomatch': true });
+        }
+      });
+    }
   }
 
   getAllCountry() {
@@ -278,10 +318,10 @@ export class StudentGeneralinfoComponent implements OnInit, OnDestroy {
 
   submit() {
     this.currentForm.form.markAllAsTouched();
-    if(this.currentForm.controls.passwordHash !== undefined){
+    if (this.currentForm.controls.passwordHash !== undefined) {
       this.studentAddModel.passwordHash = this.currentForm.controls.passwordHash.value;
     }
-    
+
     if (this.currentForm.form.valid) {
 
       if (this.studentCreateMode == this.StudentCreate.EDIT) {
@@ -302,8 +342,7 @@ export class StudentGeneralinfoComponent implements OnInit, OnDestroy {
   updateStudent() {
     this.studentAddModel._token = sessionStorage.getItem("token");
     this.studentAddModel._tenantName = sessionStorage.getItem("tenant");
-    console.log("model", this.studentAddModel);
-    this._studentService.UpdateStudent(this.studentAddModel).subscribe(data => {
+    this.studentService.UpdateStudent(this.studentAddModel).subscribe(data => {
       if (typeof (data) == 'undefined') {
         this.snackbar.open('Student Update failed. ' + sessionStorage.getItem("httpError"), '', {
           duration: 10000
@@ -319,6 +358,7 @@ export class StudentGeneralinfoComponent implements OnInit, OnDestroy {
             duration: 10000
           });
           this.data = data.studentMaster;
+          this.studentCreateMode = this.StudentCreate.VIEW
         }
       }
 
@@ -328,7 +368,7 @@ export class StudentGeneralinfoComponent implements OnInit, OnDestroy {
 
   addStudent() {
     this.studentAddModel.studentMaster.dob = this.commonFunction.formatDateSaveWithoutTime(this.studentAddModel.studentMaster.dob);
-    this._studentService.AddStudent(this.studentAddModel).subscribe(data => {
+    this.studentService.AddStudent(this.studentAddModel).subscribe(data => {
       if (typeof (data) == 'undefined') {
         this.snackbar.open('Student Save failed. ' + sessionStorage.getItem("httpError"), '', {
           duration: 10000
@@ -343,9 +383,9 @@ export class StudentGeneralinfoComponent implements OnInit, OnDestroy {
           this.snackbar.open('Student Save Successful.', '', {
             duration: 10000
           });
-          this._studentService.setStudentId(data.studentMaster.studentId);
-          this._studentService.changeCategory(4);
-          this._studentService.setStudentDetails(data);
+          this.studentService.setStudentId(data.studentMaster.studentId);
+          this.studentService.changeCategory(4);
+          this.studentService.setStudentDetails(data);
         }
       }
 

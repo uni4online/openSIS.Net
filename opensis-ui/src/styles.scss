@@ -895,3 +895,24 @@
 
 
 //End of bootstrap card
+
+
+/* Default Table Properties */
+table {
+  width: 100%;
+}
+
+.mat-table {
+  .mat-header-row {
+    .mat-header-cell {
+      color      : rgb(0 0 0) !important;
+      font-size  : 14px !important;
+      font-weight: bold;
+    }
+  }
+
+  .mat-footer-cell {
+    text-align: center;
+    font-style: italic;
+  }
+}

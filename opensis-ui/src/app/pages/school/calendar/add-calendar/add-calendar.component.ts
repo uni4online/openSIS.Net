@@ -47,8 +47,8 @@ export class AddCalendarComponent implements OnInit {
     { name: 'saturday', id: 6 }
   ];
   constructor(private dialogRef: MatDialogRef<AddCalendarComponent>,
-    private fb: FormBuilder, private _membershipService: MembershipService, private commonFunction: SharedFunction,
-    private _calendarService: CalendarService, @Inject(MAT_DIALOG_DATA) public data: any, private snackbar: MatSnackBar) {
+    private fb: FormBuilder, private membershipService: MembershipService, private commonFunction: SharedFunction,
+    private calendarService: CalendarService, @Inject(MAT_DIALOG_DATA) public data: any, private snackbar: MatSnackBar) {
 
   }
 
@@ -134,7 +134,7 @@ export class AddCalendarComponent implements OnInit {
     this.calendarAddViewModel.schoolCalendar.endDate = this.commonFunction.formatDateSaveWithoutTime(this.form.value.endDate);
     if (this.form.valid && this.weekArray.length > 0) {
       if (this.calendarAddViewModel.schoolCalendar.calenderId > 0) {
-        this._calendarService.updateCalendar(this.calendarAddViewModel).subscribe(data => {
+        this.calendarService.updateCalendar(this.calendarAddViewModel).subscribe(data => {
           if (data._failure) {
             this.snackbar.open('Calendar updating failed. ' + data._message, '', {
               duration: 10000
@@ -149,7 +149,7 @@ export class AddCalendarComponent implements OnInit {
         });
       }
       else {
-        this._calendarService.addCalendar(this.calendarAddViewModel).subscribe(data => {
+        this.calendarService.addCalendar(this.calendarAddViewModel).subscribe(data => {
           if (data._failure) {
             this.snackbar.open('Calendar saving failed. ' + data._message, '', {
               duration: 10000

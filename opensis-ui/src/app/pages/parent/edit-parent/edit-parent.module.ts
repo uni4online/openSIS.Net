@@ -32,7 +32,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { ViewparentGeneralinfoComponent } from './viewparent-generalinfo/viewparent-generalinfo.component';
+//import { ViewparentGeneralinfoComponent } from './viewparent-generalinfo/viewparent-generalinfo.component';
 import { ViewparentAddressinfoComponent } from './viewparent-addressinfo/viewparent-addressinfo.component';
 import { ViewparentSchoolaccessComponent } from './viewparent-schoolaccess/viewparent-schoolaccess.component';
 import { EditparentGeneralinfoComponent } from './editparent-generalinfo/editparent-generalinfo.component';
@@ -44,7 +44,7 @@ import { EditparentSchoolaccessComponent } from './editparent-schoolaccess/editp
 @NgModule({
   declarations: [
     EditParentComponent,
-    ViewparentGeneralinfoComponent,
+   // ViewparentGeneralinfoComponent,
     ViewparentAddressinfoComponent,
     ViewparentSchoolaccessComponent,
     EditparentGeneralinfoComponent,

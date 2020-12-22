@@ -167,7 +167,7 @@ namespace opensis.data.Repository
                     {
                         string[] membersList = notice.TargetMembershipIds.Split(",");
                         int[] memberIds = Array.ConvertAll(membersList, s => int.Parse(s));
-                        var profiles = this.context?.Membership.Where(t => memberIds.Contains(t.MembershipId)).Select(t => t.Profile).ToArray();
+                        var profiles = this.context?.Membership.Where(t => memberIds.Contains(t.MembershipId) && t.SchoolId== noticeList.SchoolId).Select(t => t.Profile).ToArray();
                         var mebershipIds = string.Join(",", profiles);
                         notice.TargetMembershipIds = mebershipIds;
                     }                    

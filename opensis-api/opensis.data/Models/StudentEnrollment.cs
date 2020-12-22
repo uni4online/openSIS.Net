@@ -18,12 +18,11 @@ namespace opensis.data.Models
         public string EnrollmentCode { get; set; }
         public DateTime? ExitDate { get; set; }
         public string ExitCode { get; set; }
+        public int? TransferredSchoolId { get; set; }
         public string SchoolTransferred { get; set; }
         public string TransferredGrade { get; set; }
         public DateTime? LastUpdated { get; set; }
         public string UpdatedBy { get; set; }
-
-        public virtual SchoolCalendars SchoolCalendars { get; set; }
-        public virtual StudentMaster StudentMaster { get; set; }
+       
     }
 }

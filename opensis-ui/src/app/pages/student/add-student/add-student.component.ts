@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { fadeInRight400ms } from '../../../../@vex/animations/fade-in-right.animation';
 import { ImageCropperService } from 'src/app/services/image-cropper.service';
@@ -27,6 +27,7 @@ import { takeUntil } from 'rxjs/operators';
 import { LoaderService } from '../../../services/loader.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'vex-add-student',
   templateUrl: './add-student.component.html',
   styleUrls: ['./add-student.component.scss'],
@@ -62,27 +63,27 @@ export class AddStudentComponent implements OnInit, OnDestroy {
   destroySubject$: Subject<void> = new Subject();
   loading: boolean;
   constructor(private layoutService: LayoutService,
-    private _studentService: StudentService,
+    private studentService: StudentService,
     private snackbar: MatSnackBar,
     private customFieldservice: CustomFieldService,
     private imageCropperService: ImageCropperService,
-    private _loaderService: LoaderService,
+    private loaderService: LoaderService,
     private cdr: ChangeDetectorRef) {
     this.layoutService.collapseSidenav();
     this.imageCropperService.getCroppedEvent().pipe(takeUntil(this.destroySubject$)).subscribe((res) => {
-      this._studentService.setStudentImage(res[1]);
+      this.studentService.setStudentImage(res[1]);
     });
-    this._studentService.categoryToSend.pipe(takeUntil(this.destroySubject$)).subscribe((res: number) => {
+    this.studentService.categoryToSend.pipe(takeUntil(this.destroySubject$)).subscribe((res: number) => {
       this.currentCategory = res;
     });
-    this._loaderService.isLoading.pipe(takeUntil(this.destroySubject$)).subscribe((currentState) => {
+    this.loaderService.isLoading.pipe(takeUntil(this.destroySubject$)).subscribe((currentState) => {
       this.loading = currentState;
     });
   }
 
   ngOnInit(): void {
     this.studentCreateMode = this.StudentCreate.ADD
-    this.studentId = this._studentService.getStudentId();
+    this.studentId = this.studentService.getStudentId();
     if (this.studentId != null || this.studentId != undefined) {
       this.studentCreateMode = this.StudentCreate.VIEW;
       this.getStudentDetailsUsingId();
@@ -94,7 +95,7 @@ export class AddStudentComponent implements OnInit, OnDestroy {
   }
 
   onViewMode() {
-    this._studentService.setStudentImage(this.responseImage);
+    this.studentService.setStudentImage(this.responseImage);
     this.pageStatus = "View Student"
   }
 
@@ -107,7 +108,7 @@ export class AddStudentComponent implements OnInit, OnDestroy {
   }
 
   changeCategory(field, index) {
-    let studentDetails = this._studentService.getStudentDetails();
+    let studentDetails = this.studentService.getStudentDetails();
 
     if (studentDetails != undefined || studentDetails != null) {
       this.studentCreateMode = this.StudentCreate.EDIT;
@@ -148,13 +149,13 @@ export class AddStudentComponent implements OnInit, OnDestroy {
 
   getStudentDetailsUsingId() {
     this.studentAddModel.studentMaster.studentId = this.studentId;
-    this._studentService.viewStudent(this.studentAddModel).subscribe(data => {
+    this.studentService.viewStudent(this.studentAddModel).subscribe(data => {
       this.studentAddModel = data;
       this.fieldsCategory = data.fieldsCategoryList;
-      this._studentService.sendDetails(this.studentAddModel);
+      this.studentService.sendDetails(this.studentAddModel);
       this.responseImage = this.studentAddModel.studentMaster.studentPhoto;
       this.studentTitle = this.studentAddModel.studentMaster.firstGivenName + " " + this.studentAddModel.studentMaster.lastFamilyName;
-      this._studentService.setStudentImage(this.responseImage);
+      this.studentService.setStudentImage(this.responseImage);
       this.checkCriticalAlertFromMedical(this.studentAddModel);
     });
   }
@@ -164,9 +165,9 @@ export class AddStudentComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this._studentService.setStudentDetails(null);
-    this._studentService.setStudentImage(null);
-    this._studentService.setStudentId(null);
+    this.studentService.setStudentDetails(null);
+    this.studentService.setStudentImage(null);
+    this.studentService.setStudentId(null);
     this.destroySubject$.next();
   }
 
