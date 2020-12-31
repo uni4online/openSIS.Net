@@ -89,7 +89,7 @@
                 </div>
             </div>
             <div *ngFor="let info of divCount;let i=index;">
-            <div [ngClass]="staffSchoolInfoModel.staffSchoolInfoList[i].hide?'hide':''"
+            <div [ngClass]="staffSchoolInfoModel?.staffSchoolInfoList[i]?.hide?'hide':''"
                 class="bg-white shadow-md border border-primary-light hover:border-primary rounded px-4 pt-3 mb-4 mx-4">
                 <div class="flex flex-wrap w-full justify-between">
                     <div class="w-11/12 -mx-4">
@@ -130,9 +130,11 @@
                             <div class="w-1/2 px-4">
                                     <mat-form-field class="w-full" appearance="outline" color="primary">
                                         <mat-label>{{'endDate'|translate}}</mat-label>
-                                        <input matInput name="{{'endDate'+i}}" [matDatepicker]="endDate" [(ngModel)]="staffSchoolInfoModel.staffSchoolInfoList[i].endDate">
+                                        <input matInput #end_date="ngModel" name="{{'endDate'+i}}" [matDatepicker]="endDate" [(ngModel)]="staffSchoolInfoModel.staffSchoolInfoList[i].endDate">
                                         <mat-datepicker-toggle matSuffix [for]="endDate"></mat-datepicker-toggle>
                                         <mat-datepicker #endDate></mat-datepicker>
+                                        <mat-error *ngIf="end_date.errors?.nomatch">{{'startDateCannotExceedEndDate'|translate}}
+                                        </mat-error>
                                     </mat-form-field>
                                 </div>
                             </div>
@@ -141,7 +143,7 @@
                         <a (click)="deleteSchoolInfo(i)" *ngIf="staffSchoolInfoModel.staffSchoolInfoList[i].id==null;else dontDelete"  class="cursor-pointer">
                             <mat-icon [icIcon]="icClear"></mat-icon>
                         </a>
-                        <ng-template #dontDelete><mat-icon [icIcon]="icClear" class="text-gray-50"></mat-icon></ng-template>
+                        <ng-template #dontDelete><mat-icon [icIcon]="icClear" class="text-gray"></mat-icon></ng-template>
                     </div>
                 </div>
             </div>
@@ -173,7 +175,7 @@
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'jobTitle' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{staffSchoolInfoModel.jobTitle}}</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{staffSchoolInfoModel.jobTitle | EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'homeroomTeacher' | translate}}</label>
@@ -220,11 +222,11 @@
                     </thead>
                     <tbody>
                         <tr *ngFor="let schoolInfo of staffSchoolInfoModel.staffSchoolInfoList;let index=index">
-                            <td class="p-3">{{schoolInfo.schoolAttachedName}}</td>
-                            <td class="p-3">{{schoolInfo.profile}}</td>
-                            <td class="p-3">{{schoolInfo.startDate | date}}</td>
+                            <td class="p-3">{{schoolInfo.schoolAttachedName | EmtyValueCheckPipe}}</td>
+                            <td class="p-3">{{schoolInfo.profile | EmtyValueCheckPipe}}</td>
+                            <td class="p-3">{{schoolInfo.startDate | date | EmtyValueCheckPipe}}</td>
                             <td class="p-3">{{schoolInfo.endDate | date | EmtyValueCheckPipe}}</td>
-                            <td class="p-3"><span class="text-green" *ngIf="compareDate(index);else otherSpan">Active</span><ng-template #otherSpan><span class="text-red">Inactive</span></ng-template></td>
+                            <td class="p-3"><span class="text-green" *ngIf="compareDate(index);else otherSpan">Active</span><ng-template #otherSpan><span class="text-red">{{staffSchoolInfoModel.staffSchoolInfoList[index].startDate==null?'-':'Inactive'}}</span></ng-template></td>
                         </tr>
                     </tbody>
                 </table>

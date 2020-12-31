@@ -70,9 +70,17 @@ export class SiblingsinfoComponent implements OnInit {
       }
       else {
         if (res._failure) {
-          this.snackbar.open('Siblings failed to fetch. ' + res._message, 'LOL THANKS', {
-            duration: 10000
-          });
+          if(res._message==="NO RECORD FOUND"){
+            if(res.studentMaster==null){
+              this.studentViewSibling.studentMaster=res.studentMaster;
+
+            }
+           
+          } else{
+            this.snackbar.open('Siblings failed to fetch.' + res._message, 'LOL THANKS', {
+              duration: 10000
+            });
+          }
         } else {  
           this.studentViewSibling.studentMaster=res.studentMaster;
         }

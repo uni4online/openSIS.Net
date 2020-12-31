@@ -19,6 +19,9 @@ import { MatTableDataSource } from '@angular/material/table';
 import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { GetAllStaffModel,StaffListModel } from '../../../models/staffModel';
+import { ImageCropperService } from '../../../services/image-cropper.service';
+import { LayoutService } from 'src/@vex/services/layout.service';
+import { ExcelService } from '../../../services/excel.service';
 @Component({
   selector: 'vex-staffinfo',
   templateUrl: './staffinfo.component.html',
@@ -63,8 +66,20 @@ export class StaffinfoComponent implements OnInit, AfterViewInit {
     private router: Router,
     private loaderService: LoaderService,
     public translateService: TranslateService,
-    private staffService: StaffService) {
+    private staffService: StaffService,
+    private imageCropperService:ImageCropperService,
+    private layoutService: LayoutService,
+    private excelService:ExcelService) {
     translateService.use('en');
+    if(localStorage.getItem("collapseValue") !== null){
+      if( localStorage.getItem("collapseValue") === "false"){
+        this.layoutService.expandSidenav();
+      }else{
+        this.layoutService.collapseSidenav();
+      } 
+    }else{
+      this.layoutService.expandSidenav();
+    }
     this.getAllStaff.filterParams = null;
     this.loaderService.isLoading.subscribe((val) => {
       this.loading = val;
@@ -171,6 +186,7 @@ export class StaffinfoComponent implements OnInit, AfterViewInit {
 
   goToAdd() {
     this.staffService.setStaffId(null);
+    this.imageCropperService.enableUpload(true);
     this.router.navigate(["school/staff/add-staff"]);
   }
 
@@ -191,6 +207,40 @@ export class StaffinfoComponent implements OnInit, AfterViewInit {
         this.getAllStaff = new GetAllStaffModel();
       }
     });
+  }
+
+  exportStaffListToExcel(){
+    let getAllStaff: GetAllStaffModel = new GetAllStaffModel();
+    getAllStaff.pageNumber=0;
+    getAllStaff.pageSize=0;
+    getAllStaff.sortingModel=null;
+      this.staffService.getAllStaffList(getAllStaff).subscribe(res => {
+        if(res._failure){
+          this.snackbar.open('Failed to Export Staff List.'+ res._message, 'LOL THANKS', {
+          duration: 10000
+          });
+        }else{
+          if(res.getStaffListForView.length>0){
+            let staffList = res.getStaffListForView?.map((x)=>{
+              let middleName=x.middleName==null?' ':' '+x.middleName+' ';
+              return {
+               Name: x.firstGivenName+middleName+x.lastFamilyName,
+               StaffId: x.staffInternalId,
+               openSisProfile: x.profile,
+               JobTitle: x.jobTitle,
+               SchoolEmail:x.schoolEmail,
+               MobilePhone:x.mobilePhone
+             }
+            });
+            this.excelService.exportAsExcelFile(staffList,'Staffs_List_')
+          }else{
+            this.snackbar.open('No Records Found. Failed to Export Staff List','LOL THANKS', {
+              duration: 5000
+            });
+          }
+        }
+      });
+    
   }
 
   toggleColumnVisibility(column, event) {

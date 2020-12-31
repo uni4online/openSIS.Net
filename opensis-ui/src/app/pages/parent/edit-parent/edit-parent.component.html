@@ -2,7 +2,8 @@
     <div class="sidenav-secondary">
         <vex-scrollbar class="flex-auto">
             <div class="h-45 flex items-center sm:px-0" fxLayout="row" fxLayoutAlign="start center">
-                <vex-profile-image class="mx-auto"></vex-profile-image>
+                <vex-profile-image [enableCropTool]="enableCropTool" [responseImage]="responseImage"></vex-profile-image>
+                
             </div>
             <div class="text-center px-4">
                 <h5 class="text-primary font-semibold mb-0">{{parentTitle}}</h5>
@@ -28,7 +29,7 @@
         <vex-page-layout>
             <vex-page-layout-header class="pb-16 pt-6" fxLayoutAlign="center start">
                 <vex-secondary-toolbar current="Parent Information" class="w-full">
-                    <vex-breadcrumbs [crumbs]="['Parent','View Parent']" class="flex-auto"></vex-breadcrumbs>
+                    <vex-breadcrumbs [crumbs]="['Parents',pageStatus]" class="flex-auto"></vex-breadcrumbs>
                 </vex-secondary-toolbar>
             </vex-page-layout-header>
             <vex-page-layout-content class="-mt-14">
@@ -37,11 +38,13 @@
                         <div class="w-full" fxFlex="auto">
 
                             <div *ngIf="pageId =='General Info'">
-                                <vex-editparent-generalinfo [parentDetailsForViewAndEdit]="addParentInfoModel"></vex-editparent-generalinfo>
+                                <vex-editparent-generalinfo [parentDetailsForViewAndEdit]="addParentInfoModel" 
+                                [parentCreateMode]="parentCreateMode"></vex-editparent-generalinfo>
                             </div>
 
                             <div *ngIf="pageId =='Address Info'">
-                                <vex-editparent-addressinfo [parentDetailsForViewAndEdit]="addParentInfoModel"></vex-editparent-addressinfo>
+                                <vex-editparent-addressinfo [parentDetailsForViewAndEdit]="addParentInfoModel"
+                                [parentCreateMode]="parentCreateMode"></vex-editparent-addressinfo>
                             </div>
 
                             <!-- <div *ngIf="pageId =='School Access'">

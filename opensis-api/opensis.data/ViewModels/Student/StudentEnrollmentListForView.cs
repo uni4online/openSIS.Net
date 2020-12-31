@@ -24,5 +24,6 @@ namespace opensis.data.ViewModels.Student
         public string TransferredGrade { get; set; }
         public DateTime? LastUpdated { get; set; }
         public string UpdatedBy { get; set; }
+        public Guid? StudentGuid { get; set; }
     }
 }

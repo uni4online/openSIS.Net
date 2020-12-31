@@ -21,6 +21,12 @@ namespace opensis.data.Models
         public string Locale { get; set; }
         public string LanguageCode { get; set; }
 
+        public string CreatedBy { get; set; }
+        public DateTime? CreatedOn { get; set; }
+        public string UpdatedBy { get; set; }
+        public DateTime? UpdatedOn { get; set; }
+
+
         public virtual ICollection<UserMaster> UserMaster { get; set; }
         public virtual ICollection<StudentMaster> StudentMasterFirstLanguage { get; set; }
         public virtual ICollection<StudentMaster> StudentMasterSecondLanguage { get; set; }

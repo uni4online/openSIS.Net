@@ -17,14 +17,14 @@
                 </div>
             </div>
             <div fxFlex="none" fxLayout="column" fxLayoutAlign="center end">
-                <button mat-icon-button matTooltip="Edit" type="button">
+                <div class="flex">
+                    <button mat-icon-button matTooltip="Edit" type="button" class="text-gray">
                     <mat-icon (click) = "editParentInfo(parent)" [icIcon]="icEdit" class="mr-2"></mat-icon>
                 </button>
+                    <button mat-icon-button matTooltip="Delete" type="button" class="text-gray">
+                        <mat-icon (click)="confirmDelete(parent)" [icIcon]="icRemove"></mat-icon>
+                    </button>
             </div>
-            <div fxFlex="none" fxLayout="column" fxLayoutAlign="center end">
-                <button mat-icon-button matTooltip="Delete" type="button">
-                    <mat-icon (click) = "confirmDelete(parent)" [icIcon]="icDelete"></mat-icon>
-                </button>
             </div>
         </div>
     </div> 
@@ -39,14 +39,14 @@
 <ng-template #secondary>
     <div *ngIf="contactType ==='Secondary'; else other">
         <div class="text-center mt-6" >
-            <button color="primary" mat-raised-button type="button" (click)='openAddNew("Secondary")'>
-                <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true" size="24px"></ic-icon>
+            <button color="primary" class="mr-3" mat-raised-button type="button" (click)='openAddNew("Secondary")'>
+                <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true" size="24px">
+                </ic-icon>
                 <span>Add Secondary Contact</span>
             </button>    
-        </div>   
-        <div class="text-center mt-6">
             <button color="primary" mat-raised-button type="button" (click)='openAddNew("Other")'>
-                <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true" size="24px"></ic-icon>
+                <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true" size="24px">
+                </ic-icon>
                 <span>Add Other Contact</span>
             </button>    
         </div>
@@ -54,11 +54,11 @@
     <ng-template #other>
         <div class="text-center mt-6">
             <button color="primary" mat-raised-button type="button" (click)='openAddNew("Other")'>
-                <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true" size="24px"></ic-icon>
+                <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true" size="24px">
+                </ic-icon>
                 <span>Add Other Contact</span>
             </button>    
         </div>
     </ng-template>
     
 </ng-template>
-

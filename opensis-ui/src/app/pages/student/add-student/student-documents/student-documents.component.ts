@@ -230,9 +230,16 @@ export class StudentDocumentsComponent implements OnInit {
     this.getAllStudentDocumentsList.studentId = this.studentDetailsForViewAndEdit.studentMaster.studentId;
     this.studentService.GetAllStudentDocumentsList(this.getAllStudentDocumentsList).subscribe(data => {
       if(data._failure){
-        this.snackbar.open('Student Document Information failed. '+ data._message, 'LOL THANKS', {
-        duration: 10000
-        });
+        if(data._message==="NO RECORD FOUND"){
+          if(data.studentDocumentsList==null){
+            this.StudentDocumentModelList=new MatTableDataSource([]) ;
+        this.StudentDocumentModelList.sort=this.sort;     
+          }
+        } else{
+          this.snackbar.open('Student Document failed. ' + data._message, 'LOL THANKS', {
+            duration: 10000
+          });
+        }
       }else{   
         
         this.StudentDocumentModelList = new MatTableDataSource(data.studentDocumentsList);

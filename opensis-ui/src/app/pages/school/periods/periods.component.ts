@@ -10,7 +10,7 @@ import { stagger40ms } from '../../../../@vex/animations/stagger.animation';
 import { TranslateService } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material/dialog';
 import { EditBlockComponent } from './edit-block/edit-block.component';
-
+import { LayoutService } from 'src/@vex/services/layout.service';
 @Component({
   selector: 'vex-periods',
   templateUrl: './periods.component.html',
@@ -28,8 +28,17 @@ export class PeriodsComponent implements OnInit {
   icSearch = icSearch;
   icFilterList = icFilterList;
 
-  constructor(public translateService:TranslateService,private dialog: MatDialog) {
+  constructor(public translateService:TranslateService,private dialog: MatDialog,private layoutService:LayoutService) {
     translateService.use('en');
+    if(localStorage.getItem("collapseValue") !== null){
+      if( localStorage.getItem("collapseValue") === "false"){
+        this.layoutService.expandSidenav();
+      }else{
+        this.layoutService.collapseSidenav();
+      } 
+    }else{
+      this.layoutService.expandSidenav();
+    }
   }
 
   ngOnInit(): void {

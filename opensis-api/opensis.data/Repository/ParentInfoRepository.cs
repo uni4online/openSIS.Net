@@ -36,8 +36,16 @@ namespace opensis.data.Repository
                         var parentInfo = this.context?.ParentInfo.FirstOrDefault(x => x.ParentId == parentInfoAddViewModel.parentInfo.ParentId);
                         if (parentInfo != null)
                         {
-                            var parentAssociationship = new ParentAssociationship { TenantId = parentInfoAddViewModel.parentInfo.TenantId, SchoolId = parentInfoAddViewModel.parentInfo.SchoolId, ParentId = parentInfoAddViewModel.parentInfo.ParentId, StudentId = parentInfoAddViewModel.parentAssociationship.StudentId, Associationship = true, LastUpdated = DateTime.UtcNow, UpdatedBy = parentInfoAddViewModel.parentInfo.UpdatedBy, IsCustodian = parentInfoAddViewModel.parentAssociationship.IsCustodian, Relationship = parentInfoAddViewModel.parentAssociationship.Relationship };
-                            this.context?.ParentAssociationship.Add(parentAssociationship);
+                            var AssociationshipData = this.context?.ParentAssociationship.FirstOrDefault(x => x.TenantId == parentInfo.TenantId && x.SchoolId == parentInfo.SchoolId && x.ParentId == parentInfo.ParentId && x.StudentId== parentInfoAddViewModel.parentAssociationship.StudentId);
+                            if (AssociationshipData != null)
+                            {
+                                AssociationshipData.Associationship = true;
+                            }
+                            else
+                            {
+                                var parentAssociationship = new ParentAssociationship { TenantId = parentInfoAddViewModel.parentInfo.TenantId, SchoolId = parentInfoAddViewModel.parentInfo.SchoolId, ParentId = parentInfoAddViewModel.parentInfo.ParentId, StudentId = parentInfoAddViewModel.parentAssociationship.StudentId, Associationship = true, LastUpdated = DateTime.UtcNow, UpdatedBy = parentInfoAddViewModel.parentInfo.UpdatedBy, IsCustodian = parentInfoAddViewModel.parentAssociationship.IsCustodian, Relationship = parentInfoAddViewModel.parentAssociationship.Relationship,ContactType= parentInfoAddViewModel.parentAssociationship.ContactType };
+                                this.context?.ParentAssociationship.Add(parentAssociationship);
+                            }
                         }
                     }
                     else
@@ -45,6 +53,15 @@ namespace opensis.data.Repository
                         int? ParentId = Utility.GetMaxPK(this.context, new Func<ParentInfo, int>(x => x.ParentId));
                         parentInfoAddViewModel.parentInfo.ParentId = (int)ParentId;
                         parentInfoAddViewModel.parentInfo.LastUpdated = DateTime.UtcNow;
+                        Guid GuidId = Guid.NewGuid();
+                        var GuidIdExist = this.context?.ParentInfo.FirstOrDefault(x => x.ParentGuid == GuidId);
+                        if (GuidIdExist != null)
+                        {
+                            parentInfoAddViewModel._failure = true;
+                            parentInfoAddViewModel._message = "Guid is already exist, Please try again.";
+                            return parentInfoAddViewModel;
+                        }
+                        parentInfoAddViewModel.parentInfo.ParentGuid = GuidId;
 
                         //Add Parent Portal Access
                         if (!string.IsNullOrWhiteSpace(parentInfoAddViewModel.PasswordHash) && !string.IsNullOrWhiteSpace(parentInfoAddViewModel.parentInfo.LoginEmail))
@@ -85,7 +102,7 @@ namespace opensis.data.Repository
                         }
 
                         this.context?.ParentInfo.Add(parentInfoAddViewModel.parentInfo);
-                        var parentAssociationship = new ParentAssociationship { TenantId = parentInfoAddViewModel.parentInfo.TenantId, SchoolId = parentInfoAddViewModel.parentInfo.SchoolId, ParentId = parentInfoAddViewModel.parentInfo.ParentId, StudentId = parentInfoAddViewModel.parentAssociationship.StudentId, Associationship = true, LastUpdated = DateTime.UtcNow, UpdatedBy = parentInfoAddViewModel.parentInfo.UpdatedBy, IsCustodian = parentInfoAddViewModel.parentAssociationship.IsCustodian, Relationship = parentInfoAddViewModel.parentAssociationship.Relationship };
+                        var parentAssociationship = new ParentAssociationship { TenantId = parentInfoAddViewModel.parentInfo.TenantId, SchoolId = parentInfoAddViewModel.parentInfo.SchoolId, ParentId = parentInfoAddViewModel.parentInfo.ParentId, StudentId = parentInfoAddViewModel.parentAssociationship.StudentId, Associationship = true, LastUpdated = DateTime.UtcNow, UpdatedBy = parentInfoAddViewModel.parentInfo.UpdatedBy, IsCustodian = parentInfoAddViewModel.parentAssociationship.IsCustodian, Relationship = parentInfoAddViewModel.parentAssociationship.Relationship, ContactType = parentInfoAddViewModel.parentAssociationship.ContactType};
                         this.context?.ParentAssociationship.Add(parentAssociationship);
 
                     }
@@ -124,7 +141,7 @@ namespace opensis.data.Repository
                         {
                             if(parentData.ParentAddress.FirstOrDefault().StudentAddressSame == true)
                             {
-                                var parentAddress = this.context?.StudentMaster.FirstOrDefault(x => x.StudentId == parentData.ParentAddress.FirstOrDefault().StudentId);
+                                var parentAddress = this.context?.StudentMaster.FirstOrDefault(x => x.StudentId == parentInfoList.StudentId && x.SchoolId == parentInfoList.SchoolId);
                                 parentData.ParentAddress.FirstOrDefault().AddressLineOne = parentAddress.HomeAddressLineOne;
                                 parentData.ParentAddress.FirstOrDefault().AddressLineTwo = parentAddress.HomeAddressLineTwo;
                                 parentData.ParentAddress.FirstOrDefault().Country = parentAddress.HomeAddressCountry;
@@ -146,7 +163,7 @@ namespace opensis.data.Repository
                             IsPortalUser = parentData.IsPortalUser,
                             BusPickup = parentData.BusPickup,
                             BusDropoff = parentData.BusDropoff,
-                            ContactType = parentData.ContactType,
+                            ContactType = parent.ContactType,
                             LastUpdated = parentData.LastUpdated,
                             UpdatedBy = parentData.UpdatedBy,
                             BusNo = parentData.BusNo,
@@ -192,7 +209,7 @@ namespace opensis.data.Repository
             {
                 try
                 {
-                    var parentInfoUpdate = this.context?.ParentInfo.FirstOrDefault(x => x.TenantId == parentInfoAddViewModel.parentInfo.TenantId && x.SchoolId == parentInfoAddViewModel.parentInfo.SchoolId && x.ParentId == parentInfoAddViewModel.parentInfo.ParentId);
+                    var parentInfoUpdate = this.context?.ParentInfo.Include(x => x.ParentAddress).FirstOrDefault(x => x.TenantId == parentInfoAddViewModel.parentInfo.TenantId && x.SchoolId == parentInfoAddViewModel.parentInfo.SchoolId && x.ParentId == parentInfoAddViewModel.parentInfo.ParentId);
 
                     //Add or Update parent portal access
                     if (parentInfoUpdate.LoginEmail != null)
@@ -263,7 +280,6 @@ namespace opensis.data.Repository
                                 this.context?.UserMaster.Add(userMaster);
                                 this.context?.SaveChanges();
 
-
                                 //Update LoginEmail in ParentInfo table.
                                 parentInfoUpdate.LoginEmail = parentInfoAddViewModel.parentInfo.LoginEmail;
                             }
@@ -285,22 +301,11 @@ namespace opensis.data.Repository
                     parentInfoUpdate.Mobile = parentInfoAddViewModel.parentInfo.Mobile;
                     parentInfoUpdate.PersonalEmail = parentInfoAddViewModel.parentInfo.PersonalEmail;
                     parentInfoUpdate.WorkEmail = parentInfoAddViewModel.parentInfo.WorkEmail;
-                    /*12/20**
-                     parentInfoUpdate.StudentAddressSame = parentInfoAddViewModel.parentInfo.StudentAddressSame;
-                     parentInfoUpdate.AddressLineOne = parentInfoAddViewModel.parentInfo.AddressLineOne;
-                     parentInfoUpdate.AddressLineTwo = parentInfoAddViewModel.parentInfo.AddressLineTwo;
-                     parentInfoUpdate.Country = parentInfoAddViewModel.parentInfo.Country;
-                     parentInfoUpdate.City = parentInfoAddViewModel.parentInfo.City;
-                     parentInfoUpdate.State = parentInfoAddViewModel.parentInfo.State;
-                     parentInfoUpdate.Zip = parentInfoAddViewModel.parentInfo.Zip;
-                     parentInfoUpdate.IsCustodian = parentInfoAddViewModel.parentInfo.IsCustodian;
-                     */
                     parentInfoUpdate.IsPortalUser = parentInfoAddViewModel.parentInfo.IsPortalUser;
                     parentInfoUpdate.Suffix = parentInfoAddViewModel.parentInfo.Suffix;
                     parentInfoUpdate.LoginEmail = parentInfoAddViewModel.parentInfo.LoginEmail;
                     parentInfoUpdate.BusPickup = parentInfoAddViewModel.parentInfo.BusPickup;
                     parentInfoUpdate.BusDropoff = parentInfoAddViewModel.parentInfo.BusDropoff;
-                    parentInfoUpdate.ContactType = parentInfoAddViewModel.parentInfo.ContactType;
                     parentInfoUpdate.LastUpdated = DateTime.UtcNow;
                     parentInfoUpdate.UpdatedBy = parentInfoAddViewModel.parentInfo.UpdatedBy;
                     parentInfoUpdate.BusNo = parentInfoAddViewModel.parentInfo.BusNo;
@@ -308,8 +313,53 @@ namespace opensis.data.Repository
                     parentInfoUpdate.ParentPhoto = parentInfoAddViewModel.parentInfo.ParentPhoto;
                     this.context?.SaveChanges();
 
+                    if (parentInfoUpdate.ParentAddress.Count() > 0 && parentInfoAddViewModel.parentInfo.ParentAddress.Count() > 0)
+                    {                      
+                        if (parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().StudentAddressSame == true)
+                        {
+                            var studentAddress = this.context?.StudentMaster.FirstOrDefault(x => x.StudentId == parentInfoUpdate.ParentAddress.FirstOrDefault().StudentId && x.SchoolId == parentInfoUpdate.SchoolId);
+                            studentAddress.HomeAddressLineOne = parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().AddressLineOne;
+                            studentAddress.HomeAddressLineTwo = parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().AddressLineTwo;
+                            studentAddress.HomeAddressCountry = parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().Country;
+                            studentAddress.HomeAddressState = parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().State;
+                            studentAddress.HomeAddressCity = parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().City;
+                            studentAddress.HomeAddressZip = parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().Zip;
+                            if (studentAddress.MailingAddressSameToHome == true)
+                            {
+                                studentAddress.MailingAddressLineOne = parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().AddressLineOne;
+                                studentAddress.MailingAddressLineTwo = parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().AddressLineTwo;
+                                studentAddress.MailingAddressCountry = parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().Country;
+                                studentAddress.MailingAddressState = parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().State;
+                                studentAddress.MailingAddressCity = parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().City;
+                                studentAddress.MailingAddressZip = parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().Zip;
+                            }
+                            parentInfoUpdate.ParentAddress.FirstOrDefault().StudentAddressSame = true;
+                            parentInfoUpdate.ParentAddress.FirstOrDefault().AddressLineOne = null;
+                            parentInfoUpdate.ParentAddress.FirstOrDefault().AddressLineTwo = null;
+                            parentInfoUpdate.ParentAddress.FirstOrDefault().Country = null;
+                            parentInfoUpdate.ParentAddress.FirstOrDefault().City = null;
+                            parentInfoUpdate.ParentAddress.FirstOrDefault().State = null;
+                            parentInfoUpdate.ParentAddress.FirstOrDefault().Zip = null;
+                            parentInfoUpdate.ParentAddress.FirstOrDefault().UpdatedBy = parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().UpdatedBy;
+                            parentInfoUpdate.ParentAddress.FirstOrDefault().LastUpdated = DateTime.UtcNow;
+                            this.context?.SaveChanges();
+                        }
+                        else
+                        {
+                            parentInfoUpdate.ParentAddress.FirstOrDefault().StudentAddressSame = false;
+                            parentInfoUpdate.ParentAddress.FirstOrDefault().AddressLineOne = parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().AddressLineOne;
+                            parentInfoUpdate.ParentAddress.FirstOrDefault().AddressLineTwo = parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().AddressLineTwo;
+                            parentInfoUpdate.ParentAddress.FirstOrDefault().Country = parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().Country;
+                            parentInfoUpdate.ParentAddress.FirstOrDefault().City = parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().City;
+                            parentInfoUpdate.ParentAddress.FirstOrDefault().State = parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().State;
+                            parentInfoUpdate.ParentAddress.FirstOrDefault().Zip = parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().Zip;
+                            parentInfoUpdate.ParentAddress.FirstOrDefault().LastUpdated = DateTime.UtcNow;
+                            parentInfoUpdate.ParentAddress.FirstOrDefault().UpdatedBy = parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().UpdatedBy;
+                        }
+                    }
+                    this.context?.SaveChanges();
+                    parentInfoAddViewModel._message = "Data Updated Successfully";
                     parentInfoAddViewModel._failure = false;
-
                     transaction.Commit();
                 }
                 catch (Exception es)
@@ -490,33 +540,52 @@ namespace opensis.data.Repository
         {
             ParentInfoAddViewModel parentInfoViewModel = new ParentInfoAddViewModel();
             try
-            {                
+            {
+                int resultData;
                 var parentInfo = this.context?.ParentInfo.Include(x=>x.ParentAddress).FirstOrDefault( x =>x.TenantId== parentInfoAddViewModel.parentInfo.TenantId && x.SchoolId== parentInfoAddViewModel.parentInfo.SchoolId && x.ParentId== parentInfoAddViewModel.parentInfo.ParentId);
                 if (parentInfo!= null)
                 {
+                    if (parentInfo.ParentAddress.FirstOrDefault().StudentAddressSame == true)
+                    {
+                        var parentAddress = this.context?.StudentMaster.FirstOrDefault(x => x.StudentId == parentInfo.ParentAddress.FirstOrDefault().StudentId && x.SchoolId == parentInfo.SchoolId);
+                        parentInfo.ParentAddress.FirstOrDefault().AddressLineOne = parentAddress.HomeAddressLineOne;
+                        parentInfo.ParentAddress.FirstOrDefault().AddressLineTwo = parentAddress.HomeAddressLineTwo;
+                        parentInfo.ParentAddress.FirstOrDefault().Country = parentAddress.HomeAddressCountry;
+                        parentInfo.ParentAddress.FirstOrDefault().State = parentAddress.HomeAddressState;
+                        parentInfo.ParentAddress.FirstOrDefault().City = parentAddress.HomeAddressCity;
+                        parentInfo.ParentAddress.FirstOrDefault().Zip = parentAddress.HomeAddressZip;
+                    }
                     parentInfoViewModel.parentInfo = parentInfo;
-                    var AssociationshipData = this.context?.ParentAssociationship.Where(x => x.TenantId == parentInfo.TenantId && x.SchoolId == parentInfo.SchoolId && x.ParentId == parentInfo.ParentId && x.Associationship == true).Select(s => s.StudentId).ToList();
+                    var AssociationshipData = this.context?.ParentAssociationship.Where(x => x.TenantId == parentInfo.TenantId && x.ParentId == parentInfo.ParentId && x.Associationship == true).ToList();
                     if(AssociationshipData.Count() >0)
                     {
                         foreach (var studentAssociateWithParent in AssociationshipData)
                         {
-                            var student = this.context?.StudentMaster.FirstOrDefault(x => x.StudentId == studentAssociateWithParent);
-                            var studentForView = new GetStudentForView() { StudentId = student.StudentId, StudentInternalId = student.StudentInternalId, FirstGivenName = student.FirstGivenName, MiddleName = student.MiddleName, LastFamilyName = student.LastFamilyName };
+                            var student = this.context?.StudentMaster.FirstOrDefault(x => x.StudentId == studentAssociateWithParent.StudentId && x.SchoolId== studentAssociateWithParent.SchoolId);
+                            var studentForView = new GetStudentForView()
+                            {
+                                TenantId = student.TenantId,
+                                SchoolId = student.SchoolId,
+                                StudentId = student.StudentId,
+                                StudentInternalId = student.StudentInternalId,
+                                FirstGivenName = student.FirstGivenName,
+                                MiddleName = student.MiddleName,
+                                LastFamilyName = student.LastFamilyName,
+                                Dob = student.Dob,
+                                Gender = student.Gender,
+                                Address = ToFullAddress(student.HomeAddressLineOne, student.HomeAddressLineTwo,
+                        int.TryParse(student.HomeAddressCity, out resultData) == true ? this.context.City.Where(x => x.Id == Convert.ToInt32(student.HomeAddressCity)).FirstOrDefault().Name : student.HomeAddressCity,
+                        int.TryParse(student.HomeAddressState, out resultData) == true ? this.context.State.Where(x => x.Id == Convert.ToInt32(student.HomeAddressState)).FirstOrDefault().Name : student.HomeAddressState,
+                        int.TryParse(student.HomeAddressCountry, out resultData) == true ? this.context.Country.Where(x => x.Id == Convert.ToInt32(student.HomeAddressCountry)).FirstOrDefault().Name : string.Empty, student.HomeAddressZip),
+                                SchoolName = this.context?.SchoolMaster.Where(x => x.SchoolId == student.SchoolId)?.Select(s => s.SchoolName).FirstOrDefault(),
+                                GradeLevelTitle= this.context?.StudentEnrollment.Where(x=>x.TenantId == student.TenantId && x.SchoolId == student.SchoolId && x.StudentId==student.StudentId).OrderByDescending(x=>x.EnrollmentDate).LastOrDefault().GradeLevelTitle,
+                                IsCustodian= studentAssociateWithParent.IsCustodian,
+                                Relationship= studentAssociateWithParent.Relationship
+                            };
                             parentInfoViewModel.getStudentForView.Add(studentForView);
+                            
                         }
-
                     }
-                    //***********12/20 **********
-                    //var AssociationshipData = parentInfo.Associationship;
-                    //string[] studentAssociateWithParents = AssociationshipData.Split(" | ", StringSplitOptions.RemoveEmptyEntries);
-                    //foreach (var studentAssociateWithParent in studentAssociateWithParents)
-                    //{
-                    //    char studentId = studentAssociateWithParent.Last();
-                    //    var student = this.context?.StudentMaster.FirstOrDefault(x => x.StudentId == int.Parse(studentId.ToString()));
-                    //    var studentForView = new GetStudentForView() { StudentId = student.StudentId, StudentInternalId=student.StudentInternalId, FirstGivenName = student.FirstGivenName, MiddleName = student.MiddleName, LastFamilyName = student.LastFamilyName };
-
-                    //    parentInfoViewModel.getStudentForView.Add(studentForView);
-                    //}
                     parentInfoViewModel._tenantName = parentInfoAddViewModel._tenantName;
                     parentInfoViewModel._token = parentInfoAddViewModel._token;
                     parentInfoViewModel._failure = false;

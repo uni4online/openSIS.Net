@@ -78,9 +78,16 @@ export class StudentCommentsComponent implements OnInit {
         }
         else{
           if (res._failure) {     
-            this.snackbar.open('Student Comments Not Found. ' + res._message, 'LOL THANKS', {
-              duration: 10000
-            });
+            if(res._message==="NO RECORD FOUND"){
+              if(res.studentCommentsList==null){
+                this.studentCommentsListViewModel.studentCommentsList=null ;
+              }
+             
+            } else{
+              this.snackbar.open('Student Comments Not Found. ' + res._message, 'LOL THANKS', {
+                duration: 10000
+              });
+            }
           }
           else {       
             this.studentCommentsListViewModel.studentCommentsList=res.studentCommentsList

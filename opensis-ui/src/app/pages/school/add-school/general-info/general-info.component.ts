@@ -49,7 +49,7 @@ import { takeUntil } from 'rxjs/operators';
 })
 
 export class GeneralInfoComponent implements OnInit, OnDestroy {
-  SchoolCreate = SchoolCreate;
+  schoolCreate = SchoolCreate;
   @ViewChild('f') currentForm: NgForm;
   @Input() schoolCreateMode: SchoolCreate;
   @Input() schoolDetailsForViewAndEdit;
@@ -75,7 +75,7 @@ export class GeneralInfoComponent implements OnInit, OnDestroy {
   schoolInternalId = '';
   module = "School";
   stateName = "";
-  status: string;
+  status: string=null;
   generalInfo = WashInfoEnum;
   statusInfo = status;
   city: number;
@@ -110,34 +110,43 @@ export class GeneralInfoComponent implements OnInit, OnDestroy {
     { id: '20', title: "20" },
   ];
   constructor(private fb: FormBuilder,
-    private _schoolService: SchoolService,
+    private schoolService: SchoolService,
     private customFieldService: CustomFieldService,
     private snackbar: MatSnackBar,
     public translateService: TranslateService,
     private loaderService: LoaderService,
     private commonService: CommonService,
     private commonFunction: SharedFunction,
-    private _imageCropperService: ImageCropperService,
+    private imageCropperService: ImageCropperService,
   ) {
     translateService.use('en');
-    this._schoolService.getSchoolDetailsForGeneral.pipe(takeUntil(this.destroySubject$)).subscribe((res: SchoolAddViewModel) => {
+    this.schoolService.getSchoolDetailsForGeneral.pipe(takeUntil(this.destroySubject$)).subscribe((res: SchoolAddViewModel) => {
       this.schoolAddViewModel = res;
       this.schoolInternalId = res.schoolMaster.schoolInternalId;
       if (this.schoolAddViewModel.schoolMaster.country) {
         this.getAllCountry();
       }
+      if(this.schoolAddViewModel.schoolMaster.schoolDetail[0].status!=null){
+        this.status = this.schoolAddViewModel.schoolMaster.schoolDetail[0].status ? 'Active' : 'Inactive';
+      }
     })
   }
 
   ngOnInit(): void {
-    if (this.schoolCreateMode == this.SchoolCreate.ADD) {
+    if (this.schoolCreateMode == this.schoolCreate.ADD) {
       this.getAllCountry();
     }
-    else if (this.schoolCreateMode == this.SchoolCreate.VIEW) {
+    else if (this.schoolCreateMode == this.schoolCreate.VIEW) {
+      this.schoolService.changePageMode(this.schoolCreateMode);
       this.schoolAddViewModel = this.schoolDetailsForViewAndEdit;
-      this.status = this.schoolAddViewModel.schoolMaster.schoolDetail[0].status ? 'Active' : 'Inactive';
+      if(this.schoolAddViewModel.schoolMaster.schoolDetail[0].status!=null){
+        this.status = this.schoolAddViewModel.schoolMaster.schoolDetail[0].status ? 'Active' : 'Inactive';
+      }
+      this.imageCropperService.enableUpload(false);
     }
-    else if (this.schoolCreateMode == this.SchoolCreate.EDIT && (this.schoolDetailsForViewAndEdit != undefined || this.schoolDetailsForViewAndEdit != null)) {
+    else if (this.schoolCreateMode == this.schoolCreate.EDIT && (this.schoolDetailsForViewAndEdit != undefined || this.schoolDetailsForViewAndEdit != null)) {
+      this.getAllCountry();
+      this.schoolService.changePageMode(this.schoolCreateMode);
       this.formActionButtonTitle = "update";
       this.schoolAddViewModel = this.schoolDetailsForViewAndEdit;
     }
@@ -153,17 +162,19 @@ export class GeneralInfoComponent implements OnInit, OnDestroy {
   }
 
   editGeneralInfo() {
-    this.schoolCreateMode = this.SchoolCreate.EDIT;
+    this.schoolCreateMode = this.schoolCreate.EDIT;
+    this.schoolService.changePageMode(this.schoolCreateMode);
     this.formActionButtonTitle = "update";
     this.getAllCountry();
     this.checkGradeLevelsOnEdit();
-    this._imageCropperService.nextMessage(false);
+    this.imageCropperService.enableUpload(true);
     this.schoolAddViewModel.schoolMaster.country = +this.schoolAddViewModel.schoolMaster.country
   }
 
   cancelEdit() {
-    this._imageCropperService.nextMessage(true);
-    this.schoolCreateMode = this.SchoolCreate.VIEW;
+    this.schoolCreateMode = this.schoolCreate.VIEW;
+    this.imageCropperService.enableUpload(false);
+    this.schoolService.changePageMode(this.schoolCreateMode);
   }
 
   checkLowGradeLevel(event) {
@@ -211,7 +222,7 @@ export class GeneralInfoComponent implements OnInit, OnDestroy {
     }
     else {
       this.checkSchoolInternalIdViewModel.schoolInternalId = internalId;
-      this._schoolService.checkSchoolInternalId(this.checkSchoolInternalIdViewModel).subscribe(data => {
+      this.schoolService.checkSchoolInternalId(this.checkSchoolInternalIdViewModel).subscribe(data => {
         if (data.isValidInternalId) {
           this.currentForm.form.controls.schoolId.setErrors(null);
         }
@@ -398,7 +409,7 @@ export class GeneralInfoComponent implements OnInit, OnDestroy {
   submit() {
     this.currentForm.form.markAllAsTouched();
     if (this.currentForm.form.valid) {
-      if (this.schoolCreateMode == this.SchoolCreate.EDIT) {
+      if (this.schoolCreateMode == this.schoolCreate.EDIT) {
         this.schoolAddViewModel.selectedCategoryId = this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].categoryId;
         this.updateSchool();
       } else {
@@ -414,7 +425,7 @@ export class GeneralInfoComponent implements OnInit, OnDestroy {
     this.schoolAddViewModel.schoolMaster.city = this.schoolAddViewModel.schoolMaster.city.toString();
     this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolOpened = this.commonFunction.formatDateSaveWithoutTime(this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolOpened);
     this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolClosed = this.commonFunction.formatDateSaveWithoutTime(this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolClosed);
-    this._schoolService.AddSchool(this.schoolAddViewModel).subscribe(data => {
+    this.schoolService.AddSchool(this.schoolAddViewModel).subscribe(data => {
       if (typeof (data) == 'undefined') {
         this.snackbar.open('General Info Submission failed. ' + sessionStorage.getItem("httpError"), '', {
           duration: 10000
@@ -432,9 +443,9 @@ export class GeneralInfoComponent implements OnInit, OnDestroy {
           });
           let schoolIdToString = data.schoolMaster.schoolId.toString();
           sessionStorage.setItem("selectedSchoolId", schoolIdToString);
-          this._schoolService.changeMessage(true);
-          this._schoolService.changeCategory(2);
-          this._schoolService.setSchoolDetails(data);
+          this.schoolService.changeMessage(true);
+          this.schoolService.changeCategory(2);
+          this.schoolService.setSchoolDetails(data);
         }
       }
 
@@ -453,7 +464,7 @@ export class GeneralInfoComponent implements OnInit, OnDestroy {
     this.schoolAddViewModel.schoolMaster.city = this.schoolAddViewModel.schoolMaster.city.toString();
     this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolOpened = this.commonFunction.formatDateSaveWithoutTime(this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolOpened);
     this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolClosed = this.commonFunction.formatDateSaveWithoutTime(this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolClosed);
-    this._schoolService.UpdateSchool(this.schoolAddViewModel).subscribe(data => {
+    this.schoolService.UpdateSchool(this.schoolAddViewModel).subscribe(data => {
       if (typeof (data) == 'undefined') {
         this.snackbar.open('General Info Updation failed. ' + sessionStorage.getItem("httpError"), '', {
           duration: 10000
@@ -469,8 +480,9 @@ export class GeneralInfoComponent implements OnInit, OnDestroy {
           this.snackbar.open('General Info Updation Successful.', '', {
             duration: 10000
           });
-          this._schoolService.changeMessage(true);
-          this._schoolService.changeCategory(2);
+          this.schoolService.changeMessage(true);
+          this.schoolCreateMode = this.schoolCreate.VIEW;
+          this.schoolService.changePageMode(this.schoolCreateMode);
         }
       }
 
@@ -480,5 +492,6 @@ export class GeneralInfoComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.destroySubject$.next();
+    this.destroySubject$.complete();
   }
 }

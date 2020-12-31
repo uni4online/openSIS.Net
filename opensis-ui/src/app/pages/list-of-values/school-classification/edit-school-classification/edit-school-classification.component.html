@@ -1,7 +1,9 @@
-<div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
-    <h2 class="headline m-0" fxFlex="auto">{{'addSchoolClassification'|translate}}</h2>
+<form [formGroup]="form" (ngSubmit)="submit()">
 
-    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+<div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
+    <h2 class="headline m-0" fxFlex="auto">{{classificationModalTitle|translate}}</h2>
+
+    <button class="text-secondary" (click) = 'closeDialog()' mat-dialog-close mat-icon-button type="button">
         <mat-icon [icIcon]="icClose"></mat-icon>
     </button>
 </div>
@@ -10,17 +12,14 @@
 <mat-dialog-content fxLayout="column">
     <mat-form-field class="mt-6" appearance="outline" color="primary">
         <mat-label>{{'title' | translate}}</mat-label>
-        <input cdkFocusInitial matInput required>
-    </mat-form-field>
-
-    <mat-form-field class="w-full" appearance="outline" color="primary">
-        <mat-label>{{'sortOrder' | translate}}</mat-label>
-        <input type="number" matInput required>
+        <input   formControlName="lovColumnValue"  [(ngModel)]="lovModel.dropdownValue.lovColumnValue" name="lovColumnValue"  cdkFocusInitial matInput required>
+        <mat-error *ngIf="form.get('lovColumnValue').hasError('required')">{{'titleIsRequired'|translate}}</mat-error>
     </mat-form-field>
 
 </mat-dialog-content>
 
 <mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" class="py-6">
-    <button mat-button mat-dialog-close type="button">{{'cancel' | translate}}</button>
-    <button color="primary" mat-raised-button type="submit">{{'submit' | translate}}</button>
+    <button mat-button mat-dialog-close type="button" (click) = 'closeDialog()'>{{'cancel' | translate}}</button>
+    <button color="primary" mat-raised-button type="submit">{{classificationModalActionTitle | translate}}</button>
 </mat-dialog-actions>
+</form>

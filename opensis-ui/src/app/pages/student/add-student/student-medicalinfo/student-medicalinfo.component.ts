@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, NgForm } from '@angular/forms';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
@@ -14,6 +14,7 @@ import { StudentService } from '../../../../services/student.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ViewParentInfoModel } from '../../../../models/parentInfoModel';
 import { ParentInfoService } from '../../../../services/parent-info.service';
+import { ImageCropperService } from '../../../../services/image-cropper.service';
 
 @Component({
   selector: 'vex-student-medicalinfo',
@@ -25,8 +26,8 @@ import { ParentInfoService } from '../../../../services/parent-info.service';
     fadeInRight400ms
   ]
 })
-export class StudentMedicalinfoComponent implements OnInit {
-  StudentCreate = SchoolCreate;
+export class StudentMedicalinfoComponent implements OnInit,OnDestroy {
+  studentCreate = SchoolCreate;
   @Input() studentCreateMode: SchoolCreate;
   @Input() categoryId;
   @Input() studentDetailsForViewAndEdit;
@@ -43,27 +44,35 @@ export class StudentMedicalinfoComponent implements OnInit {
     public translateService: TranslateService,
     private studentService: StudentService,
     private snackbar: MatSnackBar,
-    private parentInfoService: ParentInfoService) {
+    private parentInfoService: ParentInfoService,
+    private imageCropperService:ImageCropperService) {
     translateService.use('en');
 
   }
 
   ngOnInit(): void {
-    if (this.studentCreateMode == this.StudentCreate.VIEW) {
+    if (this.studentCreateMode == this.studentCreate.VIEW) {
+      this.studentService.changePageMode(this.studentCreateMode);
       this.studentAddModel = this.studentDetailsForViewAndEdit;
+      this.imageCropperService.enableUpload(false);
     } else {
       this.getAllParents();
+      this.studentService.changePageMode(this.studentCreateMode);
       this.studentAddModel = this.studentService.getStudentDetails();
     }
   }
 
   editMedicalInfo() {
     this.getAllParents();
-    this.studentCreateMode = this.StudentCreate.EDIT
+    this.studentCreateMode = this.studentCreate.EDIT;
+    this.studentService.changePageMode(this.studentCreateMode);
+    this.imageCropperService.enableUpload(true);
   }
 
   cancelEdit() {
-    this.studentCreateMode = this.StudentCreate.VIEW
+    this.studentCreateMode = this.studentCreate.VIEW;
+    this.studentService.changePageMode(this.studentCreateMode);
+    this.imageCropperService.enableUpload(false);
   }
 
   getAllParents() {
@@ -80,8 +89,9 @@ export class StudentMedicalinfoComponent implements OnInit {
   }
 
   submit() {
-    this.studentAddModel.selectedCategoryId= this.studentAddModel.fieldsCategoryList[this.categoryId].categoryId;
-    
+    if(this.studentAddModel.fieldsCategoryList!==null){
+      this.studentAddModel.selectedCategoryId = this.studentAddModel.fieldsCategoryList[this.categoryId].categoryId;
+    }    
     this.studentAddModel._tenantName = sessionStorage.getItem("tenant");
     this.studentAddModel._token = sessionStorage.getItem("token");
     this.studentService.UpdateStudent(this.studentAddModel).subscribe(data => {
@@ -96,15 +106,21 @@ export class StudentMedicalinfoComponent implements OnInit {
             duration: 10000
           });
         } else {
-          this.snackbar.open('Medical Information Update Successfully.', '', {
+          this.snackbar.open('Medical Information Update Successful.', '', {
             duration: 10000
           });
+        this.studentCreateMode = this.studentCreate.VIEW;
+        this.studentService.changePageMode(this.studentCreateMode);
           this.studentDetailsForParent.emit(data);
 
         }
       }
 
     })
+  }
+
+  ngOnDestroy() {
+    this.imageCropperService.enableUpload(false);
   }
 
 }

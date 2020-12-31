@@ -5,8 +5,19 @@
                 fxLayoutAlign="start center">
 
                 <div class="flex">
-                    <input class="pr-4 py-3 border-0 outline-none w-full bg-transparent" placeholder="Search..."
-                        type="search">
+                    <input
+                    matInput
+                    [(ngModel)]="searchKey"
+                    (keyup)="applyFilter()"
+                    class="py-3 border-0 outline-none w-full bg-transparent"
+                    appearance="outline" color="primary"
+                     placeholder="Search..."
+                    type="search">
+                    <button mat-button matSuffix mat-icon-button aria-label="clear"
+                    *ngIf="searchKey"
+                    (click)="onSearchClear()">
+                    <mat-icon>close</mat-icon>
+                    </button>
                     <button class="ml-4" fxFlex="none" fxHide.gt-xs mat-icon-button type="button">
                         <mat-icon [icIcon]="icSearch"></mat-icon>
                     </button>
@@ -31,20 +42,41 @@
         </div>
     </div>
 
-    <table @stagger mat-table [dataSource]="SchoolLevelModelList" class="mat-elevation-z8 table-auto w-full"
+    <table @stagger mat-table [dataSource]="schoolLevelList" class="mat-elevation-z8 table-auto w-full"
         matSort>
         
-        <ng-container matColumnDef="title">
+        <ng-container matColumnDef="lovColumnValue">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'title'|translate}}</th>
             <td mat-cell *matCellDef="let element">
-                {{element.title}}
+                {{element.lovColumnValue}}
             </td>
         </ng-container>
 
-        <ng-container matColumnDef="sort_order">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'sortOrder'|translate}}</th>
+        <ng-container matColumnDef="createdBy">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'createdBy'|translate}}</th>
             <td mat-cell *matCellDef="let element">
-                {{element.sort_order}}
+                {{element.createdBy}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="createdOn">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'createDate'|translate}}</th>
+            <td mat-cell *matCellDef="let element">
+                {{element.createdOn|transformDateTimePipe}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="updatedBy">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'updatedBy'|translate}}</th>
+            <td mat-cell *matCellDef="let element">
+                {{element.updatedBy}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="updatedOn">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'updateDate'|translate}}</th>
+            <td mat-cell *matCellDef="let element">
+                {{element.updatedOn|transformDateTimePipe}}
             </td>
         </ng-container>
 
@@ -52,12 +84,8 @@
             <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'action'|translate}}
             </th>
             <td mat-cell *matCellDef="let element">
-                <a routerLink="" matTooltip="Edit Item" class="mr-3 cursor-pointer">
-                    <mat-icon [icIcon]="icEdit"></mat-icon>
-                </a>
-                <a routerLink="" matTooltip="Delete Item" class="mr-3 cursor-pointer">
-                    <mat-icon [icIcon]="icDelete"></mat-icon>
-                </a>
+                <a matTooltip="Edit Item" class="mr-3 cursor-pointer" (click)="goToEdit(element)"><mat-icon [icIcon]="icEdit"></mat-icon></a>
+                <a (click)="confirmDelete(element)" matTooltip="Delete Item" class="mr-3 cursor-pointer"><mat-icon [icIcon]="icDelete"></mat-icon></a>
             </td>
         </ng-container>
 
@@ -66,12 +94,20 @@
                 <vex-mat-spinner-overlay *ngIf="loading" color="accent"></vex-mat-spinner-overlay>
             </mat-footer-cell>
         </ng-container>
-
+        <ng-container matColumnDef="noData">
+            <td mat-footer-cell *matFooterCellDef colspan="6">
+              {{loading?'Fetching Data...':'No Data'}}
+            </td>
+        </ng-container>
+        
         <tr mat-header-row *matHeaderRowDef="visibleColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: visibleColumns" @fadeInUp></tr>
-        <!-- <mat-footer-row *matFooterRowDef="['loading']" [class.hide]="!loading"></mat-footer-row> -->
+        <mat-footer-row *matFooterRowDef="['loading']" [class.hide]="!loading"></mat-footer-row>
+        <tr mat-footer-row *matFooterRowDef="['noData']" [class.hide]="listCount!=null"></tr>
 
     </table>
+    <mat-paginator [pageSize]="25" [class.hide]="listCount<26" [pageSizeOptions]="[25, 30, 40, 50]" showFirstLastButtons>
+    </mat-paginator>
     <!-- <mat-paginator [length]="totalCount" [pageSize]="pageSize" [pageSizeOptions]="[10, 20, 30, 40]" showFirstLastButtons (page)='getPageEvent($event)'></mat-paginator> -->
     <!-- <mat-paginator [length]="totalCount" [pageSize]="pageSize" [pageSizeOptions]="[10, 20, 30, 40]" showFirstLastButtons (page)='getPageEvent($event)'></mat-paginator> -->
 </div>

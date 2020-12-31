@@ -18,6 +18,7 @@ import icactivity from '@iconify/icons-ic/accessibility';
 import icreports from '@iconify/icons-ic/baseline-list-alt';
 import ictools from '@iconify/icons-ic/baseline-construction';
 import icparents from '@iconify/icons-ic/baseline-escalator-warning';
+import icbook from '@iconify/icons-ic/baseline-book';
 import { LayoutService } from '../@vex/services/layout.service';
 import { ActivatedRoute } from '@angular/router';
 import { filter, map } from 'rxjs/operators';
@@ -170,6 +171,30 @@ export class AppComponent {
             type: 'link',
             label: 'Teacher Functions',
             route: '/school/teacherfunctions',
+            icon: icinfo
+          }
+        ]
+      },
+      { type: 'dropdown',
+        label: 'Courses',
+        icon: icbook,
+        children: [
+          {
+            type: 'link',
+            label: 'Course Manager',
+            route: '/school/course-manager',
+            icon: icinfo
+          },
+          {
+            type: 'link',
+            label: 'Course Catalog',
+            route: '/school/coursemanager',
+            icon: icinfo
+          },
+          {
+            type: 'link',
+            label: 'Teacher Reassignment',
+            route: '/school/coursemanager',
             icon: icinfo
           }
         ]

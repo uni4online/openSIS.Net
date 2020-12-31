@@ -136,7 +136,7 @@
                             <mat-label>{{'race'|translate}}</mat-label>
                             <mat-select [(ngModel)]="staffAddModel.staffMaster.race" name="race">
                                 <mat-option value=""></mat-option>
-                                <mat-option *ngFor="let race of raceEnum" [value]="race">{{race}}</mat-option>
+                                <mat-option *ngFor="let race of raceList" [value]="race.lovColumnValue">{{race.lovColumnValue}}</mat-option>
                             </mat-select>
                         </mat-form-field>
                     </li>
@@ -145,7 +145,7 @@
                             <mat-label>{{'ethnicity'|translate}}</mat-label>
                             <mat-select [(ngModel)]="staffAddModel.staffMaster.ethnicity" name="ethnicity">
                                 <mat-option value=""></mat-option>
-                                <mat-option *ngFor="let ethnicity of ethnicityEnum" [value]="ethnicity">{{ethnicity}}
+                                <mat-option *ngFor="let ethnicity of ethnicityList" [value]="ethnicity.lovColumnValue">{{ethnicity.lovColumnValue}}
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
@@ -228,17 +228,17 @@
                     <li>
                         <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'physicalDisability'|translate}}</mat-label>
-                            <mat-select name="physicalDisability"  [(ngModel)]="staffAddModel.staffMaster.physicalDisability">
+                            <mat-select name="physicalDisability" (selectionChange)="checkDisability($event)"  [(ngModel)]="staffAddModel.staffMaster.physicalDisability">
                                 <mat-option></mat-option>
                                 <mat-option [value]="disablity.Yes">{{disablity['true']}}</mat-option>
                                 <mat-option [value]="disablity.No">{{disablity['false']}}</mat-option>
                             </mat-select>
                         </mat-form-field>
                     </li>
-                    <li>
+                    <li *ngIf="showDisabilityDescription">
                         <mat-form-field class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'disabilityDescription'|translate}}</mat-label>
-                            <textarea matInput></textarea>
+                            <textarea name="disabilityDescription"  [(ngModel)]="staffAddModel.staffMaster.disabilityDescription" matInput></textarea>
                         </mat-form-field>
                     </li>
                 </ul>
@@ -377,7 +377,9 @@
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'dateOfBirth' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{staffAddModel.staffMaster.dob | date:'mediumDate' | EmtyValueCheckPipe}}  {{ getAge(staffAddModel.staffMaster.dob)}}</p>
+
+                    <p *ngIf ="staffAddModel.staffMaster.dob !== null" class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{staffAddModel.staffMaster.dob | date:'mediumDate' | EmtyValueCheckPipe}} | {{ getAge(staffAddModel.staffMaster.dob)}}</p>
+                    <p *ngIf ="staffAddModel.staffMaster.dob == null" class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{staffAddModel.staffMaster.dob | date:'mediumDate' | EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'countryOfBirth' | translate}}</label>
@@ -419,10 +421,10 @@
                     <label class="text-sm leading-5 text-gray">{{'portalAccess' | translate}}</label>
                     <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2 text-green">{{staffAddModel.staffMaster.portalAccess}}</p>
                 </li>
-                <li>
+                <!-- <li>
                     <label class="text-sm leading-5 text-gray">{{'lastLogin' | translate}}</label>
                     <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Aug 20, 2020, 10:30 AM</p>
-                </li>
+                </li> -->
             </ul>
         </div>
     </mat-card-content>

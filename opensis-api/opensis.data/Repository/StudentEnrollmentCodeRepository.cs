@@ -141,10 +141,22 @@ namespace opensis.data.Repository
             {
 
                 var StudentEnrollmentCodeAll = this.context?.StudentEnrollmentCode.Where(x => x.TenantId == studentEnrollmentCodeListView.TenantId && x.SchoolId == studentEnrollmentCodeListView.SchoolId).ToList();
-                studentEnrollmentCodeList.studentEnrollmentCodeList = StudentEnrollmentCodeAll;
-                studentEnrollmentCodeList._tenantName = studentEnrollmentCodeListView._tenantName;
-                studentEnrollmentCodeList._token = studentEnrollmentCodeListView._token;
-                studentEnrollmentCodeList._failure = false;
+                if (StudentEnrollmentCodeAll.Count > 0)
+                {
+                    studentEnrollmentCodeList.studentEnrollmentCodeList = StudentEnrollmentCodeAll;
+                    studentEnrollmentCodeList._tenantName = studentEnrollmentCodeListView._tenantName;
+                    studentEnrollmentCodeList._token = studentEnrollmentCodeListView._token;
+                    studentEnrollmentCodeList._failure = false;
+                }
+                else
+                {
+                    studentEnrollmentCodeList.studentEnrollmentCodeList = null;
+                    studentEnrollmentCodeList._tenantName = studentEnrollmentCodeListView._tenantName;
+                    studentEnrollmentCodeList._token = studentEnrollmentCodeListView._token;
+                    studentEnrollmentCodeList._failure = true;
+                    studentEnrollmentCodeList._message = NORECORDFOUND;
+
+                }
             }
             catch (Exception es)
             {

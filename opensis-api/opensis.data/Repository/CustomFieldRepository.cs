@@ -143,13 +143,23 @@ namespace opensis.data.Repository
             try
             {
                 var customFieldDelete = this.context?.CustomFields.FirstOrDefault(x => x.TenantId == customFieldAddViewModel.customFields.TenantId && x.SchoolId == customFieldAddViewModel.customFields.SchoolId && x.FieldId == customFieldAddViewModel.customFields.FieldId);
-
-                this.context?.CustomFields.Remove(customFieldDelete);
-                this.context?.SaveChanges();
-                customFieldAddViewModel._failure = false;
-                customFieldAddViewModel._message = "Deleted";
+                if (customFieldDelete != null)
+                {
+                    var customFieldsValueExists = this.context?.CustomFieldsValue.FirstOrDefault(x => x.TenantId == customFieldDelete.TenantId && x.SchoolId == customFieldDelete.SchoolId && x.CategoryId == customFieldDelete.CategoryId && x.FieldId == customFieldDelete.FieldId);
+                    if (customFieldsValueExists != null)
+                    {
+                        customFieldAddViewModel._failure = true;
+                        customFieldAddViewModel._message = "It Can't Be Deleted Because It Has Association";
+                    }
+                    else
+                    {
+                        this.context?.CustomFields.Remove(customFieldDelete);
+                        this.context?.SaveChanges();
+                        customFieldAddViewModel._failure = false;
+                        customFieldAddViewModel._message = "Deleted";
+                    }
+                }
             }
-
             catch (Exception es)
             {
                 customFieldAddViewModel._failure = true;
@@ -245,10 +255,22 @@ namespace opensis.data.Repository
             try
             {
                 var fieldsCategoryDelete = this.context?.FieldsCategory.FirstOrDefault(x => x.TenantId == fieldsCategoryAddViewModel.fieldsCategory.TenantId && x.SchoolId == fieldsCategoryAddViewModel.fieldsCategory.SchoolId && x.CategoryId == fieldsCategoryAddViewModel.fieldsCategory.CategoryId);
-                this.context?.FieldsCategory.Remove(fieldsCategoryDelete);
-                this.context?.SaveChanges();
-                fieldsCategoryAddViewModel._failure = false;
-                fieldsCategoryAddViewModel._message = "Deleted";
+                if(fieldsCategoryDelete!= null)
+                {
+                    var customFieldsExists = this.context?.CustomFields.FirstOrDefault(x => x.TenantId == fieldsCategoryDelete.TenantId && x.SchoolId == fieldsCategoryDelete.SchoolId && x.CategoryId == fieldsCategoryDelete.CategoryId);
+                    if(customFieldsExists!=null)
+                    {
+                        fieldsCategoryAddViewModel._failure = true;
+                        fieldsCategoryAddViewModel._message = "It Can't Be Deleted Because It Has Association";
+                    }
+                    else
+                    {
+                        this.context?.FieldsCategory.Remove(fieldsCategoryDelete);
+                        this.context?.SaveChanges();
+                        fieldsCategoryAddViewModel._failure = false;
+                        fieldsCategoryAddViewModel._message = "Deleted";
+                    }
+                }                              
             }
             catch (Exception es)
             {

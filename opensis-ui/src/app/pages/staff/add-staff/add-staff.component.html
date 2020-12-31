@@ -8,31 +8,46 @@
 
             </div>
             <div class="text-center px-4">
-                <h5 class="text-primary font-semibold mb-0">Mr. Danielle Boucher</h5>
+                <h5 class="text-primary font-semibold mb-0">{{staffTitle}}</h5>
                 <div class="rounded-full py-1 px-3 bg-gray text-white inline-block mt-3">{{'teacher'|translate}}</div>
             </div>
             <hr class="mt-4" />
 
-            <mat-accordion>
+            <!-- <mat-accordion>
                 <mat-expansion-panel>
                     <mat-expansion-panel-header>
                         <mat-panel-title>
                             <mat-icon class="mr-3"></mat-icon> Staff Details
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <div>
-                        <ul class="nav-sub-item">
-                            <li *ngFor="let field of fieldsCategory; let index =index"
-                                (click)="changeCategory(field,index)">
-                                <a [ngClass]="currentCategory==field.categoryId?'text-primary' : ''"
-                                    @fadeInRight>{{field.title}}</a>
-                            </li>
-                        </ul>
+                    <div class="px-gutter sm:px-0">
+                       
+                                <a @fadeInRight *ngFor="let field of fieldsCategory; let index =index"
+                                (click)="changeCategory(field,index)"
+                                class="list-item mt-2 no-underline flex items-center rounded-none" matRipple
+                                 [ngClass]="currentCategory==field.categoryId?'text-primary active' : ''"
+                                    >
+                                    <mat-icon *ngIf="currentCategory==12" [icIcon]="icGeneralInfo" class="mr-3"></mat-icon>
+                                    {{field.title}}</a>
+                         
                     </div>
                 </mat-expansion-panel>
-            </mat-accordion>
-
+            </mat-accordion> -->
             <div class="px-gutter sm:px-0">
+                <a @fadeInRight *ngFor="let field of fieldsCategory; let index =index"
+                    (click)="changeCategory(field,index)"
+                    class="list-item mt-2 no-underline flex items-center rounded-none" matRipple
+                    [ngClass]="currentCategory==field.categoryId?'text-primary active' : ''">
+                    <mat-icon *ngIf="field.categoryId==12" [icIcon]="icGeneralInfo" class="mr-3"></mat-icon>
+                    <mat-icon *ngIf="field.categoryId==13" [icIcon]="icSchoolInfo" class="mr-3"></mat-icon>
+                    <mat-icon *ngIf="field.categoryId==14" [icIcon]="icAddressInfo" class="mr-3"></mat-icon>
+                    <mat-icon *ngIf="field.categoryId==15" [icIcon]="icCertificationInfo" class="mr-3"></mat-icon> 
+                    <mat-icon *ngIf="field.categoryId>15" [icIcon]="icCustomCategory" class="mr-3"></mat-icon>
+                    {{field.title}}
+                </a>
+
+            </div>
+            <!-- <div class="px-gutter sm:px-0">
                 <a @fadeInRight routerLink="" (click)='showPage("General Info")'
                     [ngClass]=" pageId =='General Info' ? 'text-primary active' : ''"
                     class="list-item mt-2 no-underline flex items-center rounded-none" matRipple>
@@ -53,15 +68,15 @@
                     class="list-item mt-2 no-underline flex items-center rounded-none" matRipple>
                     <mat-icon [icIcon]="icCertificationInfo" class="mr-3"></mat-icon> {{'certificationInfo'|translate}}
                 </a>
-                <!-- <a @fadeInRight routerLink="" (click)='showPage("Login Info")' [ngClass]=" pageId =='Login Info' ? 'text-primary active' : ''" class="list-item mt-2 no-underline flex items-center rounded-none" matRipple>
+                <a @fadeInRight routerLink="" (click)='showPage("Login Info")' [ngClass]=" pageId =='Login Info' ? 'text-primary active' : ''" class="list-item mt-2 no-underline flex items-center rounded-none" matRipple>
                     <mat-icon [icIcon]="icLoginInfo" class="mr-3"></mat-icon> Login Info
-                </a> -->
+                </a>
                 <a @fadeInRight routerLink="" (click)='showPage("Schedule")'
                     [ngClass]=" pageId =='Schedule' ? 'text-primary active' : ''"
                     class="list-item mt-2 no-underline flex items-center rounded-none" matRipple>
                     <mat-icon [icIcon]="icSchedule" class="mr-3"></mat-icon> {{'schedule'|translate}}
                 </a>
-            </div>
+            </div> -->
         </vex-scrollbar>
     </div>
     <div class="right-content">
@@ -70,7 +85,7 @@
         <vex-page-layout>
             <vex-page-layout-header class="pb-16 pt-6" fxLayoutAlign="center start">
                 <vex-secondary-toolbar current="Staff Information" class="w-full">
-                    <vex-breadcrumbs [crumbs]="['Staff','View Staff']" class="flex-auto"></vex-breadcrumbs>
+                    <vex-breadcrumbs [crumbs]="['Staff', pageStatus]" class="flex-auto"></vex-breadcrumbs>
                 </vex-secondary-toolbar>
             </vex-page-layout-header>
             <vex-page-layout-content class="-mt-14">
@@ -82,8 +97,7 @@
                                 [staffDetailsForViewAndEdit]="staffAddModel" [categoryId]="indexOfCategory">
                             </vex-staff-generalinfo>
 
-                            <vex-staff-schoolinfo *ngIf="currentCategory==13"
-                                [staffCreateMode]="staffCreateMode"
+                            <vex-staff-schoolinfo *ngIf="currentCategory==13" [staffCreateMode]="staffCreateMode"
                                 [staffDetailsForViewAndEdit]="staffAddModel"></vex-staff-schoolinfo>
 
 

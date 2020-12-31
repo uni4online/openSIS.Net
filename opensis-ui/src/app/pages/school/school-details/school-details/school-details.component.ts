@@ -21,7 +21,9 @@ import { LoaderService } from '../../../../services/loader.service';
 import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { SchoolAddViewModel } from '../../../../models/schoolMasterModel';
-
+import { ImageCropperService } from '../../../../services/image-cropper.service';
+import { LayoutService } from 'src/@vex/services/layout.service';
+import { ExcelService } from '../../../../services/excel.service';
 @Component({
   selector: 'vex-school-details',
   templateUrl: './school-details.component.html',
@@ -51,7 +53,7 @@ export class SchoolDetailsComponent implements OnInit {
   icFilterList = icFilterList;
   fapluscircle = "fa-plus-circle";
   tenant = "";
-  loading:Boolean;
+  loading:boolean;
   getAllSchool: GetAllSchoolModel = new GetAllSchoolModel();
   SchoolModelList: MatTableDataSource<any>;
 
@@ -61,11 +63,24 @@ export class SchoolDetailsComponent implements OnInit {
   constructor(private schoolService: SchoolService,
     private snackbar: MatSnackBar,
     private router: Router,
-    private loaderService:LoaderService
+    private loaderService:LoaderService,
+    private imageCropperService:ImageCropperService,
+    private layoutService: LayoutService,
+    private excelService:ExcelService
     ) 
     { 
-     this.getAllSchool.filterParams=null;
-     this.loaderService.isLoading.subscribe((val) => {
+      if(localStorage.getItem("collapseValue") !== null){
+        if( localStorage.getItem("collapseValue") === "false"){
+          this.layoutService.expandSidenav();
+        }else{
+          this.layoutService.collapseSidenav();
+        } 
+      }else{
+        this.layoutService.expandSidenav();
+      }
+      
+      this.getAllSchool.filterParams=null;
+      this.loaderService.isLoading.subscribe((val) => {
         this.loading = val;
       });
       this.callAllSchool();
@@ -136,7 +151,7 @@ export class SchoolDetailsComponent implements OnInit {
   }
 
   goToAdd(){
-    this.schoolService.setSchoolId(null)
+    this.schoolService.setSchoolId(null);
     this.router.navigate(["school/schoolinfo/add-school"]);
   }  
 
@@ -201,6 +216,38 @@ export class SchoolDetailsComponent implements OnInit {
     event.stopPropagation();
     event.stopImmediatePropagation();
     column.visible = !column.visible;
+  }
+
+  exportSchoolListToExcel(){
+    let getAllSchool: GetAllSchoolModel = new GetAllSchoolModel();
+    getAllSchool.pageNumber=0;
+    getAllSchool.pageSize=0;
+    getAllSchool.sortingModel=null;
+      this.schoolService.GetAllSchoolList(getAllSchool).subscribe(res => {
+        if(res._failure){
+          this.snackbar.open('Failed to Export School List.'+ res._message, 'LOL THANKS', {
+          duration: 10000
+          });
+        }else{
+          if(res.getSchoolForView.length>0){
+            let schoolList = res.getSchoolForView?.map((x)=>{
+              return {
+                Name:x.schoolName,
+                Address:x.streetAddress1,
+                Principal:x.nameOfPrincipal,
+                Phone:x.telephone,
+                Status:x.status?'Active':'Inactive'
+              }
+            });
+            this.excelService.exportAsExcelFile(schoolList,'Schools_List_')
+          }else{
+            this.snackbar.open('No Records Found. Failed to Export School List','LOL THANKS', {
+              duration: 5000
+            });
+          }
+        }
+      });
+    
   }
 
 

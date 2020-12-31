@@ -2,7 +2,7 @@
     <vex-mat-spinner-overlay *ngIf="loading"></vex-mat-spinner-overlay>
     <vex-page-layout-header class="pb-16" fxLayout="column" fxLayoutAlign="center start">
         <vex-secondary-toolbar current={{schoolTitle}} class="w-full">
-            <vex-breadcrumbs [crumbs]="['School',pageStatus]" class="flex-auto"></vex-breadcrumbs>
+            <vex-breadcrumbs [crumbs]="['School Info',pageStatus]" class="flex-auto"></vex-breadcrumbs>
         </vex-secondary-toolbar>
     </vex-page-layout-header>
     <vex-page-layout-content class="-mt-6">
@@ -10,16 +10,15 @@
             <mat-drawer-content class="flex-auto flex items-start">
                 <div class="hidden sm:block mr-6 ng-tns-c284-386 ng-star-inserted w-1/6">
                     <div class="max-w-xxxs w-full">
-                        <div class="h-45 mb-6 flex items-center justify-center bg-white sm:px-0" fxLayout="row"
-                            fxLayoutAlign="start center">
+                        <div class="h-45 mb-6 flex justify-center sm:px-0">
                             <vex-profile-image [enableCropTool]="enableCropTool" [responseImage]="responseImage"
-                                [mode]="modeForImage"></vex-profile-image>
+                                ></vex-profile-image>
                         </div>
 
                         <div class="px-gutter sm:px-0">
                             <p *ngFor="let field of fieldsCategory;let index=index">
-                                <button @fadeInRight
-                                    [ngClass]="currentCategory == field.categoryId?'list-item mt-2 no-underline flex items-center bg-primary hover:bg-primary text-white' : 'list-item mt-2 no-underline flex items-center'"
+                                <button @fadeInRight class="list-item mt-2 no-underline flex items-center w-full"
+                                    [ngClass]="currentCategory == field.categoryId?'bg-primary hover:bg-primary text-white' : ''"
                                     (click)="changeCategory(field,index)" matRipple>
                                     <span>{{field.title}}</span>
                                 </button>

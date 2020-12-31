@@ -80,9 +80,21 @@ export class EnrollmentCodesComponent implements OnInit {
         }
         else{
           if (res._failure) {     
-            this.snackbar.open('Enrollment code list failed. ' + res._message, 'LOL THANKS', {
-              duration: 10000
-            });
+            if (res._message === "NO RECORD FOUND") {
+              if (res.studentEnrollmentCodeList == null) {
+                this.enrollmentList=new MatTableDataSource([]) ;
+                this.enrollmentList.sort=this.sort; 
+              }
+              else {
+                this.enrollmentList=new MatTableDataSource(res.studentEnrollmentCodeList) ;
+                this.enrollmentList.sort=this.sort;  
+              }
+  
+            } else {
+              this.snackbar.open('Enrollment code list failed.' + res._message, 'LOL THANKS', {
+                duration: 10000
+              });
+            }
           } 
           else { 
             this.enrollmentList=new MatTableDataSource(res.studentEnrollmentCodeList) ;

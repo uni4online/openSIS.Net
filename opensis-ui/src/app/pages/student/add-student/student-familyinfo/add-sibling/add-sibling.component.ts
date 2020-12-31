@@ -152,8 +152,8 @@ export class AddSiblingComponent implements OnInit {
     return obj;
   }
   associateStudent(studentDetails){
-   
-    if(this.val.data !== null){
+   if(this.val !== null){   
+    if(this.val.data !== null ){
       if(this.studentSiblingSearch.getStudentForView?.length>1){      
         let obj = this.associateMultipleStudentsToParent();   
         if(obj.relationship === ""){
@@ -161,11 +161,15 @@ export class AddSiblingComponent implements OnInit {
             duration: 10000
           });
         }else
-        {        
-          this.addParentInfoModel.parentInfo.studentId= studentDetails.studentId;; 
-          this.addParentInfoModel.parentInfo.parentId = obj.parentId; 
-          this.addParentInfoModel.parentInfo.relationship= obj.relationship; 
-          this.addParentInfoModel.parentInfo.isCustodian = obj.isCustodian;         
+        {       
+         
+          this.addParentInfoModel.parentAssociationship.studentId = studentDetails.studentId;
+          this.addParentInfoModel.parentInfo.parentAddress[0].studentId = studentDetails.studentId;
+          this.addParentInfoModel.parentAssociationship.parentId = this.val.data.parentInfo.parentId;
+          this.addParentInfoModel.parentInfo.parentAddress[0].parentId = this.val.data.parentInfo.parentId;
+          this.addParentInfoModel.parentInfo.parentId = this.val.data.parentInfo.parentId;
+          this.addParentInfoModel.parentAssociationship.relationship= obj.relationship; 
+          this.addParentInfoModel.parentAssociationship.isCustodian = obj.isCustodian;            
           this.parentInfoService.addParentForStudent(this.addParentInfoModel).subscribe(data => {
             if (typeof (data) == 'undefined') 
             {
@@ -202,10 +206,16 @@ export class AddSiblingComponent implements OnInit {
          if(isCustodian === undefined){
           isCustodian = false
          }
-         this.addParentInfoModel.parentInfo.studentId= studentDetails.studentId;; 
-         this.addParentInfoModel.parentInfo.parentId = this.parentData.parentId; 
-         this.addParentInfoModel.parentInfo.relationship= contactRelationship; 
-         this.addParentInfoModel.parentInfo.isCustodian = isCustodian;
+         
+         
+         this.addParentInfoModel.parentAssociationship.relationship= contactRelationship; 
+         this.addParentInfoModel.parentAssociationship.isCustodian = isCustodian;
+          this.addParentInfoModel.parentAssociationship.studentId = studentDetails.studentId;
+          this.addParentInfoModel.parentInfo.parentAddress[0].studentId = studentDetails.studentId;
+          this.addParentInfoModel.parentAssociationship.parentId = this.val.data.parentInfo.parentId;
+          this.addParentInfoModel.parentInfo.parentAddress[0].parentId = this.val.data.parentInfo.parentId;
+          this.addParentInfoModel.parentInfo.parentId = this.val.data.parentInfo.parentId;
+       
          this.parentInfoService.addParentForStudent(this.addParentInfoModel).subscribe(data => {
           if (typeof (data) == 'undefined') 
           {
@@ -231,9 +241,10 @@ export class AddSiblingComponent implements OnInit {
                          
             }
           }
-        })     
+        })    
       }
-    }else{
+    }
+  }else{
       this.studentSiblingAssociation.studentMaster.studentId=studentDetails.studentId;
       this.studentSiblingAssociation.studentMaster.schoolId=studentDetails.schoolId;
       this.studentSiblingAssociation.studentId=this.studentService.getStudentId();
@@ -258,5 +269,14 @@ export class AddSiblingComponent implements OnInit {
       })
     }   
     
+  }
+
+  backToSearch(){
+    if(this.hideSearchBoxAfterSearch){
+      this.dialogRef.close();
+    }else{
+      this.hideSearchBoxAfterSearch=true;
+      this.studentSiblingSearch.getStudentForView=null;
+    }
   }
 }

@@ -19,6 +19,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 export class SidenavComponent implements OnInit {
 
   @Input() collapsed: boolean;
+  globalCollapseValue;
   collapsedOpen$ = this.layoutService.sidenavCollapsedOpen$;
   title$ = this.configService.config$.pipe(map(config => config.sidenav.title));
   imageUrl$ = this.configService.config$.pipe(map(config => config.sidenav.imageUrl));
@@ -38,6 +39,7 @@ export class SidenavComponent implements OnInit {
               private router:Router) { }
 
   ngOnInit() {
+    
   }
 
   onMouseEnter() {
@@ -48,10 +50,18 @@ export class SidenavComponent implements OnInit {
     this.layoutService.collapseCloseSidenav();
   }
 
-  toggleCollapse() {
-    this.collapsed ? this.layoutService.expandSidenav() : this.layoutService.collapseSidenav();
+  toggleCollapse() { 
+    if(this.collapsed){
+      localStorage.setItem("collapseValue","false");
+      this.layoutService.expandSidenav()
+    }else{
+      this.layoutService.collapseSidenav();
+      localStorage.setItem("collapseValue","true");
+    }   
+    
   }
   logOut(){
+    localStorage.removeItem("collapseValue");
     sessionStorage.removeItem("token");    
     this.router.navigate(["/"]);
   }

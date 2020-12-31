@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject,Subject,Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { BreakpointObserver } from '@angular/cdk/layout';
@@ -8,7 +8,7 @@ import { BreakpointObserver } from '@angular/cdk/layout';
   providedIn: 'root'
 })
 export class LayoutService {
-
+ 
   private _quickpanelOpenSubject = new BehaviorSubject<boolean>(false);
   quickpanelOpen$ = this._quickpanelOpenSubject.asObservable();
 
@@ -116,4 +116,6 @@ export class LayoutService {
       }
     });
   }
+
+ 
 }

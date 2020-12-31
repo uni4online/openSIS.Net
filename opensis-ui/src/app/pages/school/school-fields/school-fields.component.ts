@@ -35,14 +35,11 @@ export class SchoolFieldsComponent implements OnInit {
   columns = [
     /* { label: '', property: 'type', type: 'text', visible: true }, */
     { label: 'Field Name', property: 'field_name', type: 'text', visible: true },
-    { label: 'Sort Order', property: 'sortOrder', type: 'number', visible: false },
+    { label: 'Sort Order', property: 'sortOrder', type: 'number', visible: true },
     { label: 'Field Type', property: 'field_type', type: 'text', visible: true },
-    { label: 'Select Options', property: 'selectOptions', type: 'text', visible: true },
-    { label: 'Required', property: 'required', type: 'checkbox', visible: false },
     { label: 'In Used', property: 'inUsed', type: 'checkbox', visible: true },
-    { label: 'System Field', property: 'systemField', type: 'checkbox', visible: false },
     { label: 'Action', property: 'action', type: 'text', visible: true }
-  ];
+   ];
 
   EnrollmentCodeModelList;
   fieldsCategoryList;

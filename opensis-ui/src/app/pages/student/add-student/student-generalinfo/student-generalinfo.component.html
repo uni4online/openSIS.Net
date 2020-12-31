@@ -1,5 +1,5 @@
 <form (ngSubmit)="submit()" #f="ngForm" appInvalidControlScroll
-    *ngIf="studentCreateMode==StudentCreate.EDIT || studentCreateMode==StudentCreate.ADD">
+    *ngIf="studentCreateMode==studentCreate.EDIT || studentCreateMode==studentCreate.ADD">
     <mat-card class="w-full">
 
         <mat-card-header>
@@ -174,7 +174,7 @@
                             <mat-label>{{'race'|translate}}</mat-label>
                             <mat-select [(ngModel)]="studentAddModel.studentMaster.race" name="race">
                                 <mat-option value=""></mat-option>
-                                <mat-option *ngFor="let race of raceEnum" [value]="race">{{race}}</mat-option>
+                                <mat-option *ngFor="let race of raceList" [value]="race.lovColumnValue">{{race.lovColumnValue}}</mat-option>
                             </mat-select>
                         </mat-form-field>
                     </div>
@@ -183,7 +183,7 @@
                             <mat-label>{{'ethnicity'|translate}}</mat-label>
                             <mat-select [(ngModel)]="studentAddModel.studentMaster.ethnicity" name="ethnicity">
                                 <mat-option value=""></mat-option>
-                                <mat-option *ngFor="let ethnicity of ethnicityEnum" [value]="ethnicity">{{ethnicity}}
+                                <mat-option *ngFor="let ethnicity of ethnicityList" [value]="ethnicity.lovColumnValue">{{ethnicity.lovColumnValue}}
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
@@ -359,7 +359,7 @@
         </mat-card-content>
         <mat-card-actions>
             <div class="px-4 mb-2 text-right">
-                <button mat-button type="button" *ngIf="studentCreateMode == StudentCreate.EDIT"
+                <button mat-button type="button" *ngIf="studentCreateMode == studentCreate.EDIT"
                     (click)="cancelEdit()">{{'cancel'|translate}}</button>
                 <button color="primary" mat-raised-button>{{saveAndNext |translate}}</button>
             </div>
@@ -368,7 +368,7 @@
     </mat-card>
 </form>
 
-<mat-card class="w-full" *ngIf="studentCreateMode == StudentCreate.VIEW">
+<mat-card class="w-full" *ngIf="studentCreateMode == studentCreate.VIEW">
     <div class="flex items-center mx-4" fxLayout="row" fxLayoutAlign="center center">
         <h3 class="flex-auto">{{'generalInformation'|translate}}</h3>
         <button mat-button color="primary" (click)="editGeneralInfo()">
@@ -379,133 +379,136 @@
     <mat-card-content>
 
         <div @stagger fxLayout="column">
-            <h4 class="text-primary pt-6 pb-2 px-4">{{'identificationInformation'|translate}}</h4>
+            <h3 class="text-blue pt-6 pb-2 px-4">{{'identificationInformation'|translate}}</h3>
             <ul class="grid grid-cols-3 col-gap-8 row-gap-10 mt-2 mx-4">
                 <li>
-                    <label class="text-sm leading-5 text-gray">{{'StudentName' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                    <label class="text-sm leading-5 text-gray">{{'studentName' | translate}}</label>
+                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
                         {{studentAddModel?.studentMaster.firstGivenName}} {{data.middleName}}
                         {{studentAddModel?.studentMaster.lastFamilyName}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'preferredCommonName' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
                         {{studentAddModel?.studentMaster.preferredName|EmtyValueCheckPipe}}
                     </p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'previousMaidenName' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
                         {{studentAddModel?.studentMaster.previousName|EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'studentID' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
-                        {{studentAddModel?.studentMaster.studentInternalId}}
+                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                        {{studentAddModel?.studentMaster.studentInternalId | EmtyValueCheckPipe}}
                     </p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'alternateID' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
                         {{studentAddModel?.studentMaster.alternateId|EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'districtID' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
-                        {{studentAddModel?.studentMaster.districtId}}</p>
+                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                        {{studentAddModel?.studentMaster.districtId | EmtyValueCheckPipe}}
+                    </p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'stateID' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{studentAddModel?.studentMaster.stateId}}
+                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentAddModel?.studentMaster.stateId}}
                     </p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'admissionNumber' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
                         {{studentAddModel?.studentMaster.admissionNumber|EmtyValueCheckPipe}}
                     </p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'rollNumber' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
                         {{studentAddModel?.studentMaster.rollNumber|EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'socialSecurityNumber' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
                         {{studentAddModel?.studentMaster.socialSecurityNumber|EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'otherGovtIssuedNumber' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
                         {{studentAddModel?.studentMaster.otherGovtIssuedNumber|EmtyValueCheckPipe}}</p>
                 </li>
             </ul>
 
+            <hr class="-mx-4 mt-6">
 
-            <h4 class="text-primary pt-6 pb-2 px-4">{{'demographicInformation'|translate}}</h4>
+            <h3 class="text-blue pt-6 pb-2 px-4">{{'demographicInformation'|translate}}</h3>
             <ul class="grid grid-cols-3 col-gap-8 row-gap-10 mt-2 mx-4">
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'dateOfBirth' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
-                        {{studentAddModel?.studentMaster.dob|date:'mediumDate'}} {{studentAge}}</p>
+                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                        {{studentAddModel?.studentMaster.dob|date:'mediumDate'}} <span class="dot-separator"></span> {{'age' | translate}} : {{studentAge}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'gender' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
                         {{studentAddModel?.studentMaster.gender|EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'race' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
                         {{studentAddModel?.studentMaster.race|EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'ethnicity' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
                         {{studentAddModel?.studentMaster.ethnicity|EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'maritalStatus' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
                         {{studentAddModel?.studentMaster.maritalStatus|EmtyValueCheckPipe}}
                     </p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'countryOfBirth' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{countryName}}</p>
+                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{countryName}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'nationality' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{nationality}}</p>
+                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{nationality}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'firstLanguage' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
-                        {{studentAddModel?.studentMaster.firstLanguageId}}</p>
+                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                        {{firstLanguageName}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'secondLanguage' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
-                        {{studentAddModel?.studentMaster.secondLanguageId}}</p>
+                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                        {{secondLanguageName}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'thirdLanguage' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
-                        {{studentAddModel?.studentMaster.thirdLanguageId}}</p>
+                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                        {{thirdLanguageName}}</p>
                 </li>
             </ul>
+
             <hr class="-mx-4 mt-6">
 
-            <h4 class="text-primary pt-6 pb-2 px-4">{{'schoolInformation'|translate}}</h4>
+            <h3 class="text-blue pt-6 pb-2 px-4">{{'schoolInformation'|translate}}</h3>
             <ul class="grid grid-cols-3 col-gap-8 row-gap-10 my-2 mx-4">
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'section' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{sectionName}}</p>
+                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{sectionName}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'estimatedGraduationDate' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
                         {{studentAddModel?.studentMaster.estimatedGradDate |date:'mediumDate' |EmtyValueCheckPipe}}</p>
                 </li>
             </ul>
@@ -514,58 +517,58 @@
 
                 <div class="mr-4" *ngIf="eligibility504; else NOTEligibility">
                     <mat-icon [icIcon]="icCheckbox" class="inline-block align-middle mr-2"></mat-icon>
-                    <span class="inline-block align-middle">{{'504Eligibility' |translate}}</span>
+                    <span class="inline-block text-base align-middle">{{'504Eligibility' |translate}}</span>
                 </div>
                 <ng-template #NOTEligibility>
                     <div class="mr-4">
                         <mat-icon [icIcon]="icCheckboxOutline" class="inline-block align-middle mr-2"></mat-icon>
-                        <span class="inline-block align-middle">{{'504Eligibility' |translate}}</span>
+                        <span class="inline-block text-base align-middle">{{'504Eligibility' |translate}}</span>
                     </div>
                 </ng-template>
 
 
                 <div class="mr-4" *ngIf="economicDisadvantage; else economicadvantage">
                     <mat-icon [icIcon]="icCheckbox" class="inline-block align-middle mr-2"></mat-icon>
-                    <span class="inline-block align-middle">{{'economicDisadvantage' |translate}}</span>
+                    <span class="inline-block text-base align-middle">{{'economicDisadvantage' |translate}}</span>
                 </div>
                 <ng-template #economicadvantage>
                     <div class="mr-4">
                         <mat-icon [icIcon]="icCheckboxOutline" class="inline-block align-middle mr-2"></mat-icon>
-                        <span class="inline-block align-middle">{{'economicDisadvantage' |translate}}</span>
+                        <span class="inline-block text-base align-middle">{{'economicDisadvantage' |translate}}</span>
                     </div>
                 </ng-template>
 
                 <div class="mr-4" *ngIf="freeLunchEligibility; else LunchEligibility">
                     <mat-icon [icIcon]="icCheckbox" class="inline-block align-middle mr-2"></mat-icon>
-                    <span class="inline-block align-middle">{{'freeLunchEligibility' |translate}}</span>
+                    <span class="inline-block text-base align-middle">{{'freeLunchEligibility' |translate}}</span>
                 </div>
                 <ng-template #LunchEligibility>
                     <div class="mr-4">
                         <mat-icon [icIcon]="icCheckboxOutline" class="inline-block align-middle mr-2"></mat-icon>
-                        <span class="inline-block align-middle">{{'freeLunchEligibility' |translate}}</span>
+                        <span class="inline-block text-base align-middle">{{'freeLunchEligibility' |translate}}</span>
                     </div>
                 </ng-template>
 
                 <div class="mr-4" *ngIf="specialEducationIndicator; else nonSpecialEducationIndicator">
                     <mat-icon [icIcon]="icCheckbox" class="inline-block align-middle mr-2"></mat-icon>
-                    <span class="inline-block align-middle">{{'specialEducationIndicator' |translate}}</span>
+                    <span class="inline-block text-base align-middle">{{'specialEducationIndicator' |translate}}</span>
                 </div>
                 <ng-template #nonSpecialEducationIndicator>
                     <div class="mr-4">
                         <mat-icon [icIcon]="icCheckboxOutline" class="inline-block align-middle mr-2"></mat-icon>
-                        <span class="inline-block align-middle">{{'specialEducationIndicator' |translate}}</span>
+                        <span class="inline-block text-base align-middle">{{'specialEducationIndicator' |translate}}</span>
                     </div>
                 </ng-template>
 
 
                 <div class="mr-4" *ngIf="lepIndicator; else Indicator">
                     <mat-icon [icIcon]="icCheckbox" class="inline-block align-middle mr-2"></mat-icon>
-                    <span class="inline-block align-middle">{{'lepIndicator' |translate}}</span>
+                    <span class="inline-block text-base align-middle">{{'lepIndicator' |translate}}</span>
                 </div>
                 <ng-template #Indicator>
                     <div class="mr-4">
                         <mat-icon [icIcon]="icCheckboxOutline" class="inline-block align-middle mr-2"></mat-icon>
-                        <span class="inline-block align-middle">{{'lepIndicator' |translate}}</span>
+                        <span class="inline-block text-base align-middle">{{'lepIndicator' |translate}}</span>
                     </div>
                 </ng-template>
 
@@ -574,21 +577,21 @@
                 [categoryId]="categoryId" [studentCreateMode]="studentCreateMode"></vex-custom-field-without-form>
             <hr class="-mx-4 mt-6">
 
-            <h4 class="text-primary pt-6 pb-2 px-4">{{'accessInformation'|translate}}</h4>
+            <h3 class="text-blue pt-6 pb-2 px-4">{{'accessInformation'|translate}}</h3>
             <ul class="grid grid-cols-3 col-gap-8 row-gap-10 my-2 mx-4">
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'loginEmailAddress' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
                         {{studentAddModel?.studentMaster.studentPortalId |EmtyValueCheckPipe }}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'password' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2"><a href=""
-                            class="text-primary pointer">Reset Password</a></p>
+                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2"><a routerLink=""
+                            class="text-blue cursor-pointer hover:underline">Reset Password</a></p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'portalAccess' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2 text-green">{{studentAddModel?.portalAccess}}
+                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2 text-green">{{studentAddModel?.portalAccess}}
                     </p>
                 </li>
             </ul>

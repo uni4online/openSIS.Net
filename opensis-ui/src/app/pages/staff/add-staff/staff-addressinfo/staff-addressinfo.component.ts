@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
@@ -17,8 +17,7 @@ import { CommonService } from '../../../../services/common.service';
 import { LoginService } from '../../../../services/login.service';
 import { SharedFunction } from '../../../../pages/shared/shared-function';
 import { StaffRelation } from '../../../../enums/staff-relation.enum';
-
-
+import { ImageCropperService } from '../../../../services/image-cropper.service';
 
 @Component({
   selector: 'vex-staff-addressinfo',
@@ -30,7 +29,7 @@ import { StaffRelation } from '../../../../enums/staff-relation.enum';
     fadeInRight400ms
   ]
 })
-export class StaffAddressinfoComponent implements OnInit {
+export class StaffAddressinfoComponent implements OnInit, OnDestroy {
   staffCreate = SchoolCreate;
   @Input() staffDetailsForViewAndEdit;
   @Input() categoryId;
@@ -51,14 +50,15 @@ export class StaffAddressinfoComponent implements OnInit {
   icEdit = icEdit;
   icCheckBox = icCheckBox;
   icCheckBoxOutlineBlank = icCheckBoxOutlineBlank;
-
+  actionButton="submit"
 
   constructor(public translateService: TranslateService,
     private snackbar: MatSnackBar,
     private staffService: StaffService,
     private commonService: CommonService,
     private loginService: LoginService,
-    private commonFunction: SharedFunction) {
+    private commonFunction: SharedFunction,
+    private imageCropperService: ImageCropperService) {
     translateService.use('en');
   }
 
@@ -67,6 +67,8 @@ export class StaffAddressinfoComponent implements OnInit {
     if (this.staffCreateMode == this.staffCreate.VIEW) {
       this.data = this.staffDetailsForViewAndEdit?.staffMaster;
       this.staffAddModel = this.staffDetailsForViewAndEdit;
+      this.imageCropperService.enableUpload(false);
+      this.staffService.changePageMode(this.staffCreateMode);
       if (this.data.mailingAddressSameToHome) {
         this.mailingAddressSameToHome = true;
       } else {
@@ -74,6 +76,8 @@ export class StaffAddressinfoComponent implements OnInit {
       }
       this.getAllCountry();
     } else {
+      this.imageCropperService.enableUpload(true);
+      this.staffService.changePageMode(this.staffCreateMode);
       this.staffAddModel = this.staffService.getStaffDetails();
     }
 
@@ -139,7 +143,9 @@ export class StaffAddressinfoComponent implements OnInit {
   }
 
   submitAddress() {
-    this.staffAddModel.selectedCategoryId = this.staffAddModel.fieldsCategoryList[this.categoryId].categoryId;
+    if (this.staffAddModel.fieldsCategoryList !== null) {
+      this.staffAddModel.selectedCategoryId = this.staffAddModel.fieldsCategoryList[this.categoryId].categoryId;
+    }
     this.staffAddModel._token = sessionStorage.getItem("token");
     this.staffAddModel._tenantName = sessionStorage.getItem("tenant");
     this.staffService.updateStaff(this.staffAddModel).subscribe(data => {
@@ -158,6 +164,9 @@ export class StaffAddressinfoComponent implements OnInit {
             duration: 10000
           });
           this.staffCreateMode = this.staffCreate.VIEW;
+          this.data = data.staffMaster;
+           this.imageCropperService.enableUpload(false);
+          this.staffService.changePageMode(this.staffCreateMode);
         }
       }
 
@@ -166,11 +175,22 @@ export class StaffAddressinfoComponent implements OnInit {
 
 
   editAddressContactInfo() {
-    this.staffCreateMode = this.staffCreate.EDIT
+    this.staffCreateMode = this.staffCreate.EDIT;
+    this.staffService.changePageMode(this.staffCreateMode);
+    this.actionButton="update";
+    this.imageCropperService.enableUpload(true);
   }
 
   cancelEdit() {
-    this.staffCreateMode = this.staffCreate.VIEW
+    this.staffCreateMode = this.staffCreate.VIEW;
+    this.staffService.changePageMode(this.staffCreateMode);
+    this.imageCropperService.enableUpload(false);
   }
+
+  ngOnDestroy() {
+    this.imageCropperService.enableUpload(false);
+  }
+
+
 
 }

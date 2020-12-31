@@ -19,7 +19,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confirm-dialog.component';
 import { LoaderService } from '../../../services/loader.service';
-
+import { LayoutService } from 'src/@vex/services/layout.service';
 @Component({
   selector: 'vex-rooms',
   templateUrl: './rooms.component.html',
@@ -45,8 +45,17 @@ export class RoomsComponent implements OnInit {
     private roomService:RoomService,
     private snackbar: MatSnackBar,
     private translateService : TranslateService,
-    private loaderService:LoaderService) {
-      translateService.use('en')
+    private loaderService:LoaderService,private layoutService: LayoutService) {
+      translateService.use('en');
+      if(localStorage.getItem("collapseValue") !== null){
+        if( localStorage.getItem("collapseValue") === "false"){
+          this.layoutService.expandSidenav();
+        }else{
+          this.layoutService.collapseSidenav();
+        } 
+      }else{
+        this.layoutService.expandSidenav();
+      }
       this.loaderService.isLoading.subscribe((val) => {
         this.loading = val;
       }); 
@@ -77,9 +86,21 @@ export class RoomsComponent implements OnInit {
         }
         else{
           if (res._failure) {     
-            this.snackbar.open('Room list failed. ' + res._message, 'LOL THANKS', {
-              duration: 10000
-            });
+            if (res._message === "NO RECORD FOUND") {
+              if (res.tableroomList == null) {
+                this.roomModelList=new MatTableDataSource([]) ;
+                this.roomModelList.sort=this.sort;  
+              }
+              else {
+                this.roomModelList=new MatTableDataSource(res.tableroomList) ;
+                this.roomModelList.sort=this.sort;  
+              }
+  
+            } else {
+              this.snackbar.open('Room List failed. ' + res._message, 'LOL THANKS', {
+                duration: 10000
+              });
+            }
           } 
           else { 
             this.roomModelList=new MatTableDataSource(res.tableroomList) ;

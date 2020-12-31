@@ -77,9 +77,7 @@
                 </div>
                 <mat-form-field class="mt-6" appearance="outline" color="primary">
                     <mat-label>{{'notes' | translate}}</mat-label>
-                    <textarea formControlName="notes" name="notes" cdkFocusInitial matInput required></textarea>
-                    <mat-error *ngIf="form.get('notes').hasError('required')">
-                        {{'notesIsRequired'|translate}}</mat-error>
+                    <textarea formControlName="notes" name="notes" cdkFocusInitial matInput></textarea>
                 </mat-form-field>
                 <mat-label class="mb-2">{{'eventColor' | translate}}</mat-label>
                 <div class="mb-4 event-color-list">

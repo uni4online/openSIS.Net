@@ -124,8 +124,16 @@ namespace opensis.core.ParentInfo.Services
                 if (TokenManager.CheckToken(pageResult._tenantName, pageResult._token))
                 {
                     parentInfoList = this.parentInfoRepository.GetAllParentInfoList(pageResult);
-                    parentInfoList._message = SUCCESS;
-                    parentInfoList._failure = false;
+                    if (parentInfoList.parentInfoForView.Count > 0)
+                    {
+                        parentInfoList._message = SUCCESS;
+                        parentInfoList._failure = false;
+                    }
+                    else
+                    {
+                        parentInfoList._message = "NO RECORD FOUND";
+                        parentInfoList._failure = true;
+                    }
                     logger.Info("Method getAllParentInfoList end with success.");
                 }
 

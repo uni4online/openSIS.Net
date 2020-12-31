@@ -9,33 +9,33 @@
     <ul class="grid grid-cols-2 col-gap-8 row-gap-10 mt-6">
         <li>
             <label class="text-sm leading-5 text-gray">{{'firstName' | translate}}</label>
-            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.siblingDetails.firstGivenName}}</p>
+            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{data.siblingDetails.firstGivenName}}</p>
         </li>
         <li>
             <label class="text-sm leading-5 text-gray">{{'lastName' | translate}}</label>
-            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.siblingDetails.lastFamilyName}}</p>
+            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{data.siblingDetails.lastFamilyName}}</p>
         </li>
         <li>
             <label class="text-sm leading-5 text-gray">{{'dateOfBirth' | translate}}</label>
-            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.siblingDetails.dob | date|EmtyValueCheckPipe}} | Age : {{data.siblingDetails.dob|date|age|EmtyValueCheckPipe}}</p>
+            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{data.siblingDetails.dob | date|EmtyValueCheckPipe}} | Age : {{data.siblingDetails.dob|date|age|EmtyValueCheckPipe}}</p>
         </li>
         <li>
             <label class="text-sm leading-5 text-gray">{{'studentID' | translate}}</label>
-            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{data.siblingDetails.studentId}}</p>
+            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{data.siblingDetails.studentId}}</p>
         </li>
         <li>
             <label class="text-sm leading-5 text-gray">{{'gradeLevel' | translate}}</label>
-            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">9</p>
+            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">9</p>
         </li>
         <li>
             <label class="text-sm leading-5 text-gray">{{'school' | translate}}</label>
-            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolName|EmtyValueCheckPipe}}</p>
+            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{schoolName|EmtyValueCheckPipe}}</p>
         </li>
     </ul>
     
     <div>
         <label class="text-sm leading-5 text-gray">{{'Address' | translate}}</label>
-        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2"><a href="javascript:void(0)" class="text-blue cursor-pointer">{{address}}<i class="icon icon-sphere"></i></a></p>
+        <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2"><a href="javascript:void(0)" class="text-blue cursor-pointer">{{address}}<i class="icon icon-sphere"></i></a></p>
     </div>
 </mat-dialog-content>
 <mat-dialog-actions class="py-6"></mat-dialog-actions>

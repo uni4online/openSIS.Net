@@ -1,11 +1,10 @@
 import { CommonField } from "../models/commonField";
-import { StudentMasterModel } from "../models/studentModel";
+
 export class ParentInfoModel {
     public tenantId: string;
-    public schoolId: number;
-    public studentId: number;
+    public schoolId: number;    
     public parentId: number;
-    public relationship: string;
+    public parentPhoto:string;    
     public salutation: string;
     public firstname: string;
     public middlename: string;
@@ -16,41 +15,72 @@ export class ParentInfoModel {
     public personalEmail: string;
     public workEmail: string;
     public userProfile: string;
-    public studentAddressSame: boolean;
-    public addressLineOne: string;
-    public addressLineTwo: string;
-    public country: number | string;
-    public city: string;
-    public state: string;
-    public zip: string;
-    public isCustodian: boolean;
-    public isPortalUser: boolean;
+    public isPortalUser: boolean;   
     public loginEmail: string;
     public suffix: string;
     public busNo: string;
     public busPickup: boolean;
-    public busDropoff: boolean;
-    public contactType: string;
-    public associationship: string;
+    public busDropoff: boolean;       
     public lastUpdated: string;
     public updatedBy: string;
-    public studentMaster: {};
-    public getStudentForView:[StudentMasterModel];
-    public students : [];
+    public parentAddress:[parentAddressModel];
+    public students:[];
     constructor() {
+        this.parentAddress = [new parentAddressModel];
         this.tenantId = sessionStorage.getItem("tenantId");
         this.schoolId = +sessionStorage.getItem("selectedSchoolId");
     }
 }
 
+export class ParentAssociationshipModel {
+    public tenantId: string;
+    public schoolId: number;    
+    public parentId: number;
+    public studentId: number;
+    public associationship:boolean;    
+    public relationship: string;
+    public isCustodian: boolean;
+    public lastUpdated: string;
+    public updatedBy: string;
+    public contactType: string;
+    
+    constructor() {
+        this.tenantId = sessionStorage.getItem("tenantId");
+        this.schoolId = +sessionStorage.getItem("selectedSchoolId");
+        this.updatedBy = sessionStorage.getItem("email");
+    }
+}
+export class parentAddressModel{
+    tenantId: string;
+    schoolId: number;
+    studentId: number;
+    parentId: number;
+    studentAddressSame: boolean;
+    addressLineOne: string;
+    addressLineTwo: string;
+    country: any;
+    city: string;
+    state: string;
+    zip: string;
+    lastUpdated: string;
+    updatedBy: string;
+    studentMaster: {};
+    constructor(){
+      this.tenantId=sessionStorage.getItem("tenantId");
+      this.schoolId=+sessionStorage.getItem("selectedSchoolId");      
+      this.updatedBy=sessionStorage.getItem("email");
+    }
+  }
 export class AddParentInfoModel extends CommonField {
     public parentInfo: ParentInfoModel;
-    public passwordHash: number;
+    public parentAssociationship: ParentAssociationshipModel;
+    public passwordHash: string;
     public getStudentForView: [];
 
     constructor() {
         super();
         this.parentInfo = new ParentInfoModel();
+        this.parentAssociationship = new ParentAssociationshipModel();
         this._tenantName = sessionStorage.getItem("tenant");
         this._token = sessionStorage.getItem("token");
         this.getStudentForView = null;
@@ -119,7 +149,7 @@ export class GetAllParentModel extends CommonField {
 
 
 export class GetAllParentInfoModel extends CommonField {
-    public parentInfoList: [];
+    public parentInfoListForView: [];
     public tenantId: string;
     public schoolId: number;
     public studentId: number;

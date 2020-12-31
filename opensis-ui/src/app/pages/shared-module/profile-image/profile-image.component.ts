@@ -37,33 +37,20 @@ export class ProfileImageComponent implements OnInit,OnDestroy {
   destroySubject$: Subject<void> = new Subject();
   @Input() enableCropTool=true;
   @Input() responseImage; 
-  @Input() mode; 
 
   constructor(private dialog:MatDialog,
     private imageCropperService:ImageCropperService,
-    private snackbar: MatSnackBar,
-    private schoolService:SchoolService) {
+    private snackbar: MatSnackBar) {
      }
 
      ngOnInit(): void {
-      if(this.mode){
         this.imageCropperService.sharedMessage.pipe(takeUntil(this.destroySubject$)).subscribe((message) => {
-          this.enableUpload = message
-          let id=this.schoolService.getSchoolId();
-          if(this.enableUpload){
-            this.inputType ="none";
-            if(id!=null){
-              this.inputType ="none";
-            }
-            if(id==null && this.enableUpload){
-              this.inputType="file"
-            }
-          }else if(!this.enableUpload){
+          if(message){
             this.inputType="file"
+          }else{
+            this.inputType="none"
           }
-        });
-      }
-     
+        }); 
     }
      
   imageCropped(event: ImageCroppedEvent) {
@@ -109,9 +96,9 @@ export class ProfileImageComponent implements OnInit,OnDestroy {
         var img = new Image();
         img.onload = () => {
           if (this.enableCropTool) {
-            this.CallCropper(event);
+            this.callCropper(event);
           } else {
-            this.CallUncropper(event);
+            this.callUncropper(event);
           }
         }
         img.src = _URL.createObjectURL(files[i]);
@@ -123,7 +110,7 @@ export class ProfileImageComponent implements OnInit,OnDestroy {
     }
   }
 
-  CallCropper(event){
+  callCropper(event){
     this.croppedImage
     this.imageChangedEvent = event;
     this.showCropTool = true;
@@ -131,11 +118,11 @@ export class ProfileImageComponent implements OnInit,OnDestroy {
     return false;
   }
 
-  CallUncropper(event){
+  callUncropper(event){
     const file = (event.target as HTMLInputElement).files[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = this.HandleReaderLoaded.bind(this);
+      reader.onload = this.handleReaderLoaded.bind(this);
       reader.readAsBinaryString(file);
     }
     const reader = new FileReader();
@@ -145,7 +132,7 @@ export class ProfileImageComponent implements OnInit,OnDestroy {
     reader.readAsDataURL(file)
   }
 
-  HandleReaderLoaded(e) {
+  handleReaderLoaded(e) {
     this.croppedImage='';
     let sendImageData2 =(e)=>{
       this.imageCropperService.sendUncroppedEvent(e);

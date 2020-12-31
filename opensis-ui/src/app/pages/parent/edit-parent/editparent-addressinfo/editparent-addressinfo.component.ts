@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
@@ -13,6 +13,7 @@ import { CountryModel } from '../../../../models/countryModel';
 import { CommonService } from '../../../../services/common.service';
 import { ParentInfoService } from '../../../../services/parent-info.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ImageCropperService } from 'src/app/services/image-cropper.service';
 
 @Component({
   selector: 'vex-editparent-addressinfo',
@@ -24,7 +25,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     fadeInRight400ms
   ]
 })
-export class EditparentAddressinfoComponent implements OnInit {
+export class EditparentAddressinfoComponent implements OnInit,OnDestroy {
 
   icAdd = icAdd;
   icClear = icClear;
@@ -40,36 +41,32 @@ export class EditparentAddressinfoComponent implements OnInit {
   countryName = "-";
   country = '-';
   data;
-
+  parentInfo;
   constructor(private fb: FormBuilder,
     private snackbar: MatSnackBar,
     public translateService: TranslateService,
     private commonService: CommonService,
-    private _parentInfoService: ParentInfoService) {
+    private parentInfoService: ParentInfoService,
+    private imageCropperService:ImageCropperService) {
     translateService.use('en');
+    
   }
 
-  ngOnInit(): void {
+  ngOnInit(): void {   
     this.parentCreateMode = this.parentCreate.VIEW;
-    this.addParentInfoModel = this.parentDetailsForViewAndEdit;    
+    this.parentInfo = {};    
+    this.addParentInfoModel = this.parentDetailsForViewAndEdit;   
+    this.addParentInfoModel.parentInfo.parentAddress[0].country = +this.parentDetailsForViewAndEdit.parentInfo.parentAddress[0].country; 
     this.getAllCountry();
   }
 
-
-  viewParentInfo() {
-
-    this.addParentInfoModel.parentInfo.parentId = 1;
-    this._parentInfoService.viewParentInfo(this.addParentInfoModel).subscribe(data => {
-      this.addParentInfoModel.parentInfo = data.parentInfo;
-      
-    });
-
-  }
+  
+ 
 
   editAddressContactInfo() {
     this.parentCreateMode = this.parentCreate.EDIT;
-
-    this.addParentInfoModel.parentInfo.country = + this.addParentInfoModel.parentInfo.country;
+    this.parentInfoService.changePageMode(this.parentCreateMode);
+    this.imageCropperService.enableUpload(true);
   }
 
   getAllCountry() {
@@ -88,7 +85,7 @@ export class EditparentAddressinfoComponent implements OnInit {
           }
 
           this.countryListArr.map((val) => {
-            var country = + this.addParentInfoModel.parentInfo.country;
+            var country = + this.addParentInfoModel.parentInfo.parentAddress[0].country;
             if (val.id === country) {
 
               this.country = val.name;
@@ -105,7 +102,7 @@ export class EditparentAddressinfoComponent implements OnInit {
 
   viewCountryName() {
     this.countryListArr.map((val) => {
-      var countryInNumber = + this.addParentInfoModel.parentInfo.country;
+      var countryInNumber = + this.addParentInfoModel.parentInfo.parentAddress[0].country;      
       if (val.id === countryInNumber) {
         this.countryName = val.name;
 
@@ -115,7 +112,9 @@ export class EditparentAddressinfoComponent implements OnInit {
   }
 
   submit() {
-    this._parentInfoService.updateParentInfo(this.addParentInfoModel).subscribe(data => {
+    this.addParentInfoModel._token = sessionStorage.getItem("token");
+    this.addParentInfoModel._tenantName = sessionStorage.getItem("tenant");
+    this.parentInfoService.updateParentInfo(this.addParentInfoModel).subscribe(data => {
       if (typeof (data) == 'undefined') {
         this.snackbar.open('Address Updation failed. ' + sessionStorage.getItem("httpError"), '', {
           duration: 10000
@@ -132,9 +131,15 @@ export class EditparentAddressinfoComponent implements OnInit {
           });
           this.viewCountryName();
           this.parentCreateMode = this.parentCreate.VIEW;
+          this.parentInfoService.changePageMode(this.parentCreateMode);
+          this.imageCropperService.enableUpload(false);
         }
       }
 
     });
+  }
+
+  ngOnDestroy(){
+    this.imageCropperService.enableUpload(false);
   }
 }

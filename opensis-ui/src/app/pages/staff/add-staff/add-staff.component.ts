@@ -11,6 +11,7 @@ import icLoginInfo from '@iconify/icons-ic/outline-lock-open';
 import icAddressInfo from '@iconify/icons-ic/outline-location-on';
 import icCertificationInfo from '@iconify/icons-ic/outline-military-tech';
 import icSchedule from '@iconify/icons-ic/outline-schedule';
+import icCustomCategory from '@iconify/icons-ic/outline-article';
 import { ImageCropperService } from '../../../services/image-cropper.service';
 import { TranslateService } from '@ngx-translate/core';
 import { SchoolCreate } from '../../../../../src/app/enums/school-create.enum';
@@ -43,7 +44,7 @@ export class AddStaffComponent implements OnInit, OnDestroy {
   currentCategory: number = 12; // because 12 is the id of general info.
   indexOfCategory: number = 0;
   staffTitle = "Add Staff Information";
-  pageStatus = "Add Staff"
+  pageStatus = "Add Staff";
   module = 'Staff';
   responseImage: string;
   enableCropTool = true;
@@ -53,6 +54,7 @@ export class AddStaffComponent implements OnInit, OnDestroy {
   icAddressInfo = icAddressInfo;
   icCertificationInfo = icCertificationInfo;
   icSchedule = icSchedule;
+  icCustomCategory = icCustomCategory;
   loading: boolean;
 
   pageId = 'General Info';
@@ -62,11 +64,22 @@ export class AddStaffComponent implements OnInit, OnDestroy {
     private customFieldService: CustomFieldService,
     private snackbar: MatSnackBar,
     private loaderService:LoaderService,
-    private cdr: ChangeDetectorRef) {
+    private cdr: ChangeDetectorRef,
+    private imageCropperService:ImageCropperService) {
     translateService.use('en');
     this.layoutService.collapseSidenav();
+    this.imageCropperService.getCroppedEvent().pipe(takeUntil(this.destroySubject$)).subscribe((res) => {
+      this.staffService.setStaffImage(res[1]);
+    });
     this.staffService.categoryToSend.pipe(takeUntil(this.destroySubject$)).subscribe((res:number) => {
       this.currentCategory = res;
+    });
+    this.staffService.modeToUpdate.pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
+      if(res==this.staffCreate.VIEW){
+        this.pageStatus="View Staff";
+      }else{
+        this.pageStatus="Edit Staff";
+      }
     });
     this.loaderService.isLoading.pipe(takeUntil(this.destroySubject$)).subscribe((currentState) => {
       this.loading = currentState;
@@ -120,9 +133,13 @@ export class AddStaffComponent implements OnInit, OnDestroy {
       this.staffAddModel = data;
       this.fieldsCategory = data.fieldsCategoryList;
       this.staffService.sendDetails(this.staffAddModel);
-      //this.responseImage = this.staffAddModel.staffMaster.staffPhoto;
-      this.staffTitle = this.staffAddModel.staffMaster.firstGivenName + " " + this.staffAddModel.staffMaster.lastFamilyName;
-      //this.staffService.setStaffImage(this.responseImage);
+      this.responseImage = this.staffAddModel.staffMaster.staffPhoto;
+      if(this.staffAddModel.staffMaster.salutation!=null){
+        this.staffTitle =this.staffAddModel.staffMaster.salutation+" "+ this.staffAddModel.staffMaster.firstGivenName + " " + this.staffAddModel.staffMaster.lastFamilyName;
+      }else{
+        this.staffTitle =this.staffAddModel.staffMaster.firstGivenName + " " + this.staffAddModel.staffMaster.lastFamilyName;
+      }
+      this.staffService.setStaffImage(this.responseImage);
     });
   }
 
@@ -151,7 +168,7 @@ export class AddStaffComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.staffService.setStaffDetails(null);
-    // this.staffService.setStudentImage(null);
+    this.staffService.setStaffImage(null);
     this.staffService.setStaffId(null);
     this.destroySubject$.next();
   }

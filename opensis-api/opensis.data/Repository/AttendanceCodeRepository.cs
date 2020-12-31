@@ -108,10 +108,21 @@ namespace opensis.data.Repository
             {
 
                 var attendanceCodeList = this.context?.AttendanceCode.Where(x => x.TenantId == attendanceCodeListViewModel.TenantId && x.SchoolId == attendanceCodeListViewModel.SchoolId && x.AttendanceCategoryId== attendanceCodeListViewModel.AttendanceCategoryId).OrderBy(x => x.SortOrder).ToList();
-                attendanceCodeListModel.attendanceCodeList = attendanceCodeList;
-                attendanceCodeListModel._tenantName = attendanceCodeListViewModel._tenantName;
-                attendanceCodeListModel._token = attendanceCodeListViewModel._token;
-                attendanceCodeListModel._failure = false;
+                if (attendanceCodeList.Count > 0)
+                {
+                    attendanceCodeListModel.attendanceCodeList = attendanceCodeList;
+                    attendanceCodeListModel._tenantName = attendanceCodeListViewModel._tenantName;
+                    attendanceCodeListModel._token = attendanceCodeListViewModel._token;
+                    attendanceCodeListModel._failure = false;
+                }
+                else
+                {
+                    attendanceCodeListModel.attendanceCodeList = null;
+                    attendanceCodeListModel._tenantName = attendanceCodeListViewModel._tenantName;
+                    attendanceCodeListModel._token = attendanceCodeListViewModel._token;
+                    attendanceCodeListModel._failure = true;
+                    attendanceCodeListModel._message = NORECORDFOUND;
+                }
             }
             catch (Exception es)
             {
@@ -227,10 +238,21 @@ namespace opensis.data.Repository
             {
 
                 var attendanceCodeCategoriesList = this.context?.AttendanceCodeCategories.Where(x => x.TenantId == attendanceCodeCategoriesListViewModel.TenantId && x.SchoolId == attendanceCodeCategoriesListViewModel.SchoolId).ToList();
-                attendanceCodeCategoriesListModel.attendanceCodeCategoriesList = attendanceCodeCategoriesList;
-                attendanceCodeCategoriesListModel._tenantName = attendanceCodeCategoriesListViewModel._tenantName;
-                attendanceCodeCategoriesListModel._token = attendanceCodeCategoriesListViewModel._token;
-                attendanceCodeCategoriesListModel._failure = false;
+                if (attendanceCodeCategoriesList.Count > 0)
+                {
+                    attendanceCodeCategoriesListModel.attendanceCodeCategoriesList = attendanceCodeCategoriesList;
+                    attendanceCodeCategoriesListModel._tenantName = attendanceCodeCategoriesListViewModel._tenantName;
+                    attendanceCodeCategoriesListModel._token = attendanceCodeCategoriesListViewModel._token;
+                    attendanceCodeCategoriesListModel._failure = false;
+                }
+                else
+                {
+                    attendanceCodeCategoriesListModel.attendanceCodeCategoriesList = null;
+                    attendanceCodeCategoriesListModel._tenantName = attendanceCodeCategoriesListViewModel._tenantName;
+                    attendanceCodeCategoriesListModel._token = attendanceCodeCategoriesListViewModel._token;
+                    attendanceCodeCategoriesListModel._failure = true;
+                    attendanceCodeCategoriesListModel._message = NORECORDFOUND;
+                }
             }
             catch (Exception es)
             {

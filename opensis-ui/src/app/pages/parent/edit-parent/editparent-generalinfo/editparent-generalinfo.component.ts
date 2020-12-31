@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef,Input } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef,Input, OnDestroy } from '@angular/core';
 import { FormBuilder,NgForm } from '@angular/forms';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
@@ -24,6 +24,8 @@ import { ConfirmDialogComponent } from '../../../shared-module/confirm-dialog/co
 import {StudentSiblingAssociation} from '../../../../models/studentModel';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { ImageCropperService } from 'src/app/services/image-cropper.service';
+import { SchoolCreate } from '../../../../enums/school-create.enum';
 @Component({
   selector: 'vex-editparent-generalinfo',
   templateUrl: './editparent-generalinfo.component.html',
@@ -34,9 +36,10 @@ import { Subject } from 'rxjs';
     fadeInRight400ms
   ]
 })
-export class EditparentGeneralinfoComponent implements OnInit {
+export class EditparentGeneralinfoComponent implements OnInit,OnDestroy {
   @Input() parentDetailsForViewAndEdit;
-  
+  parentCreate = SchoolCreate;
+  @Input() parentCreateMode: SchoolCreate;
   icAdd = icAdd;
   icClear = icClear;
   icVisibility = icVisibility;
@@ -59,63 +62,71 @@ export class EditparentGeneralinfoComponent implements OnInit {
   parentInfoList:ParentInfoList=new ParentInfoList();
   studentSiblingAssociation:StudentSiblingAssociation=new StudentSiblingAssociation();
   removeAssociateParent:RemoveAssociateParent=new RemoveAssociateParent();
-  destroySubject$: Subject<void> = new Subject();
   parentInfo;
   studentInfo;
   
   constructor(
-    private fb: FormBuilder, 
     public translateService:TranslateService, 
     private cd: ChangeDetectorRef,  
     private parentInfoService:ParentInfoService,
     private snackbar: MatSnackBar,  
     private router:Router,
     private dialog: MatDialog,
-    private studentService:StudentService
+    private imageCropperService:ImageCropperService
     ) {
     translateService.use('en');
     
   }
 
   ngOnInit(): void {
+
+    
     this.parentInfo = {};
     if(this.parentDetailsForViewAndEdit.parentInfo.hasOwnProperty('firstname')){
       this.addParentInfoModel = this.parentDetailsForViewAndEdit;     
       this.parentInfo = this.addParentInfoModel.parentInfo;
-      this.studentInfo = this.addParentInfoModel.getStudentForView;    
+      this.studentInfo = this.addParentInfoModel.getStudentForView;  
+      this.setEmptyValue(this.parentInfo,this.studentInfo);     
     }else{    
-      this.parentInfoService.getParentDetailsForGeneral.subscribe((res: AddParentInfoModel) => {
-        this.addParentInfoModel = res;
+      
+      this.parentInfoService.getParentDetailsForGeneral.subscribe((res: AddParentInfoModel) => {       
+        this.addParentInfoModel = res;        
         this.parentInfo = this.addParentInfoModel.parentInfo;
-        this.studentInfo = this.addParentInfoModel.getStudentForView;     
+        this.studentInfo = this.addParentInfoModel.getStudentForView;  
+        this.setEmptyValue(this.parentInfo,this.studentInfo);   
       })
     } 
-    if(this.parentInfo.middlename === null){
-      this.parentInfo.middlename = " ";      
-      }
-      if(this.parentInfo.salutation === null){
-      this.parentInfo.salutation = " ";      
-      }
-      if(this.studentInfo !== undefined){
-        this.studentInfo.forEach(element => {
-          if(element.middleName === null){
-            element.middleName="";
-          } 
-        }); 
-      }
+   
+  }
+  setEmptyValue(parentInfo,studentInfo){
+   
+    if(parentInfo.middlename === null){
+      parentInfo.middlename = " ";      
+    }
+    if(parentInfo.salutation === null){
+      parentInfo.salutation = " ";      
+    }
+    
+    if(studentInfo !== undefined){      
+      studentInfo.forEach(element => {  
+        
+        if(element.middleName === null){
+          element.middleName="";
+        } 
+      }); 
+    }
          
-      if(this.parentInfo.isPortalUser === true){
+    if(parentInfo.isPortalUser === true){
       this.isPortalUser = true;
       this.addParentInfoModel.parentInfo.isPortalUser = true; 
-      }else{
+    }else{
       this.isPortalUser = false;
       this.addParentInfoModel.parentInfo.isPortalUser = false; 
-      }
-      if(this.parentInfo){
+    }
+    if(parentInfo){
       this.mode = "view";     
-      }
+    }
   }
-
   portalUserCheck(event){
     if(event.checked === true){
       this.isPortalUser = true;
@@ -127,12 +138,18 @@ export class EditparentGeneralinfoComponent implements OnInit {
   }
 
   editGeneralInfo(){
-    this.mode = "add";   
+    this.mode = "add"; 
+    this.parentCreateMode=this.parentCreate.EDIT
     this.addParentInfoModel.parentInfo = this.parentInfo;
+    this.imageCropperService.enableUpload(true);
+    this.parentInfoService.changePageMode(this.parentCreateMode);
   }
   
   submit()
   {  
+    this.addParentInfoModel._token = sessionStorage.getItem("token");
+    this.addParentInfoModel._tenantName = sessionStorage.getItem("tenant");
+
     this.parentInfoService.updateParentInfo(this.addParentInfoModel).subscribe(data => {
       if (typeof (data) == 'undefined') 
       {
@@ -172,7 +189,7 @@ export class EditparentGeneralinfoComponent implements OnInit {
     this.associateStudentMode="search";
     this.dialog.open(AddSiblingComponent, {
      data:{      
-      data:this.parentDetails
+      data:this.addParentInfoModel
      },
       width: '600px'
     }).afterClosed().subscribe(data => {
@@ -201,8 +218,7 @@ export class EditparentGeneralinfoComponent implements OnInit {
    });
   }
   deleteParentInfo(studentId){  
-    this.removeAssociateParent.studentId=studentId;
-    this.removeAssociateParent.parentInfo.studentId=studentId;
+    this.removeAssociateParent.studentId=studentId;  
     this.removeAssociateParent.parentInfo.parentId=this.parentInfo.parentId;
     this.parentInfoService.removeAssociatedParent(this.removeAssociateParent).subscribe(
       data => { 
@@ -242,6 +258,11 @@ export class EditparentGeneralinfoComponent implements OnInit {
     this.visible = true;
     this.cd.markForCheck();
     }
+  }
+
+  ngOnDestroy(){
+    this.imageCropperService.enableUpload(false);
+
   }
 
 }

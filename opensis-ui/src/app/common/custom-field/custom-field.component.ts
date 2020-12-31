@@ -52,13 +52,13 @@ export class CustomFieldComponent implements OnInit {
   constructor(
     private snackbar: MatSnackBar,
     private commonFunction: SharedFunction,
-    private _studentService: StudentService,
-    private _schoolService: SchoolService,
-    private _staffService : StaffService,
+    private studentService: StudentService,
+    private schoolService: SchoolService,
+    private staffService : StaffService,
     private router: Router,
   ) {
     if (this.module === 'School') {
-      this._schoolService.getSchoolDetailsForGeneral.subscribe((res: SchoolAddViewModel) => {
+      this.schoolService.getSchoolDetailsForGeneral.subscribe((res: SchoolAddViewModel) => {
         this.schoolAddViewModel = res;
         this.checkCustomValue();
       });
@@ -165,7 +165,7 @@ export class CustomFieldComponent implements OnInit {
     this.studentAddViewModel.selectedCategoryId = this.studentAddViewModel.fieldsCategoryList[this.categoryId].categoryId;
     this.studentAddViewModel._tenantName = sessionStorage.getItem("tenant");
     this.studentAddViewModel._token = sessionStorage.getItem("token");
-    this._studentService.UpdateStudent(this.studentAddViewModel).subscribe(data => {
+    this.studentService.UpdateStudent(this.studentAddViewModel).subscribe(data => {
       if (typeof (data) == 'undefined') {
         this.snackbar.open(this.categoryTitle + ' Updation failed. ' + sessionStorage.getItem("httpError"), '', {
           duration: 10000
@@ -180,6 +180,7 @@ export class CustomFieldComponent implements OnInit {
           this.snackbar.open(this.categoryTitle + ' Updated Successfully.', '', {
             duration: 10000
           });
+          this.studentCreateMode = this.SchoolCreate.VIEW
 
 
         }
@@ -194,7 +195,7 @@ export class CustomFieldComponent implements OnInit {
     this.schoolAddViewModel.schoolMaster.city = this.schoolAddViewModel.schoolMaster.city.toString();
     this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolOpened = this.commonFunction.formatDateSaveWithoutTime(this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolOpened);
     this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolClosed = this.commonFunction.formatDateSaveWithoutTime(this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolClosed);
-    this._schoolService.UpdateSchool(this.schoolAddViewModel).subscribe(data => {
+    this.schoolService.UpdateSchool(this.schoolAddViewModel).subscribe(data => {
       if (typeof (data) == 'undefined') {
         this.snackbar.open(this.categoryTitle + ' ' + sessionStorage.getItem("httpError"), '', {
           duration: 10000
@@ -210,7 +211,9 @@ export class CustomFieldComponent implements OnInit {
           this.snackbar.open(this.categoryTitle + " " + 'Updation Successful', '', {
             duration: 10000
           });
-          this._schoolService.changeMessage(true);
+          this.schoolCreateMode = this.SchoolCreate.VIEW
+          this.schoolService.changeMessage(true);
+
         }
       }
 
@@ -221,7 +224,7 @@ export class CustomFieldComponent implements OnInit {
     this.staffAddViewModel.selectedCategoryId = this.staffAddViewModel.fieldsCategoryList[this.categoryId].categoryId;
     this.staffAddViewModel._token = sessionStorage.getItem("token");
     this.staffAddViewModel._tenantName = sessionStorage.getItem("tenant");
-    this._staffService.updateStaff(this.staffAddViewModel).subscribe(data => {
+    this.staffService.updateStaff(this.staffAddViewModel).subscribe(data => {
       if (typeof (data) == 'undefined') {
         this.snackbar.open(this.categoryTitle + ' ' + sessionStorage.getItem("httpError"), '', {
           duration: 10000

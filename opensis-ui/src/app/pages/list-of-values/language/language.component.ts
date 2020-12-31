@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input ,ViewChild} from '@angular/core';
 import icMoreVert from '@iconify/icons-ic/twotone-more-vert';
 import icAdd from '@iconify/icons-ic/baseline-add';
 import icEdit from '@iconify/icons-ic/twotone-edit';
@@ -13,7 +13,12 @@ import { fadeInUp400ms } from '../../../../@vex/animations/fade-in-up.animation'
 import { stagger40ms } from '../../../../@vex/animations/stagger.animation';
 import { TranslateService } from '@ngx-translate/core';
 import { EditLanguageComponent } from './edit-language/edit-language.component';
-
+import {LanguageModel} from '../../../models/languageModel';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
+import { LoaderService } from '../../../services/loader.service';
+import { CommonService } from '../../../services/common.service';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'vex-language',
@@ -27,13 +32,16 @@ import { EditLanguageComponent } from './edit-language/edit-language.component';
 export class LanguageComponent implements OnInit {
   @Input()
   columns = [
-    { label: 'Title', property: 'title', type: 'text', visible: true },
-    { label: 'Short Code', property: 'short_code', type: 'text', visible: true },
-    { label: 'Sort Order', property: 'sort_order', type: 'number', visible: true },
+    { label: 'Title', property: 'locale', type: 'text', visible: true },
+    { label: 'Short Code', property: 'languageCode', type: 'text', visible: true },
+    { label: 'Created By', property: 'createdBy', type: 'text', visible: true },
+    { label: 'Create Date', property: 'createdOn', type: 'text', visible: true },
+    { label: 'Updated By', property: 'updatedBy', type: 'text', visible: true },
+    { label: 'Update Date', property: 'updatedOn', type: 'text', visible: true },
     { label: 'Actions', property: 'actions', type: 'text', visible: true }
   ];
 
-  LanguageModelList;
+  SchoolClassificationModelList;
 
   icMoreVert = icMoreVert;
   icAdd = icAdd;
@@ -41,38 +49,84 @@ export class LanguageComponent implements OnInit {
   icDelete = icDelete;
   icSearch = icSearch;
   icImpersonate = icImpersonate;
-  icFilterList = icFilterList;
-  loading:Boolean;
-
-  constructor(private router: Router,private dialog: MatDialog,public translateService:TranslateService) {
+  icFilterList = icFilterList; 
+  loading;  
+  totalCount:Number;pageNumber:Number;pageSize:Number;
+  languageModel: LanguageModel = new LanguageModel();  
+  languageModelList: MatTableDataSource<any>;
+  searchKey:string;
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+  constructor(private router: Router,
+    private dialog: MatDialog,
+    public translateService:TranslateService,
+    public loaderService:LoaderService,
+    public commonService:CommonService,
+    public snackbar:MatSnackBar
+    ) {
     translateService.use('en');
-    this.LanguageModelList = [
-      {title: 'Abkhaz', short_code: 'ab', sort_order: 1},
-      {title: 'Afar', short_code: 'aa', sort_order: 2},
-      {title: 'Afrikaans', short_code: 'af', sort_order: 3},
-      {title: 'Akan', short_code: 'ak', sort_order: 4},
-      {title: 'Albanian', short_code: 'sq', sort_order: 5},
-      {title: 'Amharic', short_code: 'am', sort_order: 6},
-      {title: 'Arabic', short_code: 'ar', sort_order: 7},
-      {title: 'Aragonese', short_code: 'an', sort_order: 8},
-      {title: 'Armenian', short_code: 'hy', sort_order: 9},
-      {title: 'Assamese', short_code: 'as', sort_order: 10}
-    ]
+    this.loaderService.isLoading.subscribe((val) => {
+      this.loading = val;
+    });
+    this.getLanguageList();
   }
 
   ngOnInit(): void {
+    
   }
-
-  getPageEvent(event){    
-    // this.getAllSchool.pageNumber=event.pageIndex+1;
-    // this.getAllSchool.pageSize=event.pageSize;
-    // this.callAllSchool(this.getAllSchool);
+ 
+  getLanguageList(){
+    this.languageModel._tenantName = sessionStorage.getItem("tenant");
+    this.commonService.GetAllLanguage(this.languageModel).subscribe(data => {
+      if (typeof (data) == 'undefined') {
+        this.snackbar.open('Language list failed. ' + sessionStorage.getItem("httpError"), '', {
+          duration: 10000
+        });
+      }else{
+        if (data._failure) {
+          if (data._message === "NO RECORD FOUND") {
+            this.languageModelList = new MatTableDataSource(data.tableLanguage);
+            this.languageModelList.sort=this.sort;
+            this.languageModelList.paginator = this.paginator;       
+          } else {
+            this.snackbar.open('Language list failed.' + data._message, 'LOL THANKS', {
+              duration: 10000
+            });
+          }
+        }else{ 
+          this.languageModelList = new MatTableDataSource(data.tableLanguage);
+          this.languageModelList.sort=this.sort; 
+          this.languageModelList.paginator = this.paginator;         
+        } 
+      }
+    });
   }
 
   goToAdd(){
     this.dialog.open(EditLanguageComponent, {
+      data: {
+        mode:"add"       
+      },  
       width: '500px'
-    })
+    }).afterClosed().subscribe((data) => {
+      if(data){
+        this.getLanguageList();
+      }            
+    });   
+  }
+
+  goToEdit(editDetails){
+    this.dialog.open(EditLanguageComponent, {
+      data: {
+        mode:"edit",
+        editDetails:editDetails
+      },  
+      width: '500px'
+    }).afterClosed().subscribe((data) => {
+      if(data){
+        this.getLanguageList();
+      }            
+    });   
   }
 
   toggleColumnVisibility(column, event) {
@@ -83,6 +137,15 @@ export class LanguageComponent implements OnInit {
 
   get visibleColumns() {
     return this.columns.filter(column => column.visible).map(column => column.property);
+  }
+
+  onSearchClear(){
+    this.searchKey="";
+    this.applyFilter();
+  }
+
+  applyFilter(){
+    this.languageModelList.filter = this.searchKey.trim().toLowerCase()
   }
 
 }

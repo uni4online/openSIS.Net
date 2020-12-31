@@ -28,6 +28,15 @@ export class ParentInfoService {
   getParentDetails() {
     return this.parentDetails;
   }
+
+// Update Mode in Parent
+ private pageMode = new Subject;
+ modeToUpdate=this.pageMode.asObservable();
+
+ changePageMode(mode:number){
+     this.pageMode.next(mode);
+ } 
+
   ViewParentListForStudent(parentInfo: ViewParentInfoModel) {
     let apiurl = this.apiUrl + parentInfo._tenantName + "/ParentInfo/ViewParentListForStudent";
     return this.http.post<ViewParentInfoModel>(apiurl, parentInfo)
@@ -38,7 +47,7 @@ export class ParentInfoService {
   }
 
   updateParentInfo(parentInfo: AddParentInfoModel) {
-    console.log(parentInfo)
+    parentInfo.parentInfo.parentPhoto = this.parentImage;
     let apiurl = this.apiUrl + parentInfo._tenantName + "/ParentInfo/updateParentInfo";
     return this.http.put<AddParentInfoModel>(apiurl, parentInfo)
   }
@@ -48,7 +57,7 @@ export class ParentInfoService {
   }
   addParentForStudent(obj: AddParentInfoModel){
     obj.passwordHash = this.cryptoService.encrypt(obj.passwordHash);
-   
+    obj.parentInfo.parentPhoto = this.parentImage;
     let apiurl = this.apiUrl + obj._tenantName+ "/ParentInfo/addParentForStudent";   
     return this.http.post<AddParentInfoModel>(apiurl,obj)
   }
@@ -78,7 +87,10 @@ sendDetails(parentDetailsForGeneralInfo) {
   this.parentDetailsForGeneralInfo.next(parentDetailsForGeneralInfo);
 }
 
-
+private parentImage;
+setParentImage(imageInBase64) {
+  this.parentImage = imageInBase64;
+}
 
 
   

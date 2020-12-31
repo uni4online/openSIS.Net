@@ -2,14 +2,18 @@
 <vex-mat-spinner-overlay *ngIf="loading" color="accent"></vex-mat-spinner-overlay>
     <div class="sidenav-secondary">
         <vex-scrollbar class="flex-auto">
-        <div class="h-45 flex items-center sm:px-0" fxLayout="row" fxLayoutAlign="start center">
+        <div class="h-45 items-center sm:px-0" fxLayout="row" fxLayoutAlign="start center">
             <vex-profile-image [enableCropTool]="enableCropTool" [responseImage]="responseImage"></vex-profile-image>
-            <span *ngIf="criticalAlert"><mat-icon [icIcon]="icHospital" class="mr-3"></mat-icon></span>
+            <span class="critical-alert shadow-md" *ngIf="criticalAlert"><mat-icon [icIcon]="icHospital" class="mr-3"></mat-icon></span>
         </div>
-
+        <div class="text-center px-4">
+            <h5 class="text-primary font-semibold mb-0">{{studentTitle}}</h5>
+            <div class="rounded-full py-1 px-3 bg-gray text-white inline-block mt-3" *ngIf="studentGrade">Grade Not Assigned</div>
+        </div>
+        <hr class="mt-4"/>
         <mat-accordion>
-            <mat-expansion-panel>
-                <mat-expansion-panel-header>
+            <mat-expansion-panel expanded="true">
+                <mat-expansion-panel-header >
                         <mat-panel-title>
                             <mat-icon [icIcon]="icSchool" class="mr-3"></mat-icon> Student Details
                         </mat-panel-title>
@@ -17,7 +21,7 @@
                 <div>
                     <ul class="nav-sub-item">
                         <li *ngFor="let field of fieldsCategory; let index =index" (click)="changeCategory(field,index)">
-                            <a  [ngClass]="currentCategory==field.categoryId?'text-primary' : ''" @fadeInRight>{{field.title}}</a>
+                            <a  [ngClass]="currentCategory==field.categoryId?'text-blue' : ''" @fadeInRight>{{field.title}}</a>
                         </li>
                     </ul>
                 </div>
@@ -51,8 +55,8 @@
 
 <vex-page-layout>
             <vex-page-layout-header class="pb-16 pt-6" fxLayoutAlign="center start">
-        <vex-secondary-toolbar current={{studentTitle}} class="w-full">
-            <vex-breadcrumbs [crumbs]="['Student',pageStatus]" class="flex-auto"></vex-breadcrumbs>
+        <vex-secondary-toolbar current="{{studentCreateMode==studentCreate.ADD?'Add Student Information':'Student Information'}}" class="w-full">
+            <vex-breadcrumbs [crumbs]="['Students',pageStatus]" class="flex-auto"></vex-breadcrumbs>
         </vex-secondary-toolbar>
     </vex-page-layout-header>    
             <vex-page-layout-content class="-mt-14">
@@ -61,7 +65,9 @@
                 <div class="w-full" fxFlex="auto">                    
                     <vex-student-generalinfo *ngIf="currentCategory==3"
                     [studentCreateMode]="studentCreateMode"
-                    [studentDetailsForViewAndEdit]="studentAddModel" [categoryId]="indexOfCategory">
+                    [studentDetailsForViewAndEdit]="studentAddModel"
+                    (dataAfterSavingGeneralInfo)="afterSavingGeneralInfo($event)"
+                     [categoryId]="indexOfCategory">
                     </vex-student-generalinfo>
 
                     <vex-student-addressandcontacts *ngIf="currentCategory==5"

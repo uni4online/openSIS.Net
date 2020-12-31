@@ -43,19 +43,19 @@ export class CustomFieldWithoutFormComponent implements OnInit {
     private snackbar: MatSnackBar,
     private commonFunction: SharedFunction,
     private customFieldservice: CustomFieldService,
-    private _schoolService: SchoolService,
-    private _studentService: StudentService,
-    private _staffService : StaffService
+    private schoolService: SchoolService,
+    private studentService: StudentService,
+    private staffService : StaffService
   ) {
-    this._schoolService.getSchoolDetailsForGeneral.subscribe((res: SchoolAddViewModel) => {
+    this.schoolService.getSchoolDetailsForGeneral.subscribe((res: SchoolAddViewModel) => {
       this.schoolAddViewModel = res;
       this.checkCustomValue();
     });
-    this._studentService.getStudentDetailsForGeneral.subscribe((res: StudentAddModel) => {
+    this.studentService.getStudentDetailsForGeneral.subscribe((res: StudentAddModel) => {
       this.studentAddModel = res;
       this.checkStudentCustomValue();
     })
-    this._staffService.getStaffDetailsForGeneral.subscribe((res: StaffAddModel) => {
+    this.staffService.getStaffDetailsForGeneral.subscribe((res: StaffAddModel) => {
       this.staffAddModel = res;
       this.checkStaffCustomValue();
     })

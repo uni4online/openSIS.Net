@@ -1,4 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { LovList, LovAddView } from './../../../models/lovModel';
+import { CommonService } from './../../../services/common.service';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import icMoreVert from '@iconify/icons-ic/twotone-more-vert';
 import icAdd from '@iconify/icons-ic/baseline-add';
 import icEdit from '@iconify/icons-ic/twotone-edit';
@@ -13,6 +15,11 @@ import { fadeInUp400ms } from '../../../../@vex/animations/fade-in-up.animation'
 import { stagger40ms } from '../../../../@vex/animations/stagger.animation';
 import { TranslateService } from '@ngx-translate/core';
 import { EditSchoolLevelComponent } from './edit-school-level/edit-school-level.component';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
+import { LoaderService } from './../../../services/loader.service';
+import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confirm-dialog.component';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'vex-school-level',
@@ -26,12 +33,14 @@ import { EditSchoolLevelComponent } from './edit-school-level/edit-school-level.
 export class SchoolLevelComponent implements OnInit {
   @Input()
   columns = [
-    { label: 'Title', property: 'title', type: 'text', visible: true },
-    { label: 'Sort Order', property: 'sort_order', type: 'number', visible: true },
+    { label: 'Title', property: 'lovColumnValue', type: 'text', visible: true },
+    { label: 'Created By', property: 'createdBy', type: 'text', visible: true },
+    { label: 'Create Date', property: 'createdOn', type: 'text', visible: true },
+    { label: 'Updated By', property: 'updatedBy', type: 'text', visible: true },
+    { label: 'Update Date', property: 'updatedOn', type: 'text', visible: true },
     { label: 'Actions', property: 'actions', type: 'text', visible: true }
   ];
 
-  SchoolLevelModelList;
 
   icMoreVert = icMoreVert;
   icAdd = icAdd;
@@ -41,31 +50,31 @@ export class SchoolLevelComponent implements OnInit {
   icImpersonate = icImpersonate;
   icFilterList = icFilterList;
   loading:Boolean;
+  searchKey:string;
+  lovAddView:LovAddView= new LovAddView();
+  lovList:LovList= new LovList();
+  lovName="School Level";
+  schoolLevelList: MatTableDataSource<any>;
+  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  listCount;
 
-  constructor(private router: Router,private dialog: MatDialog,public translateService:TranslateService) {
+  constructor(
+    private router: Router,
+    private dialog: MatDialog,
+    private snackbar: MatSnackBar,
+    private commonService:CommonService,
+    private loaderService:LoaderService,
+    public translateService:TranslateService
+    ) {
     translateService.use('en');
-    this.SchoolLevelModelList = [
-      {title: 'Nursery', sort_order: 1},
-      {title: 'Pre-School', sort_order: 2},
-      {title: 'Pre-Kindergarten', sort_order: 3},
-      {title: 'Kindergarten', sort_order: 4},
-      {title: 'Primary', sort_order: 5},
-      {title: 'Elementary', sort_order: 6},
-      {title: 'Secondary', sort_order: 7},
-      {title: 'Lower Secondary', sort_order: 8},
-      {title: 'Upper Secondary', sort_order: 9},
-      {title: 'Middle', sort_order: 10},
-      {title: 'High', sort_order: 11},
-      {title: 'Tertiary', sort_order: 12},
-      {title: 'College', sort_order: 13},
-      {title: 'University', sort_order: 14},
-      {title: 'Graduate', sort_order: 15},
-      {title: 'Post Graduate', sort_order: 16},
-      {title: 'Doctoral', sort_order: 17},
-    ]
+    this.loaderService.isLoading.subscribe((val) => {
+      this.loading = val;
+    }); 
   }
 
   ngOnInit(): void {
+    this.getAllSchoolLevel();
   }
 
   getPageEvent(event){    
@@ -73,10 +82,30 @@ export class SchoolLevelComponent implements OnInit {
     // this.getAllSchool.pageSize=event.pageSize;
     // this.callAllSchool(this.getAllSchool);
   }
-
+  onSearchClear(){
+    this.searchKey="";
+    this.applyFilter();
+  }
+  applyFilter(){
+    this.schoolLevelList.filter = this.searchKey.trim().toLowerCase()
+  }
   goToAdd(){
     this.dialog.open(EditSchoolLevelComponent, {
       width: '500px'
+    }).afterClosed().subscribe((data)=>{
+      if(data==='submited'){
+        this.getAllSchoolLevel()
+      }
+    })
+  }
+  goToEdit(element){
+    this.dialog.open(EditSchoolLevelComponent,{
+      data: element,
+      width:'500px'
+    }).afterClosed().subscribe((data)=>{
+      if(data==='submited'){
+        this.getAllSchoolLevel()
+      }
     })
   }
 
@@ -88,6 +117,72 @@ export class SchoolLevelComponent implements OnInit {
 
   get visibleColumns() {
     return this.columns.filter(column => column.visible).map(column => column.property);
+  }
+  deleteSchoolLeveldata(element){
+    this.lovAddView.dropdownValue=element
+    this.commonService.deleteDropdownValue(this.lovAddView).subscribe(
+      (res:LovAddView)=>{
+        if(typeof(res)=='undefined'){
+          this.snackbar.open('School Level Deletion failed. ' + sessionStorage.getItem("httpError"), '', {
+            duration: 10000
+          });
+        }
+        else{
+          if (res._failure) {
+            this.snackbar.open('School Level Deletion failed. ' + res._message, 'LOL THANKS', {
+              duration: 10000
+            });
+          } 
+          else { 
+            this.snackbar.open('School Level ' + res._message, 'LOL THANKS', {
+              duration: 10000
+            });
+            this.getAllSchoolLevel()
+          }
+        }
+      }
+    )
+  }
+  confirmDelete(element){
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      maxWidth: "400px",
+      data: {
+          title: "Are you sure?",
+          message: "You are about to delete "+element.lovColumnValue+"."}
+    });
+    dialogRef.afterClosed().subscribe(dialogResult => {
+      if(dialogResult){
+        this.deleteSchoolLeveldata(element);
+      }
+   });
+  }
+
+  getAllSchoolLevel(){
+    this.lovList.lovName=this.lovName;
+    this.commonService.getAllDropdownValues(this.lovList).subscribe(
+      (res:LovList)=>{
+        if(typeof(res)=='undefined'){
+          this.snackbar.open('School Level List failed. ' + sessionStorage.getItem("httpError"), '', {
+            duration: 10000
+          });
+        }
+        else{
+          if (res._failure) {  
+            this.schoolLevelList=new MatTableDataSource(res.dropdownList) ;
+            this.listCount=this.schoolLevelList.data;
+            this.snackbar.open('School Level List failed. ' + res._message, 'LOL THANKS', {
+              duration: 10000
+            });
+          } 
+          else { 
+            this.schoolLevelList=new MatTableDataSource(res.dropdownList) ;
+            this.schoolLevelList.sort=this.sort;  
+            this.schoolLevelList.paginator=this.paginator; 
+            this.listCount=this.schoolLevelList.data.length;
+          }
+        }
+      }
+    );
   }
 
 }

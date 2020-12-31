@@ -22,7 +22,7 @@ import { StudentAddModel } from '../../../models/studentModel';
 import { CustomFieldService } from '../../../services/custom-field.service';
 import { FieldsCategoryListView } from '../../../models/fieldsCategoryModel';
 import { SchoolCreate } from '../../../enums/school-create.enum';
-import icHospital from '@iconify/icons-ic/round-local-hospital';
+import icHospital from '@iconify/icons-ic/baseline-medical-services';
 import { takeUntil } from 'rxjs/operators';
 import { LoaderService } from '../../../services/loader.service';
 
@@ -38,7 +38,7 @@ import { LoaderService } from '../../../services/loader.service';
   ]
 })
 export class AddStudentComponent implements OnInit, OnDestroy {
-  StudentCreate = SchoolCreate;
+  studentCreate = SchoolCreate;
   studentCreateMode: SchoolCreate = SchoolCreate.ADD;
   fieldsCategoryListView = new FieldsCategoryListView();
   currentCategory: number = 3; // because 3 is the id of general info.
@@ -52,9 +52,10 @@ export class AddStudentComponent implements OnInit, OnDestroy {
   icBilling = icBilling;
   icHospital = icHospital;
   studentId: number;
-  studentTitle = "Add Student Information";
+  studentTitle:string;
   pageStatus = "Add Student"
   module = 'Student';
+  studentGrade:string;
   responseImage: string;
   enableCropTool = true;
   studentAddModel: StudentAddModel = new StudentAddModel();
@@ -69,6 +70,7 @@ export class AddStudentComponent implements OnInit, OnDestroy {
     private imageCropperService: ImageCropperService,
     private loaderService: LoaderService,
     private cdr: ChangeDetectorRef) {
+
     this.layoutService.collapseSidenav();
     this.imageCropperService.getCroppedEvent().pipe(takeUntil(this.destroySubject$)).subscribe((res) => {
       this.studentService.setStudentImage(res[1]);
@@ -76,19 +78,26 @@ export class AddStudentComponent implements OnInit, OnDestroy {
     this.studentService.categoryToSend.pipe(takeUntil(this.destroySubject$)).subscribe((res: number) => {
       this.currentCategory = res;
     });
+    this.studentService.modeToUpdate.pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
+      if(res==this.studentCreate.VIEW){
+        this.pageStatus="View Student";
+      }else{
+        this.pageStatus="Edit Student";
+      }
+    });
     this.loaderService.isLoading.pipe(takeUntil(this.destroySubject$)).subscribe((currentState) => {
       this.loading = currentState;
     });
   }
 
   ngOnInit(): void {
-    this.studentCreateMode = this.StudentCreate.ADD
+    this.studentCreateMode = this.studentCreate.ADD
     this.studentId = this.studentService.getStudentId();
     if (this.studentId != null || this.studentId != undefined) {
-      this.studentCreateMode = this.StudentCreate.VIEW;
+      this.studentCreateMode = this.studentCreate.VIEW;
       this.getStudentDetailsUsingId();
       this.onViewMode();
-    } else if (this.studentCreateMode == this.StudentCreate.ADD) {
+    } else if (this.studentCreateMode == this.studentCreate.ADD) {
       this.getAllFieldsCategory();
     }
 
@@ -111,13 +120,13 @@ export class AddStudentComponent implements OnInit, OnDestroy {
     let studentDetails = this.studentService.getStudentDetails();
 
     if (studentDetails != undefined || studentDetails != null) {
-      this.studentCreateMode = this.StudentCreate.EDIT;
+      this.studentCreateMode = this.studentCreate.EDIT;
       this.currentCategory = field.categoryId;
       this.indexOfCategory = index;
       this.studentAddModel = studentDetails;
     }
 
-    if (this.studentCreateMode == this.StudentCreate.VIEW) {
+    if (this.studentCreateMode == this.studentCreate.VIEW) {
       this.currentCategory = field.categoryId;
       this.indexOfCategory = index;
       this.pageStatus = "View Student"
@@ -162,6 +171,11 @@ export class AddStudentComponent implements OnInit, OnDestroy {
 
   ngAfterViewChecked() {
     this.cdr.detectChanges();
+  }
+
+  afterSavingGeneralInfo(data){
+    this.studentTitle = data.studentMaster.firstGivenName + " " + data.studentMaster.lastFamilyName;
+
   }
 
   ngOnDestroy() {

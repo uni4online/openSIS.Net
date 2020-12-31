@@ -7,9 +7,10 @@ import { TranslateService } from '@ngx-translate/core';
 import icEdit from '@iconify/icons-ic/twotone-edit';
 import icDelete from '@iconify/icons-ic/twotone-delete';
 import icAdd from '@iconify/icons-ic/baseline-add';
+import icRemove from '@iconify/icons-ic/remove-circle';
 import { MatDialog } from '@angular/material/dialog';
 import { EditContactComponent } from '../edit-contact/edit-contact.component';
-import { GetAllParentInfoModel,AddParentInfoModel  } from '../../../../../models/parentInfoModel';
+import { GetAllParentInfoModel,AddParentInfoModel ,RemoveAssociateParent } from '../../../../../models/parentInfoModel';
 import { ParentInfoService } from '../../../../../services/parent-info.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmDialogComponent } from '../../../../shared-module/confirm-dialog/confirm-dialog.component';
@@ -28,10 +29,12 @@ export class StudentContactsComponent implements OnInit {
   icEdit = icEdit;
   icDelete = icDelete;
   icAdd = icAdd;
+  icRemove = icRemove;
   parentListArray=[];
   contactType = "Primary";
   getAllParentInfoModel : GetAllParentInfoModel = new GetAllParentInfoModel();
   addParentInfoModel : AddParentInfoModel = new AddParentInfoModel();
+  removeAssociateParent : RemoveAssociateParent = new RemoveAssociateParent();
   constructor(
     private fb: FormBuilder, private dialog: MatDialog,
     public translateService:TranslateService,
@@ -39,12 +42,11 @@ export class StudentContactsComponent implements OnInit {
     private snackbar: MatSnackBar) { }
 
   ngOnInit(): void {
-    this.parentListArray = this.getAllParentInfoModel.parentInfoList;    
+    this.parentListArray = this.getAllParentInfoModel.parentInfoListForView;    
     this.viewParentListForStudent();
   }
 
-  openAddNew(ctype) {
-   
+  openAddNew(ctype) {   
     this.dialog.open(EditContactComponent, {
       data: {
         contactType:ctype,
@@ -69,14 +71,17 @@ export class StudentContactsComponent implements OnInit {
     });
   }
 
-  editParentInfo(parentInfo){
-   
+  editParentInfo(parentInfo){   
     this.dialog.open(EditContactComponent, {
       data: {
         parentInfo:parentInfo,
         studentDetailsForViewAndEditData:this.studentDetailsForViewAndEditData,
         mode:'edit'},
       width: '600px'
+    }).afterClosed().subscribe(data => {
+      if(data){
+        this.viewParentListForStudent();
+      }      
     });
   }
   confirmDelete(deleteDetails){    
@@ -86,7 +91,7 @@ export class StudentContactsComponent implements OnInit {
       data: {
           title: "Are you sure?",
           message: "You are about to delete "+deleteDetails.firstname+" "+deleteDetails.lastname+"."}
-    });
+        });
     // listen to response
     dialogRef.afterClosed().subscribe(dialogResult => {
       // if user pressed yes dialogResult will be true, 
@@ -97,9 +102,9 @@ export class StudentContactsComponent implements OnInit {
    });
   }
   deleteParentInfo(parentId){
-    this.addParentInfoModel.parentInfo.parentId=parentId;
-    this.addParentInfoModel.parentInfo.studentId=this.studentDetailsForViewAndEditData.studentMaster.studentId;
-    this.parentInfoService.deleteParentInfo(this.addParentInfoModel).subscribe(
+    this.removeAssociateParent.parentInfo.parentId = parentId;
+    this.removeAssociateParent.studentId = this.studentDetailsForViewAndEditData.studentMaster.studentId;
+    this.parentInfoService.removeAssociatedParent(this.removeAssociateParent).subscribe(
       data => { 
         if(typeof(data)=='undefined'){
           this.snackbar.open('Parent Information failed. ' + sessionStorage.getItem("httpError"), '', {
@@ -142,7 +147,8 @@ export class StudentContactsComponent implements OnInit {
             });
           } 
           else { 
-            this.parentListArray= data.parentInfoList; 
+            this.parentListArray= data.parentInfoListForView; 
+            
             var var1 = 0;
             var var2 = 0;
             this.parentListArray.forEach(val=>{             

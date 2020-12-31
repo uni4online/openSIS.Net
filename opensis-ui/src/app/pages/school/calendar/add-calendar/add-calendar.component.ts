@@ -125,6 +125,9 @@ export class AddCalendarComponent implements OnInit {
   }
 
   submitCalendar() {
+    if(this.form.invalid){
+      return
+    }
     this.calendarAddViewModel.schoolCalendar.title = this.form.value.title;
     this.calendarAddViewModel.schoolCalendar.defaultCalender = this.form.value.isDefaultCalendar;
     this.calendarAddViewModel.schoolCalendar.academicYear = +sessionStorage.getItem("academicyear");

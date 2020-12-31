@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input ,ViewChild} from '@angular/core';
 import icMoreVert from '@iconify/icons-ic/twotone-more-vert';
 import icAdd from '@iconify/icons-ic/baseline-add';
 import icEdit from '@iconify/icons-ic/twotone-edit';
@@ -13,7 +13,12 @@ import { fadeInUp400ms } from '../../../../@vex/animations/fade-in-up.animation'
 import { stagger40ms } from '../../../../@vex/animations/stagger.animation';
 import { TranslateService } from '@ngx-translate/core';
 import { EditSchoolClassificationComponent } from './edit-school-classification/edit-school-classification.component';
-
+import {LovList,LovAddView} from '../../../models/lovModel';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
+import { LoaderService } from '../../../services/loader.service';
+import { CommonService } from '../../../services/common.service';
+import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confirm-dialog.component';
 @Component({
   selector: 'vex-school-classification',
   templateUrl: './school-classification.component.html',
@@ -26,8 +31,11 @@ import { EditSchoolClassificationComponent } from './edit-school-classification/
 export class SchoolClassificationComponent implements OnInit {
   @Input()
   columns = [
-    { label: 'Title', property: 'title', type: 'text', visible: true },
-    { label: 'Sort Order', property: 'sort_order', type: 'number', visible: true },
+    { label: 'Title', property: 'lovColumnValue', type: 'text', visible: true },
+    { label: 'Created By', property: 'createdBy', type: 'text', visible: true },
+    { label: 'Create Date', property: 'createdOn', type: 'text', visible: true },
+    { label: 'Updated By', property: 'updatedBy', type: 'text', visible: true },
+    { label: 'Update Date', property: 'updatedOn', type: 'text', visible: true },
     { label: 'Actions', property: 'actions', type: 'text', visible: true }
   ];
 
@@ -39,39 +47,115 @@ export class SchoolClassificationComponent implements OnInit {
   icDelete = icDelete;
   icSearch = icSearch;
   icImpersonate = icImpersonate;
-  icFilterList = icFilterList;
-  loading:Boolean;
-
-  constructor(private router: Router,private dialog: MatDialog,public translateService:TranslateService) {
+  icFilterList = icFilterList; 
+  loading;  
+  totalCount:Number;pageNumber:Number;pageSize:Number;
+  getAllClassification: LovList = new LovList(); 
+  saveClassification: LovAddView = new LovAddView(); 
+  
+  ClassificationModelList: MatTableDataSource<any>;
+  searchKey:string;
+  @ViewChild(MatSort) sort: MatSort;
+  constructor(private router: Router,
+    private dialog: MatDialog,
+    public translateService:TranslateService,
+    public loaderService:LoaderService,
+    public commonService:CommonService,
+    public snackbar:MatSnackBar
+    ) {
     translateService.use('en');
-    this.SchoolClassificationModelList = [
-      {title: 'Public School', sort_order: 1},
-      {title: 'Private School', sort_order: 2},
-      {title: 'Charter School', sort_order: 3},
-      {title: 'Magnet School', sort_order: 4},
-      {title: 'Trade School', sort_order: 5},
-      {title: 'Home School', sort_order: 6},
-      {title: 'Religious School', sort_order: 7},
-      {title: 'Military School', sort_order: 8},
-      {title: 'Pre-K/Montessori', sort_order: 9},
-      {title: 'College', sort_order: 10},
-      {title: 'University', sort_order: 11},
-    ]
+    this.loaderService.isLoading.subscribe((val) => {
+      this.loading = val;
+    });
+    this.getSchoolClassificationList();
   }
 
   ngOnInit(): void {
+    
   }
 
-  getPageEvent(event){    
-    // this.getAllSchool.pageNumber=event.pageIndex+1;
-    // this.getAllSchool.pageSize=event.pageSize;
-    // this.callAllSchool(this.getAllSchool);
+  getSchoolClassificationList(){
+    this.getAllClassification.lovName="School Classification";
+    this.commonService.getAllDropdownValues(this.getAllClassification).subscribe(data => {
+      if(data._failure){
+        this.snackbar.open('School information failed. '+ data._message, 'LOL THANKS', {
+        duration: 10000
+        });
+      }else{     
+        this.ClassificationModelList = new MatTableDataSource(data.dropdownList);
+        this.ClassificationModelList.sort=this.sort;      
+      }
+    });
   }
 
   goToAdd(){
     this.dialog.open(EditSchoolClassificationComponent, {
+      data: {
+        mode:"add"       
+      },  
       width: '500px'
+    }).afterClosed().subscribe((data) => {
+      if(data){
+        this.getSchoolClassificationList();
+      }            
+    });   
+  }
+  confirmDelete(deleteDetails){
+    
+    // call our modal window
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      maxWidth: "400px",
+      data: {
+          title: "Are you sure?",
+          message: "You are about to delete "+deleteDetails.lovColumnValue+"."}
+    });
+    // listen to response
+    dialogRef.afterClosed().subscribe(dialogResult => {
+      // if user pressed yes dialogResult will be true, 
+      // if user pressed no - it will be false
+      if(dialogResult){
+        this.deleteClassification(deleteDetails);
+      }
+   });
+  }
+  deleteClassification(deleteDetails){
+    this.saveClassification.dropdownValue.id=deleteDetails.id;          
+    this.commonService.deleteDropdownValue(this.saveClassification).subscribe(data => {
+      if (typeof (data) == 'undefined') {
+        this.snackbar.open('School Classification Deletion failed. ' + sessionStorage.getItem("httpError"), '', {
+          duration: 10000
+        });
+      }
+      else {
+        if (data._failure) {
+          this.snackbar.open('School Classification Deletion failed. ' + data._message, 'LOL THANKS', {
+            duration: 10000
+          });
+        } else {
+       
+          this.snackbar.open('School Classification Deletion Successful.', '', {
+            duration: 10000
+          }).afterOpened().subscribe(data => {
+            this.getSchoolClassificationList();
+          });
+          
+        }
+      }
+
     })
+  }
+  goToEdit(editDetails){
+    this.dialog.open(EditSchoolClassificationComponent, {
+      data: {
+        mode:"edit",
+        editDetails:editDetails
+      },  
+      width: '500px'
+    }).afterClosed().subscribe((data) => {
+      if(data){
+        this.getSchoolClassificationList();
+      }            
+    });   
   }
 
   toggleColumnVisibility(column, event) {
@@ -82,6 +166,15 @@ export class SchoolClassificationComponent implements OnInit {
 
   get visibleColumns() {
     return this.columns.filter(column => column.visible).map(column => column.property);
+  }
+
+  onSearchClear(){
+    this.searchKey="";
+    this.applyFilter();
+  }
+
+  applyFilter(){
+    this.ClassificationModelList.filter = this.searchKey.trim().toLowerCase()
   }
 
 }

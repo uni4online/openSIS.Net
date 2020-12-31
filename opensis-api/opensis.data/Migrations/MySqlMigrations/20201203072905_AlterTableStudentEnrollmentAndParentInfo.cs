@@ -55,15 +55,18 @@ namespace opensis.data.Migrations.MySqlMigrations
                 name: "portal_user_id",
                 table: "parent_info");
 
-            migrationBuilder.RenameColumn(
-                name: "start_date",
-                table: "student_enrollment",
-                newName: "exit_date");
+            //migrationBuilder.RenameColumn(
+            //    name: "start_date",
+            //    table: "student_enrollment",
+            //    newName: "exit_date");
 
-            migrationBuilder.RenameColumn(
-                name: "end_date",
-                table: "student_enrollment",
-                newName: "enrollment_date");
+            //migrationBuilder.RenameColumn(
+            //    name: "end_date",
+            //    table: "student_enrollment",
+            //    newName: "enrollment_date");
+
+            migrationBuilder.Sql("ALTER TABLE `student_enrollment` CHANGE `start_date` `exit_date` DATE NULL DEFAULT NULL");
+            migrationBuilder.Sql("ALTER TABLE `student_enrollment` CHANGE `end_date` `enrollment_date` DATE NULL DEFAULT NULL");
 
             migrationBuilder.AddColumn<DateTime>(
                 name: "last_updated",

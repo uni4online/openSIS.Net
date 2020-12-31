@@ -24,7 +24,10 @@ namespace opensis.data.ViewModels.Student
         public string Gender { get; set; }
         public string MaritalStatus { get; set; }
         public string SchoolName { get; set; }
-    
-     
+        public string GradeLevelTitle { get; set; }
+        public bool? IsCustodian { get; set; }
+        public string Relationship { get; set; }
+
+
     }
 }

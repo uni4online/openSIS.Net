@@ -55,27 +55,27 @@
         <ul class="grid grid-cols-2 col-gap-8 row-gap-10">
             <li>
                 <label class="text-sm leading-5 text-gray">{{'streetAddress1' | translate}}</label>
-                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.addressLineOne}}</p>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.parentAddress.addressLineOne}}</p>
             </li>
             <li>
                 <label class="text-sm leading-5 text-gray">{{'streetAddress2' | translate}}</label>
-                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.addressLineTwo}}</p>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.parentAddress.addressLineTwo}}</p>
             </li>
             <li>
                 <label class="text-sm leading-5 text-gray">{{'country' | translate}}</label>
-                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.country}}</p>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.parentAddress.country}}</p>
             </li>
             <li>
                 <label class="text-sm leading-5 text-gray">{{'stateProvinceLocality' | translate}}</label>
-                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.state}}</p>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.parentAddress.state}}</p>
             </li>
             <li>
                 <label class="text-sm leading-5 text-gray">{{'city' | translate}}</label>
-                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.city}}</p>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.parentAddress.city}}</p>
             </li>
             <li>
                 <label class="text-sm leading-5 text-gray">{{'zipPostalCode' | translate}}</label>
-                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.zip}}</p>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.parentAddress.zip}}</p>
             </li>
           
             <li>
@@ -145,7 +145,7 @@
         
                 <mat-form-field appearance="outline" color="primary">
                     <mat-label>{{'contactRelationship' | translate}}</mat-label>
-                    <mat-select   [(ngModel)]="addParentInfoModel.parentInfo.relationship" name="relationship" #relationship="ngModel" required>
+                    <mat-select   [(ngModel)]="addParentInfoModel.parentAssociationship.relationship" name="relationship" #relationship="ngModel" required>
                         <mat-option value=""></mat-option>
                         <mat-option *ngFor="let relationShip of relationShipEnum" [value]="relationShip">{{relationShip}}</mat-option>
                     </mat-select>
@@ -154,7 +154,7 @@
                 </mat-form-field>
                 <mat-form-field appearance="outline" color="primary">
                     <mat-label>{{'custodyOfStudent' | translate}}</mat-label>
-                    <mat-select   [(ngModel)]="addParentInfoModel.parentInfo.isCustodian" (selectionChange) = "disableAddress($event)" name="isCustodian" #isCustodian="ngModel" required>
+                    <mat-select   [(ngModel)]="addParentInfoModel.parentAssociationship.isCustodian" (selectionChange) = "disableAddress($event)" name="isCustodian" #isCustodian="ngModel" required>
                         <mat-option></mat-option>
 
                         <mat-option [value]="custodyEnum.Yes">{{custodyEnum['true']}}</mat-option>
@@ -240,56 +240,54 @@
                 <div>
                     <mat-radio-group [value]="val" aria-label="Select an option" color="primary">
                         <mat-radio-button  value = "Yes" (change)="radioChange($event)" class="mr-3" [disabled] = "disableAddressFlag">{{'sameAsStudentsHomeAddress' | translate}}</mat-radio-button>
-                        <mat-radio-button  value = "No" (change)="radioChange($event)">{{'addNewAddress' | translate}}</mat-radio-button>
+                        <mat-radio-button  value = "No" (change)="radioChange($event)" [disabled] = "disableNewAddressFlag">{{'addNewAddress' | translate}}</mat-radio-button>
                     </mat-radio-group>
                 </div>
                 
                     <mat-form-field *ngIf="sameAsStudentAddress === false" fxFlex="auto" class="mt-4" appearance="outline" color="primary">
                         <mat-label>{{'streetAddress1'|translate}}</mat-label>
-                        <input   [(ngModel)]="addParentInfoModel.parentInfo.addressLineOne"  name="streetAddress1" #streetAddress1="ngModel" matInput>
+                        <input   [(ngModel)]="addParentInfoModel.parentInfo.parentAddress[0].addressLineOne"  name="streetAddress1" #streetAddress1="ngModel" matInput required>
+                        <mat-error class="text-red" *ngIf="streetAddress1.errors?.required">
+                            {{'streetAddress1IsRequired'|translate}}</mat-error>
                     </mat-form-field>
             
                     <mat-form-field  *ngIf="sameAsStudentAddress === false" fxFlex="auto" appearance="outline" color="primary">
                         <mat-label>{{'streetAddress2'|translate}}</mat-label>
-                        <input   [(ngModel)]="addParentInfoModel.parentInfo.addressLineTwo"  name="addressLineTwo" #addressLineTwo="ngModel" matInput>
+                        <input   [(ngModel)]="addParentInfoModel.parentInfo.parentAddress[0].addressLineTwo"  name="addressLineTwo" #addressLineTwo="ngModel" matInput>
                     </mat-form-field>
             
                     <mat-form-field *ngIf="sameAsStudentAddress === false" fxFlex="auto" appearance="outline" color="primary">
                         <mat-label>{{'country'|translate}}</mat-label>
-                        <mat-select   [(ngModel)]="addParentInfoModel.parentInfo.country" name="country" #country="ngModel">
+                        <mat-select   [(ngModel)]="addParentInfoModel.parentInfo.parentAddress[0].country" name="country" #country="ngModel" required>
                             <mat-option value=""></mat-option>
                             <mat-option *ngFor="let country of countryListArr" [value]= 'country.id'>
                                 {{country.name}}
                             </mat-option>
                         </mat-select>
+                        <mat-error class="text-red" *ngIf="country.errors?.required">
+                            {{'countryIsRequired'|translate}}</mat-error>
                     </mat-form-field>
             
                     <mat-form-field *ngIf="sameAsStudentAddress === false" fxFlex="auto" appearance="outline" color="primary">
                         <mat-label>{{'stateProvinceLocality'|translate}}</mat-label>
-                        <input   [(ngModel)]="addParentInfoModel.parentInfo.state" name="state" #state="ngModel" matInput>
+                        <input   [(ngModel)]="addParentInfoModel.parentInfo.parentAddress[0].state" name="state" #state="ngModel" matInput required>
+                        <mat-error class="text-red" *ngIf="state.errors?.required">
+                            {{'stateIsRequired'|translate}}</mat-error>
                     </mat-form-field>
             
                     <mat-form-field *ngIf="sameAsStudentAddress === false" fxFlex="auto" appearance="outline" color="primary">
                         <mat-label>{{'city'|translate}}</mat-label>
-                        <input   [(ngModel)]="addParentInfoModel.parentInfo.city" name="city" #city="ngModel" matInput>
+                        <input   [(ngModel)]="addParentInfoModel.parentInfo.parentAddress[0].city" name="city" #city="ngModel" matInput required>
+                        <mat-error class="text-red" *ngIf="city.errors?.required">
+                            {{'cityIsRequired'|translate}}</mat-error>
                     </mat-form-field>
             
                     <mat-form-field *ngIf="sameAsStudentAddress === false" fxFlex="auto" appearance="outline" color="primary">
                         <mat-label>{{'zipPostalCode'|translate}}</mat-label>
-                        <input   [(ngModel)]="addParentInfoModel.parentInfo.zip" name="zip" #zip="ngModel" matInput>
-                    </mat-form-field>       
-        
-                <!--<mat-form-field *ngIf="sameAsStudentAddress === false" fxFlex="auto" appearance="outline" color="primary">
-                    <mat-label>{{'busNo'|translate}}</mat-label>
-                    <input   [(ngModel)]="addParentInfoModel.parentInfo.busNo" name="busNo" #busNo="ngModel" matInput>
-                </mat-form-field>
-        
-                <div *ngIf="sameAsStudentAddress === false">
-                    <mat-checkbox color="primary" [(ngModel)]="addParentInfoModel.parentInfo.busPickup"  #busPickup="ngModel" name="busPickup" class="mr-6">{{'busPickup' | translate}}</mat-checkbox>
-                    <mat-checkbox color="primary" [(ngModel)]="addParentInfoModel.parentInfo.busDropoff"  #busDropoff="ngModel" name="busDropoff">{{'busDropoff' | translate}}</mat-checkbox>
-                </div>
-            -->
-                
+                        <input   [(ngModel)]="addParentInfoModel.parentInfo.parentAddress[0].zip" name="zip" #zip="ngModel" matInput required>
+                        <mat-error class="text-red" *ngIf="zip.errors?.required">
+                            {{'zipIsRequired'|translate}}</mat-error>
+                    </mat-form-field>              
         
             </mat-dialog-content>
             <mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" class="py-6">
@@ -298,7 +296,7 @@
             </mat-dialog-actions>
         </form>
     </div>
-    <ng-template #search>
+   <ng-template #search>
         <div *ngIf="mode ==='search'; else singleResult">
             <form  (ngSubmit)="search.form.valid && searchParent()" #search="ngForm" novalidate>
                 <div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>

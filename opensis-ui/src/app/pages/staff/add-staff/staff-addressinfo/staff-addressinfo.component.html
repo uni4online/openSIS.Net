@@ -148,13 +148,13 @@
                     <li>
                         <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'busNo'|translate}}</mat-label>
-                            <input name="busNo" matInput>
+                            <input  name="busNo" [(ngModel)]="staffAddModel.staffMaster.busNo" matInput>
                         </mat-form-field>
                     </li>
                     <li class="flex flex-1 mx-4 md:w-1/2 md:pt-3">
-                        <mat-checkbox name="schoolBusPickUp" color="primary" class="mr-6">{{'busPickup' | translate}}
+                        <mat-checkbox name="busPickup" [(ngModel)]="staffAddModel.staffMaster.busPickup" color="primary" class="mr-6">{{'busPickup' | translate}}
                         </mat-checkbox>
-                        <mat-checkbox name="schoolBusDropOff" color="primary">{{'busDropoff' | translate}}
+                        <mat-checkbox name="busDropoff"  [(ngModel)]="staffAddModel.staffMaster.busDropoff" color="primary">{{'busDropoff' | translate}}
                         </mat-checkbox>
 
                     </li>
@@ -285,8 +285,8 @@
         </mat-card-content>
         <mat-card-actions>
             <div class="px-4 mb-2 text-right">
-                <button *ngIf="staffCreateMode == staffCreate.EDIT" color="primary" mat-raised-button>{{'update'|translate}}</button>
-                <button *ngIf="staffCreateMode == staffCreate.ADD" color="primary" mat-raised-button>{{'submit'|translate}}</button>
+                <button *ngIf="staffCreateMode == staffCreate.EDIT" mat-raised-button>{{'cancel'|translate}}</button>
+                <button color="primary" mat-raised-button>{{actionButton|translate}}</button>
             </div>
         </mat-card-actions>
     </form>
@@ -402,15 +402,15 @@
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'busNo' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">-</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{staffAddModel.staffMaster.busNo}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'busPickup' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">-</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{staffAddModel.staffMaster.busPickup ? "Yes" :"No"}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'busDropoff' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">-</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{staffAddModel.staffMaster.busDropoff ? "Yes" :"No"}}</p>
                 </li>
             </ul>
 

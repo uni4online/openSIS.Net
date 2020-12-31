@@ -16,6 +16,7 @@ namespace opensis.data.Models
         public Guid TenantId { get; set; }
         public int SchoolId { get; set; }
         public int StudentId { get; set; }
+        public Guid StudentGuid { get; set; }
         public string StudentInternalId { get; set; }
         public string AlternateId { get; set; }
         public string DistrictId { get; set; }
@@ -90,6 +91,8 @@ namespace opensis.data.Models
         public string Vision { get; set; }
         public string VisionPhone { get; set; }
         public string Associationship { get; set; }
+        public string EnrollmentType { get; set; }
+        public bool? IsActive { get; set; }
         public DateTime? LastUpdated { get; set; }
         public string UpdatedBy { get; set; }
 

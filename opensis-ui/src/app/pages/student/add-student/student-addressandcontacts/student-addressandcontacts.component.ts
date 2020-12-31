@@ -22,6 +22,7 @@ import { SchoolCreate } from '../../../../enums/school-create.enum';
 import icCheckBox from '@iconify/icons-ic/check-box';
 import icCheckBoxOutlineBlank from '@iconify/icons-ic/check-box-outline-blank';
 import icEdit from '@iconify/icons-ic/edit';
+import { ImageCropperService } from '../../../../services/image-cropper.service';
 
 @Component({
   selector: 'vex-student-addressandcontacts',
@@ -40,38 +41,37 @@ export class StudentAddressandcontactsComponent implements OnInit {
   icEdit = icEdit;
   icCheckBox = icCheckBox;
   icCheckBoxOutlineBlank = icCheckBoxOutlineBlank;
-  mailingAddressSameToHome:boolean=false;
   countryListArr=[]; 
   countryName="-";
   mailingAddressCountry="-";
   countryModel: CountryModel = new CountryModel();
   data;
-  StudentCreate=SchoolCreate;
+  studentCreate=SchoolCreate;
   @Input() studentCreateMode:SchoolCreate;
   studentAddModel: StudentAddModel = new StudentAddModel();
   languageList;
-  checkBoxChecked = false;  
+  checkBoxChecked = false; 
+  actionButtonTitle="submit" 
 
   constructor(public translateService: TranslateService,
     private snackbar: MatSnackBar,
     private studentService:StudentService,
     private commonService:CommonService,
     private loginService: LoginService,
-    private commonFunction:SharedFunction) { 
+    private commonFunction:SharedFunction,
+    private imageCropperService:ImageCropperService) { 
       translateService.use('en');
     }
 
   ngOnInit(): void {  
-    if(this.studentCreateMode==this.StudentCreate.VIEW){
+    if(this.studentCreateMode==this.studentCreate.VIEW){
+      this.studentService.changePageMode(this.studentCreateMode);
       this.data=this.studentDetailsForViewAndEdit?.studentMaster;
       this.studentAddModel = this.studentDetailsForViewAndEdit;
-      if(this.data.mailingAddressSameToHome){
-        this.mailingAddressSameToHome = true;
-      }else{
-        this.mailingAddressSameToHome = false;
-      }
+      this.imageCropperService.enableUpload(false);
       this.getAllCountry();   
     }else{
+      this.studentService.changePageMode(this.studentCreateMode);
       this.studentAddModel = this.studentService.getStudentDetails();
     }
 
@@ -79,16 +79,22 @@ export class StudentAddressandcontactsComponent implements OnInit {
   }
   
   editAddressContactInfo(){
-    this.studentCreateMode=this.StudentCreate.EDIT
+    this.studentCreateMode=this.studentCreate.EDIT;
+    this.studentService.changePageMode(this.studentCreateMode);
+    this.actionButtonTitle="update";
+    this.imageCropperService.enableUpload(true);
   }
 
   cancelEdit(){
-    this.studentCreateMode = this.StudentCreate.VIEW
+    this.studentCreateMode = this.studentCreate.VIEW;
+    this.studentService.changePageMode(this.studentCreateMode);
+    this.data=this.studentAddModel.studentMaster; 
+    this.imageCropperService.enableUpload(false);
   }
 
   copyHomeAddress(check){
-  
-    if(this.studentAddModel.studentMaster.mailingAddressSameToHome === false || this.studentAddModel.studentMaster.mailingAddressSameToHome === undefined){
+ 
+    if(this.studentAddModel.studentMaster.mailingAddressSameToHome === false || this.studentAddModel.studentMaster.mailingAddressSameToHome === null){
      
       if(this.studentAddModel.studentMaster.homeAddressLineOne !== undefined && this.studentAddModel.studentMaster.homeAddressCity !== undefined &&
         this.studentAddModel.studentMaster.homeAddressState !== undefined && this.studentAddModel.studentMaster.homeAddressZip !== undefined ){
@@ -101,7 +107,7 @@ export class StudentAddressandcontactsComponent implements OnInit {
       this.studentAddModel.studentMaster.mailingAddressCountry=+this.studentAddModel.studentMaster.homeAddressCountry;
 
     }else{
-      
+     
       this.checkBoxChecked = check ? true : false;
       this.snackbar.open('Please Provide All Mandatory Fields First', '', {
         duration: 10000
@@ -127,7 +133,7 @@ export class StudentAddressandcontactsComponent implements OnInit {
           this.countryListArr=[];
         } else {        
           this.countryListArr=data.tableCountry;    
-         if(this.studentCreateMode==this.StudentCreate.VIEW){
+         if(this.studentCreateMode==this.studentCreate.VIEW){
           this.countryListArr.map((val) => {
             var countryInNumber = +this.data.homeAddressCountry;  
             var mailingAddressCountry=+this.data.mailingAddressCountry; 
@@ -159,7 +165,9 @@ export class StudentAddressandcontactsComponent implements OnInit {
           this.snackbar.open('Student Update Successful.', '', {
             duration: 10000
           });
-          
+        this.studentCreateMode = this.studentCreate.VIEW
+        this.data=data.studentMaster;
+        this.studentService.changePageMode(this.studentCreateMode);
         }
       }
   

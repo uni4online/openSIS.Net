@@ -1,4 +1,4 @@
-<mat-card class="w-full" *ngIf="schoolCreateMode==SchoolCreate.EDIT || schoolCreateMode==SchoolCreate.ADD">
+<mat-card class="w-full" *ngIf="schoolCreateMode==schoolCreate.EDIT || schoolCreateMode==schoolCreate.ADD">
     <form (ngSubmit)="submit()" #f="ngForm" novalidate appInvalidControlScroll>
         <mat-card-header>
             <mat-card-title>{{'generalInformation'|translate}}</mat-card-title>
@@ -472,7 +472,7 @@
         </mat-card-content>
         <mat-card-actions class="mb-0">
             <div class="px-4 text-right">
-                <button mat-button type="button" *ngIf="schoolCreateMode == SchoolCreate.EDIT" (click)="cancelEdit()">{{'cancel'|translate}}</button>
+                <button mat-button type="button" *ngIf="schoolCreateMode == schoolCreate.EDIT" (click)="cancelEdit()">{{'cancel'|translate}}</button>
                 <button color="primary" mat-raised-button>{{formActionButtonTitle|translate}}</button>
             </div>
         </mat-card-actions>
@@ -481,7 +481,7 @@
 </mat-card>
 
 
-<mat-card @fadeInUp class="w-full" fxFlex="auto" *ngIf="schoolCreateMode == SchoolCreate.VIEW">
+<mat-card @fadeInUp class="w-full" fxFlex="auto" *ngIf="schoolCreateMode == schoolCreate.VIEW">
     <div class="flex items-center mx-4" fxLayout="row" fxLayoutAlign="center center">
         <h3 class="flex-auto">{{'generalInformation' | translate}}</h3>
         <button mat-button color="primary" (click)="editGeneralInfo()"><mat-icon [icIcon]="icEdit"></mat-icon>{{'editInformation' |translate}}</button>
@@ -566,7 +566,7 @@
                     </li>
                     <li>
                         <label class="text-sm leading-5 text-gray">{{'status' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2"><span [ngClass]="status=='Active'?'text-green':'text-red'">{{status}}</span></p>
+                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2"><span [ngClass]="status!=null?'':status=='Active'?'text-green':'text-red'">{{status|EmtyValueCheckPipe}}</span></p>
                     </li>
                     <!-- <li *ngFor="let customField of customFieldListViewModel">
                         <label class="text-sm leading-5 text-gray">{{customField.title}}</label>
@@ -621,8 +621,8 @@
                     </li>
                     <li>
                         <label class="text-sm leading-5 text-gray">{{'latitude' | translate}}, {{'longitude' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.schoolMaster.latitude}},
-                            {{schoolAddViewModel.schoolMaster.longitude}} </p>
+                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.schoolMaster.latitude|EmtyNumberCheckPipe}},
+                            {{schoolAddViewModel.schoolMaster.longitude|EmtyNumberCheckPipe}} </p>
                     </li>
                 </ul>
             </div>
@@ -641,11 +641,11 @@
                     </li>
                     <li>
                         <label class="text-sm leading-5 text-gray">{{'telephone' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.schoolMaster.schoolDetail[0].telephone}}</p>
+                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.schoolMaster.schoolDetail[0].telephone|EmtyValueCheckPipe}}</p>
                     </li>
                     <li>
                         <label class="text-sm leading-5 text-gray">{{'fax' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.schoolMaster.schoolDetail[0].fax}}</p>
+                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.schoolMaster.schoolDetail[0].fax|EmtyValueCheckPipe}}</p>
                     </li>
                     <li>
                         <label class="text-sm leading-5 text-gray">{{'website' | translate}}</label>

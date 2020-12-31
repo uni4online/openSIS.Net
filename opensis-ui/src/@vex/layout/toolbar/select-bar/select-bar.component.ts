@@ -37,11 +37,11 @@ export class SelectBarComponent implements OnInit {
   /** Subject that emits when the component has been destroyed. */
   protected _onDestroy = new Subject<void>();
 
-  constructor(private _schoolService: SchoolService,
+  constructor(private schoolService: SchoolService,
     private router: Router,
     private markingPeriodService: MarkingPeriodService
   ) {
-    this._schoolService.currentMessage.subscribe((res) => {
+    this.schoolService.currentMessage.subscribe((res) => {
       if (res) {
         this.checkForAnyNewSchool = res;
         this.callAllSchool();
@@ -64,7 +64,7 @@ export class SelectBarComponent implements OnInit {
     this.getSchoolList._tenantName = sessionStorage.getItem("tenant");
     this.getSchoolList._token = sessionStorage.getItem("token");
 
-    this._schoolService.GetAllSchools(this.getSchoolList).subscribe((data) => {
+    this.schoolService.GetAllSchools(this.getSchoolList).subscribe((data) => {
       this.schools = data.getSchoolForView;
       /** control for the selected School */
       this.schoolCtrl = new FormControl();

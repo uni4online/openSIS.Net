@@ -74,6 +74,14 @@ export class StudentService {
     this.studentImage = imageInBase64;
   }
 
+   // Update Mode in Student
+ public pageMode = new Subject;
+ modeToUpdate=this.pageMode.asObservable();
+
+ changePageMode(mode:number){
+     this.pageMode.next(mode);
+ } 
+
   //Student comment
   addStudentComment(obj: StudentCommentsAddView) {
     let apiurl = this.apiUrl + obj._tenantName + "/Student/addStudentComment";

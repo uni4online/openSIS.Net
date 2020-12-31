@@ -1,0 +1,58 @@
+<div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
+    <h2 class="headline m-0" fxFlex="auto">{{'addNewStandard'|translate}}</h2>
+
+    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+        <mat-icon [icIcon]="icClose"></mat-icon>
+    </button>
+</div>
+<mat-divider class="-mx-6 text-border"></mat-divider>
+
+<mat-dialog-content fxLayout="column">
+
+    <mat-form-field class="w-full mt-6" appearance="outline" color="primary">
+        <mat-label>{{'subject' | translate}}</mat-label>
+        <mat-select name="course" required>
+            <mat-option value="1">Showing Subject List</mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="w-full" appearance="outline" color="primary">
+        <mat-label>{{'course' | translate}}</mat-label>
+        <mat-select name="course" required>
+            <mat-option value="1">Showing Course List</mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="w-full" appearance="outline" color="primary">
+        <mat-label>{{'gradeLevel' | translate}}</mat-label>
+        <mat-select name="gradeLevel" required>
+            <mat-option value="1">Showing Grade Levels</mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="w-full" appearance="outline" color="primary">
+        <mat-label>{{'domain' | translate}}</mat-label>
+        <input type="text" matInput>
+    </mat-form-field>
+
+    <mat-form-field class="w-full" appearance="outline" color="primary">
+        <mat-label>{{'topic' | translate}}</mat-label>
+        <input type="text" matInput required>
+    </mat-form-field>
+
+    <mat-form-field class="w-full" appearance="outline" color="primary">
+        <mat-label>{{'standardRefNo' | translate}}</mat-label>
+        <input type="text" matInput required>
+    </mat-form-field>
+
+    <mat-form-field class="w-full" appearance="outline" color="primary">
+        <mat-label>{{'standardDetails' | translate}}</mat-label>
+        <textarea matInput required></textarea>
+    </mat-form-field>
+
+</mat-dialog-content>
+
+<mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" class="py-6">
+    <button mat-button mat-dialog-close type="button">{{'cancel' | translate}}</button>
+    <button color="primary" mat-raised-button type="submit">{{'submit' | translate}}</button>
+</mat-dialog-actions>

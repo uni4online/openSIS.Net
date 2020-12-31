@@ -20,14 +20,18 @@
 
     <mat-form-field class="w-full" appearance="outline" color="primary">
         <mat-label>{{'startTime' | translate}}</mat-label>
-        <input type="text" matInput required>
+        <input  name="startTime" [(ngModel)]="dateTime1"
+        [owlDateTimeTrigger]="startTime" [owlDateTime]="startTime" matInput required>
+        <owl-date-time [pickerType]="'timer'" [hour12Timer]='true' #startTime></owl-date-time>
     </mat-form-field>
 
     <mat-form-field class="w-full" appearance="outline" color="primary">
         <mat-label>{{'endTime' | translate}}</mat-label>
-        <input type="text" matInput required>
+        <input  name="endTime" [(ngModel)]="dateTime2"
+        [owlDateTimeTrigger]="endTime" [owlDateTime]="endTime" matInput required>
+        <owl-date-time [pickerType]="'timer'" [hour12Timer]='true' #endTime></owl-date-time>
     </mat-form-field>
-
+    
 </mat-dialog-content>
 
 <mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" class="py-6">

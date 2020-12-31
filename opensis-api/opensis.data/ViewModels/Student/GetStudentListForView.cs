@@ -19,6 +19,7 @@ namespace opensis.data.ViewModels.Student
         public string PersonalEmail { get; set; }  
         public string GradeLevelTitle { get; set; }
         public DateTime? EnrollmentDate { get; set; }
+        public Guid StudentGuid { get; set; }
 
     }
 }

@@ -79,8 +79,16 @@ namespace opensis.core.Student.Services
                 if (TokenManager.CheckToken(pageResult._tenantName, pageResult._token))
                 {
                     studentList = this.studentRepository.GetAllStudentList(pageResult);
-                    studentList._message = SUCCESS;
-                    studentList._failure = false;
+                    if (studentList.getStudentListForViews.Count > 0)
+                    {
+                        studentList._message = SUCCESS;
+                        studentList._failure = false;
+                    }
+                    else
+                    {
+                        studentList._message = "NO RECORD FOUND";
+                        studentList._failure = true;
+                    }
                     logger.Info("Method getAllStudentList end with success.");
                 }
 

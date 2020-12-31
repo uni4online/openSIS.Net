@@ -53,14 +53,16 @@ export class EditContactComponent implements OnInit {
   mailingAddressCountry="-";
   val;
   isPortalUser=false;
-  sameAsStudentAddress:boolean=false;
+  sameAsStudentAddress:boolean=true;
   disableAddressFlag;
+  disableNewAddressFlag;
   singleParentInfo;
   multipleParentInfo=[];
   editMode=false;
   isCustodyCheck=false;
   disablePassword=false;
   studentDetailsForViewAndEditDataDetails;
+  parentAddress=[];
   constructor(
       private dialogRef: MatDialogRef<EditContactComponent>,
       private fb: FormBuilder, 
@@ -75,30 +77,51 @@ export class EditContactComponent implements OnInit {
     { }
 
   ngOnInit(): void {  
+   
     this.studentDetailsForViewAndEditDataDetails=this.data.studentDetailsForViewAndEditData; 
     this.getAllCountry(); 
    
       if(this.data.mode === "view"){       
        this.mode = "view";
-       this.viewData = this.data.parentInfo; 
+       this.viewData = this.data.parentInfo;       
        if(this.viewData.middlename === null){
         this.viewData.middlename = "";
        }  
       }else{
         if(this.data.mode === "add"){
         this.disableAddressFlag =true;
-        this.val="No";     
-        this.addParentInfoModel.parentInfo.contactType = this.data.contactType;    
-        this.addParentInfoModel.parentInfo.studentAddressSame = true;    
-        }else{
-                    
-          this.addParentInfoModel.parentInfo = this.data.parentInfo;     
-          this.addParentInfoModel.parentInfo.country = +this.data.parentInfo.country;                 
+        this.disableNewAddressFlag =true;
+        this.val="Yes";     
+        this.addParentInfoModel.parentAssociationship.contactType = this.data.contactType;    
+        this.addParentInfoModel.parentInfo.parentAddress[0].studentAddressSame = true;   
+        }else{        
+          this.addParentInfoModel.parentInfo.parentAddress[0].addressLineOne = this.data.parentInfo.parentAddress.addressLineOne;  
+          this.addParentInfoModel.parentInfo.parentAddress[0].addressLineTwo = this.data.parentInfo.parentAddress.addressLineTwo;
+          this.addParentInfoModel.parentInfo.parentAddress[0].country = +this.data.parentInfo.parentAddress.country;
+          this.addParentInfoModel.parentInfo.parentAddress[0].state = this.data.parentInfo.parentAddress.state;
+          this.addParentInfoModel.parentInfo.parentAddress[0].city = this.data.parentInfo.parentAddress.city;
+          this.addParentInfoModel.parentInfo.parentAddress[0].zip = this.data.parentInfo.parentAddress.zip;  
+          this.addParentInfoModel.parentInfo.salutation = this.data.parentInfo.salutation; 
+          this.addParentInfoModel.parentInfo.firstname = this.data.parentInfo.firstname; 
+          this.addParentInfoModel.parentInfo.middlename = this.data.parentInfo.middlename; 
+          this.addParentInfoModel.parentInfo.lastname = this.data.parentInfo.lastname; 
+          this.addParentInfoModel.parentInfo.suffix = this.data.parentInfo.suffix; 
+          this.addParentInfoModel.parentAssociationship.relationship = this.data.parentInfo.relationship; 
+          this.addParentInfoModel.parentAssociationship.isCustodian = this.data.parentInfo.isCustodian; 
+          this.addParentInfoModel.parentInfo.mobile = this.data.parentInfo.mobile; 
+          this.addParentInfoModel.parentInfo.workPhone = this.data.parentInfo.workPhone; 
+          this.addParentInfoModel.parentInfo.homePhone = this.data.parentInfo.homePhone;
+          this.addParentInfoModel.parentInfo.personalEmail = this.data.parentInfo.personalEmail; 
+          this.addParentInfoModel.parentInfo.workEmail = this.data.parentInfo.workEmail; 
+          this.addParentInfoModel.parentInfo.parentAddress[0].studentAddressSame = this.data.parentInfo.parentAddress.studentAddressSame;
+          this.addParentInfoModel.parentInfo.isPortalUser = this.data.parentInfo.isPortalUser; 
+          this.addParentInfoModel.parentInfo.loginEmail = this.data.parentInfo.loginEmail; 
+          this.addParentInfoModel.passwordHash = this.data.passwordHash;
+
           this.editMode=true;
-          this.disablePassword = true;
-          this.addParentInfoModel.parentInfo.relationship= this.commonFunction.trimData(this.data.parentInfo.relationship);
-        
-          if(this.data.parentInfo.studentAddressSame === true){
+          this.disablePassword = true;    
+             
+          if(this.data.parentInfo.parentAddress.studentAddressSame === true){
             this.val="Yes";
             this.sameAsStudentAddress=true;
             
@@ -112,18 +135,9 @@ export class EditContactComponent implements OnInit {
           }else{
             this.isPortalUser = false;
             this.addParentInfoModel.parentInfo.isPortalUser = false; 
-          }
-          if(this.addParentInfoModel.parentInfo.isCustodian === true){
-            this.isCustodyCheck = true;
-            this.addParentInfoModel.parentInfo.isCustodian = true; 
-            this.disableAddressFlag = false;
-           
-          }else{
-            this.isCustodyCheck = false;
-            this.addParentInfoModel.parentInfo.isCustodian = false; 
-            this.disableAddressFlag =true;
-          }  
-          this.addParentInfoModel.parentInfo.contactType = this.data.parentInfo.contactType;       
+          }   
+               
+          this.addParentInfoModel.parentAssociationship.contactType = this.data.parentInfo.contactType;       
         }
         this.mode = "add";     
       }   
@@ -133,10 +147,10 @@ export class EditContactComponent implements OnInit {
   disableAddress(event){
     if(event.value === true){
       this.disableAddressFlag = false;
+      this.disableNewAddressFlag=false;
     }else{
       this.disableAddressFlag = true;
-      this.val="No";
-      this.addParentInfoModel.parentInfo.studentAddressSame = false;
+      this.val="No";     
       this.sameAsStudentAddress = false;
     }
   }
@@ -149,14 +163,20 @@ export class EditContactComponent implements OnInit {
      if(isCustodian === undefined){
       isCustodian = false
      }
-    this.singleParentInfo.isCustodian = isCustodian;
-    this.singleParentInfo.relationShip = contactRelationship; 
-    this.singleParentInfo.tenantId =  sessionStorage.getItem("tenantId");
-    this.singleParentInfo.schoolId = +sessionStorage.getItem("selectedSchoolId");  
-    this.singleParentInfo.studentId = this.data.studentDetailsForViewAndEditData.studentMaster.studentId;  
-    delete this.singleParentInfo.getStudentForView;
-    this.addParentInfoModel.parentInfo= this.singleParentInfo; 
-    this.addParentInfoModel.parentInfo.contactType = this.data.contactType;   
+  
+    this.addParentInfoModel.parentAssociationship.isCustodian = isCustodian;
+    this.addParentInfoModel.parentAssociationship.relationship = contactRelationship; 
+    this.addParentInfoModel.parentAssociationship.tenantId =  sessionStorage.getItem("tenantId");
+    this.addParentInfoModel.parentAssociationship.schoolId = +sessionStorage.getItem("selectedSchoolId");  
+    this.addParentInfoModel.parentAssociationship.studentId = this.data.studentDetailsForViewAndEditData.studentMaster.studentId;  
+    this.addParentInfoModel.parentAssociationship.parentId = this.singleParentInfo.parentId;
+    this.addParentInfoModel.parentAssociationship.contactType=this.data.contactType;
+    delete this.singleParentInfo.getStudentForView;  
+    delete this.singleParentInfo.isCustodian;
+    delete this.singleParentInfo.relationship;
+    delete this.singleParentInfo.studentId; 
+    this.addParentInfoModel.parentInfo= this.singleParentInfo;   
+    
     this.submit();
   }
 
@@ -174,9 +194,12 @@ export class EditContactComponent implements OnInit {
     'relationship':contactRelationship,
     "tenantId": sessionStorage.getItem("tenantId"),
     "schoolId": +sessionStorage.getItem("selectedSchoolId"),
-    "studentId": this.data.studentDetailsForViewAndEditData.studentMaster.studentId,
-    "contactType" : this.data.contactType
-    
+    "studentId": this.data.studentDetailsForViewAndEditData.studentMaster.studentId,   
+    "parentId":0,
+    "associationship":false,
+    "lastUpdated":"",
+    "contactType":this.data.contactType,
+    "updatedBy":sessionStorage.getItem("email")
     }   
    return obj;
   }
@@ -187,10 +210,13 @@ export class EditContactComponent implements OnInit {
         duration: 10000
       });
     }else{
-      let concatObj = {...data,...obj};
-      delete concatObj.getStudentForView;
-      this.addParentInfoModel.parentInfo= concatObj;   
-        
+      obj.parentId = data.parentId;
+      this.addParentInfoModel.parentAssociationship = obj; 
+      delete data.studentId;
+      delete data.relationShip;
+      delete data.isCustodian;
+      delete data.getStudentForView;
+      this.addParentInfoModel.parentInfo = data;     
       this.submit();
     }
     
@@ -219,9 +245,9 @@ export class EditContactComponent implements OnInit {
           this.countryListArr = data.tableCountry; 
           if(this.mode === "view"){
             this.countryListArr.map((val) => {
-              var countryInNumber = +this.viewData.country;            
+              var countryInNumber = +this.viewData.parentAddress.country;            
                 if(val.id === countryInNumber){
-                  this.viewData.country= val.name;
+                  this.viewData.parentAddress.country= val.name;
                 }               
               })     
           }  
@@ -246,21 +272,19 @@ export class EditContactComponent implements OnInit {
   radioChange(event){
     if(event.value === "Yes"){
       this.sameAsStudentAddress = true;
-      this.addParentInfoModel.parentInfo.studentAddressSame = true;
-    
+      this.addParentInfoModel.parentInfo.parentAddress[0].studentAddressSame = true;    
     }else{
       this.sameAsStudentAddress = false;
-      this.addParentInfoModel.parentInfo.studentAddressSame = false;
-     
+      this.addParentInfoModel.parentInfo.parentAddress[0].studentAddressSame = false;     
     }    
   }
   custodyCheck(event){
     if(event.checked === true){
       this.isCustodyCheck = true;
-      this.addParentInfoModel.parentInfo.isCustodian = true; 
+     
     }else{
       this.isCustodyCheck = true;
-      this.addParentInfoModel.parentInfo.isCustodian = false; 
+     
     }
   }
   portalUserCheck(event){
@@ -273,9 +297,14 @@ export class EditContactComponent implements OnInit {
     }
   }
   submit() {
-    if(this.editMode === true){
-      this.addParentInfoModel.parentInfo.country = this.addParentInfoModel.parentInfo.country.toString();
-      this.addParentInfoModel.parentInfo.studentId = this.data.studentDetailsForViewAndEditData.studentMaster.studentId;
+    if(this.mode!=="singleResult" && this.mode!=="multipleResult"){
+      this.addParentInfoModel.parentAssociationship.studentId = this.studentDetailsForViewAndEditDataDetails.studentMaster.studentId;
+      this.addParentInfoModel.parentInfo.parentAddress[0].studentId = this.studentDetailsForViewAndEditDataDetails.studentMaster.studentId;
+    }    
+    if(this.editMode === true){     
+      this.addParentInfoModel.parentAssociationship.parentId = this.data.parentInfo.parentId;
+      this.addParentInfoModel.parentInfo.parentAddress[0].parentId = this.data.parentInfo.parentId;
+      this.addParentInfoModel.parentInfo.parentId = this.data.parentInfo.parentId;
       this.parentInfoService.updateParentInfo(this.addParentInfoModel).subscribe(data => {
         if (typeof (data) == 'undefined') 
         {
@@ -299,22 +328,8 @@ export class EditContactComponent implements OnInit {
           }
         }
       })     
-    }else{
-
-      this.addParentInfoModel.parentInfo.studentId = this.data.studentDetailsForViewAndEditData.studentMaster.studentId;
-      
-      if(this.sameAsStudentAddress === true){
-        this.addParentInfoModel.parentInfo.city = this.data.studentDetailsForViewAndEditData.studentMaster.homeAddressCity;
-        this.addParentInfoModel.parentInfo.country = this.data.studentDetailsForViewAndEditData.studentMaster.homeAddressCountry;
-        this.addParentInfoModel.parentInfo.addressLineOne = this.data.studentDetailsForViewAndEditData.studentMaster.homeAddressLineOne;
-        this.addParentInfoModel.parentInfo.addressLineTwo = this.data.studentDetailsForViewAndEditData.studentMaster.homeAddressLineTwo;
-        this.addParentInfoModel.parentInfo.state = this.data.studentDetailsForViewAndEditData.studentMaster.homeAddressState;
-        this.addParentInfoModel.parentInfo.zip = this.data.studentDetailsForViewAndEditData.studentMaster.homeAddressZip;
-      }
-      if(this.addParentInfoModel.parentInfo.country !== null){
-        this.addParentInfoModel.parentInfo.country = this.addParentInfoModel.parentInfo.country.toString();
-      }    
-     
+    }else{  
+    
       this.parentInfoService.addParentForStudent(this.addParentInfoModel).subscribe(data => {
         if (typeof (data) == 'undefined') 
         {

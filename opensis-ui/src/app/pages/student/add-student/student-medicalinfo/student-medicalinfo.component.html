@@ -1,4 +1,4 @@
-<form (ngSubmit)="submit()" #f="ngForm" *ngIf="studentCreateMode==StudentCreate.EDIT || studentCreateMode==StudentCreate.ADD">
+<form (ngSubmit)="submit()" #f="ngForm" *ngIf="studentCreateMode==studentCreate.EDIT || studentCreateMode==studentCreate.ADD">
 <mat-card class="w-full">
     <mat-card-header>
         <mat-card-title>{{'medicalInformation'|translate}}</mat-card-title>
@@ -118,14 +118,14 @@
     </mat-card-content>
     <mat-card-actions>
         <div class="px-4 mb-2 text-right">
-            <button mat-button type="button" *ngIf="studentCreateMode == StudentCreate.EDIT" (click)="cancelEdit()">{{'cancel'|translate}}</button>
-            <button color="primary" mat-raised-button>{{'submit'|translate}}</button>
+            <button mat-button type="button" *ngIf="studentCreateMode == studentCreate.EDIT" (click)="cancelEdit()">{{'cancel'|translate}}</button>
+            <button color="primary" mat-raised-button>{{'update'|translate}}</button>
         </div>
     </mat-card-actions>
 </mat-card>
 </form>
 
-<mat-card class="w-full" *ngIf="studentCreateMode == StudentCreate.VIEW">
+<mat-card class="w-full" *ngIf="studentCreateMode == studentCreate.VIEW">
 
     <div class="flex items-center mx-4" fxLayout="row" fxLayoutAlign="center center">
         <h3 class="flex-auto">{{'medicalInformation' | translate}}</h3>
@@ -135,71 +135,76 @@
 
 
         <div @stagger fxLayout="column">
-            <h4 class="text-primary pt-6 pb-2 px-4">{{'alertInformation'|translate}}</h4>
+            <h3 class="text-blue pt-6 pb-2 px-4">{{'alertInformation'|translate}}</h3>
             <ul class="grid md:grid-cols-2 lg:grid-cols-3 col-gap-8 row-gap-10 mt-2 mx-4">
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'criticalAlert' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{studentAddModel.studentMaster.criticalAlert|EmtyValueCheckPipe}}</p>
+                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentAddModel.studentMaster.criticalAlert|EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'alertDescription' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{studentAddModel.studentMaster.alertDescription|EmtyValueCheckPipe}}</p>
+                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentAddModel.studentMaster.alertDescription|EmtyValueCheckPipe}}</p>
                 </li>
             </ul>
 
+            <hr class="-mx-4 mt-6">
 
-            <h4 class="text-primary pt-6 pb-2 px-4">{{'providerInformation'|translate}}</h4>
+
+            <h3 class="text-blue pt-6 pb-2 px-4">{{'providerInformation'|translate}}</h3>
             <div class="w-full lg:w-2/3">
                 <ul class="grid md:grid-cols-2 col-gap-8 row-gap-10 my-3 mx-4">
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'primaryCarePhysician' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{studentAddModel.studentMaster.primaryCarePhysician|EmtyValueCheckPipe}}</p>
+                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentAddModel.studentMaster.primaryCarePhysician|EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'primaryCarePhysicianPhone' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{studentAddModel.studentMaster.primaryCarePhysicianPhone|EmtyValueCheckPipe}}</p>
+                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentAddModel.studentMaster.primaryCarePhysicianPhone|EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'insuranceCompany' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{studentAddModel.studentMaster.insuranceCompany|EmtyValueCheckPipe}}</p>
+                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentAddModel.studentMaster.insuranceCompany|EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'insuranceCompanyPhone' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{studentAddModel.studentMaster.insuranceCompanyPhone|EmtyValueCheckPipe}}</p>
+                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentAddModel.studentMaster.insuranceCompanyPhone|EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'policyNumber' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{studentAddModel.studentMaster.policyNumber|EmtyValueCheckPipe}}</p>
+                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentAddModel.studentMaster.policyNumber|EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'policyHolderName' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{studentAddModel.studentMaster.policyHolder|EmtyValueCheckPipe}}</p>
+                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentAddModel.studentMaster.policyHolder|EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'preferredMedicalFacility' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{studentAddModel.studentMaster.medicalFacility|EmtyValueCheckPipe}}</p>
+                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentAddModel.studentMaster.medicalFacility|EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'preferredMedicalFacilityPhone' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{studentAddModel.studentMaster.medicalFacilityPhone|EmtyValueCheckPipe}}</p>
+                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentAddModel.studentMaster.medicalFacilityPhone|EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'dentist' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{studentAddModel.studentMaster.dentist|EmtyValueCheckPipe}}</p>
+                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentAddModel.studentMaster.dentist|EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'dentistsPhone' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{studentAddModel.studentMaster.dentistPhone|EmtyValueCheckPipe}}</p>
+                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentAddModel.studentMaster.dentistPhone|EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'vision' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{studentAddModel.studentMaster.vision|EmtyValueCheckPipe}}</p>
+                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentAddModel.studentMaster.vision|EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'visionProvidersPhone' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{studentAddModel.studentMaster.visionPhone|EmtyValueCheckPipe}}</p>
+                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentAddModel.studentMaster.visionPhone|EmtyValueCheckPipe}}</p>
                 </li>
             </ul>
+            
+            <hr class="-mx-4 mt-6">
+
             <vex-custom-field-without-form  [schoolDetailsForViewAndEdit]="studentAddModel" [module] = "module" [categoryId] = "categoryId" [studentCreateMode]="studentCreateMode"></vex-custom-field-without-form>
             </div>
         </div>

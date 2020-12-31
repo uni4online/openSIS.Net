@@ -39,7 +39,7 @@ class OnlySchoolList{
     dateSchoolOpened:string;
     dateSchoolClosed:string;
     streetAddress1:string;
-    nameOfPrinciple:string;
+    nameOfPrincipal:string;
     telephone:string;
     status:boolean;
 }

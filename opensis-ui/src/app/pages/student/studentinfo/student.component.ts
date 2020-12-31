@@ -16,7 +16,9 @@ import { MatTableDataSource } from '@angular/material/table';
 import { LoaderService } from '../../../services/loader.service';
 import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-
+import { ImageCropperService } from '../../../services/image-cropper.service';
+import { LayoutService } from 'src/@vex/services/layout.service';
+import { ExcelService } from '../../../services/excel.service';
 @Component({
   selector: 'vex-student',
   templateUrl: './student.component.html',
@@ -57,10 +59,22 @@ export class StudentComponent implements OnInit {
     private studentService: StudentService,
     private snackbar: MatSnackBar,
     private router: Router,
-    private loaderService:LoaderService
+    private loaderService:LoaderService,
+    private imageCropperService:ImageCropperService,
+    private layoutService: LayoutService,
+    private excelService:ExcelService
     ) 
     { 
      this.getAllStudent.filterParams=null;
+     if(localStorage.getItem("collapseValue") !== null){
+      if( localStorage.getItem("collapseValue") === "false"){
+        this.layoutService.expandSidenav();
+      }else{
+        this.layoutService.collapseSidenav();
+      } 
+    }else{
+      this.layoutService.expandSidenav();
+    }
      this.loaderService.isLoading.subscribe((val) => {
         this.loading = val;
       });
@@ -137,6 +151,7 @@ export class StudentComponent implements OnInit {
 
   goToAdd(){   
     this.router.navigate(["school/students/student-generalinfo"]);
+    this.imageCropperService.enableUpload(true);
   }
 
   viewStudentDetails(id){  
@@ -170,9 +185,13 @@ export class StudentComponent implements OnInit {
     }
     this.studentService.GetAllStudentList(this.getAllStudent).subscribe(data => {
       if(data._failure){
-        this.snackbar.open('Student information failed. '+ data._message, 'LOL THANKS', {
-        duration: 10000
-        });
+        if(data._message==="NO RECORD FOUND"){
+            this.StudentModelList = new MatTableDataSource([]);   
+        } else{
+          this.snackbar.open('Student List failed. ' + data._message, 'LOL THANKS', {
+            duration: 10000
+          });
+        }
       }else{
         this.totalCount= data.totalCount;
         this.pageNumber = data.pageNumber;
@@ -200,6 +219,38 @@ export class StudentComponent implements OnInit {
         this.getAllStudent=new StudentListModel();     
       }
     });
+  }
+
+  exportStudentListToExcel(){
+    let getAllStudent: StudentListModel = new StudentListModel();
+    getAllStudent.pageNumber=0;
+    getAllStudent.pageSize=0;
+    getAllStudent.sortingModel=null;
+      this.studentService.GetAllStudentList(getAllStudent).subscribe(res => {
+        if(res._failure){
+          this.snackbar.open('Failed to Export School List.'+ res._message, 'LOL THANKS', {
+          duration: 10000
+          });
+        }else{
+          if(res.getStudentListForViews.length>0){
+            let studentList;
+            studentList=res.getStudentListForViews?.map((x)=>{
+             let middleName=x.middleName==null?' ':' '+x.middleName+' ';
+               return {
+                Name: x.firstGivenName+middleName+x.lastFamilyName,
+                StudentId: x.studentInternalId,
+                AlternativeId: x.alternateId,
+                Phone: x.mobilePhone
+              }
+            });
+            this.excelService.exportAsExcelFile(studentList,'Students_List_')
+          }else{
+            this.snackbar.open('No Records Found. Failed to Export Students List','LOL THANKS', {
+              duration: 5000
+            });
+          }
+        }
+      });
   }
 
 

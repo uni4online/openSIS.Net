@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { CalendarEvent, CalendarEventAction, CalendarEventTimesChangedEvent, CalendarMonthViewBeforeRenderEvent, CalendarMonthViewDay, CalendarView, DAYS_OF_WEEK } from 'angular-calendar';
 import { addDays, addHours, endOfDay, endOfMonth, endOfWeek, format, isSameDay, isSameMonth, startOfDay, startOfMonth, startOfWeek, subDays } from 'date-fns';
@@ -25,7 +25,8 @@ import { map } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confirm-dialog.component';
 import * as moment from 'moment';
-
+import { LayoutService } from 'src/@vex/services/layout.service';
+import { LoaderService } from '../../../services/loader.service';
 const colors: any = {
   blue: {
     primary: '#5c77ff',
@@ -42,6 +43,7 @@ const colors: any = {
 };
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'vex-calendar',
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss'],
@@ -84,10 +86,30 @@ export class CalendarComponent implements OnInit {
   refresh: Subject<any> = new Subject();
   calendarFrom: FormControl;
   cssClass: string;
-  constructor(private http: HttpClient, private dialog: MatDialog,
-    private snackbar: MatSnackBar, public translate: TranslateService, private membershipService: MembershipService,
-    private calendarEventService: CalendarEventService, private calendarService: CalendarService) {
+  loading:boolean;
+  constructor(private http: HttpClient, 
+    private dialog: MatDialog,
+    private snackbar: MatSnackBar, 
+    public translate: TranslateService, 
+    private membershipService: MembershipService,
+    private calendarEventService: CalendarEventService, 
+    private calendarService: CalendarService, 
+    private layoutService: LayoutService,
+    private loaderService:LoaderService,
+    private cdr: ChangeDetectorRef,) {
     this.translate.setDefaultLang('en');
+    if(localStorage.getItem("collapseValue") !== null){
+      if( localStorage.getItem("collapseValue") === "false"){
+        this.layoutService.expandSidenav();
+      }else{
+        this.layoutService.collapseSidenav();
+      } 
+    }else{
+      this.layoutService.expandSidenav();
+    }
+    this.loaderService.isLoading.subscribe((res) => {
+      this.loading = res;
+    });
     this.calendarEventService.currentEvent.subscribe(
       res => {
         if (res) {
@@ -102,6 +124,10 @@ export class CalendarComponent implements OnInit {
     this.calendarService.setCalendarId(event.calenderId);
     this.getAllCalendarEvent();
   }
+
+  ngAfterViewChecked(){
+    this.cdr.detectChanges();
+ }
 
   //Show all members
   getAllMemberList() {

@@ -113,10 +113,21 @@ namespace opensis.data.Repository
             {
 
                 var room = this.context?.Rooms.Where(x => x.TenantId == roomList.TenantId && x.SchoolId == roomList.SchoolId).OrderBy(x => x.SortOrder).ToList();
-                roomListModel.TableroomList = room;
-                roomListModel._tenantName = roomList._tenantName;
-                roomListModel._token = roomList._token;
-                roomListModel._failure = false;
+                if (room.Count > 0)
+                {
+                    roomListModel.TableroomList = room;
+                    roomListModel._tenantName = roomList._tenantName;
+                    roomListModel._token = roomList._token;
+                    roomListModel._failure = false;
+                }
+                else
+                {
+                    roomListModel.TableroomList = null;
+                    roomListModel._tenantName = roomList._tenantName;
+                    roomListModel._token = roomList._token;
+                    roomListModel._failure = true;
+                    roomListModel._message = NORECORDFOUND;
+                }
             }
             catch (Exception es)
             {

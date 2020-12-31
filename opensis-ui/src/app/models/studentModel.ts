@@ -151,9 +151,24 @@ export class CheckStudentInternalIdViewModel extends CommonField {
     }
 }
 
+class studentList {
+       tenantId: string;
+      schoolId: number;
+      studentId:number;
+      alternateId: number;
+      studentInternalId: number;
+      mobilePhone: string;
+      homePhone: string
+      firstGivenName: string;
+      middleName: string;
+      lastFamilyName: string;
+      personalEmail: string;
+      gradeLevelTitle: string;
+      enrollmentDate: string
+}
 
 export class StudentResponseListModel {
-    public getStudentListForViews: [];
+    public getStudentListForViews: [studentList];
     public tenantId: string;
     public schoolId: number;
     public totalCount: number;

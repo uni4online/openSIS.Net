@@ -102,6 +102,16 @@ const routes: Routes = [
         path: '',
         children: [
           {
+            path: 'course-manager',
+            loadChildren: () => import('./pages/courses/course-manager/course-manager.module').then(m => m.CourseManagerModule),
+            //canActivate: [AuthGuard]            
+          }
+        ]
+      },
+      {
+        path: '',
+        children: [
+          {
             path: 'settings',
             loadChildren: () => import('./pages/settings/settings.module').then(m => m.SettingsModule),
             canActivate: [AuthGuard]            

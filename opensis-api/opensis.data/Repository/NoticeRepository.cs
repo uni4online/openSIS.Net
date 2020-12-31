@@ -161,21 +161,31 @@ namespace opensis.data.Repository
             try
             {
                 var noticeRepository = this.context?.Notice.OrderBy(x => x.ValidFrom).Where(x => x.TenantId == noticeList.TenantId && x.SchoolId == noticeList.SchoolId && x.Isactive == true).ToList();
-                foreach (var notice in noticeRepository)
+                if (noticeRepository.Count > 0)
                 {
-                    if(!string.IsNullOrEmpty(notice.TargetMembershipIds))
+                    foreach (var notice in noticeRepository)
                     {
-                        string[] membersList = notice.TargetMembershipIds.Split(",");
-                        int[] memberIds = Array.ConvertAll(membersList, s => int.Parse(s));
-                        var profiles = this.context?.Membership.Where(t => memberIds.Contains(t.MembershipId) && t.SchoolId== noticeList.SchoolId).Select(t => t.Profile).ToArray();
-                        var mebershipIds = string.Join(",", profiles);
-                        notice.TargetMembershipIds = mebershipIds;
-                    }                    
+                        if (!string.IsNullOrEmpty(notice.TargetMembershipIds))
+                        {
+                            string[] membersList = notice.TargetMembershipIds.Split(",");
+                            int[] memberIds = Array.ConvertAll(membersList, s => int.Parse(s));
+                            var profiles = this.context?.Membership.Where(t => memberIds.Contains(t.MembershipId) && t.SchoolId == noticeList.SchoolId).Select(t => t.Profile).ToArray();
+                            var mebershipIds = string.Join(",", profiles);
+                            notice.TargetMembershipIds = mebershipIds;
+                        }
+                    }
+
+                    getAllNoticeList.NoticeList = noticeRepository;
+                    getAllNoticeList._failure = false;
+                    return getAllNoticeList;
                 }
-
-                getAllNoticeList.NoticeList = noticeRepository;
-
-                return getAllNoticeList;
+                else
+                {
+                    getAllNoticeList.NoticeList = null;
+                    getAllNoticeList._failure = true;
+                    getAllNoticeList._message = NORECORDFOUND;
+                    return getAllNoticeList;
+                }
             }
             catch (Exception ex)
             {

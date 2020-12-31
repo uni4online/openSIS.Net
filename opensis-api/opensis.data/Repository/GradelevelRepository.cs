@@ -152,32 +152,42 @@ namespace opensis.data.Repository
                 var gradelevelsList = this.context?.Gradelevels.Include(x=>x.IscedGradeLevelNavigation)
                     .Where(x => x.TenantId == gradelevelList.TenantId && x.SchoolId==gradelevelList.SchoolId).OrderBy(x=>x.SortOrder).ToList();
 
+                if (gradelevelsList.Count > 0)
+                {
+                    var gradeLevels = from gradelevel in gradelevelsList
+                                      select new GradeLevelView()
+                                      {
+                                          GradeId = gradelevel.GradeId,
+                                          LastUpdated = gradelevel.LastUpdated,
+                                          NextGrade = this.context?.Gradelevels.FirstOrDefault(x => x.GradeId == gradelevel.NextGradeId)?.Title,
+                                          NextGradeId = gradelevel.NextGradeId,
+                                          SchoolId = gradelevel.SchoolId,
+                                          Title = gradelevel.Title,
+                                          ShortName = gradelevel.ShortName,
+                                          SortOrder = gradelevel.SortOrder,
+                                          TenantId = gradelevel.TenantId,
+                                          IscedGradeLevel = gradelevel.IscedGradeLevel,
+                                          GradeDescription = gradelevel.IscedGradeLevelNavigation != null ? gradelevel.IscedGradeLevelNavigation.GradeDescription : null,
+                                          //AgeRange=gradelevel.AgeRange,
+                                          //EducationalStage=gradelevel.EducationalStage,
+                                          //GradeLevelEquivalency=gradelevel.GradeLevelEquivalency,
+                                          UpdatedBy = gradelevel.UpdatedBy
+                                      };
 
-                var gradeLevels = from gradelevel in gradelevelsList
-                                 select new GradeLevelView()
-                                 {
-                                     GradeId= gradelevel.GradeId,
-                                     LastUpdated= gradelevel.LastUpdated,
-                                     NextGrade= this.context?.Gradelevels.FirstOrDefault(x=>x.GradeId== gradelevel.NextGradeId)?.Title,
-                                     NextGradeId=gradelevel.NextGradeId,
-                                     SchoolId= gradelevel.SchoolId,
-                                     Title= gradelevel.Title,
-                                     ShortName= gradelevel.ShortName,
-                                     SortOrder= gradelevel.SortOrder,
-                                     TenantId= gradelevel.TenantId,
-                                     IscedGradeLevel=gradelevel.IscedGradeLevel,
-                                     GradeDescription= gradelevel.IscedGradeLevelNavigation != null ? gradelevel.IscedGradeLevelNavigation.GradeDescription : null,
-                                     //AgeRange=gradelevel.AgeRange,
-                                     //EducationalStage=gradelevel.EducationalStage,
-                                     //GradeLevelEquivalency=gradelevel.GradeLevelEquivalency,
-                                     UpdatedBy = gradelevel.UpdatedBy
-                                 };
 
-
-                gradelevelListModel.TableGradelevelList = gradeLevels.ToList();
-                gradelevelListModel._tenantName = gradelevelList._tenantName;
-                gradelevelListModel._token = gradelevelList._token;
-                gradelevelListModel._failure = false;
+                    gradelevelListModel.TableGradelevelList = gradeLevels.ToList();
+                    gradelevelListModel._tenantName = gradelevelList._tenantName;
+                    gradelevelListModel._token = gradelevelList._token;
+                    gradelevelListModel._failure = false;
+                }
+                else
+                {
+                    gradelevelListModel.TableGradelevelList = null;
+                    gradelevelListModel._tenantName = gradelevelList._tenantName;
+                    gradelevelListModel._token = gradelevelList._token;
+                    gradelevelListModel._failure = true;
+                    gradelevelListModel._message = NORECORDFOUND;
+                }
             }
             catch (Exception es)
             {

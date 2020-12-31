@@ -1,0 +1,34 @@
+<vex-page-layout>
+    <vex-page-layout-header class="pb-16" fxLayout="column" fxLayoutAlign="center start">        
+        <vex-secondary-toolbar current={{pageTitle}} [schoolSettings]="parentSettings" [pages]="pages" (selectedPage)="getSelectedPage($event)" class="w-full">
+            <vex-breadcrumbs [crumbs]="['Settings','Grades']" class="flex-auto"></vex-breadcrumbs>
+        </vex-secondary-toolbar>
+    </vex-page-layout-header>    
+    <vex-page-layout-content class="-mt-6">
+        <mat-drawer-container class="bg-transparent flex-auto flex -mt-16">
+            <mat-drawer-content class="flex-auto flex items-start">
+                <div  class="w-full p-0">
+                    <!-- <div *ngIf="pageId === 'US Common Core Standards'">
+                        <vex-us-common-core-standards></vex-us-common-core-standards>
+                    </div>
+
+                    <div *ngIf="pageId === 'School Specific Standards'">
+                        <vex-school-specific-standards></vex-school-specific-standards>
+                    </div> -->
+
+                    <div *ngIf="pageId === 'Standard Grade Setup'">
+                        <vex-standard-grade-setup></vex-standard-grade-setup>
+                    </div>
+
+                    <div *ngIf="pageId === 'Effort Grade Library'">
+                        <vex-effort-grade-library></vex-effort-grade-library>
+                    </div>
+
+                    <div *ngIf="pageId === 'Report Card Grades'">
+                        <vex-report-card-grades></vex-report-card-grades>
+                    </div>
+                </div>
+            </mat-drawer-content>
+        </mat-drawer-container>
+    </vex-page-layout-content>
+</vex-page-layout>

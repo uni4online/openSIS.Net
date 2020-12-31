@@ -78,6 +78,14 @@ export class SchoolService {
       this.category.next(category);
   }
 
+ // Update Mode in School
+ private pageMode = new Subject;
+ modeToUpdate=this.pageMode.asObservable();
+
+ changePageMode(mode:number){
+     this.pageMode.next(mode);
+ } 
+
 // to Update school details in General Info in first view mode.
   private schoolDetailsForGeneral = new Subject;
   getSchoolDetailsForGeneral=this.schoolDetailsForGeneral.asObservable();

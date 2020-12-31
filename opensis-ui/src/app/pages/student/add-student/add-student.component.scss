@@ -1,0 +1,16 @@
+.critical-alert {
+    background: #d2111f;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    position: absolute;
+    right: 25px;
+    top: 40px;
+    color: #fff;
+    padding: 4px 5px;
+
+    .mat-icon {
+        font-size: 20px;
+    }
+}

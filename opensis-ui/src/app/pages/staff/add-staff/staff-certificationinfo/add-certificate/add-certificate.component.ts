@@ -70,19 +70,18 @@ export class AddCertificateComponent implements OnInit {
     }
 
   ngOnInit(): void {
-    
   }
   submit(){
     
     if (this.form.valid) {
       if(
-        (this.form.controls.certificationCode.value!=null) && 
-        (this.form.controls.certificationDate.value!=null) &&
-        (this.form.controls.certificationDescription.value!=null) &&
-        (this.form.controls.certificationExpiryDate.value!=null) &&
-        (this.form.controls.certificationName.value!=null) &&
-        (this.form.controls.primaryCertification.value!=null) &&
-        (this.form.controls.shortName.value!=null)
+        ((this.form.controls.certificationCode.value!=null) || 
+        (this.form.controls.certificationDate.value!=null) ||
+        (this.form.controls.certificationDescription.value!=null) ||
+        (this.form.controls.certificationExpiryDate.value!=null) ||
+        (this.form.controls.certificationName.value!=null) ||
+        (this.form.controls.primaryCertification.value!=null) ||
+        (this.form.controls.shortName.value!=null))
         ){
           if(this.form.controls.id.value==0){
             this.staffCertificateModel.staffCertificateInfo.staffId=this.staffService.getStaffId();
@@ -93,8 +92,7 @@ export class AddCertificateComponent implements OnInit {
             this.staffCertificateModel.staffCertificateInfo.certificationDate=this.form.controls.certificationDate.value;
             this.staffCertificateModel.staffCertificateInfo.certificationExpiryDate=this.form.controls.certificationExpiryDate.value;
             this.staffCertificateModel.staffCertificateInfo.certificationDescription=this.form.controls.certificationDescription.value;
-            console.log(this.form.value)
-            console.log(this.staffCertificateModel)
+          
             this.staffService.addStaffCertificateInfo(this.staffCertificateModel).subscribe(
               (res:StaffCertificateModel)=>{
                 if(typeof(res)=='undefined'){

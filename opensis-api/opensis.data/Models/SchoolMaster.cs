@@ -25,6 +25,7 @@ namespace opensis.data.Models
 
         public Guid TenantId { get; set; }
         public int SchoolId { get; set; }
+        public Guid SchoolGuid { get; set; }
         public string SchoolInternalId { get; set; }
         public string SchoolAltId { get; set; }
         public string SchoolStateId { get; set; }

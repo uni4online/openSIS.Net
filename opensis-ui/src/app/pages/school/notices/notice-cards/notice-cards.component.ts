@@ -71,9 +71,9 @@ deleteNotice(id){
         duration: 10000
       });
     } else {
-       this.noticeService.getAllNotice(this.noticeListViewModel).subscribe((res) => {
-         this.noticeListViewModel = res;
-       });
+      //  this.noticeService.getAllNotice(this.noticeListViewModel).subscribe((res) => {
+      //    this.noticeListViewModel = res;
+      //  });
       this.snackbar.open('Notice Deleted Successful.', '', {
         duration: 10000
       });

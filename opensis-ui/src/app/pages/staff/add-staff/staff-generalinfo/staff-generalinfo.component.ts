@@ -23,6 +23,8 @@ import { CheckUserEmailAddressViewModel } from '../../../../models/userModel';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { WashInfoEnum } from '../../../../enums/wash-info.enum';
+import { ImageCropperService } from '../../../../services/image-cropper.service';
+import { LovList } from '../../../../models/lovModel';
 
 @Component({
   selector: 'vex-staff-generalinfo',
@@ -43,16 +45,18 @@ export class StaffGeneralinfoComponent implements OnInit {
   countryModel: CountryModel = new CountryModel();
   staffAddModel: StaffAddModel = new StaffAddModel();
   languages: LanguageModel = new LanguageModel();
+  
+  lovListViewModel: LovList = new LovList()
   checkStaffInternalIdViewModel: CheckStaffInternalIdViewModel = new CheckStaffInternalIdViewModel();
   checkUserEmailAddressViewModel: CheckUserEmailAddressViewModel = new CheckUserEmailAddressViewModel();
   salutationEnum = Object.keys(salutation);
   suffixEnum = Object.keys(suffix);
   genderEnum = Object.keys(gender);
-  raceEnum = Object.keys(race);
-  ethnicityEnum = Object.keys(ethnicity);
   maritalStatusEnum = Object.keys(maritalStatus);
   destroySubject$: Subject<void> = new Subject();
   languageList = [];
+  ethnicityList = [];
+  raceList = [];
   disablity = WashInfoEnum;
   countryListArr = [];
   countryName = '-';
@@ -68,14 +72,15 @@ export class StaffGeneralinfoComponent implements OnInit {
   staffInternalId = '';
   data: any;
   hidePasswordAccess: boolean = false;
-  firstLanguageName : string;
-  secondLanguageName : string;
-  thirdLanguageName : string;
+  firstLanguageName: string;
+  secondLanguageName: string;
+  thirdLanguageName: string;
   hideAccess: boolean = false;
   fieldDisabled: boolean = false;
   saveAndNext = 'saveAndNext';
   pageStatus: string;
   staffPortalId: string;
+  showDisabilityDescription: boolean = false;
 
   constructor(private fb: FormBuilder,
     public translateService: TranslateService,
@@ -84,7 +89,8 @@ export class StaffGeneralinfoComponent implements OnInit {
     private loginService: LoginService,
     private commonFunction: SharedFunction,
     private staffService: StaffService,
-    private cd: ChangeDetectorRef) {
+    private cd: ChangeDetectorRef,
+    private imageCropperService: ImageCropperService) {
     translateService.use('en');
 
     this.staffService.getStaffDetailsForGeneral.pipe(takeUntil(this.destroySubject$)).subscribe((res: StaffAddModel) => {
@@ -95,6 +101,8 @@ export class StaffGeneralinfoComponent implements OnInit {
       this.accessPortal();
       this.GetAllLanguage();
       this.getAllCountry();
+      this.getAllEthnicity();
+      this.getAllRace();
     })
 
   }
@@ -103,16 +111,20 @@ export class StaffGeneralinfoComponent implements OnInit {
     if (this.staffCreateMode == this.staffCreate.ADD) {
       this.getAllCountry();
       this.GetAllLanguage();
+      this.getAllEthnicity();
+      this.getAllRace();
     } else if (this.staffCreateMode == this.staffCreate.VIEW) {
 
+      this.staffService.changePageMode(this.staffCreateMode);
+      this.imageCropperService.enableUpload(false);
       this.staffAddModel = this.staffDetailsForViewAndEdit;
       this.data = this.staffDetailsForViewAndEdit?.staffMaster;
     } else if (this.staffCreateMode == this.staffCreate.EDIT && (this.staffDetailsForViewAndEdit != undefined || this.staffDetailsForViewAndEdit != null)) {
       this.staffAddModel = this.staffDetailsForViewAndEdit;
-
+      this.staffService.changePageMode(this.staffCreateMode);
+      this.imageCropperService.enableUpload(true);
       this.saveAndNext = 'update';
       if (this.staffAddModel.staffMaster.loginEmailAddress !== null) {
-
         this.hideAccess = true;
         this.fieldDisabled = true;
 
@@ -120,6 +132,49 @@ export class StaffGeneralinfoComponent implements OnInit {
     }
   }
 
+  getAllEthnicity() {
+    this.lovListViewModel.lovName = "Ethnicity";
+    this.commonService.getAllDropdownValues(this.lovListViewModel).subscribe(
+      (res: LovList) => {
+        if (typeof (res) == 'undefined') {
+          this.snackbar.open('Ethnicity list failed. ' + sessionStorage.getItem("httpError"), '', {
+            duration: 10000
+          });
+        }
+        else {
+          if (res._failure) {
+            this.snackbar.open('Ethnicity list failed. ' + res._message, 'LOL THANKS', {
+              duration: 10000
+            });
+          }
+          else {
+            this.ethnicityList = res.dropdownList;
+          }
+        }
+      })
+  }
+
+  getAllRace() {
+    this.lovListViewModel.lovName = "Race";
+    this.commonService.getAllDropdownValues(this.lovListViewModel).subscribe(
+      (res: LovList) => {
+        if (typeof (res) == 'undefined') {
+          this.snackbar.open('Race list failed. ' + sessionStorage.getItem("httpError"), '', {
+            duration: 10000
+          });
+        }
+        else {
+          if (res._failure) {
+            this.snackbar.open('Race list failed. ' + res._message, 'LOL THANKS', {
+              duration: 10000
+            });
+          }
+          else {
+            this.raceList = res.dropdownList;
+          }
+        }
+      })
+  }
 
 
   getAllCountry() {
@@ -160,17 +215,17 @@ export class StaffGeneralinfoComponent implements OnInit {
 
         if (this.staffCreateMode == this.staffCreate.VIEW) {
           this.languageList.map((val) => {
-            var firstLanguageId = + this.data.firstLanguage;
-            var secondLanguageId = + this.data.secondLanguage;
-            var thirdLanguageId = + this.data.thirdLanguage;
-            if (val.id === firstLanguageId) {
-              this.firstLanguageName = val.name;
+            let firstLanguageId = + this.data.firstLanguage;
+            let secondLanguageId = + this.data.secondLanguage;
+            let thirdLanguageId = + this.data.thirdLanguage;
+            if (val.langId === firstLanguageId) {
+              this.firstLanguageName = val.locale;
             }
-            if (val.id === secondLanguageId) {
-              this.secondLanguageName = val.name;
+            if (val.langId === secondLanguageId) {
+              this.secondLanguageName = val.locale;
             }
-            if (val.id === thirdLanguageId) {
-              this.thirdLanguageName = val.name;
+            if (val.langId === thirdLanguageId) {
+              this.thirdLanguageName = val.locale;
             }
           })
         }
@@ -238,7 +293,20 @@ export class StaffGeneralinfoComponent implements OnInit {
 
   editGeneralInfo() {
     this.staffCreateMode = this.staffCreate.EDIT
-    this.pageStatus = "Edit Staff";
+    this.imageCropperService.enableUpload(true);
+    this.staffService.changePageMode(this.staffCreateMode);
+    this.saveAndNext = 'update';
+    if (this.staffAddModel.staffMaster.physicalDisability) {
+      this.showDisabilityDescription = true;
+    }
+  }
+  checkDisability(event) {
+    if (event.value == true) {
+      this.showDisabilityDescription = true;
+    }
+    else {
+      this.showDisabilityDescription = false;
+    }
   }
 
   getAge(birthDate) {
@@ -272,7 +340,9 @@ export class StaffGeneralinfoComponent implements OnInit {
     if (this.currentForm.form.valid) {
 
       if (this.staffCreateMode == this.staffCreate.EDIT) {
-        this.staffAddModel.selectedCategoryId = this.staffAddModel.fieldsCategoryList[this.categoryId].categoryId;
+        if (this.staffAddModel.fieldsCategoryList !== null) {
+          this.staffAddModel.selectedCategoryId = this.staffAddModel.fieldsCategoryList[this.categoryId].categoryId;
+        }
 
         this.updateStaff();
       } else {
@@ -308,7 +378,9 @@ export class StaffGeneralinfoComponent implements OnInit {
   }
 
   updateStaff() {
-    this.staffAddModel.selectedCategoryId = this.staffAddModel.fieldsCategoryList[this.categoryId].categoryId;
+    if (this.staffAddModel.fieldsCategoryList !== null) {
+      this.staffAddModel.selectedCategoryId = this.staffAddModel.fieldsCategoryList[this.categoryId].categoryId;
+    }
     this.staffAddModel._token = sessionStorage.getItem("token");
     this.staffAddModel._tenantName = sessionStorage.getItem("tenant");
     this.staffAddModel.staffMaster.dob = this.commonFunction.formatDateSaveWithoutTime(this.staffAddModel.staffMaster.dob);
@@ -327,9 +399,10 @@ export class StaffGeneralinfoComponent implements OnInit {
           this.snackbar.open('Staff Update Successful.', '', {
             duration: 10000
           });
-          // this.staffService.setStudentId(data.studentMaster.studentId);
-          // this._studentService.changeCategory(4);
-          // this._studentService.setStudentDetails(data);
+          this.staffCreateMode = this.staffCreate.VIEW
+           this.data = data.staffMaster;
+           this.imageCropperService.enableUpload(false);
+          this.staffService.changePageMode(this.staffCreateMode);
         }
       }
 
@@ -337,8 +410,11 @@ export class StaffGeneralinfoComponent implements OnInit {
   }
 
   cancelEdit() {
-    this.staffCreateMode = this.staffCreate.VIEW
+    this.staffCreateMode = this.staffCreate.VIEW;
+    this.staffService.changePageMode(this.staffCreateMode);
+    this.imageCropperService.enableUpload(false);
     this.data = this.staffAddModel.staffMaster;
+    this.GetAllLanguage();
   }
 
   toggleVisibility() {
@@ -355,6 +431,7 @@ export class StaffGeneralinfoComponent implements OnInit {
 
   ngOnDestroy() {
     this.destroySubject$.next();
+    this.imageCropperService.enableUpload(false);
   }
 
 }

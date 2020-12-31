@@ -7,7 +7,7 @@ import { BehaviorSubject,Observable, Subject } from 'rxjs';
 export class ImageCropperService {
   private cropEventSubject = new Subject<any>();
   private unCropEventSubject = new Subject<any>();
-  private message = new BehaviorSubject(true);
+  private message = new BehaviorSubject(false);
   sharedMessage = this.message.asObservable();
   constructor() { }
 
@@ -25,7 +25,7 @@ export class ImageCropperService {
     return this.unCropEventSubject.asObservable();
   }
 
-  nextMessage(message: boolean) {
+  enableUpload(message: boolean) {
     this.message.next(message)
   }
 }

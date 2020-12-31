@@ -115,10 +115,20 @@ namespace opensis.data.Repository
             try
             {
                 var eventList = this.context?.CalendarEvents.Where(x => x.TenantId == calendarEventList.TenantId && x.SchoolId == calendarEventList.SchoolId && x.AcademicYear == calendarEventList.AcademicYear && ((x.CalendarId == calendarEventList.CalendarId && x.SystemWideEvent == false) || x.SystemWideEvent == true)).OrderBy(x => x.Title).ToList();
+
                 calendarEventListViewModel.calendarEventList = eventList;
                 calendarEventListViewModel._tenantName = calendarEventList._tenantName;
                 calendarEventListViewModel._token = calendarEventList._token;
-                calendarEventListViewModel._failure = false;
+
+                if (eventList.Count > 0)
+                {
+                    calendarEventListViewModel._failure = false;
+                }
+                else
+                {
+                    calendarEventListViewModel._failure = true;
+                    calendarEventListViewModel._message = NORECORDFOUND;
+                }
             }
             catch (Exception es)
             {

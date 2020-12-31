@@ -32,6 +32,15 @@ namespace opensis.data.Repository
                 {
                     int? staffId = Utility.GetMaxPK(this.context, new Func<StaffMaster, int>(x => x.StaffId));
                     staffAddViewModel.staffMaster.StaffId = (int)staffId;
+                    Guid GuidId = Guid.NewGuid();
+                    var GuidIdExist = this.context?.StaffMaster.FirstOrDefault(x => x.StaffGuid == GuidId);
+                    if (GuidIdExist != null)
+                    {
+                        staffAddViewModel._failure = true;
+                        staffAddViewModel._message = "Guid is already exist, Please try again.";
+                        return staffAddViewModel;
+                    }
+                    staffAddViewModel.staffMaster.StaffGuid = GuidId;
                     staffAddViewModel.staffMaster.LastUpdated = DateTime.UtcNow;
                     bool checkInternalID = CheckInternalID(staffAddViewModel.staffMaster.TenantId, staffAddViewModel.staffMaster.StaffInternalId);
                     if (checkInternalID == true)
@@ -193,7 +202,10 @@ namespace opensis.data.Repository
                 }
 
                 int totalCount = transactionIQ.Count();
-                transactionIQ = transactionIQ.Skip((pageResult.PageNumber - 1) * pageResult.PageSize).Take(pageResult.PageSize);
+                if (pageResult.PageNumber > 0 && pageResult.PageSize > 0)
+                {
+                    transactionIQ = transactionIQ.Skip((pageResult.PageNumber - 1) * pageResult.PageSize).Take(pageResult.PageSize);
+                }
                 var staffList = transactionIQ.Select(s => new GetStaffListForView
                 {
                     TenantId = s.TenantId,
@@ -467,6 +479,10 @@ namespace opensis.data.Repository
                         staffUpdate.LastUpdated = DateTime.UtcNow;
                         staffUpdate.LastUpdatedBy = staffAddViewModel.staffMaster.LastUpdatedBy;
                         staffUpdate.StaffPhoto = staffAddViewModel.staffMaster.StaffPhoto;
+                        staffUpdate.BusDropoff = staffAddViewModel.staffMaster.BusDropoff;
+                        staffUpdate.BusNo = staffAddViewModel.staffMaster.BusNo;
+                        staffUpdate.BusPickup = staffAddViewModel.staffMaster.BusPickup;
+                        staffUpdate.DisabilityDescription = staffAddViewModel.staffMaster.DisabilityDescription;
 
                         this.context?.SaveChanges();
 

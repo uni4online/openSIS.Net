@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit } from '@angular/core';
 import icArrowDropDown from '@iconify/icons-ic/arrow-drop-down';
 import icAdd from '@iconify/icons-ic/add';
 import { MatDialog } from '@angular/material/dialog';
@@ -13,7 +13,9 @@ import { MembershipService } from '../../../../app/services/membership.service';
 import { GetAllMembersList } from '../../../../app/models/membershipModel';
 import moment from 'moment';
 import { LoaderService } from '../../../services/loader.service';
-
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { LayoutService } from 'src/@vex/services/layout.service';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'vex-notices',
@@ -24,7 +26,7 @@ import { LoaderService } from '../../../services/loader.service';
     fadeInUp400ms
   ]
 })
-export class NoticesComponent implements OnInit {
+export class NoticesComponent implements OnInit, OnDestroy {
 
   @Input() afterClosed = new EventEmitter<boolean>();
   noticeListViewModel: NoticeListViewModel = new NoticeListViewModel();
@@ -35,18 +37,30 @@ export class NoticesComponent implements OnInit {
   recordFor: string;
   getAllMembersList: GetAllMembersList = new GetAllMembersList();
   loading:boolean;
+  destroySubject$: Subject<void> = new Subject();
+
   constructor(private dialog: MatDialog, 
     public translateService: TranslateService, 
     private noticeService: NoticeService,
     private membershipService:MembershipService, 
     private snackbar: MatSnackBar,
     private loaderService: LoaderService,
-    private cdr: ChangeDetectorRef) {
+    private cdr: ChangeDetectorRef,
+    private layoutService: LayoutService) {
     translateService.use('en');
+    if(localStorage.getItem("collapseValue") !== null){
+      if( localStorage.getItem("collapseValue") === "false"){
+        this.layoutService.expandSidenav();
+      }else{
+        this.layoutService.collapseSidenav();
+      } 
+    }else{
+      this.layoutService.expandSidenav();
+    }
     this.loaderService.isLoading.subscribe((v) => {
       this.loading = v;
     });
-    this.noticeService.currentNotice.subscribe(
+    this.noticeService.currentNotice.pipe(takeUntil(this.destroySubject$)).subscribe(
       res=>{
         if(res){
           this.showRecords('All');
@@ -91,7 +105,7 @@ export class NoticesComponent implements OnInit {
         this.recordFor = event.target.innerHTML;
         var today = new Date();
         if (this.recordFor.toLowerCase() == "today") {
-          this.noticeList =res.noticeList.filter(
+          this.noticeList =res.noticeList?.filter(
             m=>{
                 let validFrom=moment(m.validFrom).format('DD-MM-YYYY').toString();
                 let validFromarr=validFrom.split("-");
@@ -120,7 +134,7 @@ export class NoticesComponent implements OnInit {
           )
         }
         else if (this.recordFor.toLowerCase() == "upcoming") {
-          this.noticeList =  res.noticeList.filter(
+          this.noticeList =  res.noticeList?.filter(
             m=>{
               
               let validFrom=moment(m.validFrom).format('DD-MM-YYYY').toString();
@@ -150,7 +164,7 @@ export class NoticesComponent implements OnInit {
           )
         }
         else if (this.recordFor.toLowerCase() == "past") {
-          this.noticeList =res.noticeList.filter(
+          this.noticeList =res.noticeList?.filter(
             m=>{
               
               let validTo=moment(m.validTo).format('DD-MM-YYYY').toString();
@@ -194,6 +208,12 @@ export class NoticesComponent implements OnInit {
           }
         }
       )
+  }
+
+  ngOnDestroy() {
+    this.destroySubject$.next();
+    this.destroySubject$.complete();
+    this.noticeService.changeNotice(false);
   }
 
 

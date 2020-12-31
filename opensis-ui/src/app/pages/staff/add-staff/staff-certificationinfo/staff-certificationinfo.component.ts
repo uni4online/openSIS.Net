@@ -127,10 +127,23 @@ export class StaffCertificationinfoComponent implements OnInit {
           });
         }
         else{
-          if (res._failure) {     
-            this.snackbar.open('Staff Certificate List failed. ' + res._message, 'LOL THANKS', {
-              duration: 10000
-            });
+          if (res._failure) {  
+            if(res._message==="NO RECORD FOUND"){
+              if(res.staffCertificateInfoList==null){
+                this.staffCertificateList=new MatTableDataSource([]) ;
+                this.staffCertificateList.sort=this.sort;
+              }
+              else{
+                this.staffCertificateList=new MatTableDataSource(res.staffCertificateInfoList) ;
+                this.staffCertificateList.sort=this.sort; 
+              }
+             
+            } else{
+              this.snackbar.open('Staff Certificate List failed. ' + res._message, 'LOL THANKS', {
+                duration: 10000
+              });
+            }  
+            
           } 
           else { 
             this.staffCertificateList=new MatTableDataSource(res.staffCertificateInfoList) ;

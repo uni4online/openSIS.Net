@@ -24,18 +24,20 @@
     accept="image/jpg, image/jpeg, image/png">
   </div>
 <div @fadeInRight class="d-flex justify-center cursor-pointer photo-upload" (click)="fileUpload.click();unsetImage()">
-  <div @fadeInRight class="py-4 pl-8 pr-8" *ngIf="croppedImage=='' && preview=='' && (responseImage==null || responseImage.length==0)">
+  <div @fadeInRight class="inline-block align-top bg-white rounded-full"
+    *ngIf="croppedImage=='' && preview=='' && (responseImage==null || responseImage.length==0)">
     <img src="../../../../assets/img/UploadPhoto.svg" width="200" height="200" class="rounded-full"
       alt="Upload School Logo">
   </div>
-  <div @fadeInRight class="py-4 pl-8 pr-8" *ngIf="preview!='' && croppedImage==''">
+  <div @fadeInRight class="inline-block align-top" *ngIf="preview!='' && croppedImage==''">
     <img [src]="preview" class="rounded-full border-2 border-gray-light" width="200" height="200" />
   </div>
-  <div @fadeInRight *ngIf="responseImage" class="py-4 pl-8 pr-8">
+  <div @fadeInRight *ngIf="responseImage" class="inline-block align-top">
     <img [src]="'data:image/jpeg;base64,'+responseImage" class="rounded-full border-2 border-gray-light" width="200"
       height="200" />
     </div>
-  <div *ngIf="croppedImage!=''" class="py-4 pl-8 pr-8">
-    <img @fadeInRight [src]="croppedImage" class="rounded-full border border-1 border-gray-light" width="200" height="200" />
+  <div *ngIf="croppedImage!=''" class="inline-block align-top">
+    <img @fadeInRight [src]="croppedImage" class="rounded-full border border-1 border-gray-light" width="200"
+      height="200" />
   </div>
 </div>

@@ -1,10 +1,11 @@
-import { CountryModel } from '../models/countryModel';
+import { LovList, LovAddView } from './../models/lovModel';
+import { CountryModel,CountryAddModel } from '../models/countryModel';
 import { StateModel } from '../models/stateModel';
 import { CityModel } from '../models/cityModel';
 import { HttpClient} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { LanguageModel } from '../models/languageModel';
+import { LanguageModel,LanguageAddModel } from '../models/languageModel';
 
 @Injectable({
   providedIn: 'root'
@@ -12,10 +13,22 @@ import { LanguageModel } from '../models/languageModel';
 export class CommonService {
   apiUrl:string = environment.apiURL;
   constructor(private http: HttpClient) { }
+
   GetAllCountry(obj: CountryModel){  
     let apiurl = this.apiUrl + obj._tenantName+ "/Common/getAllCountries"; 
     return this.http.post<CountryModel>(apiurl,obj)
   }  
+
+  AddCountry(obj: CountryAddModel){  
+    let apiurl = this.apiUrl + obj._tenantName+ "/Common/addCountry"; 
+    return this.http.post<CountryAddModel>(apiurl,obj)
+  } 
+  
+  UpdateCountry(obj: CountryAddModel){  
+    let apiurl = this.apiUrl + obj._tenantName+ "/Common/updateCountry"; 
+    return this.http.put<CountryAddModel>(apiurl,obj)
+  }  
+
   GetAllState(obj: StateModel){  
      
     let apiurl = this.apiUrl + obj._tenantName+ "/Common/getAllStatesByCountry"; 
@@ -32,6 +45,32 @@ export class CommonService {
     return this.http.post<LanguageModel>(apiurl,obj)
   }  
 
- 
+  AddLanguage(obj: LanguageAddModel){  
+    let apiurl = this.apiUrl + obj._tenantName+ "/Common/addLanguage"; 
+    return this.http.post<LanguageAddModel>(apiurl,obj)
+  }  
+
+  UpdateLanguage(obj: LanguageAddModel){   
+    let apiurl = this.apiUrl + obj._tenantName+ "/Common/updateLanguage"; 
+    return this.http.post<LanguageAddModel>(apiurl,obj)
+  }  
+
+
+  getAllDropdownValues(obj:LovList){
+    let apiurl =this.apiUrl + obj._tenantName+ "/Common/getAllDropdownValues"; 
+    return this.http.post<LovList>(apiurl,obj);
+  }
+  addDropdownValue(obj:LovAddView){
+    let apiurl =this.apiUrl + obj._tenantName+ "/Common/addDropdownValue"; 
+    return this.http.post<LovAddView>(apiurl,obj);
+  }
+  updateDropdownValue(obj:LovAddView){
+    let apiurl =this.apiUrl + obj._tenantName+ "/Common/updateDropdownValue"; 
+    return this.http.put<LovAddView>(apiurl,obj);
+  }
+  deleteDropdownValue(obj:LovAddView){
+    let apiurl =this.apiUrl + obj._tenantName+ "/Common/deleteDropdownValue"; 
+    return this.http.post<LovAddView>(apiurl,obj);
+  }
 
 }

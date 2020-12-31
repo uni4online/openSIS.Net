@@ -27,7 +27,7 @@ import { SchoolCreate } from '../../../../enums/school-create.enum';
   ]
 })
 export class WashInfoComponent implements OnInit {
-  SchoolCreate = SchoolCreate;
+  schoolCreate = SchoolCreate;
   @Input() schoolCreateMode: SchoolCreate;
   icEdit = icEdit;
   @Input() schoolDetailsForViewAndEdit;
@@ -41,13 +41,13 @@ export class WashInfoComponent implements OnInit {
   loading: boolean;
   formActionButtonTitle = "submit";
   constructor(private fb: FormBuilder,
-    private _schoolService: SchoolService,
+    private schoolService: SchoolService,
     private snackbar: MatSnackBar,
     private router: Router,
     public translateService: TranslateService,
     private loaderService: LoaderService,
     private commonFunction: SharedFunction,
-    private _imageCropperService: ImageCropperService) {
+    private imageCropperService: ImageCropperService) {
 
     translateService.use('en');
     this.loaderService.isLoading.subscribe((val) => {
@@ -55,28 +55,34 @@ export class WashInfoComponent implements OnInit {
     });
   }
   ngOnInit(): void {
-    if (this.schoolCreateMode == this.SchoolCreate.VIEW) {
+    if (this.schoolCreateMode == this.schoolCreate.VIEW) {
+      this.schoolService.changePageMode(this.schoolCreateMode);
+      this.imageCropperService.enableUpload(false);
       this.schoolAddViewModel = this.schoolDetailsForViewAndEdit;
     } else {
-      this.schoolAddViewModel = this._schoolService.getSchoolDetails();
+      this.imageCropperService.enableUpload(true);
+      this.schoolService.changePageMode(this.schoolCreateMode);
+      this.schoolAddViewModel = this.schoolService.getSchoolDetails();
     }
   }
 
   editWashInfo() {
     this.formActionButtonTitle = "update";
-    this._imageCropperService.nextMessage(false);
-    this.schoolCreateMode = this.SchoolCreate.EDIT;
+    this.imageCropperService.enableUpload(true);
+    this.schoolCreateMode = this.schoolCreate.EDIT;
+    this.schoolService.changePageMode(this.schoolCreateMode);
   }
   cancelEdit() {
-    this._imageCropperService.nextMessage(true);
-    this.schoolCreateMode = this.SchoolCreate.VIEW;
+    this.imageCropperService.enableUpload(false);
+    this.schoolCreateMode = this.schoolCreate.VIEW;
+    this.schoolService.changePageMode(this.schoolCreateMode);
   }
 
   submit() {
     this.currentForm.form.markAllAsTouched();
     if (this.currentForm.form.valid) {
       this.schoolAddViewModel.selectedCategoryId = this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].categoryId;
-      this._schoolService.UpdateSchool(this.schoolAddViewModel).subscribe(data => {
+      this.schoolService.UpdateSchool(this.schoolAddViewModel).subscribe(data => {
         if (typeof (data) == 'undefined') {
           this.snackbar.open(`Wash Info Updation failed` + sessionStorage.getItem("httpError"), '', {
             duration: 10000
@@ -91,8 +97,9 @@ export class WashInfoComponent implements OnInit {
             this.snackbar.open(`Wash Info Updation Successful`, '', {
               duration: 10000
             });
-            // this.router.navigateByUrl("school/schoolinfo");
-            this._schoolService.changeMessage(true);
+            this.schoolCreateMode = this.schoolCreate.VIEW;
+            this.schoolService.changeMessage(true);
+           this.schoolService.changePageMode(this.schoolCreateMode);
             
           }
         }

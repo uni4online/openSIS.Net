@@ -49,12 +49,26 @@ namespace opensis.data.Repository
                     Title=z.Title,ShortName=z.ShortName,TenantId=z.TenantId,DoesComments=z.DoesComments,DoesExam=z.DoesExam,DoesGrades=z.DoesGrades,StartDate=z.StartDate,EndDate=z.EndDate,PostStartDate=z.PostStartDate,PostEndDate=z.PostEndDate,
                     Children=this.context.ProgressPeriods.Where(a=>a.QuarterId==z.MarkingPeriodId && a.AcademicYear == markingPeriod.AcademicYear).Select(a=> new SchoolProgressPeriodView() {IsParent=false,MarkingPeriodId=a.MarkingPeriodId,SchoolId=a.SchoolId,
                     QuarterId=a.QuarterId,ShortName=a.ShortName,TenantId=a.TenantId,Title=a.Title,DoesComments=a.DoesComments,DoesExam=a.DoesExam,DoesGrades=a.DoesGrades,StartDate=a.StartDate,EndDate=a.EndDate,PostStartDate=a.PostStartDate,PostEndDate=a.PostEndDate}).ToList() }).ToList() }).ToList() }).ToList();
-                markingPeriodModel.schoolYearsView = MarkingperiodViews;
-                markingPeriodModel._tenantName = markingPeriod._tenantName;
-                markingPeriodModel._token = markingPeriod._token;
-                markingPeriodModel._failure = false;
-                markingPeriodModel.TenantId = markingPeriod.TenantId;
-                markingPeriodModel.SchoolId = markingPeriod.SchoolId;
+                if(MarkingperiodViews.Count > 0)
+                {
+                    markingPeriodModel.schoolYearsView = MarkingperiodViews;
+                    markingPeriodModel._tenantName = markingPeriod._tenantName;
+                    markingPeriodModel._token = markingPeriod._token;
+                    markingPeriodModel._failure = false;
+                    markingPeriodModel.TenantId = markingPeriod.TenantId;
+                    markingPeriodModel.SchoolId = markingPeriod.SchoolId;
+                }
+                else
+                {
+                    markingPeriodModel.schoolYearsView = null;
+                    markingPeriodModel._tenantName = markingPeriod._tenantName;
+                    markingPeriodModel._token = markingPeriod._token;
+                    markingPeriodModel._failure = true;
+                    markingPeriodModel.TenantId = markingPeriod.TenantId;
+                    markingPeriodModel.SchoolId = markingPeriod.SchoolId;
+                    markingPeriodModel._message = NORECORDFOUND;
+                }
+               
             }
             catch (Exception es)
             {

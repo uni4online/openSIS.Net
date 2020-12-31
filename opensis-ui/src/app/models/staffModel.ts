@@ -7,6 +7,7 @@ export class StaffMasterModel {
     public tenantId: string;
     public schoolId: number;
     public staffId: number;
+    public staffPhoto: string;
     public staffInternalId: string;
     public alternateId: string;
     public districtId: number;
@@ -32,7 +33,7 @@ export class StaffMasterModel {
     public secondLanguage: number;
     public thirdLanguage: number;
     public physicalDisability: boolean;
-
+    public disabilityDescription: string;
     public portalAccess: boolean;
     public loginEmailAddress: string;
     public profile: string;
@@ -67,6 +68,9 @@ export class StaffMasterModel {
     public mailingAddressState: string;
     public mailingAddressCountry: string;
     public mailingAddressZip: string;
+    public busNo: string;
+    public busPickup : boolean;
+    public busDropoff : boolean;
     public emergencyFirstName: string;
     public emergencyLastName: string;
     public relationshipToStaff: string;
@@ -84,8 +88,8 @@ export class StaffMasterModel {
 
 export class StaffAddModel extends CommonField {
     public staffMaster: StaffMasterModel;
-    public fieldsCategoryList : [FieldsCategoryModel];
-    public selectedCategoryId : number;
+    public fieldsCategoryList: [FieldsCategoryModel];
+    public selectedCategoryId: number;
     public passwordHash: string;
     constructor() {
         super();
@@ -108,146 +112,146 @@ export class CheckStaffInternalIdViewModel extends CommonField {
     }
 }
 
-export class StaffListModel{
-      tenantId: string;
-      staffId: number;
-      firstGivenName: string;
-      middleName: string;
-      lastFamilyName: string;
-      staffInternalId: string;
-      profile: string;
-      jobTitle: string;
-      schoolEmail: string;
-      mobilePhone: string;
+export class StaffListModel {
+    tenantId: string;
+    staffId: number;
+    firstGivenName: string;
+    middleName: string;
+    lastFamilyName: string;
+    staffInternalId: string;
+    profile: string;
+    jobTitle: string;
+    schoolEmail: string;
+    mobilePhone: string;
 }
 
 export class GetAllStaffModel {
-    getStaffListForView:[StaffListModel];
-    tenantId:string;
-    schoolId:number;
+    getStaffListForView: [StaffListModel];
+    tenantId: string;
+    schoolId: number;
     pageNumber: number;
     pageSize: number;
-    _pageSize:number;
-    totalCount:number;
-    sortingModel:sorting;
-    filterParams:filterParams;
+    _pageSize: number;
+    totalCount: number;
+    sortingModel: sorting;
+    filterParams: filterParams;
     _tenantName: string;
     _token: string;
     _failure: boolean;
     _message: string;
-constructor() {
-    this.tenantId= sessionStorage.getItem("tenantId");
-    this.schoolId = +sessionStorage.getItem("selectedSchoolId");
-    this.pageNumber=1;
-    this.pageSize=10;
-    this.sortingModel=new sorting();
-    this.filterParams=null;
-    this._tenantName=sessionStorage.getItem("tenant");
-    this._token=sessionStorage.getItem("token");
-    this._failure=false;
-    this._message="";
-}
-}
-
-class sorting{
-    sortColumn:string;
-    sortDirection:string;
-    constructor(){
-        this.sortColumn="";
-        this.sortDirection="";
+    constructor() {
+        this.tenantId = sessionStorage.getItem("tenantId");
+        this.schoolId = +sessionStorage.getItem("selectedSchoolId");
+        this.pageNumber = 1;
+        this.pageSize = 10;
+        this.sortingModel = new sorting();
+        this.filterParams = null;
+        this._tenantName = sessionStorage.getItem("tenant");
+        this._token = sessionStorage.getItem("token");
+        this._failure = false;
+        this._message = "";
     }
 }
 
-export class filterParams{
-       columnName: string;
-       filterValue: string;
-       filterOption: number;
-    constructor(){
-        this.columnName=null;
-        this.filterOption=3;
-        this.filterValue=null;
+class sorting {
+    sortColumn: string;
+    sortDirection: string;
+    constructor() {
+        this.sortColumn = "";
+        this.sortDirection = "";
+    }
+}
+
+export class filterParams {
+    columnName: string;
+    filterValue: string;
+    filterOption: number;
+    constructor() {
+        this.columnName = null;
+        this.filterOption = 3;
+        this.filterValue = null;
     }
 }
 
 //Staff Certificate Models 
-export class StaffCertificateModel extends CommonField{
-    staffCertificateInfo:CertificateModel;
-    constructor(){
+export class StaffCertificateModel extends CommonField {
+    staffCertificateInfo: CertificateModel;
+    constructor() {
         super();
-        this._tenantName=sessionStorage.getItem("tenant")
-        this._token=sessionStorage.getItem("token")
-        this.staffCertificateInfo= new CertificateModel();
+        this._tenantName = sessionStorage.getItem("tenant")
+        this._token = sessionStorage.getItem("token")
+        this.staffCertificateInfo = new CertificateModel();
     }
 }
-export class StaffCertificateListModel extends CommonField{
-    staffCertificateInfoList:[CertificateModel];
+export class StaffCertificateListModel extends CommonField {
+    staffCertificateInfoList: [CertificateModel];
     tenantId: string;
     schoolId: number;
     staffId: number;
 
     pageNumber: number;
     pageSize: number;
-    filterParams:filterParams;
-    constructor(){
+    filterParams: filterParams;
+    constructor() {
         super();
-        this.tenantId=sessionStorage.getItem("tenantId");
-        this.pageNumber=1;
-        this.pageSize=10;
-        this.filterParams=null;
-        this.schoolId=+sessionStorage.getItem("selectedSchoolId");
-        this._tenantName=sessionStorage.getItem("tenant");
-        this._token=sessionStorage.getItem("token");
+        this.tenantId = sessionStorage.getItem("tenantId");
+        this.pageNumber = 1;
+        this.pageSize = 10;
+        this.filterParams = null;
+        this.schoolId = +sessionStorage.getItem("selectedSchoolId");
+        this._tenantName = sessionStorage.getItem("tenant");
+        this._token = sessionStorage.getItem("token");
     }
-  }
-  
-export class StaffSchoolInfoListModel extends CommonField{
+}
+
+export class StaffSchoolInfoListModel extends CommonField {
     id: number;
     tenantId: string;
     schoolId: number;
     staffId: number;
     schoolAttachedId: number | string;
     schoolAttachedName: string;
-    staffMaster:{};
+    staffMaster: {};
     profile: string;
-    startDate: string;
+    startDate: Date;
     endDate: Date;
-    hide:boolean; //This is not a backend key, Its only for frontend check.
+    hide: boolean; //This is not a backend key, Its only for frontend check.
     updatedBy: string;
     updatedAt: string;
 
-    constructor(){
+    constructor() {
         super();
-        this.tenantId= sessionStorage.getItem("tenantId");
+        this.tenantId = sessionStorage.getItem("tenantId");
         this.schoolId = +sessionStorage.getItem("selectedSchoolId");
-        this._tenantName=sessionStorage.getItem("tenant");
-        this._token=sessionStorage.getItem("token");
-        this._failure=false;
+        this._tenantName = sessionStorage.getItem("tenant");
+        this._token = sessionStorage.getItem("token");
+        this._failure = false;
     }
 }
-export class StaffSchoolInfoModel extends CommonField{
-  schoolId: number;
-  tenantId:string;
-  staffId: number;
-  profile: string;
-  jobTitle: string;
-  joiningDate: string;
-  endDate: string;
-  homeroomTeacher: boolean;
-  primaryGradeLevelTaught: string;
-  primarySubjectTaught: string;
-  otherGradeLevelTaught: string;
-  otherSubjectTaught: string;
-  staffSchoolInfoList:[StaffSchoolInfoListModel]
-  constructor(){
-    super();
-    this.homeroomTeacher=false;
-    this.staffSchoolInfoList=[new StaffSchoolInfoListModel];
-    this.tenantId= sessionStorage.getItem("tenantId");
-    this.schoolId = +sessionStorage.getItem("selectedSchoolId");
-    this._tenantName=sessionStorage.getItem("tenant");
-    this._token=sessionStorage.getItem("token");
-    this._failure=false;
-  }
+export class StaffSchoolInfoModel extends CommonField {
+    schoolId: number;
+    tenantId: string;
+    staffId: number;
+    profile: string;
+    jobTitle: string;
+    joiningDate: string;
+    endDate: string;
+    homeroomTeacher: boolean;
+    primaryGradeLevelTaught: string;
+    primarySubjectTaught: string;
+    otherGradeLevelTaught: string;
+    otherSubjectTaught: string;
+    staffSchoolInfoList: [StaffSchoolInfoListModel]
+    constructor() {
+        super();
+        this.homeroomTeacher = false;
+        this.staffSchoolInfoList = [new StaffSchoolInfoListModel];
+        this.tenantId = sessionStorage.getItem("tenantId");
+        this.schoolId = +sessionStorage.getItem("selectedSchoolId");
+        this._tenantName = sessionStorage.getItem("tenant");
+        this._token = sessionStorage.getItem("token");
+        this._failure = false;
+    }
 }
 
 

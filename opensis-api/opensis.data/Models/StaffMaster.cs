@@ -14,6 +14,7 @@ namespace opensis.data.Models
         public Guid TenantId { get; set; }
         public int SchoolId { get; set; }
         public int StaffId { get; set; }
+        public Guid StaffGuid { get; set; }
         public byte[] StaffPhoto { get; set; }
         public string Salutation { get; set; }
         public string Suffix { get; set; }

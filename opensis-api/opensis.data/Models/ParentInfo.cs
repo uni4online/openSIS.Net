@@ -14,6 +14,7 @@ namespace opensis.data.Models
         public int SchoolId { get; set; }
        
         public int ParentId { get; set; }
+        public Guid ParentGuid { get; set; }
         public byte[] ParentPhoto { get; set; }
        
         public string Salutation { get; set; }
@@ -33,7 +34,7 @@ namespace opensis.data.Models
         public string BusNo { get; set; }
         public bool? BusPickup { get; set; }
         public bool? BusDropoff { get; set; }
-        public string ContactType { get; set; }
+       
         public DateTime? LastUpdated { get; set; }
         public string UpdatedBy { get; set; }
         public virtual ICollection<ParentAddress> ParentAddress { get; set; }

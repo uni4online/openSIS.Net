@@ -5,6 +5,9 @@ import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animati
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
 import { TranslateService } from '@ngx-translate/core';
 
+export const dateTimeCustomFormats = {
+};
+
 @Component({
   selector: 'vex-edit-period',
   templateUrl: './edit-period.component.html',
@@ -16,7 +19,8 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class EditPeriodComponent implements OnInit {
   icClose = icClose;
-
+  public dateTime2: Date;
+  public dateTime1: Date;
   constructor(private dialogRef: MatDialogRef<EditPeriodComponent>, public translateService:TranslateService) {
     translateService.use('en');
   }

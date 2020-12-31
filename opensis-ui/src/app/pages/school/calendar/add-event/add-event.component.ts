@@ -66,7 +66,7 @@ export class AddEventComponent implements OnInit {
       title: ['', Validators.required],
       startDate: ['', Validators.required],
       endDate: ['', Validators.required],
-      notes: ['', Validators.required],
+      notes: [''],
       eventColor :[''],
       systemWideEvent :['',false]
     });

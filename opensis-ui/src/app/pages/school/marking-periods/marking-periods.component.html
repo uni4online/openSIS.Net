@@ -1,12 +1,12 @@
 <vex-page-layout>
     <vex-page-layout-header class="pb-16" fxLayout="column" fxLayoutAlign="center start">
         <vex-secondary-toolbar current="Marking Period" class="w-full">
-            <vex-breadcrumbs [crumbs]="['School','Marking Period']" class="flex-auto"></vex-breadcrumbs>
+            <vex-breadcrumbs [crumbs]="['School Info','Marking Period']" class="flex-auto"></vex-breadcrumbs>
         </vex-secondary-toolbar>
     </vex-page-layout-header>
     <vex-mat-spinner-overlay *ngIf="loading"></vex-mat-spinner-overlay>
     <div class="-mt-6 absolute w-full" vexContainer>
-        <mat-drawer-container class="bg-transparent flex-auto flex flex -mt-16" *ngIf="list.length > 0 ; else noData" vexContainer>
+        <mat-drawer-container class="bg-transparent flex-auto flex -mt-16" *ngIf="list.length > 0 ; else noData" vexContainer>
             <mat-drawer [(opened)]="menuOpen" mode="over" class="w-10/12">
                 <mat-card @stagger class="w-full">
                     <div class="flex items-center pl-0" fxLayout="row" fxLayoutAlign="center center">
@@ -174,7 +174,7 @@
             </mat-drawer-content>
         </mat-drawer-container>
         <ng-template #noData>
-            <mat-drawer-container class="bg-transparent flex-auto flex flex -mt-16" vexContainer>
+            <mat-drawer-container class="bg-transparent flex-auto flex -mt-16" vexContainer>
                 <mat-drawer-content class="flex-auto flex items-start p-gutter">
                     <mat-card @stagger class="w-full text-center py-20 md:py-32">
 

@@ -18,6 +18,7 @@ import { SchoolService } from '../../../../services/school.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import icEdit from '@iconify/icons-ic/edit';
 import moment from 'moment';
+import { ImageCropperService } from '../../../../services/image-cropper.service';
 
 @Component({
   selector: 'vex-staff-schoolinfo',
@@ -51,7 +52,8 @@ export class StaffSchoolinfoComponent implements OnInit {
     private snackbar: MatSnackBar,
     private staffService:StaffService,
     private gradeLevelService:GradeLevelService,
-    private schoolService: SchoolService) {
+    private schoolService: SchoolService,
+    private imageCropperService:ImageCropperService) {
     translateService.use('en');
   }
 
@@ -65,6 +67,7 @@ export class StaffSchoolinfoComponent implements OnInit {
       this.callAllSchool();
       this.getAllStaffSchoolInfo()
     } else if (this.staffCreateMode == this.staffCreate.VIEW) {
+      this.staffService.changePageMode(this.staffCreateMode);
       this.getAllStaffSchoolInfo();
     }
   }
@@ -115,11 +118,16 @@ export class StaffSchoolinfoComponent implements OnInit {
 
   compareDate(index){
     let endDate=this.staffSchoolInfoModel.staffSchoolInfoList[index].endDate
-    if(endDate==null || moment(endDate)>moment()){
+    if(this.staffSchoolInfoModel.staffSchoolInfoList[index].startDate!=null){
+      if(endDate==null || moment(endDate)>moment()){
         return true;
     }else{
-      return false
+      return false;
     }
+    }else{
+      return false;
+    }
+    
   }
 
   getAllStaffSchoolInfo(){
@@ -192,6 +200,11 @@ export class StaffSchoolinfoComponent implements OnInit {
               duration: 10000
             });
             this.staffSchoolInfoModel=res;
+            if(this.staffCreateMode==this.staffCreate.EDIT || this.staffCreateMode==this.staffCreate.ADD){
+              this.staffCreateMode = this.staffCreate.VIEW
+              this.imageCropperService.enableUpload(false);
+            }
+          this.staffService.changePageMode(this.staffCreateMode);
             this.manipulateArray();     
           }
         }
@@ -199,15 +212,23 @@ export class StaffSchoolinfoComponent implements OnInit {
   }
 
   editSchoolInfo() {
-    for(let i=0;i<this.staffSchoolInfoModel.staffSchoolInfoList.length;i++){
-      this.divCount[i]=2;
+    if(this.staffSchoolInfoModel.staffSchoolInfoList!=null){
+      for(let i=0;i<this.staffSchoolInfoModel.staffSchoolInfoList?.length;i++){
+        this.divCount[i]=2;
+      }
+    }else{
+    this.staffSchoolInfoModel=new StaffSchoolInfoModel();
     }
     this.getAllGradeLevel();
     this.callAllSchool();
-    this.staffCreateMode=this.staffCreate.EDIT
+    this.staffCreateMode=this.staffCreate.EDIT;
+    this.imageCropperService.enableUpload(true);
+    this.staffService.changePageMode(this.staffCreateMode);
   }
   cancelEdit(){
-    this.staffCreateMode=this.staffCreate.VIEW
+    this.staffCreateMode=this.staffCreate.VIEW;
+    this.imageCropperService.enableUpload(false);
+    this.staffService.changePageMode(this.staffCreateMode);
   }
 }
 

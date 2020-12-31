@@ -217,6 +217,16 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasColumnName("id")
                         .HasColumnType("int");
 
+                    b.Property<string>("CreatedBy")
+                        .HasColumnName("created_by")
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
+                        .HasMaxLength(100)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnName("created_on")
+                        .HasColumnType("datetime");
+
                     b.Property<string>("Name")
                         .HasColumnName("name")
                         .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
@@ -225,6 +235,16 @@ namespace opensis.data.Migrations.MySqlMigrations
                     b.Property<int?>("StateId")
                         .HasColumnName("stateid")
                         .HasColumnType("int");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnName("updated_by")
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
+                        .HasMaxLength(100)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnName("updated_on")
+                        .HasColumnType("datetime");
 
                     b.HasKey("Id");
 
@@ -246,10 +266,30 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasMaxLength(5)
                         .IsUnicode(false);
 
+                    b.Property<string>("CreatedBy")
+                        .HasColumnName("created_by")
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
+                        .HasMaxLength(100)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnName("created_on")
+                        .HasColumnType("datetime");
+
                     b.Property<string>("Name")
                         .HasColumnName("name")
                         .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
                         .HasMaxLength(50);
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnName("updated_by")
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
+                        .HasMaxLength(100)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnName("updated_on")
+                        .HasColumnType("datetime");
 
                     b.HasKey("Id");
 
@@ -2161,6 +2201,16 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasColumnName("lang_id")
                         .HasColumnType("int");
 
+                    b.Property<string>("CreatedBy")
+                        .HasColumnName("created_by")
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
+                        .HasMaxLength(100)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnName("created_on")
+                        .HasColumnType("datetime");
+
                     b.Property<string>("LanguageCode")
                         .HasColumnName("language_code")
                         .HasColumnType("char(10) CHARACTER SET utf8mb4")
@@ -2178,6 +2228,16 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasColumnType("char(50) CHARACTER SET utf8mb4")
                         .IsFixedLength(true)
                         .HasMaxLength(50);
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnName("updated_by")
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
+                        .HasMaxLength(100)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnName("updated_on")
+                        .HasColumnType("datetime");
 
                     b.HasKey("LangId")
                         .HasName("pk_table_language");
@@ -3549,6 +3609,13 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasColumnType("tinyint(1)")
                         .HasComment("tenantid#schoolid#studentid | tenantid#schoolid#studentid | ....");
 
+                    b.Property<string>("ContactType")
+                        .HasColumnName("contact_type")
+                        .HasColumnType("varchar(9) CHARACTER SET utf8mb4")
+                        .HasComment("Primary | Secondary | Other")
+                        .HasMaxLength(9)
+                        .IsUnicode(false);
+
                     b.Property<bool?>("IsCustodian")
                         .HasColumnName("is_custodian")
                         .HasColumnType("tinyint(1)");
@@ -3602,13 +3669,6 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasColumnName("bus_pickup")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<string>("ContactType")
-                        .HasColumnName("contact_type")
-                        .HasColumnType("varchar(9) CHARACTER SET utf8mb4")
-                        .HasComment("Primary | Secondary | Other")
-                        .HasMaxLength(9)
-                        .IsUnicode(false);
-
                     b.Property<string>("Firstname")
                         .HasColumnName("firstname")
                         .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
@@ -3653,6 +3713,10 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasColumnType("varchar(15) CHARACTER SET utf8mb4")
                         .HasMaxLength(15)
                         .IsUnicode(false);
+
+                    b.Property<Guid>("ParentGuid")
+                        .HasColumnName("parent_guid")
+                        .HasColumnType("char(36)");
 
                     b.Property<byte[]>("ParentPhoto")
                         .HasColumnName("parent_photo")
@@ -4385,6 +4449,10 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasColumnType("char(50) CHARACTER SET utf8mb4")
                         .IsFixedLength(true)
                         .HasMaxLength(50);
+
+                    b.Property<Guid>("SchoolGuid")
+                        .HasColumnName("school_guid")
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("SchoolInternalId")
                         .HasColumnName("school_internal_id")
@@ -5174,6 +5242,10 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasMaxLength(50)
                         .IsUnicode(false);
 
+                    b.Property<Guid>("StaffGuid")
+                        .HasColumnName("staff_guid")
+                        .HasColumnType("char(36)");
+
                     b.Property<string>("StaffInternalId")
                         .HasColumnName("staff_internal_id")
                         .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
@@ -5294,10 +5366,26 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasColumnName("countryid")
                         .HasColumnType("int");
 
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<string>("Name")
                         .HasColumnName("name")
                         .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
                         .HasMaxLength(50);
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnName("updated_by")
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
+                        .HasMaxLength(100)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnName("updated_on")
+                        .HasColumnType("datetime");
 
                     b.HasKey("Id");
 
@@ -5464,6 +5552,10 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasMaxLength(200)
                         .IsUnicode(false);
 
+                    b.Property<Guid>("StudentGuid")
+                        .HasColumnName("student_guid")
+                        .HasColumnType("char(36)");
+
                     b.Property<string>("TransferredGrade")
                         .HasColumnName("transferred_grade")
                         .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
@@ -5624,6 +5716,14 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasColumnName("eligibility_504")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<string>("EnrollmentType")
+                        .HasColumnName("enrollment_type")
+                        .HasColumnType("char(8) CHARACTER SET utf8mb4")
+                        .IsFixedLength(true)
+                        .HasComment("\"Internal\" or \"External\". Default \"Internal\"")
+                        .HasMaxLength(8)
+                        .IsUnicode(false);
+
                     b.Property<DateTime?>("EstimatedGradDate")
                         .HasColumnName("estimated_grad_date")
                         .HasColumnType("date");
@@ -5718,6 +5818,10 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
                         .HasMaxLength(50)
                         .IsUnicode(false);
+
+                    b.Property<bool?>("IsActive")
+                        .HasColumnName("is_active")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("LastFamilyName")
                         .HasColumnName("last_family_name")
@@ -5915,6 +6019,10 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
                         .HasMaxLength(50)
                         .IsUnicode(false);
+
+                    b.Property<Guid>("StudentGuid")
+                        .HasColumnName("student_guid")
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("StudentInternalId")
                         .HasColumnName("student_internal_id")

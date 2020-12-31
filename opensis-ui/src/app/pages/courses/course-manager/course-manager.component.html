@@ -1,0 +1,163 @@
+<div class="bg-skyblue px-gutter py-4 border-b border-t">
+    <vex-secondary-toolbar current="Course Manager" class="text-primary">
+        <vex-breadcrumbs [crumbs]="['Courses']" class="flex-auto"></vex-breadcrumbs>
+    </vex-secondary-toolbar>
+</div>
+<vex-page-layout>
+    <vex-page-layout-content>
+        <div class="flex justify-between mb-6">
+                    <div>
+                <div class="inline-block mr-4">
+                    <mat-form-field class="mb-0 mr-1 bg-white" appearance="outline" color="primary">
+                            <mat-label>{{'Subject'|translate}}</mat-label>
+                            <mat-select name="salutation" [value]="selectedOption">
+                                <mat-option value="1">Showing All Subjects</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    <a routerLink="" class="inline-block align-top text-blue py-3 px-2">
+                        <mat-icon [icIcon]="icSettings"></mat-icon>
+                    </a>
+                </div>
+        
+                <div class="inline-block mr-4">
+                    <mat-form-field class="mb-0 mr-1 bg-white" appearance="outline" color="primary">
+                            <mat-label>{{'Program'|translate}}</mat-label>
+                            <mat-select name="salutation" [value]="selectedOption">
+                                <mat-option value="1">Showing All Programs</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    <a routerLink="" class="inline-block align-top text-blue py-3 px-2">
+                        <mat-icon [icIcon]="icSettings"></mat-icon>
+                    </a>
+                </div>
+        
+                <mat-form-field class="mb-0 bg-white" appearance="outline" color="primary">
+                            <mat-label>{{'gradeLevel'|translate}}</mat-label>
+                            <mat-select name="salutation" [value]="selectedOption">
+                                <mat-option value="1">Showing All Grade Levels</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <!-- <div>
+                        <mat-slide-toggle class="mr-6" color="primary">{{'required' | translate}}</mat-slide-toggle>
+                    </div> -->
+                </div>
+
+        <div class="flex w-full -mx-6">
+            <div class="w-1/2 px-gutter">
+                <div class="card overflow-auto">
+                    <div class="flex justify-between w-full px-6 py-2 align-middle">
+                        <h3>20 Course Found</h3>
+                        <button mat-raised-button color="primary">{{'addNewCourse'|translate}}</button>
+                    </div>
+                    <hr />
+                    <input class="w-full border-0 px-6 py-4 box-border" type="text" placeholder="Search...">
+                    <hr />
+                    <ul>
+                        <li class="px-6 py-3 bg-green-light border-b">
+                            <div class="flex items-center w-full justify-between">
+                                <div>
+                                    <h4 class="text-green font-bold">Chemistry</h4>
+                                    <p>Science<span class="dot-separator"></span>Regular Course Program</p>
+                                </div>
+                                <div>
+                                    <a routerLink="" class="mr-4 text-blue cursor-pointer">Sections (4)</a>
+                                    <span class="w-3 h-3 rounded-full inline-block bg-green"></span>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="px-6 py-3 border-b">
+                            <div class="flex items-center w-full justify-between">
+                                <div>
+                                    <h4 class="font-bold">Physics</h4>
+                                    <p>Science<span class="dot-separator"></span>Regular Course Program</p>
+                                </div>
+                                <div>
+                                    <a routerLink="" class="mr-4 text-blue cursor-pointer">Sections (10)</a>
+                                    <span class="w-3 h-3 rounded-full inline-block bg-green"></span>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="px-6 py-3 border-b">
+                            <div class="flex items-center w-full justify-between">
+                                <div>
+                                    <h4 class="font-bold">Mathematics</h4>
+                                    <p>Science<span class="dot-separator"></span>Regular Course Program</p>
+                                </div>
+                                <div>
+                                    <a routerLink="" class="mr-4 text-blue cursor-pointer">Sections (2)</a>
+                                    <span class="w-3 h-3 rounded-full inline-block bg-green"></span>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="px-6 py-3 border-b">
+                            <div class="flex items-center w-full justify-between">
+                                <div>
+                                    <h4 class="font-bold">Spanish Language</h4>
+                                    <p>Language & Arts<span class="dot-separator"></span>Regular Course Program</p>
+                                </div>
+                                <div>
+                                    <a routerLink="" class="mr-4 text-blue cursor-pointer">Sections (4)</a>
+                                    <span class="w-3 h-3 rounded-full inline-block bg-green"></span>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="w-1/2 px-gutter">
+                <div class="card overflow-auto">
+                    <div class="flex justify-between w-full px-6 py-3 align-middle">
+                        <h3>Chemistry</h3>
+                        <div>
+                            <label class="bg-green inline-block rounded px-2 py-1 text-xs text-white">ACTIVE</label>
+                        </div>
+                    </div>
+                    <hr />
+                    <ul class="md:grid md:grid-cols-2 md:col-gap-8 md:row-gap-10 my-6 px-6">
+                        <li>
+                            <label class="text-sm leading-5 text-gray">{{'title' | translate}}</label>
+                            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Chemistry</p>
+                        </li>
+                        <li>
+                            <label class="text-sm leading-5 text-gray">{{'shortName' | translate}}</label>
+                            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">CHEM</p>
+                        </li>
+                        <li>
+                            <label class="text-sm leading-5 text-gray">{{'gradeLevel' | translate}}</label>
+                            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Grade 9</p>
+                        </li>
+                        <li>
+                            <label class="text-sm leading-5 text-gray">{{'program' | translate}}</label>
+                            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Regular Course Program</p>
+                        </li>
+                        <li>
+                            <label class="text-sm leading-5 text-gray">{{'subject' | translate}}</label>
+                            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Science</p>
+                        </li>
+                        <li>
+                            <label class="text-sm leading-5 text-gray">{{'courseCategory' | translate}}</label>
+                            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Core</p>
+                        </li>
+                        <li>
+                            <label class="text-sm leading-5 text-gray">{{'creditHours' | translate}}</label>
+                            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">3.000</p>
+                        </li>
+                        <li>
+                            <label class="text-sm leading-5 text-gray">{{'standards' | translate}}</label>
+                            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Chemistry</p>
+                        </li>
+                        <li class="col-span-2">
+                            <label class="text-sm leading-5 text-gray">{{'description' | translate}}</label>
+                            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Lorem ipsum, dolor sit amet
+                                consectetur adipisicing elit. Possimus voluptatum tenetur maxime voluptates alias quia
+                                quis optio voluptate corrupti vero sapiente earum consectetur porro, consequatur
+                                expedita cupiditate aliquid amet nemo, magni dolor placeat repellat quibusdam dicta.
+                                Asperiores eaque officia delectus?</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </vex-page-layout-content>
+</vex-page-layout>

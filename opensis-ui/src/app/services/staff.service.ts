@@ -14,6 +14,10 @@ export class StaffService {
 
   constructor(private http: HttpClient, private cryptoService: CryptoService) { }
 
+  private staffImage;
+  setStaffImage(imageInBase64) {
+    this.staffImage = imageInBase64;
+  }
 
   private staffId: number;
   setStaffId(id: number) {
@@ -41,6 +45,13 @@ export class StaffService {
     return this.http.post<CheckStaffInternalIdViewModel>(apiurl, obj)
   }
 
+     // Update Mode in Staff
+ public pageMode = new Subject;
+ modeToUpdate=this.pageMode.asObservable();
+
+ changePageMode(mode:number){
+     this.pageMode.next(mode);
+ }
 
   // to Update staff details in General for first time.
   private staffDetailsForGeneralInfo = new Subject;
@@ -53,12 +64,14 @@ export class StaffService {
 
   addStaff(obj: StaffAddModel) {
     obj.passwordHash = this.cryptoService.encrypt(obj.passwordHash);
+    obj.staffMaster.staffPhoto=this.staffImage;
     let apiurl = this.apiUrl + obj._tenantName + "/Staff/addStaff";
     return this.http.post<StaffAddModel>(apiurl, obj)
   }
 
   updateStaff(obj: StaffAddModel) {
     obj.passwordHash = this.cryptoService.encrypt(obj.passwordHash);
+    obj.staffMaster.staffPhoto=this.staffImage;
     let apiurl = this.apiUrl + obj._tenantName + "/Staff/updateStaff";
     return this.http.put<StaffAddModel>(apiurl, obj)
   }

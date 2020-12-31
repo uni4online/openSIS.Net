@@ -1,5 +1,5 @@
 <div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
-    <h2 class="headline m-0" fxFlex="auto"><a mat-dialog-close class="text-primary cursor-pointer inline-block align-middle mr-3" @fadeInRight><mat-icon [icIcon]="icBack"></mat-icon></a> {{'searchAndAssociateStudent' | translate}}</h2>
+    <h2 class="headline m-0" fxFlex="auto"><a class="text-primary cursor-pointer inline-block align-middle mr-3" @fadeInRight (click)="backToSearch()"><mat-icon [icIcon]="icBack"></mat-icon></a> {{'searchAndAssociateStudent' | translate}}</h2>
     <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
         <mat-icon (click) = "cancel()" [icIcon]="icClose"></mat-icon>
     </button>
@@ -30,9 +30,9 @@
                 <div class="flex flex-1 mx-4 md:w-1/2">
                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
             <mat-label>{{'gradeLevel' | translate}}</mat-label>
-            <mat-select name="gradeLevel" formControlName="gradeLevel" [(ngModel)]="studentSiblingSearch.gradeLevel" required>
+            <mat-select name="gradeLevel" formControlName="gradeLevel" [(ngModel)]="studentSiblingSearch.gradeLevelTitle" required>
                 <mat-option value=""></mat-option>
-                <mat-option *ngFor="let gradeLevel of gradeLevelArr" [value]= 'gradeLevel.gradeId'>
+                <mat-option *ngFor="let gradeLevel of gradeLevelArr" [value]= 'gradeLevel.title'>
                     {{gradeLevel.title}}
                 </mat-option>
 
@@ -86,32 +86,32 @@
                 <ul class="grid grid-cols-2 col-gap-8 row-gap-8 mt-6">
                     <li>
                         <label class="text-sm leading-5 text-gray">{{'firstName' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{studentSiblingSearch.getStudentForView[0].firstGivenName}}</p>
+                        <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentSiblingSearch.getStudentForView[0].firstGivenName}}</p>
                     </li>
                     <li>
                         <label class="text-sm leading-5 text-gray">{{'lastName' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{studentSiblingSearch.getStudentForView[0].lastFamilyName}}</p>
+                        <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentSiblingSearch.getStudentForView[0].lastFamilyName}}</p>
                     </li>
                     <li>
                         <label class="text-sm leading-5 text-gray">{{'dateOfBirth' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{studentSiblingSearch.getStudentForView[0].dob | date|EmtyValueCheckPipe}} | Age : {{this.studentSiblingSearch.getStudentForView[0].dob|date|age|EmtyValueCheckPipe}}</p>
+                        <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentSiblingSearch.getStudentForView[0].dob | date|EmtyValueCheckPipe}} | Age : {{this.studentSiblingSearch.getStudentForView[0].dob|date|age|EmtyValueCheckPipe}}</p>
                     </li>
                     <li>
                         <label class="text-sm leading-5 text-gray">{{'studentID' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{studentSiblingSearch.getStudentForView[0].studentId}}</p>
+                        <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentSiblingSearch.getStudentForView[0].studentId}}</p>
                     </li>
                     <li>
                         <label class="text-sm leading-5 text-gray">{{'gradeLevel' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{studentSiblingSearch.gradeLevelTitle}}</p>
+                        <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentSiblingSearch.gradeLevelTitle}}</p>
                     </li>
                     <li>
                         <label class="text-sm leading-5 text-gray">{{'school' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{studentSiblingSearch.getStudentForView[0].schoolName}}</p>
+                        <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentSiblingSearch.getStudentForView[0].schoolName}}</p>
                     </li>
                 </ul>
                 <div class="pt-8">
                     <label class="text-sm leading-5 text-gray">{{'Address' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2"><a routerLink="" class="text-blue cursor-pointer">{{studentSiblingSearch.getStudentForView[0].address|EmtyValueCheckPipe}}<i class="icon icon-sphere ml-2"></i></a></p>
+                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2"><a routerLink="" class="text-blue cursor-pointer">{{studentSiblingSearch.getStudentForView[0].address|EmtyValueCheckPipe}}<i class="icon icon-sphere ml-2"></i></a></p>
                 </div>
                 <div class="text-right">
                     <button color="primary" mat-raised-button >Associate this Student</button>
@@ -158,33 +158,33 @@
                             <ul class="grid grid-cols-3 col-gap-8 row-gap-6 mt-6">
                                 <li>
                                     <label class="text-sm leading-5 text-gray">{{'firstName' | translate}}</label>
-                                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{student.firstGivenName}}</p>
+                                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{student.firstGivenName}}</p>
                                 </li>
                                 <li>
                                     <label class="text-sm leading-5 text-gray">{{'lastName' | translate}}</label>
-                                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{student.lastFamilyName}}</p>
+                                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{student.lastFamilyName}}</p>
                                 </li>
                                 <li>
                                     <label class="text-sm leading-5 text-gray">{{'dateOfBirth' | translate}}</label>
-                                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{student.dob | date|EmtyValueCheckPipe}} | Age : {{student.dob|date|age|EmtyValueCheckPipe}}</p>
+                                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{student.dob | date|EmtyValueCheckPipe}} | Age : {{student.dob|date|age|EmtyValueCheckPipe}}</p>
                                 </li>
                                 <li>
                                     <label class="text-sm leading-5 text-gray">{{'studentID' | translate}}</label>
-                                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{student.studentId}}</p>
+                                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{student.studentId}}</p>
                                 </li>
                                 <li>
                                     <label class="text-sm leading-5 text-gray">{{'gradeLevel' | translate}}</label>
-                                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{studentSiblingSearch.gradeLevelTitle}}</p>
+                                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentSiblingSearch.gradeLevelTitle}}</p>
                                 </li>
                                 <li>
                                     <label class="text-sm leading-5 text-gray">{{'school' | translate}}</label>
-                                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{student.schoolName}}</p>
+                                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{student.schoolName}}</p>
                                 </li>
                             </ul>
                             <div class="flex pt-6 w-full justify-between">
                                 <div>
                                     <label class="text-sm leading-5 text-gray">{{'Address' | translate}}</label>
-                                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2"><a routerLink="" class="text-blue cursor-pointer">{{student.address|EmtyValueCheckPipe}}<i class="icon icon-sphere ml-2"></i></a></p>
+                                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2"><a routerLink="" class="text-blue cursor-pointer">{{student.address|EmtyValueCheckPipe}}<i class="icon icon-sphere ml-2"></i></a></p>
                                 </div>
                                 <div class="text-right">
                                     <button color="primary" mat-raised-button (click)="associateStudent(student)">Associate this Student</button>

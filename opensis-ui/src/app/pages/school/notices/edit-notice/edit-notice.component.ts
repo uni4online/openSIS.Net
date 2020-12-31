@@ -152,7 +152,6 @@ export class EditNoticeComponent implements OnInit {
             }
           });
       }
-      this.afterClosed.emit(true);
     }
   }
 

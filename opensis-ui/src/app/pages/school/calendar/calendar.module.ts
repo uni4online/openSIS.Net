@@ -23,6 +23,7 @@ import { ContainerModule } from '../../../../@vex/directives/container/container
 import { MatMenuModule } from '@angular/material/menu';
 import { TranslateModule } from '@ngx-translate/core';
 import { CalendarRoutingModule } from './calendar-routing-module';
+import {SharedModuleModule} from '../../shared-module/shared-module.module';
 
 @NgModule({
   declarations: [CalendarComponent, CalendarEditComponent],
@@ -50,7 +51,8 @@ import { CalendarRoutingModule } from './calendar-routing-module';
     ContainerModule,
     MatMenuModule,
     TranslateModule,
-    CalendarRoutingModule
+    CalendarRoutingModule,
+    SharedModuleModule
   ],
   entryComponents: [CalendarEditComponent]
 })

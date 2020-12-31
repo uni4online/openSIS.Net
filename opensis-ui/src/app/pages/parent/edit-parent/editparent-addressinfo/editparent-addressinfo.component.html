@@ -12,7 +12,7 @@
                     <div class="flex flex-1 mx-4 md:w-1/2">
                         <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'streetAddress1'|translate}}</mat-label>
-                            <input [(ngModel)]="addParentInfoModel.parentInfo.addressLineOne" name="addressLineOne"
+                            <input [(ngModel)]="addParentInfoModel.parentInfo.parentAddress[0].addressLineOne" name="addressLineOne"
                                 #addressLineOne="ngModel" matInput required>
                             <mat-error class="text-red" *ngIf="addressLineOne.errors?.required">
                                 {{'streetAddress1IsRequired'|translate}}</mat-error>
@@ -21,7 +21,7 @@
                     <div class="flex flex-1 mx-4 md:w-1/2">
                         <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'streetAddress2'|translate}}</mat-label>
-                            <input [(ngModel)]="addParentInfoModel.parentInfo.addressLineTwo" name="addressLineTwo"
+                            <input [(ngModel)]="addParentInfoModel.parentInfo.parentAddress[0].addressLineTwo" name="addressLineTwo"
                                 matInput>
                         </mat-form-field>
                     </div>
@@ -30,7 +30,7 @@
                     <div class="flex flex-1 mx-4 md:w-1/2">
                         <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'country'|translate}}</mat-label>
-                            <mat-select [(ngModel)]="addParentInfoModel.parentInfo.country" name="country" required>
+                            <mat-select [(ngModel)]="addParentInfoModel.parentInfo.parentAddress[0].country" name="country" required>
                                 <mat-option value=""></mat-option>
                                 <mat-option *ngFor="let country of countryListArr" [value]='country.id'>
                                     {{country.name}}
@@ -42,7 +42,7 @@
                     <div class="flex flex-1 mx-4 md:w-1/2">
                         <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'stateProvinceLocality'|translate}}</mat-label>
-                            <input [(ngModel)]="addParentInfoModel.parentInfo.state" name="state" #state="ngModel"
+                            <input [(ngModel)]="addParentInfoModel.parentInfo.parentAddress[0].state" name="state" #state="ngModel"
                                 matInput required>
                             <mat-error class="text-red" *ngIf="state.errors?.required">
                                 {{'stateProvinceLocalityIsRequired'|translate}}</mat-error>
@@ -53,7 +53,7 @@
                     <div class="flex flex-1 mx-4 md:w-1/2">
                         <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'city'|translate}}</mat-label>
-                            <input [(ngModel)]="addParentInfoModel.parentInfo.city" name="city" #city="ngModel" matInput
+                            <input [(ngModel)]="addParentInfoModel.parentInfo.parentAddress[0].city" name="city" #city="ngModel" matInput
                                 required>
                             <mat-error class="text-red" *ngIf="city.errors?.required">
                                 {{'cityIsRequired'|translate}}</mat-error>
@@ -62,7 +62,7 @@
                     <div class="flex flex-1 mx-4 md:w-1/2">
                         <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'zipPostalCode'|translate}}</mat-label>
-                            <input [(ngModel)]="addParentInfoModel.parentInfo.zip" #zip="ngModel" name="zip" matInput
+                            <input [(ngModel)]="addParentInfoModel.parentInfo.parentAddress[0].zip" #zip="ngModel" name="zip" matInput
                                 required>
                             <mat-error class="text-red" *ngIf="zip.errors?.required">
                                 {{'zipPostalCodeIsRequired'|translate}}</mat-error>
@@ -80,7 +80,7 @@
 
 </form>
 
-<mat-card class="w-full" *ngIf="parentCreateMode == parentCreate.VIEW">
+ <mat-card class="w-full" *ngIf="parentCreateMode == parentCreate.VIEW">
     <div class="flex items-center mx-4" fxLayout="row" fxLayoutAlign="center center">
         <h3 class="flex-auto">{{'addressInformation' | translate}}</h3>
         <button mat-button (click)="editAddressContactInfo()" color="primary">
@@ -90,22 +90,22 @@
     <mat-card-content>
 
         <div @stagger fxLayout="column">
-            <h4 *ngIf="addParentInfoModel.parentInfo.studentAddressSame" class="text-primary pt-6 pb-4 px-4">
+            <h4 *ngIf="addParentInfoModel.parentInfo.parentAddress[0].studentAddressSame" class="text-primary pt-6 pb-4 px-4">
                 {{'homeAddress'|translate}} <span class="same-as-home-address">Same
                     as Student's Home Address</span></h4>
-           <h4 *ngIf="!addParentInfoModel.parentInfo.studentAddressSame" class="text-primary pt-6 pb-4 px-4">
+           <h4 *ngIf="!addParentInfoModel.parentInfo.parentAddress[0].studentAddressSame" class="text-primary pt-6 pb-4 px-4">
                 {{'homeAddress'|translate}} <span class="different-from-home-address">Different from Student's Home
                     Address</span></h4>
             <ul class="grid grid-cols-3 col-gap-8 row-gap-10 mt-2 mx-4 mb-6">
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'streetAddress1' | translate}}</label>
                     <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
-                        {{addParentInfoModel.parentInfo.addressLineOne}}</p>
+                        {{addParentInfoModel.parentInfo.parentAddress[0].addressLineOne}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'streetAddress2' | translate}}</label>
                     <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
-                        {{addParentInfoModel.parentInfo.addressLineTwo}}</p>
+                        {{addParentInfoModel.parentInfo.parentAddress[0].addressLineTwo}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'country' | translate}}</label>
@@ -113,15 +113,15 @@
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'stateProvinceLocality' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{addParentInfoModel.parentInfo.state}}</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{addParentInfoModel.parentInfo.parentAddress[0].state}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'city' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{addParentInfoModel.parentInfo.city}}</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{addParentInfoModel.parentInfo.parentAddress[0].city}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'zipPostalCode' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{addParentInfoModel.parentInfo.zip}}</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{addParentInfoModel.parentInfo.parentAddress[0].zip}}</p>
                 </li>
             </ul>
         </div>

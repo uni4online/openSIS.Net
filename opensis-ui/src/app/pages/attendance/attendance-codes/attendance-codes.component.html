@@ -1,10 +1,15 @@
 <vex-mat-spinner-overlay *ngIf="loading"></vex-mat-spinner-overlay>
 <div *ngIf="attendanceCategories?.length>0; else addCategory">
+
+
 <div class="mb-2 lg:flex lg:flex-wrap">
-    <div class="lg:w-9/12 lg:pr-0">
+    <div class="w-full">
+        <mat-card class="w-full p-0" fxFlex="auto">
+            <div class="lg:flex lg:flex-wrap">
+                <div class="lg:w-9/12 lg:pr-0 attendance-code-tab-group">
         <mat-tab-group #tabs>
             <mat-tab *ngFor="let category of attendanceCategories"> 
-                <ng-template mat-tab-label>
+                            <ng-template mat-tab-label class="tabl-list">
                    <span (click)="onClick(category.attendanceCategoryId)" class="custom-label"> {{category.title}}</span>
                     <div *ngIf="selectedAttendanceCategory==category.attendanceCategoryId">
                         <a (click)="openEditCategory(category)"><mat-icon [icIcon]="icEdit"></mat-icon></a>
@@ -24,10 +29,8 @@
     </button>
     </div>
 </div>
+            <hr class="-mt-1" />
 
-<div class="mb-2 lg:flex lg:flex-wrap">
-    <div class="w-full">
-        <mat-card class="w-full p-0" fxFlex="auto">
             <div class="bg-white px-6 h-16 border-b sticky left-0" fxLayout="row" fxLayoutAlign="start center">
                 <div class="flex w-full justify-between">
                     <div class="py-3" fxFlex="300px" fxFlex.lt-md="auto" fxHide.xs fxLayout="row"
