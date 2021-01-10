@@ -30,7 +30,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { SharedModuleModule } from '../../../pages/shared-module/shared-module.module';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-
+import {DragDropModule } from '@angular/cdk/drag-drop';
 
 
 @NgModule({
@@ -65,7 +65,8 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
     MatMenuModule,
     MatSortModule,
     MatCheckboxModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    DragDropModule
   ]
 })
 export class StaffSettingsModule { }

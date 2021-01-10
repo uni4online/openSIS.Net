@@ -159,7 +159,9 @@ export class AddStaffComponent implements OnInit, OnDestroy {
           });
         }
         else {
-          this.fieldsCategory = res.fieldsCategoryList.filter(x => x.isSystemCategory == true);
+          this.fieldsCategory = res.fieldsCategoryList;
+          this.staffAddModel.fieldsCategoryList= res.fieldsCategoryList;
+          this.staffService.sendDetails(this.staffAddModel);
         }
       }
     }

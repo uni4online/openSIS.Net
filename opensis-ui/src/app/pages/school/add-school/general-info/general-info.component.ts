@@ -11,13 +11,9 @@ import { default as _rollupMoment } from 'moment';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { TranslateService } from '@ngx-translate/core';
-import { schoolLevel } from '../../../../enums/school_level.enum';
-import { schoolClassification } from '../../../../enums/school_classification.enum';
-import { gender } from '../../../../enums/gender.enum';
 import { WashInfoEnum } from '../../../../enums/wash-info.enum';
 import { status } from '../../../../enums/wash-info.enum';
 import { MY_FORMATS } from '../../../shared/format-datepicker';
-import { ValidationService } from '../../../shared/validation.service';
 import { LoaderService } from '../../../../services/loader.service';
 import { __values } from 'tslib';
 import { Subject } from 'rxjs';
@@ -32,7 +28,7 @@ import { CustomFieldService } from '../../../../services/custom-field.service';
 import icEdit from '@iconify/icons-ic/twotone-edit';
 import { SchoolCreate } from '../../../../enums/school-create.enum';
 import { takeUntil } from 'rxjs/operators';
-
+import { LovList } from './../../../../models/lovModel';
 @Component({
   selector: 'vex-general-info',
   templateUrl: './general-info.component.html',
@@ -56,11 +52,11 @@ export class GeneralInfoComponent implements OnInit, OnDestroy {
   @Input() categoryId;
   icEdit = icEdit;
 
-  cityName;
+  cityName;  
   schoolLevelOptions = [];
   schoolClassificationOptions = [];
   genderOptions = [];
-
+  gradeLevel=[];
   destroySubject$: Subject<void> = new Subject();
   customFieldModel = new CustomFieldListViewModel();
   schoolAddViewModel: SchoolAddViewModel = new SchoolAddViewModel();
@@ -68,6 +64,7 @@ export class GeneralInfoComponent implements OnInit, OnDestroy {
   countryModel: CountryModel = new CountryModel();
   stateModel: StateModel = new StateModel();
   cityModel: CityModel = new CityModel();
+  lovList:LovList= new LovList();
   countryListArr = [];
   stateListArr = [];
   cityListArr = [];
@@ -85,30 +82,7 @@ export class GeneralInfoComponent implements OnInit, OnDestroy {
   selectedLowGradeLevelIndex: number;
   selectedHighGradeLevelIndex: number;
   formActionButtonTitle = "submit";
-  gradeLevel = [
-    { id: 'PK', title: "PK" },
-    { id: 'K', title: "K" },
-    { id: '1', title: "1" },
-    { id: '2', title: "2" },
-    { id: '3', title: "3" },
-    { id: '4', title: "4" },
-    { id: '5', title: "5" },
-    { id: '6', title: "6" },
-    { id: '7', title: "7" },
-    { id: '8', title: "8" },
-    { id: '9', title: "9" },
-    { id: '10', title: "10" },
-    { id: '11', title: "11" },
-    { id: '12', title: "12" },
-    { id: '13', title: "13" },
-    { id: '14', title: "14" },
-    { id: '15', title: "15" },
-    { id: '16', title: "16" },
-    { id: '17', title: "17" },
-    { id: '18', title: "18" },
-    { id: '19', title: "19" },
-    { id: '20', title: "20" },
-  ];
+ 
   constructor(private fb: FormBuilder,
     private schoolService: SchoolService,
     private customFieldService: CustomFieldService,
@@ -156,11 +130,42 @@ export class GeneralInfoComponent implements OnInit, OnDestroy {
   }
 
   initializeDropdownsForSchool() {
-    this.schoolLevelOptions = Object.keys(schoolLevel);
-    this.schoolClassificationOptions = Object.keys(schoolClassification);
-    this.genderOptions = Object.keys(gender);
+    this.getAllSchoolLevel();
+    this.getAllGender();
+    this.getSchoolClassificationList();    
+    this.getAllGradeLevel();
   }
 
+  getAllSchoolLevel(){
+    this.lovList.lovName="School Level";
+    this.commonService.getAllDropdownValues(this.lovList).subscribe(
+      (res:LovList)=>{        
+        this.schoolLevelOptions = res.dropdownList;           
+      }
+    );
+  }
+  getAllGender(){
+    this.lovList.lovName="Gender";
+    this.commonService.getAllDropdownValues(this.lovList).subscribe(
+      (res:LovList)=>{       
+        this.genderOptions = res.dropdownList;              
+      }
+    );
+  }
+  getAllGradeLevel(){
+    this.lovList.lovName="Grade Level";
+    this.commonService.getAllDropdownValues(this.lovList).subscribe(
+      (res:LovList)=>{         
+        this.gradeLevel = res.dropdownList;           
+      }
+    );
+  }
+  getSchoolClassificationList(){
+    this.lovList.lovName="School Classification";
+    this.commonService.getAllDropdownValues(this.lovList).subscribe(data => {         
+      this.schoolClassificationOptions=data.dropdownList;             
+    });
+  }
   editGeneralInfo() {
     this.schoolCreateMode = this.schoolCreate.EDIT;
     this.schoolService.changePageMode(this.schoolCreateMode);
@@ -178,6 +183,7 @@ export class GeneralInfoComponent implements OnInit, OnDestroy {
   }
 
   checkLowGradeLevel(event) {
+    
     let index = this.gradeLevel.findIndex((val) => {
       return val.id == event.value;
     });
@@ -277,11 +283,12 @@ export class GeneralInfoComponent implements OnInit, OnDestroy {
 
   findCountryNameByIdOnViewMode() {
     let index = this.countryListArr.findIndex((x) => {
+      
       return x.id === +this.schoolAddViewModel.schoolMaster.country
     });
     this.countryName = this.countryListArr[index]?.name;
   }
-
+  
   getAllStateByCountry(data) {
     if (this.stateCount > 0) {
       if ((this.commonFunction.checkEmptyObject(this.schoolDetailsForViewAndEdit) === true)
@@ -410,7 +417,15 @@ export class GeneralInfoComponent implements OnInit, OnDestroy {
     this.currentForm.form.markAllAsTouched();
     if (this.currentForm.form.valid) {
       if (this.schoolCreateMode == this.schoolCreate.EDIT) {
-        this.schoolAddViewModel.selectedCategoryId = this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].categoryId;
+        if(this.schoolAddViewModel.schoolMaster.fieldsCategory !== null){
+          this.schoolAddViewModel.selectedCategoryId = this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].categoryId;
+          for (var i = 0; i < this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].customFields.length; i++) {
+            if (this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].customFields[i].type === "Multiple SelectBox") {
+              this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].customFields[i].customFieldsValue[0].customFieldValue = this.schoolService.getSchoolMultiselectValue().toString().replaceAll(",", "|");
+            }
+          }
+        }
+        
         this.updateSchool();
       } else {
         this.addSchool();

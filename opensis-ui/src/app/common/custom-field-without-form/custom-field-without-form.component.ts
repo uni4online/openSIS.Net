@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { NgForm, ControlContainer } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SchoolAddViewModel } from '../../../../src/app/models/schoolMasterModel';
@@ -34,6 +34,9 @@ export class CustomFieldWithoutFormComponent implements OnInit {
   @Input() studentCreateMode;
   @Input() staffCreateMode;
   @Input() module;
+  staffMultiSelectValue;
+  studentMultiSelectValue;
+  schoolMultiSelectValue
   customFieldListViewModel = new CustomFieldListViewModel();
   headerTitle: string = "Other Information";
   @ViewChild('f') currentForm: NgForm;
@@ -62,6 +65,7 @@ export class CustomFieldWithoutFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
     if (this.module === 'Student') {
       this.studentAddModel = this.schoolDetailsForViewAndEdit;
       this.checkStudentCustomValue();
@@ -77,6 +81,19 @@ export class CustomFieldWithoutFormComponent implements OnInit {
     }
   }
 
+  modelChanged(selectValue) {
+    if (this.module === 'Staff') {
+      this.staffService.setStaffMultiselectValue(selectValue);
+    }
+    else if (this.module === 'Student') {
+      this.studentService.setStudentMultiselectValue(selectValue);
+    }
+    else if (this.module === 'School') {
+      this.schoolService.setSchoolMultiselectValue(selectValue);
+    }
+
+}
+
   checkStudentCustomValue() {
     if (this.studentAddModel !== undefined) {
       let catId = this.categoryId;
@@ -86,6 +103,12 @@ export class CustomFieldWithoutFormComponent implements OnInit {
           if (this.studentAddModel.fieldsCategoryList[catId].customFields[i]?.customFieldsValue.length == 0) {
 
             this.studentAddModel.fieldsCategoryList[catId]?.customFields[i]?.customFieldsValue.push(new CustomFieldsValueModel());
+          }
+          else {
+            if (this.studentAddModel.fieldsCategoryList[catId]?.customFields[i]?.type === 'Multiple SelectBox') {
+              this.studentMultiSelectValue = this.studentAddModel.fieldsCategoryList[this.categoryId].customFields[i]?.customFieldsValue[0].customFieldValue.split('|');
+
+            }
           }
         }
 
@@ -102,6 +125,12 @@ export class CustomFieldWithoutFormComponent implements OnInit {
           if (this.staffAddModel.fieldsCategoryList[catId].customFields[i]?.customFieldsValue.length == 0) {
 
             this.staffAddModel.fieldsCategoryList[catId]?.customFields[i]?.customFieldsValue.push(new CustomFieldsValueModel());
+          }
+          else {
+            if (this.staffAddModel.fieldsCategoryList[catId]?.customFields[i]?.type === 'Multiple SelectBox') {
+              this.staffMultiSelectValue = this.staffAddModel.fieldsCategoryList[this.categoryId].customFields[i]?.customFieldsValue[0].customFieldValue.split('|');
+              
+            }
           }
         }
 
@@ -124,6 +153,12 @@ export class CustomFieldWithoutFormComponent implements OnInit {
               this.schoolAddViewModel.schoolMaster.fieldsCategory[catId].customFields[i].customFieldsValue.push(new CustomFieldsValueModel());
 
             }
+            else {
+              if (this.schoolAddViewModel.schoolMaster.fieldsCategory[catId]?.customFields[i]?.type === 'Multiple SelectBox') {
+                this.schoolMultiSelectValue = this.schoolAddViewModel.schoolMaster.fieldsCategory[catId]?.customFields[i]?.customFieldsValue[0].customFieldValue.split('|');
+  
+              }
+            }
           }
         }
       }
@@ -142,6 +177,12 @@ export class CustomFieldWithoutFormComponent implements OnInit {
             if (this.schoolAddViewModel.schoolMaster.fieldsCategory[catId].customFields[i].customFieldsValue.length == 0) {
 
               this.schoolAddViewModel.schoolMaster.fieldsCategory[catId].customFields[i].customFieldsValue.push(new CustomFieldsValueModel());
+            }
+            else {
+              if (this.schoolAddViewModel.schoolMaster.fieldsCategory[catId]?.customFields[i]?.type === 'Multiple SelectBox') {
+                this.schoolMultiSelectValue = this.schoolAddViewModel.schoolMaster.fieldsCategory[catId]?.customFields[i]?.customFieldsValue[0].customFieldValue.split('|');
+  
+              }
             }
           }
         }

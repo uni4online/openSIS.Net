@@ -74,7 +74,7 @@
                         <mat-form-field class="w-full" appearance="outline" color="primary">
                             <mat-label>{{customField.title}}</mat-label>
                             <mat-select name="{{customField.title.replace(' ','_')}}"
-                                [(ngModel)]="schoolAddViewModel.schoolMaster.fieldsCategory[categoryId]?.customFields[index]?.customFieldsValue[0].customFieldValue"
+                                [(ngModel)]="schoolMultiSelectValue" (ngModelChange)="modelChanged($event)"
                                 multiple [required]="customField.required ? true : null ">
                                 <mat-option *ngFor="let option of customField.selectOptions.split('|')"
                                     [value]="option">
@@ -177,7 +177,7 @@
                         <mat-form-field class="w-full" appearance="outline" color="primary">
                             <mat-label>{{customField.title}}</mat-label>
                             <mat-select name="{{customField.title.replace(' ','_')}}"
-                                [(ngModel)]="studentAddModel.fieldsCategoryList[categoryId]?.customFields[index]?.customFieldsValue[0].customFieldValue"
+                                [(ngModel)]="studentMultiSelectValue" (ngModelChange)="modelChanged($event)"
                                 multiple [required]="customField.required ? true : null ">
                                 <mat-option *ngFor="let option of customField.selectOptions.split('|')"
                                     [value]="option">
@@ -279,7 +279,7 @@
                         <mat-form-field class="w-full" appearance="outline" color="primary">
                             <mat-label>{{customField.title}}</mat-label>
                             <mat-select name="{{customField.title.replace(' ','_')}}"
-                                [(ngModel)]="staffAddModel.fieldsCategoryList[categoryId]?.customFields[index]?.customFieldsValue[0].customFieldValue"
+                                [(ngModel)]="staffMultiSelectValue" (ngModelChange)="modelChanged($event)"
                                 multiple [required]="customField.required ? true : null ">
                                 <mat-option *ngFor="let option of customField.selectOptions.split('|')"
                                     [value]="option">

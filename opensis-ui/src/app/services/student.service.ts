@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { StudentAddModel, StudentListModel, StudentResponseListModel, GetAllStudentDocumentsList, StudentDocumentAddModel, StudentSiblingSearch, StudentSiblingAssociation, StudentViewSibling, CheckStudentInternalIdViewModel } from '../models/studentModel';
+import { StudentAddModel, StudentListModel, StudentResponseListModel, GetAllStudentDocumentsList, StudentDocumentAddModel, StudentSiblingSearch, StudentSiblingAssociation, StudentViewSibling, CheckStudentInternalIdViewModel, StudentEnrollmentModel, StudentEnrollmentSchoolListModel } from '../models/studentModel';
 import { StudentCommentsAddView, StudentCommentsListViewModel } from '../models/studentCommentsModel'
 import { BehaviorSubject, Subject } from 'rxjs';
 import { CryptoService } from './Crypto.service';
@@ -67,6 +67,14 @@ export class StudentService {
   }
   getStudentId() {
     return this.studentId;
+  }
+
+  private studentMultiselectValue: any;
+  setStudentMultiselectValue(value: any) {
+    this.studentMultiselectValue = value;
+  }
+  getStudentMultiselectValue() {
+    return this.studentMultiselectValue;
   }
 
   private studentImage;
@@ -139,5 +147,21 @@ export class StudentService {
     return this.http.post<StudentSiblingAssociation>(apiurl, studentDetails)
   }
 
+  // Student Enrollment
+
+  updateStudentEnrollment(studentDetails:StudentEnrollmentModel){
+    let apiurl = this.apiUrl + studentDetails._tenantName + "/Student/updateStudentEnrollment";
+    return this.http.put<StudentEnrollmentModel>(apiurl, studentDetails)
+  }
+
+  getAllStudentEnrollment(studentDetails:StudentEnrollmentModel){
+    let apiurl = this.apiUrl + studentDetails._tenantName + "/Student/getAllStudentEnrollment";
+    return this.http.post<StudentEnrollmentModel>(apiurl, studentDetails)
+  }
+
+  studentEnrollmentSchoolList(schoolDetails:StudentEnrollmentSchoolListModel){
+    let apiurl = this.apiUrl + schoolDetails._tenantName + "/School/studentEnrollmentSchoolList";
+    return this.http.post<StudentEnrollmentSchoolListModel>(apiurl, schoolDetails)
+  }
 
 }

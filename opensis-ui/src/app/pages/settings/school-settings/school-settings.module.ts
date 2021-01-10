@@ -34,6 +34,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import {MatSortModule} from '@angular/material/sort';
 import { SharedModuleModule } from '../../../pages/shared-module/shared-module.module';
+import {DragDropModule } from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [SchoolSettingsComponent,GradeLevelsComponent,SectionsComponent, RoomsComponent,SchoolFieldsComponent, PeriodsComponent, PeriodsListComponent],
@@ -67,7 +68,8 @@ import { SharedModuleModule } from '../../../pages/shared-module/shared-module.m
     MatMenuModule,
     MatSortModule,
     MatCheckboxModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    DragDropModule
   ]
 })
 export class SchoolSettingsModule { }

@@ -14,7 +14,8 @@ import { SharedFunction } from '../../../shared/shared-function';
 import { ImageCropperService } from '../../../../services/image-cropper.service';
 import icEdit from '@iconify/icons-ic/twotone-edit';
 import { SchoolCreate } from '../../../../enums/school-create.enum';
-
+import { LovList } from './../../../../models/lovModel';
+import { CommonService } from '../../../../services/common.service';
 @Component({
   selector: 'vex-wash-info',
   templateUrl: './wash-info.component.html',
@@ -40,6 +41,11 @@ export class WashInfoComponent implements OnInit {
   schoolAddViewModel: SchoolAddViewModel = new SchoolAddViewModel();
   loading: boolean;
   formActionButtonTitle = "submit";
+  femaleToiletTypeList;
+  maleToiletTypeList;
+  commonToiletTypeList;
+
+  lovList:LovList= new LovList();
   constructor(private fb: FormBuilder,
     private schoolService: SchoolService,
     private snackbar: MatSnackBar,
@@ -47,7 +53,8 @@ export class WashInfoComponent implements OnInit {
     public translateService: TranslateService,
     private loaderService: LoaderService,
     private commonFunction: SharedFunction,
-    private imageCropperService: ImageCropperService) {
+    private imageCropperService: ImageCropperService,
+    private commonService:CommonService) {
 
     translateService.use('en');
     this.loaderService.isLoading.subscribe((val) => {
@@ -55,6 +62,9 @@ export class WashInfoComponent implements OnInit {
     });
   }
   ngOnInit(): void {
+    this.getAllFemaleToiletType();
+    this.getAllMaleToiletType();
+    this.getAllCommonToiletType();
     if (this.schoolCreateMode == this.schoolCreate.VIEW) {
       this.schoolService.changePageMode(this.schoolCreateMode);
       this.imageCropperService.enableUpload(false);
@@ -77,11 +87,43 @@ export class WashInfoComponent implements OnInit {
     this.schoolCreateMode = this.schoolCreate.VIEW;
     this.schoolService.changePageMode(this.schoolCreateMode);
   }
-
+  getAllFemaleToiletType(){
+    this.lovList.lovName="Female Toilet Type";
+    this.commonService.getAllDropdownValues(this.lovList).subscribe(
+      (res:LovList)=>{      
+        this.femaleToiletTypeList = res.dropdownList;            
+      }
+    );
+  }
+  getAllMaleToiletType(){
+    this.lovList.lovName="Male Toilet Type";
+    this.commonService.getAllDropdownValues(this.lovList).subscribe(
+      (res:LovList)=>{        
+          this.maleToiletTypeList = res.dropdownList;         
+      }
+    );
+  }
+  getAllCommonToiletType(){
+    this.lovList.lovName="Common Toilet Type";
+    this.commonService.getAllDropdownValues(this.lovList).subscribe(
+      (res:LovList)=>{        
+        this.commonToiletTypeList = res.dropdownList;     
+          
+      }
+    );
+  }
+  
   submit() {
     this.currentForm.form.markAllAsTouched();
     if (this.currentForm.form.valid) {
-      this.schoolAddViewModel.selectedCategoryId = this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].categoryId;
+      if(this.schoolAddViewModel.schoolMaster.fieldsCategory !== null){
+        this.schoolAddViewModel.selectedCategoryId = this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].categoryId;
+        for (var i = 0; i < this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].customFields.length; i++) {
+          if (this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].customFields[i].type === "Multiple SelectBox") {
+            this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].customFields[i].customFieldsValue[0].customFieldValue = this.schoolService.getSchoolMultiselectValue().toString().replaceAll(",", "|");
+          }
+        }
+      }
       this.schoolService.UpdateSchool(this.schoolAddViewModel).subscribe(data => {
         if (typeof (data) == 'undefined') {
           this.snackbar.open(`Wash Info Updation failed` + sessionStorage.getItem("httpError"), '', {

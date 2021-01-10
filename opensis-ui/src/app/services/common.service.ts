@@ -29,6 +29,11 @@ export class CommonService {
     return this.http.put<CountryAddModel>(apiurl,obj)
   }  
 
+  DeleteCountry(obj: CountryAddModel){  
+    let apiurl = this.apiUrl + obj._tenantName+ "/Common/deleteCountry"; 
+    return this.http.post<CountryAddModel>(apiurl,obj)
+  }  
+
   GetAllState(obj: StateModel){  
      
     let apiurl = this.apiUrl + obj._tenantName+ "/Common/getAllStatesByCountry"; 
@@ -55,7 +60,10 @@ export class CommonService {
     return this.http.post<LanguageAddModel>(apiurl,obj)
   }  
 
-
+  DeleteLanguage(obj: LanguageAddModel){  
+    let apiurl = this.apiUrl + obj._tenantName+ "/Common/deleteLanguage"; 
+    return this.http.post<LanguageAddModel>(apiurl,obj)
+  } 
   getAllDropdownValues(obj:LovList){
     let apiurl =this.apiUrl + obj._tenantName+ "/Common/getAllDropdownValues"; 
     return this.http.post<LovList>(apiurl,obj);

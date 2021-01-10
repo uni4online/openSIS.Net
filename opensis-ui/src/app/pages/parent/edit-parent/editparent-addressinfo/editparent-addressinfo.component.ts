@@ -58,6 +58,7 @@ export class EditparentAddressinfoComponent implements OnInit,OnDestroy {
     this.addParentInfoModel = this.parentDetailsForViewAndEdit;   
     this.addParentInfoModel.parentInfo.parentAddress[0].country = +this.parentDetailsForViewAndEdit.parentInfo.parentAddress[0].country; 
     this.getAllCountry();
+    console.log(this.addParentInfoModel.parentInfo.parentAddress[0].studentAddressSame);
   }
 
   

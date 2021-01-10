@@ -47,14 +47,17 @@ export class CustomFieldComponent implements OnInit {
   schoolAddViewModel: SchoolAddViewModel = new SchoolAddViewModel();
   staffAddViewModel: StaffAddModel = new StaffAddModel();
   @ViewChild('f') currentForm: NgForm;
+  staffMultiSelectValue;
+  studentMultiSelectValue;
+  schoolMultiSelectValue
   f: NgForm;
-  formActionButtonTitle: string;
+  formActionButtonTitle = "update";
   constructor(
     private snackbar: MatSnackBar,
     private commonFunction: SharedFunction,
     private studentService: StudentService,
     private schoolService: SchoolService,
-    private staffService : StaffService,
+    private staffService: StaffService,
     private router: Router,
   ) {
     if (this.module === 'School') {
@@ -106,6 +109,12 @@ export class CustomFieldComponent implements OnInit {
           if (this.schoolAddViewModel.schoolMaster.fieldsCategory[catId].customFields[i].customFieldsValue.length == 0) {
             this.schoolAddViewModel.schoolMaster.fieldsCategory[catId].customFields[i].customFieldsValue.push(new CustomFieldsValueModel());
           }
+          else {
+            if (this.schoolAddViewModel.schoolMaster.fieldsCategory[catId]?.customFields[i]?.type === 'Multiple SelectBox') {
+              this.schoolMultiSelectValue = this.schoolAddViewModel.schoolMaster.fieldsCategory[catId]?.customFields[i]?.customFieldsValue[0].customFieldValue.split('|');
+
+            }
+          }
         }
       }
 
@@ -123,6 +132,12 @@ export class CustomFieldComponent implements OnInit {
 
             this.studentAddViewModel.fieldsCategoryList[catId]?.customFields[i]?.customFieldsValue.push(new CustomFieldsValueModel());
           }
+          else {
+            if (this.studentAddViewModel.fieldsCategoryList[catId]?.customFields[i]?.type === 'Multiple SelectBox') {
+              this.studentMultiSelectValue = this.studentAddViewModel.fieldsCategoryList[this.categoryId].customFields[i]?.customFieldsValue[0].customFieldValue.split('|');
+
+            }
+          }
         }
 
       }
@@ -138,6 +153,12 @@ export class CustomFieldComponent implements OnInit {
           if (this.staffAddViewModel.fieldsCategoryList[catId].customFields[i]?.customFieldsValue.length == 0) {
 
             this.staffAddViewModel.fieldsCategoryList[catId]?.customFields[i]?.customFieldsValue.push(new CustomFieldsValueModel());
+          }
+          else {
+            if (this.staffAddViewModel.fieldsCategoryList[catId]?.customFields[i]?.type === 'Multiple SelectBox') {
+              this.staffMultiSelectValue = this.staffAddViewModel.fieldsCategoryList[this.categoryId].customFields[i]?.customFieldsValue[0].customFieldValue.split('|');
+
+            }
           }
         }
 
@@ -165,6 +186,11 @@ export class CustomFieldComponent implements OnInit {
     this.studentAddViewModel.selectedCategoryId = this.studentAddViewModel.fieldsCategoryList[this.categoryId].categoryId;
     this.studentAddViewModel._tenantName = sessionStorage.getItem("tenant");
     this.studentAddViewModel._token = sessionStorage.getItem("token");
+    for (var i = 0; i < this.studentAddViewModel.fieldsCategoryList[this.categoryId].customFields.length; i++) {
+      if (this.studentAddViewModel.fieldsCategoryList[this.categoryId].customFields[i].type === "Multiple SelectBox") {
+        this.studentAddViewModel.fieldsCategoryList[this.categoryId].customFields[i].customFieldsValue[0].customFieldValue = this.studentMultiSelectValue.toString().replaceAll(",", "|");
+      }
+    }
     this.studentService.UpdateStudent(this.studentAddViewModel).subscribe(data => {
       if (typeof (data) == 'undefined') {
         this.snackbar.open(this.categoryTitle + ' Updation failed. ' + sessionStorage.getItem("httpError"), '', {
@@ -195,6 +221,11 @@ export class CustomFieldComponent implements OnInit {
     this.schoolAddViewModel.schoolMaster.city = this.schoolAddViewModel.schoolMaster.city.toString();
     this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolOpened = this.commonFunction.formatDateSaveWithoutTime(this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolOpened);
     this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolClosed = this.commonFunction.formatDateSaveWithoutTime(this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolClosed);
+    for (var i = 0; i < this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].customFields.length; i++) {
+      if (this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].customFields[i].type === "Multiple SelectBox") {
+        this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].customFields[i].customFieldsValue[0].customFieldValue = this.schoolMultiSelectValue.toString().replaceAll(",", "|");
+      }
+    }
     this.schoolService.UpdateSchool(this.schoolAddViewModel).subscribe(data => {
       if (typeof (data) == 'undefined') {
         this.snackbar.open(this.categoryTitle + ' ' + sessionStorage.getItem("httpError"), '', {
@@ -224,6 +255,11 @@ export class CustomFieldComponent implements OnInit {
     this.staffAddViewModel.selectedCategoryId = this.staffAddViewModel.fieldsCategoryList[this.categoryId].categoryId;
     this.staffAddViewModel._token = sessionStorage.getItem("token");
     this.staffAddViewModel._tenantName = sessionStorage.getItem("tenant");
+    for (var i = 0; i < this.staffAddViewModel.fieldsCategoryList[this.categoryId].customFields.length; i++) {
+      if (this.staffAddViewModel.fieldsCategoryList[this.categoryId].customFields[i].type === "Multiple SelectBox") {
+        this.staffAddViewModel.fieldsCategoryList[this.categoryId].customFields[i].customFieldsValue[0].customFieldValue = this.staffMultiSelectValue.toString().replaceAll(",", "|");
+      }
+    }
     this.staffService.updateStaff(this.staffAddViewModel).subscribe(data => {
       if (typeof (data) == 'undefined') {
         this.snackbar.open(this.categoryTitle + ' ' + sessionStorage.getItem("httpError"), '', {
@@ -251,6 +287,9 @@ export class CustomFieldComponent implements OnInit {
     this.schoolCreateMode = this.SchoolCreate.EDIT;
     this.studentCreateMode = this.SchoolCreate.EDIT;
     this.staffCreateMode = this.SchoolCreate.EDIT;
+    this.studentService.changePageMode(this.studentCreateMode);
+    this.staffService.changePageMode(this.staffCreateMode);
+    this.schoolService.changePageMode(this.schoolCreateMode);
     this.formActionButtonTitle = "update";
   }
 }

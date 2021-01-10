@@ -52,6 +52,12 @@ using opensis.core.ParentInfo.Interfaces;
 using opensis.core.ParentInfo.Services;
 using opensis.core.Staff.Services;
 using opensis.core.Staff.Interfaces;
+using opensis.core.CourseManager.Services;
+using opensis.core.CourseManager.Interfaces;
+using opensis.core.Period.Interfaces;
+using opensis.core.Period.Services;
+using opensis.core.Grade.Interfaces;
+using opensis.core.Grade.Services;
 
 namespace opensisAPI
 {
@@ -108,7 +114,12 @@ namespace opensisAPI
             services.AddScoped<IParentInfoRepository, ParentInfoRepository>();
             services.AddScoped<IStaffRepository, StaffRepository>();
             services.AddScoped<IStaffService, StaffService>();
-
+            services.AddScoped<ICourseManagerRepository, CourseManagerRepository>();
+            services.AddScoped<ICourseManagerService, CourseManagerService>();
+            services.AddScoped<IPeriodRepository, PeriodRepository>();
+            services.AddScoped<IPeriodService, PeriodService>();
+            services.AddScoped<IGradeRepository, GradeRepository>();
+            services.AddScoped<IGradeService, GradeService>();
 
 
 

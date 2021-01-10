@@ -270,5 +270,35 @@ namespace opensis.core.CustomField.Services
 
             return fieldsCategoryListModel;
         }
+        /// <summary>
+        /// Update Custom Field Sort Order
+        /// </summary>
+        /// <param name="customFieldSortOrderModel"></param>
+        /// <returns></returns>
+        public CustomFieldSortOrderModel UpdateCustomFieldSortOrder(CustomFieldSortOrderModel customFieldSortOrderModel)
+        {
+            CustomFieldSortOrderModel customFieldSortOrderUpdateModel = new CustomFieldSortOrderModel();
+            try
+            {
+                if (TokenManager.CheckToken(customFieldSortOrderModel._tenantName, customFieldSortOrderModel._token))
+                {
+                    customFieldSortOrderUpdateModel = this.customFieldRepository.UpdateCustomFieldSortOrder(customFieldSortOrderModel);
+                }
+                else
+                {
+                    customFieldSortOrderUpdateModel._failure = true;
+                    customFieldSortOrderUpdateModel._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                customFieldSortOrderUpdateModel._failure = true;
+                customFieldSortOrderUpdateModel._message = es.Message;
+            }
+
+            return customFieldSortOrderUpdateModel;
+        }
+
+
     }
 }

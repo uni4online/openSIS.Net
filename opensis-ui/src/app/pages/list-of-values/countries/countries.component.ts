@@ -19,7 +19,8 @@ import { LoaderService } from '../../../services/loader.service';
 import { CommonService } from '../../../services/common.service';
 import { EditCountryComponent } from './edit-country/edit-country.component';
 import { MatPaginator } from '@angular/material/paginator';
-
+import { CountryAddModel } from '../../../models/countryModel';
+import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confirm-dialog.component';
 @Component({
   selector: 'vex-countries',
   templateUrl: './countries.component.html',
@@ -48,6 +49,7 @@ export class CountriesComponent implements OnInit {
   icImpersonate = icImpersonate;
   icFilterList = icFilterList; 
   loading;  
+  countryAddModel = new CountryAddModel();
   totalCount:Number;pageNumber:Number;pageSize:Number;
   getCountryModel: CountryModel = new CountryModel();  
   CountryModelList: MatTableDataSource<any>;
@@ -109,6 +111,45 @@ export class CountriesComponent implements OnInit {
     });   
   }
 
+  deleteCountryData(element){
+    this.countryAddModel.country.id = element;
+    this.commonService.DeleteCountry(this.countryAddModel).subscribe(
+      (res)=>{
+        if(typeof(res)=='undefined'){
+          this.snackbar.open('Country Deletion failed. ' + sessionStorage.getItem("httpError"), '', {
+            duration: 10000
+          });
+        }
+        else{
+          if (res._failure) {
+            this.snackbar.open('Country Deletion failed. ' + res._message, 'LOL THANKS', {
+              duration: 10000
+            });
+          } 
+          else { 
+            this.snackbar.open('Country Deleted Successfully. ' + res._message, 'LOL THANKS', {
+              duration: 10000
+            });
+            this.getCountryList()
+          }
+        }
+      }
+    )
+  }
+  confirmDelete(element){
+   
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      maxWidth: "400px",
+      data: {
+          title: "Are you sure?",
+          message: "You are about to delete "+element.name+"."}
+    });
+    dialogRef.afterClosed().subscribe(dialogResult => {
+      if(dialogResult){
+        this.deleteCountryData(element.id);
+      }
+   });
+  }
   goToEdit(editDetails){
     this.dialog.open(EditCountryComponent, {
       data: {

@@ -13,8 +13,8 @@
                             <mat-label>{{'salutation'|translate}}</mat-label>
                             <mat-select [(ngModel)]="staffAddModel.staffMaster.salutation" name="salutation">
                                 <mat-option value=""></mat-option>
-                                <mat-option *ngFor="let salutation of salutationEnum" [value]="salutation">
-                                    {{salutation}}</mat-option>
+                                <mat-option *ngFor="let salutation of salutationList" [value]="salutation.lovColumnValue">
+                                    {{salutation.lovColumnValue}}</mat-option>
                             </mat-select>
                         </mat-form-field>
                     </li>
@@ -23,7 +23,7 @@
                             <mat-label>{{'suffix'|translate}}</mat-label>
                             <mat-select [(ngModel)]="staffAddModel.staffMaster.suffix" name="suffix">
                                 <mat-option value=""></mat-option>
-                                <mat-option *ngFor="let suffix of suffixEnum" [value]="suffix">{{suffix}}</mat-option>
+                                <mat-option *ngFor="let suffix of suffixList" [value]="suffix.lovColumnValue">{{suffix.lovColumnValue}}</mat-option>
                             </mat-select>
                         </mat-form-field>
                     </li>
@@ -127,7 +127,7 @@
                             <mat-label>{{'gender'|translate}}</mat-label>
                             <mat-select [(ngModel)]="staffAddModel.staffMaster.gender" name="gender">
                                 <mat-option value=""></mat-option>
-                                <mat-option *ngFor="let gender of genderEnum" [value]="gender">{{gender}}</mat-option>
+                                <mat-option *ngFor="let gender of genderList" [value]="gender.lovColumnValue">{{gender.lovColumnValue}}</mat-option>
                             </mat-select>
                         </mat-form-field>
                     </li>
@@ -155,8 +155,8 @@
                             <mat-label>{{'maritalStatus'|translate}}</mat-label>
                             <mat-select [(ngModel)]="staffAddModel.staffMaster.maritalStatus" name="maritalStatus">
                                 <mat-option value=""></mat-option>
-                                <mat-option *ngFor="let maritalStatus of maritalStatusEnum" [value]="maritalStatus">
-                                    {{maritalStatus}}</mat-option>
+                                <mat-option *ngFor="let maritalStatus of maritalStatusList" [value]="maritalStatus.lovColumnValue">
+                                    {{maritalStatus.lovColumnValue}}</mat-option>
                             </mat-select>
                         </mat-form-field>
                     </li>
@@ -328,11 +328,11 @@
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'districtId' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{staffAddModel.staffMaster.districtId}}</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{staffAddModel.staffMaster.districtId | EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'stateId' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{staffAddModel.staffMaster.stateId}}</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{staffAddModel.staffMaster.stateId | EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'preferredCommonName' | translate}}</label>
@@ -410,7 +410,7 @@
             <ul class="grid grid-cols-3 col-gap-8 row-gap-10 my-2 mx-4">
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'loginEmailAddress' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{staffAddModel.staffMaster.loginEmailAddress}}</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{staffAddModel.staffMaster.loginEmailAddress | EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'password' | translate}}</label>
@@ -419,7 +419,7 @@
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'portalAccess' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2 text-green">{{staffAddModel.staffMaster.portalAccess}}</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2 text-green">{{staffPortalAccess}}</p>
                 </li>
                 <!-- <li>
                     <label class="text-sm leading-5 text-gray">{{'lastLogin' | translate}}</label>

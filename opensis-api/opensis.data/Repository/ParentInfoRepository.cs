@@ -229,7 +229,7 @@ namespace opensis.data.Repository
                                 }
                                 else
                                 {
-                                    var loginInfoData = this.context?.UserMaster.FirstOrDefault(x => x.TenantId == parentInfoAddViewModel.parentInfo.TenantId && x.EmailAddress == parentInfoAddViewModel.parentInfo.LoginEmail);
+                                    var loginInfoData = this.context?.UserMaster.FirstOrDefault(x => x.TenantId == parentInfoAddViewModel.parentInfo.TenantId && x.EmailAddress == parentInfoUpdate.LoginEmail);
 
                                     loginInfoData.EmailAddress = parentInfoAddViewModel.parentInfo.LoginEmail;
                                     loginInfoData.IsActive = parentInfoAddViewModel.parentInfo.IsPortalUser;
@@ -243,7 +243,7 @@ namespace opensis.data.Repository
                             }
                             else
                             {
-                                var loginInfo = this.context?.UserMaster.FirstOrDefault(x => x.TenantId == parentInfoAddViewModel.parentInfo.TenantId && x.EmailAddress == parentInfoAddViewModel.parentInfo.LoginEmail);
+                                var loginInfo = this.context?.UserMaster.FirstOrDefault(x => x.TenantId == parentInfoAddViewModel.parentInfo.TenantId && x.EmailAddress == parentInfoUpdate.LoginEmail);
 
                                 loginInfo.IsActive = parentInfoAddViewModel.parentInfo.IsPortalUser;
 

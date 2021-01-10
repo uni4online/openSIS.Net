@@ -25,7 +25,17 @@ namespace opensis.data.Repository
         /// <returns></returns>
         public SectionAddViewModel AddSection(SectionAddViewModel section)
         {
-            int? MasterSectionId = Utility.GetMaxPK(this.context, new Func<Sections, int>(x => x.SectionId));
+            //int? MasterSectionId = Utility.GetMaxPK(this.context, new Func<Sections, int>(x => x.SectionId));
+
+            int? MasterSectionId = 1;
+
+            var SectionData = this.context?.Sections.Where(x => x.SchoolId == section.tableSections.SchoolId && x.TenantId == section.tableSections.TenantId).OrderByDescending(x => x.SectionId).FirstOrDefault();
+
+            if (SectionData != null)
+            {
+                MasterSectionId = SectionData.SectionId + 1;
+            }
+
             section.tableSections.SectionId = (int)MasterSectionId;
             section.tableSections.LastUpdated = DateTime.UtcNow;
             this.context?.Sections.Add(section.tableSections);

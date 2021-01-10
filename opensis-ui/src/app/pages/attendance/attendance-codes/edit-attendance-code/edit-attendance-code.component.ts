@@ -7,7 +7,7 @@ import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
 import { AttendanceCodeService } from '../../../../services/attendance-code.service';
 import { AttendanceCodeModel } from '../../../../models/attendanceCodeModel';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import {AttendanceCodeEnum} from '../../../../enums/attendance_code.enum';
+import {AttendanceCodeEnum} from '../../../../enums/attendance-code.enum';
 
 @Component({
   selector: 'vex-edit-attendance-code',

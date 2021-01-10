@@ -31,7 +31,7 @@ namespace opensis.data.Repository
                 try
                 {
                     //int? MasterStudentId = Utility.GetMaxPK(this.context, new Func<StudentMaster, int>(x => x.StudentId));
-                    int? MasterStudentId = 0;
+                    int? MasterStudentId = 1;
 
                     var studentData = this.context?.StudentMaster.Where(x => x.SchoolId == student.studentMaster.SchoolId && x.TenantId == student.studentMaster.TenantId).OrderByDescending(x => x.StudentId).FirstOrDefault();
 
@@ -39,10 +39,7 @@ namespace opensis.data.Repository
                     {
                         MasterStudentId = studentData.StudentId + 1;                      
                     }
-                    else
-                    {
-                        MasterStudentId = 1;
-                    }
+
                     student.studentMaster.StudentId = (int)MasterStudentId;
                     Guid GuidId = Guid.NewGuid();
                     var GuidIdExist = this.context?.StudentMaster.FirstOrDefault(x => x.StudentGuid == GuidId);
@@ -58,11 +55,11 @@ namespace opensis.data.Repository
                     bool checkInternalID = CheckInternalID(student.studentMaster.TenantId,student.studentMaster.StudentInternalId);
                     if (checkInternalID == true)
                     {
-                        int? MasterEnrollmentId = Utility.GetMaxPK(this.context, new Func<StudentEnrollment, int>(x => (int)x.EnrollmentId));
                         var schoolName = this.context?.SchoolMaster.Where(x => x.TenantId == student.studentMaster.TenantId && x.SchoolId == student.studentMaster.SchoolId).Select(s => s.SchoolName).FirstOrDefault();
 
                         //Insert data into Enrollment table
                         int? calenderId = null;
+                        string enrollmentCode = null;
 
                         var defaultCalender = this.context?.SchoolCalendars.FirstOrDefault(x=>x.TenantId==student.studentMaster.TenantId && x.SchoolId==student.studentMaster.SchoolId && x.AcademicYear.ToString()== student.AcademicYear && x.DefaultCalender==true);
 
@@ -70,8 +67,16 @@ namespace opensis.data.Repository
                         {
                             calenderId = defaultCalender.CalenderId;
                         }
+
+                        var enrollmentType = this.context?.StudentEnrollmentCode.FirstOrDefault(x => x.TenantId == student.studentMaster.TenantId && x.SchoolId == student.studentMaster.SchoolId && x.Type.ToLower() == "Add".ToLower());
+
+                        if (enrollmentType != null)
+                        {
+                            enrollmentCode = enrollmentType.Title;
+                        }
+
                         var gradeLevel = this.context?.Gradelevels.Where(x => x.SchoolId == student.studentMaster.SchoolId).OrderBy(x => x.GradeId).FirstOrDefault();
-                        var StudentEnrollmentData = new StudentEnrollment() { TenantId = student.studentMaster.TenantId, SchoolId = student.studentMaster.SchoolId, StudentId = student.studentMaster.StudentId, EnrollmentId = (int)MasterEnrollmentId, SchoolName = schoolName, RollingOption = "Next grade at current school", EnrollmentCode="New", CalenderId=calenderId,GradeLevelTitle=(gradeLevel!=null)?gradeLevel.Title:null, EnrollmentDate = DateTime.UtcNow };                   
+                        var StudentEnrollmentData = new StudentEnrollment() { TenantId = student.studentMaster.TenantId, SchoolId = student.studentMaster.SchoolId, StudentId = student.studentMaster.StudentId, EnrollmentId = 1, SchoolName = schoolName, RollingOption = "Next grade at current school", EnrollmentCode = enrollmentCode, CalenderId=calenderId,GradeLevelTitle=(gradeLevel!=null)?gradeLevel.Title:null, EnrollmentDate = DateTime.UtcNow,StudentGuid = GuidId };                   
                         
                         this.context?.StudentEnrollment.Add(StudentEnrollmentData);
                         this.context?.SaveChanges();
@@ -237,7 +242,7 @@ namespace opensis.data.Repository
                                 }
                                 else
                                 {
-                                    var loginInfo = this.context?.UserMaster.FirstOrDefault(x => x.TenantId == student.studentMaster.TenantId && x.EmailAddress == student.LoginEmail);
+                                    var loginInfo = this.context?.UserMaster.FirstOrDefault(x => x.TenantId == student.studentMaster.TenantId && x.EmailAddress == studentUpdate.StudentPortalId);
 
                                     loginInfo.IsActive = student.PortalAccess;
 
@@ -895,8 +900,16 @@ namespace opensis.data.Repository
             {
                 try
                 {
-                    int? EnrollmentId = null;
-                    EnrollmentId = Utility.GetMaxPK(this.context, new Func<StudentEnrollment, int>(x => x.EnrollmentId));
+                    int? EnrollmentId = 1;
+                    //EnrollmentId = Utility.GetMaxPK(this.context, new Func<StudentEnrollment, int>(x => x.EnrollmentId));
+
+                    var studentEnrollmentData = this.context?.StudentEnrollment.Where(x=>x.StudentGuid==studentEnrollmentListModel.StudentGuid).OrderByDescending(x => x.EnrollmentId).FirstOrDefault();
+
+                    if (studentEnrollmentData != null)
+                    {
+                        EnrollmentId = studentEnrollmentData.EnrollmentId + 1;
+                    }
+
                     foreach (var studentEnrollmentList in studentEnrollmentListModel.studentEnrollments)
                     {
                         if (studentEnrollmentList.EnrollmentId > 0)
@@ -997,7 +1010,7 @@ namespace opensis.data.Repository
                                                 studentEnrollmentList.EnrollmentCode = studentTransferIn.Title;
                                                 studentEnrollmentList.ExitCode = null;
                                                 studentEnrollmentList.ExitDate = null;
-                                                studentEnrollmentList.SchoolName = null;
+                                                studentEnrollmentList.SchoolName = studentEnrollmentList.SchoolTransferred;
                                                 studentEnrollmentList.SchoolTransferred = null;
                                                 studentEnrollmentList.TransferredSchoolId = null;
                                                 studentEnrollmentList.GradeLevelTitle = studentEnrollmentList.TransferredGrade;
@@ -1014,7 +1027,7 @@ namespace opensis.data.Repository
                                     {
                                         studentEnrollmentUpdate.ExitCode = studentExitCode.Title;
                                         studentEnrollmentUpdate.ExitDate = studentEnrollmentList.ExitDate;
-                                        studentEnrollmentUpdate.TransferredGrade = studentEnrollmentList.TransferredGrade;                                
+                                        studentEnrollmentUpdate.TransferredGrade = studentEnrollmentList.GradeLevelTitle;                                
                                         studentEnrollmentUpdate.LastUpdated = DateTime.UtcNow;
                                         studentEnrollmentUpdate.UpdatedBy = studentEnrollmentList.UpdatedBy;
 
@@ -1026,7 +1039,7 @@ namespace opensis.data.Repository
                                         studentEnrollment.SchoolName = studentEnrollmentList.SchoolName;
                                         studentEnrollment.EnrollmentDate = studentEnrollmentList.ExitDate;
                                         studentEnrollment.EnrollmentCode = studentExitCode.Title;
-                                        studentEnrollment.GradeLevelTitle = studentEnrollmentList.TransferredGrade;
+                                        studentEnrollment.GradeLevelTitle = studentEnrollmentList.GradeLevelTitle;
                                         studentEnrollment.RollingOption = studentEnrollmentListModel.RollingOption;
                                         studentEnrollment.UpdatedBy = studentEnrollmentList.UpdatedBy;
                                         studentEnrollment.LastUpdated = DateTime.UtcNow;
@@ -1136,6 +1149,7 @@ namespace opensis.data.Repository
                 }
 
                 var studentEnrollmentList = this.context?.StudentEnrollment.Where(x => x.TenantId == studentEnrollmentListViewModel.TenantId && x.StudentGuid == studentEnrollmentListViewModel.StudentGuid).OrderByDescending(x => x.EnrollmentId).ToList();
+
                 if(studentEnrollmentList.Count>0)
                 {
                     var studentEnrollment = studentEnrollmentList.Select(y => new StudentEnrollmentListForView
@@ -1158,11 +1172,13 @@ namespace opensis.data.Repository
                         EnrollmentDate = y.EnrollmentDate,
                         ExitCode = y.ExitCode,
                         ExitDate = y.ExitDate,
-                        StudentGuid=y.StudentGuid
+                        StudentGuid=y.StudentGuid,
+                        EnrollmentType=this.context?.StudentEnrollmentCode.FirstOrDefault(s => s.TenantId==y.TenantId && s.SchoolId==y.SchoolId && s.Title == y.EnrollmentCode)?.Type,
                     }).ToList();
                     studentEnrollmentListView.studentEnrollmentListForView = studentEnrollment;
                     studentEnrollmentListView.TenantId = studentEnrollmentListViewModel.TenantId;
                     studentEnrollmentListView.CalenderId = calenderId;
+                    studentEnrollmentListView.AcademicYear = studentEnrollmentListViewModel.AcademicYear;
                     studentEnrollmentListView.RollingOption = "Next Grade at Current School";
                     studentEnrollmentListView.StudentId = studentEnrollmentListViewModel.StudentId;
                     studentEnrollmentListView._tenantName = studentEnrollmentListViewModel._tenantName;

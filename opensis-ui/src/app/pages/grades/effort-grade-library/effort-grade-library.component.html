@@ -2,126 +2,172 @@
     <div class="lg:w-3/12 lg:pr-4">
         <mat-card class="w-full p-0" fxFlex="auto">
             <div class="py-4">
-                <h4 class="px-gutter mb-4">{{'effortCategories'|translate}}</h4>
+                <h3 class="px-gutter mb-4">{{'effortCategories'|translate}}</h3>
                 <hr/>
 
-                <div class="flex items-center justify-between bg-skyblue-light text-primary px-6 py-3">
-                    <a class="cursor-pointer">Effective Communicator - Listening</a>
+                <div class="flex items-center justify-between bg-skyblue-light text-primary pl-6 pr-2 py-3">
+                    <a class="cursor-pointer">
+                        <span class="flex">
+                            <mat-icon cdkDragHandle class="mr-3 inline-block align-middle">reorder</mat-icon>
+                            <span>Effective Communicator - Listening</span>
+                        </span>
+                    </a>
                     <div class="w-20 text-right">
-                        <a class="cursor-pointer mr-3">
-                            <mat-icon [icIcon]="icEdit"></mat-icon>
-                        </a>
-                        <a class="cursor-pointer">
-                            <mat-icon [icIcon]="icDelete"></mat-icon>
+                        <a [matMenuTriggerFor]="addNewMenu" class="cursor-pointer inline-block ml-3 pt-1 align-middle">
+                            <mat-icon [icIcon]="icMoreVertical" class="mr-2"></mat-icon>
                         </a>
                     </div>
                 </div>
                 <hr/>
 
-                <div class="flex items-center justify-between px-6 py-3">
-                    <a class="cursor-pointer">Effective Communicator - Speaking</a>
+                <div class="flex items-center justify-between pl-6 pr-2 py-3">
+                    <a class="cursor-pointer">
+                        <span class="flex">
+                            <mat-icon cdkDragHandle class="mr-3 inline-block align-middle">reorder</mat-icon>
+                            <span>Effective Communicator - Speaking</span>
+                        </span>
+                    </a>
                     <div class="w-20 text-right">
-                        <a class="cursor-pointer mr-3">
-                            <mat-icon [icIcon]="icEdit"></mat-icon>
-                        </a>
-                        <a class="cursor-pointer">
-                            <mat-icon [icIcon]="icDelete"></mat-icon>
+                        <a [matMenuTriggerFor]="addNewMenu" class="cursor-pointer inline-block ml-3 pt-1 align-middle">
+                            <mat-icon [icIcon]="icMoreVertical" class="mr-2"></mat-icon>
                         </a>
                     </div>
                 </div>
                 <hr/>
 
-                <div class="flex items-center justify-between px-6 py-3">
-                    <a class="cursor-pointer">Effective Communicator - Reading</a>
+                <div class="flex items-center justify-between pl-6 pr-2 py-3">
+                    <a class="cursor-pointer">
+                        <span class="flex">
+                            <mat-icon cdkDragHandle class="mr-3 inline-block align-middle">reorder</mat-icon>
+                            <span>Effective Communicator - Reading</span>
+                        </span>
+                    </a>
                     <div class="w-20 text-right">
-                        <a class="cursor-pointer mr-3">
-                            <mat-icon [icIcon]="icEdit"></mat-icon>
-                        </a>
-                        <a class="cursor-pointer">
-                            <mat-icon [icIcon]="icDelete"></mat-icon>
+                        <a [matMenuTriggerFor]="addNewMenu" class="cursor-pointer inline-block ml-3 pt-1 align-middle">
+                            <mat-icon [icIcon]="icMoreVertical" class="mr-2"></mat-icon>
                         </a>
                     </div>
                 </div>
                 <hr/>
 
-                <div class="flex items-center justify-between px-6 py-3">
-                    <a class="cursor-pointer">Effective Communicator - Writing</a>
+                <div class="flex items-center justify-between pl-6 pr-2 py-3">
+                    <a class="cursor-pointer">
+                        <span class="flex">
+                            <mat-icon cdkDragHandle class="mr-3 inline-block align-middle">reorder</mat-icon>
+                            <span>Effective Communicator - Writing</span>
+                        </span>
+                    </a>
                     <div class="w-20 text-right">
-                        <a class="cursor-pointer mr-3">
-                            <mat-icon [icIcon]="icEdit"></mat-icon>
-                        </a>
-                        <a class="cursor-pointer">
-                            <mat-icon [icIcon]="icDelete"></mat-icon>
+                        <a [matMenuTriggerFor]="addNewMenu" class="cursor-pointer inline-block ml-3 pt-1 align-middle">
+                            <mat-icon [icIcon]="icMoreVertical" class="mr-2"></mat-icon>
                         </a>
                     </div>
                 </div>
                 <hr/>
 
-                <div class="flex items-center justify-between px-6 py-3">
-                    <a class="cursor-pointer">Critical Thinker</a>
+                <div class="flex items-center justify-between pl-6 pr-2 py-3">
+                    <a class="cursor-pointer">
+                        <span class="flex">
+                            <mat-icon cdkDragHandle class="mr-3 inline-block align-middle">reorder</mat-icon>
+                            <span>Critical Thinker</span>
+                        </span>
+                    </a>
                     <div class="w-20 text-right">
-                        <a class="cursor-pointer mr-3">
-                            <mat-icon [icIcon]="icEdit"></mat-icon>
-                        </a>
-                        <a class="cursor-pointer">
-                            <mat-icon [icIcon]="icDelete"></mat-icon>
+                        <a [matMenuTriggerFor]="addNewMenu" class="cursor-pointer inline-block ml-3 pt-1 align-middle">
+                            <mat-icon [icIcon]="icMoreVertical" class="mr-2"></mat-icon>
                         </a>
                     </div>
                 </div>
                 <hr/>
 
-                <div class="flex items-center justify-between px-6 py-3">
-                    <a class="cursor-pointer">Exemplary Worker</a>
+                <div class="flex items-center justify-between pl-6 pr-2 py-3">
+                    <a class="cursor-pointer">
+                        <span class="flex">
+                            <mat-icon cdkDragHandle class="mr-3 inline-block align-middle">reorder</mat-icon>
+                            <span>Exemplary Worker</span>
+                        </span>
+                    </a>
                     <div class="w-20 text-right">
-                        <a class="cursor-pointer mr-3">
-                            <mat-icon [icIcon]="icEdit"></mat-icon>
-                        </a>
-                        <a class="cursor-pointer">
-                            <mat-icon [icIcon]="icDelete"></mat-icon>
+                        <a [matMenuTriggerFor]="addNewMenu" class="cursor-pointer inline-block ml-3 pt-1 align-middle">
+                            <mat-icon [icIcon]="icMoreVertical" class="mr-2"></mat-icon>
                         </a>
                     </div>
                 </div>
                 <hr/>
 
-                <div class="flex items-center justify-between px-6 py-3">
-                    <a class="cursor-pointer">Self-Manager</a>
+                <div class="flex items-center justify-between pl-6 pr-2 py-3">
+                    <a class="cursor-pointer">
+                        <span class="flex">
+                            <mat-icon cdkDragHandle class="mr-3 inline-block align-middle">reorder</mat-icon>
+                            <span>Self-Manager</span>
+                        </span>
+                    </a>
                     <div class="w-20 text-right">
-                        <a class="cursor-pointer mr-3">
-                            <mat-icon [icIcon]="icEdit"></mat-icon>
-                        </a>
-                        <a class="cursor-pointer">
-                            <mat-icon [icIcon]="icDelete"></mat-icon>
+                        <a [matMenuTriggerFor]="addNewMenu" class="cursor-pointer inline-block ml-3 pt-1 align-middle">
+                            <mat-icon [icIcon]="icMoreVertical" class="mr-2"></mat-icon>
                         </a>
                     </div>
                 </div>
                 <hr/>
 
-                <div class="flex items-center justify-between px-6 py-3">
-                    <a class="cursor-pointer">Caring Citizen</a>
+                <div class="flex items-center justify-between pl-6 pr-2 py-3">
+                    <a class="cursor-pointer">
+                        <span class="flex">
+                            <mat-icon cdkDragHandle class="mr-3 inline-block align-middle">reorder</mat-icon>
+                            <span>Caring Citizen</span>
+                        </span>
+                    </a>
                     <div class="w-20 text-right">
-                        <a class="cursor-pointer mr-3">
-                            <mat-icon [icIcon]="icEdit"></mat-icon>
-                        </a>
-                        <a class="cursor-pointer">
-                            <mat-icon [icIcon]="icDelete"></mat-icon>
+                        <a [matMenuTriggerFor]="addNewMenu" class="cursor-pointer inline-block ml-3 pt-1 align-middle">
+                            <mat-icon [icIcon]="icMoreVertical" class="mr-2"></mat-icon>
                         </a>
                     </div>
                 </div>
                 <hr class="mb-3" />
+                <div class="text-center px-6" *ngIf="addCategory == true; else elseBlock">
+                    <h4 class="text-green">{{'addNewEffortCategory'|translate}}</h4>
+                    <mat-form-field class="w-full mt-1" appearance="outline" color="primary">
+                        <mat-label>{{'categoryName' | translate}}</mat-label>
+                        <input type="text" matInput required>
+                    </mat-form-field>
+                    <div class="flex">
+                        <div class="w-1/2 pr-2">
+                            <button color="primary" class="w-full" mat-raised-button type="button">
+                                {{'submit'|translate}}
+                            </button>
+                        </div>
+                        <div class="w-1/2 pl-2">
+                            <button color="" mat-button class="w-full" type="button" (click)='closeAddCategory()'>
+                                {{'cancel'|translate}}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <ng-template #elseBlock>
                 <div class="text-center">
                     <button color="" (click)='goToAddCategory()' class="text-primary" mat-button type="button">
-                        <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true" size="24px"></ic-icon>
+                            <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true"
+                                size="24px"></ic-icon>
                         <span>{{'addEffortCategory'|translate}}</span>
                     </button>
                 </div>
+                </ng-template>
+                <mat-menu #addNewMenu="matMenu" [overlapTrigger]="false" xPosition="before" yPosition="below">
+                    <button mat-menu-item>
+                        <span>{{'editItem' | translate}}</span>
+                    </button>
+                    <button mat-menu-item>
+                        <span>{{'deleteItem' | translate}}</span>
+                    </button>
+                </mat-menu>
             </div>
         </mat-card>
     </div>
     <div class="lg:w-9/12 lg:pl-4">
         <mat-card class="w-full p-0" fxFlex="auto">
-            <div class="bg-white h-16 border-b sticky left-0 px-4" fxLayout="row" fxLayoutAlign="start center">
+            <div class="h-16 border-b sticky left-0 px-4" fxLayout="row" fxLayoutAlign="start center">
                 <div class="flex w-full justify-between items-center pt-3">
-                    <h4>{{'effortItems'|translate}}</h4>       
+                    <h3>{{'effortItems'|translate}}</h3>
         
                     <div>
                         <a routerLink="" class="cursor-pointer p-1 mt-1 inline-block align-middle"
@@ -130,7 +176,8 @@
                             matTooltip="Filter Columns" type="button">
                             <mat-icon [icIcon]="icFilterList"></mat-icon>
                         </button>
-                        <button color="primary" class="ml-4" fxFlex="none" mat-raised-button type="button" (click)='goToAddEffortItem()'>
+                        <button color="primary" class="ml-4" fxFlex="none" mat-raised-button type="button"
+                            (click)='goToAddEffortItem()'>
                             <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true"
                                 size="24px">
                             </ic-icon>
@@ -140,8 +187,7 @@
                 </div>
             </div>
         
-            <table @stagger mat-table [dataSource]="PeriodsModelList" class="table-auto w-full"
-                matSort>
+            <table @stagger mat-table [dataSource]="PeriodsModelList" class="table-auto w-full" matSort>
         
                 <ng-container matColumnDef="id">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header width="50"></th>

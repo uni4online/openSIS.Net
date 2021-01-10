@@ -533,6 +533,14 @@ namespace opensis.data.Repository
 
 
                 };
+                school.schoolMaster.StudentEnrollmentCode = new List<StudentEnrollmentCode>()
+                {
+                     new StudentEnrollmentCode(){TenantId=school.schoolMaster.TenantId, SchoolId=school.schoolMaster.SchoolId, EnrollmentCode=1, Title="New", ShortName="NEW", Type="Add", LastUpdated=DateTime.UtcNow, UpdatedBy=school.schoolMaster.CreatedBy },
+                     new StudentEnrollmentCode(){TenantId=school.schoolMaster.TenantId, SchoolId=school.schoolMaster.SchoolId, EnrollmentCode=2, Title="Dropped Out", ShortName="DROP", Type="Drop", LastUpdated=DateTime.UtcNow, UpdatedBy=school.schoolMaster.CreatedBy },
+                     new StudentEnrollmentCode(){TenantId=school.schoolMaster.TenantId, SchoolId=school.schoolMaster.SchoolId, EnrollmentCode=3, Title="Rolled Over", ShortName="ROLL", Type="Rolled Over", LastUpdated=DateTime.UtcNow, UpdatedBy=school.schoolMaster.CreatedBy },
+                     new StudentEnrollmentCode(){TenantId=school.schoolMaster.TenantId, SchoolId=school.schoolMaster.SchoolId, EnrollmentCode=4, Title="Transferred In", ShortName="TRAN", Type="Enroll (Transfer)", LastUpdated=DateTime.UtcNow, UpdatedBy=school.schoolMaster.CreatedBy },
+                     new StudentEnrollmentCode(){TenantId=school.schoolMaster.TenantId, SchoolId=school.schoolMaster.SchoolId, EnrollmentCode=5, Title="Transferred Out", ShortName="TRAN", Type="Drop (Transfer)", LastUpdated=DateTime.UtcNow, UpdatedBy=school.schoolMaster.CreatedBy }                    
+                };
                 bool checkInternalID = CheckInternalID(school.schoolMaster.TenantId, school.schoolMaster.SchoolInternalId);
                 if(checkInternalID == true)
                 {
@@ -618,7 +626,7 @@ namespace opensis.data.Repository
             SchoolListViewModel schoolListView = new SchoolListViewModel();
             try
             {
-                var schoolListWithGradeLevel = this.context?.SchoolMaster.Include(x=>x.Gradelevels).Where(x => x.TenantId == schoolListViewModel.TenantId).ToList();
+                var schoolListWithGradeLevel = this.context?.SchoolMaster.Include(x=>x.Gradelevels).Include(x=>x.StudentEnrollmentCode).Where(x => x.TenantId == schoolListViewModel.TenantId).ToList();
                 schoolListView.schoolMaster = schoolListWithGradeLevel;
                 schoolListView._tenantName = schoolListViewModel._tenantName;
                 schoolListView._token = schoolListViewModel._token;

@@ -61,6 +61,10 @@ export class StudentGeneralinfoComponent implements OnInit, OnDestroy {
   countryListArr = [];
   ethnicityList = [];
   raceList = [];
+  genderList = [];
+  suffixList = [];
+  salutationList = [];
+  maritalStatusList = [];
   countryName = "-";
   sectionName = "-";
   nationality = "-";
@@ -75,18 +79,14 @@ export class StudentGeneralinfoComponent implements OnInit, OnDestroy {
   sectionList: [TableSectionList];
   languages: LanguageModel = new LanguageModel();
   lovListViewModel: LovList = new LovList()
-  salutationEnum = Object.keys(salutation);
-  suffixEnum = Object.keys(suffix);
   eligibility504: boolean = false;
   economicDisadvantage: boolean = false;
   freeLunchEligibility: boolean = false;
   specialEducationIndicator: boolean = false;
   lepIndicator: boolean = false;
-  genderEnum = Object.keys(gender);
   module = 'Student';
   saveAndNext = 'saveAndNext';
   pageStatus: string;
-  maritalStatusEnum = Object.keys(maritalStatus);
   languageList;
   icVisibility = icVisibility;
   icVisibilityOff = icVisibilityOff;
@@ -132,17 +132,25 @@ export class StudentGeneralinfoComponent implements OnInit, OnDestroy {
       this.getAllCountry();
       this.getAllEthnicity();
       this.getAllRace();
+      this.getAllGender();
+      this.getAllSalutation();
+      this.getAllSuffix();
+      this.getAllMaritalStatus();
     })
   }
  
   ngOnInit(): void {
-    this.getAllSection();
+    
     this.GetAllLanguage(); 
-    this.getAllEthnicity();
-    this.getAllRace();   
     if (this.studentCreateMode == this.studentCreate.ADD) {
-      this.getAllCountry();
-      
+     this.getAllSection();
+     this.getAllEthnicity();
+     this.getAllRace();
+     this.getAllGender();
+     this.getAllSalutation();
+     this.getAllSuffix();
+     this.getAllMaritalStatus();
+     this.getAllCountry();
     } else if (this.studentCreateMode == this.studentCreate.VIEW) {
       this.studentAddModel = this.studentDetailsForViewAndEdit;
       this.studentService.changePageMode(this.studentCreateMode);
@@ -191,7 +199,7 @@ export class StudentGeneralinfoComponent implements OnInit, OnDestroy {
   }
 
   accessPortal() {
-    if (this.data.studentPortalId !== null) {
+    if (this.data.studentPortalId !== null && this.data.studentPortalId !== undefined) {
       this.hideAccess = true;
       this.fieldDisabled = true;
       this.hidePasswordAccess = false;
@@ -209,15 +217,9 @@ export class StudentGeneralinfoComponent implements OnInit, OnDestroy {
     this.commonService.getAllDropdownValues(this.lovListViewModel).subscribe(
       (res: LovList) => {
         if (typeof (res) == 'undefined') {
-          this.snackbar.open('Ethnicity list failed. ' + sessionStorage.getItem("httpError"), '', {
-            duration: 10000
-          });
         }
         else {
           if (res._failure) {
-            this.snackbar.open('Ethnicity list failed. ' + res._message, 'LOL THANKS', {
-              duration: 10000
-            });
           }
           else {
             this.ethnicityList = res.dropdownList;
@@ -231,18 +233,76 @@ export class StudentGeneralinfoComponent implements OnInit, OnDestroy {
     this.commonService.getAllDropdownValues(this.lovListViewModel).subscribe(
       (res: LovList) => {
         if (typeof (res) == 'undefined') {
-          this.snackbar.open('Race list failed. ' + sessionStorage.getItem("httpError"), '', {
-            duration: 10000
-          });
         }
         else {
           if (res._failure) {
-            this.snackbar.open('Race list failed. ' + res._message, 'LOL THANKS', {
-              duration: 10000
-            });
           }
           else {
             this.raceList = res.dropdownList;
+          }
+        }
+      })
+  }
+
+  getAllGender() {
+    this.lovListViewModel.lovName = "Gender";
+    this.commonService.getAllDropdownValues(this.lovListViewModel).subscribe(
+      (res: LovList) => {
+        if (typeof (res) == 'undefined') {
+        }
+        else {
+          if (res._failure) {
+          }
+          else {
+            this.genderList = res.dropdownList;
+          }
+        }
+      })
+  }
+
+  getAllSuffix() {
+    this.lovListViewModel.lovName = "Suffix";
+    this.commonService.getAllDropdownValues(this.lovListViewModel).subscribe(
+      (res: LovList) => {
+        if (typeof (res) == 'undefined') {
+        }
+        else {
+          if (res._failure) {
+          }
+          else {
+            this.suffixList = res.dropdownList;
+          }
+        }
+      })
+  }
+
+  getAllSalutation() {
+    this.lovListViewModel.lovName = "Salutation";
+    this.commonService.getAllDropdownValues(this.lovListViewModel).subscribe(
+      (res: LovList) => {
+        if (typeof (res) == 'undefined') {
+        }
+        else {
+          if (res._failure) {
+          }
+          else {
+            this.salutationList = res.dropdownList;
+          }
+        }
+      })
+  }
+
+  getAllMaritalStatus() {
+    this.lovListViewModel.lovName = "Marital Status";
+    this.commonService.getAllDropdownValues(this.lovListViewModel).subscribe(
+      (res: LovList) => {
+        if (typeof (res) == 'undefined') {
+        }
+        else {
+          if (res._failure) {
+          }
+          else {
+            this.maritalStatusList = res.dropdownList;
           }
         }
       })
@@ -404,10 +464,15 @@ export class StudentGeneralinfoComponent implements OnInit, OnDestroy {
 
     if (this.currentForm.form.valid) {
 
-      if (this.studentCreateMode == this.studentCreate.EDIT) {
-        if(this.studentAddModel.fieldsCategoryList!==null){
-          this.studentAddModel.selectedCategoryId = this.studentAddModel.fieldsCategoryList[this.categoryId].categoryId;
+      if(this.studentAddModel.fieldsCategoryList!==null){
+        this.studentAddModel.selectedCategoryId = this.studentAddModel.fieldsCategoryList[this.categoryId].categoryId;
+        for (var i = 0; i < this.studentAddModel.fieldsCategoryList[this.categoryId].customFields.length; i++) {
+          if (this.studentAddModel.fieldsCategoryList[this.categoryId].customFields[i].type === "Multiple SelectBox") {
+            this.studentAddModel.fieldsCategoryList[this.categoryId].customFields[i].customFieldsValue[0].customFieldValue = this.studentService.getStudentMultiselectValue().toString().replaceAll(",", "|");
+          }
         }
+      }
+      if (this.studentCreateMode == this.studentCreate.EDIT) {
         this.updateStudent();
       } else {
         this.addStudent();

@@ -29,7 +29,17 @@ namespace opensis.data.Repository
         /// <returns></returns>
         public RoomAddViewModel AddRoom(RoomAddViewModel rooms)
         {
-            int? RoomlId = Utility.GetMaxPK(this.context, new Func<Rooms, int>(x => x.RoomId));
+            //int? RoomlId = Utility.GetMaxPK(this.context, new Func<Rooms, int>(x => x.RoomId));
+
+            int? RoomlId = 1;
+
+            var RoomlIdData = this.context?.Rooms.Where(x => x.SchoolId == rooms.tableRoom.SchoolId && x.TenantId == rooms.tableRoom.TenantId).OrderByDescending(x => x.RoomId).FirstOrDefault();
+
+            if (RoomlIdData != null)
+            {
+                RoomlId = RoomlIdData.RoomId + 1;
+            }
+
             rooms.tableRoom.RoomId = (int)RoomlId;
             rooms.tableRoom.LastUpdated = DateTime.UtcNow;
             rooms.tableRoom.TenantId = rooms.tableRoom.TenantId;

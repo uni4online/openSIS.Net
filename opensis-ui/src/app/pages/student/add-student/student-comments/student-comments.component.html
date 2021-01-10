@@ -12,7 +12,7 @@
     </div>
     <mat-card-content>
         <div @stagger fxLayout="column">
-            <div class="mt-6 mx-4">
+            <div class="mt-6 mx-4" *ngIf="listCount > 0">
                 <div class="mb-4" *ngFor="let studentComment of studentCommentsListViewModel.studentCommentsList">
                     <mat-accordion class="w-full">
                         <mat-expansion-panel>
@@ -45,6 +45,7 @@
                 </div>
 
             </div>
+            <div class="text-center" *ngIf="listCount === null">No Data</div>
         </div>
     </mat-card-content>
 </mat-card>

@@ -98,7 +98,7 @@
                 <a  (click) ="goToEdit(element)" matTooltip="Edit Item" class="mr-3 cursor-pointer">
                     <mat-icon [icIcon]="icEdit"></mat-icon>
                 </a>
-                <a routerLink="" matTooltip="Delete Item" class="mr-3 cursor-pointer">
+                <a (click) = "confirmDelete(element)" matTooltip="Delete Item" class="mr-3 cursor-pointer">
                     <mat-icon [icIcon]="icDelete"></mat-icon>
                 </a>
             </td>

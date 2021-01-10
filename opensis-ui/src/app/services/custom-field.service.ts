@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import {CustomFieldAddView, CustomFieldListViewModel} from '../models/customFieldModel';
+import {CustomFieldAddView, CustomFieldDragDropModel, CustomFieldListViewModel} from '../models/customFieldModel';
 import {FieldsCategoryAddView, FieldsCategoryListView} from '../models/fieldsCategoryModel'
 @Injectable({
   providedIn: 'root'
@@ -41,6 +41,10 @@ export class CustomFieldService {
   getAllFieldsCategory(obj:FieldsCategoryListView){
     let apiurl=this.apiUrl+obj._tenantName+"/CustomField/getAllFieldsCategory" ;
     return this.http.post<FieldsCategoryListView>(apiurl,obj);
+  }
+  updateCustomFieldSortOrder(obj:CustomFieldDragDropModel){
+    let apiurl=this.apiUrl+obj._tenantName+"/CustomField/updateCustomFieldSortOrder" ;
+    return this.http.put<CustomFieldDragDropModel>(apiurl,obj);
   }
   
 }

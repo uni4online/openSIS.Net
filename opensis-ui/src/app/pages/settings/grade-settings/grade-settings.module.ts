@@ -24,7 +24,9 @@ import { MatTableModule } from '@angular/material/table';
 import { StandardGradeSetupComponent } from '../../grades/standard-grade-setup/standard-grade-setup.component';
 import { UsCommonCoreStandardsComponent } from '../../grades/us-common-core-standards/us-common-core-standards.component';
 import { SchoolSpecificStandardsComponent } from '../../grades/school-specific-standards/school-specific-standards.component';
+import { EffortGradeSetupComponent } from '../../grades/effort-grade-setup/effort-grade-setup.component';
 import { EffortGradeLibraryComponent } from '../../grades/effort-grade-library/effort-grade-library.component';
+import { EffortGradeScaleComponent } from '../../grades/effort-grade-scale/effort-grade-scale.component';
 import { ReportCardGradesComponent } from '../../grades/report-card-grades/report-card-grades.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
@@ -42,7 +44,9 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
     StandardGradeSetupComponent,
     UsCommonCoreStandardsComponent,
     SchoolSpecificStandardsComponent,
+    EffortGradeSetupComponent,
     EffortGradeLibraryComponent,
+    EffortGradeScaleComponent,
     ReportCardGradesComponent
   ],
   imports: [

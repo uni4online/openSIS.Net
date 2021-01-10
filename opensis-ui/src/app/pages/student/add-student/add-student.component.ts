@@ -149,7 +149,9 @@ export class AddStudentComponent implements OnInit, OnDestroy {
           });
         }
         else {
-          this.fieldsCategory = res.fieldsCategoryList.filter(x => x.isSystemCategory == true);
+          this.fieldsCategory = res.fieldsCategoryList;
+          this.studentAddModel.fieldsCategoryList= res.fieldsCategoryList;
+          this.studentService.sendDetails(this.studentAddModel);
         }
       }
     }

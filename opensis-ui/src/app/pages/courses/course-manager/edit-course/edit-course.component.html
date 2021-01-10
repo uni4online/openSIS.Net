@@ -1,0 +1,271 @@
+<div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
+    <h2 class="headline m-0" fxFlex="auto" *ngIf="addStandard; else addNewCourseTitle"><a routerLink="" (click)="closeStandardsSelection()" class="text-primary cursor-pointer"><mat-icon [icIcon]="icBack" matTooltip="Back to Previous" class="mr-3 align-middle"></mat-icon></a>{{'addStandardTo'|translate}} <span class="text-green font-bold">Chemistry</span></h2>
+    <ng-template #addNewCourseTitle><h2 class="headline m-0" fxFlex="auto">{{'addNewCourse'|translate}}</h2></ng-template>
+    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+        <mat-icon [icIcon]="icClose"></mat-icon>
+    </button>
+</div>
+<mat-divider class="-mx-6 text-border"></mat-divider>
+
+
+<div *ngIf="addStandard; else addNewCourse">
+    <mat-dialog-content fxLayout="column" class="p-0">
+        <div class="custom-tabs">
+            <ul class="flex border-b">
+                <li class="active"><a class="cursor-pointer px-6 py-4 inline-block hover:bg-skyblue-light">{{'usCommonCoreStandards'|translate}}</a></li>
+                <li><a class="cursor-pointer px-6 py-4 inline-block hover:bg-skyblue-light">{{'schoolSpecificStandards'|translate}}</a></li>
+            </ul>
+        </div>
+
+        <ul class="grid grid-cols-2 col-gap-8 mx-6 mt-6">
+            <li>
+                <mat-form-field class="w-full" appearance="outline" color="primary">
+                    <mat-label>{{'gradeLevel' | translate}}</mat-label>
+                    <mat-select name="gradeLevel" required>
+                        <mat-option value="">Show school specific grade levels</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </li>
+            <li>
+                <mat-form-field class="w-full" appearance="outline" color="primary">
+                    <mat-label>{{'subject' | translate}}</mat-label>
+                    <mat-select name="program" required>
+                        <mat-option value="">Show all subjects based on grade level</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </li>
+            <li>
+                <mat-form-field class="w-full" appearance="outline" color="primary">
+                    <mat-label>{{'course' | translate}}</mat-label>
+                    <mat-select name="program" required>
+                        <mat-option value="">Show all courses based on grade level & subject</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </li>
+        </ul>
+        <hr/>
+        <h3 class="text-blue px-6 py-3">3 {{'result' | translate}} found</h3>
+        <hr/>
+        <div class="px-6 py-3">
+            <div class="flex w-full">
+                <div class="w-1/12">
+                    <mat-checkbox color="primary"></mat-checkbox>
+                </div>
+                <div class="w-5/12 font-bold">
+                    {{'standardRefNo' | translate}}
+                </div>
+                <div class="w-5/12 font-bold">
+                    {{'topic' | translate}}
+                </div>
+                <div class="w-1/12 font-bold text-center">
+                    {{'details' | translate}}
+                </div>
+            </div>
+        </div>
+        <hr/>
+        <div class="px-6 py-3">
+            <div class="flex w-full">
+                <div class="w-1/12">
+                    <mat-checkbox color="primary"></mat-checkbox>
+                </div>
+                <div class="w-5/12">
+                    CCSS.Math.Content.K.CC.A.1
+                </div>
+                <div class="w-5/12">
+                    Know number names and the count sequence.
+                </div>
+                <div class="w-1/12 text-center">
+                    <a class="cursor-pointer text-gray" routerLink=""><mat-icon [icIcon]="icCollapse"></mat-icon></a>
+                </div>
+            </div>
+        </div>
+        <div class="px-6 pb-3">
+            <div class="flex w-full">
+                <div class="w-1/12"></div>
+                <div class="w-11/12">
+                    <div class="border rounded border-normal p-4">
+                        <div class="mb-5">
+                            <label class="text-sm leading-5 text-gray">{{'domain' | translate}}</label>
+                            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Operations & Algebraic Thinking</p>
+                        </div>
+                        <div>
+                            <label class="text-sm leading-5 text-gray">{{'standardDetails' | translate}}</label>
+                            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Interpret products of whole numbers, e.g., interpret 5 × 7 as the total number of objects in 5
+                                groups of 7 objects each. For example, describe a context in which a total number of objects
+                                can be expressed as 5 × 7.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr/>
+        <div class="px-6 py-3">
+            <div class="flex w-full">
+                <div class="w-1/12">
+                    <mat-checkbox color="primary"></mat-checkbox>
+                </div>
+                <div class="w-5/12">
+                    CCSS.Math.Content.K.CC.A.1
+                </div>
+                <div class="w-5/12">
+                    Know number names and the count sequence.
+                </div>
+                <div class="w-1/12 text-center">
+                    <a class="cursor-pointer text-gray" routerLink=""><mat-icon [icIcon]="icExpand"></mat-icon></a>
+                </div>
+            </div>
+        </div>
+        <hr/>
+        <div class="px-6 py-3">
+            <div class="flex w-full">
+                <div class="w-1/12">
+                    <mat-checkbox color="primary"></mat-checkbox>
+                </div>
+                <div class="w-5/12">
+                    CCSS.Math.Content.K.CC.A.1
+                </div>
+                <div class="w-5/12">
+                    Know number names and the count sequence.
+                </div>
+                <div class="w-1/12 text-center">
+                    <a class="cursor-pointer text-gray" routerLink=""><mat-icon [icIcon]="icExpand"></mat-icon></a>
+                </div>
+            </div>
+        </div>
+        <hr/>
+        <div class="px-6 py-3">
+            <div class="flex w-full">
+                <div class="w-1/12">
+                    <mat-checkbox color="primary"></mat-checkbox>
+                </div>
+                <div class="w-5/12">
+                    CCSS.Math.Content.K.CC.A.1
+                </div>
+                <div class="w-5/12">
+                    Know number names and the count sequence.
+                </div>
+                <div class="w-1/12 text-center">
+                    <a class="cursor-pointer text-gray" routerLink=""><mat-icon [icIcon]="icExpand"></mat-icon></a>
+                </div>
+            </div>
+        </div>
+        <hr/>
+    </mat-dialog-content>
+    <mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" class="py-6">
+        <button mat-button mat-dialog-close type="button">{{'cancel' | translate}}</button>
+        <button color="primary" mat-raised-button type="submit">{{'addStandards' | translate}}</button>
+    </mat-dialog-actions>
+</div>
+
+<ng-template #addNewCourse>
+    <mat-dialog-content fxLayout="column">
+        <mat-form-field class="w-full mt-6" appearance="outline" color="primary">
+            <mat-label>{{'title' | translate}}</mat-label>
+            <input type="text" matInput required>
+        </mat-form-field>
+        
+        <ul class="grid grid-cols-2 col-gap-8">
+            <li>
+                <mat-form-field class="w-full" appearance="outline" color="primary">
+                    <mat-label>{{'shortName' | translate}}</mat-label>
+                    <input type="text" matInput>
+                </mat-form-field>
+            </li>
+            <li>
+                <mat-form-field class="w-full" appearance="outline" color="primary">
+                    <mat-label>{{'gradeLevel' | translate}}</mat-label>
+                    <mat-select name="gradeLevel">
+                        <mat-option value="">Show school specific grade levels</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </li>
+            <li class="mb-3">
+                <mat-form-field class="w-full mb-1" appearance="outline" color="primary">
+                    <mat-label>{{'program' | translate}}</mat-label>
+                    <mat-select name="program">
+                        <mat-option value="">Show all programs</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <a class="cursor-pointer text-blue"><mat-icon [icIcon]="icAdd" class="mr-1 align-middle"></mat-icon>{{'addNewProgram' | translate}}</a>
+            </li>
+            <li class="mb-3">
+                <mat-form-field class="w-full mb-1" appearance="outline" color="primary">
+                    <mat-label>{{'subject' | translate}}</mat-label>
+                    <mat-select name="subject" required>
+                        <mat-option value="">Show all subjects</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <a class="cursor-pointer text-blue"><mat-icon [icIcon]="icAdd" class="mr-1 align-middle"></mat-icon>{{'addNewSubject' | translate}}</a>
+            </li>
+            <li>
+                <mat-form-field class="w-full" appearance="outline" color="primary">
+                    <mat-label>{{'courseCategory' | translate}}</mat-label>
+                    <mat-select name="suffix">
+                        <mat-option value="">Show school specific grade levels</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </li>
+            <li>
+                <mat-form-field class="w-full" appearance="outline" color="primary">
+                    <mat-label>{{'creditHours' | translate}}</mat-label>
+                    <input type="text" matInput>
+                </mat-form-field>
+            </li>
+            <li class="col-span-2">
+                <div class="border rounded border-normal mb-4">
+                    <div class="flex justify-between items-center px-3 py-2">
+                        <div class="text-gray">{{'standards' | translate}}</div>
+                        <a class="cursor-pointer text-blue" (click)="selectStandards()"><mat-icon [icIcon]="icList"></mat-icon></a>
+                    </div>
+                    <ul class="w-full">
+                        <li>
+                            <hr/>
+                            <div class="flex justify-between items-center pl-3">
+                                <div title="show the standard description">Know number names and the count sequence.</div>
+                                <div>
+                                    <span matTooltip="asdasdad" class="inline-block opacity-75 p-2"><mat-icon [icIcon]="icInfo"></mat-icon></span>
+                                    <a class="cursor-pointer opacity-75 py-2 px-3 inline-block"><mat-icon [icIcon]="icRemove"></mat-icon></a>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <hr/>
+                            <div class="flex justify-between items-center pl-3">
+                                <div title="show the standard description">Know number names and the count sequence.</div>
+                                <div>
+                                    <span matTooltip="asdasdad" class="inline-block opacity-75 p-2"><mat-icon [icIcon]="icInfo"></mat-icon></span>
+                                    <a class="cursor-pointer opacity-75 py-2 px-3 inline-block"><mat-icon [icIcon]="icRemove"></mat-icon></a>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <hr/>
+                            <div class="flex justify-between items-center pl-3">
+                                <div title="show the standard description">Know number names and the count sequence.</div>
+                                <div>
+                                    <span matTooltip="asdasdad" class="inline-block opacity-75 p-2"><mat-icon [icIcon]="icInfo"></mat-icon></span>
+                                    <a class="cursor-pointer opacity-75 py-2 px-3 inline-block"><mat-icon [icIcon]="icRemove"></mat-icon></a>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="col-span-2">
+                <mat-form-field class="w-full" appearance="outline" color="primary">
+                    <mat-label>{{'description' | translate}}</mat-label>
+                    <textarea matInput></textarea>
+                </mat-form-field>
+            </li>
+            <li class="col-span-2">
+                <mat-slide-toggle class="mt-2" color="primary" checked="checked">{{'active' | translate}}</mat-slide-toggle>
+            </li>
+        </ul>
+
+    </mat-dialog-content>
+
+    <mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" class="py-6">
+        <button mat-button mat-dialog-close type="button">{{'cancel' | translate}}</button>
+        <button color="primary" mat-raised-button type="submit">{{'submit' | translate}}</button>
+    </mat-dialog-actions>
+</ng-template>

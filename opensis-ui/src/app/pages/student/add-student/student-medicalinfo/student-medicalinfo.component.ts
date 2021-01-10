@@ -26,11 +26,12 @@ import { ImageCropperService } from '../../../../services/image-cropper.service'
     fadeInRight400ms
   ]
 })
-export class StudentMedicalinfoComponent implements OnInit,OnDestroy {
+export class StudentMedicalinfoComponent implements OnInit, OnDestroy {
   studentCreate = SchoolCreate;
   @Input() studentCreateMode: SchoolCreate;
   @Input() categoryId;
   @Input() studentDetailsForViewAndEdit;
+  @ViewChild('f') currentForm: NgForm;
   @Output() studentDetailsForParent = new EventEmitter<StudentAddModel>();
   studentAddModel: StudentAddModel = new StudentAddModel();
   parentInfoModel: ViewParentInfoModel = new ViewParentInfoModel();
@@ -45,7 +46,7 @@ export class StudentMedicalinfoComponent implements OnInit,OnDestroy {
     private studentService: StudentService,
     private snackbar: MatSnackBar,
     private parentInfoService: ParentInfoService,
-    private imageCropperService:ImageCropperService) {
+    private imageCropperService: ImageCropperService) {
     translateService.use('en');
 
   }
@@ -89,34 +90,43 @@ export class StudentMedicalinfoComponent implements OnInit,OnDestroy {
   }
 
   submit() {
-    if(this.studentAddModel.fieldsCategoryList!==null){
-      this.studentAddModel.selectedCategoryId = this.studentAddModel.fieldsCategoryList[this.categoryId].categoryId;
-    }    
-    this.studentAddModel._tenantName = sessionStorage.getItem("tenant");
-    this.studentAddModel._token = sessionStorage.getItem("token");
-    this.studentService.UpdateStudent(this.studentAddModel).subscribe(data => {
-      if (typeof (data) == 'undefined') {
-        this.snackbar.open('Medical Information Updation failed. ' + sessionStorage.getItem("httpError"), '', {
-          duration: 10000
-        });
-      }
-      else {
-        if (data._failure) {
-          this.snackbar.open('Medical Information Updation failed. ' + data._message, 'LOL THANKS', {
-            duration: 10000
-          });
-        } else {
-          this.snackbar.open('Medical Information Update Successful.', '', {
-            duration: 10000
-          });
-        this.studentCreateMode = this.studentCreate.VIEW;
-        this.studentService.changePageMode(this.studentCreateMode);
-          this.studentDetailsForParent.emit(data);
-
+    this.currentForm.form.markAllAsTouched();
+    if (this.currentForm.form.valid) {
+      if(this.studentAddModel.fieldsCategoryList!==null){
+        this.studentAddModel.selectedCategoryId = this.studentAddModel.fieldsCategoryList[this.categoryId].categoryId;
+        
+        for (var i = 0; i < this.studentAddModel.fieldsCategoryList[this.categoryId].customFields.length; i++) {
+          if (this.studentAddModel.fieldsCategoryList[this.categoryId].customFields[i].type === "Multiple SelectBox") {
+            this.studentAddModel.fieldsCategoryList[this.categoryId].customFields[i].customFieldsValue[0].customFieldValue = this.studentService.getStudentMultiselectValue().toString().replaceAll(",", "|");
+          }
         }
       }
+      this.studentAddModel._tenantName = sessionStorage.getItem("tenant");
+      this.studentAddModel._token = sessionStorage.getItem("token");
+      this.studentService.UpdateStudent(this.studentAddModel).subscribe(data => {
+        if (typeof (data) == 'undefined') {
+          this.snackbar.open('Medical Information Updation failed. ' + sessionStorage.getItem("httpError"), '', {
+            duration: 10000
+          });
+        }
+        else {
+          if (data._failure) {
+            this.snackbar.open('Medical Information Updation failed. ' + data._message, 'LOL THANKS', {
+              duration: 10000
+            });
+          } else {
+            this.snackbar.open('Medical Information Update Successful.', '', {
+              duration: 10000
+            });
+            this.studentCreateMode = this.studentCreate.VIEW;
+            this.studentService.changePageMode(this.studentCreateMode);
+            this.studentDetailsForParent.emit(data);
 
-    })
+          }
+        }
+
+      })
+    }
   }
 
   ngOnDestroy() {

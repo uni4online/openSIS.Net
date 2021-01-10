@@ -1,4 +1,4 @@
-<form (ngSubmit)="submit()" #f="ngForm" *ngIf="studentCreateMode==studentCreate.EDIT || studentCreateMode==studentCreate.ADD">
+<form (ngSubmit)="submit()" #f="ngForm" appInvalidControlScroll *ngIf="studentCreateMode==studentCreate.EDIT || studentCreateMode==studentCreate.ADD">
 <mat-card class="w-full">
     <mat-card-header>
         <mat-card-title>{{'medicalInformation'|translate}}</mat-card-title>

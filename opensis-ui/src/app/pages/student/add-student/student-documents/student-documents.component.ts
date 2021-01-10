@@ -66,6 +66,7 @@ export class StudentDocumentsComponent implements OnInit {
   filesType=[];
   uploadSuccessfull = false;
   totalCount:Number;pageNumber:Number;pageSize:Number;
+  studentDocument=[];
   getAllStudentDocumentsList: GetAllStudentDocumentsList = new GetAllStudentDocumentsList();   
   StudentDocumentModelList: MatTableDataSource<any>;
   studentDocumentAddModel: StudentDocumentAddModel = new StudentDocumentAddModel();
@@ -88,15 +89,14 @@ export class StudentDocumentsComponent implements OnInit {
     this.getAllDocumentsList();
   }  
   //Split base 64 data from its datatype then push to base64 array
-  HandleReaderLoaded(e) {     
+  HandleReaderLoaded(e) {   
     let str = e.substr(e.indexOf(",") + 1);
-    this.base64Arr.push(str);
-    
+    this.base64Arr.push(str);  
   }
   onSelect(event) {  
     this.files.push(...event.addedFiles);
     let count = this.files.length;
-    let prevCount = count-1;
+    let prevCount = count-1;   
     for(let i=0; i<this.files.length;i++){
       this.filesName.push(this.files[i].name)
       this.filesType.push(this.files[i].type)
@@ -111,6 +111,10 @@ export class StudentDocumentsComponent implements OnInit {
   
   onRemove(event) {    
     this.files.splice(this.files.indexOf(event), 1);
+    this.filesName.splice(this.files.indexOf(event), 1);
+    this.filesType.splice(this.files.indexOf(event), 1);
+    this.base64Arr.splice(this.files.indexOf(event), 1);
+    
   }
 
   confirmDelete(deleteDetails)
@@ -167,7 +171,7 @@ export class StudentDocumentsComponent implements OnInit {
   }
 
   uploadFile(){
-    let studentDocument = [];    
+    
     this.base64Arr.forEach((value, index) => {
         var obj = {};
           obj = {     
@@ -181,10 +185,13 @@ export class StudentDocumentsComponent implements OnInit {
             uploadedBy:sessionStorage.getItem("email"),
             studentMaster: null
           }   
-          studentDocument.push(obj);    
-      });  
-      if(studentDocument.length > 0){
-        this.studentDocumentAddModel.studentDocuments=studentDocument;
+          this.studentDocument.push(obj);    
+      }); 
+     
+      
+     if(this.studentDocument.length > 0){
+       
+        this.studentDocumentAddModel.studentDocuments=this.studentDocument;
         this.studentService.AddStudentDocument(this.studentDocumentAddModel).subscribe(data => {
           if (typeof (data) == 'undefined') {
             this.snackbar.open('Student Document Upload failed. ' + sessionStorage.getItem("httpError"), '', {
@@ -200,10 +207,15 @@ export class StudentDocumentsComponent implements OnInit {
               this.snackbar.open('Student Document Upload Successful.', '', {
                 duration: 10000
               }).afterOpened().subscribe(data => {
+                this.base64Arr=[];
+                this.studentDocument = [];
+                this.filesName=[];
+                this.filesType=[];
                 this.uploadSuccessfull = true;
                 this.isShowDiv=true;
                 this.getAllDocumentsList();
                 this.files = [];
+                
               });                  
             }
           }

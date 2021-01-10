@@ -5,6 +5,7 @@ export class StudentMasterModel {
     public tenantId: string;
     public schoolId: number;
     public studentId: number;
+    public studentGuid:string;
     public studentInternalId: string;
     public studentPortalId: string;
     public alternateId: string;
@@ -114,7 +115,9 @@ export class StudentMasterModel {
     public vision: string;
     public visionPhone: string;
     public schoolMaster: Object;
+    public academicYear:string;
     constructor() {
+        this.academicYear= sessionStorage.getItem("academicyear");
         this.tenantId = sessionStorage.getItem("tenantId");
         this.schoolId = +sessionStorage.getItem("selectedSchoolId");
     }
@@ -314,6 +317,67 @@ export class StudentSiblingAssociation extends CommonField {
         this.schoolId = +sessionStorage.getItem("selectedSchoolId");
         this._tenantName = sessionStorage.getItem("tenant");
         this._token = sessionStorage.getItem("token");
+    }
+}
+
+export class StudentEnrollmentSchoolListModel extends CommonField{
+    public schoolMaster:[]
+    public tenantId:string;
+    constructor(){
+        super();
+        this.schoolMaster=null;
+        this.tenantId = sessionStorage.getItem("tenantId");
+        this._tenantName = sessionStorage.getItem("tenant");
+        this._token = sessionStorage.getItem("token");
+    }
+}
+
+export class StudentEnrollmentDetails extends CommonField{
+    tenantId: string;
+    schoolId: number | string;
+    studentId: number;
+    academicYear: number;
+    enrollmentId: number;
+    calenderId: number;
+    rollingOption: string;
+    schoolName: string;
+    gradeLevelTitle: string;
+    enrollmentDate: string;
+    enrollmentCode: string;
+    exitDate: string;
+    exitCode: string;
+    transferredSchoolId: number | string;
+    schoolTransferred: string;
+    transferredGrade: string;
+    lastUpdated: string;
+    updatedBy: string;
+    studentGuid:string;
+    constructor(){
+        super();
+        this.tenantId = sessionStorage.getItem("tenantId");
+        this.schoolId = +sessionStorage.getItem("selectedSchoolId");
+        this.updatedBy = sessionStorage.getItem("email");
+    }
+}
+export class StudentEnrollmentModel extends CommonField{
+    studentEnrollments:[StudentEnrollmentDetails];
+    studentEnrollmentListForView:[StudentEnrollmentDetails];
+    tenantId: string;
+    studentId: number;
+    calenderId: number | string;
+    rollingOption: string;
+    schoolId:number;
+    academicYear:string;
+    studentGuid:string;
+    constructor(){
+        super();
+        this.studentEnrollments=[new StudentEnrollmentDetails];
+        this.studentEnrollmentListForView=[new StudentEnrollmentDetails];
+        this.tenantId = sessionStorage.getItem("tenantId");
+        this._tenantName = sessionStorage.getItem("tenant");
+        this._token = sessionStorage.getItem("token");
+        this.schoolId = +sessionStorage.getItem("selectedSchoolId");
+        this.academicYear= sessionStorage.getItem("academicyear");
     }
 }
 

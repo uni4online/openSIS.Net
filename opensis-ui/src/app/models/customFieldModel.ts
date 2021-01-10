@@ -35,7 +35,7 @@ export class CustomFieldModel {
         this.defaultSelection="";
         this.hide=false;
         this.lastUpdate=null;
-        this.updatedBy=null;
+        this.updatedBy=sessionStorage.getItem('email');
         this.customFieldsValue =[];
     }
   }
@@ -59,4 +59,22 @@ export class CustomFieldListViewModel extends CommonField {
         this.schoolId=+sessionStorage.getItem("selectedSchoolId")
         this._token=sessionStorage.getItem("token")
     }
+}
+export class CustomFieldDragDropModel extends CommonField{
+        
+    schoolId:number;
+    previousSortOrder: number;
+    currentSortOrder:number;
+    categoryId:number;
+    constructor(){
+        super();
+        this._tenantName=sessionStorage.getItem("tenant")
+        this.schoolId=+sessionStorage.getItem("selectedSchoolId")
+        this._token=sessionStorage.getItem("token")
+        this.previousSortOrder=0;
+        this.currentSortOrder=0;
+        this.categoryId=0;
+    }
+
+
 }

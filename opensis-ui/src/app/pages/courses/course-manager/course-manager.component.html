@@ -14,7 +14,7 @@
                                 <mat-option value="1">Showing All Subjects</mat-option>
                             </mat-select>
                         </mat-form-field>
-                    <a routerLink="" class="inline-block align-top text-blue py-3 px-2">
+                    <a (click)="openModalManageSubjects()" class="inline-block align-top cursor-pointer text-blue py-3 px-2">
                         <mat-icon [icIcon]="icSettings"></mat-icon>
                     </a>
                 </div>
@@ -26,7 +26,7 @@
                                 <mat-option value="1">Showing All Programs</mat-option>
                             </mat-select>
                         </mat-form-field>
-                    <a routerLink="" class="inline-block align-top text-blue py-3 px-2">
+                    <a (click)="openModalManagePrograms()" class="inline-block align-top cursor-pointer text-blue py-3 px-2">
                         <mat-icon [icIcon]="icSettings"></mat-icon>
                     </a>
                 </div>
@@ -38,81 +38,161 @@
                             </mat-select>
                         </mat-form-field>
                     </div>
-                    <!-- <div>
-                        <mat-slide-toggle class="mr-6" color="primary">{{'required' | translate}}</mat-slide-toggle>
-                    </div> -->
+            <div>
+                <mat-slide-toggle class="mt-2" color="primary">{{'includeInactive' | translate}}</mat-slide-toggle>
+            </div>
                 </div>
 
-        <div class="flex w-full -mx-6">
-            <div class="w-1/2 px-gutter">
+        <div class="flex w-full" *ngIf="showCourses; else showCourseSections">
+            <div class="w-1/2 pr-6">
                 <div class="card overflow-auto">
-                    <div class="flex justify-between w-full px-6 py-2 align-middle">
+                    <div class="flex justify-between w-full px-6 py-3 align-middle">
                         <h3>20 Course Found</h3>
-                        <button mat-raised-button color="primary">{{'addNewCourse'|translate}}</button>
+                        <button mat-raised-button color="primary" (click)="openModalEditCourse()">
+                            <mat-icon [icIcon]="icAdd" class="mr-2"></mat-icon>{{'addNewCourse'|translate}}
+                        </button>
                     </div>
                     <hr />
-                    <input class="w-full border-0 px-6 py-4 box-border" type="text" placeholder="Search...">
+                    <input
+                        class="w-full border-0 focus:border-0 focus:border-none focus:outline-none px-6 py-4 box-border"
+                        type="text" placeholder="Search...">
                     <hr />
                     <ul>
-                        <li class="px-6 py-3 bg-green-light border-b">
+                        <li class="pl-6 pr-2 py-3 bg-green-light border-b">
                             <div class="flex items-center w-full justify-between">
-                                <div>
+                                <a routerLink="" class="cursor-pointer">
                                     <h4 class="text-green font-bold">Chemistry</h4>
                                     <p>Science<span class="dot-separator"></span>Regular Course Program</p>
-                                </div>
+                                </a>
                                 <div>
-                                    <a routerLink="" class="mr-4 text-blue cursor-pointer">Sections (4)</a>
-                                    <span class="w-3 h-3 rounded-full inline-block bg-green"></span>
+                                    <span (click)="courseSections()" class="mr-4 text-blue cursor-pointer">Sections (4)</span>
+                                    <span class="w-3 h-3 rounded-full inline-block bg-green" matTooltip="Active"></span>
+                                    <a [matMenuTriggerFor]="addNewMenu"
+                                        class="cursor-pointer inline-block ml-3 pt-1 align-middle">
+                                        <mat-icon [icIcon]="icMoreVertical" class="mr-2"></mat-icon>
+                                    </a>
                                 </div>
                             </div>
                         </li>
-                        <li class="px-6 py-3 border-b">
+                        <li class="pl-6 pr-2 py-3 border-b">
                             <div class="flex items-center w-full justify-between">
-                                <div>
+                                <a routerLink="" class="cursor-pointer hover:text-blue">
                                     <h4 class="font-bold">Physics</h4>
                                     <p>Science<span class="dot-separator"></span>Regular Course Program</p>
-                                </div>
+                                </a>
                                 <div>
-                                    <a routerLink="" class="mr-4 text-blue cursor-pointer">Sections (10)</a>
-                                    <span class="w-3 h-3 rounded-full inline-block bg-green"></span>
+                                    <a href="javascript:void(0)" (click)="courseSections()" class="mr-4 text-blue cursor-pointer">Sections (4)</a>
+                                    <span class="w-3 h-3 rounded-full inline-block bg-gray-light" matTooltip="Inactive"></span>
+                                    <a [matMenuTriggerFor]="addNewMenu"
+                                        class="cursor-pointer inline-block ml-3 pt-1 align-middle">
+                                        <mat-icon [icIcon]="icMoreVertical" class="mr-2"></mat-icon>
+                                    </a>
                                 </div>
                             </div>
                         </li>
-                        <li class="px-6 py-3 border-b">
+                        <li class="pl-6 pr-2 py-3 border-b">
                             <div class="flex items-center w-full justify-between">
-                                <div>
+                                <a routerLink="" class="cursor-pointer hover:text-blue">
                                     <h4 class="font-bold">Mathematics</h4>
                                     <p>Science<span class="dot-separator"></span>Regular Course Program</p>
-                                </div>
+                                </a>
                                 <div>
-                                    <a routerLink="" class="mr-4 text-blue cursor-pointer">Sections (2)</a>
-                                    <span class="w-3 h-3 rounded-full inline-block bg-green"></span>
+                                    <a href="javascript:void(0)" (click)="courseSections()" class="mr-4 text-blue cursor-pointer">Sections (4)</a>
+                                    <span class="w-3 h-3 rounded-full inline-block bg-green" matTooltip="Active"></span>
+                                    <a [matMenuTriggerFor]="addNewMenu"
+                                        class="cursor-pointer inline-block ml-3 pt-1 align-middle">
+                                        <mat-icon [icIcon]="icMoreVertical" class="mr-2"></mat-icon>
+                                    </a>
                                 </div>
                             </div>
                         </li>
-                        <li class="px-6 py-3 border-b">
+                        <li class="pl-6 pr-2 py-3 border-b">
                             <div class="flex items-center w-full justify-between">
-                                <div>
+                                <a routerLink="" class="cursor-pointer hover:text-blue">
                                     <h4 class="font-bold">Spanish Language</h4>
                                     <p>Language & Arts<span class="dot-separator"></span>Regular Course Program</p>
-                                </div>
+                                </a>
                                 <div>
-                                    <a routerLink="" class="mr-4 text-blue cursor-pointer">Sections (4)</a>
-                                    <span class="w-3 h-3 rounded-full inline-block bg-green"></span>
+                                    <a href="javascript:void(0)" (click)="courseSections()" class="mr-4 text-blue cursor-pointer">Sections (4)</a>
+                                    <span class="w-3 h-3 rounded-full inline-block bg-green" matTooltip="Active"></span>
+                                    <a [matMenuTriggerFor]="addNewMenu"
+                                        class="cursor-pointer inline-block ml-3 pt-1 align-middle">
+                                        <mat-icon [icIcon]="icMoreVertical" class="mr-2"></mat-icon>
+                                    </a>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="pl-6 pr-2 py-3 border-b">
+                            <div class="flex items-center w-full justify-between">
+                                <a routerLink="" class="cursor-pointer hover:text-blue">
+                                    <h4 class="font-bold">English Grammar</h4>
+                                    <p>Language & Arts<span class="dot-separator"></span>Regular Course Program</p>
+                                </a>
+                                <div>
+                                    <a href="javascript:void(0)" (click)="courseSections()" class="mr-4 text-blue cursor-pointer">Sections (4)</a>
+                                    <span class="w-3 h-3 rounded-full inline-block bg-gray-light" matTooltip="Inactive"></span>
+                                    <a [matMenuTriggerFor]="addNewMenu"
+                                        class="cursor-pointer inline-block ml-3 pt-1 align-middle">
+                                        <mat-icon [icIcon]="icMoreVertical" class="mr-2"></mat-icon>
+                                    </a>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="pl-6 pr-2 py-3 border-b">
+                            <div class="flex items-center w-full justify-between">
+                                <a routerLink="" class="cursor-pointer hover:text-blue">
+                                    <h4 class="font-bold">US History</h4>
+                                    <p>Language & Arts<span class="dot-separator"></span>Regular Course Program</p>
+                                </a>
+                                <div>
+                                    <a href="javascript:void(0)" (click)="courseSections()" class="mr-4 text-blue cursor-pointer">Sections (4)</a>
+                                    <span class="w-3 h-3 rounded-full inline-block bg-green" matTooltip="Active"></span>
+                                    <a [matMenuTriggerFor]="addNewMenu"
+                                        class="cursor-pointer inline-block ml-3 pt-1 align-middle">
+                                        <mat-icon [icIcon]="icMoreVertical" class="mr-2"></mat-icon>
+                                    </a>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="pl-6 pr-2 py-3 border-b">
+                            <div class="flex items-center w-full justify-between">
+                                <a routerLink="" class="cursor-pointer hover:text-blue">
+                                    <h4 class="font-bold">World History</h4>
+                                    <p>Language & Arts<span class="dot-separator"></span>Regular Course Program</p>
+                                </a>
+                                <div>
+                                    <a href="javascript:void(0)" (click)="courseSections()" class="mr-4 text-blue cursor-pointer">Sections (4)</a>
+                                    <span class="w-3 h-3 rounded-full inline-block bg-green" matTooltip="Active"></span>
+                                    <a [matMenuTriggerFor]="addNewMenu"
+                                        class="cursor-pointer inline-block ml-3 pt-1 align-middle">
+                                        <mat-icon [icIcon]="icMoreVertical" class="mr-2"></mat-icon>
+                                    </a>
                                 </div>
                             </div>
                         </li>
                     </ul>
                 </div>
             </div>
-            <div class="w-1/2 px-gutter">
+            <div class="w-1/2 pl-6">
                 <div class="card overflow-auto">
-                    <div class="flex justify-between w-full px-6 py-3 align-middle">
-                        <h3>Chemistry</h3>
+                    <div class="flex justify-between w-full pl-6 py-3 align-middle">
+                        <h3 class="pt-1">Chemistry</h3>
                         <div>
                             <label class="bg-green inline-block rounded px-2 py-1 text-xs text-white">ACTIVE</label>
+                            <a [matMenuTriggerFor]="addNewMenu"
+                                class="cursor-pointer inline-block ml-2 px-1 pt-1 align-middle">
+                                <mat-icon [icIcon]="icMoreVertical" class="mr-2"></mat-icon>
+                            </a>
                         </div>
                     </div>
+                    <mat-menu #addNewMenu="matMenu" [overlapTrigger]="false" xPosition="before" yPosition="below">
+                        <button mat-menu-item>
+                            <span>{{'editItem' | translate}}</span>
+                        </button>
+                        <button mat-menu-item>
+                            <span>{{'deleteItem' | translate}}</span>
+                        </button>
+                    </mat-menu>
                     <hr />
                     <ul class="md:grid md:grid-cols-2 md:col-gap-8 md:row-gap-10 my-6 px-6">
                         <li>
@@ -144,8 +224,38 @@
                             <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">3.000</p>
                         </li>
                         <li>
+                            <label class="text-sm leading-5 text-gray">{{'status' | translate}}</label>
+                            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Active</p>
+                        </li>
+                        <li class="col-span-2">
                             <label class="text-sm leading-5 text-gray">{{'standards' | translate}}</label>
-                            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Chemistry</p>
+                            <div class="standards-list mt-1">
+                                <hr/>
+                                <div class="flex justify-between items-center">
+                                    <div title="show the standard description">Know number names and the count sequence.</div>
+                                    <div>
+                                        <span class="inline-block opacity-75 p-2 text-gray"><mat-icon [icIcon]="icInfo"></mat-icon></span>
+                                        <a matTooltip="Remove" class="cursor-pointer opacity-75 py-2 px-3 inline-block text-gray"><mat-icon [icIcon]="icRemoveCircle"></mat-icon></a>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="flex justify-between items-center">
+                                    <div title="show the standard description">Know number names and the count sequence.</div>
+                                    <div>
+                                        <span class="inline-block opacity-75 p-2 text-gray"><mat-icon [icIcon]="icInfo"></mat-icon></span>
+                                        <a matTooltip="Remove" class="cursor-pointer opacity-75 py-2 px-3 inline-block text-gray"><mat-icon [icIcon]="icRemoveCircle"></mat-icon></a>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="flex justify-between items-center">
+                                    <div title="show the standard description">Know number names and the count sequence.</div>
+                                    <div>
+                                        <span class="inline-block opacity-75 p-2 text-gray"><mat-icon [icIcon]="icInfo"></mat-icon></span>
+                                        <a matTooltip="Remove" class="cursor-pointer opacity-75 py-2 px-3 inline-block text-gray"><mat-icon [icIcon]="icRemoveCircle"></mat-icon></a>
+                                    </div>
+                                </div>
+                                <hr/>
+                            </div>
                         </li>
                         <li class="col-span-2">
                             <label class="text-sm leading-5 text-gray">{{'description' | translate}}</label>
@@ -159,5 +269,178 @@
                 </div>
             </div>
         </div>
+
+        <ng-template #showCourseSections>
+            <div class="flex w-full">
+                <div class="w-1/2 pr-6">
+                    <div class="card overflow-auto">
+                        <div class="flex justify-between w-full px-6 py-2 items-center">
+                            <div>
+                                <a class="flex cursor-pointer items-center mr-3" href="javascript:void(0)" (click)="backToCourse()">
+                                    <mat-icon [icIcon]="icBack" class="mr-4"></mat-icon>
+                                    <div>
+                                        <h3 class="font-bold">Chemistry</h3>
+                                        <p>4 Course Sections Found</p>
+                                    </div>
+                                </a>
+                            </div>
+                            <div>
+                                <button mat-raised-button color="primary" (click)="openModalEditCourseSection()">
+                                    <mat-icon [icIcon]="icAdd" class="mr-2"></mat-icon>{{'addNewCourseSection'|translate}}
+                                </button>
+                            </div>
+                        </div>
+                        <hr />
+                        <input
+                            class="w-full border-0 focus:border-0 focus:border-none focus:outline-none px-6 py-4 box-border"
+                            type="text" placeholder="Search Course Section...">
+                        <hr />
+                        <ul>
+                            <li class="pl-5 pr-2 py-3 bg-green-light border-l-4 border-green">
+                                <div class="flex items-center w-full justify-between">
+                                    <a routerLink="" class="cursor-pointer">
+                                        <h4 class="text-green font-bold">Chem 001</h4>
+                                        <p>Quarter 3</p>
+                                    </a>
+                                    <div>
+                                        <div class="flex items-center">
+                                            <p class="text-lg text-green font-bold" matTooltip="10 Seats Available">10 / 20</p>
+                                            <a [matMenuTriggerFor]="addNewMenu"
+                                                class="cursor-pointer ml-3 inline-block pt-1 align-middle">
+                                                <mat-icon [icIcon]="icMoreVertical" class="mr-2"></mat-icon>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="pl-6 pr-2 py-3 border-b">
+                                <div class="flex items-center w-full justify-between">
+                                    <a routerLink="" class="cursor-pointer hover:text-blue">
+                                        <h4 class="font-bold">Chem 002</h4>
+                                        <p>Quarter 4</p>
+                                    </a>
+                                    <div>
+                                        <div class="flex items-center">
+                                            <span class="w-3 h-3 mr-4 rounded-full inline-block bg-green" matTooltip="Active"></span>
+                                            <p class="text-lg text-warn font-bold" matTooltip="No Seats Available">20 / 20</p>
+                                            <a [matMenuTriggerFor]="addNewMenu"
+                                                class="cursor-pointer ml-3 inline-block pt-1 align-middle">
+                                                <mat-icon [icIcon]="icMoreVertical" class="mr-2"></mat-icon>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="pl-6 pr-2 py-3 border-b">
+                                <div class="flex items-center w-full justify-between">
+                                    <a routerLink="" class="cursor-pointer hover:text-blue">
+                                        <h4 class="font-bold">Chem 003</h4>
+                                        <p>Jan 01, 20201 - Mar 02, 2021</p>
+                                    </a>
+                                    <div>
+                                        <div class="flex items-center">
+                                            <p class="text-lg ml-4 text-green font-bold" matTooltip="16 Seats Available">4 / 20</p>
+                                            <a [matMenuTriggerFor]="addNewMenu"
+                                                class="cursor-pointer ml-3 inline-block pt-1 align-middle">
+                                                <mat-icon [icIcon]="icMoreVertical" class="mr-2"></mat-icon>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="pl-6 pr-2 py-3 border-b">
+                                <div class="flex items-center w-full justify-between">
+                                    <a routerLink="" class="cursor-pointer hover:text-blue">
+                                        <h4 class="font-bold">Chem 004</h4>
+                                        <p>Quarter 3</p>
+                                    </a>
+                                    <div>
+                                        <div class="flex items-center">
+                                            <p class="text-lg ml-4 text-green font-bold" matTooltip="20 Seats Available">0 / 20</p>
+                                            <a [matMenuTriggerFor]="addNewMenu"
+                                                class="cursor-pointer ml-3 inline-block pt-1 align-middle">
+                                                <mat-icon [icIcon]="icMoreVertical" class="mr-2"></mat-icon>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="w-1/2 pl-6">
+                    <div class="card overflow-auto">
+                        <div class="flex justify-between w-full pl-6 py-3 align-middle">
+                            <h3 class="pt-1">Chem 001</h3>
+                            <div>
+                                <a [matMenuTriggerFor]="addNewMenu"
+                                    class="cursor-pointer inline-block ml-2 px-1 pt-1 align-middle">
+                                    <mat-icon [icIcon]="icMoreVertical" class="mr-2"></mat-icon>
+                                </a>
+                            </div>
+                        </div>
+                        <mat-menu #addNewMenu="matMenu" [overlapTrigger]="false" xPosition="before" yPosition="below">
+                            <button mat-menu-item>
+                                <span>{{'editItem' | translate}}</span>
+                            </button>
+                            <button mat-menu-item>
+                                <span>{{'deleteItem' | translate}}</span>
+                            </button>
+                        </mat-menu>
+                        <hr />
+                        <ul class="md:grid md:grid-cols-2 md:col-gap-6 md:row-gap-8 my-6 px-6">
+                            <li>
+                                <label class="text-sm leading-5 text-gray">{{'courseSectionName' | translate}}</label>
+                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Chem 001</p>
+                            </li>
+                            <li>
+                                <label class="text-sm leading-5 text-gray">{{'calendar' | translate}}</label>
+                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Academic Calendar</p>
+                            </li>
+                            <li>
+                                <label class="text-sm leading-5 text-gray">{{'gradeScale' | translate}}</label>
+                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Main</p>
+                            </li>
+                            <li>
+                                <label class="text-sm leading-5 text-gray">{{'creditHours' | translate}}</label>
+                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">3.00</p>
+                            </li>
+                            <li>
+                                <label class="text-sm leading-5 text-gray">{{'seats' | translate}}</label>
+                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">20 | <span class="text-green font-bold">10 Available</span></p>
+                            </li>
+                            <li>
+                                <label class="text-sm leading-5 text-gray">{{'attendanceCategory' | translate}}</label>
+                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">School Default</p>
+                            </li>
+                        </ul>
+                        <div class="mx-5 mt-6 flex flex-wrap">
+                            <span class="mr-5 mb-4">
+                                <mat-icon [icIcon]="icCheckboxChecked" class="inline-block align-middle mr-1"></mat-icon> {{'courseIsWeighted' | translate}}
+                            </span>
+                            <span class="mr-5 mb-4">
+                                <mat-icon [icIcon]="icCheckboxUnchecked" class="inline-block align-middle mr-1"></mat-icon> {{'useStandards' | translate}}
+                            </span>
+                            <span class="mr-5 mb-4">
+                                <mat-icon [icIcon]="icCheckboxUnchecked" class="inline-block align-middle mr-1"></mat-icon> {{'affectsClassRank' | translate}}
+                            </span>
+                            <span class="mr-5 mb-4">
+                                <mat-icon [icIcon]="icCheckboxUnchecked" class="inline-block align-middle mr-1"></mat-icon> {{'affectsHonorRoll' | translate}}
+                            </span>
+                            <span class="mr-5 mb-4">
+                                <mat-icon [icIcon]="icCheckboxUnchecked" class="inline-block align-middle mr-1"></mat-icon> {{'onlineClassRoom' | translate}}
+                            </span>
+                        </div>
+                        <hr class="my-4"/>
+                        <h3>{{'duration' | translate}}</h3>
+                        <div class="flex">
+                            <span class="mr-5 mb-4">
+
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
     </vex-page-layout-content>
 </vex-page-layout>

@@ -146,5 +146,26 @@ namespace opensisAPI.Controllers
             //}            
             return Ok();
         }
+
+        [HttpPost]
+        public IActionResult InserEnrollmentCode()
+        {
+            //var schoolList = this.context?.SchoolMaster.ToList();
+            //foreach (var school in schoolList)
+            //{
+            //    var enrollmentCode = new List<StudentEnrollmentCode>()
+            //    {
+            //         new StudentEnrollmentCode(){TenantId=school.TenantId, SchoolId=school.SchoolId, EnrollmentCode=1, Title="New", ShortName="NEW", Type="Add", LastUpdated=DateTime.UtcNow, UpdatedBy=school.CreatedBy },
+            //         new StudentEnrollmentCode(){TenantId=school.TenantId, SchoolId=school.SchoolId, EnrollmentCode=2, Title="Dropped Out", ShortName="DROP", Type="Drop", LastUpdated=DateTime.UtcNow, UpdatedBy=school.CreatedBy },
+            //         new StudentEnrollmentCode(){TenantId=school.TenantId, SchoolId=school.SchoolId, EnrollmentCode=3, Title="Rolled Over", ShortName="ROLL", Type="Rolled Over", LastUpdated=DateTime.UtcNow, UpdatedBy=school.CreatedBy },
+            //         new StudentEnrollmentCode(){TenantId=school.TenantId, SchoolId=school.SchoolId, EnrollmentCode=4, Title="Transferred In", ShortName="TRAN", Type="Enroll (Transfer)", LastUpdated=DateTime.UtcNow, UpdatedBy=school.CreatedBy },
+            //         new StudentEnrollmentCode(){TenantId=school.TenantId, SchoolId=school.SchoolId, EnrollmentCode=5, Title="Transferred Out", ShortName="TRAN", Type="Drop (Transfer)", LastUpdated=DateTime.UtcNow, UpdatedBy=school.CreatedBy }
+            //    };
+
+            //    this.context?.StudentEnrollmentCode.AddRange(enrollmentCode);
+            //    this.context?.SaveChanges();
+            //}
+            return Ok();
+        }
     }
 }

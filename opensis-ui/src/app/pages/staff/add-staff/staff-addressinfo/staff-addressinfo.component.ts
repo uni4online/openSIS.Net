@@ -18,6 +18,7 @@ import { LoginService } from '../../../../services/login.service';
 import { SharedFunction } from '../../../../pages/shared/shared-function';
 import { StaffRelation } from '../../../../enums/staff-relation.enum';
 import { ImageCropperService } from '../../../../services/image-cropper.service';
+import { LovList } from '../../../../models/lovModel';
 
 @Component({
   selector: 'vex-staff-addressinfo',
@@ -39,8 +40,9 @@ export class StaffAddressinfoComponent implements OnInit, OnDestroy {
   staffAddModel: StaffAddModel = new StaffAddModel();
   languages: LanguageModel = new LanguageModel();
   mailingAddressSameToHome: boolean = false;
-  staffRelationEnum = Object.keys(StaffRelation);
   countryListArr = [];
+  relationshipList = [];
+  lovListViewModel: LovList = new LovList();
   module = 'Staff';
   countryName = "-";
   mailingAddressCountry = "-";
@@ -63,7 +65,6 @@ export class StaffAddressinfoComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-
     if (this.staffCreateMode == this.staffCreate.VIEW) {
       this.data = this.staffDetailsForViewAndEdit?.staffMaster;
       this.staffAddModel = this.staffDetailsForViewAndEdit;
@@ -80,13 +81,12 @@ export class StaffAddressinfoComponent implements OnInit, OnDestroy {
       this.staffService.changePageMode(this.staffCreateMode);
       this.staffAddModel = this.staffService.getStaffDetails();
     }
-
+    this.getAllRelationship();
     this.getAllCountry();
   }
 
   copyHomeAddress(check) {
-
-    if (this.staffAddModel.staffMaster.mailingAddressSameToHome === false || this.staffAddModel.staffMaster.mailingAddressSameToHome === undefined) {
+    if (this.staffAddModel.staffMaster.mailingAddressSameToHome === false || this.staffAddModel.staffMaster.mailingAddressSameToHome === null) {
 
       if (this.staffAddModel.staffMaster.homeAddressLineOne !== undefined && this.staffAddModel.staffMaster.homeAddressCity !== undefined &&
         this.staffAddModel.staffMaster.homeAddressState !== undefined && this.staffAddModel.staffMaster.homeAddressZip !== undefined) {
@@ -115,6 +115,23 @@ export class StaffAddressinfoComponent implements OnInit, OnDestroy {
       this.staffAddModel.staffMaster.mailingAddressCountry = null;
     }
   }
+
+  getAllRelationship() {
+    this.lovListViewModel.lovName = "Relationship";
+    this.commonService.getAllDropdownValues(this.lovListViewModel).subscribe(
+      (res: LovList) => {
+        if (typeof (res) == 'undefined') {
+        }
+        else {
+          if (res._failure) {
+          }
+          else {
+            this.relationshipList = res.dropdownList;
+          }
+        }
+      })
+  }
+  
   getAllCountry() {
     this.commonService.GetAllCountry(this.countryModel).subscribe(data => {
       if (typeof (data) == 'undefined') {
@@ -145,6 +162,12 @@ export class StaffAddressinfoComponent implements OnInit, OnDestroy {
   submitAddress() {
     if (this.staffAddModel.fieldsCategoryList !== null) {
       this.staffAddModel.selectedCategoryId = this.staffAddModel.fieldsCategoryList[this.categoryId].categoryId;
+      
+      for (var i = 0; i < this.staffAddModel.fieldsCategoryList[this.categoryId].customFields.length; i++) {
+        if (this.staffAddModel.fieldsCategoryList[this.categoryId].customFields[i].type === "Multiple SelectBox") {
+          this.staffAddModel.fieldsCategoryList[this.categoryId].customFields[i].customFieldsValue[0].customFieldValue = this.staffService.getStaffMultiselectValue().toString().replaceAll(",", "|");
+        }
+      }
     }
     this.staffAddModel._token = sessionStorage.getItem("token");
     this.staffAddModel._tenantName = sessionStorage.getItem("tenant");

@@ -25,5 +25,6 @@ namespace opensis.data.ViewModels.Student
         public DateTime? LastUpdated { get; set; }
         public string UpdatedBy { get; set; }
         public Guid? StudentGuid { get; set; }
+        public string EnrollmentType { get; set; }
     }
 }

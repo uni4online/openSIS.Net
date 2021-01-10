@@ -15,6 +15,7 @@ import { salutation,suffix ,relationShip,userProfile,Custody} from '../../../../
 import { CountryModel } from '../../../../../models/countryModel';
 import { CommonService } from '../../../../../services/common.service';
 import { SharedFunction } from '../../../../shared/shared-function';
+import { LovList } from '../../../../../models/lovModel';
 
 @Component({
   selector: 'vex-edit-contact',
@@ -37,12 +38,10 @@ export class EditContactComponent implements OnInit {
   addParentInfoModel: AddParentInfoModel = new AddParentInfoModel(); 
   parentInfoList:ParentInfoList=new ParentInfoList();
   associateStudent:AssociateStudent=new AssociateStudent();
+  lovListViewModel: LovList = new LovList();
   contactModalTitle="addContact";
   contactModalActionTitle="submit";
   isEdit=false;
-  salutationEnum=Object.keys(salutation);
-  suffixEnum = Object.keys(suffix);
-  relationShipEnum = Object.keys(relationShip); 
   userProfileEnum = Object.keys(userProfile);
   custodyEnum = Custody;
   mode;
@@ -58,6 +57,9 @@ export class EditContactComponent implements OnInit {
   disableNewAddressFlag;
   singleParentInfo;
   multipleParentInfo=[];
+  suffixList = [];
+  salutationList = [];
+  relationshipList = [];
   editMode=false;
   isCustodyCheck=false;
   disablePassword=false;
@@ -80,7 +82,10 @@ export class EditContactComponent implements OnInit {
    
     this.studentDetailsForViewAndEditDataDetails=this.data.studentDetailsForViewAndEditData; 
     this.getAllCountry(); 
-   
+    this.getAllRelationship();
+    this.getAllSalutation();
+    this.getAllSuffix();
+    
       if(this.data.mode === "view"){       
        this.mode = "view";
        this.viewData = this.data.parentInfo;       
@@ -178,6 +183,54 @@ export class EditContactComponent implements OnInit {
     this.addParentInfoModel.parentInfo= this.singleParentInfo;   
     
     this.submit();
+  }
+
+  getAllSuffix() {
+    this.lovListViewModel.lovName = "Suffix";
+    this.commonService.getAllDropdownValues(this.lovListViewModel).subscribe(
+      (res: LovList) => {
+        if (typeof (res) == 'undefined') {
+        }
+        else {
+          if (res._failure) {
+          }
+          else {
+            this.suffixList = res.dropdownList;
+          }
+        }
+      })
+  }
+
+  getAllSalutation() {
+    this.lovListViewModel.lovName = "Salutation";
+    this.commonService.getAllDropdownValues(this.lovListViewModel).subscribe(
+      (res: LovList) => {
+        if (typeof (res) == 'undefined') {
+        }
+        else {
+          if (res._failure) {
+          }
+          else {
+            this.salutationList = res.dropdownList;
+          }
+        }
+      })
+  }
+
+  getAllRelationship() {
+    this.lovListViewModel.lovName = "Relationship";
+    this.commonService.getAllDropdownValues(this.lovListViewModel).subscribe(
+      (res: LovList) => {
+        if (typeof (res) == 'undefined') {
+        }
+        else {
+          if (res._failure) {
+          }
+          else {
+            this.relationshipList = res.dropdownList;
+          }
+        }
+      })
   }
 
   associateMultipleStudentsToParent(){

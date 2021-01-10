@@ -48,11 +48,11 @@ export class SchoolClassificationComponent implements OnInit {
   icSearch = icSearch;
   icImpersonate = icImpersonate;
   icFilterList = icFilterList; 
-  loading;  
+  loading; 
+  listCount; 
   totalCount:Number;pageNumber:Number;pageSize:Number;
   getAllClassification: LovList = new LovList(); 
   saveClassification: LovAddView = new LovAddView(); 
-  
   ClassificationModelList: MatTableDataSource<any>;
   searchKey:string;
   @ViewChild(MatSort) sort: MatSort;
@@ -77,14 +77,24 @@ export class SchoolClassificationComponent implements OnInit {
   getSchoolClassificationList(){
     this.getAllClassification.lovName="School Classification";
     this.commonService.getAllDropdownValues(this.getAllClassification).subscribe(data => {
-      if(data._failure){
-        this.snackbar.open('School information failed. '+ data._message, 'LOL THANKS', {
-        duration: 10000
+      if(typeof(data)=='undefined'){
+        this.snackbar.open('School Classification List failed. ' + sessionStorage.getItem("httpError"), '', {
+          duration: 10000
         });
-      }else{     
-        this.ClassificationModelList = new MatTableDataSource(data.dropdownList);
-        this.ClassificationModelList.sort=this.sort;      
+      }else{
+        if(data._failure){
+          this.ClassificationModelList=new MatTableDataSource(data.dropdownList) ;
+            this.listCount=this.ClassificationModelList.data;
+            this.snackbar.open('School Classification List failed. ' + data._message, 'LOL THANKS', {
+              duration: 10000
+            });
+        }else{     
+          this.ClassificationModelList=new MatTableDataSource(data.dropdownList) ;
+          this.ClassificationModelList.sort=this.sort;           
+          this.listCount=this.ClassificationModelList.data.length;
+        }
       }
+      
     });
   }
 

@@ -75,7 +75,9 @@
                     [studentDetailsForViewAndEdit]="studentAddModel">
                     </vex-student-addressandcontacts>
 
-                    <vex-student-enrollmentinfo *ngIf="currentCategory==4">
+                    <vex-student-enrollmentinfo *ngIf="currentCategory==4"
+                    [studentCreateMode]="studentCreateMode"
+                    [studentDetailsForViewAndEdit]="studentAddModel">
                     </vex-student-enrollmentinfo>
                    
                     <vex-student-familyinfo *ngIf="currentCategory==6" 

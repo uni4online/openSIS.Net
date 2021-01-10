@@ -26,6 +26,9 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { ImageCropperService } from 'src/app/services/image-cropper.service';
 import { SchoolCreate } from '../../../../enums/school-create.enum';
+import { LovList } from './../../../../models/lovModel';
+import { CommonService } from '../../../../services/common.service';
+
 @Component({
   selector: 'vex-editparent-generalinfo',
   templateUrl: './editparent-generalinfo.component.html',
@@ -37,6 +40,8 @@ import { SchoolCreate } from '../../../../enums/school-create.enum';
   ]
 })
 export class EditparentGeneralinfoComponent implements OnInit,OnDestroy {
+  schoolCreate = SchoolCreate;
+  @Input() schoolCreateMode: SchoolCreate;
   @Input() parentDetailsForViewAndEdit;
   parentCreate = SchoolCreate;
   @Input() parentCreateMode: SchoolCreate;
@@ -60,11 +65,15 @@ export class EditparentGeneralinfoComponent implements OnInit,OnDestroy {
   associateStudentMode="";
   addParentInfoModel: AddParentInfoModel = new AddParentInfoModel(); 
   parentInfoList:ParentInfoList=new ParentInfoList();
+  lovList:LovList= new LovList();
   studentSiblingAssociation:StudentSiblingAssociation=new StudentSiblingAssociation();
   removeAssociateParent:RemoveAssociateParent=new RemoveAssociateParent();
   parentInfo;
   studentInfo;
-  
+  salutationList;
+  suffixList;
+  salutation;
+  suffix;
   constructor(
     public translateService:TranslateService, 
     private cd: ChangeDetectorRef,  
@@ -72,31 +81,32 @@ export class EditparentGeneralinfoComponent implements OnInit,OnDestroy {
     private snackbar: MatSnackBar,  
     private router:Router,
     private dialog: MatDialog,
-    private imageCropperService:ImageCropperService
+    private imageCropperService:ImageCropperService,
+    private commonService:CommonService
     ) {
     translateService.use('en');
     
   }
 
   ngOnInit(): void {
-
-    
+    this.getAllSalutation();
+    this.getAllSuffix();    
     this.parentInfo = {};
     if(this.parentDetailsForViewAndEdit.parentInfo.hasOwnProperty('firstname')){
       this.addParentInfoModel = this.parentDetailsForViewAndEdit;     
       this.parentInfo = this.addParentInfoModel.parentInfo;
       this.studentInfo = this.addParentInfoModel.getStudentForView;  
+      
       this.setEmptyValue(this.parentInfo,this.studentInfo);     
     }else{    
-      
       this.parentInfoService.getParentDetailsForGeneral.subscribe((res: AddParentInfoModel) => {       
         this.addParentInfoModel = res;        
         this.parentInfo = this.addParentInfoModel.parentInfo;
-        this.studentInfo = this.addParentInfoModel.getStudentForView;  
+        this.studentInfo = this.addParentInfoModel.getStudentForView; 
+       
         this.setEmptyValue(this.parentInfo,this.studentInfo);   
       })
-    } 
-   
+    }   
   }
   setEmptyValue(parentInfo,studentInfo){
    
@@ -142,9 +152,46 @@ export class EditparentGeneralinfoComponent implements OnInit,OnDestroy {
     this.parentCreateMode=this.parentCreate.EDIT
     this.addParentInfoModel.parentInfo = this.parentInfo;
     this.imageCropperService.enableUpload(true);
-    this.parentInfoService.changePageMode(this.parentCreateMode);
+    this.parentInfoService.changePageMode(this.parentCreateMode);     
+    console.log()
+  }
+
+  getAllSalutation(){
+    this.lovList.lovName="Salutation";
+    this.commonService.getAllDropdownValues(this.lovList).subscribe(
+      (res:LovList)=>{      
+        this.salutationList = res.dropdownList; 
+        if (this.schoolCreateMode == SchoolCreate.VIEW) {
+          this.findSalutationNameByIdOnViewMode();
+        }       
+      }
+    );
+  }
+  getAllSuffix(){
+    this.lovList.lovName="Suffix";
+    this.commonService.getAllDropdownValues(this.lovList).subscribe(
+      (res:LovList)=>{      
+        this.suffixList = res.dropdownList; 
+        if (this.schoolCreateMode == SchoolCreate.VIEW) {
+          this.findSuffixNameByIdOnViewMode();
+        }       
+      }
+    );
+  }
+  findSalutationNameByIdOnViewMode(){
+    let index = this.salutationList.findIndex((x) => {      
+      return x.id === +this.addParentInfoModel.parentInfo.salutation;
+    });    
+    this.salutation = this.salutationList[index]?.lovColumnValue; 
+  }
+  findSuffixNameByIdOnViewMode(){
+    let index = this.suffixList.findIndex((x) => {      
+      return x.id === +this.addParentInfoModel.parentInfo.suffix;
+    });    
+    this.suffix = this.suffixList[index]?.lovColumnValue; 
   }
   
+
   submit()
   {  
     this.addParentInfoModel._token = sessionStorage.getItem("token");

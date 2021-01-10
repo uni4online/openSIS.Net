@@ -45,19 +45,20 @@ export class StaffGeneralinfoComponent implements OnInit {
   countryModel: CountryModel = new CountryModel();
   staffAddModel: StaffAddModel = new StaffAddModel();
   languages: LanguageModel = new LanguageModel();
-  
+
   lovListViewModel: LovList = new LovList()
   checkStaffInternalIdViewModel: CheckStaffInternalIdViewModel = new CheckStaffInternalIdViewModel();
   checkUserEmailAddressViewModel: CheckUserEmailAddressViewModel = new CheckUserEmailAddressViewModel();
-  salutationEnum = Object.keys(salutation);
-  suffixEnum = Object.keys(suffix);
-  genderEnum = Object.keys(gender);
-  maritalStatusEnum = Object.keys(maritalStatus);
   destroySubject$: Subject<void> = new Subject();
   languageList = [];
   ethnicityList = [];
   raceList = [];
+  genderList = [];
+  suffixList = [];
+  salutationList = [];
+  maritalStatusList = [];
   disablity = WashInfoEnum;
+  staffPortalAccess: string;
   countryListArr = [];
   countryName = '-';
   nationality = '-';
@@ -72,9 +73,9 @@ export class StaffGeneralinfoComponent implements OnInit {
   staffInternalId = '';
   data: any;
   hidePasswordAccess: boolean = false;
-  firstLanguageName: string;
-  secondLanguageName: string;
-  thirdLanguageName: string;
+  firstLanguageName = '-';
+  secondLanguageName = '-';
+  thirdLanguageName = '-';
   hideAccess: boolean = false;
   fieldDisabled: boolean = false;
   saveAndNext = 'saveAndNext';
@@ -98,11 +99,14 @@ export class StaffGeneralinfoComponent implements OnInit {
       this.data = this.staffAddModel?.staffMaster;
       this.staffInternalId = this.data.staffInternalId;
       this.staffPortalId = this.data.loginEmailAddress;
+      this.viewPortalAccess();
       this.accessPortal();
       this.GetAllLanguage();
       this.getAllCountry();
-      this.getAllEthnicity();
-      this.getAllRace();
+      this.getAllGender();
+      this.getAllSalutation();
+      this.getAllSuffix();
+      this.getAllMaritalStatus();
     })
 
   }
@@ -113,6 +117,10 @@ export class StaffGeneralinfoComponent implements OnInit {
       this.GetAllLanguage();
       this.getAllEthnicity();
       this.getAllRace();
+      this.getAllGender();
+      this.getAllSalutation();
+      this.getAllSuffix();
+      this.getAllMaritalStatus();
     } else if (this.staffCreateMode == this.staffCreate.VIEW) {
 
       this.staffService.changePageMode(this.staffCreateMode);
@@ -137,15 +145,9 @@ export class StaffGeneralinfoComponent implements OnInit {
     this.commonService.getAllDropdownValues(this.lovListViewModel).subscribe(
       (res: LovList) => {
         if (typeof (res) == 'undefined') {
-          this.snackbar.open('Ethnicity list failed. ' + sessionStorage.getItem("httpError"), '', {
-            duration: 10000
-          });
         }
         else {
           if (res._failure) {
-            this.snackbar.open('Ethnicity list failed. ' + res._message, 'LOL THANKS', {
-              duration: 10000
-            });
           }
           else {
             this.ethnicityList = res.dropdownList;
@@ -159,18 +161,76 @@ export class StaffGeneralinfoComponent implements OnInit {
     this.commonService.getAllDropdownValues(this.lovListViewModel).subscribe(
       (res: LovList) => {
         if (typeof (res) == 'undefined') {
-          this.snackbar.open('Race list failed. ' + sessionStorage.getItem("httpError"), '', {
-            duration: 10000
-          });
         }
         else {
           if (res._failure) {
-            this.snackbar.open('Race list failed. ' + res._message, 'LOL THANKS', {
-              duration: 10000
-            });
           }
           else {
             this.raceList = res.dropdownList;
+          }
+        }
+      })
+  }
+
+  getAllGender() {
+    this.lovListViewModel.lovName = "Gender";
+    this.commonService.getAllDropdownValues(this.lovListViewModel).subscribe(
+      (res: LovList) => {
+        if (typeof (res) == 'undefined') {
+        }
+        else {
+          if (res._failure) {
+          }
+          else {
+            this.genderList = res.dropdownList;
+          }
+        }
+      })
+  }
+
+  getAllSuffix() {
+    this.lovListViewModel.lovName = "Suffix";
+    this.commonService.getAllDropdownValues(this.lovListViewModel).subscribe(
+      (res: LovList) => {
+        if (typeof (res) == 'undefined') {
+        }
+        else {
+          if (res._failure) {
+          }
+          else {
+            this.suffixList = res.dropdownList;
+          }
+        }
+      })
+  }
+
+  getAllSalutation() {
+    this.lovListViewModel.lovName = "Salutation";
+    this.commonService.getAllDropdownValues(this.lovListViewModel).subscribe(
+      (res: LovList) => {
+        if (typeof (res) == 'undefined') {
+        }
+        else {
+          if (res._failure) {
+          }
+          else {
+            this.salutationList = res.dropdownList;
+          }
+        }
+      })
+  }
+
+  getAllMaritalStatus() {
+    this.lovListViewModel.lovName = "Marital Status";
+    this.commonService.getAllDropdownValues(this.lovListViewModel).subscribe(
+      (res: LovList) => {
+        if (typeof (res) == 'undefined') {
+        }
+        else {
+          if (res._failure) {
+          }
+          else {
+            this.maritalStatusList = res.dropdownList;
           }
         }
       })
@@ -252,7 +312,7 @@ export class StaffGeneralinfoComponent implements OnInit {
     }
   }
   accessPortal() {
-    if (this.staffPortalId !== null) {
+    if (this.staffPortalId !== null && this.staffPortalId !== undefined) {
       this.hideAccess = true;
       this.fieldDisabled = true;
       this.hidePasswordAccess = false;
@@ -288,6 +348,15 @@ export class StaffGeneralinfoComponent implements OnInit {
       this.hideAccess = false;
       this.hidePasswordAccess = false;
       this.staffAddModel.staffMaster.portalAccess = false;
+    }
+  }
+
+  viewPortalAccess() {
+    if (this.staffAddModel.staffMaster.portalAccess == false || this.staffAddModel.staffMaster.portalAccess == null) {
+      this.staffPortalAccess = 'No';
+    }
+    else {
+      this.staffPortalAccess = 'Yes';
     }
   }
 
@@ -338,12 +407,16 @@ export class StaffGeneralinfoComponent implements OnInit {
     }
 
     if (this.currentForm.form.valid) {
-
-      if (this.staffCreateMode == this.staffCreate.EDIT) {
-        if (this.staffAddModel.fieldsCategoryList !== null) {
-          this.staffAddModel.selectedCategoryId = this.staffAddModel.fieldsCategoryList[this.categoryId].categoryId;
+      if (this.staffAddModel.fieldsCategoryList !== null) {
+        this.staffAddModel.selectedCategoryId = this.staffAddModel.fieldsCategoryList[this.categoryId].categoryId;
+        
+        for (var i = 0; i < this.staffAddModel.fieldsCategoryList[this.categoryId].customFields.length; i++) {
+          if (this.staffAddModel.fieldsCategoryList[this.categoryId].customFields[i].type === "Multiple SelectBox") {
+            this.staffAddModel.fieldsCategoryList[this.categoryId].customFields[i].customFieldsValue[0].customFieldValue = this.staffService.getStaffMultiselectValue().toString().replaceAll(",", "|");
+          }
         }
-
+      }
+      if (this.staffCreateMode == this.staffCreate.EDIT) {
         this.updateStaff();
       } else {
         this.addStaff();
@@ -400,8 +473,12 @@ export class StaffGeneralinfoComponent implements OnInit {
             duration: 10000
           });
           this.staffCreateMode = this.staffCreate.VIEW
-           this.data = data.staffMaster;
-           this.imageCropperService.enableUpload(false);
+          this.staffAddModel.staffMaster = data.staffMaster;
+          this.viewPortalAccess();
+          if (this.staffAddModel.staffMaster.loginEmailAddress !== null) {
+            this.hidePasswordAccess = false;
+          }
+          this.imageCropperService.enableUpload(false);
           this.staffService.changePageMode(this.staffCreateMode);
         }
       }

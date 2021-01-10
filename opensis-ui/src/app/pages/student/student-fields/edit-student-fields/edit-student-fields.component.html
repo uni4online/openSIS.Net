@@ -12,14 +12,9 @@
         <mat-label>{{'fieldName' | translate}}</mat-label>
         <input formControlName="title" cdkFocusInitial matInput required>
         <mat-error *ngIf="form.get('title').hasError('required')">{{'fieldNameIsRequired'|translate}}</mat-error>
+        <mat-error *ngIf="form.get('title').hasError('whitespace')">{{'fieldNameIsRequired'|translate}}</mat-error>
     </mat-form-field>
 
-    <mat-form-field class="w-full" appearance="outline" color="primary">
-        <mat-label>{{'sortOrder' | translate}}</mat-label>
-        <input type="number" formControlName="sortOrder" matInput required>
-        <mat-error *ngIf="form.get('sortOrder').hasError('required')">{{'sortOrderIsRequired'|translate}}</mat-error>
-        <mat-error *ngIf="form.get('sortOrder').hasError('min')">{{'sortOrderCannotBeLessThenOne'|translate}}</mat-error>
-    </mat-form-field>
 
     <mat-form-field class="w-full" appearance="outline" color="primary">
         <mat-label>{{'fieldType' | translate}}</mat-label>

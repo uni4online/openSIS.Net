@@ -27,6 +27,15 @@ export class StaffService {
     return this.staffId;
   }
 
+  private staffMultiselectValue: any;
+  setStaffMultiselectValue(value: any) {
+    this.staffMultiselectValue = value;
+  }
+  getStaffMultiselectValue() {
+    return this.staffMultiselectValue;
+  }
+
+
   private category = new Subject;
   categoryToSend = this.category.asObservable();
   changeCategory(category: number) {

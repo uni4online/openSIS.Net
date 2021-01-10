@@ -19,7 +19,8 @@ import { MatSort } from '@angular/material/sort';
 import { LoaderService } from '../../../services/loader.service';
 import { CommonService } from '../../../services/common.service';
 import { MatPaginator } from '@angular/material/paginator';
-
+import {LanguageAddModel} from '../../../models/languageModel';
+import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confirm-dialog.component';
 @Component({
   selector: 'vex-language',
   templateUrl: './language.component.html',
@@ -53,6 +54,7 @@ export class LanguageComponent implements OnInit {
   loading;  
   totalCount:Number;pageNumber:Number;pageSize:Number;
   languageModel: LanguageModel = new LanguageModel();  
+  languageAddModel = new LanguageAddModel();
   languageModelList: MatTableDataSource<any>;
   searchKey:string;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
@@ -71,12 +73,50 @@ export class LanguageComponent implements OnInit {
     this.getLanguageList();
   }
 
-  ngOnInit(): void {
-    
+  ngOnInit(): void { }
+
+  deleteLanguageData(element){
+    this.languageAddModel._tenantName = sessionStorage.getItem("tenant");
+    this.languageAddModel._token = sessionStorage.getItem("token");
+    this.languageAddModel.language.langId = element;
+    this.commonService.DeleteLanguage(this.languageAddModel).subscribe(
+      (res)=>{
+        if(typeof(res)=='undefined'){
+          this.snackbar.open('Language Deletion failed. ' + sessionStorage.getItem("httpError"), '', {
+            duration: 10000
+          });
+        }
+        else{
+          if (res._failure) {
+            this.snackbar.open('Language Deletion failed. ' + res._message, 'LOL THANKS', {
+              duration: 10000
+            });
+          } 
+          else { 
+            this.snackbar.open('Language Deleted Successfully. ' + res._message, 'LOL THANKS', {
+              duration: 10000
+            });
+            this.getLanguageList()
+          }
+        }
+      }
+    )
   }
- 
+  confirmDelete(element){   
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      maxWidth: "400px",
+      data: {
+          title: "Are you sure?",
+          message: "You are about to delete "+element.locale+"."}
+    });
+    dialogRef.afterClosed().subscribe(dialogResult => {
+      if(dialogResult){
+        this.deleteLanguageData(element.langId);
+      }
+   });
+  }
   getLanguageList(){
-    this.languageModel._tenantName = sessionStorage.getItem("tenant");
+    this.languageModel._tenantName = sessionStorage.getItem("tenant");  
     this.commonService.GetAllLanguage(this.languageModel).subscribe(data => {
       if (typeof (data) == 'undefined') {
         this.snackbar.open('Language list failed. ' + sessionStorage.getItem("httpError"), '', {

@@ -10,17 +10,10 @@ import { fadeInRight400ms } from '../../../../@vex/animations/fade-in-right.anim
   ]
 })
 export class GradeSettingsComponent implements OnInit {
-  pages=['US Common Core Standards', 'School Specific Standards', 'Effort Grade Library']
+  pages=['Standard Grade Setup', 'Effort Grade Library', 'Report Card Grades']
   parentSettings=true;
   pageTitle = 'US Common Core Standards';
   pageId: string = '';
-  displayUSCommonCoreStandards = true;
-  displaySchoolSpecificStandards = true;
-  displayEffortGradeLibrary = true;
-
-  USCommonCoreStandardsFlag: boolean = true;
-  SchoolSpecificStandardsFlag: boolean = true;
-  EffortGradeLibraryFlag: boolean = true;
 
   constructor() { }
 

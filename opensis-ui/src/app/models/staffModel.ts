@@ -10,8 +10,8 @@ export class StaffMasterModel {
     public staffPhoto: string;
     public staffInternalId: string;
     public alternateId: string;
-    public districtId: number;
-    public stateId: number;
+    public districtId: string;
+    public stateId: string;
     public salutation: string;
     public firstGivenName: string;
     public middleName: string;

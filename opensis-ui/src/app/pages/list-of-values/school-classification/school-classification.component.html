@@ -104,26 +104,28 @@
             </mat-footer-cell>
           </ng-container>
           <ng-container matColumnDef="noData">
-            <td mat-footer-cell *matFooterCellDef colspan="3">
-              No Data
+            <td mat-footer-cell *matFooterCellDef colspan="6">
+              {{loading?'Fetching Data...':'No Data'}}
             </td>
-          </ng-container>
-
-          <tr mat-header-row *matHeaderRowDef="visibleColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: visibleColumns" @fadeInUp></tr>
-          <mat-footer-row *matFooterRowDef="['loading']" [class.hide]="!loading"></mat-footer-row>
-          <tr mat-footer-row *matFooterRowDef="['noData']" [class.hide]="ClassificationModelList?.data.length!=0"></tr>
+        </ng-container>
+        
+        <tr mat-header-row *matHeaderRowDef="visibleColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: visibleColumns" @fadeInUp></tr>
+        <mat-footer-row *matFooterRowDef="['loading']" [class.hide]="!loading"></mat-footer-row>
+        <tr mat-footer-row *matFooterRowDef="['noData']" [class.hide]="listCount!=null"></tr>
 
     </table>
+    <mat-paginator [pageSize]="25" [class.hide]="listCount<26" [pageSizeOptions]="[25, 30, 40, 50]" showFirstLastButtons>
+    </mat-paginator>
     <!-- <mat-paginator [length]="totalCount" [pageSize]="pageSize" [pageSizeOptions]="[10, 20, 30, 40]" showFirstLastButtons (page)='getPageEvent($event)'></mat-paginator> -->
     <!-- <mat-paginator [length]="totalCount" [pageSize]="pageSize" [pageSizeOptions]="[10, 20, 30, 40]" showFirstLastButtons (page)='getPageEvent($event)'></mat-paginator> -->
 </div>
 
 <mat-menu #columnFilterMenu="matMenu" xPosition="before" yPosition="below">
     <button (click)="toggleColumnVisibility(column, $event)" *ngFor="let column of columns"
-            class="checkbox-item mat-menu-item">
-      <mat-checkbox (click)="$event.stopPropagation()" [(ngModel)]="column.visible" color="primary">
-        {{column.label}}
-      </mat-checkbox>
+        class="checkbox-item mat-menu-item">
+        <mat-checkbox (click)="$event.stopPropagation()" [(ngModel)]="column.visible" color="primary">
+            {{column.label}}
+        </mat-checkbox>
     </button>
 </mat-menu>

@@ -4,6 +4,8 @@ import icEdit from '@iconify/icons-ic/twotone-edit';
 import icDelete from '@iconify/icons-ic/twotone-delete';
 import icSearch from '@iconify/icons-ic/search';
 import icFilterList from '@iconify/icons-ic/filter-list';
+import icMoreVertical from '@iconify/icons-ic/baseline-more-vert';
+import icCancel from '@iconify/icons-ic/baseline-close';
 import { Router} from '@angular/router';
 import { fadeInUp400ms } from '../../../../@vex/animations/fade-in-up.animation';
 import { stagger40ms } from '../../../../@vex/animations/stagger.animation';
@@ -37,6 +39,9 @@ export class EffortGradeLibraryComponent implements OnInit {
   icDelete = icDelete;
   icSearch = icSearch;
   icFilterList = icFilterList;
+  icMoreVertical = icMoreVertical;
+  icCancel = icCancel;
+  addCategory = false;
   loading:Boolean;
 
   constructor(private router: Router,private dialog: MatDialog,public translateService:TranslateService) {
@@ -70,9 +75,14 @@ export class EffortGradeLibraryComponent implements OnInit {
   }
 
   goToAddCategory() {
-    this.dialog.open(EditCategoryComponent, {
-      width: '500px'
-    });
+    // this.dialog.open(EditCategoryComponent, {
+    //   width: '500px'
+    // });
+    this.addCategory = true;
+  }
+
+  closeAddCategory() {
+    this.addCategory = false;
   }
 
   get visibleColumns() {

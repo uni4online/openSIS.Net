@@ -16,7 +16,7 @@
                 <ul class="grid grid-cols-3 col-gap-8 row-gap-10 mt-2 mx-4">
                     <li>
                         <label class="text-sm leading-5 text-gray">{{'Name' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{parentInfo.firstname+' '+parentInfo.middlename+' '+parentInfo.lastname}}</p>
+                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{parentInfo.firstname+' '+parentInfo.middlename+' '+parentInfo.lastname | EmtyValueCheckPipe}}</p>
                     </li>
                    <!-- <li>
                         <label class="text-sm leading-5 text-gray">{{'preferredCommonName' | translate}}</label>
@@ -32,19 +32,19 @@
                 <ul class="grid grid-cols-3 col-gap-8 row-gap-10 mt-2 mx-4">
                     <li>
                         <label class="text-sm leading-5 text-gray">{{'homePhone' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{parentInfo.homePhone}}</p>
+                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{parentInfo.homePhone | EmtyValueCheckPipe}}</p>
                     </li>
                     <li>
                         <label class="text-sm leading-5 text-gray">{{'mobilePhone' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{parentInfo.mobile}}</p>
+                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{parentInfo.mobile | EmtyValueCheckPipe}}</p>
                     </li>
                     <li>
                         <label class="text-sm leading-5 text-gray">{{'workEmail' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{parentInfo.workEmail}}</p>
+                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{parentInfo.workEmail | EmtyValueCheckPipe}}</p>
                     </li>
                     <li>
                         <label class="text-sm leading-5 text-gray">{{'personalEmail' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{parentInfo.personalEmail}}</p>
+                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{parentInfo.personalEmail | EmtyValueCheckPipe}}</p>
                     </li>
                    
                 </ul>
@@ -56,7 +56,7 @@
                 <ul class="grid grid-cols-3 col-gap-8 row-gap-10 my-2 mx-4">
                     <li>
                         <label class="text-sm leading-5 text-gray">{{'loginEmailAddress' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{parentInfo.loginEmail}}</p>
+                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{parentInfo.loginEmail | EmtyValueCheckPipe}}</p>
                     </li>
                     <li>
                         <label class="text-sm leading-5 text-gray">{{'password' | translate}}</label>
@@ -80,9 +80,9 @@
                                 <img src="assets/img/default.jpg" class="avatar">
                             </div>
                             <div class="overflow-hidden cursor-pointer py-2" fxFlex="auto" (click)='openViewDetails(student)'>
-                                <div class="subheading-2 leading-snug text-primary">{{student.firstGivenName+' '+student.middleName+' '+student.lastFamilyName}}</div>
-                                <div class="body-1 text-secondary truncate contact-type">Grade:   {{student.gradeLevelTitle}} <span
-                                        class="separator"></span>   {{student.schoolName}}  </div>
+                                <div class="subheading-2 leading-snug text-primary">{{student.firstGivenName+' '+student.middleName+' '+student.lastFamilyName | EmtyValueCheckPipe}}</div>
+                                <div class="body-1 text-secondary truncate contact-type">Grade:   {{student.gradeLevelTitle| EmtyValueCheckPipe}} <span
+                                        class="separator"></span>   {{student.schoolName | EmtyValueCheckPipe}}  </div>
                             </div>
                             <div fxFlex="none" fxLayout="column" fxLayoutAlign="center end" class="pr-3">
                                 <div class="flex items-center">
@@ -98,9 +98,9 @@
                     </div>
                    
                     <div
-                        class="border flex items-center border-dashed border-blue rounded hover:bg-skyblue-light p-4 mb-4 text-center cursor-pointer">
+                    (click) = "associateStudent()" class="border flex items-center border-dashed border-blue rounded hover:bg-skyblue-light p-4 mb-4 text-center cursor-pointer">
                         <span class="text-center w-full text-primary">
-                            <mat-icon (click) = "associateStudent()" [icIcon]="icAdd" class="mr-3 inline-block align-middle"></mat-icon>Associate Student
+                            <mat-icon [icIcon]="icAdd" class="mr-3 inline-block align-middle"></mat-icon>Associate Student
                         </span>
                     </div>
                 </div>
@@ -120,19 +120,23 @@
             <div class="mb-2 md:flex md:flex-wrap">
                 <div class="flex flex-1 mx-4 md:w-1/2">
                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
-                         <mat-label>{{'salutation'|translate}}</mat-label>
-                        <mat-select  [(ngModel)]="addParentInfoModel.parentInfo.salutation" name="salutation" #salutation="ngModel">
-                            <mat-option value=""></mat-option>
-                            <mat-option *ngFor="let salutation of salutationEnum" [value]="salutation">{{salutation}}</mat-option>
-                        </mat-select>
+                        <mat-label>{{'salutation'|translate}}</mat-label>    
+
+                        <mat-select #salutation="ngModel"
+                        [(ngModel)]="addParentInfoModel.parentInfo.salutation" name="salutation" required>
+                        <mat-option></mat-option>
+                        <mat-option *ngFor="let key of salutationList" [value]='key.lovColumnValue'>
+                            {{key.lovColumnValue}}
+                        </mat-option>
+                    </mat-select>                 
                     </mat-form-field>
                 </div>
                 <div class="flex flex-1 mx-4 md:w-1/2">
                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                         <mat-label>{{'suffix'|translate}}</mat-label>
                         <mat-select  [(ngModel)]="addParentInfoModel.parentInfo.suffix" name="suffix" #suffix="ngModel">
-                            <mat-option value=""></mat-option>
-                            <mat-option *ngFor="let suffix of suffixEnum" [value]="suffix">{{suffix}}</mat-option>
+                            <mat-option></mat-option>
+                            <mat-option *ngFor="let suffix of suffixList" [value]="suffix.lovColumnValue">{{suffix.lovColumnValue}}</mat-option>
                         </mat-select>
                     </mat-form-field>
                 </div>

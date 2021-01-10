@@ -36,6 +36,7 @@ export class StudentCommentsComponent implements OnInit {
   icAdd = icAdd;
   icComment = icComment;
   icPrint = icPrint;
+  listCount;
   StudentCreate=SchoolCreate;
   @Input() studentCreateMode:SchoolCreate;
   @Input() studentDetailsForViewAndEdit;
@@ -80,6 +81,7 @@ export class StudentCommentsComponent implements OnInit {
           if (res._failure) {     
             if(res._message==="NO RECORD FOUND"){
               if(res.studentCommentsList==null){
+                this.listCount =null;
                 this.studentCommentsListViewModel.studentCommentsList=null ;
               }
              
@@ -91,6 +93,7 @@ export class StudentCommentsComponent implements OnInit {
           }
           else {       
             this.studentCommentsListViewModel.studentCommentsList=res.studentCommentsList
+            this.listCount =res.studentCommentsList.length;
             this.studentCommentsListViewModel.studentCommentsList.map(n=>{
               n.lastUpdated=this.commonFunction.serverToLocalDateAndTime(n.lastUpdated)
             })

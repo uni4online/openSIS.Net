@@ -46,8 +46,8 @@
                             <mat-select #school_level="ngModel"
                                 [(ngModel)]="schoolAddViewModel.schoolMaster.schoolLevel" name="school_level" required>
                                 <mat-option></mat-option>
-                                <mat-option *ngFor="let key of schoolLevelOptions" [value]='key'>
-                                    {{key}}
+                                <mat-option *ngFor="let key of schoolLevelOptions" [value]='key.lovColumnValue'>
+                                    {{key.lovColumnValue}}
                                 </mat-option>
                             </mat-select>
                                 <mat-error *ngIf="school_level.errors?.required">
@@ -62,8 +62,8 @@
                                 [(ngModel)]="schoolAddViewModel.schoolMaster.schoolClassification"
                                 name="school_classification" required>
                                 <mat-option></mat-option>
-                                <mat-option *ngFor="let key of schoolClassificationOptions" [value]="key">
-                                    {{key}}
+                                <mat-option *ngFor="let key of schoolClassificationOptions" [value]='key.lovColumnValue'>
+                                    {{key.lovColumnValue}}
                                 </mat-option>
                             </mat-select>
                            
@@ -109,13 +109,13 @@
                     <li>
                         <mat-form-field class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'lowestGradeLevel'|translate}}</mat-label>
-                            <mat-select #lowestGradeLevel="ngModel" (selectionChange)="checkLowGradeLevel($event)"
+                            <mat-select #lowestGradeLevel="ngModel"  (selectionChange)="checkLowGradeLevel($event)"
                                 [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].lowestGradeLevel"
                                 name="lowestGradeLevel" required>
 
-                                <mat-option *ngFor="let lowestGradeLevel of gradeLevel" [value]="lowestGradeLevel.id"
-                                    [disabled]="lowestGradeLevel.id==schoolAddViewModel.schoolMaster.schoolDetail[0].highestGradeLevel">
-                                    {{lowestGradeLevel.title}}
+                                <mat-option *ngFor="let lowestGradeLevel of gradeLevel" [value]="lowestGradeLevel.lovColumnValue"
+                                    [disabled]="lowestGradeLevel.lovColumnValue==schoolAddViewModel.schoolMaster.schoolDetail[0].highestGradeLevel">
+                                    {{lowestGradeLevel.lovColumnValue}}
                                 </mat-option>
                             </mat-select>
                           
@@ -130,13 +130,13 @@
                     <li>
                         <mat-form-field class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'highestGradeLevel'|translate}}</mat-label>
-                            <mat-select #highestGradeLevel="ngModel" (selectionChange)="checkHighGradeLevel($event)"
-                                [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].highestGradeLevel"
+                            <mat-select #highestGradeLevel="ngModel"
+                                [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].highestGradeLevel" (selectionChange)="checkHighGradeLevel($event)"
                                 name="highestGradeLevel" required>
 
-                                <mat-option *ngFor="let highestGradeLevel of gradeLevel" [value]="highestGradeLevel.id"
-                                    [disabled]="highestGradeLevel.id==schoolAddViewModel.schoolMaster.schoolDetail[0].lowestGradeLevel">
-                                    {{highestGradeLevel.title}}
+                                <mat-option *ngFor="let highestGradeLevel of gradeLevel" [value]="highestGradeLevel.lovColumnValue"
+                                    [disabled]="highestGradeLevel.lovColumnValue==schoolAddViewModel.schoolMaster.schoolDetail[0].lowestGradeLevel">
+                                    {{highestGradeLevel.lovColumnValue}}
                                 </mat-option>
                             </mat-select>
                             
@@ -184,8 +184,8 @@
                             <mat-select [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].gender"
                                 name="gender">
                                 <mat-option></mat-option>
-                                <mat-option *ngFor="let key of genderOptions" [value]="key">
-                                    {{key}}
+                                <mat-option *ngFor="let key of genderOptions" [value]="key.lovColumnValue">
+                                    {{key.lovColumnValue}}
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
@@ -512,7 +512,7 @@
                     </li>
                     <li>
                         <label class="text-sm leading-5 text-gray">{{'schoolClassification' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.schoolMaster.schoolClassification|EmtyValueCheckPipe}}</p>
+                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.schoolMaster.schoolClassification |EmtyValueCheckPipe}}</p>
                     </li>
                     <li>
                         <label class="text-sm leading-5 text-gray">{{'schoolName' | translate}} </label>
@@ -534,11 +534,11 @@
                     </li>
                     <li>
                         <label class="text-sm leading-5 text-gray">{{'lowestGradeLevel' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.schoolMaster.schoolDetail[0].lowestGradeLevel|EmtyValueCheckPipe}}</p>
+                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.schoolMaster.schoolDetail[0].lowestGradeLevel |EmtyValueCheckPipe}}</p>
                     </li>
                     <li>
                         <label class="text-sm leading-5 text-gray">{{'highestGradeLevel' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.schoolMaster.schoolDetail[0].highestGradeLevel|EmtyValueCheckPipe}}</p>
+                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.schoolMaster.schoolDetail[0].highestGradeLevel |EmtyValueCheckPipe}}</p>
                     </li>
                     <li>
                         <label class="text-sm leading-5 text-gray">{{'dateSchoolOpened' | translate}}</label>

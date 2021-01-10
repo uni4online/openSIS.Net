@@ -19,6 +19,9 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { SharedModuleModule } from '../../shared-module/shared-module.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { CalendarModule as AngularCalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 
 
 
@@ -26,6 +29,10 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   declarations: [CourseManagerComponent],
   imports: [
     CommonModule,
+    AngularCalendarModule.forRoot({
+      provide: DateAdapter,
+      useFactory: adapterFactory
+    }),
     CourseManagerRoutingModule,
     SecondaryToolbarModule,
     BreadcrumbsModule,
@@ -44,7 +51,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatButtonToggleModule,
     SharedModuleModule,
     TranslateModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatSlideToggleModule
   ]
 })
 export class CourseManagerModule { }

@@ -244,8 +244,8 @@
                             <mat-select [(ngModel)]="staffAddModel.staffMaster.relationshipToStaff"
                                 name="relationshipToStaff">
                                 <mat-option value=""></mat-option>
-                                <mat-option *ngFor="let staffRelation of staffRelationEnum" [value]="staffRelation">
-                                    {{staffRelation}}</mat-option>
+                                <mat-option *ngFor="let staffRelation of relationshipList" [value]="staffRelation.lovColumnValue">
+                                    {{staffRelation.lovColumnValue}}</mat-option>
                             </mat-select>
                         </mat-form-field>
                     </li>

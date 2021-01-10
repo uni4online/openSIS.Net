@@ -19,7 +19,7 @@ import {MatTabGroup } from '@angular/material/tabs';
 import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confirm-dialog.component';
 import { AttendanceCodeService } from '../../../services/attendance-code.service';
 import { AttendanceCodeCategoryModel, AttendanceCodeModel, GetAllAttendanceCategoriesListModel, GetAllAttendanceCodeModel } from '../../../models/attendanceCodeModel';
-import {AttendanceCodeEnum} from '../../../enums/attendance_code.enum';
+import {AttendanceCodeEnum} from '../../../enums/attendance-code.enum';
 
 @Component({
   selector: 'vex-attendance-codes',
