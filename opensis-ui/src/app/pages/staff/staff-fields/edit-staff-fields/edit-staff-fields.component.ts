@@ -40,8 +40,8 @@ export class EditStaffFieldsComponent implements OnInit {
     ) {
       this.form=fb.group({
         fieldId:[0],
-        title:['',[Validators.required,ValidationService.noWhitespaceValidator]],
-        fieldType:[],
+        title:['',[ValidationService.noWhitespaceValidator]],
+        fieldType:['',[Validators.required]],
         selectOptions:[''],
         defaultSelection:[,[ValidationService.defaultSelectionValidator]],
         required:[false],
@@ -83,7 +83,6 @@ export class EditStaffFieldsComponent implements OnInit {
         this.customFieldAddView.customFields.systemField=this.form.controls.systemField.value;
         this.customFieldAddView.customFields.type=this.form.controls.fieldType.value;
         this.customFieldAddView.customFields.module=this.fieldCategoryModule.Staff;
-        //this.customFieldAddView.customFields.type="Custom";
          this.customFieldService.addCustomField(this.customFieldAddView).subscribe(
           (res:CustomFieldAddView)=>{
             if(typeof(res)=='undefined'){
@@ -93,7 +92,7 @@ export class EditStaffFieldsComponent implements OnInit {
             }
             else{
               if (res._failure) {
-                this.snackbar.open('Staff field failed. ' + res._message, 'LOL THANKS', {
+                this.snackbar.open('Staff field failed. ' + res._message, '', {
                   duration: 10000
                 });
               } 
@@ -130,7 +129,7 @@ export class EditStaffFieldsComponent implements OnInit {
             }
             else{
               if (res._failure) {
-                this.snackbar.open('Staff field failed. ' + res._message, 'LOL THANKS', {
+                this.snackbar.open('Staff field failed. ' + res._message, '', {
                   duration: 10000
                 });
               } 

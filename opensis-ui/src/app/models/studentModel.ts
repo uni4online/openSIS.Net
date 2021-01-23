@@ -95,6 +95,7 @@ export class StudentMasterModel {
     public secondaryContactAddressLineTwo: string;
     public secondaryContactCity: string;
     public secondaryContactState: string;
+    public studentEnrollment:[StudentEnrollmentDetails];
     public secondaryContactZip: string;
     public homeAddressCountry: number;
     public mailingAddressCountry: number;
@@ -172,6 +173,7 @@ class studentList {
 
 export class StudentResponseListModel {
     public getStudentListForViews: [studentList];
+    public studentMaster:[StudentMasterModel]
     public tenantId: string;
     public schoolId: number;
     public totalCount: number;
@@ -346,9 +348,11 @@ export class StudentEnrollmentDetails extends CommonField{
     enrollmentCode: string;
     exitDate: string;
     exitCode: string;
+    exitType:string;
     transferredSchoolId: number | string;
     schoolTransferred: string;
     transferredGrade: string;
+    enrollmentType: string;
     lastUpdated: string;
     updatedBy: string;
     studentGuid:string;
@@ -360,7 +364,7 @@ export class StudentEnrollmentDetails extends CommonField{
     }
 }
 export class StudentEnrollmentModel extends CommonField{
-    studentEnrollments:[StudentEnrollmentDetails];
+    studentEnrollments:Array<StudentEnrollmentDetails>;
     studentEnrollmentListForView:[StudentEnrollmentDetails];
     tenantId: string;
     studentId: number;

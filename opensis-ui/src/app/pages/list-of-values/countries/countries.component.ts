@@ -85,7 +85,7 @@ export class CountriesComponent implements OnInit {
             this.CountryModelList.sort=this.sort;      
             this.CountryModelList.paginator = this.paginator;   
           } else {
-            this.snackbar.open('Country list failed.' + data._message, 'LOL THANKS', {
+            this.snackbar.open('Country list failed.' + data._message, '', {
               duration: 10000
             });
           }
@@ -122,12 +122,12 @@ export class CountriesComponent implements OnInit {
         }
         else{
           if (res._failure) {
-            this.snackbar.open('Country Deletion failed. ' + res._message, 'LOL THANKS', {
+            this.snackbar.open('Country Deletion failed. ' + res._message, '', {
               duration: 10000
             });
           } 
           else { 
-            this.snackbar.open('Country Deleted Successfully. ' + res._message, 'LOL THANKS', {
+            this.snackbar.open('Country Deleted Successfully. ' + res._message, '', {
               duration: 10000
             });
             this.getCountryList()

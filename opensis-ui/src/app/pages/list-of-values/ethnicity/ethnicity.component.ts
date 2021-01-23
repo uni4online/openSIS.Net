@@ -88,7 +88,7 @@ export class EthnicityComponent implements OnInit {
           if (res._failure) {
             this.ethnicityListModel=new MatTableDataSource(res.dropdownList) ;
             this.listCount=this.ethnicityListModel.data;
-            this.snackbar.open('Ethnicity List failed. ' + res._message, 'LOL THANKS', {
+            this.snackbar.open('Ethnicity List failed. ' + res._message, '', {
               duration: 10000
             });
           }
@@ -121,12 +121,12 @@ export class EthnicityComponent implements OnInit {
         }
         else{
           if (res._failure) {
-            this.snackbar.open('Ethnicity Deletion failed. ' + res._message, 'LOL THANKS', {
+            this.snackbar.open('Ethnicity Deletion failed. ' + res._message, '', {
               duration: 10000
             });
           } 
           else { 
-            this.snackbar.open('Ethnicity Deleted Successfully. ' + res._message, 'LOL THANKS', {
+            this.snackbar.open('Ethnicity Deleted Successfully. ' + res._message, '', {
               duration: 10000
             });
             this.getAllEthnicity()

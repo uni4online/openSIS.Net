@@ -1,3 +1,5 @@
+import { SchoolMasterModel } from "./schoolMasterModel";
+
 export class GetAllSchoolModel {
     tenantId:string;
     pageNumber: number;
@@ -22,7 +24,7 @@ constructor() {
 }
 
 export class AllSchoolListModel{
-    getSchoolForView:[OnlySchoolList];
+    schoolMaster:[SchoolMasterModel];
     totalCount:number;
     pageNumber:number;
     _pageSize:number;
@@ -45,7 +47,7 @@ class OnlySchoolList{
 }
 
 export class OnlySchoolListModel{
-    getSchoolForView: [OnlySchoolList];
+    schoolMaster: [SchoolMasterModel];
       tenantId: string;
       totalCount: number;
       pageNumber: number;

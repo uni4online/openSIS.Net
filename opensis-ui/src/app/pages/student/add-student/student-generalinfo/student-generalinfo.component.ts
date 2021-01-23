@@ -1,5 +1,5 @@
-import { Component, OnInit, Input, ViewChild, ChangeDetectorRef, OnDestroy, EventEmitter, Output } from '@angular/core';
-import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
+import { Component, OnInit, Input, ViewChild, ChangeDetectorRef, OnDestroy, EventEmitter, Output, AfterViewInit, ElementRef } from '@angular/core';
+import { FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
 import { fadeInRight400ms } from '../../../../../@vex/animations/fade-in-right.animation';
@@ -17,21 +17,18 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MY_FORMATS } from '../../../shared/format-datepicker';
 import { SharedFunction } from '../../../shared/shared-function';
-import { salutation, suffix, gender, race, ethnicity, maritalStatus } from '../../../../enums/studentAdd.enum';
 import { SchoolCreate } from '../../../../enums/school-create.enum';
 import icEdit from '@iconify/icons-ic/edit';
 import { Subject } from 'rxjs/internal/Subject';
-import { takeUntil } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import icVisibility from '@iconify/icons-ic/twotone-visibility';
 import icVisibilityOff from '@iconify/icons-ic/twotone-visibility-off';
-import icCheckbox from '@iconify/icons-ic/baseline-check-box';
-import icCheckboxOutline from '@iconify/icons-ic/baseline-check-box-outline-blank';
 import { SectionService } from '../../../../services/section.service';
 import { GetAllSectionModel, TableSectionList } from '../../../../models/sectionModel';
-import { CryptoService } from '../../../../services/Crypto.service';
 import { CheckUserEmailAddressViewModel } from '../../../../models/userModel';
 import { ImageCropperService } from '../../../../services/image-cropper.service';
 import { LovList } from '../../../../models/lovModel';
+import {MiscModel} from '../../../../models/misc-data-student.model';
 
 @Component({
   selector: 'vex-student-generalinfo',
@@ -48,16 +45,19 @@ import { LovList } from '../../../../models/lovModel';
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
   ],
 })
-export class StudentGeneralinfoComponent implements OnInit, OnDestroy {
+export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDestroy {
+  icEdit = icEdit;
+  icVisibility = icVisibility;
+  icVisibilityOff = icVisibilityOff;
+
   studentCreate = SchoolCreate;
   @Input() studentCreateMode: SchoolCreate;
   @Input() studentDetailsForViewAndEdit;
   @Input() categoryId;
   @ViewChild('f') currentForm: NgForm;
+
   data;
-  icEdit = icEdit;
-  icCheckbox = icCheckbox;
-  icCheckboxOutline = icCheckboxOutline;
+  nameOfMiscValuesForView:MiscModel=new MiscModel; //This Object contains Section Name, Nationality, Country, languages for View Mode.
   countryListArr = [];
   ethnicityList = [];
   raceList = [];
@@ -65,31 +65,19 @@ export class StudentGeneralinfoComponent implements OnInit, OnDestroy {
   suffixList = [];
   salutationList = [];
   maritalStatusList = [];
-  countryName = "-";
-  sectionName = "-";
-  nationality = "-";
   countryModel: CountryModel = new CountryModel();
   destroySubject$: Subject<void> = new Subject();
-
   form: FormGroup;
   studentAddModel: StudentAddModel = new StudentAddModel();
   checkStudentInternalIdViewModel: CheckStudentInternalIdViewModel = new CheckStudentInternalIdViewModel();
   checkUserEmailAddressViewModel: CheckUserEmailAddressViewModel = new CheckUserEmailAddressViewModel();
-  section: GetAllSectionModel = new GetAllSectionModel();
   sectionList: [TableSectionList];
   languages: LanguageModel = new LanguageModel();
   lovListViewModel: LovList = new LovList()
-  eligibility504: boolean = false;
-  economicDisadvantage: boolean = false;
-  freeLunchEligibility: boolean = false;
-  specialEducationIndicator: boolean = false;
-  lepIndicator: boolean = false;
   module = 'Student';
   saveAndNext = 'saveAndNext';
   pageStatus: string;
   languageList;
-  icVisibility = icVisibility;
-  icVisibilityOff = icVisibilityOff;
   inputType = 'password';
   studentInternalId = '';
   studentPortalId = '';
@@ -98,13 +86,13 @@ export class StudentGeneralinfoComponent implements OnInit, OnDestroy {
   hidePasswordAccess: boolean = false;
   hideAccess: boolean = false;
   fieldDisabled: boolean = false;
-  studentAge;
-  firstLanguageName : string;
-  secondLanguageName : string;
-  thirdLanguageName : string;
+  internalId: FormControl;
+  loginEmail:FormControl;
+  cloneStudentModel;
+  isSubjectActivated=false;
   @Output() dataAfterSavingGeneralInfo = new EventEmitter<any>();
   constructor(
-    private fb: FormBuilder,
+    private el: ElementRef,
     public translateService: TranslateService,
     private snackbar: MatSnackBar,
     private studentService: StudentService,
@@ -113,102 +101,138 @@ export class StudentGeneralinfoComponent implements OnInit, OnDestroy {
     private commonFunction: SharedFunction,
     private sectionService: SectionService,
     private cd: ChangeDetectorRef,
-    private imageCropperService:ImageCropperService) {
+    private imageCropperService: ImageCropperService) {
     translateService.use('en');
     this.studentService.getStudentDetailsForGeneral.pipe(takeUntil(this.destroySubject$)).subscribe((res: StudentAddModel) => {
+      this.isSubjectActivated=true;
       this.studentAddModel = res;
       this.studentAddModel.loginEmail = this.studentAddModel.studentMaster.studentPortalId;
       this.data = this.studentAddModel?.studentMaster;
+      this.cloneStudentModel=JSON.stringify(this.studentAddModel);
       this.studentInternalId = this.data.studentInternalId;
       this.studentPortalId = this.data.studentPortalId;
-      this.accessPortal();
-
-      if (this.studentCreateMode == this.studentCreate.VIEW) {
-        this.renderCheckBox();
-        this.studentAge = this.commonFunction.getAge(this.studentAddModel?.studentMaster.dob);
-        this.getAllSection();
-        this.imageCropperService.enableUpload(false);
+      if(this.studentAddModel.studentMaster?.studentId){
+        this.accessPortal();
+        this.GetAllLanguage();
+        this.initializeDropdowns()
       }
-      this.getAllCountry();
-      this.getAllEthnicity();
-      this.getAllRace();
-      this.getAllGender();
-      this.getAllSalutation();
-      this.getAllSuffix();
-      this.getAllMaritalStatus();
     })
   }
- 
+
   ngOnInit(): void {
-    
-    this.GetAllLanguage(); 
+    this.internalId = new FormControl('',Validators.required);
+    this.loginEmail=new FormControl('',Validators.required);
     if (this.studentCreateMode == this.studentCreate.ADD) {
-     this.getAllSection();
-     this.getAllEthnicity();
-     this.getAllRace();
-     this.getAllGender();
-     this.getAllSalutation();
-     this.getAllSuffix();
-     this.getAllMaritalStatus();
-     this.getAllCountry();
+      this.initializeDropdownsInAddMode();
     } else if (this.studentCreateMode == this.studentCreate.VIEW) {
-      this.studentAddModel = this.studentDetailsForViewAndEdit;
       this.studentService.changePageMode(this.studentCreateMode);
-      this.data = this.studentDetailsForViewAndEdit?.studentMaster;      
-      this.renderCheckBox();
-      
-    
+      this.imageCropperService.enableUpload(false);
+      this.studentAddModel = this.studentDetailsForViewAndEdit;
+      this.data = this.studentDetailsForViewAndEdit?.studentMaster;
+      this.cloneStudentModel=JSON.stringify(this.studentAddModel);
+      if(!this.isSubjectActivated){
+        this.GetAllLanguage();
+        this.getAllCountry();
+        this.getAllSection();
+        this.getAllEthnicity();
+        this.getAllRace();
+        this.getAllGender();
+        this.getAllSalutation();
+        this.getAllSuffix();
+        this.getAllMaritalStatus();
+      }
+
     } else if (this.studentCreateMode == this.studentCreate.EDIT && (this.studentDetailsForViewAndEdit != undefined || this.studentDetailsForViewAndEdit != null)) {
       this.studentAddModel = this.studentDetailsForViewAndEdit;
+      this.cloneStudentModel=JSON.stringify(this.studentAddModel);
+      this.data=this.studentAddModel.studentMaster;
+      this.studentPortalId = this.studentAddModel.studentMaster.studentPortalId;
       this.studentService.changePageMode(this.studentCreateMode);
+      this.accessPortal();
+      this.initializeDropdownsInAddMode();
       this.saveAndNext = 'update';
       if (this.studentAddModel.studentMaster.studentPortalId !== null) {
         this.hideAccess = true;
         this.fieldDisabled = true;
-
       }
     }
   }
 
-  renderCheckBox() {
-    if (this.data.eligibility504) {
-      this.eligibility504 = true;
-    } else {
-      this.eligibility504 = false;
-    }
-    if (this.data.freeLunchEligibility) {
-      this.freeLunchEligibility = true;
-    } else {
-      this.freeLunchEligibility = false;
-    }
-    if (this.data.economicDisadvantage) {
-      this.economicDisadvantage = true;
-    } else {
-      this.economicDisadvantage = false;
-    }
-    if (this.data.specialEducationIndicator) {
-      this.specialEducationIndicator = true;
-    } else {
-      this.specialEducationIndicator = false;
-    }
-    if (this.data.lepIndicator) {
-      this.lepIndicator = true;
-    } else {
-      this.lepIndicator = false;
-    }
+  initializeDropdowns(){
+    this.getAllCountry();
+    this.getAllSection();
+  }
+
+  initializeDropdownsInAddMode(){
+    this.getAllSalutation();
+    this.getAllSuffix();
+    this.getAllGender();
+    this.getAllRace();
+    this.getAllEthnicity();
+    this.getAllMaritalStatus();
+    this.getAllCountry();
+    this.GetAllLanguage();
+    this.getAllSection();
+  }
+
+  ngAfterViewInit() {
+    // For Checking Internal Id
+    this.internalId.valueChanges.pipe(debounceTime(500), distinctUntilChanged()).subscribe((term) => {
+      if (term != '') {
+        if (this.studentInternalId === term) {
+          this.internalId.setErrors(null);
+        }
+        else {
+          this.checkStudentInternalIdViewModel.studentInternalId = term;
+          this.studentService.checkStudentInternalId(this.checkStudentInternalIdViewModel).subscribe(data => {
+            if (data.isValidInternalId) {
+              this.internalId.setErrors(null);
+            }
+            else {
+              this.internalId.markAsTouched();
+              this.internalId.setErrors({ 'nomatch': true });
+            }
+          });
+        }
+      } else {
+        this.internalId.markAsTouched();
+      }
+    });
+
+    this.loginEmail.valueChanges
+    .pipe(debounceTime(600), distinctUntilChanged())
+    .subscribe(term => {
+      if (term != '') {
+        if (this.studentPortalId === term) {
+          this.loginEmail.setErrors(null);
+        }
+        else {
+          this.checkUserEmailAddressViewModel.emailAddress = term;
+          this.loginService.checkUserLoginEmail(this.checkUserEmailAddressViewModel).subscribe(data => {
+            if (data.isValidEmailAddress) {
+              this.loginEmail.setErrors(null);
+            }
+            else {
+              this.loginEmail.markAsTouched();
+              this.loginEmail.setErrors({ 'nomatch': true });
+            }
+          });
+        }
+      } else {
+        this.loginEmail.markAsTouched();
+      }
+    });
   }
 
   accessPortal() {
-    if (this.data.studentPortalId !== null && this.data.studentPortalId !== undefined) {
+    if (this.data?.studentPortalId !== null && this.data?.studentPortalId !== undefined) {
       this.hideAccess = true;
       this.fieldDisabled = true;
       this.hidePasswordAccess = false;
-
     } else {
       this.hideAccess = false;
       this.fieldDisabled = false;
       this.hidePasswordAccess = false;
-
     }
   }
 
@@ -309,25 +333,27 @@ export class StudentGeneralinfoComponent implements OnInit, OnDestroy {
   }
 
   getAllSection() {
-    this.sectionService.GetAllSection(this.section).subscribe(data => {
+    let section: GetAllSectionModel = new GetAllSectionModel();
+    this.sectionService.GetAllSection(section).subscribe(data => {
       if (data._failure) {
-        this.snackbar.open('Section information failed. ' + data._message, 'LOL THANKS', {
-          duration: 10000
-        });
-      } else {
+      }
+      else {
         this.sectionList = data.tableSectionsList;
         if (this.studentCreateMode == this.studentCreate.VIEW) {
-          this.sectionList.map((val) => {
-            var sectionNumber = +this.data.sectionId;
-            if (val.sectionId === sectionNumber) {
-              this.sectionName = val.name;
-            }
-
-          })
+         this.findSectionNameById();
         }
-
       }
+      
     });
+  }
+
+  findSectionNameById(){
+    this.sectionList.map((val) => {
+      var sectionNumber = +this.data.sectionId;
+      if (val.sectionId === sectionNumber) {
+        this.nameOfMiscValuesForView.sectionName = val.name;
+      }
+    })
   }
 
   isPortalAccess(event) {
@@ -353,41 +379,6 @@ export class StudentGeneralinfoComponent implements OnInit, OnDestroy {
     }
   }
 
-  checkLoginEmail(event) {
-    let emailId = event.target.value;
-    if (this.studentPortalId === emailId) {
-      this.currentForm.form.controls.loginEmail.setErrors(null);
-    }
-    else {
-      this.checkUserEmailAddressViewModel.emailAddress = emailId;
-      this.loginService.checkUserLoginEmail(this.checkUserEmailAddressViewModel).subscribe(data => {
-        if (data.isValidEmailAddress) {
-          this.currentForm.form.controls.loginEmail.setErrors(null);
-        }
-        else {
-          this.currentForm.form.controls.loginEmail.setErrors({ 'nomatch': true });
-        }
-      });
-    }
-  }
-
-  checkInternalId(event) {
-    let internalId = event.target.value;
-    if (this.studentInternalId === internalId) {
-      this.currentForm.form.controls.studentInternalId.setErrors(null);
-    }
-    else {
-      this.checkStudentInternalIdViewModel.studentInternalId = internalId;
-      this.studentService.checkStudentInternalId(this.checkStudentInternalIdViewModel).subscribe(data => {
-        if (data.isValidInternalId) {
-          this.currentForm.form.controls.studentInternalId.setErrors(null);
-        }
-        else {
-          this.currentForm.form.controls.studentInternalId.setErrors({ 'nomatch': true });
-        }
-      });
-    }
-  }
 
   getAllCountry() {
     this.commonService.GetAllCountry(this.countryModel).subscribe(data => {
@@ -400,29 +391,55 @@ export class StudentGeneralinfoComponent implements OnInit, OnDestroy {
         } else {
           this.countryListArr = data.tableCountry;
           if (this.studentCreateMode == this.studentCreate.VIEW) {
-            this.countryListArr.map((val) => {
-              var countryInNumber = +this.data.countryOfBirth;
-              var nationality = +this.data.nationality;
-              if (val.id === countryInNumber) {
-                this.countryName = val.name;
-              }
-              if (val.id === nationality) {
-                this.nationality = val.name;
-              }
-            })
+           this.findCountryNationalityById();
           }
         }
       }
     })
   }
+
+  findCountryNationalityById(){
+    this.countryListArr.map((val) => {
+      var countryInNumber = +this.data.countryOfBirth;
+      var nationality = +this.data.nationality;
+      if (val.id === countryInNumber) {
+        this.nameOfMiscValuesForView.countryName = val.name;
+      }
+      if (val.id === nationality) {
+        this.nameOfMiscValuesForView.nationality = val.name;
+      }
+    });
+  }
   editGeneralInfo() {
     this.studentCreateMode = this.studentCreate.EDIT
+    this.getAllEthnicity();
+    this.getAllRace();
+    this.getAllGender();
+    this.getAllSalutation();
+    this.getAllSuffix();
+    this.getAllMaritalStatus();
     this.studentService.changePageMode(this.studentCreateMode);
     this.imageCropperService.enableUpload(true);
     this.saveAndNext = 'update';
   }
+  
+  cancelEdit() {
+    if(JSON.stringify(this.studentAddModel)!==this.cloneStudentModel){
+      this.studentAddModel=JSON.parse(this.cloneStudentModel);
+      this.studentDetailsForViewAndEdit=JSON.parse(this.cloneStudentModel);
+      this.studentService.sendDetails(JSON.parse(this.cloneStudentModel));
+    }
+    this.findCountryNationalityById();
+    this.findLanguagesById();
+    this.findSectionNameById();
+    this.studentCreateMode = this.studentCreate.VIEW
+    this.imageCropperService.enableUpload(false);
+    this.imageCropperService.cancelImage("student");
+    this.studentService.changePageMode(this.studentCreateMode);
+    this.data = this.studentAddModel.studentMaster;       
+  }
 
- GetAllLanguage() {
+  GetAllLanguage() {
     this.languages._tenantName = sessionStorage.getItem("tenant");
     this.loginService.getAllLanguage(this.languages).subscribe((res) => {
       if (typeof (res) == 'undefined') {
@@ -431,24 +448,28 @@ export class StudentGeneralinfoComponent implements OnInit, OnDestroy {
       else {
         this.languageList = res.tableLanguage;
         if (this.studentCreateMode == this.studentCreate.VIEW) {
-          this.languageList.map((val) => {
-            let firstLanguageId = + this.data.firstLanguageId;
-            let secondLanguageId = + this.data.secondLanguageId;
-            let thirdLanguageId = + this.data.thirdLanguageId;
-           
-            if (val.langId === firstLanguageId) {
-              this.firstLanguageName = val.locale;
-            }
-            if (val.langId === secondLanguageId) {
-              this.secondLanguageName = val.locale;
-            }
-            if (val.langId === thirdLanguageId) {
-              this.thirdLanguageName = val.locale;
-            }
-          })
+         this.findLanguagesById()
         }
       }
     })
+  }
+
+  findLanguagesById(){
+    this.languageList.map((val) => {
+      let firstLanguageId = + this.data.firstLanguageId;
+      let secondLanguageId = + this.data.secondLanguageId;
+      let thirdLanguageId = + this.data.thirdLanguageId;
+      
+      if (val.langId === firstLanguageId) {
+        this.nameOfMiscValuesForView.firstLanguage = val.locale;
+      }
+      if (val.langId === secondLanguageId) {
+        this.nameOfMiscValuesForView.secondLanguage = val.locale;
+      }
+      if (val.langId === thirdLanguageId) {
+        this.nameOfMiscValuesForView.thirdLanguage = val.locale;
+      }
+    });
   }
 
 
@@ -464,11 +485,11 @@ export class StudentGeneralinfoComponent implements OnInit, OnDestroy {
 
     if (this.currentForm.form.valid) {
 
-      if(this.studentAddModel.fieldsCategoryList!==null){
+      if (this.studentAddModel.fieldsCategoryList !== null) {
         this.studentAddModel.selectedCategoryId = this.studentAddModel.fieldsCategoryList[this.categoryId].categoryId;
-        for (var i = 0; i < this.studentAddModel.fieldsCategoryList[this.categoryId].customFields.length; i++) {
-          if (this.studentAddModel.fieldsCategoryList[this.categoryId].customFields[i].type === "Multiple SelectBox") {
-            this.studentAddModel.fieldsCategoryList[this.categoryId].customFields[i].customFieldsValue[0].customFieldValue = this.studentService.getStudentMultiselectValue().toString().replaceAll(",", "|");
+        for (let studentCustomField of this.studentAddModel.fieldsCategoryList[this.categoryId].customFields) {
+          if (studentCustomField.type === "Multiple SelectBox" && this.studentService.getStudentMultiselectValue() !== undefined) {
+            studentCustomField.customFieldsValue[0].customFieldValue = this.studentService.getStudentMultiselectValue().toString().replaceAll(",", "|");
           }
         }
       }
@@ -480,14 +501,11 @@ export class StudentGeneralinfoComponent implements OnInit, OnDestroy {
     }
   }
 
-  cancelEdit() {
-    this.studentCreateMode = this.studentCreate.VIEW
-    this.imageCropperService.enableUpload(false);
-    this.studentService.changePageMode(this.studentCreateMode);
-    this.data = this.studentAddModel.studentMaster;
-  }
-
   updateStudent() {
+    if (this.internalId.invalid) {
+      this.invalidScroll();
+      return
+    }
     this.studentAddModel._token = sessionStorage.getItem("token");
     this.studentAddModel._tenantName = sessionStorage.getItem("tenant");
     this.studentService.UpdateStudent(this.studentAddModel).subscribe(data => {
@@ -502,21 +520,30 @@ export class StudentGeneralinfoComponent implements OnInit, OnDestroy {
             duration: 10000
           });
         } else {
-          this.snackbar.open('Student Update Successful.', '', {
+          this.snackbar.open('Student Information has been updated successfully', '', {
             duration: 10000
           });
+          this.studentService.setStudentCloneImage(data.studentMaster.studentPhoto);
+          data.studentMaster.studentPhoto=null;
           this.data = data.studentMaster;
+          this.cloneStudentModel=JSON.stringify(data);
+          this.findCountryNationalityById();
+          this.findLanguagesById();
+          this.studentDetailsForViewAndEdit=data;
+          this.dataAfterSavingGeneralInfo.emit(data);
           this.studentCreateMode = this.studentCreate.VIEW
           this.studentService.changePageMode(this.studentCreateMode);
-          this.imageCropperService.enableUpload(false);
+          this.imageCropperService.enableUpload(false);        
         }
       }
-
-
     });
   }
 
   addStudent() {
+    if (this.internalId.invalid) {
+      this.invalidScroll();
+      return
+    }
     this.studentAddModel.studentMaster.dob = this.commonFunction.formatDateSaveWithoutTime(this.studentAddModel.studentMaster.dob);
     this.studentService.AddStudent(this.studentAddModel).subscribe(data => {
       if (typeof (data) == 'undefined') {
@@ -526,14 +553,15 @@ export class StudentGeneralinfoComponent implements OnInit, OnDestroy {
       }
       else {
         if (data._failure) {
-          this.snackbar.open('Student Save failed. ' + data._message, 'LOL THANKS', {
+          this.snackbar.open('Student Save failed. ' + data._message, '', {
             duration: 10000
           });
         } else {
-          this.snackbar.open('Student Save Successful.', '', {
+          this.snackbar.open('Student has been saved successfully.', '', {
             duration: 10000
           });
           this.studentService.setStudentId(data.studentMaster.studentId);
+          this.studentService.setStudentCloneImage(data.studentMaster.studentPhoto);
           this.studentService.changeCategory(4);
           this.studentService.setStudentDetails(data);
           this.dataAfterSavingGeneralInfo.emit(data);
@@ -541,6 +569,13 @@ export class StudentGeneralinfoComponent implements OnInit, OnDestroy {
       }
 
     })
+  }
+
+  invalidScroll() {
+    const firstInvalidControl: HTMLElement = this.el.nativeElement.querySelector(
+      'input.ng-invalid'
+    );
+    firstInvalidControl.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 
   toggleVisibility() {

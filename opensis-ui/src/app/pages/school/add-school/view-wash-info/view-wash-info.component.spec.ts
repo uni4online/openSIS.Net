@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ViewWashInfoComponent } from './view-wash-info.component';
 
@@ -6,12 +6,12 @@ describe('ViewWashInfoComponent', () => {
   let component: ViewWashInfoComponent;
   let fixture: ComponentFixture<ViewWashInfoComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       declarations: [ ViewWashInfoComponent ]
     })
     .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ViewWashInfoComponent);

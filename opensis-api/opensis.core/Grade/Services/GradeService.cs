@@ -613,5 +613,209 @@ namespace opensis.core.Grade.Services
             }
             return effortGradeScaleSortOrderUpdate;
         }
-    }  
-}
+
+        /// <summary>
+        /// Add GradeUsStandard
+        /// </summary>
+        /// <param name="gradeUsStandardAddViewModel"></param>
+        /// <returns></returns>
+        public GradeUsStandardAddViewModel AddGradeUsStandard(GradeUsStandardAddViewModel gradeUsStandardAddViewModel)
+        {
+            GradeUsStandardAddViewModel gradeUsStandardAdd = new GradeUsStandardAddViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(gradeUsStandardAddViewModel._tenantName, gradeUsStandardAddViewModel._token))
+                {
+                    gradeUsStandardAdd = this.gradeRepository.AddGradeUsStandard(gradeUsStandardAddViewModel);
+                }
+                else
+                {
+                    gradeUsStandardAdd._failure = true;
+                    gradeUsStandardAdd._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                gradeUsStandardAdd._failure = true;
+                gradeUsStandardAdd._message = es.Message;
+            }
+            return gradeUsStandardAdd;
+        }
+
+        /// <summary>
+        /// Update GradeUsStandard
+        /// </summary>
+        /// <param name="gradeUsStandardAddViewModel"></param>
+        /// <returns></returns>
+        public GradeUsStandardAddViewModel UpdateGradeUsStandard(GradeUsStandardAddViewModel gradeUsStandardAddViewModel)
+        {
+            GradeUsStandardAddViewModel gradeUsStandardUpdate = new GradeUsStandardAddViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(gradeUsStandardAddViewModel._tenantName, gradeUsStandardAddViewModel._token))
+                {
+                    gradeUsStandardUpdate = this.gradeRepository.UpdateGradeUsStandard(gradeUsStandardAddViewModel);
+                }
+                else
+                {
+                    gradeUsStandardUpdate._failure = true;
+                    gradeUsStandardUpdate._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                gradeUsStandardUpdate._failure = true;
+                gradeUsStandardUpdate._message = es.Message;
+            }
+            return gradeUsStandardUpdate;
+        }
+
+        /// <summary>
+        /// Delete GradeUsStandard
+        /// </summary>
+        /// <param name="gradeUsStandardAddViewModel"></param>
+        /// <returns></returns>
+        public GradeUsStandardAddViewModel DeleteGradeUsStandard(GradeUsStandardAddViewModel gradeUsStandardAddViewModel)
+        {
+            GradeUsStandardAddViewModel gradeUsStandardDelete = new GradeUsStandardAddViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(gradeUsStandardAddViewModel._tenantName, gradeUsStandardAddViewModel._token))
+                {
+                    gradeUsStandardDelete = this.gradeRepository.DeleteGradeUsStandard(gradeUsStandardAddViewModel);
+                }
+                else
+                {
+                    gradeUsStandardDelete._failure = true;
+                    gradeUsStandardDelete._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                gradeUsStandardDelete._failure = true;
+                gradeUsStandardDelete._message = es.Message;
+            }
+            return gradeUsStandardDelete;
+        }
+
+        /// <summary>
+        /// Get All GradeUsStandard List
+        /// </summary>
+        /// <param name="pageResult"></param>
+        /// <returns></returns>
+        public GradeUsStandardListModel GetAllGradeUsStandardList(PageResult pageResult)
+        {
+            logger.Info("Method getAllGradeUsStandardList called.");
+            GradeUsStandardListModel gradeUsStandardList = new GradeUsStandardListModel();
+            try
+            {
+                if (TokenManager.CheckToken(pageResult._tenantName, pageResult._token))
+                {
+                    gradeUsStandardList = this.gradeRepository.GetAllGradeUsStandardList(pageResult);
+                    gradeUsStandardList._message = SUCCESS;
+                    gradeUsStandardList._failure = false;
+                    logger.Info("Method getAllGradeUsStandardList end with success.");
+                }
+                else
+                {
+                    gradeUsStandardList._failure = true;
+                    gradeUsStandardList._message = TOKENINVALID;
+                    return gradeUsStandardList;
+                }
+            }
+            catch (Exception ex)
+            {
+                gradeUsStandardList._message = ex.Message;
+                gradeUsStandardList._failure = true;
+                logger.Error("Method getAllGradeUsStandardList end with error :" + ex.Message);
+            }
+            return gradeUsStandardList;
+        }
+
+        /// <summary>
+        /// Get All Subject Standard List
+        /// </summary>
+        /// <param name="gradeUsStandardListModel"></param>
+        /// <returns></returns>
+        public GradeUsStandardListModel GetAllSubjectStandardList(GradeUsStandardListModel gradeUsStandardListModel)
+        {
+            GradeUsStandardListModel subjectStandardList = new GradeUsStandardListModel();
+            try
+            {
+                if (TokenManager.CheckToken(gradeUsStandardListModel._tenantName, gradeUsStandardListModel._token))
+                {
+                    subjectStandardList = this.gradeRepository.GetAllSubjectStandardList(gradeUsStandardListModel);
+                }
+                else
+                {
+                    subjectStandardList._failure = true;
+                    subjectStandardList._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                subjectStandardList._failure = true;
+                subjectStandardList._message = es.Message;
+            }
+            return subjectStandardList;
+        }
+
+        /// <summary>
+        /// Get All Course Standard List
+        /// </summary>
+        /// <param name="gradeUsStandardListModel"></param>
+        /// <returns></returns>
+        public GradeUsStandardListModel GetAllCourseStandardList(GradeUsStandardListModel gradeUsStandardListModel)
+        {
+            GradeUsStandardListModel courseStandardList = new GradeUsStandardListModel();
+            try
+            {
+                if (TokenManager.CheckToken(gradeUsStandardListModel._tenantName, gradeUsStandardListModel._token))
+                {
+                    courseStandardList = this.gradeRepository.GetAllCourseStandardList(gradeUsStandardListModel);
+                }
+                else
+                {
+                    courseStandardList._failure = true;
+                    courseStandardList._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                courseStandardList._failure = true;
+                courseStandardList._message = es.Message;
+            }
+            return courseStandardList;
+        }
+
+        /// <summary>
+        /// Check StandardRefNo Is Valid Or Not
+        /// </summary>
+        /// <param name="checkStandardRefNoViewModel"></param>
+        /// <returns></returns>
+        public CheckStandardRefNoViewModel CheckStandardRefNo(CheckStandardRefNoViewModel checkStandardRefNoViewModel)
+        {
+            CheckStandardRefNoViewModel checkStandardRefNo = new CheckStandardRefNoViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(checkStandardRefNoViewModel._tenantName, checkStandardRefNoViewModel._token))
+                {
+                    checkStandardRefNo = this.gradeRepository.CheckStandardRefNo(checkStandardRefNoViewModel);
+                }
+                else
+                {
+                    checkStandardRefNo._failure = true;
+                    checkStandardRefNo._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                checkStandardRefNo._failure = true;
+                checkStandardRefNo._message = es.Message;
+            }
+            return checkStandardRefNo;
+        }
+    }
+
+}  
+

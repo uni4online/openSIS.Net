@@ -89,7 +89,8 @@ export class AddParentInfoModel extends CommonField {
 }
 
 export class ParentInfoList extends CommonField{ 
-    public parentInfoForView:[];    
+    public parentInfoForView:[];  
+    public parentInfo:[]  
     public tenantId: string;
     public schoolId: number;
     public studentId: number;
@@ -122,7 +123,7 @@ export class ParentInfoList extends CommonField{
 }  
 
 export class ViewParentInfoModel extends CommonField {
-    parentInfoList: [ParentInfoModel]
+    parentInfoListForView: [ParentInfoModel]
     schoolId: number;
     studentId: number;
     tenantId: string;

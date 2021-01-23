@@ -358,5 +358,119 @@ namespace opensisAPI.Controllers
             }
             return effortGradeScaleSortOrder;
         }
+
+        [HttpPost("addGradeUsStandard")]
+        public ActionResult<GradeUsStandardAddViewModel> AddGradeUsStandard(GradeUsStandardAddViewModel gradeUsStandardAddViewModel)
+        {
+            GradeUsStandardAddViewModel gradeUsStandardAdd = new GradeUsStandardAddViewModel();
+            try
+            {
+                gradeUsStandardAdd = _gradeService.AddGradeUsStandard(gradeUsStandardAddViewModel);
+            }
+            catch (Exception es)
+            {
+                gradeUsStandardAdd._failure = true;
+                gradeUsStandardAdd._message = es.Message;
+            }
+            return gradeUsStandardAdd;
+        }
+
+        [HttpPut("updateGradeUsStandard")]
+        public ActionResult<GradeUsStandardAddViewModel> UpdateGradeUsStandard(GradeUsStandardAddViewModel gradeUsStandardAddViewModel)
+        {
+            GradeUsStandardAddViewModel gradeUsStandardUpdate = new GradeUsStandardAddViewModel();
+            try
+            {
+                gradeUsStandardUpdate = _gradeService.UpdateGradeUsStandard(gradeUsStandardAddViewModel);
+            }
+            catch (Exception es)
+            {
+                gradeUsStandardUpdate._failure = true;
+                gradeUsStandardUpdate._message = es.Message;
+            }
+            return gradeUsStandardUpdate;
+        }
+
+        [HttpPost("deleteGradeUsStandard")]
+        public ActionResult<GradeUsStandardAddViewModel> DeleteGradeUsStandard(GradeUsStandardAddViewModel gradeUsStandardAddViewModel)
+        {
+            GradeUsStandardAddViewModel gradeUsStandardDelete = new GradeUsStandardAddViewModel();
+            try
+            {
+                gradeUsStandardDelete = _gradeService.DeleteGradeUsStandard(gradeUsStandardAddViewModel);
+            }
+            catch (Exception es)
+            {
+                gradeUsStandardDelete._failure = true;
+                gradeUsStandardDelete._message = es.Message;
+            }
+            return gradeUsStandardDelete;
+        }
+
+        [HttpPost("getAllGradeUsStandardList")]
+        public ActionResult<GradeUsStandardListModel> GetAllGradeUsStandardList(PageResult pageResult)
+        {
+            GradeUsStandardListModel gradeUsStandardList = new GradeUsStandardListModel();
+            try
+            {
+                gradeUsStandardList = _gradeService.GetAllGradeUsStandardList(pageResult);
+            }
+            catch (Exception es)
+            {
+                gradeUsStandardList._message = es.Message;
+                gradeUsStandardList._failure = true;
+            }
+            return gradeUsStandardList;
+        }
+
+        [HttpPost("getAllSubjectStandardList")]
+        public ActionResult<GradeUsStandardListModel> GetAllSubjectStandardList(GradeUsStandardListModel gradeUsStandardListModel)
+        {
+            GradeUsStandardListModel subjectStandardList = new GradeUsStandardListModel();
+            try
+            {
+                subjectStandardList = _gradeService.GetAllSubjectStandardList(gradeUsStandardListModel);
+            }
+            catch (Exception es)
+            {
+                subjectStandardList._message = es.Message;
+                subjectStandardList._failure = true;
+            }
+            return subjectStandardList;
+        }
+
+        [HttpPost("getAllCourseStandardList")]
+        public ActionResult<GradeUsStandardListModel> GetAllCourseStandardList(GradeUsStandardListModel gradeUsStandardListModel)
+        {
+            GradeUsStandardListModel courseStandardList = new GradeUsStandardListModel();
+            try
+            {
+                courseStandardList = _gradeService.GetAllCourseStandardList(gradeUsStandardListModel);
+            }
+            catch (Exception es)
+            {
+                courseStandardList._message = es.Message;
+                courseStandardList._failure = true;
+            }
+            return courseStandardList;
+        }
+
+        [HttpPost("checkStandardRefNo")]
+        public ActionResult<CheckStandardRefNoViewModel> CheckStandardRefNo(CheckStandardRefNoViewModel checkStandardRefNoViewModel)
+        {
+            CheckStandardRefNoViewModel checkStandardRefNo = new CheckStandardRefNoViewModel();
+            try
+            {
+                checkStandardRefNo = _gradeService.CheckStandardRefNo(checkStandardRefNoViewModel);
+            }
+            catch (Exception es)
+            {
+                checkStandardRefNo._message = es.Message;
+                checkStandardRefNo._failure = true;
+            }
+            return checkStandardRefNo;
+        }
+
+
     }
 }

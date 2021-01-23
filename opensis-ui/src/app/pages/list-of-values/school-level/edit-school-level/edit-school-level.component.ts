@@ -7,6 +7,7 @@ import icClose from '@iconify/icons-ic/twotone-close';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ValidationService } from 'src/app/pages/shared/validation.service';
 
 @Component({
   selector: 'vex-edit-school-level',
@@ -34,7 +35,7 @@ export class EditSchoolLevelComponent implements OnInit {
       this.form=fb.group({
         id:[0],
         lovName:["School Level"],
-        lovColumnValue:['',[Validators.required]],
+        lovColumnValue:['',[ValidationService.noWhitespaceValidator]],
       })
       if(data==null){
         this.schoolLevelTitle="addSchoolLevel";
@@ -54,7 +55,7 @@ export class EditSchoolLevelComponent implements OnInit {
   ngOnInit(): void {
   }
   submit(){
-    
+    this.form.markAsTouched();
     if (this.form.valid) { 
       if(this.form.controls.id.value==0){
         this.lovAddView.dropdownValue.lovColumnValue=this.form.controls.lovColumnValue.value;
@@ -68,12 +69,12 @@ export class EditSchoolLevelComponent implements OnInit {
             }
             else{
               if (res._failure) {
-                this.snackbar.open('School Level insertion failed. ' + res._message, 'LOL THANKS', {
+                this.snackbar.open('School Level insertion failed. ' + res._message, '', {
                   duration: 10000
                 });
               } 
               else { 
-                this.snackbar.open('School Level inserted Successfully.' + res._message, 'LOL THANKS', {
+                this.snackbar.open('School Level inserted Successfully.' + res._message, '', {
                   duration: 10000
                 });
                 this.dialogRef.close('submited');
@@ -97,13 +98,13 @@ export class EditSchoolLevelComponent implements OnInit {
             else{
              
               if (res._failure) {
-                this.snackbar.open('School Level Update failed. ' + res._message, 'LOL THANKS', {
+                this.snackbar.open('School Level Update failed. ' + res._message, '', {
                   duration: 10000
                 });
               } 
               else { 
                
-                this.snackbar.open('School Level Updated Successfully.' + res._message, 'LOL THANKS', {
+                this.snackbar.open('School Level Updated Successfully.' + res._message, '', {
                   duration: 10000
                 });
                 this.dialogRef.close('submited');

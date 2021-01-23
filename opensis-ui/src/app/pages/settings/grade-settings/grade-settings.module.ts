@@ -28,6 +28,7 @@ import { EffortGradeSetupComponent } from '../../grades/effort-grade-setup/effor
 import { EffortGradeLibraryComponent } from '../../grades/effort-grade-library/effort-grade-library.component';
 import { EffortGradeScaleComponent } from '../../grades/effort-grade-scale/effort-grade-scale.component';
 import { ReportCardGradesComponent } from '../../grades/report-card-grades/report-card-grades.component';
+import { HonorRollSetupComponent } from '../../grades/honor-roll-setup/honor-roll-setup.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -35,6 +36,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { SharedModuleModule } from '../../../pages/shared-module/shared-module.module';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 
 
@@ -47,7 +49,8 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
     EffortGradeSetupComponent,
     EffortGradeLibraryComponent,
     EffortGradeScaleComponent,
-    ReportCardGradesComponent
+    ReportCardGradesComponent,
+    HonorRollSetupComponent
   ],
   imports: [
     CommonModule,
@@ -79,7 +82,8 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
     MatMenuModule,
     MatSortModule,
     MatCheckboxModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    DragDropModule
   ]
 })
 export class GradeSettingsModule { }

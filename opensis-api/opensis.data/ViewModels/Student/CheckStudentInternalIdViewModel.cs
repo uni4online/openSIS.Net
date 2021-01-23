@@ -6,7 +6,8 @@ namespace opensis.data.ViewModels.Student
 {
     public class CheckStudentInternalIdViewModel : CommonFields
     {
-        public Guid TenantId { get; set; }
+        public Guid? TenantId { get; set; }
+        public int? SchoolId { get; set; }
         public string StudentInternalId { get; set; }
         public bool IsValidInternalId { get; set; }
     }

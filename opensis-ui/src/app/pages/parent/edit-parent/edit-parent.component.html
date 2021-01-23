@@ -1,9 +1,8 @@
 <div class="flex container-sidenav-secondary">
     <div class="sidenav-secondary">
         <vex-scrollbar class="flex-auto">
-            <div class="h-45 flex items-center sm:px-0" fxLayout="row" fxLayoutAlign="start center">
-                <vex-profile-image [enableCropTool]="enableCropTool" [responseImage]="responseImage"></vex-profile-image>
-                
+            <div class="h-45 text-center sm:px-0 pt-5 pb-2">
+                <vex-profile-image [enableCropTool]="enableCropTool" [responseImage]="responseImage" class="inline-block"></vex-profile-image>
             </div>
             <div class="text-center px-4">
                 <h5 class="text-primary font-semibold mb-0">{{parentTitle}}</h5>
@@ -11,13 +10,13 @@
             </div>
             <hr class="mt-4"/>
             <div class="px-gutter sm:px-0">
-                <a @fadeInRight routerLink="" (click)='showPage("General Info")' [ngClass]=" pageId =='General Info' ? 'text-primary active' : ''" class="list-item mt-2 no-underline flex items-center rounded-none" matRipple>
+                <a @fadeInRight routerLink="" (click)='showPage("General Info")' [ngClass]=" pageId =='General Info' ? 'text-primary active' : ''" class="list-item no-underline flex items-center rounded-none" matRipple>
                     <mat-icon [icIcon]="icGeneralInfo" class="mr-3"></mat-icon> General Info
                 </a>
-                <a @fadeInRight routerLink="" (click)='showPage("Address Info")' [ngClass]=" pageId =='Address Info' ? 'text-primary active' : ''" class="list-item mt-2 no-underline flex items-center rounded-none" matRipple>
+                <a @fadeInRight routerLink="" (click)='showPage("Address Info")' [ngClass]=" pageId =='Address Info' ? 'text-primary active' : ''" class="list-item no-underline flex items-center rounded-none" matRipple>
                     <mat-icon [icIcon]="icAddress" class="mr-3"></mat-icon> Address Info
                 </a>
-                <!-- <a @fadeInRight routerLink="" (click)='showPage("School Access")' [ngClass]=" pageId =='School Access' ? 'text-primary active' : ''" class="list-item mt-2 no-underline flex items-center rounded-none" matRipple>
+                <!-- <a @fadeInRight routerLink="" (click)='showPage("School Access")' [ngClass]=" pageId =='School Access' ? 'text-primary active' : ''" class="list-item no-underline flex items-center rounded-none" matRipple>
                     <mat-icon [icIcon]="icAccessInfo" class="mr-3"></mat-icon> Login Information
                 </a> -->
             </div>
@@ -27,12 +26,12 @@
 
 
         <vex-page-layout>
-            <vex-page-layout-header class="pb-16 pt-6" fxLayoutAlign="center start">
+            <vex-page-layout-header class="pb-10 pt-6" fxLayoutAlign="center start">
                 <vex-secondary-toolbar current="Parent Information" class="w-full">
                     <vex-breadcrumbs [crumbs]="['Parents',pageStatus]" class="flex-auto"></vex-breadcrumbs>
                 </vex-secondary-toolbar>
             </vex-page-layout-header>
-            <vex-page-layout-content class="-mt-14">
+            <vex-page-layout-content class="-mt-4">
                 <mat-drawer-container class="bg-transparent flex-auto flex -mt-16">
                     <mat-drawer-content class="flex-auto flex items-start">
                         <div class="w-full" fxFlex="auto">

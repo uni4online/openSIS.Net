@@ -17,11 +17,13 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { FormControl } from '@angular/forms';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { GetAllStaffModel,StaffListModel } from '../../../models/staffModel';
+import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
+import { GetAllStaffModel,StaffListModel, StaffMasterModel } from '../../../models/staffModel';
 import { ImageCropperService } from '../../../services/image-cropper.service';
 import { LayoutService } from 'src/@vex/services/layout.service';
 import { ExcelService } from '../../../services/excel.service';
+import { Subject } from 'rxjs';
+
 @Component({
   selector: 'vex-staffinfo',
   templateUrl: './staffinfo.component.html',
@@ -36,7 +38,7 @@ export class StaffinfoComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort
 
   getAllStaff: GetAllStaffModel = new GetAllStaffModel();
-  staffList: MatTableDataSource<StaffListModel>;
+  staffList: MatTableDataSource<StaffMasterModel>;
 
   columns = [
     { label: 'Name', property: 'lastFamilyName', type: 'text', visible: true },
@@ -61,6 +63,7 @@ export class StaffinfoComponent implements OnInit, AfterViewInit {
   pageNumber: number;
   pageSize: number;
   searchCtrl: FormControl;
+  destroySubject$: Subject<void> = new Subject();
 
   constructor(private snackbar: MatSnackBar,
     private router: Router,
@@ -81,7 +84,7 @@ export class StaffinfoComponent implements OnInit, AfterViewInit {
       this.layoutService.expandSidenav();
     }
     this.getAllStaff.filterParams = null;
-    this.loaderService.isLoading.subscribe((val) => {
+    this.loaderService.isLoading.pipe(takeUntil(this.destroySubject$)).subscribe((val) => {
       this.loading = val;
     });
     this.callStaffList();
@@ -203,7 +206,7 @@ export class StaffinfoComponent implements OnInit, AfterViewInit {
         this.totalCount = res.totalCount;
         this.pageNumber = res.pageNumber;
         this.pageSize = res._pageSize;
-        this.staffList = new MatTableDataSource(res.getStaffListForView);
+        this.staffList = new MatTableDataSource(res.staffMaster);
         this.getAllStaff = new GetAllStaffModel();
       }
     });
@@ -220,8 +223,8 @@ export class StaffinfoComponent implements OnInit, AfterViewInit {
           duration: 10000
           });
         }else{
-          if(res.getStaffListForView.length>0){
-            let staffList = res.getStaffListForView?.map((x)=>{
+          if(res.staffMaster.length>0){
+            let staffList = res.staffMaster?.map((x)=>{
               let middleName=x.middleName==null?' ':' '+x.middleName+' ';
               return {
                Name: x.firstGivenName+middleName+x.lastFamilyName,
@@ -251,6 +254,11 @@ export class StaffinfoComponent implements OnInit, AfterViewInit {
 
   get visibleColumns() {
     return this.columns.filter(column => column.visible).map(column => column.property);
+  }
+
+  ngOnDestroy(){
+    this.destroySubject$.next();
+    this.destroySubject$.complete();
   }
 
 }

@@ -1,8 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, Optional, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import icClose from '@iconify/icons-ic/twotone-close';
+import icAdd from '@iconify/icons-ic/add-circle-outline';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
+import { GetAllGradeLevelsModel } from '../../../../models/gradeLevelModel';
+import { GradeLevelService } from '../../../../services/grade-level.service';
+import { LoaderService } from '../../../../services/loader.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { CheckStandardRefNoModel, GradeStandardSubjectCourseListModel, SchoolSpecificStandarModel } from '../../../../models/grades.model';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { GradesService } from '../../../../services/grades.service';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { Subject } from 'rxjs/internal/Subject';
 
 @Component({
   selector: 'vex-edit-school-specific-standard',
@@ -15,10 +27,245 @@ import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
 })
 export class EditSchoolSpecificStandardComponent implements OnInit {
   icClose = icClose;
+  icAdd = icAdd;
 
-  constructor(private dialogRef: MatDialogRef<EditSchoolSpecificStandardComponent>) { }
+  visibleSubjectTextBox=false;
+  visibleCourseTextBox=false;
+  gradeLevelList: GetAllGradeLevelsModel = new GetAllGradeLevelsModel();
+  schoolSpecificStandard:SchoolSpecificStandarModel= new SchoolSpecificStandarModel();
+  subjectList:GradeStandardSubjectCourseListModel=new GradeStandardSubjectCourseListModel();
+  courseList:GradeStandardSubjectCourseListModel=new GradeStandardSubjectCourseListModel();
+  standardRefNoModel:CheckStandardRefNoModel=new CheckStandardRefNoModel();
+  form:FormGroup;
+  editMode:boolean;
+  editDetails;
+  modalActionButton="submit"
+  modalDialogTitle="addNewStandard"
+  constructor(private dialogRef: MatDialogRef<EditSchoolSpecificStandardComponent>,
+    @Optional() @Inject(MAT_DIALOG_DATA) public data: any,
+    private gradeLevelService: GradeLevelService,
+    private snackbar: MatSnackBar,
+    private fb: FormBuilder,
+    private gradesService:GradesService) { 
+      if(this.data.editMode){
+        this.editMode = this.data.editMode;
+        this.editDetails= this.data.schoolSpecificStandards;
+        this.modalActionButton="update";
+        this.modalDialogTitle="updateStandard"
+       }else{
+        this.editMode = this.data.editMode;
+       }
+    }
 
   ngOnInit(): void {
+    this.form = this.fb.group(
+      {
+        standardRefNo: ['',[Validators.required]],
+        gradeLevel: ['',Validators.required],
+        domain: [''],
+        subject: ['',Validators.required],
+        course: ['',Validators.required],
+        topic: ['',Validators.required],
+        standardDetails: ['',Validators.required],
+      });
+     
+    if(this.editMode){
+      this.form.patchValue({
+        standardRefNo:this.editDetails.standardRefNo,
+        gradeLevel: this.editDetails.gradeLevel,
+        domain: this.editDetails.domain,
+        subject: this.editDetails.subject,
+        course: this.editDetails.course,
+        topic: this.editDetails.topic,
+        standardDetails: this.editDetails.standardDetails,
+      })
+      this.form.controls['standardRefNo'].disable();
+    }
+
+    this.getAllSubjectStandardList();
+    this.getAllCourseStandardList();
+    this.getAllGradeLevel();
+    
+  }
+  ngAfterViewInit(){
+    this.form.controls['standardRefNo'].setErrors({ 'nomatch': false });
+    this.form.controls['standardRefNo'].valueChanges.pipe(debounceTime(500),distinctUntilChanged()).subscribe((term)=>{
+      if(term!=''){
+          this.standardRefNoModel.standardRefNo = term;
+          this.gradesService.checkStandardRefNo(this.standardRefNoModel).pipe(debounceTime(500),distinctUntilChanged()).subscribe(data => {
+            if (data.isValidStandardRefNo) {
+              this.form.controls['standardRefNo'].setErrors(null);}
+            else {
+              this.form.controls['standardRefNo'].markAsTouched();
+              this.form.controls['standardRefNo'].setErrors({ 'nomatch': true });
+            }
+          });
+        
+      }else{
+        this.form.controls['standardRefNo'].markAsTouched();
+      }
+    })
   }
 
+  activeSubjectTextBox(){
+    this.visibleSubjectTextBox=true;
+  }
+
+  activeCourseTextBox(){
+    this.visibleCourseTextBox=true;
+  }
+
+  getAllGradeLevel() {
+    this.gradeLevelService.getAllGradeLevels(this.gradeLevelList).subscribe((res) => {
+      if (typeof (res) == 'undefined') {
+        this.snackbar.open('Grade Level List failed. ' + sessionStorage.getItem("httpError"), '', {
+          duration: 10000
+        });
+      }
+      else {
+        if (res._failure) {
+          if (res._message === "NO RECORD FOUND") {
+            if (res.tableGradelevelList == null) {
+              this.gradeLevelList.tableGradelevelList=[]
+            }
+
+          } else {
+            this.snackbar.open('Grade Level List failed. ' + res._message, 'LOL THANKS', {
+              duration: 10000
+            });
+          }
+
+        }
+        else {
+          this.gradeLevelList=res;
+        }
+      }
+    })
+  }
+
+  getAllSubjectStandardList(){
+    this.gradesService.getAllSubjectStandardList(this.subjectList).subscribe((res) => {
+      if (typeof (res) == 'undefined') {
+        this.snackbar.open('Standard Subject List failed. ' + sessionStorage.getItem("httpError"), '', {
+          duration: 10000
+        });
+      }
+      else {
+        if (res._failure) {
+          if (res._message === "NO RECORD FOUND") {
+            if (res.gradeUsStandardList == null) {
+              this.subjectList.gradeUsStandardList=null
+            }
+
+          } else {
+            this.snackbar.open('Standard Subject List failed. ' + res._message, 'LOL THANKS', {
+              duration: 10000
+            });
+          }
+
+        }
+        else {
+          this.subjectList=res;
+        }
+      }
+    })
+  }
+
+  getAllCourseStandardList(){
+    this.gradesService.getAllCourseStandardList(this.courseList).subscribe((res) => {
+      if (typeof (res) == 'undefined') {
+        this.snackbar.open('Standard Course List failed. ' + sessionStorage.getItem("httpError"), '', {
+          duration: 10000
+        });
+      }
+      else {
+        if (res._failure) {
+          if (res._message === "NO RECORD FOUND") {
+            if (res.gradeUsStandardList == null) {
+              this.courseList.gradeUsStandardList=null
+            }
+
+          } else {
+            this.snackbar.open('Standard Course List failed. ' + res._message, 'LOL THANKS', {
+              duration: 10000
+            });
+          }
+
+        }
+        else {
+          this.courseList=res;
+        }
+      }
+    })
+  }
+
+  submit(){
+    this.form.markAllAsTouched();
+    if(this.form.valid){
+    if(this.editMode){
+      this.updateSchoolSpecificStandards();
+    }else{
+      this.addSchoolSpecificStandards();
+    }
+  }
+
+  }
+
+  updateSchoolSpecificStandards(){
+    this.schoolSpecificStandard.gradeUsStandard.standardRefNo=this.editDetails.standardRefNo;
+    this.schoolSpecificStandard.gradeUsStandard.gradeStandardId=this.editDetails.gradeStandardId;
+    this.schoolSpecificStandard.gradeUsStandard.subject=this.form.value.subject;
+    this.schoolSpecificStandard.gradeUsStandard.course=this.form.value.course;
+    this.schoolSpecificStandard.gradeUsStandard.gradeLevel=this.form.value.gradeLevel;
+    this.schoolSpecificStandard.gradeUsStandard.domain=this.form.value.domain;
+    this.schoolSpecificStandard.gradeUsStandard.topic=this.form.value.topic;
+    this.schoolSpecificStandard.gradeUsStandard.standardDetails=this.form.value.standardDetails;
+
+    this.gradesService.updateGradeUsStandard(this.schoolSpecificStandard).subscribe((res)=>{
+      if (typeof (res) == 'undefined') {
+        this.snackbar.open('Failed to Update School Specific Standard ' + sessionStorage.getItem("httpError"), '', {
+          duration: 10000
+        });
+      }else
+      if (res._failure) {
+        this.snackbar.open('Failed to Update School Specific Standard ' + res._message, 'LOL THANKS', {
+          duration: 10000
+        });
+      } else {
+        this.snackbar.open('School Specific Standard Updated Successfully.', '', {
+          duration: 10000
+        });
+        this.dialogRef.close(true);
+      }
+    })
+  }
+
+  addSchoolSpecificStandards(){
+    this.schoolSpecificStandard.gradeUsStandard.standardRefNo=this.form.value.standardRefNo;
+    this.schoolSpecificStandard.gradeUsStandard.subject=this.form.value.subject;
+    this.schoolSpecificStandard.gradeUsStandard.course=this.form.value.course;
+    this.schoolSpecificStandard.gradeUsStandard.gradeLevel=this.form.value.gradeLevel;
+    this.schoolSpecificStandard.gradeUsStandard.domain=this.form.value.domain;
+    this.schoolSpecificStandard.gradeUsStandard.topic=this.form.value.topic;
+    this.schoolSpecificStandard.gradeUsStandard.standardDetails=this.form.value.standardDetails;
+
+    this.gradesService.addGradeUsStandard(this.schoolSpecificStandard).subscribe((res)=>{
+      if (typeof (res) == 'undefined') {
+        this.snackbar.open('Failed to Add School Specific Standard ' + sessionStorage.getItem("httpError"), '', {
+          duration: 10000
+        });
+      }else
+      if (res._failure) {
+        this.snackbar.open('Failed to Add School Specific Standard ' + res._message, 'LOL THANKS', {
+          duration: 10000
+        });
+      } else {
+        this.snackbar.open('School Specific Standard Added Successfully.', '', {
+          duration: 10000
+        });
+        this.dialogRef.close(true);
+      }
+    })
+
+  }
 }

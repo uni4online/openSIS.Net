@@ -138,7 +138,7 @@ export class StaffFieldsComponent implements OnInit {
         }
         else{
           if (res._failure) {
-            this.snackbar.open('Custom Field failed. ' + res._message, 'LOL THANKS', {
+            this.snackbar.open('Custom Field failed. ' + res._message, '', {
               duration: 10000
             });
           } 
@@ -183,7 +183,7 @@ export class StaffFieldsComponent implements OnInit {
         }
         else{
           if (res._failure) {
-            this.snackbar.open('Field Category list failed. ' + res._message, 'LOL THANKS', {
+            this.snackbar.open('Field Category list failed. ' + res._message, '', {
               duration: 10000
             });
           } 
@@ -227,12 +227,12 @@ export class StaffFieldsComponent implements OnInit {
         }
         else{
           if (res._failure) {
-            this.snackbar.open('Field Category delete failed. ' + res._message, 'LOL THANKS', {
+            this.snackbar.open('Field Category delete failed. ' + res._message, '', {
               duration: 10000
             });
           } 
           else{
-            this.snackbar.open('' + res._message, 'LOL THANKS', {
+            this.snackbar.open('' + res._message, '', {
               duration: 10000
             });
             this.getAllCustomFieldCategory()
@@ -267,7 +267,7 @@ export class StaffFieldsComponent implements OnInit {
           });
         }else{
           if (res._failure) {
-            this.snackbar.open('Custom Field Drag short failed. ' + res._message, 'LOL THANKS', {
+            this.snackbar.open('Custom Field Drag short failed. ' + res._message, '', {
               duration: 10000
             });
           } 

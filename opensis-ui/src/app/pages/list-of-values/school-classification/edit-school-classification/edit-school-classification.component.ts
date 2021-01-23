@@ -60,11 +60,11 @@ export class EditSchoolClassificationComponent implements OnInit {
           }
           else {
             if (data._failure) {
-              this.snackbar.open('Classification Updation failed. ' + data._message, 'LOL THANKS', {
+              this.snackbar.open('Classification Updation failed. '+ data._message, '', {
                 duration: 10000
               });
             } else {
-              this.snackbar.open('Classification Updation Successful.', '', {
+              this.snackbar.open('School Classification Updated Successfully.', '', {
                 duration: 10000
               });              
               this.dialogRef.close(true);
@@ -83,11 +83,11 @@ export class EditSchoolClassificationComponent implements OnInit {
           }
           else {
             if (data._failure) {
-              this.snackbar.open('Classification Submission failed. ' + data._message, 'LOL THANKS', {
+              this.snackbar.open('Classification Submission failed. ' + data._message, '', {
                 duration: 10000
               });
             } else {
-              this.snackbar.open('Classification Submission Successful.', '', {
+              this.snackbar.open('School Classification Inserted Successfully.', '', {
                 duration: 10000
               });              
               this.dialogRef.close(true);

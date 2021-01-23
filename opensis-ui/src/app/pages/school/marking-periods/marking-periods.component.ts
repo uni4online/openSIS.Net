@@ -132,7 +132,7 @@ export class MarkingPeriodsComponent implements OnInit {
               this.viewFirstMarkingPeriodChild();
             }
           } else {
-            this.snackbar.open('General Info Updation failed. ' + data._message, 'LOL THANKS', {
+            this.snackbar.open('General Info Updation failed. ' + data._message, '', {
               duration: 10000
             });
           }
@@ -218,7 +218,7 @@ export class MarkingPeriodsComponent implements OnInit {
         }
         else {
           if (data._failure) {
-            this.snackbar.open('School Year Deletion failed. ' + data._message, 'LOL THANKS', {
+            this.snackbar.open('School Year Deletion failed. ' + data._message, '', {
               duration: 10000
             });
           } else {
@@ -243,7 +243,7 @@ export class MarkingPeriodsComponent implements OnInit {
           }
           else {
             if (data._failure) {
-              this.snackbar.open('School Semester Deletion failed. ' + data._message, 'LOL THANKS', {
+              this.snackbar.open('School Semester Deletion failed. ' + data._message, '', {
                 duration: 10000
               });
             } else {
@@ -268,7 +268,7 @@ export class MarkingPeriodsComponent implements OnInit {
           }
           else {
             if (data._failure) {
-              this.snackbar.open('School Quarter Deletion failed. ' + data._message, 'LOL THANKS', {
+              this.snackbar.open('School Quarter Deletion failed. ' + data._message, '', {
                 duration: 10000
               });
             } else {
@@ -292,7 +292,7 @@ export class MarkingPeriodsComponent implements OnInit {
           }
           else {
             if (data._failure) {
-              this.snackbar.open('School Progress Period Deletion failed. ' + data._message, 'LOL THANKS', {
+              this.snackbar.open('School Progress Period Deletion failed. ' + data._message, '', {
                 duration: 10000
               });
             } else {

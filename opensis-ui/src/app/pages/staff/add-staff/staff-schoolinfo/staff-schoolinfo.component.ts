@@ -47,7 +47,7 @@ export class StaffSchoolinfoComponent implements OnInit {
   selectedSchoolId=[];
   otherGradeLevelTaught;
   otherSubjectTaught;
-
+  cloneStaffModel;
   constructor(public translateService: TranslateService,
     private snackbar: MatSnackBar,
     private staffService:StaffService,
@@ -86,15 +86,15 @@ export class StaffSchoolinfoComponent implements OnInit {
     this.getSchoolList._tenantName = sessionStorage.getItem("tenant");
     this.getSchoolList._token = sessionStorage.getItem("token");
     this.schoolService.GetAllSchools(this.getSchoolList).subscribe((data) => {
-      this.getSchoolList.getSchoolForView = data.getSchoolForView;
+      this.getSchoolList.schoolMaster = data.schoolMaster;
     });
   }
 
   onSchoolChange(schoolId, indexOfDynamicRow) {
-    let index = this.getSchoolList.getSchoolForView.findIndex((x) => {
+    let index = this.getSchoolList.schoolMaster.findIndex((x) => {
       return x.schoolId === +schoolId;
     });
-    this.staffSchoolInfoModel.staffSchoolInfoList[indexOfDynamicRow].schoolAttachedName=this.getSchoolList.getSchoolForView[index].schoolName;
+    this.staffSchoolInfoModel.staffSchoolInfoList[indexOfDynamicRow].schoolAttachedName=this.getSchoolList.schoolMaster[index].schoolName;
     this.selectedSchoolId[indexOfDynamicRow]=+schoolId
   }
 
@@ -146,6 +146,7 @@ export class StaffSchoolinfoComponent implements OnInit {
           });
         } else {
           this.staffSchoolInfoModel=res;
+          this.cloneStaffModel=JSON.stringify(this.staffSchoolInfoModel)
           if(this.staffSchoolInfoModel.otherGradeLevelTaught!=null || this.staffSchoolInfoModel.otherGradeLevelTaught!=null){
           this.otherGradeLevelTaught=this.staffSchoolInfoModel.otherGradeLevelTaught.split(',');
           this.otherSubjectTaught=this.staffSchoolInfoModel.otherSubjectTaught.split(',');
@@ -200,6 +201,7 @@ export class StaffSchoolinfoComponent implements OnInit {
               duration: 10000
             });
             this.staffSchoolInfoModel=res;
+            this.cloneStaffModel=JSON.stringify(this.staffSchoolInfoModel)
             if(this.staffCreateMode==this.staffCreate.EDIT || this.staffCreateMode==this.staffCreate.ADD){
               this.staffCreateMode = this.staffCreate.VIEW
               this.imageCropperService.enableUpload(false);
@@ -226,9 +228,14 @@ export class StaffSchoolinfoComponent implements OnInit {
     this.staffService.changePageMode(this.staffCreateMode);
   }
   cancelEdit(){
+    if(this.staffSchoolInfoModel!==JSON.parse(this.cloneStaffModel)){
+      this.staffSchoolInfoModel=JSON.parse(this.cloneStaffModel);
+      this.staffService.sendDetails(JSON.parse(this.cloneStaffModel));
+    }
     this.staffCreateMode=this.staffCreate.VIEW;
     this.imageCropperService.enableUpload(false);
     this.staffService.changePageMode(this.staffCreateMode);
+    this.imageCropperService.cancelImage("staff");
   }
 }
 

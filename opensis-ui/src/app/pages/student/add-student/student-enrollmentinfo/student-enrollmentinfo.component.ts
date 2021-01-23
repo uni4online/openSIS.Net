@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { NgForm} from '@angular/forms';
+import { NgForm } from '@angular/forms';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
 import { fadeInRight400ms } from '../../../../../@vex/animations/fade-in-right.animation';
@@ -11,7 +11,6 @@ import { CalendarListModel } from '../../../../models/calendarModel';
 import { CalendarService } from '../../../../services/calendar.service';
 import { StudentEnrollmentDetails, StudentEnrollmentModel, StudentEnrollmentSchoolListModel } from '../../../../models/studentModel';
 import { StudentService } from '../../../../services/student.service';
-import { EnrollmentCodesService } from '../../../../services/enrollment-codes.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import icEdit from '@iconify/icons-ic/edit';
 import icCheckbox from '@iconify/icons-ic/baseline-check-box';
@@ -27,6 +26,7 @@ import icTrasnferOut from '@iconify/icons-ic/baseline-call-made';
 import icDrop from '@iconify/icons-ic/vertical-align-bottom';
 import { EnrollmentCodeListView } from '../../../../models/enrollmentCodeModel';
 import { Router } from '@angular/router';
+import { SharedFunction} from '../../../shared/shared-function';
 
 @Component({
   selector: 'vex-student-enrollmentinfo',
@@ -57,30 +57,32 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
   @Input() studentCreateMode: SchoolCreate;
   @Input() studentDetailsForViewAndEdit;
   rollingOptions = Object.keys(RollingOptionsEnum);
-  exitCodes=[];
+  exitCodes = [];
   calendarListModel: CalendarListModel = new CalendarListModel();
   studentEnrollmentModel: StudentEnrollmentModel = new StudentEnrollmentModel();
   schoolListWithGrades: StudentEnrollmentSchoolListModel = new StudentEnrollmentSchoolListModel();
   enrollmentCodeListView: EnrollmentCodeListView = new EnrollmentCodeListView();
   @ViewChild('form') currentForm: NgForm;
-  
+
   divCount = [1];
   schoolListWithGradeLevelsAndEnrollCodes = [];
   selectedSchoolIndex = [];
   selectedTransferredSchoolIndex = [];
-  calendarNameInViewMode: string="-";
+  calendarNameInViewMode: string = "-";
   filteredEnrollmentInfoInViewMode;
-  expandEnrollmentHistory=true;
-  selectedExitCodes=[];
-  selectedEnrollmentCodes=[];
-  disableEditDueToActiveExitCode=false;
-  cloneStudentEnrollment;
+  expandEnrollmentHistory = true;
+  selectedExitCodes = [];
+  selectedEnrollmentCodes = [];
+  disableEditDueToActiveExitCode = false;
+  cloneEnrollmentForCancel;
+  cloneOfCloneEnrollmentForCancel;
+  cloneStudentEnrollment: StudentEnrollmentModel = new StudentEnrollmentModel();;
   constructor(private calendarService: CalendarService,
     private studentService: StudentService,
-    private enrollmentCodesService: EnrollmentCodesService,
     private snackbar: MatSnackBar,
-    private router:Router) {
-     }
+    private router: Router,
+    private commonFunction:SharedFunction) {
+  }
 
   ngOnInit(): void {
     if (this.studentCreateMode == this.studentCreate.EDIT) {
@@ -108,7 +110,8 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
       return x.schoolId === +schoolId;
     });
     this.selectedSchoolIndex[indexOfDynamicRow] = index;
-    this.cloneStudentEnrollment[indexOfDynamicRow].schoolName = this.schoolListWithGradeLevelsAndEnrollCodes[index].schoolName;
+    
+    this.cloneStudentEnrollment.studentEnrollments[indexOfDynamicRow].schoolName = this.schoolListWithGradeLevelsAndEnrollCodes[index].schoolName;
   }
 
   onTransferredSchoolChange(transferredSchoolId, indexOfDynamicRow) {
@@ -116,56 +119,53 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
       return x.schoolId === +transferredSchoolId;
     });
     this.selectedTransferredSchoolIndex[indexOfDynamicRow] = index;
-    this.cloneStudentEnrollment[indexOfDynamicRow].schoolTransferred = this.schoolListWithGradeLevelsAndEnrollCodes[index].schoolName;
+    this.cloneStudentEnrollment.studentEnrollments[indexOfDynamicRow].schoolTransferred = this.schoolListWithGradeLevelsAndEnrollCodes[index].schoolName;
 
   }
 
-  onEnrollmentCodeChange(enrollmentCode,indexOfDynamicRow){
+  onEnrollmentCodeChange(enrollmentCode, indexOfDynamicRow) {
 
   }
 
-  onExitCodeChange(value,indexOfDynamicRow){
-  this.schoolListWithGradeLevelsAndEnrollCodes[this.selectedSchoolIndex[indexOfDynamicRow]].studentEnrollmentCode?.map((item)=>{
-    if(item.enrollmentCode==+value){
-      this.selectedExitCodes[indexOfDynamicRow]=item.type;
-    }
-  })
-  
+  onExitCodeChange(value, indexOfDynamicRow) {
+    this.schoolListWithGradeLevelsAndEnrollCodes[this.selectedSchoolIndex[indexOfDynamicRow]].studentEnrollmentCode?.map((item) => {
+      if (item.enrollmentCode == +value) {
+        this.selectedExitCodes[indexOfDynamicRow] = item.type;
+      }
+    })
+
   }
 
   addMoreEnrollments() {
-    this.cloneStudentEnrollment.push(new StudentEnrollmentDetails)
+    this.cloneStudentEnrollment.studentEnrollments.push(new StudentEnrollmentDetails)
     this.divCount.push(2); // Why 2? We have to fill up the divCount, It could be anything.
   }
 
   deleteDynamicRow(indexOfDynamicRow) {
     this.divCount.splice(indexOfDynamicRow, 1);
-    this.cloneStudentEnrollment.splice(indexOfDynamicRow, 1);
+    this.cloneStudentEnrollment.studentEnrollments.splice(indexOfDynamicRow, 1);
     this.selectedSchoolIndex.splice(indexOfDynamicRow, 1);
     this.selectedTransferredSchoolIndex.splice(indexOfDynamicRow, 1);
   }
 
   getAllCalendar() {
     this.calendarService.getAllCalendar(this.calendarListModel).subscribe((res) => {
-      let allCalendarsInCurrentSchool=res.calendarList;
-      this.calendarListModel.calendarList= allCalendarsInCurrentSchool.filter((x)=>{
-          return (x.academicYear==+sessionStorage.getItem("academicyear") && x.defaultCalender);
+      let allCalendarsInCurrentSchool = res.calendarList;
+      this.calendarListModel.calendarList = allCalendarsInCurrentSchool.filter((x) => {
+        return (x.academicYear == +sessionStorage.getItem("academicyear") && x.defaultCalender);
       })
     });
   }
 
-
- 
-
   getAllSchoolListWithGradeLevelsAndEnrollCodes() {
     this.studentService.studentEnrollmentSchoolList(this.schoolListWithGrades).subscribe(res => {
       this.schoolListWithGradeLevelsAndEnrollCodes = res.schoolMaster;
-      for (let i = 0; i < this.cloneStudentEnrollment.length; i++) {
+      for (let i = 0; i < this.cloneStudentEnrollment.studentEnrollments.length; i++) {
         this.selectedSchoolIndex[i] = this.schoolListWithGradeLevelsAndEnrollCodes.findIndex((x) => {
-          return x.schoolId==+this.cloneStudentEnrollment[i].schoolId;
+          return x.schoolId == +this.cloneStudentEnrollment.studentEnrollments[i].schoolId;
         });
         this.selectedTransferredSchoolIndex[i] = this.schoolListWithGradeLevelsAndEnrollCodes.findIndex((x) => {
-          return x.schoolId==+this.cloneStudentEnrollment[i].transferredSchoolId;
+          return x.schoolId == +this.cloneStudentEnrollment.studentEnrollments[i].transferredSchoolId;
         })
       }
       this.findEnrollmentCodeIdByName();
@@ -174,46 +174,54 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
 
   }
 
-  editEnrollmentInfo(){
-    this.getAllSchoolListWithGradeLevelsAndEnrollCodes();
+  editEnrollmentInfo() {
     this.studentCreateMode = this.studentCreate.EDIT
+    this.getAllSchoolListWithGradeLevelsAndEnrollCodes();
     this.studentService.changePageMode(this.studentCreateMode);
   }
-  cancelEdit(){
+  cancelEdit() {
+    // if(this.studentEnrollmentModel!==this.cloneEnrollmentForCancel){
+    //   this.studentEnrollmentModel=JSON.parse(this.cloneEnrollmentForCancel);
+    // }
+    // if(this.cloneStudentEnrollment!==this.cloneOfCloneEnrollmentForCancel){
+    //   this.cloneStudentEnrollment=JSON.parse(this.cloneOfCloneEnrollmentForCancel);
+    // }
     this.studentCreateMode = this.studentCreate.VIEW
     this.replaceEnrollmentCodeWithName();
     this.studentService.changePageMode(this.studentCreateMode);
   }
-  replaceEnrollmentCodeWithName(){
-    for(let i=0;i<this.studentEnrollmentModel.studentEnrollmentListForView?.length;i++){
-      let index = this.schoolListWithGradeLevelsAndEnrollCodes.findIndex((x)=>{
+  replaceEnrollmentCodeWithName() {
+    for (let i = 0; i < this.studentEnrollmentModel.studentEnrollmentListForView?.length; i++) {
+      let index = this.schoolListWithGradeLevelsAndEnrollCodes.findIndex((x) => {
         return x.schoolId == +this.studentEnrollmentModel.studentEnrollmentListForView[i].schoolId;
       });
-      for(let j=0;j<this.schoolListWithGradeLevelsAndEnrollCodes[index].studentEnrollmentCode?.length;j++){
-        if(this.studentEnrollmentModel.studentEnrollmentListForView[i].enrollmentCode==this.schoolListWithGradeLevelsAndEnrollCodes[index].studentEnrollmentCode[j].enrollmentCode.toString()){
-          this.studentEnrollmentModel.studentEnrollmentListForView[i].enrollmentCode=this.schoolListWithGradeLevelsAndEnrollCodes[index].studentEnrollmentCode[j].title;
+      for (let j = 0; j < this.schoolListWithGradeLevelsAndEnrollCodes[index].studentEnrollmentCode?.length; j++) {
+        if (this.studentEnrollmentModel.studentEnrollmentListForView[i].enrollmentCode == this.schoolListWithGradeLevelsAndEnrollCodes[index].studentEnrollmentCode[j].enrollmentCode.toString()) {
+          this.studentEnrollmentModel.studentEnrollmentListForView[i].enrollmentCode = this.schoolListWithGradeLevelsAndEnrollCodes[index].studentEnrollmentCode[j].title;
           break;
         }
-      } 
+      }
     }
   }
 
 
-  toggleEnrollmentHistory(){
-    this.expandEnrollmentHistory=!this.expandEnrollmentHistory;
+  toggleEnrollmentHistory() {
+    this.expandEnrollmentHistory = !this.expandEnrollmentHistory;
   }
 
 
   getAllStudentEnrollments() {
-    if (this.studentCreateMode == this.studentCreate.ADD) {
-      let studentDetails=this.studentService.getStudentDetails()
-      this.studentEnrollmentModel.studentGuid=studentDetails.studentMaster.studentGuid;
+    let details = this.studentService.getStudentDetails();
+    if (details != null) {
+      this.studentEnrollmentModel.studentGuid = details.studentMaster.studentGuid;
+    } else {
+      this.studentEnrollmentModel.studentGuid = this.studentDetailsForViewAndEdit.studentMaster.studentGuid;
     }
     this.studentEnrollmentModel.studentId = this.studentService.getStudentId();
     this.studentEnrollmentModel.tenantId = sessionStorage.getItem("tenantId");
-    this.studentEnrollmentModel.schoolId=+sessionStorage.getItem("selectedSchoolId");
+    this.studentEnrollmentModel.schoolId = +sessionStorage.getItem("selectedSchoolId");
     if (this.studentCreateMode == this.studentCreate.VIEW) {
-      this.studentEnrollmentModel.studentGuid=this.studentDetailsForViewAndEdit.studentMaster.studentGuid;
+      this.studentEnrollmentModel.studentGuid = this.studentDetailsForViewAndEdit.studentMaster.studentGuid;
     }
 
     this.studentService.getAllStudentEnrollment(this.studentEnrollmentModel).subscribe(res => {
@@ -229,11 +237,13 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
           });
         } else {
           this.studentEnrollmentModel = res;
-          this.cloneStudentEnrollment= res.studentEnrollmentListForView.filter((item)=>{
-            return item.exitCode==null;
+          this.cloneStudentEnrollment.studentEnrollments = res.studentEnrollmentListForView.filter((item) => {
+            return item.exitCode == null;
           });
-          for(let i=0;i<this.cloneStudentEnrollment?.length;i++){
-            this.divCount[i]=i;
+          this.cloneEnrollmentForCancel=JSON.stringify(this.studentEnrollmentModel);
+          this.cloneOfCloneEnrollmentForCancel=JSON.stringify(this.cloneStudentEnrollment)
+          for (let i = 0; i < this.cloneStudentEnrollment.studentEnrollments?.length; i++) {
+            this.divCount[i] = i;
           }
           this.manipulateModelInEditMode();
         }
@@ -242,22 +252,22 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
   }
 
 
-  findEnrollmentCodeIdByName(){
-      for(let i=0;i<this.studentEnrollmentModel.studentEnrollmentListForView?.length;i++){
-        let index = this.schoolListWithGradeLevelsAndEnrollCodes.findIndex((x)=>{
-          return x.schoolId == +this.studentEnrollmentModel.studentEnrollmentListForView[i].schoolId;
-        });
-        for(let j=0;j<this.schoolListWithGradeLevelsAndEnrollCodes[index].studentEnrollmentCode?.length;j++){
-          if(this.studentEnrollmentModel.studentEnrollmentListForView[i].enrollmentCode==this.schoolListWithGradeLevelsAndEnrollCodes[index].studentEnrollmentCode[j].title){
-            this.studentEnrollmentModel.studentEnrollmentListForView[i].enrollmentCode=this.schoolListWithGradeLevelsAndEnrollCodes[index].studentEnrollmentCode[j].enrollmentCode.toString();
-            break;
-          }
+  findEnrollmentCodeIdByName() {
+    for (let i = 0; i < this.studentEnrollmentModel.studentEnrollmentListForView?.length; i++) {
+      let index = this.schoolListWithGradeLevelsAndEnrollCodes.findIndex((x) => {
+        return x.schoolId == +this.studentEnrollmentModel.studentEnrollmentListForView[i].schoolId;
+      });
+      for (let j = 0; j < this.schoolListWithGradeLevelsAndEnrollCodes[index].studentEnrollmentCode?.length; j++) {
+        if (this.studentEnrollmentModel.studentEnrollmentListForView[i].enrollmentCode == this.schoolListWithGradeLevelsAndEnrollCodes[index].studentEnrollmentCode[j].title) {
+          this.studentEnrollmentModel.studentEnrollmentListForView[i].enrollmentCode = this.schoolListWithGradeLevelsAndEnrollCodes[index].studentEnrollmentCode[j].enrollmentCode.toString();
+          break;
         }
-        
       }
+
+    }
   }
 
-  findCalendarNameById(){
+  findCalendarNameById() {
     if (this.calendarListModel.calendarList != null) {
       for (let i = 0; i < this.calendarListModel.calendarList?.length; i++) {
         if (this.studentEnrollmentModel.calenderId != null && this.calendarListModel.calendarList[i].calenderId.toString() == this.studentEnrollmentModel.calenderId.toString()) {
@@ -270,44 +280,50 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
   }
 
   manipulateModelInEditMode() {
-    this.filteredEnrollmentInfoInViewMode=this.studentEnrollmentModel.studentEnrollmentListForView.filter((x)=>{
-      return x.exitCode==null;
+    this.filteredEnrollmentInfoInViewMode = this.studentEnrollmentModel.studentEnrollmentListForView.filter((x) => {
+      return x.exitCode == null;
     });
-    if(this.studentEnrollmentModel.calenderId!=null){
+    if (this.studentEnrollmentModel.calenderId != null) {
       for (let i = 0; i < this.studentEnrollmentModel.studentEnrollmentListForView?.length; i++) {
         this.studentEnrollmentModel.calenderId = this.studentEnrollmentModel.calenderId.toString();
       }
     }
-    for (let i = 0; i < this.cloneStudentEnrollment.length; i++) {
-      this.selectedExitCodes[i]=null;
-      this.cloneStudentEnrollment[i].schoolId=this.studentEnrollmentModel.studentEnrollmentListForView[i].schoolId.toString();
-      }
-      this.findCalendarNameById();
+    for (let i = 0; i < this.cloneStudentEnrollment.studentEnrollments.length; i++) {
+      this.selectedExitCodes[i] = null;
+      this.cloneStudentEnrollment.studentEnrollments[i].schoolId = this.studentEnrollmentModel.studentEnrollmentListForView[i].schoolId.toString();
+    }
+    this.findCalendarNameById();
   }
 
-  updateStudentEnrollment(){
+  updateStudentEnrollment() {
     this.currentForm.form.markAllAsTouched();
-    if(this.currentForm.form.invalid){
+    if (this.currentForm.form.invalid) {
       return
     }
     delete this.studentEnrollmentModel.studentEnrollmentListForView;
-      this.studentEnrollmentModel.studentEnrollments=this.cloneStudentEnrollment;
-    let details=this.studentService.getStudentDetails();
-    for(let i=0;i<this.studentEnrollmentModel.studentEnrollments?.length;i++){
-      this.studentEnrollmentModel.studentEnrollments[i].studentId=this.studentService.getStudentId();
-        this.studentEnrollmentModel.studentEnrollments[i].academicYear=+sessionStorage.getItem("academicyear");
-        if(details!=null){
-          this.studentEnrollmentModel.studentEnrollments[i].studentGuid=details.studentMaster.studentGuid;
+    this.studentEnrollmentModel.studentEnrollments = this.cloneStudentEnrollment.studentEnrollments;
+    let details = this.studentService.getStudentDetails();
+    for (let i = 0; i < this.studentEnrollmentModel.studentEnrollments?.length; i++) {
+      this.studentEnrollmentModel.studentEnrollments[i].studentId = this.studentService.getStudentId();
+      this.studentEnrollmentModel.studentEnrollments[i].academicYear = +sessionStorage.getItem("academicyear");
+      // this.studentEnrollmentModel.studentEnrollments[i].enrollmentDate=this.commonFunction.formatDateSaveWithoutTime(this.studentEnrollmentModel.studentEnrollments[i].enrollmentDate)
+      // this.studentEnrollmentModel.studentEnrollments[i].exitDate=this.commonFunction.formatDateSaveWithoutTime(this.studentEnrollmentModel.studentEnrollments[i].exitDate)
+      if (details != null) {
+        this.studentEnrollmentModel.studentEnrollments[i].studentGuid = details.studentMaster.studentGuid;
+      } else {
+        this.studentEnrollmentModel.studentEnrollments[i].studentGuid = this.studentDetailsForViewAndEdit.studentMaster.studentGuid;
 
-        }else{
-        this.studentEnrollmentModel.studentEnrollments[i].studentGuid=this.studentDetailsForViewAndEdit.studentMaster.studentGuid;
-
-        }
+      }
     }
-    this.studentEnrollmentModel.studentGuid=this.studentDetailsForViewAndEdit.studentMaster.studentGuid;
-    this.studentEnrollmentModel.academicYear=sessionStorage.getItem("academicyear");
-    this.studentEnrollmentModel.schoolId=+sessionStorage.getItem("selectedSchoolId");
-    this.studentService.updateStudentEnrollment(this.studentEnrollmentModel).subscribe((res)=>{
+    if (details != null) {
+      this.studentEnrollmentModel.studentGuid = details.studentMaster.studentGuid;
+    } else {
+      this.studentEnrollmentModel.studentGuid = this.studentDetailsForViewAndEdit.studentMaster.studentGuid;
+    }
+
+    this.studentEnrollmentModel.academicYear = sessionStorage.getItem("academicyear");
+    this.studentEnrollmentModel.schoolId = +sessionStorage.getItem("selectedSchoolId");
+    this.studentService.updateStudentEnrollment(this.studentEnrollmentModel).subscribe((res) => {
       if (typeof (res) == 'undefined') {
         this.snackbar.open('Enrollment Update failed. ' + sessionStorage.getItem("httpError"), '', {
           duration: 10000
@@ -322,9 +338,9 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
           this.snackbar.open('Enrollment Update Successful.', '', {
             duration: 10000
           });
-          for(let i=0;i<res.studentEnrollments?.length;i++){
-            if(res.studentEnrollments[i].enrollmentCode=="Transferred In"){
-             this.router.navigate(["school/students"]);
+          for (let i = 0; i < res.studentEnrollments?.length; i++) {
+            if (res.studentEnrollments[i].enrollmentCode == "Transferred In") {
+              this.router.navigate(["school/students"]);
             }
           }
           this.getAllStudentEnrollments();
@@ -332,7 +348,7 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
           // this.replaceEnrollmentCodeWithName();
           this.studentCreateMode = this.studentCreate.VIEW;
           this.studentService.changePageMode(this.studentCreateMode);
-          
+
 
         }
       }

@@ -42,9 +42,26 @@ namespace opensis.data.Repository
                     }
                     staffAddViewModel.staffMaster.StaffGuid = GuidId;
                     staffAddViewModel.staffMaster.LastUpdated = DateTime.UtcNow;
-                    bool checkInternalID = CheckInternalID(staffAddViewModel.staffMaster.TenantId, staffAddViewModel.staffMaster.StaffInternalId);
-                    if (checkInternalID == true)
-                    {                       
+
+                    if (!string.IsNullOrEmpty(staffAddViewModel.staffMaster.StaffInternalId))
+                    {
+                        bool checkInternalID = CheckInternalID(staffAddViewModel.staffMaster.TenantId, staffAddViewModel.staffMaster.StaffInternalId);
+                        if (checkInternalID == false)
+                        {
+                            staffAddViewModel.staffMaster = null;
+                            staffAddViewModel.fieldsCategoryList = null;
+                            staffAddViewModel._failure = true;
+                            staffAddViewModel._message = "Staff InternalID Already Exist";
+                            return staffAddViewModel;
+                        }
+                    }
+                    else
+                    {
+                        staffAddViewModel.staffMaster.StaffInternalId = staffAddViewModel.staffMaster.StaffId.ToString();
+                    }
+                    //bool checkInternalID = CheckInternalID(staffAddViewModel.staffMaster.TenantId, staffAddViewModel.staffMaster.StaffInternalId);
+                    //if (checkInternalID == true)
+                    //{                       
                         //Add Staff Portal Access
                         if (!string.IsNullOrWhiteSpace(staffAddViewModel.PasswordHash) && !string.IsNullOrWhiteSpace(staffAddViewModel.staffMaster.LoginEmailAddress))
                         {
@@ -116,14 +133,14 @@ namespace opensis.data.Repository
                         }
 
                         staffAddViewModel._failure = false;
-                    }
-                    else
-                    {
-                        staffAddViewModel.staffMaster = null;
-                        staffAddViewModel.fieldsCategoryList = null;
-                        staffAddViewModel._failure = true;
-                        staffAddViewModel._message = "Staff InternalID Already Exist";
-                    }
+                    //}
+                    //else
+                    //{
+                    //    staffAddViewModel.staffMaster = null;
+                    //    staffAddViewModel.fieldsCategoryList = null;
+                    //    staffAddViewModel._failure = true;
+                    //    staffAddViewModel._message = "Staff InternalID Already Exist";
+                    //}
                     transaction.Commit();
                 }
                 catch (Exception es)
@@ -204,24 +221,38 @@ namespace opensis.data.Repository
                 int totalCount = transactionIQ.Count();
                 if (pageResult.PageNumber > 0 && pageResult.PageSize > 0)
                 {
-                    transactionIQ = transactionIQ.Skip((pageResult.PageNumber - 1) * pageResult.PageSize).Take(pageResult.PageSize);
+                    transactionIQ = transactionIQ.Select(e => new StaffMaster
+                    {
+                        TenantId = e.TenantId,
+                        StaffId = e.StaffId,
+                        StaffInternalId = e.StaffInternalId,
+                        FirstGivenName = e.FirstGivenName,
+                        MiddleName = e.MiddleName,
+                        LastFamilyName = e.LastFamilyName,
+                        Profile = e.Profile,
+                        JobTitle = e.JobTitle,
+                        SchoolEmail = e.SchoolEmail,
+                        MobilePhone = e.MobilePhone,
+                    }).Skip((pageResult.PageNumber - 1) * pageResult.PageSize).Take(pageResult.PageSize);
                 }
-                var staffList = transactionIQ.Select(s => new GetStaffListForView
-                {
-                    TenantId = s.TenantId,
-                    StaffId = s.StaffId,
-                    StaffInternalId = s.StaffInternalId,
-                    FirstGivenName = s.FirstGivenName,
-                    MiddleName = s.MiddleName,
-                    LastFamilyName = s.LastFamilyName,
-                    Profile = s.Profile,
-                    JobTitle = s.JobTitle,
-                    SchoolEmail = s.SchoolEmail,
-                    MobilePhone = s.MobilePhone,
-                }).ToList();
+                
+                //var staffList = transactionIQ.Select(s => new GetStaffListForView
+                //{
+                //    TenantId = s.TenantId,
+                //    StaffId = s.StaffId,
+                //    StaffInternalId = s.StaffInternalId,
+                //    FirstGivenName = s.FirstGivenName,
+                //    MiddleName = s.MiddleName,
+                //    LastFamilyName = s.LastFamilyName,
+                //    Profile = s.Profile,
+                //    JobTitle = s.JobTitle,
+                //    SchoolEmail = s.SchoolEmail,
+                //    MobilePhone = s.MobilePhone,
+                //}).ToList();
 
                 staffListModel.TenantId = pageResult.TenantId;
-                staffListModel.getStaffListForView = staffList;
+                //staffListModel.getStaffListForView = staffList;
+                staffListModel.staffMaster = transactionIQ.ToList();
                 staffListModel.TotalCount = totalCount;
                 staffListModel.PageNumber = pageResult.PageNumber;
                 staffListModel._pageSize = pageResult.PageSize;
@@ -332,9 +363,12 @@ namespace opensis.data.Repository
                     }
                     else
                     {
-
-
                         var staffUpdate = this.context?.StaffMaster.FirstOrDefault(x => x.TenantId == staffAddViewModel.staffMaster.TenantId && x.StaffId == staffAddViewModel.staffMaster.StaffId);
+
+                        if (string.IsNullOrEmpty(staffAddViewModel.staffMaster.StaffInternalId))
+                        {
+                            staffAddViewModel.staffMaster.StaffInternalId = staffUpdate.StaffInternalId;
+                        }
 
                         //Add or Update staff portal access
                         if (staffUpdate.LoginEmailAddress != null)
@@ -363,7 +397,7 @@ namespace opensis.data.Repository
                                         this.context?.SaveChanges();
 
                                         //Update Parent Login in ParentInfo table.
-                                        staffUpdate.LoginEmailAddress = staffAddViewModel.staffMaster.LoginEmailAddress;
+                                        //staffUpdate.LoginEmailAddress = staffAddViewModel.staffMaster.LoginEmailAddress;
                                     }
                                 }
                                 else
@@ -407,7 +441,7 @@ namespace opensis.data.Repository
 
 
                                     //Update LoginEmailAddress in StaffMaster table.
-                                    staffUpdate.LoginEmailAddress = staffAddViewModel.staffMaster.LoginEmailAddress;
+                                    //staffUpdate.LoginEmailAddress = staffAddViewModel.staffMaster.LoginEmailAddress;
                                 }
                                 else
                                 {
@@ -419,72 +453,11 @@ namespace opensis.data.Repository
                             }
                         }
 
-                        staffUpdate.Salutation = staffAddViewModel.staffMaster.Salutation;
-                        staffUpdate.Suffix = staffAddViewModel.staffMaster.Suffix;
-                        staffUpdate.FirstGivenName = staffAddViewModel.staffMaster.FirstGivenName;
-                        staffUpdate.MiddleName = staffAddViewModel.staffMaster.MiddleName;
-                        staffUpdate.LastFamilyName = staffAddViewModel.staffMaster.LastFamilyName;
-                        staffUpdate.StaffInternalId = staffAddViewModel.staffMaster.StaffInternalId;
-                        staffUpdate.AlternateId = staffAddViewModel.staffMaster.AlternateId;
-                        staffUpdate.DistrictId = staffAddViewModel.staffMaster.DistrictId;
-                        staffUpdate.StateId = staffAddViewModel.staffMaster.StateId;
-                        staffUpdate.PreferredName = staffAddViewModel.staffMaster.PreferredName;
-                        staffUpdate.PreviousName = staffAddViewModel.staffMaster.PreviousName;
-                        staffUpdate.SocialSecurityNumber = staffAddViewModel.staffMaster.SocialSecurityNumber;
-                        staffUpdate.OtherGovtIssuedNumber = staffAddViewModel.staffMaster.OtherGovtIssuedNumber;
-                        staffUpdate.Gender = staffAddViewModel.staffMaster.Gender;
-                        staffUpdate.Race = staffAddViewModel.staffMaster.Race;
-                        staffUpdate.Ethnicity = staffAddViewModel.staffMaster.Ethnicity;
-                        staffUpdate.MaritalStatus = staffAddViewModel.staffMaster.MaritalStatus;
-                        staffUpdate.Dob = staffAddViewModel.staffMaster.Dob;
-                        staffUpdate.CountryOfBirth = staffAddViewModel.staffMaster.CountryOfBirth;
-                        staffUpdate.Nationality = staffAddViewModel.staffMaster.Nationality;
-                        staffUpdate.FirstLanguage = staffAddViewModel.staffMaster.FirstLanguage;
-                        staffUpdate.SecondLanguage = staffAddViewModel.staffMaster.SecondLanguage;
-                        staffUpdate.ThirdLanguage = staffAddViewModel.staffMaster.ThirdLanguage;
-                        staffUpdate.PhysicalDisability = staffAddViewModel.staffMaster.PhysicalDisability;
-                        staffUpdate.LoginEmailAddress = staffAddViewModel.staffMaster.LoginEmailAddress;
-                        staffUpdate.PortalAccess = staffAddViewModel.staffMaster.PortalAccess;
-
-                        staffUpdate.HomePhone = staffAddViewModel.staffMaster.HomePhone;
-                        staffUpdate.MobilePhone = staffAddViewModel.staffMaster.MobilePhone;
-                        staffUpdate.OfficePhone = staffAddViewModel.staffMaster.OfficePhone;
-                        staffUpdate.PersonalEmail = staffAddViewModel.staffMaster.PersonalEmail;
-                        staffUpdate.SchoolEmail = staffAddViewModel.staffMaster.SchoolEmail;
-                        staffUpdate.Twitter = staffAddViewModel.staffMaster.Twitter;
-                        staffUpdate.Facebook = staffAddViewModel.staffMaster.Facebook;
-                        staffUpdate.Instagram = staffAddViewModel.staffMaster.Instagram;
-                        staffUpdate.Youtube = staffAddViewModel.staffMaster.Youtube;
-                        staffUpdate.Linkedin = staffAddViewModel.staffMaster.Linkedin;
-                        staffUpdate.HomeAddressLineOne = staffAddViewModel.staffMaster.HomeAddressLineOne;
-                        staffUpdate.HomeAddressLineTwo = staffAddViewModel.staffMaster.HomeAddressLineTwo;
-                        staffUpdate.HomeAddressCountry = staffAddViewModel.staffMaster.HomeAddressCountry;
-                        staffUpdate.HomeAddressState = staffAddViewModel.staffMaster.HomeAddressState;
-                        staffUpdate.HomeAddressCity = staffAddViewModel.staffMaster.HomeAddressCity;
-                        staffUpdate.HomeAddressZip = staffAddViewModel.staffMaster.HomeAddressZip;
-                        staffUpdate.MailingAddressSameToHome = staffAddViewModel.staffMaster.MailingAddressSameToHome;
-                        staffUpdate.MailingAddressLineOne = staffAddViewModel.staffMaster.MailingAddressLineOne;
-                        staffUpdate.MailingAddressLineTwo = staffAddViewModel.staffMaster.MailingAddressLineTwo;
-                        staffUpdate.MailingAddressCountry = staffAddViewModel.staffMaster.MailingAddressCountry;
-                        staffUpdate.MailingAddressState = staffAddViewModel.staffMaster.MailingAddressState;
-                        staffUpdate.MailingAddressCity = staffAddViewModel.staffMaster.MailingAddressCity;
-                        staffUpdate.MailingAddressZip = staffAddViewModel.staffMaster.MailingAddressZip;
-                        staffUpdate.EmergencyFirstName = staffAddViewModel.staffMaster.EmergencyFirstName;
-                        staffUpdate.EmergencyLastName = staffAddViewModel.staffMaster.EmergencyLastName;
-                        staffUpdate.RelationshipToStaff = staffAddViewModel.staffMaster.RelationshipToStaff;
-                        staffUpdate.EmergencyHomePhone = staffAddViewModel.staffMaster.EmergencyHomePhone;
-                        staffUpdate.EmergencyWorkPhone = staffAddViewModel.staffMaster.EmergencyWorkPhone;
-                        staffUpdate.EmergencyMobilePhone = staffAddViewModel.staffMaster.EmergencyMobilePhone;
-                        staffUpdate.EmergencyEmail = staffAddViewModel.staffMaster.EmergencyEmail;
-                        staffUpdate.LastUpdated = DateTime.UtcNow;
-                        staffUpdate.LastUpdatedBy = staffAddViewModel.staffMaster.LastUpdatedBy;
-                        staffUpdate.StaffPhoto = staffAddViewModel.staffMaster.StaffPhoto;
-                        staffUpdate.BusDropoff = staffAddViewModel.staffMaster.BusDropoff;
-                        staffUpdate.BusNo = staffAddViewModel.staffMaster.BusNo;
-                        staffUpdate.BusPickup = staffAddViewModel.staffMaster.BusPickup;
-                        staffUpdate.DisabilityDescription = staffAddViewModel.staffMaster.DisabilityDescription;
-
+                        staffAddViewModel.staffMaster.StaffGuid = staffUpdate.StaffGuid;
+                        staffAddViewModel.staffMaster.LastUpdated = DateTime.Now;
+                        this.context.Entry(staffUpdate).CurrentValues.SetValues(staffAddViewModel.staffMaster);
                         this.context?.SaveChanges();
+                        staffAddViewModel._message = "Updated Successfully";
 
                         if (staffAddViewModel.fieldsCategoryList != null && staffAddViewModel.fieldsCategoryList.ToList().Count > 0)
                         {
@@ -756,50 +729,6 @@ namespace opensis.data.Repository
                     staffCertificateInfoListView._failure = true;
                     staffCertificateInfoListView._message = NORECORDFOUND;
                 }
-                //if (staffCertificatePageResult.FilterParams == null || staffCertificatePageResult.FilterParams.Count == 0)
-                //{
-                //    transactionIQ = staffCertificateInfoList.AsQueryable();
-                //}
-                //else
-                //{
-                //    if (staffCertificatePageResult.FilterParams != null && staffCertificatePageResult.FilterParams.ElementAt(0).ColumnName == null && staffCertificatePageResult.FilterParams.Count == 1)
-                //    {
-                //        string Columnvalue = staffCertificatePageResult.FilterParams.ElementAt(0).FilterValue;
-                //        transactionIQ = staffCertificateInfoList.Where(x => x.CertificationName != null && x.CertificationName.ToLower().Contains(Columnvalue.ToLower()) ||
-                //                        x.ShortName != null && x.ShortName.ToLower().Contains(Columnvalue.ToLower()) ||
-                //                        x.CertificationDate != null && x.CertificationDate.ToString().Contains(Columnvalue)||
-                //                        x.CertificationExpiryDate != null && x.CertificationExpiryDate.ToString().Contains(Columnvalue)).AsQueryable();
-                //    }
-                //    else
-                //    {
-                //        transactionIQ = Utility.FilteredData(staffCertificatePageResult.FilterParams, staffCertificateInfoList).AsQueryable();
-                //    }
-                //    transactionIQ = transactionIQ.Distinct();
-                //}
-
-                //if (staffCertificatePageResult.SortingModel != null)
-                //{
-                //    transactionIQ = Utility.Sort(transactionIQ, staffCertificatePageResult.SortingModel.SortColumn, staffCertificatePageResult.SortingModel.SortDirection.ToLower());
-                //}
-
-                //int totalCount = transactionIQ.Count();
-                //transactionIQ = transactionIQ.Skip((staffCertificatePageResult.PageNumber - 1) * staffCertificatePageResult.PageSize).Take(staffCertificatePageResult.PageSize);
-                //var staffCertificateInfo = transactionIQ.AsNoTracking().Select(y => new GetStaffCertificateForView
-                //{ 
-                //    Id=y.Id,
-                //    TenantId=y.TenantId,
-                //    SchoolId=y.SchoolId,
-                //    StaffId=y.StaffId,
-                //    CertificationName=y.CertificationName,
-                //    ShortName=y.ShortName,
-                //    CertificationCode=y.CertificationCode,                    
-                //    PrimaryCertification=y.PrimaryCertification,
-                //    CertificationDate=y.CertificationDate,
-                //    CertificationExpiryDate=y.CertificationExpiryDate,
-                //    CertificationDescription=y.CertificationDescription,
-                //    UpdatedBy=y.UpdatedBy,
-                //    UpdatedAt=y.UpdatedAt
-                //}).ToList();                
             }
             catch (Exception es)
             {
@@ -822,15 +751,8 @@ namespace opensis.data.Repository
                 var staffCertificateInfoUpdate = this.context?.StaffCertificateInfo.FirstOrDefault(x => x.TenantId == staffCertificateInfoAddViewModel.staffCertificateInfo.TenantId && x.SchoolId == staffCertificateInfoAddViewModel.staffCertificateInfo.SchoolId && x.StaffId == staffCertificateInfoAddViewModel.staffCertificateInfo.StaffId && x.Id == staffCertificateInfoAddViewModel.staffCertificateInfo.Id);
                 if (staffCertificateInfoUpdate != null)
                 {
-                    staffCertificateInfoUpdate.CertificationName = staffCertificateInfoAddViewModel.staffCertificateInfo.CertificationName;
-                    staffCertificateInfoUpdate.ShortName = staffCertificateInfoAddViewModel.staffCertificateInfo.ShortName;
-                    staffCertificateInfoUpdate.CertificationCode = staffCertificateInfoAddViewModel.staffCertificateInfo.CertificationCode;
-                    staffCertificateInfoUpdate.PrimaryCertification = staffCertificateInfoAddViewModel.staffCertificateInfo.PrimaryCertification;
-                    staffCertificateInfoUpdate.CertificationDate = staffCertificateInfoAddViewModel.staffCertificateInfo.CertificationDate;
-                    staffCertificateInfoUpdate.CertificationExpiryDate = staffCertificateInfoAddViewModel.staffCertificateInfo.CertificationExpiryDate;
-                    staffCertificateInfoUpdate.CertificationDescription = staffCertificateInfoAddViewModel.staffCertificateInfo.CertificationDescription;
-                    staffCertificateInfoUpdate.UpdatedBy = staffCertificateInfoAddViewModel.staffCertificateInfo.UpdatedBy;
-                    staffCertificateInfoUpdate.UpdatedAt= DateTime.UtcNow;
+                    staffCertificateInfoAddViewModel.staffCertificateInfo.UpdatedAt = DateTime.UtcNow;
+                    this.context.Entry(staffCertificateInfoUpdate).CurrentValues.SetValues(staffCertificateInfoAddViewModel.staffCertificateInfo);
                     this.context?.SaveChanges();
                     staffCertificateInfoAddViewModel._failure = false;
                     staffCertificateInfoAddViewModel._message= "Updated Successfully";

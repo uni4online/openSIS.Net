@@ -78,14 +78,14 @@ export class SchoolClassificationComponent implements OnInit {
     this.getAllClassification.lovName="School Classification";
     this.commonService.getAllDropdownValues(this.getAllClassification).subscribe(data => {
       if(typeof(data)=='undefined'){
-        this.snackbar.open('School Classification List failed. ' + sessionStorage.getItem("httpError"), '', {
+        this.snackbar.open('No Record Found For School Classification. ' + sessionStorage.getItem("httpError"), '', {
           duration: 10000
         });
       }else{
         if(data._failure){
           this.ClassificationModelList=new MatTableDataSource(data.dropdownList) ;
             this.listCount=this.ClassificationModelList.data;
-            this.snackbar.open('School Classification List failed. ' + data._message, 'LOL THANKS', {
+            this.snackbar.open('No Record Found For School Classification. ', '', {
               duration: 10000
             });
         }else{     
@@ -138,12 +138,12 @@ export class SchoolClassificationComponent implements OnInit {
       }
       else {
         if (data._failure) {
-          this.snackbar.open('School Classification Deletion failed. ' + data._message, 'LOL THANKS', {
+          this.snackbar.open('School Classification Deletion failed. ' + data._message, '', {
             duration: 10000
           });
         } else {
        
-          this.snackbar.open('School Classification Deletion Successful.', '', {
+          this.snackbar.open('School Classification Deleted Successfully.', '', {
             duration: 10000
           }).afterOpened().subscribe(data => {
             this.getSchoolClassificationList();

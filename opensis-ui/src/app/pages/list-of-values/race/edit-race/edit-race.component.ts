@@ -68,12 +68,12 @@ export class EditRaceComponent implements OnInit {
             }
             else {
               if (res._failure) {
-                this.snackbar.open('Race Addition failed. ' + res._message, 'LOL THANKS', {
+                this.snackbar.open('Race Addition failed. ' + res._message, '', {
                   duration: 10000
                 });
               }
               else {
-                this.snackbar.open('Race Added Successfully. ' + res._message, 'LOL THANKS', {
+                this.snackbar.open('Race Added Successfully. ' + res._message, '', {
                   duration: 10000
                 });
                 this.dialogRef.close('submited');

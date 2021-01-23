@@ -118,7 +118,7 @@ export class RaceComponent implements OnInit {
           if (res._failure) {
             this.raceListModel=new MatTableDataSource(res.dropdownList) ;
             this.listCount=this.raceListModel.data;
-            this.snackbar.open('Race List failed. ' + res._message, 'LOL THANKS', {
+            this.snackbar.open('Race List failed. ' + res._message, '', {
               duration: 10000
             });
           }
@@ -151,12 +151,12 @@ export class RaceComponent implements OnInit {
         }
         else{
           if (res._failure) {
-            this.snackbar.open('Race Deletion failed. ' + res._message, 'LOL THANKS', {
+            this.snackbar.open('Race Deletion failed. ' + res._message, '', {
               duration: 10000
             });
           } 
           else { 
-            this.snackbar.open('Race Deleted Successfully. ' + res._message, 'LOL THANKS', {
+            this.snackbar.open('Race Deleted Successfully. ' + res._message, '', {
               duration: 10000
             });
             this.getAllRace()

@@ -1,11 +1,11 @@
 <div class="card">
     <div class="bg-white px-6 h-16 border-b sticky left-0" fxLayout="row" fxLayoutAlign="start center">
         <div class="flex w-full justify-between">
-            <div class="py-3" fxFlex="300px" fxFlex.lt-md="auto" fxHide.xs fxLayout="row"
-                fxLayoutAlign="start center">
+            <div class="py-3" fxFlex="300px" fxFlex.lt-md="auto" fxHide.xs fxLayout="row" fxLayoutAlign="start center">
 
                 <div class="flex">
-                    <input class="pr-4 py-3 border-0 outline-none w-full bg-transparent" placeholder="Search..."
+                    <input [formControl]="searchCtrl" name="search"
+                        class="px-4 py-3 border-0 outline-none w-full bg-transparent" placeholder="Search..."
                         type="search">
                     <button class="ml-4" fxFlex="none" fxHide.gt-xs mat-icon-button type="button">
                         <mat-icon [icIcon]="icSearch"></mat-icon>
@@ -15,15 +15,15 @@
 
 
             <div fxFlex="200px" class="pt-3">
-                <a routerLink="" class="cursor-pointer p-1 mt-1 inline-block align-middle" matTooltip="Export to Excel"><i class="icon icon-file-excel text-lg"></i></a>
+                <a (click)="exportEffortGradeScaleListToExcel()"
+                    class="cursor-pointer p-1 mt-1 inline-block align-middle" matTooltip="Export to Excel"><i
+                        class="icon icon-file-excel text-lg"></i></a>
                 <button [matMenuTriggerFor]="columnFilterMenu" class="ml-4" fxFlex="none" mat-icon-button
                     matTooltip="Filter Columns" type="button">
                     <mat-icon [icIcon]="icFilterList"></mat-icon>
                 </button>
-                <button color="primary" class="ml-4" fxFlex="none" mat-raised-button type="button"
-                (click)='goToAdd()'>
-                    <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true"
-                        size="24px">
+                <button color="primary" class="ml-4" fxFlex="none" mat-raised-button type="button" (click)='openAdd()'>
+                    <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true" size="24px">
                     </ic-icon>
                     <span>{{'addNewEffortGradeScale'|translate}}</span>
                 </button>
@@ -32,55 +32,61 @@
     </div>
 
     <div class="overflow-x-auto">
-    <table @stagger mat-table [dataSource]="EffortGradeScaleModelList" class="table-auto w-full" matSort>
+        <table @stagger mat-table [dataSource]="effortGradeScaleModelList" class="table-auto w-full" cdkDropList
+            [cdkDropListData]="effortGradeScaleModelList" (cdkDropListDropped)="drop($event)" matSort>
 
-        <ng-container matColumnDef="order">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header width="50"></th>
-            <td mat-cell *matCellDef="let element">
-                <mat-icon cdkDragHandle>reorder</mat-icon>
-            </td>
-        </ng-container>
-        
-        <ng-container matColumnDef="value">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'value'|translate}}</th>
-            <td mat-cell *matCellDef="let element">
-                {{element.value}}
-            </td>
-        </ng-container>
+            <ng-container matColumnDef="order">
+                <th mat-header-cell *matHeaderCellDef width="50"></th>
+                <td mat-cell *matCellDef="let element" cdkDrag>
+                    <mat-icon class="cursor-move" cdkDragHandle>reorder</mat-icon>
+                </td>
+            </ng-container>
 
-        <ng-container matColumnDef="comment">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'comment'|translate}}</th>
-            <td mat-cell *matCellDef="let element">
-                {{element.comment}}
-            </td>
-        </ng-container>
+            <ng-container matColumnDef="gradeScaleValue">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'value'|translate}}</th>
+                <td mat-cell *matCellDef="let element">
+                    {{element.gradeScaleValue}}
+                </td>
+            </ng-container>
 
-        <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header width="150">{{'action'|translate}}</th>
-            <td mat-cell *matCellDef="let element">
-                <a routerLink="" matTooltip="Edit Item" class="mr-3 cursor-pointer">
-                    <mat-icon [icIcon]="icEdit"></mat-icon>
-                </a>
-                <a routerLink="" matTooltip="Delete Item" class="mr-3 cursor-pointer">
-                    <mat-icon [icIcon]="icDelete"></mat-icon>
-                </a>
-            </td>
-        </ng-container>
+            <ng-container matColumnDef="gradeScaleComment">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'comment'|translate}}</th>
+                <td mat-cell *matCellDef="let element">
+                    {{element.gradeScaleComment}}
+                </td>
+            </ng-container>
 
-        <ng-container matColumnDef="loading">
-            <mat-footer-cell *matFooterCellDef colspan="6">
-                <vex-mat-spinner-overlay *ngIf="loading" color="accent"></vex-mat-spinner-overlay>
-            </mat-footer-cell>
-        </ng-container>
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef width="150">{{'action'|translate}}</th>
+                <td mat-cell *matCellDef="let element">
+                    <a (click)="openEdit(element)" matTooltip="Edit Item" class="mr-3 cursor-pointer">
+                        <mat-icon [icIcon]="icEdit"></mat-icon>
+                    </a>
+                    <a (click)="confirmDelete(element)" matTooltip="Delete Item" class="mr-3 cursor-pointer">
+                        <mat-icon [icIcon]="icDelete"></mat-icon>
+                    </a>
+                </td>
+            </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="visibleColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: visibleColumns" @fadeInUp></tr>
-        <!-- <mat-footer-row *matFooterRowDef="['loading']" [class.hide]="!loading"></mat-footer-row> -->
+            <ng-container matColumnDef="loading">
+                <mat-footer-cell *matFooterCellDef colspan="4">
+                    <vex-mat-spinner-overlay *ngIf="loading" color="accent"></vex-mat-spinner-overlay>
+                </mat-footer-cell>
+            </ng-container>
+            <ng-container matColumnDef="noData">
+                <td mat-footer-cell *matFooterCellDef colspan="5">
+                    {{loading?'Fetching Data...':'No Data'}}
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="visibleColumns"></tr>
+            <tr mat-footer-row *matFooterRowDef="['noData']" [class.hide]="totalCount!=0"></tr>
+            <tr mat-row *matRowDef="let row; columns: visibleColumns" @fadeInUp></tr>
+            <mat-footer-row *matFooterRowDef="['loading']" [class.hide]="!loading"></mat-footer-row>
 
-    </table>
+        </table>
     </div>
-    <!-- <mat-paginator [length]="totalCount" [pageSize]="pageSize" [pageSizeOptions]="[10, 20, 30, 40]" showFirstLastButtons (page)='getPageEvent($event)'></mat-paginator> -->
-    <mat-paginator length="100"  pageSize="10" [pageSizeOptions]="[10, 20, 30, 40]" showFirstLastButtons></mat-paginator>
+    <mat-paginator [class.hide]="totalCount<=10" [length]="totalCount" [pageSize]="pageSize"
+        [pageSizeOptions]="[10, 20, 30, 40]" showFirstLastButtons (page)='getPageEvent($event)'></mat-paginator>
 </div>
 
 <mat-menu #columnFilterMenu="matMenu" xPosition="before" yPosition="below">

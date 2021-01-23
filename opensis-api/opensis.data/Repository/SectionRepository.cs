@@ -56,16 +56,9 @@ namespace opensis.data.Repository
             {
                 var sectionUpdate = this.context?.Sections.FirstOrDefault(x => x.TenantId == section.tableSections.TenantId && x.SchoolId == section.tableSections.SchoolId && x.SectionId == section.tableSections.SectionId);
 
-                sectionUpdate.TenantId = section.tableSections.TenantId;
-                sectionUpdate.SchoolId = section.tableSections.SchoolId;
-                sectionUpdate.SectionId = section.tableSections.SectionId;
-                sectionUpdate.Name = section.tableSections.Name;
-                sectionUpdate.SortOrder = section.tableSections.SortOrder;
                 section.tableSections.LastUpdated = DateTime.UtcNow;
-                sectionUpdate.UpdatedBy = section.tableSections.UpdatedBy;
-
+                this.context.Entry(sectionUpdate).CurrentValues.SetValues(section.tableSections);
                 this.context?.SaveChanges();
-
                 section._failure = false;
                 return section;
             }

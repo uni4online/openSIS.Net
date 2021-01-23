@@ -177,6 +177,7 @@ namespace opensis.data.Repository
                             IsCustodian = parent.IsCustodian,
                             Relationship = parent.Relationship,
                             ParentAddress=parentData.ParentAddress.FirstOrDefault(),
+                            LoginEmail= parentData.LoginEmail
                         };
                         parentInfoListViewModel.parentInfoListForView.Add(parentInfoListData);
                     }                 
@@ -238,7 +239,7 @@ namespace opensis.data.Repository
                                     this.context?.SaveChanges();
 
                                     //Update Parent Login in ParentInfo table.
-                                    parentInfoUpdate.LoginEmail = parentInfoAddViewModel.parentInfo.LoginEmail;
+                                    //parentInfoUpdate.LoginEmail = parentInfoAddViewModel.parentInfo.LoginEmail;
                                 }
                             }
                             else
@@ -281,7 +282,7 @@ namespace opensis.data.Repository
                                 this.context?.SaveChanges();
 
                                 //Update LoginEmail in ParentInfo table.
-                                parentInfoUpdate.LoginEmail = parentInfoAddViewModel.parentInfo.LoginEmail;
+                                //parentInfoUpdate.LoginEmail = parentInfoAddViewModel.parentInfo.LoginEmail;
                             }
                             else
                             {
@@ -292,25 +293,11 @@ namespace opensis.data.Repository
                             }
                         }
                     }
-                    parentInfoUpdate.Salutation = parentInfoAddViewModel.parentInfo.Salutation;
-                    parentInfoUpdate.Firstname = parentInfoAddViewModel.parentInfo.Firstname;
-                    parentInfoUpdate.Middlename = parentInfoAddViewModel.parentInfo.Middlename;
-                    parentInfoUpdate.Lastname = parentInfoAddViewModel.parentInfo.Lastname;
-                    parentInfoUpdate.HomePhone = parentInfoAddViewModel.parentInfo.HomePhone;
-                    parentInfoUpdate.WorkPhone = parentInfoAddViewModel.parentInfo.WorkPhone;
-                    parentInfoUpdate.Mobile = parentInfoAddViewModel.parentInfo.Mobile;
-                    parentInfoUpdate.PersonalEmail = parentInfoAddViewModel.parentInfo.PersonalEmail;
-                    parentInfoUpdate.WorkEmail = parentInfoAddViewModel.parentInfo.WorkEmail;
-                    parentInfoUpdate.IsPortalUser = parentInfoAddViewModel.parentInfo.IsPortalUser;
-                    parentInfoUpdate.Suffix = parentInfoAddViewModel.parentInfo.Suffix;
-                    parentInfoUpdate.LoginEmail = parentInfoAddViewModel.parentInfo.LoginEmail;
-                    parentInfoUpdate.BusPickup = parentInfoAddViewModel.parentInfo.BusPickup;
-                    parentInfoUpdate.BusDropoff = parentInfoAddViewModel.parentInfo.BusDropoff;
-                    parentInfoUpdate.LastUpdated = DateTime.UtcNow;
-                    parentInfoUpdate.UpdatedBy = parentInfoAddViewModel.parentInfo.UpdatedBy;
-                    parentInfoUpdate.BusNo = parentInfoAddViewModel.parentInfo.BusNo;
-                    parentInfoUpdate.IsPortalUser = parentInfoAddViewModel.parentInfo.IsPortalUser;
-                    parentInfoUpdate.ParentPhoto = parentInfoAddViewModel.parentInfo.ParentPhoto;
+                    
+                    parentInfoAddViewModel.parentInfo.UserProfile = parentInfoUpdate.UserProfile;
+                    parentInfoAddViewModel.parentInfo.ParentGuid =parentInfoUpdate.ParentGuid;
+                    parentInfoAddViewModel.parentInfo.LastUpdated = DateTime.UtcNow;
+                    this.context.Entry(parentInfoUpdate).CurrentValues.SetValues(parentInfoAddViewModel.parentInfo);
                     this.context?.SaveChanges();
 
                     if (parentInfoUpdate.ParentAddress.Count() > 0 && parentInfoAddViewModel.parentInfo.ParentAddress.Count() > 0)
@@ -345,16 +332,11 @@ namespace opensis.data.Repository
                             this.context?.SaveChanges();
                         }
                         else
-                        {
-                            parentInfoUpdate.ParentAddress.FirstOrDefault().StudentAddressSame = false;
-                            parentInfoUpdate.ParentAddress.FirstOrDefault().AddressLineOne = parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().AddressLineOne;
-                            parentInfoUpdate.ParentAddress.FirstOrDefault().AddressLineTwo = parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().AddressLineTwo;
-                            parentInfoUpdate.ParentAddress.FirstOrDefault().Country = parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().Country;
-                            parentInfoUpdate.ParentAddress.FirstOrDefault().City = parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().City;
-                            parentInfoUpdate.ParentAddress.FirstOrDefault().State = parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().State;
-                            parentInfoUpdate.ParentAddress.FirstOrDefault().Zip = parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().Zip;
-                            parentInfoUpdate.ParentAddress.FirstOrDefault().LastUpdated = DateTime.UtcNow;
-                            parentInfoUpdate.ParentAddress.FirstOrDefault().UpdatedBy = parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().UpdatedBy;
+                        {                          
+                            parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().StudentAddressSame = false;
+                            parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().LastUpdated = DateTime.UtcNow;
+                            this.context.Entry(parentInfoUpdate.ParentAddress.FirstOrDefault()).CurrentValues.SetValues(parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault());
+                            this.context?.SaveChanges();
                         }
                     }
                     this.context?.SaveChanges();
@@ -392,7 +374,6 @@ namespace opensis.data.Repository
         public GetAllParentInfoListForView GetAllParentInfoList(PageResult pageResult)
         {
             GetAllParentInfoListForView parentInfoListModel = new GetAllParentInfoListForView();
-            int resultData;
             IQueryable<ParentInfo> transactionIQ = null;
             var ParentInfoList = this.context?.ParentInfo.Include(x=>x.ParentAddress).ToList().Where(x => x.TenantId == pageResult.TenantId && x.SchoolId==pageResult.SchoolId);
             
@@ -400,6 +381,24 @@ namespace opensis.data.Repository
             {
                 transactionIQ = ParentInfoList.AsQueryable();
                 int totalCount = transactionIQ.Count();
+
+                foreach(var parent in ParentInfoList.ToList())
+                {
+                    if(parent.ParentAddress.FirstOrDefault().StudentAddressSame==true)
+                    {
+                        var studentAddress = this.context?.StudentMaster.Where(x => x.TenantId == parent.ParentAddress.FirstOrDefault().TenantId && x.SchoolId == parent.ParentAddress.FirstOrDefault().SchoolId && x.StudentId==parent.ParentAddress.FirstOrDefault().StudentId).FirstOrDefault();
+
+                        if(studentAddress != null)
+                        {
+                            parent.ParentAddress.FirstOrDefault().AddressLineOne = studentAddress.HomeAddressLineOne;
+                            parent.ParentAddress.FirstOrDefault().AddressLineTwo = studentAddress.HomeAddressLineTwo;
+                            parent.ParentAddress.FirstOrDefault().City = studentAddress.HomeAddressCity;
+                            parent.ParentAddress.FirstOrDefault().Country = studentAddress.HomeAddressCountry;
+                            parent.ParentAddress.FirstOrDefault().State = studentAddress.HomeAddressState;
+                            parent.ParentAddress.FirstOrDefault().Zip = studentAddress.HomeAddressZip;
+                        }
+                    }                  
+                }
                 var parentInfo = transactionIQ.AsNoTracking().Select(y => new GetParentInfoForView
                 {
                     SchoolId = y.SchoolId,
@@ -416,10 +415,8 @@ namespace opensis.data.Repository
                     PersonalEmail=y.PersonalEmail,
                     Mobile=y.Mobile,
                     UserProfile=y.UserProfile,
-                    AddressLineOne = ToFullAddress(y.ParentAddress.FirstOrDefault().AddressLineOne, y.ParentAddress.FirstOrDefault().AddressLineTwo,
-                        int.TryParse(y.ParentAddress.FirstOrDefault().City, out resultData) == true ? this.context.City.Where(x => x.Id == Convert.ToInt32(y.ParentAddress.FirstOrDefault().City)).FirstOrDefault().Name : y.ParentAddress.FirstOrDefault().City,
-                        int.TryParse(y.ParentAddress.FirstOrDefault().State, out resultData) == true ? this.context.State.Where(x => x.Id == Convert.ToInt32(y.ParentAddress.FirstOrDefault().State)).FirstOrDefault().Name : y.ParentAddress.FirstOrDefault().State,
-                        int.TryParse(y.ParentAddress.FirstOrDefault().Country, out resultData) == true ? this.context.Country.Where(x => x.Id == Convert.ToInt32(y.ParentAddress.FirstOrDefault().Country)).FirstOrDefault().Name : string.Empty, y.ParentAddress.FirstOrDefault().Zip)
+                    AddressLineOne = ToFullAddress(y.ParentAddress.FirstOrDefault().AddressLineOne, y.ParentAddress.FirstOrDefault().AddressLineTwo, y.ParentAddress.FirstOrDefault().City,
+                    y.ParentAddress.FirstOrDefault().State, y.ParentAddress.FirstOrDefault().Country, y.ParentAddress.FirstOrDefault().Zip)
                 }).ToList();                
                 parentInfoListModel.parentInfoForView = parentInfo;
                 foreach (var ParentInfo in parentInfoListModel.parentInfoForView)
@@ -485,39 +482,61 @@ namespace opensis.data.Repository
         /// <returns></returns>
         public GetAllParentInfoListForView SearchParentInfoForStudent(GetAllParentInfoListForView getAllParentInfoListForView)
         {
-            int resultData;
             GetAllParentInfoListForView parentInfoListModel = new GetAllParentInfoListForView();
             try
             {
-                var containParentId = this.context?.ParentAssociationship.Where(x => x.TenantId == getAllParentInfoListForView.TenantId && x.SchoolId == getAllParentInfoListForView.SchoolId && x.StudentId == getAllParentInfoListForView.StudentId && x.Associationship == true).Select(x => x.ParentId).ToList();                               
-                string parentIDs = null;
-                if(containParentId.Count()>0)
+                var containParentId = this.context?.ParentAssociationship.Where(x => x.TenantId == getAllParentInfoListForView.TenantId && x.SchoolId == getAllParentInfoListForView.SchoolId && x.StudentId == getAllParentInfoListForView.StudentId && x.Associationship == true).Select(x => x.ParentId).ToList();
+                //string parentIDs = null;
+                //if (containParentId.Count() > 0)
+                //{
+                //    parentIDs = string.Join(",", containParentId);
+                //}
+
+                List<int> parentIDs = new List<int> { };
+                parentIDs = containParentId;
+
+                var ParentInfoList = this.context?.ParentInfo.Include(x => x.ParentAddress).ToList().Where(x => x.TenantId == getAllParentInfoListForView.TenantId && (getAllParentInfoListForView.Firstname == null || (x.Firstname == getAllParentInfoListForView.Firstname)) && (getAllParentInfoListForView.Lastname == null || (x.Lastname == getAllParentInfoListForView.Lastname)) && (getAllParentInfoListForView.Email == null || (x.PersonalEmail == getAllParentInfoListForView.Email)) && (getAllParentInfoListForView.Mobile == null || (x.Mobile == getAllParentInfoListForView.Mobile)) && (getAllParentInfoListForView.StreetAddress == null || (x.ParentAddress.FirstOrDefault().AddressLineOne == getAllParentInfoListForView.StreetAddress)) && (getAllParentInfoListForView.City == null || (x.ParentAddress.FirstOrDefault().City == getAllParentInfoListForView.City)) && (getAllParentInfoListForView.State == null || (x.ParentAddress.FirstOrDefault().State == getAllParentInfoListForView.State)) && (getAllParentInfoListForView.Zip == null || (x.ParentAddress.FirstOrDefault().Zip == getAllParentInfoListForView.Zip)) && (parentIDs == null || (!parentIDs.Contains(x.ParentId))));
+
+                //var ParentInfoList1 = (from parent in this.context?.ParentInfo join address in this.context?.ParentAddress on parent.ParentId equals address.ParentId where parent.TenantId == getAllParentInfoListForView.TenantId && parent.Firstname == getAllParentInfoListForView.Firstname && parent.Lastname == getAllParentInfoListForView.Lastname && parent.PersonalEmail == getAllParentInfoListForView.Email && parent.Mobile == getAllParentInfoListForView.Mobile && address.AddressLineOne == getAllParentInfoListForView.StreetAddress && address.City == getAllParentInfoListForView.City && address.State == getAllParentInfoListForView.State && address.Zip == getAllParentInfoListForView.Zip select new { parent.TenantId, parent.Firstname, parent.Lastname, parent.PersonalEmail, parent.Mobile, address.AddressLineOne, address.City, address.State, address.Zip, }).ToList();
+
+                //var parentInfo = ParentInfoList.Select(y => new GetParentInfoForView
+                //{
+                //    SchoolId = y.SchoolId,
+                //    ParentId = y.ParentId,
+                //    Firstname = y.Firstname,
+                //    Lastname = y.Lastname,
+                //    Mobile = y.Mobile,
+                //    WorkPhone = y.WorkPhone,
+                //    HomePhone = y.HomePhone,
+                //    PersonalEmail = y.PersonalEmail,
+                //    WorkEmail = y.WorkEmail,
+                //    LoginEmail = y.LoginEmail,
+                //    UserProfile = y.UserProfile,
+                //    IsPortalUser = y.IsPortalUser,                    
+                //    TenantId = y.TenantId,
+                //    AddressLineOne = ToFullAddress(y.ParentAddress.FirstOrDefault().AddressLineOne, y.ParentAddress.FirstOrDefault().AddressLineTwo,
+                //int.TryParse(y.ParentAddress.FirstOrDefault().City, out resultData) == true ? this.context.City.Where(x => x.Id == Convert.ToInt32(y.ParentAddress.FirstOrDefault().City)).FirstOrDefault().Name : y.ParentAddress.FirstOrDefault().City,
+                //int.TryParse(y.ParentAddress.FirstOrDefault().State, out resultData) == true ? this.context.State.Where(x => x.Id == Convert.ToInt32(y.ParentAddress.FirstOrDefault().State)).FirstOrDefault().Name : y.ParentAddress.FirstOrDefault().State,
+                //int.TryParse(y.ParentAddress.FirstOrDefault().Country, out resultData) == true ? this.context.Country.Where(x => x.Id == Convert.ToInt32(y.ParentAddress.FirstOrDefault().Country)).FirstOrDefault().Name : string.Empty, y.ParentAddress.FirstOrDefault().Zip),
+                //}).ToList();
+
+                foreach (var parent in ParentInfoList)
                 {
-                    parentIDs=string.Join(",", containParentId);
+                    if (parent.ParentAddress.FirstOrDefault().StudentAddressSame == true)
+                    {
+                        var parentAddress = this.context?.StudentMaster.FirstOrDefault(x => x.StudentId == parent.ParentAddress.FirstOrDefault().StudentId && x.SchoolId == parent.SchoolId);
+                        parent.ParentAddress.FirstOrDefault().AddressLineOne = parentAddress.HomeAddressLineOne;
+                        parent.ParentAddress.FirstOrDefault().AddressLineTwo = parentAddress.HomeAddressLineTwo;
+                        parent.ParentAddress.FirstOrDefault().Country = parentAddress.HomeAddressCountry;
+                        parent.ParentAddress.FirstOrDefault().State = parentAddress.HomeAddressState;
+                        parent.ParentAddress.FirstOrDefault().City = parentAddress.HomeAddressCity;
+                        parent.ParentAddress.FirstOrDefault().Zip = parentAddress.HomeAddressZip;
+                    }
                 }
-                var ParentInfoList = this.context?.ParentInfo.Include(x=>x.ParentAddress).ToList().Where(x => x.TenantId == getAllParentInfoListForView.TenantId && (getAllParentInfoListForView.Firstname == null || (x.Firstname == getAllParentInfoListForView.Firstname)) && (getAllParentInfoListForView.Lastname == null || (x.Lastname == getAllParentInfoListForView.Lastname)) && (getAllParentInfoListForView.Email == null || (x.PersonalEmail == getAllParentInfoListForView.Email)) && (getAllParentInfoListForView.Mobile == null || (x.Mobile == getAllParentInfoListForView.Mobile)) && (getAllParentInfoListForView.StreetAddress == null || (x.ParentAddress.FirstOrDefault().AddressLineOne == getAllParentInfoListForView.StreetAddress)) && (getAllParentInfoListForView.City == null || (x.ParentAddress.FirstOrDefault().City == getAllParentInfoListForView.City)) && (getAllParentInfoListForView.State == null || (x.ParentAddress.FirstOrDefault().State == getAllParentInfoListForView.State)) && (getAllParentInfoListForView.Zip == null || (x.ParentAddress.FirstOrDefault().Zip == getAllParentInfoListForView.Zip)) && (parentIDs == null || (!parentIDs.Contains(x.ParentId.ToString())))); 
-                var parentInfo = ParentInfoList.Select(y => new GetParentInfoForView
-                {
-                    SchoolId = y.SchoolId,
-                    ParentId = y.ParentId,
-                    Firstname = y.Firstname,
-                    Lastname = y.Lastname,
-                    Mobile = y.Mobile,
-                    WorkPhone = y.WorkPhone,
-                    HomePhone = y.HomePhone,
-                    PersonalEmail = y.PersonalEmail,
-                    WorkEmail = y.WorkEmail,
-                    LoginEmail = y.LoginEmail,
-                    UserProfile = y.UserProfile,
-                    IsPortalUser = y.IsPortalUser,                    
-                    TenantId = y.TenantId,
-                    AddressLineOne = ToFullAddress(y.ParentAddress.FirstOrDefault().AddressLineOne, y.ParentAddress.FirstOrDefault().AddressLineTwo,
-                int.TryParse(y.ParentAddress.FirstOrDefault().City, out resultData) == true ? this.context.City.Where(x => x.Id == Convert.ToInt32(y.ParentAddress.FirstOrDefault().City)).FirstOrDefault().Name : y.ParentAddress.FirstOrDefault().City,
-                int.TryParse(y.ParentAddress.FirstOrDefault().State, out resultData) == true ? this.context.State.Where(x => x.Id == Convert.ToInt32(y.ParentAddress.FirstOrDefault().State)).FirstOrDefault().Name : y.ParentAddress.FirstOrDefault().State,
-                int.TryParse(y.ParentAddress.FirstOrDefault().Country, out resultData) == true ? this.context.Country.Where(x => x.Id == Convert.ToInt32(y.ParentAddress.FirstOrDefault().Country)).FirstOrDefault().Name : string.Empty, y.ParentAddress.FirstOrDefault().Zip),
-                }).ToList();
+
                 parentInfoListModel.TenantId = getAllParentInfoListForView.TenantId;
-                parentInfoListModel.parentInfoForView = parentInfo;
+                //parentInfoListModel.parentInfoForView = parentInfo;
+                parentInfoListModel.parentInfo = ParentInfoList.ToList();
                 parentInfoListModel._tenantName = getAllParentInfoListForView._tenantName;
                 parentInfoListModel._token = getAllParentInfoListForView._token;
                 parentInfoListModel._failure = false;
@@ -541,7 +560,6 @@ namespace opensis.data.Repository
             ParentInfoAddViewModel parentInfoViewModel = new ParentInfoAddViewModel();
             try
             {
-                int resultData;
                 var parentInfo = this.context?.ParentInfo.Include(x=>x.ParentAddress).FirstOrDefault( x =>x.TenantId== parentInfoAddViewModel.parentInfo.TenantId && x.SchoolId== parentInfoAddViewModel.parentInfo.SchoolId && x.ParentId== parentInfoAddViewModel.parentInfo.ParentId);
                 if (parentInfo!= null)
                 {
@@ -561,7 +579,7 @@ namespace opensis.data.Repository
                     {
                         foreach (var studentAssociateWithParent in AssociationshipData)
                         {
-                            var student = this.context?.StudentMaster.FirstOrDefault(x => x.StudentId == studentAssociateWithParent.StudentId && x.SchoolId== studentAssociateWithParent.SchoolId);
+                            var student = this.context?.StudentMaster.FirstOrDefault(x => x.StudentId == studentAssociateWithParent.StudentId && x.SchoolId == studentAssociateWithParent.SchoolId);
                             var studentForView = new GetStudentForView()
                             {
                                 TenantId = student.TenantId,
@@ -573,17 +591,15 @@ namespace opensis.data.Repository
                                 LastFamilyName = student.LastFamilyName,
                                 Dob = student.Dob,
                                 Gender = student.Gender,
-                                Address = ToFullAddress(student.HomeAddressLineOne, student.HomeAddressLineTwo,
-                        int.TryParse(student.HomeAddressCity, out resultData) == true ? this.context.City.Where(x => x.Id == Convert.ToInt32(student.HomeAddressCity)).FirstOrDefault().Name : student.HomeAddressCity,
-                        int.TryParse(student.HomeAddressState, out resultData) == true ? this.context.State.Where(x => x.Id == Convert.ToInt32(student.HomeAddressState)).FirstOrDefault().Name : student.HomeAddressState,
-                        int.TryParse(student.HomeAddressCountry, out resultData) == true ? this.context.Country.Where(x => x.Id == Convert.ToInt32(student.HomeAddressCountry)).FirstOrDefault().Name : string.Empty, student.HomeAddressZip),
+                                Address = ToFullAddress(student.HomeAddressLineOne, student.HomeAddressLineTwo,student.HomeAddressCity,student.HomeAddressState,
+                                student.HomeAddressCountry, student.HomeAddressZip),
                                 SchoolName = this.context?.SchoolMaster.Where(x => x.SchoolId == student.SchoolId)?.Select(s => s.SchoolName).FirstOrDefault(),
-                                GradeLevelTitle= this.context?.StudentEnrollment.Where(x=>x.TenantId == student.TenantId && x.SchoolId == student.SchoolId && x.StudentId==student.StudentId).OrderByDescending(x=>x.EnrollmentDate).LastOrDefault().GradeLevelTitle,
-                                IsCustodian= studentAssociateWithParent.IsCustodian,
-                                Relationship= studentAssociateWithParent.Relationship
+                                GradeLevelTitle = this.context?.StudentEnrollment.Where(x => x.TenantId == student.TenantId && x.SchoolId == student.SchoolId && x.StudentId == student.StudentId).OrderByDescending(x => x.EnrollmentDate).LastOrDefault().GradeLevelTitle,
+                                IsCustodian = studentAssociateWithParent.IsCustodian,
+                                Relationship = studentAssociateWithParent.Relationship
                             };
                             parentInfoViewModel.getStudentForView.Add(studentForView);
-                            
+
                         }
                     }
                     parentInfoViewModel._tenantName = parentInfoAddViewModel._tenantName;

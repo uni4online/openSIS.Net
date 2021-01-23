@@ -7,6 +7,7 @@ import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
 import {LanguageAddModel} from '../../../../models/languageModel';
 import {CommonService} from '../../../../services/common.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ValidationService } from 'src/app/pages/shared/validation.service';
 
 @Component({
   selector: 'vex-edit-language',
@@ -33,8 +34,8 @@ export class EditLanguageComponent implements OnInit {
   ngOnInit(): void {
     this.form = this.fb.group(
       {
-        locale: ['', Validators.required],
-        languageCode: ['']    
+        locale: ['', ValidationService.noWhitespaceValidator],
+        languageCode: ['',[ValidationService.noWhitespaceValidator,ValidationService.lowerCaseValidator]]    
       });
       
       if(this.data.mode === "edit"){
@@ -51,6 +52,7 @@ export class EditLanguageComponent implements OnInit {
     this.dialogRef.close(false);
   }
   submit() {    
+    this.form.markAllAsTouched()
     if (this.form.valid) {   
       if(this.data.mode === "edit"){
         this.languageModel.language.updatedBy = sessionStorage.getItem("email");
@@ -65,7 +67,7 @@ export class EditLanguageComponent implements OnInit {
           }
           else {
             if (data._failure) {
-              this.snackbar.open('Language Updation failed. ' + data._message, 'LOL THANKS', {
+              this.snackbar.open('Language Updation failed. ' + data._message, '', {
                 duration: 10000
               });
             } else {
@@ -90,7 +92,7 @@ export class EditLanguageComponent implements OnInit {
           }
           else {
             if (data._failure) {
-              this.snackbar.open('Language Submission failed. ' + data._message, 'LOL THANKS', {
+              this.snackbar.open('Language Submission failed. ' + data._message, '', {
                 duration: 10000
               });
             } else {

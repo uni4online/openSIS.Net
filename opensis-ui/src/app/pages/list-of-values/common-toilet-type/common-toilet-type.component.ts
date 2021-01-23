@@ -127,12 +127,12 @@ export class CommonToiletTypeComponent implements OnInit {
         }
         else{
           if (res._failure) {
-            this.snackbar.open('Common Toilet Type Deletion failed. ' + res._message, 'LOL THANKS', {
+            this.snackbar.open('Common Toilet Type Deletion failed. ' + res._message, '', {
               duration: 10000
             });
           } 
           else { 
-            this.snackbar.open('Common Toilet Type ' + res._message, 'LOL THANKS', {
+            this.snackbar.open('Common Toilet Type ' + res._message, '', {
               duration: 10000
             });
             this.getAllCommonToiletType()
@@ -169,7 +169,7 @@ export class CommonToiletTypeComponent implements OnInit {
           if (res._failure) { 
             this.commonToiletTypeList=new MatTableDataSource(res.dropdownList) ;
             this.listCount=this.commonToiletTypeList.data 
-            this.snackbar.open('Common Toilet Type List failed. ' + res._message, 'LOL THANKS', {
+            this.snackbar.open('Common Toilet Type List failed. ' + res._message, '', {
               duration: 10000
             });
           } 

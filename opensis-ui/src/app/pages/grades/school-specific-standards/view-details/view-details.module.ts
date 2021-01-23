@@ -8,6 +8,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { IconModule } from '@visurel/iconify-angular';
 import { MatButtonModule } from '@angular/material/button';
 import { TranslateModule } from '@ngx-translate/core';
+import { SharedModuleModule } from '../../../shared-module/shared-module.module';
 
 
 
@@ -21,7 +22,8 @@ import { TranslateModule } from '@ngx-translate/core';
     IconModule,
     FlexLayoutModule,
     MatDividerModule,
-    TranslateModule
+    TranslateModule,
+    SharedModuleModule
   ]
 })
 export class ViewDetailsModule { }

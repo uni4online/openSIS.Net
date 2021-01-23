@@ -8,6 +8,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { CustomFieldService } from '../../../../services/custom-field.service';
 import {FieldsCategoryAddView} from '../../../../models/fieldsCategoryModel';
 import {FieldCategoryModuleEnum} from '../../../../enums/field-category-module.enum'
+import { ValidationService } from 'src/app/pages/shared/validation.service';
 
 
 @Component({
@@ -36,7 +37,7 @@ export class SchoolFieldsCategoryComponent implements OnInit {
     ) {
     this.form= fb.group({
       categoryId:[0],
-      title:['',[Validators.required]],
+      title:['',[ValidationService.noWhitespaceValidator]],
       sortOrder:['',[Validators.required,Validators.min(1)]]
     });
     if(data==null){
@@ -70,7 +71,7 @@ export class SchoolFieldsCategoryComponent implements OnInit {
             }
             else{
               if (res._failure) {
-                this.snackbar.open('field category failed. ' + res._message, 'LOL THANKS', {
+                this.snackbar.open('field category failed. ' + res._message, '', {
                   duration: 10000
                 });
               } 
@@ -98,7 +99,7 @@ export class SchoolFieldsCategoryComponent implements OnInit {
             }
             else{
               if (res._failure) {
-                this.snackbar.open('field category failed. ' + res._message, 'LOL THANKS', {
+                this.snackbar.open('field category failed. ' + res._message, '', {
                   duration: 10000
                 });
               } 

@@ -284,5 +284,21 @@ namespace opensisAPI.Controllers
         }
 
 
+        [HttpPost("getAllLanguageForLogin")]
+        public ActionResult<LanguageListModel> GetAllLanguageForLogin(LanguageListModel language)
+        {
+            LanguageListModel languageListModel = new LanguageListModel();
+            try
+            {
+                languageListModel = _commonService.GetAllLanguageForLogin(language);
+            }
+            catch (Exception es)
+            {
+                languageListModel._failure = true;
+                languageListModel._message = es.Message;
+            }
+            return languageListModel;
+        }
+
     }
 }

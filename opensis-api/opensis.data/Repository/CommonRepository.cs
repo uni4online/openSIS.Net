@@ -176,11 +176,11 @@ namespace opensis.data.Repository
             else
             {
                 var getLanguageData = this.context?.Language.FirstOrDefault(x => x.LangId == languageUpdate.Language.LangId);
-                getLanguageData.LanguageCode = languageUpdate.Language.LanguageCode;
-                getLanguageData.Lcid = languageUpdate.Language.Lcid;
-                getLanguageData.Locale = languageUpdate.Language.LanguageCode;
-                getLanguageData.UpdatedOn = DateTime.UtcNow;
-                getLanguageData.UpdatedBy = languageUpdate.Language.UpdatedBy;
+
+                languageUpdate.Language.CreatedBy = getLanguageData.CreatedBy;
+                languageUpdate.Language.CreatedOn = getLanguageData.CreatedOn;
+                languageUpdate.Language.UpdatedOn = DateTime.Now;
+                this.context.Entry(getLanguageData).CurrentValues.SetValues(languageUpdate.Language);
                 this.context?.SaveChanges();
                 languageUpdate._failure = false;
             }
@@ -591,10 +591,11 @@ namespace opensis.data.Repository
                 else
                 {
                     var getCountryData = this.context?.Country.FirstOrDefault(x => x.Id == countryAddModel.country.Id);
-                    getCountryData.Name = countryAddModel.country.Name;
-                    getCountryData.CountryCode = countryAddModel.country.CountryCode;
-                    getCountryData.UpdatedOn = DateTime.UtcNow;
-                    getCountryData.UpdatedBy = countryAddModel.country.UpdatedBy;
+
+                    countryAddModel.country.CreatedBy = getCountryData.CreatedBy;
+                    countryAddModel.country.CreatedOn = getCountryData.CreatedOn;
+                    countryAddModel.country.UpdatedOn = DateTime.Now;
+                    this.context.Entry(getCountryData).CurrentValues.SetValues(countryAddModel.country);
                     this.context?.SaveChanges();
                     countryAddModel._failure = false;
                     countryAddModel._message = "Updated Successfully";
@@ -801,6 +802,43 @@ namespace opensis.data.Repository
                 dropdownValueAddModel._message = es.Message;
             }
             return dropdownValueAddModel;
+
+        }
+
+        /// <summary>
+        /// Get All Language For Login 
+        /// </summary>
+        /// <param name="language"></param>
+        /// <returns></returns>
+        public LanguageListModel GetAllLanguageForLogin(LanguageListModel language)
+        {
+            LanguageListModel languageListModel = new LanguageListModel();
+            try
+            {
+                languageListModel.TableLanguage = null;
+                var languages = this.context?.Language.Where(x => x.Lcid.ToLower() == "en-us".ToLower() || x.Lcid.ToLower() == "fr-fr".ToLower() || x.Lcid.ToLower() == "es-es".ToLower()).ToList();
+                if (languages.Count > 0)
+                {
+                    languageListModel.TableLanguage = languages;
+                    languageListModel._failure = false;
+                }
+                else
+                {
+                    languageListModel._failure = true;
+                    languageListModel._message = NORECORDFOUND;
+                }
+                languageListModel._tenantName = language._tenantName;
+                languageListModel._token = language._token;
+
+            }
+            catch (Exception es)
+            {
+                languageListModel._message = es.Message;
+                languageListModel._failure = true;
+                languageListModel._tenantName = language._tenantName;
+                languageListModel._token = language._token;
+            }
+            return languageListModel;
 
         }
 

@@ -4,33 +4,31 @@
             <mat-card-title>{{'generalInformation'|translate}}</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-
             <div class="py-6" @stagger fxLayout="column">
                 <ul class="md:grid md:grid-cols-2 md:col-gap-8 md:row-gap-0 mx-4">
                     <li>
                         <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'schoolId'|translate}}</mat-label>
-                            <input #schoolId="ngModel" [(ngModel)]="schoolAddViewModel.schoolMaster.schoolInternalId"
-                            (keyup)="checkSchoolInternalId($event)" name="schoolId" maxlength="50" required matInput>
-                                <mat-error *ngIf="schoolId.errors?.required">
+                            <input [(ngModel)]="schoolAddViewModel.schoolMaster.schoolInternalId"
+                            [formControl]="internalId" name="schoolId" maxlength="50" required matInput>
+                                <mat-error *ngIf="internalId.errors?.required">
                                     {{'schoolIdIsRequired'|translate}}</mat-error>
-                                    <mat-error *ngIf="schoolId.errors?.nomatch">
+                                    <mat-error *ngIf="internalId.errors?.nomatch">
                                         {{'schoolIdAlreadyExist'|translate}}</mat-error>
                         </mat-form-field>
                     </li>
-
                     <li>
                         <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'schoolAlternateId'|translate}}</mat-label>
                             <input [(ngModel)]="schoolAddViewModel.schoolMaster.schoolAltId" name="alternate_id"
-                                maxlength="10" matInput>
+                            maxlength="50" matInput>
                         </mat-form-field>
                     </li>
                     <li>
                         <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'stateId'|translate}}</mat-label>
                             <input [(ngModel)]="schoolAddViewModel.schoolMaster.schoolStateId" name="state_id"
-                                maxlength="10" matInput>
+                            maxlength="50" matInput>
                         </mat-form-field>
                     </li>
                     <li>
@@ -45,7 +43,6 @@
                             <mat-label>{{'schoolLevel'|translate}}</mat-label>
                             <mat-select #school_level="ngModel"
                                 [(ngModel)]="schoolAddViewModel.schoolMaster.schoolLevel" name="school_level" required>
-                                <mat-option></mat-option>
                                 <mat-option *ngFor="let key of schoolLevelOptions" [value]='key.lovColumnValue'>
                                     {{key.lovColumnValue}}
                                 </mat-option>
@@ -61,7 +58,6 @@
                             <mat-select #school_classification="ngModel"
                                 [(ngModel)]="schoolAddViewModel.schoolMaster.schoolClassification"
                                 name="school_classification" required>
-                                <mat-option></mat-option>
                                 <mat-option *ngFor="let key of schoolClassificationOptions" [value]='key.lovColumnValue'>
                                     {{key.lovColumnValue}}
                                 </mat-option>
@@ -149,26 +145,14 @@
                     </li>
                     <li>
                         <mat-form-field class="w-full" appearance="outline" color="primary">
-                            <mat-label>{{'dateSchoolOpened'|translate}}</mat-label>
+                            <mat-label>{{'dateSchoolFirstStarted'|translate}}</mat-label>
                             <input #date_school_opened="ngModel" (dateInput)="dateCompare()"
                                 [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolOpened"
                                 name="date_school_opened" [matDatepicker]="datepickerRef" matInput required>
                             <mat-datepicker-toggle [for]="datepickerRef" matSuffix></mat-datepicker-toggle>
                             <mat-datepicker #datepickerRef></mat-datepicker>
                                 <mat-error *ngIf="date_school_opened.errors?.required">
-                                    {{'dateSchoolOpenedIsRequired'|translate}}</mat-error>
-                        </mat-form-field>
-                    </li>
-                    <li>
-                        <mat-form-field class="w-full" appearance="outline" color="primary">
-                            <mat-label>{{'dateSchoolClosed'|translate}}</mat-label>
-                            <input #date_school_closed="ngModel" (dateInput)="checkClosedDate()"
-                                [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolClosed"
-                                [min]="minDate" name="date_school_closed" [matDatepicker]="dateSchoolClosed" matInput>
-                            <mat-datepicker-toggle [for]="dateSchoolClosed" matSuffix></mat-datepicker-toggle>
-                            <mat-datepicker #dateSchoolClosed></mat-datepicker>
-                            <mat-error *ngIf="date_school_closed.errors?.required">
-                                {{'schoolClosedDateIsRequired'|translate}}</mat-error>
+                                    {{'dateSchoolFirstStartedIsRequired'|translate}}</mat-error>
                         </mat-form-field>
                     </li>
                     <li>
@@ -183,7 +167,6 @@
                             <mat-label>{{'gender'|translate}}</mat-label>
                             <mat-select [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].gender"
                                 name="gender">
-                                <mat-option></mat-option>
                                 <mat-option *ngFor="let key of genderOptions" [value]="key.lovColumnValue">
                                     {{key.lovColumnValue}}
                                 </mat-option>
@@ -195,7 +178,6 @@
                             <mat-label>{{'internet'|translate}}</mat-label>
                             <mat-select [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].internet"
                                 name="internet" matInput>
-                                <mat-option></mat-option>
                                 <mat-option [value]="generalInfo.Yes">{{generalInfo['true']}}</mat-option>
                                 <mat-option [value]="generalInfo.No">{{generalInfo['false']}}</mat-option>
 
@@ -207,8 +189,6 @@
                             <mat-label>{{'electricity'|translate}}</mat-label>
                             <mat-select [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].electricity"
                                 name="electricity">
-
-                                <mat-option></mat-option>
                                 <mat-option [value]="generalInfo.Yes">{{generalInfo['true']}}</mat-option>
                                 <mat-option [value]="generalInfo.No">{{generalInfo['false']}}</mat-option>
                             </mat-select>
@@ -219,17 +199,26 @@
                             <mat-label>{{'status'|translate}}</mat-label>
                             <mat-select [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].status"
                                 name="status" (selectionChange)="onStatusChange($event.value)">
-                                <mat-option></mat-option>
                                 <mat-option [value]="statusInfo.Active">{{statusInfo['true']}}</mat-option>
                                 <mat-option [value]="statusInfo.Inactive">{{statusInfo['false']}}</mat-option>
                             </mat-select>
                         </mat-form-field>
                     </li>
+                    <li>
+                        <mat-form-field class="w-full" appearance="outline" color="primary">
+                            <mat-label>{{'dateSchoolClosed'|translate}}</mat-label>
+                            <input #date_school_closed="ngModel" (dateInput)="checkClosedDate()"
+                                [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolClosed"
+                                [min]="minDate" name="date_school_closed" [matDatepicker]="dateSchoolClosed" matInput>
+                            <mat-datepicker-toggle [for]="dateSchoolClosed" matSuffix></mat-datepicker-toggle>
+                            <mat-datepicker #dateSchoolClosed></mat-datepicker>
+                            <mat-error *ngIf="date_school_closed.errors?.required">
+                                {{'schoolClosedDateIsRequired'|translate}}</mat-error>
+                        </mat-form-field>
+                    </li>
                      </ul>
                      <vex-custom-field-without-form  [schoolDetailsForViewAndEdit]="schoolAddViewModel" [categoryId] = "categoryId" [module] = "module" [schoolCreateMode]="schoolCreateMode"></vex-custom-field-without-form>
-               
             </div>
-           
             <div class="pb-6" @stagger fxLayout="column">
                 <div class="px-4 pb-3">
                     <h4 class="text-primary">{{'addressInformation'|translate}}</h4>
@@ -259,13 +248,10 @@
                             <mat-label>{{'country'|translate}}</mat-label>
                             <mat-select #country (selectionChange)="getAllStateByCountry($event)"
                                 [(ngModel)]="schoolAddViewModel.schoolMaster.country" name="country" required>
-                                <mat-option value=""></mat-option>
-                                <mat-option *ngFor="let country of countryListArr" [value]='country.id'>
+                                <mat-option *ngFor="let country of countryListArr" [value]="country.name">
                                     {{country.name}}
                                 </mat-option>
                             </mat-select>
-                            <!-- <mat-error *ngIf="country.errors?.required">
-                                {{'countryIsRequired'|translate}}</mat-error> -->
                         </mat-form-field>
                     </li>
                     <li>
@@ -274,7 +260,6 @@
                             <div *ngIf="stateCount!==0;else textblock">
                                 <mat-select (selectionChange)="getAllCitiesByState($event)"
                                     [(ngModel)]="schoolAddViewModel.schoolMaster.state" name="state">
-                                    <mat-option value=""></mat-option>
                                     <mat-option *ngFor="let state of stateListArr" [value]='state.id'>
                                         {{state.name}}
                                     </mat-option>
@@ -293,7 +278,6 @@
                                 <mat-label>{{'city'|translate}}</mat-label>
                                 <mat-select #city="ngModel"
                                     [(ngModel)]="this.schoolAddViewModel.schoolMaster.city" name="city" required>
-                                    <mat-option></mat-option>
                                     <mat-option *ngFor="let city of cityListArr" [value]='city.id'>
                                         {{city.name}}
                                     </mat-option>
@@ -367,7 +351,6 @@
                 <div class="px-4 pb-3">
                     <h4 class="text-primary">{{'contactInformation'|translate}}</h4>
                 </div>
-
                 <ul class="md:grid md:grid-cols-2 md:col-gap-8 md:row-gap-0 mx-4">
                     <li>
                         <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
@@ -421,10 +404,11 @@
                         <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'email'|translate}}</mat-label>
                             <input #email="ngModel" maxlength="100"
+                                appEmailvalidator
                                 [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].email" name="email"
                                 matInput>
-                            <mat-error *ngIf="email.errors?.invalidPhoneNumber">
-                                {{'invalidWebsite'|translate}}</mat-error>
+                            <mat-error *ngIf="!email.errors?.emailvalidator?.valid">
+                                {{'invalidEmailAddress'|translate}}</mat-error>
                         </mat-form-field>
                     </li>
                     <li>
@@ -477,213 +461,14 @@
             </div>
         </mat-card-actions>
     </form>
-
 </mat-card>
-
-
 <mat-card @fadeInUp class="w-full" fxFlex="auto" *ngIf="schoolCreateMode == schoolCreate.VIEW">
     <div class="flex items-center mx-4" fxLayout="row" fxLayoutAlign="center center">
         <h3 class="flex-auto">{{'generalInformation' | translate}}</h3>
         <button mat-button color="primary" (click)="editGeneralInfo()"><mat-icon [icIcon]="icEdit"></mat-icon>{{'editInformation' |translate}}</button>
     </div>
-    <mat-card-content>
-        <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-4">
-            <div class="my-6">
-                <ul class="md:grid md:grid-cols-3 md:col-gap-8 md:row-gap-10">
-                    <li>
-                        <label class="text-sm leading-5 text-gray">{{'schoolId' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.schoolMaster.schoolInternalId|EmtyValueCheckPipe}}</p>
-                    </li>
-                    <li>
-                        <label class="text-sm leading-5 text-gray">{{'schoolAlternateId' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.schoolMaster.schoolAltId|EmtyValueCheckPipe}}</p>
-                    </li>
-                    <li>
-                        <label class="text-sm leading-5 text-gray">{{'stateId' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.schoolMaster.schoolStateId|EmtyValueCheckPipe}}</p>
-                    </li>
-                    <li>
-                        <label class="text-sm leading-5 text-gray">{{'districtId' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.schoolMaster.schoolDistrictId|EmtyValueCheckPipe}}</p>
-                    </li>
-                    <li>
-                        <label class="text-sm leading-5 text-gray">{{'schoolLevel' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.schoolMaster.schoolLevel|EmtyValueCheckPipe}}</p>
-                    </li>
-                    <li>
-                        <label class="text-sm leading-5 text-gray">{{'schoolClassification' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.schoolMaster.schoolClassification |EmtyValueCheckPipe}}</p>
-                    </li>
-                    <li>
-                        <label class="text-sm leading-5 text-gray">{{'schoolName' | translate}} </label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.schoolMaster.schoolName|EmtyValueCheckPipe}}
-                        </p>
-                    </li>
-                    <li>
-                        <label class="text-sm leading-5 text-gray">{{'shortName' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.schoolMaster.alternateName|EmtyValueCheckPipe}}</p>
-                    </li>
-                    <li>
-                        <label class="text-sm leading-5 text-gray">{{'affiliation' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.schoolMaster.schoolDetail[0].affiliation|EmtyValueCheckPipe}}</p>
-                    </li>
-                    <li>
-                        <label class="text-sm leading-5 text-gray">{{'associations' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.schoolMaster.schoolDetail[0].associations|EmtyValueCheckPipe}}
-                    </p>
-                    </li>
-                    <li>
-                        <label class="text-sm leading-5 text-gray">{{'lowestGradeLevel' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.schoolMaster.schoolDetail[0].lowestGradeLevel |EmtyValueCheckPipe}}</p>
-                    </li>
-                    <li>
-                        <label class="text-sm leading-5 text-gray">{{'highestGradeLevel' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.schoolMaster.schoolDetail[0].highestGradeLevel |EmtyValueCheckPipe}}</p>
-                    </li>
-                    <li>
-                        <label class="text-sm leading-5 text-gray">{{'dateSchoolOpened' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolOpened|date:'mediumDate'|EmtyValueCheckPipe}}</p>
-                    </li>
-                    <li>
-                        <label class="text-sm leading-5 text-gray">{{'dateSchoolClosed' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolClosed|date:'mediumDate'|EmtyValueCheckPipe}}</p>
-                    </li>
-                    <li>
-                        <label class="text-sm leading-5 text-gray">{{'code' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.schoolMaster.schoolDetail[0].locale|EmtyValueCheckPipe}}</p>
-                    </li>
-                    <li>
-                        <label class="text-sm leading-5 text-gray">{{'gender' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.schoolMaster.schoolDetail[0].gender|EmtyValueCheckPipe}}</p>
-                    </li>
-                    <li>
-                        <label class="text-sm leading-5 text-gray">{{'internet' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.schoolMaster.schoolDetail[0].internet|EmtyBooleanCheckPipe}} </p>
-                    </li>
-                    <li>
-                        <label class="text-sm leading-5 text-gray">{{'electricity' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.schoolMaster.schoolDetail[0].electricity|EmtyBooleanCheckPipe}}</p>
-                    </li>
-                    <li>
-                        <label class="text-sm leading-5 text-gray">{{'status' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2"><span [ngClass]="status!=null?'':status=='Active'?'text-green':'text-red'">{{status|EmtyValueCheckPipe}}</span></p>
-                    </li>
-                    <!-- <li *ngFor="let customField of customFieldListViewModel">
-                        <label class="text-sm leading-5 text-gray">{{customField.title}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{customField.customFieldsValue[0]?.customFieldValue}}</p>
-                    </li> -->
-                    
-                </ul>
-                <vex-custom-field-without-form  [schoolDetailsForViewAndEdit]="schoolAddViewModel" [categoryId] = "categoryId" [module] = "module" [schoolCreateMode]="schoolCreateMode"></vex-custom-field-without-form>
-            </div>
-            <div class="mt-12">
-                <div class="flex w-full justify-between pb-4">
-                    <h4 class="text-blue font-medium">{{'addressInformation' | translate}}</h4>
-                    <a routerLink="" class="cursor-pointer bg-primary hover:bg-blue text-white font-bold py-2 px-4 rounded"><i class="icon icon-location4 mr-3"></i>Show on Map</a>
-                </div>
-                <ul class="md:grid md:grid-cols-3 md:col-gap-8 md:row-gap-10">
-                    <li>
-                        <label class="text-sm leading-5 text-gray">{{'streetAddress1' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.schoolMaster.streetAddress1|EmtyValueCheckPipe}}</p>
-                    </li>
-                    <li>
-                        <label class="text-sm leading-5 text-gray">{{'streetAddress2' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.schoolMaster.streetAddress2|EmtyValueCheckPipe}}</p>
-                    </li>
-                    <li>
-                        <label class="text-sm leading-5 text-gray">{{'city' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{cityName|EmtyValueCheckPipe}}</p>
-                    </li>
-                    <li>
-                        <label class="text-sm leading-5 text-gray">{{'county' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.schoolMaster.county|EmtyValueCheckPipe}}</p>
-                    </li>
-                    <li>
-                        <label class="text-sm leading-5 text-gray">{{'division' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.schoolMaster.division|EmtyValueCheckPipe}}</p>
-                    </li>
-                    <li>
-                        <label class="text-sm leading-5 text-gray">{{'stateRegionProvince' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{stateName|EmtyValueCheckPipe}}</p>
-                    </li>
-                    <li>
-                        <label class="text-sm leading-5 text-gray">{{'district' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.schoolMaster.district|EmtyValueCheckPipe}}</p>
-                    </li>
-                    <li>
-                        <label class="text-sm leading-5 text-gray">{{'zipPostalCode' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.schoolMaster.zip|EmtyValueCheckPipe}}</p>
-                    </li>
-                    <li>
-                        <label class="text-sm leading-5 text-gray">{{'Country' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{countryName|EmtyValueCheckPipe}}
-                        </p>
-                    </li>
-                    <li>
-                        <label class="text-sm leading-5 text-gray">{{'latitude' | translate}}, {{'longitude' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.schoolMaster.latitude|EmtyNumberCheckPipe}},
-                            {{schoolAddViewModel.schoolMaster.longitude|EmtyNumberCheckPipe}} </p>
-                    </li>
-                </ul>
-            </div>
-            <div class="mt-12 pb-4">
-                <div class="pb-4">
-                    <h4 class="text-blue font-medium">{{'contactInformation' | translate}}</h4>
-                </div>
-                <ul class="md:grid md:grid-cols-3 md:col-gap-8 md:row-gap-10">
-                    <li>
-                        <label class="text-sm leading-5 text-gray">{{'principal' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.schoolMaster.schoolDetail[0].nameOfPrincipal|EmtyValueCheckPipe}}</p>
-                    </li>
-                    <li>
-                        <label class="text-sm leading-5 text-gray">{{'assistantPrincipal' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.schoolMaster.schoolDetail[0].nameOfAssistantPrincipal|EmtyValueCheckPipe}}</p>
-                    </li>
-                    <li>
-                        <label class="text-sm leading-5 text-gray">{{'telephone' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.schoolMaster.schoolDetail[0].telephone|EmtyValueCheckPipe}}</p>
-                    </li>
-                    <li>
-                        <label class="text-sm leading-5 text-gray">{{'fax' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.schoolMaster.schoolDetail[0].fax|EmtyValueCheckPipe}}</p>
-                    </li>
-                    <li>
-                        <label class="text-sm leading-5 text-gray">{{'website' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.schoolMaster.schoolDetail[0].website|EmtyValueCheckPipe}}
-                        </p>
-                    </li>
-                    <li>
-                        <label class="text-sm leading-5 text-gray">{{'email' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.schoolMaster.schoolDetail[0].email|EmtyValueCheckPipe}}
-                        </p>
-                    </li>
-                    <li>
-                        <label class="text-sm leading-5 text-gray">{{'twitter' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.schoolMaster.schoolDetail[0].twitter|EmtyValueCheckPipe}}</p>
-                    </li>
-                    <li>
-                        <label class="text-sm leading-5 text-gray">{{'facebook' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2"><a
-                                href="{{schoolAddViewModel.schoolMaster.schoolDetail[0].facebook}}" target="_blank"
-                                class="text-primary">{{schoolAddViewModel.schoolMaster.schoolDetail[0].facebook|EmtyValueCheckPipe}}</a></p>
-                    </li>
-                    <li>
-                        <label class="text-sm leading-5 text-gray">{{'instagram' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2"><a
-                                href="{{schoolAddViewModel.schoolMaster.schoolDetail[0].instagram}}" target="_blank"
-                                class="text-primary">{{schoolAddViewModel.schoolMaster.schoolDetail[0].instagram|EmtyValueCheckPipe}}</a></p>
-                    </li>
-                    <li>
-                        <label class="text-sm leading-5 text-gray">{{'youtube' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.schoolMaster.schoolDetail[0].youtube|EmtyValueCheckPipe}}</p>
-                    </li>
-                    <li>
-                        <label class="text-sm leading-5 text-gray">{{'linkedIn' | translate}}</label>
-                        <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolAddViewModel.schoolMaster.schoolDetail[0].linkedIn|EmtyValueCheckPipe}}</p>
-                    </li>
-                </ul>
-            </div>
-        </div>
-
-    </mat-card-content>
+    <vex-view-general-info [schoolCreateMode]="schoolCreateMode"
+     [categoryId]="categoryId"
+     [schoolViewDetails]="schoolDetailsForViewAndEdit">
+    </vex-view-general-info>
 </mat-card>

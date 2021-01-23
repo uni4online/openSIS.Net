@@ -1,6 +1,6 @@
 import { CommonField } from "../models/commonField";
 
-export class GetAllGradeLevelsModel{
+export class GetAllGradeLevelsModel extends CommonField{
     public tableGradelevelList:[];
     public tenantId: string;
     public schoolId: number;
@@ -10,7 +10,11 @@ export class GetAllGradeLevelsModel{
     public _message: string;   
     
     constructor(){
-          this.tenantId = sessionStorage.getItem("tenantId");
+        super();
+        this.schoolId=+sessionStorage.getItem('selectedSchoolId');
+        this._tenantName = sessionStorage.getItem("tenant");
+        this._token = sessionStorage.getItem("token");
+        this.tenantId = sessionStorage.getItem("tenantId");
     }
 }
 
@@ -28,8 +32,9 @@ class tblGradelevel {
     public updatedBy: string
 
     constructor(){
+        this.schoolId=+sessionStorage.getItem('selectedSchoolId');
         this.tenantId = sessionStorage.getItem("tenantId");
-        this.updatedBy = "Souvik";
+        this.updatedBy = sessionStorage.getItem('email');
     }
 }
 export class AddGradeLevelModel extends CommonField{

@@ -69,6 +69,14 @@ export class StaffService {
     this.staffDetailsForGeneralInfo.next(staffDetailsForGeneralInfo);
   }
 
+  // for cancel after staff photo added
+  public cloneStaffImage
+  setStaffCloneImage(image){
+    this.cloneStaffImage = image;
+  }
+  getStaffCloneImage(){
+    return this.cloneStaffImage;
+  }
 
 
   addStaff(obj: StaffAddModel) {

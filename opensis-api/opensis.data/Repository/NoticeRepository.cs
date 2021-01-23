@@ -131,16 +131,10 @@ namespace opensis.data.Repository
 
                 if (noticeRepository != null)
                 {
-                    noticeRepository.TenantId = notice.Notice.TenantId;
-                    noticeRepository.Title = notice.Notice.Title;
-
-                    noticeRepository.TargetMembershipIds = notice.Notice.TargetMembershipIds;
-                    noticeRepository.Body = notice.Notice.Body;
-                    noticeRepository.ValidFrom = notice.Notice.ValidFrom;
-                    noticeRepository.ValidTo = notice.Notice.ValidTo;
-                    noticeRepository.Isactive = true;
-                    noticeRepository.CreatedTime = DateTime.UtcNow;
-
+                    notice.Notice.Isactive = true;
+                    notice.Notice.CreatedBy = noticeRepository.CreatedBy;
+                    notice.Notice.CreatedTime = noticeRepository.CreatedTime;
+                    this.context.Entry(noticeRepository).CurrentValues.SetValues(notice.Notice);
                     this.context?.SaveChanges();
                     notice._failure = false;
                     return notice;

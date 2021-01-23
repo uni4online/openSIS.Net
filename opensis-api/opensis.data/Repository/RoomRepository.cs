@@ -90,15 +90,9 @@ namespace opensis.data.Repository
             try
             {
                 var roomMaster = this.context?.Rooms.FirstOrDefault(x => x.TenantId == room.tableRoom.TenantId && x.SchoolId == room.tableRoom.SchoolId && x.RoomId == room.tableRoom.RoomId);
-                roomMaster.SchoolId = room.tableRoom.SchoolId;
-                roomMaster.TenantId = room.tableRoom.TenantId;
-                roomMaster.Title = room.tableRoom.Title;
-                roomMaster.Capacity = room.tableRoom.Capacity;
-                roomMaster.Description = room.tableRoom.Description;
-                roomMaster.SortOrder = room.tableRoom.SortOrder;
-                roomMaster.IsActive = room.tableRoom.IsActive;
+
                 room.tableRoom.LastUpdated = DateTime.UtcNow;
-                roomMaster.UpdatedBy = room.tableRoom.UpdatedBy;
+                this.context.Entry(roomMaster).CurrentValues.SetValues(room.tableRoom);
                 this.context?.SaveChanges();
                 room._failure = false;
                 return room;

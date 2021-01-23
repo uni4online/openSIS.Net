@@ -1,4 +1,4 @@
-import { Component, Input, OnInit,Output,EventEmitter, ViewChild } from '@angular/core';
+import { Component, Input, OnInit,Output,EventEmitter, ViewChild, OnDestroy } from '@angular/core';
 import icMoreVert from '@iconify/icons-ic/twotone-more-vert';
 import icAdd from '@iconify/icons-ic/baseline-add';
 import icSearch from '@iconify/icons-ic/search';
@@ -15,10 +15,13 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { LoaderService } from '../../../services/loader.service';
 import { FormControl } from '@angular/forms';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { ImageCropperService } from '../../../services/image-cropper.service';
 import { LayoutService } from 'src/@vex/services/layout.service';
 import { ExcelService } from '../../../services/excel.service';
+import icImpersonate from '@iconify/icons-ic/twotone-account-circle';
+import { Subject } from 'rxjs';
+
 @Component({
   selector: 'vex-student',
   templateUrl: './student.component.html',
@@ -28,14 +31,17 @@ import { ExcelService } from '../../../services/excel.service';
     stagger40ms
   ]
 })
-export class StudentComponent implements OnInit { 
+export class StudentComponent implements OnInit,OnDestroy { 
   columns = [
     { label: 'Name', property: 'firstGivenName', type: 'text', visible: true },
     { label: 'Student ID', property: 'studentId', type: 'text', visible: true },
-    { label: 'Alternate ID', property: 'alternateId', type: 'text', visible: true },    
-    { label: 'Phone', property: 'homePhone', type: 'text', visible: true }
+    { label: 'Alternate ID', property: 'alternateId', type: 'text', visible: true }, 
+    { label: 'Grade Level', property: 'gradeLevelTitle', type: 'text', visible: true },    
+    { label: 'Email', property: 'schoolEmail', type: 'text', visible: true },    
+    { label: 'Telephone', property: 'homePhone', type: 'text', visible: true },
+    { label: 'Action', property: 'action', type: 'text', visible: true }
   ];
-
+  icImpersonate = icImpersonate;
   selection = new SelectionModel<any>(true, []);
   totalCount:number=0;
   pageNumber:number;
@@ -47,10 +53,11 @@ export class StudentComponent implements OnInit {
   icFilterList = icFilterList;
   fapluscircle = "fa-plus-circle";
   tenant = "";
-  loading:Boolean;
+  loading:boolean;
   allStudentList=[];
+  destroySubject$: Subject<void> = new Subject();
   getAllStudent: StudentListModel = new StudentListModel(); 
-  StudentModelList: MatTableDataSource<StudentListModel>;
+  StudentModelList: MatTableDataSource<any>;
   
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator; 
   @ViewChild(MatSort) sort:MatSort
@@ -75,7 +82,7 @@ export class StudentComponent implements OnInit {
     }else{
       this.layoutService.expandSidenav();
     }
-     this.loaderService.isLoading.subscribe((val) => {
+     this.loaderService.isLoading.pipe(takeUntil(this.destroySubject$)).subscribe((val) => {
         this.loading = val;
       });
       this.callAllStudent();
@@ -99,7 +106,7 @@ export class StudentComponent implements OnInit {
           {
             columnName:null,
             filterValue:this.searchCtrl.value,
-            filterOption:4
+            filterOption:3
           }
         ]
         Object.assign(this.getAllStudent,{filterParams: filterParams});
@@ -122,7 +129,7 @@ export class StudentComponent implements OnInit {
           {
             columnName:null,
             filterValue:term,
-            filterOption:4
+            filterOption:3
           }
         ]
         if(this.sort.active!=undefined && this.sort.direction!=""){
@@ -169,7 +176,7 @@ export class StudentComponent implements OnInit {
         {
          columnName:null,
          filterValue:this.searchCtrl.value,
-         filterOption:4
+         filterOption:3
         }
       ]
      Object.assign(this.getAllStudent,{filterParams: filterParams});
@@ -195,27 +202,8 @@ export class StudentComponent implements OnInit {
       }else{
         this.totalCount= data.totalCount;
         this.pageNumber = data.pageNumber;
-        this.pageSize = data._pageSize;  
-        let filterArr = [];
-        this.allStudentList = data.getStudentListForViews;
-        if(data.getStudentListForViews!=null){
-          data.getStudentListForViews.map((value:any) => {
-            var obj = {};
-            var middleName="";
-           if(value.middleName !== null){
-             middleName = value.middleName
-           }
-            obj = {
-              firstGivenName: value.firstGivenName+' '+middleName+' '+value.lastFamilyName,
-              studentInternalId: value.studentInternalId,
-              alternateId: value.alternateId,
-              homePhone: value.mobilePhone,
-              studentId:value.studentId
-              }   
-              filterArr.push(obj)               
-          }); 
-        }     
-        this.StudentModelList = new MatTableDataSource(filterArr);      
+        this.pageSize = data._pageSize;
+        this.StudentModelList = new MatTableDataSource(data.studentMaster);      
         this.getAllStudent=new StudentListModel();     
       }
     });
@@ -232,15 +220,17 @@ export class StudentComponent implements OnInit {
           duration: 10000
           });
         }else{
-          if(res.getStudentListForViews.length>0){
+          if(res.studentMaster.length>0){
             let studentList;
-            studentList=res.getStudentListForViews?.map((x)=>{
+            studentList=res.studentMaster?.map((x)=>{
              let middleName=x.middleName==null?' ':' '+x.middleName+' ';
                return {
                 Name: x.firstGivenName+middleName+x.lastFamilyName,
                 StudentId: x.studentInternalId,
                 AlternativeId: x.alternateId,
-                Phone: x.mobilePhone
+                GradeLevel:x.studentEnrollment[0]?.gradeLevelTitle,
+                Email:x.schoolEmail,
+                Telephone: x.mobilePhone
               }
             });
             this.excelService.exportAsExcelFile(studentList,'Students_List_')
@@ -271,6 +261,11 @@ export class StudentComponent implements OnInit {
     event.stopPropagation();
     event.stopImmediatePropagation();
     column.visible = !column.visible;
+  }
+
+  ngOnDestroy(){
+    this.destroySubject$.next();
+    this.destroySubject$.complete();
   }
 
 }

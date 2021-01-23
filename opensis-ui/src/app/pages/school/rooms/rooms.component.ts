@@ -97,7 +97,7 @@ export class RoomsComponent implements OnInit {
               }
   
             } else {
-              this.snackbar.open('Room List failed. ' + res._message, 'LOL THANKS', {
+              this.snackbar.open('Room List failed. ' + res._message, '', {
                 duration: 10000
               });
             }
@@ -113,7 +113,7 @@ export class RoomsComponent implements OnInit {
   openAddNew() {
     this.dialog.open(EditRoomComponent, {
       data: null,
-      width: '800px'
+      width: '600px'
     }).afterClosed().subscribe(data => {
         if(data==='submited'){
           this.getAllRooms();
@@ -150,7 +150,7 @@ export class RoomsComponent implements OnInit {
   openEditdata(element){
     this.dialog.open(EditRoomComponent, {
       data: element,
-        width: '800px'
+        width: '600px'
     }).afterClosed().subscribe((data)=>{
       if(data==='submited'){
         this.getAllRooms()
@@ -168,7 +168,7 @@ export class RoomsComponent implements OnInit {
         }
         else{
           if (res._failure) {
-            this.snackbar.open('Room Delete failed. ' + res._message, 'LOL THANKS', {
+            this.snackbar.open('Room Delete failed. ' + res._message, '', {
               duration: 10000
             });
           } 

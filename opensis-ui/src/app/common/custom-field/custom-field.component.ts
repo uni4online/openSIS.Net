@@ -105,13 +105,13 @@ export class CustomFieldComponent implements OnInit {
       let catId = this.categoryId;
       if (this.schoolDetailsForViewAndEdit.schoolMaster.fieldsCategory !== undefined) {
         this.schoolAddViewModel = this.schoolDetailsForViewAndEdit;
-        for (let i = 0; i < this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].customFields.length; i++) {
-          if (this.schoolAddViewModel.schoolMaster.fieldsCategory[catId].customFields[i].customFieldsValue.length == 0) {
-            this.schoolAddViewModel.schoolMaster.fieldsCategory[catId].customFields[i].customFieldsValue.push(new CustomFieldsValueModel());
+        for (let customField of this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].customFields) {
+          if (customField.customFieldsValue.length == 0) {
+            customField.customFieldsValue.push(new CustomFieldsValueModel());
           }
           else {
-            if (this.schoolAddViewModel.schoolMaster.fieldsCategory[catId]?.customFields[i]?.type === 'Multiple SelectBox') {
-              this.schoolMultiSelectValue = this.schoolAddViewModel.schoolMaster.fieldsCategory[catId]?.customFields[i]?.customFieldsValue[0].customFieldValue.split('|');
+            if (customField.type === 'Multiple SelectBox') {
+              this.schoolMultiSelectValue = customField.customFieldsValue[0].customFieldValue.split('|');
 
             }
           }
@@ -119,6 +119,7 @@ export class CustomFieldComponent implements OnInit {
       }
 
     }
+    
   }
 
 
@@ -127,14 +128,14 @@ export class CustomFieldComponent implements OnInit {
       let catId = this.categoryId;
       if (this.studentAddViewModel.fieldsCategoryList !== undefined) {
 
-        for (let i = 0; i < this.studentAddViewModel.fieldsCategoryList[this.categoryId]?.customFields.length; i++) {
-          if (this.studentAddViewModel.fieldsCategoryList[catId].customFields[i]?.customFieldsValue.length == 0) {
+        for (let studentCustomField of this.studentAddViewModel.fieldsCategoryList[this.categoryId]?.customFields) {
+          if (studentCustomField?.customFieldsValue.length == 0) {
 
-            this.studentAddViewModel.fieldsCategoryList[catId]?.customFields[i]?.customFieldsValue.push(new CustomFieldsValueModel());
+            studentCustomField?.customFieldsValue.push(new CustomFieldsValueModel());
           }
           else {
-            if (this.studentAddViewModel.fieldsCategoryList[catId]?.customFields[i]?.type === 'Multiple SelectBox') {
-              this.studentMultiSelectValue = this.studentAddViewModel.fieldsCategoryList[this.categoryId].customFields[i]?.customFieldsValue[0].customFieldValue.split('|');
+            if (studentCustomField?.type === 'Multiple SelectBox') {
+              this.studentMultiSelectValue = studentCustomField?.customFieldsValue[0].customFieldValue.split('|');
 
             }
           }
@@ -142,6 +143,7 @@ export class CustomFieldComponent implements OnInit {
 
       }
     }
+
   }
 
   checkStaffCustomValue() {
@@ -149,14 +151,14 @@ export class CustomFieldComponent implements OnInit {
       let catId = this.categoryId;
       if (this.staffAddViewModel.fieldsCategoryList !== undefined) {
 
-        for (let i = 0; i < this.staffAddViewModel.fieldsCategoryList[this.categoryId]?.customFields.length; i++) {
-          if (this.staffAddViewModel.fieldsCategoryList[catId].customFields[i]?.customFieldsValue.length == 0) {
+        for (let staffCustomField of this.staffAddViewModel.fieldsCategoryList[this.categoryId]?.customFields) {
+          if (staffCustomField?.customFieldsValue.length == 0) {
 
-            this.staffAddViewModel.fieldsCategoryList[catId]?.customFields[i]?.customFieldsValue.push(new CustomFieldsValueModel());
+            staffCustomField?.customFieldsValue.push(new CustomFieldsValueModel());
           }
           else {
-            if (this.staffAddViewModel.fieldsCategoryList[catId]?.customFields[i]?.type === 'Multiple SelectBox') {
-              this.staffMultiSelectValue = this.staffAddViewModel.fieldsCategoryList[this.categoryId].customFields[i]?.customFieldsValue[0].customFieldValue.split('|');
+            if (staffCustomField?.type === 'Multiple SelectBox') {
+              this.staffMultiSelectValue = staffCustomField?.customFieldsValue[0].customFieldValue.split('|');
 
             }
           }
@@ -172,23 +174,24 @@ export class CustomFieldComponent implements OnInit {
       let catId = this.categoryId;
       if (this.schoolAddViewModel.schoolMaster.fieldsCategory !== undefined) {
 
-        for (let i = 0; i < this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].customFields.length; i++) {
-          if (this.schoolAddViewModel.schoolMaster.fieldsCategory[catId].customFields[i].customFieldsValue.length == 0) {
+        for (let customField of this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].customFields) {
+          if (customField.customFieldsValue.length == 0) {
 
-            this.schoolAddViewModel.schoolMaster.fieldsCategory[catId].customFields[i].customFieldsValue.push(new CustomFieldsValueModel());
+            customField.customFieldsValue.push(new CustomFieldsValueModel());
           }
         }
 
       }
     }
+
   }
   updateStudent() {
     this.studentAddViewModel.selectedCategoryId = this.studentAddViewModel.fieldsCategoryList[this.categoryId].categoryId;
     this.studentAddViewModel._tenantName = sessionStorage.getItem("tenant");
     this.studentAddViewModel._token = sessionStorage.getItem("token");
-    for (var i = 0; i < this.studentAddViewModel.fieldsCategoryList[this.categoryId].customFields.length; i++) {
-      if (this.studentAddViewModel.fieldsCategoryList[this.categoryId].customFields[i].type === "Multiple SelectBox") {
-        this.studentAddViewModel.fieldsCategoryList[this.categoryId].customFields[i].customFieldsValue[0].customFieldValue = this.studentMultiSelectValue.toString().replaceAll(",", "|");
+    for (let studentCustomField of this.studentAddViewModel.fieldsCategoryList[this.categoryId].customFields) {
+      if (studentCustomField.type === "Multiple SelectBox" && this.studentMultiSelectValue !== undefined) {
+        studentCustomField.customFieldsValue[0].customFieldValue = this.studentMultiSelectValue.toString().replaceAll(",", "|");
       }
     }
     this.studentService.UpdateStudent(this.studentAddViewModel).subscribe(data => {
@@ -221,9 +224,9 @@ export class CustomFieldComponent implements OnInit {
     this.schoolAddViewModel.schoolMaster.city = this.schoolAddViewModel.schoolMaster.city.toString();
     this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolOpened = this.commonFunction.formatDateSaveWithoutTime(this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolOpened);
     this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolClosed = this.commonFunction.formatDateSaveWithoutTime(this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolClosed);
-    for (var i = 0; i < this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].customFields.length; i++) {
-      if (this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].customFields[i].type === "Multiple SelectBox") {
-        this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].customFields[i].customFieldsValue[0].customFieldValue = this.schoolMultiSelectValue.toString().replaceAll(",", "|");
+    for (let schoolCustomField of this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].customFields) {
+      if (schoolCustomField.type === "Multiple SelectBox" && this.schoolMultiSelectValue !== undefined) {
+        schoolCustomField.customFieldsValue[0].customFieldValue = this.schoolMultiSelectValue.toString().replaceAll(",", "|");
       }
     }
     this.schoolService.UpdateSchool(this.schoolAddViewModel).subscribe(data => {
@@ -255,9 +258,9 @@ export class CustomFieldComponent implements OnInit {
     this.staffAddViewModel.selectedCategoryId = this.staffAddViewModel.fieldsCategoryList[this.categoryId].categoryId;
     this.staffAddViewModel._token = sessionStorage.getItem("token");
     this.staffAddViewModel._tenantName = sessionStorage.getItem("tenant");
-    for (var i = 0; i < this.staffAddViewModel.fieldsCategoryList[this.categoryId].customFields.length; i++) {
-      if (this.staffAddViewModel.fieldsCategoryList[this.categoryId].customFields[i].type === "Multiple SelectBox") {
-        this.staffAddViewModel.fieldsCategoryList[this.categoryId].customFields[i].customFieldsValue[0].customFieldValue = this.staffMultiSelectValue.toString().replaceAll(",", "|");
+    for (let staffCustomField of this.staffAddViewModel.fieldsCategoryList[this.categoryId].customFields) {
+      if (staffCustomField.type === "Multiple SelectBox" && this.staffMultiSelectValue !== undefined) {
+        staffCustomField.customFieldsValue[0].customFieldValue = this.staffMultiSelectValue.toString().replaceAll(",", "|");
       }
     }
     this.staffService.updateStaff(this.staffAddViewModel).subscribe(data => {

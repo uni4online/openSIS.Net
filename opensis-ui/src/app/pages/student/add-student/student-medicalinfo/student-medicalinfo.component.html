@@ -79,7 +79,7 @@
                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                         <mat-label>{{'policyHolderName'|translate}}</mat-label>
                         <mat-select name="suffix" [(ngModel)]="studentAddModel.studentMaster.policyHolder">
-                            <mat-option value="" *ngIf="parentsFullName?.length==0">No Parents Found</mat-option>
+                            <mat-option value="" disabled *ngIf="parentsFullName?.length==0">No Parents Found</mat-option>
                             <mat-option *ngFor="let parent of parentsFullName" value="{{parent}}">{{parent}}</mat-option>
                         </mat-select>
                     </mat-form-field>

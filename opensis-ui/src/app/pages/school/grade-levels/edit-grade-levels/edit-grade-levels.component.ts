@@ -130,7 +130,7 @@ export class EditGradeLevelsComponent implements OnInit {
         });
       }else
       if (res._failure) {
-        this.snackbar.open('Failed to Add Grade Level ' + res._message, 'LOL THANKS', {
+        this.snackbar.open('Failed to Add Grade Level ' + res._message, '', {
           duration: 10000
         });
       } else {
@@ -166,7 +166,7 @@ export class EditGradeLevelsComponent implements OnInit {
           duration: 10000
         });
       }else if(res._failure) {
-        this.snackbar.open('Failed to Update Grade Level ' + res._message, 'LOL THANKS', {
+        this.snackbar.open('Failed to Update Grade Level ' + res._message, '', {
           duration: 10000
         });
       } else {

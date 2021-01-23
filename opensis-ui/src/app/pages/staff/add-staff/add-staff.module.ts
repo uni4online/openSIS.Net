@@ -43,6 +43,8 @@ import { StaffCertificationinfoComponent } from './staff-certificationinfo/staff
 import { ViewstaffCertificationinfoComponent } from './viewstaff-certificationinfo/viewstaff-certificationinfo.component';
 import { CustomFieldModule } from '../../../../../src/app/common/custom-field/custom-field.module';
 import { CustomFieldWithoutFormModule } from '../../../../../src/app/common/custom-field-without-form/custom-field-without-form.module';
+import { ViewStaffGeneralinfoComponent } from './view-staff-generalinfo/view-staff-generalinfo.component';
+import { ViewStaffAddressinfoComponent } from './view-staff-addressinfo/view-staff-addressinfo.component';
 
 
 
@@ -57,7 +59,9 @@ import { CustomFieldWithoutFormModule } from '../../../../../src/app/common/cust
     ViewstaffGeneralinfoComponent,
     ViewstaffSchoolinfoComponent,
     ViewstaffAddressinfoComponent,
-    ViewstaffCertificationinfoComponent
+    ViewstaffCertificationinfoComponent,
+    ViewStaffGeneralinfoComponent,
+    ViewStaffAddressinfoComponent
   ],
   imports: [
     CommonModule,

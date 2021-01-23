@@ -9,7 +9,7 @@ namespace opensis.data.Models
         public int SchoolId { get; set; }
         public int GradeScaleId { get; set; }
         public int GradeId { get; set; }
-        public string Tite { get; set; }
+        public string Title { get; set; }
         public int? Breakoff { get; set; }
         public decimal? WeightedGpValue { get; set; }
         public decimal? UnweightedGpValue { get; set; }

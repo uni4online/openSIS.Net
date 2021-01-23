@@ -43,8 +43,12 @@ export class EditCourseSectionComponent implements OnInit {
   icPlusCircle = icPlusCircle;
   icLeftArrow = icLeftArrow;
   icRightArrow = icRightArrow;
-  scheduleType = '3';
+  useStandardGrades = false;
+  isChecked = false;
+  scheduleType = '1';
   durationType = '1';
+  addCalendarDay = 0;
+  selectedDate;
 
   view: CalendarView = CalendarView.Month;
   viewDate: Date = new Date();
@@ -58,6 +62,7 @@ export class EditCourseSectionComponent implements OnInit {
 
   setScheduleType(mrChange) {
     this.scheduleType = mrChange.value;
+    this.addCalendarDay = 0;
   }
 
   setDuration(mrChange) {
@@ -73,7 +78,12 @@ export class EditCourseSectionComponent implements OnInit {
   }
 
   openAddNewEvent(event) {
+    this.addCalendarDay = 1;
+    this.selectedDate = event.date;
+  }
 
+  cancelAddClass() {
+    this.addCalendarDay = 0;
   }
 
 }

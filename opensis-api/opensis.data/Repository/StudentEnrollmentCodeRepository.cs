@@ -157,23 +157,18 @@ namespace opensis.data.Repository
                     }
                     this.context?.StudentEnrollment.UpdateRange(sameTitleExits);
                 }
-                studentEnrollmentCodeUpdate.TenantId = studentEnrollmentCodeAddViewModel.studentEnrollmentCode.TenantId;
-                studentEnrollmentCodeUpdate.SchoolId = studentEnrollmentCodeAddViewModel.studentEnrollmentCode.SchoolId;
-                studentEnrollmentCodeUpdate.EnrollmentCode = studentEnrollmentCodeAddViewModel.studentEnrollmentCode.EnrollmentCode;
-                studentEnrollmentCodeUpdate.AcademicYear = studentEnrollmentCodeAddViewModel.studentEnrollmentCode.AcademicYear;
-                studentEnrollmentCodeUpdate.Title = studentEnrollmentCodeAddViewModel.studentEnrollmentCode.Title;
-                studentEnrollmentCodeUpdate.ShortName = studentEnrollmentCodeAddViewModel.studentEnrollmentCode.ShortName;
-                studentEnrollmentCodeUpdate.SortOrder = studentEnrollmentCodeAddViewModel.studentEnrollmentCode.SortOrder;
-                studentEnrollmentCodeUpdate.LastUpdated = DateTime.UtcNow;
-                studentEnrollmentCodeUpdate.UpdatedBy = studentEnrollmentCodeAddViewModel.studentEnrollmentCode.UpdatedBy;
 
                 if (studentEnrollmentCodeAddViewModel.studentEnrollmentCode.Type.ToLower() != studentEnrollmentCodeUpdate.Type.ToLower())
                 {
                     studentEnrollmentCodeAddViewModel._message = "Can't edit Type because it is not editable";
                 }
-                this.context?.SaveChanges();
-                
-                studentEnrollmentCodeAddViewModel._failure = false;
+                else
+                {
+                    studentEnrollmentCodeAddViewModel.studentEnrollmentCode.LastUpdated = DateTime.UtcNow;
+                    this.context.Entry(studentEnrollmentCodeUpdate).CurrentValues.SetValues(studentEnrollmentCodeAddViewModel.studentEnrollmentCode);
+                    this.context?.SaveChanges();
+                    studentEnrollmentCodeAddViewModel._failure = false;
+                }
             }
             catch (Exception ex)
             {

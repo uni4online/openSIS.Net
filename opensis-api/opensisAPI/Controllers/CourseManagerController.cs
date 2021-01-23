@@ -21,23 +21,23 @@ namespace opensisAPI.Controllers
             _courseManagerService = courseManagerService;
         }
 
-        [HttpPost("addProgram")]
-        public ActionResult<ProgramAddViewModel> AddProgram(ProgramAddViewModel programAddViewModel)
-        {
-            ProgramAddViewModel programAdd = new ProgramAddViewModel();
-            try
-            {
-                programAdd = _courseManagerService.AddProgram(programAddViewModel);
-            }
-            catch (Exception es)
-            {
-                programAdd._failure = true;
-                programAdd._message = es.Message;
-            }
-            return programAdd;
-        }
+        //[HttpPost("addProgram")]
+        //public ActionResult<ProgramAddViewModel> AddProgram(ProgramAddViewModel programAddViewModel)
+        //{
+        //    ProgramAddViewModel programAdd = new ProgramAddViewModel();
+        //    try
+        //    {
+        //        programAdd = _courseManagerService.AddProgram(programAddViewModel);
+        //    }
+        //    catch (Exception es)
+        //    {
+        //        programAdd._failure = true;
+        //        programAdd._message = es.Message;
+        //    }
+        //    return programAdd;
+        //}
         
-        [HttpPost("GetAllProgram")]
+        [HttpPost("getAllProgram")]
         public ActionResult<ProgramListViewModel> GetAllProgram(ProgramListViewModel programListViewModel)
         {
             ProgramListViewModel programList = new ProgramListViewModel();
@@ -54,13 +54,13 @@ namespace opensisAPI.Controllers
             return programList;
         }
         
-        [HttpPut("updateProgram")]
-        public ActionResult<ProgramAddViewModel> UpdateProgram(ProgramAddViewModel programAddViewModel)
+        [HttpPut("addEditProgram")]
+        public ActionResult<ProgramListViewModel> AddEditProgram(ProgramListViewModel programListViewModel)
         {
-            ProgramAddViewModel programUpdate = new ProgramAddViewModel();
+            ProgramListViewModel programUpdate = new ProgramListViewModel();
             try
             {
-                programUpdate = _courseManagerService.UpdateProgram(programAddViewModel);
+                programUpdate = _courseManagerService.AddEditProgram(programListViewModel);
             }
             catch (Exception es)
             {
@@ -86,46 +86,36 @@ namespace opensisAPI.Controllers
             return programDelete;
         }
 
-        [HttpPost("addSubject")]
-        public ActionResult<SubjectAddViewModel> AddSubject(SubjectAddViewModel subjectAddViewModel)
-        {
-            SubjectAddViewModel subjectAdd = new SubjectAddViewModel();
-            try
-            {
-                subjectAdd = _courseManagerService.AddSubject(subjectAddViewModel);
-            }
-            catch (Exception es)
-            {
-                subjectAdd._failure = true;
-                subjectAdd._message = es.Message;
-            }
-            return subjectAdd;
-        }
+        //[HttpPost("addSubject")]
+        //public ActionResult<SubjectAddViewModel> AddSubject(SubjectAddViewModel subjectAddViewModel)
+        //{
+        //    SubjectAddViewModel subjectAdd = new SubjectAddViewModel();
+        //    try
+        //    {
+        //        subjectAdd = _courseManagerService.AddSubject(subjectAddViewModel);
+        //    }
+        //    catch (Exception es)
+        //    {
+        //        subjectAdd._failure = true;
+        //        subjectAdd._message = es.Message;
+        //    }
+        //    return subjectAdd;
+        //}
 
-        [HttpPut("updateSubject")]
-        public ActionResult<SubjectAddViewModel> UpdateSubject(SubjectAddViewModel subjectAddViewModel)
+        [HttpPut("addEditSubject")]
+        public ActionResult<SubjectListViewModel> AddEditSubject(SubjectListViewModel subjectListViewModel)
         {
-            SubjectAddViewModel subjectUpdate = new SubjectAddViewModel();
+            SubjectListViewModel subjectAddUpdate = new SubjectListViewModel();
             try
             {
-                if (subjectAddViewModel.subject.SchoolId > 0)
-                {
-                    subjectUpdate = _courseManagerService.UpdateSubject(subjectAddViewModel);
-                }
-                else
-                {
-                    subjectUpdate._token = subjectAddViewModel._token;
-                    subjectUpdate._tenantName = subjectAddViewModel._tenantName;
-                    subjectUpdate._failure = true;
-                    subjectUpdate._message = "Please enter valid school id";
-                }
+                subjectAddUpdate = _courseManagerService.AddEditSubject(subjectListViewModel);
             }
             catch (Exception es)
             {
-                subjectUpdate._failure = true;
-                subjectUpdate._message = es.Message;
+                subjectAddUpdate._failure = true;
+                subjectAddUpdate._message = es.Message;
             }
-            return subjectUpdate;
+            return subjectAddUpdate;
         }
 
         [HttpPost("getAllSubjectList")]
@@ -168,6 +158,71 @@ namespace opensisAPI.Controllers
                 subjectDelete._message = es.Message;
             }
             return subjectDelete;
+        }
+
+        [HttpPost("addCourse")]
+        public ActionResult<CourseAddViewModel> AddCourse(CourseAddViewModel courseAddViewModel)
+        {
+            CourseAddViewModel courseAdd = new CourseAddViewModel();
+            try
+            {
+                courseAdd = _courseManagerService.AddCourse(courseAddViewModel);
+            }
+            catch (Exception es)
+            {
+                courseAdd._failure = true;
+                courseAdd._message = es.Message;
+            }
+            return courseAdd;
+        }
+
+        [HttpPut("updateCourse")]
+        public ActionResult<CourseAddViewModel> UpdateCourse(CourseAddViewModel courseAddViewModel)
+        {
+            CourseAddViewModel courseUpdate = new CourseAddViewModel();
+            try
+            {
+                courseUpdate = _courseManagerService.UpdateCourse(courseAddViewModel);
+            }
+            catch (Exception es)
+            {
+                courseUpdate._failure = true;
+                courseUpdate._message = es.Message;
+            }
+            return courseUpdate;
+        }
+
+        [HttpPost("deleteCourse")]
+        public ActionResult<CourseAddViewModel> DeleteCourse(CourseAddViewModel courseAddViewModel)
+        {
+            CourseAddViewModel courseDelete = new CourseAddViewModel();
+            try
+            {
+                courseDelete = _courseManagerService.DeleteCourse(courseAddViewModel);
+            }
+            catch (Exception es)
+            {
+                courseDelete._failure = true;
+                courseDelete._message = es.Message;
+            }
+            return courseDelete;
+        }
+
+        [HttpPost("getAllCourseList")]
+        public ActionResult<CourseListViewModel> GetAllCourseList(CourseListViewModel courseListViewModel)
+        {
+            CourseListViewModel courseList = new CourseListViewModel();
+            try
+            {
+                courseList = _courseManagerService.GetAllCourseList(courseListViewModel);
+
+            }
+            catch (Exception es)
+            {
+                courseList._message = es.Message;
+                courseList._failure = true;
+            }
+            return courseList;
         }
     }
 }

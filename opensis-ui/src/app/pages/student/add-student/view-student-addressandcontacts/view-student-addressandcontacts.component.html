@@ -1,0 +1,127 @@
+<mat-card-content>
+
+    <div @stagger fxLayout="column">
+        <h3 class="text-blue pt-6 pb-2 px-4">{{'studentHomeAddress'|translate}}</h3>
+        <ul class="grid grid-cols-3 col-gap-8 row-gap-10 mt-2 mx-4">
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'streetAddress1' | translate}}</label>
+                <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentViewDetails.studentMaster.homeAddressLineOne|EmtyValueCheckPipe}}</p>
+            </li>
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'streetAddress2' | translate}}</label>
+                <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentViewDetails.studentMaster.homeAddressLineTwo|EmtyValueCheckPipe}}</p>
+            </li>
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'country' | translate}}</label>
+                <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{this.nameOfMiscValues.countryName|EmtyValueCheckPipe}}</p>
+            </li>
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'stateProvinceLocality' | translate}}</label>
+                <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentViewDetails.studentMaster.homeAddressState|EmtyValueCheckPipe}}</p>
+            </li>
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'city' | translate}}</label>
+                <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentViewDetails.studentMaster.homeAddressCity|EmtyValueCheckPipe}}</p>
+            </li>
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'zipPostalCode' | translate}}</label>
+                <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentViewDetails.studentMaster.homeAddressZip}}</p>
+            </li>
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'busNo' | translate}}</label>
+                <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentViewDetails.studentMaster.busNo|EmtyValueCheckPipe}}</p>
+            </li>
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'busPickup' | translate}}</label>
+                <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentViewDetails.studentMaster.schoolBusPickUp|EmtyBooleanCheckPipe}}</p>
+            </li>
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'busDropoff' | translate}}</label>
+                <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentViewDetails.studentMaster.schoolBusDropOff|EmtyBooleanCheckPipe}}</p>
+            </li>
+        </ul>
+
+        <hr class="-mx-4 mt-6">
+
+        <h3 class="text-blue pt-6 pb-2 px-4">{{'studentMailingAddress'|translate}}</h3>
+        <div class="mx-4 flex mb-4" *ngIf="studentViewDetails.studentMaster?.mailingAddressSameToHome; else mailingAddressNotSameToHome">
+            <mat-icon [icIcon]="icCheckBox" class="mr-3"></mat-icon>
+            <span class="text-base">{{'sameAsHomeAddress' | translate}}</span>
+        </div>
+        <ng-template #mailingAddressNotSameToHome>
+            <div class="mx-4 flex mb-4" >
+                <mat-icon [icIcon]="icCheckBoxOutlineBlank" class="mr-3"></mat-icon>
+                <span class="text-base">{{'sameAsHomeAddress' | translate}}</span>
+            </div>
+        </ng-template>
+       
+        <ul class="grid grid-cols-3 col-gap-8 row-gap-10 mt-2 mx-4">
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'streetAddress1' | translate}}</label>
+                <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentViewDetails.studentMaster.mailingAddressLineOne|EmtyValueCheckPipe}}</p>
+            </li>
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'streetAddress2' | translate}}</label>
+                <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentViewDetails.studentMaster.mailingAddressLineTwo|EmtyValueCheckPipe}}</p>
+            </li>
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'country' | translate}}</label>
+                <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{this.nameOfMiscValues.mailingAddressCountry|EmtyValueCheckPipe}}</p>
+            </li>
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'stateProvinceLocality' | translate}}</label>
+                <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentViewDetails.studentMaster.mailingAddressState|EmtyValueCheckPipe}}</p>
+            </li>
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'city' | translate}}</label>
+                <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentViewDetails.studentMaster.mailingAddressCity|EmtyValueCheckPipe}}</p>
+            </li>
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'zipPostalCode' | translate}}</label>
+                <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentViewDetails.studentMaster.mailingAddressZip}}</p>
+            </li>
+        </ul>
+
+        <hr class="-mx-4 mt-6">
+
+        <h3 class="text-blue pt-6 pb-2 px-4">{{'personalContactInformation'|translate}}</h3>
+        <ul class="grid grid-cols-3 col-gap-8 row-gap-10 mt-2 mx-4">
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'homePhone' | translate}}</label>
+                <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentViewDetails.studentMaster.homePhone| EmtyValueCheckPipe}}</p>
+            </li>
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'mobilePhone' | translate}}</label>
+                <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentViewDetails.studentMaster.mobilePhone|EmtyValueCheckPipe}}</p>
+            </li>
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'personalEmail' | translate}}</label>
+                <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentViewDetails.studentMaster.personalEmail|EmtyValueCheckPipe}}</p>
+            </li>
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'schoolEmail' | translate}}</label>
+                <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentViewDetails.studentMaster.schoolEmail|EmtyValueCheckPipe}}</p>
+            </li>
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'twitter' | translate}}</label>
+                <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentViewDetails.studentMaster.twitter|EmtyValueCheckPipe}}</p>
+            </li>
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'facebook' | translate}}</label>
+                <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentViewDetails.studentMaster.facebook|EmtyValueCheckPipe}}</p>
+            </li>
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'instagram' | translate}}</label>
+                <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentViewDetails.studentMaster.instagram|EmtyValueCheckPipe}}</p>
+            </li>
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'youtube' | translate}}</label>
+                <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentViewDetails.studentMaster.youtube|EmtyValueCheckPipe}}</p>
+            </li>
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'linkedIn' | translate}}</label>
+                <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentViewDetails.studentMaster.linkedin|EmtyValueCheckPipe}}</p>
+            </li>
+        </ul>
+    </div>
+</mat-card-content>

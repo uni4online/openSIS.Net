@@ -26,10 +26,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModuleModule } from '../../shared-module/shared-module.module';
 import { CustomFieldModule } from "../../../common/custom-field/custom-field.module";
 import { CustomFieldWithoutFormModule } from "../../../common/custom-field-without-form/custom-field-without-form.module";
+import { ViewGeneralInfoComponent } from './view-general-info/view-general-info.component';
+import { ViewWashInfoComponent } from './view-wash-info/view-wash-info.component';
 
 
 @NgModule({
-  declarations: [AddSchoolComponent,GeneralInfoComponent,WashInfoComponent],
+  declarations: [AddSchoolComponent,GeneralInfoComponent,WashInfoComponent, ViewGeneralInfoComponent, ViewWashInfoComponent],
   imports: [
     CommonModule,
     MatIconModule,

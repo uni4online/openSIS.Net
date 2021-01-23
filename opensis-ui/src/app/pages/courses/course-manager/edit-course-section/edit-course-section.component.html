@@ -1,15 +1,18 @@
 <div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
     <h2 class="headline m-0" fxFlex="auto"><span class="text-green">Chemistry</span> -
         {{'addNewCourseSection'|translate}}</h2>
-    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
-        <mat-icon [icIcon]="icClose"></mat-icon>
-    </button>
+    <div>
+        <mat-slide-toggle class="mr-4" color="primary" checked="checked">{{'active' | translate}}</mat-slide-toggle>
+        <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+            <mat-icon [icIcon]="icClose"></mat-icon>
+        </button>
+    </div>
 </div>
 <mat-divider class="-mx-6 text-border"></mat-divider>
 
 <mat-dialog-content fxLayout="column">
 
-    <ul class="grid grid-cols-2 col-gap-8 mt-6">
+    <ul class="md:grid md:grid-cols-2 col-gap-8 mt-6">
         <li>
             <mat-form-field class="w-full" appearance="outline" color="primary">
                 <mat-label>{{'courseSectionName' | translate}}</mat-label>
@@ -62,20 +65,41 @@
                     <mat-slide-toggle class="mb-3" color="primary">{{'courseIsWeighted' | translate}}</mat-slide-toggle>
                 </span>
                 <span class="mr-6">
-                    <mat-slide-toggle class="mb-3" color="primary">{{'useStandards' | translate}}</mat-slide-toggle>
-                </span>
-                <span class="mr-6">
                     <mat-slide-toggle class="mb-3" color="primary">{{'affectsClassRank' | translate}}</mat-slide-toggle>
                 </span>
                 <span class="mr-6">
                     <mat-slide-toggle class="mb-3" color="primary">{{'affectsHonorRoll' | translate}}</mat-slide-toggle>
                 </span>
-                <span class="mr-6">
-                    <mat-slide-toggle class="mb-3" color="primary">{{'onlineClassRoom' | translate}}</mat-slide-toggle>
+                <span class="mr-6 mb-3">
+                    <mat-slide-toggle [(ngModel)]="isChecked" color="primary">{{'onlineClassRoom' | translate}}</mat-slide-toggle>
                 </span>
             </div>
         </li>
+        <li *ngIf="isChecked">
+            <mat-form-field class="w-full" appearance="outline" color="primary">
+                <mat-label>{{'onlineClassRoomUrl' | translate}}</mat-label>
+                <input type="text" matInput>
+            </mat-form-field>
+        </li>
+        <li *ngIf="isChecked">
+            <mat-form-field class="w-full" appearance="outline" color="primary">
+                <mat-label>{{'onlineClassRoomPasswordIfAny' | translate}}</mat-label>
+                <input type="text" matInput>
+            </mat-form-field>
+        </li>
+        <li class="col-span-2 pb-3">
+            <mat-slide-toggle [(ngModel)]="useStandardGrades" color="primary">{{'useStandards' | translate}}</mat-slide-toggle>
+        </li>
+        <li *ngIf="useStandardGrades">
+            <mat-form-field class="w-full" appearance="outline" color="primary">
+                <mat-label>{{'standardGradeScale' | translate}}</mat-label>
+                <mat-select name="suffix">
+                    <mat-option value="">Show standard specific grade scale categories</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </li>
     </ul>
+
 
     <hr class="-mx-6 my-4">
 
@@ -85,7 +109,7 @@
         <mat-radio-button value="2" color="primary">{{'customDateRange' | translate}}</mat-radio-button>
     </mat-radio-group>
     <div *ngIf="durationType === '1'">
-        <ul class="grid grid-cols-2 col-gap-8 mt-3">
+        <ul class="md:grid md:grid-cols-2 col-gap-8 mt-3">
             <li>
                 <mat-form-field class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'markingPeriod' | translate}}</mat-label>
@@ -97,7 +121,7 @@
         </ul>
     </div>
     <div *ngIf="durationType === '2'">
-        <ul class="grid grid-cols-2 col-gap-8 mt-3">
+        <ul class="md:grid md:grid-cols-2 col-gap-8 mt-3">
             <li>
                 <mat-form-field class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'startDate' | translate}}</mat-label>
@@ -128,7 +152,7 @@
     </mat-radio-group>
 
     <div class="" *ngIf="scheduleType === '1'">
-        <ul class="grid grid-cols-2 col-gap-8 mt-6">
+        <ul class="md:grid md:grid-cols-2 col-gap-8 mt-6">
             <li>
                 <mat-form-field class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'room' | translate}}</mat-label>
@@ -328,36 +352,66 @@
         </div>
     </div>
 
-    <!-- <div class="-mx-6 mt-5" *ngIf="scheduleType === '3'"> 
-         <div class="flex justify-between px-6 py-2 border-t border-b border-normal">
-            <a href="" class="cursor-pointer">
-                <mat-icon [icIcon]="icLeftArrow"></mat-icon>
-            </a>
-            <h4 class="font-bold text-blue">January 2021</h4>
-            <a href="" class="cursor-pointer">
-                <mat-icon [icIcon]="icRightArrow"></mat-icon>
-            </a>
-        </div> -->
-       
+    <div class="-mx-6 mt-5 relative" *ngIf="scheduleType === '3'">
+         
+        <div class="absolute w-full h-full bg-gray-light z-50 p-10" *ngIf="addCalendarDay === 1">
+            <div class="shadow-lg w-full bg-white rounded p-6">
+                <div class="pb-4">
+                    <h3>{{'addClass' | translate}}</h3>
+                </div>
+
+                <ul class="md:grid md:grid-cols-2 col-gap-8 mt-3">
+                    <li>
+                        <mat-form-field class="w-full" appearance="outline" color="primary">
+                            <mat-label>{{'date' | translate}}</mat-label>
+                            <input matInput [matDatepicker]="pickerStartDate" required [value]='selectedDate'>
+                            <mat-datepicker-toggle matSuffix [for]="pickerStartDate"></mat-datepicker-toggle>
+                            <mat-datepicker #pickerStartDate></mat-datepicker>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field class="w-full" appearance="outline" color="primary">
+                            <mat-label>{{'period' | translate}}</mat-label>
+                            <mat-select name="period" required>
+                                <mat-option value="">Show period list</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field class="w-full" appearance="outline" color="primary">
+                            <mat-label>{{'room' | translate}}</mat-label>
+                            <mat-select name="room" required>
+                                <mat-option value="">Show room list</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </li>
+                    <li class="pt-3">
+                        <mat-slide-toggle class="mb-3" color="primary">{{'takeAttendance' | translate}}</mat-slide-toggle>
+                    </li>
+                </ul>
+
+                <div class="pt-5 text-right">
+                    <button mat-button type="button" class="mr-2" (click)="cancelAddClass()">{{'cancel' | translate}}</button>
+                    <button color="primary" mat-raised-button type="submit">{{'submit' | translate}}</button>
+                </div>
+            </div>
+        </div>
+        <hr/>
         <ng-template #customCellTemplate let-day="day" let-locale="locale">
             <div class="cal-cell-top">
                 <span class="cal-day-badge" *ngIf="day.badgeTotal > 0">{{ day.badgeTotal }}</span>
                 <span class="cal-day-number">{{ day.date | calendarDate:'monthViewDayNumber':locale }}</span>
             </div>
-            <small style="margin: 5px;">There are {{ day.events.length }} events on this day</small>
+            <!-- <small style="margin: 5px;">There are {{ day.events.length }} events on this day</small> -->
         </ng-template>
 
         <div [ngSwitch]="view">
-            <mwl-calendar-month-view *ngSwitchCase="'month'" [viewDate]="viewDate" [events]="events"
+            <mwl-calendar-month-view *ngSwitchCase="'month'" (dayClicked)="openAddNewEvent($event.day)" [viewDate]="viewDate" [events]="events"
                 [cellTemplate]="customCellTemplate">
             </mwl-calendar-month-view>
-            <mwl-calendar-week-view *ngSwitchCase="'week'" [viewDate]="viewDate" [events]="events">
-            </mwl-calendar-week-view>
-            <mwl-calendar-day-view *ngSwitchCase="'day'" [viewDate]="viewDate" [events]="events">
-            </mwl-calendar-day-view>
         </div>
-        
-    <!-- </div> -->
+
+    </div>
 
     <div class="-mx-6 mt-5" *ngIf="scheduleType === '4'">
         <div class="flex py-2 border-t border-normal">

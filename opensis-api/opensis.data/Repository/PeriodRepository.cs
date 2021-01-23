@@ -28,20 +28,30 @@ namespace opensis.data.Repository
         {
             try
             {
-                int? BlockId = 1;
+                var blockTitle = this.context?.Block.FirstOrDefault(x => x.TenantId == blockAddViewModel.block.TenantId && x.SchoolId == blockAddViewModel.block.SchoolId && x.BlockTitle.ToLower() == blockAddViewModel.block.BlockTitle.ToLower());
 
-                var blockData = this.context?.Block.Where(x => x.SchoolId == blockAddViewModel.block.SchoolId && x.TenantId == blockAddViewModel.block.TenantId).OrderByDescending(x => x.BlockId).FirstOrDefault();
-
-                if (blockData != null)
+                if (blockTitle == null)
                 {
-                    BlockId = blockData.BlockId + 1;
-                }
+                    int? BlockId = 1;
 
-                blockAddViewModel.block.BlockId = (int)BlockId;
-                blockAddViewModel.block.CreatedOn = DateTime.UtcNow;
-                this.context?.Block.Add(blockAddViewModel.block);
-                this.context?.SaveChanges();
-                blockAddViewModel._failure = false;
+                    var blockData = this.context?.Block.Where(x => x.SchoolId == blockAddViewModel.block.SchoolId && x.TenantId == blockAddViewModel.block.TenantId).OrderByDescending(x => x.BlockId).FirstOrDefault();
+
+                    if (blockData != null)
+                    {
+                        BlockId = blockData.BlockId + 1;
+                    }
+
+                    blockAddViewModel.block.BlockId = (int)BlockId;
+                    blockAddViewModel.block.CreatedOn = DateTime.UtcNow;
+                    this.context?.Block.Add(blockAddViewModel.block);
+                    this.context?.SaveChanges();
+                    blockAddViewModel._failure = false;
+                }
+                else
+                {
+                    blockAddViewModel._failure = true;
+                    blockAddViewModel._message = "Block Title Already Exists";
+                }
             }
             catch (Exception es)
             {
@@ -61,15 +71,31 @@ namespace opensis.data.Repository
             try
             {
                 var blockUpdate = this.context?.Block.FirstOrDefault(x => x.TenantId == blockAddViewModel.block.TenantId && x.SchoolId == blockAddViewModel.block.SchoolId && x.BlockId == blockAddViewModel.block.BlockId);
+
                 if (blockUpdate != null)
                 {
-                    blockUpdate.BlockTitle = blockAddViewModel.block.BlockTitle;
-                    blockUpdate.BlockSortOrder = blockAddViewModel.block.BlockSortOrder;
-                    blockUpdate.UpdatedOn = DateTime.UtcNow;
-                    blockUpdate.UpdatedBy = blockAddViewModel.block.UpdatedBy;
-                    this.context?.SaveChanges();
-                    blockAddViewModel._failure = false;
-                    blockAddViewModel._message = "Block Updated Successfully";
+                    var blockTitle = this.context?.Block.FirstOrDefault(x => x.TenantId == blockAddViewModel.block.TenantId && x.SchoolId == blockAddViewModel.block.SchoolId && x.BlockTitle.ToLower() == blockAddViewModel.block.BlockTitle.ToLower() && x.BlockId != blockAddViewModel.block.BlockId);
+
+                    if (blockTitle == null)
+                    {
+                        blockAddViewModel.block.CreatedBy = blockUpdate.CreatedBy;
+                        blockAddViewModel.block.CreatedOn = blockUpdate.CreatedOn;
+                        blockAddViewModel.block.UpdatedOn = DateTime.Now;
+                        this.context.Entry(blockUpdate).CurrentValues.SetValues(blockAddViewModel.block);
+                        this.context?.SaveChanges();
+                        blockAddViewModel._failure = false;
+                        blockAddViewModel._message = "Block Updated Successfully";
+                    }
+                    else
+                    {
+                        blockAddViewModel._failure = true;
+                        blockAddViewModel._message = "Block Title Already Exists";
+                    }
+                }
+                else
+                {
+                    blockAddViewModel._failure = true;
+                    blockAddViewModel._message = NORECORDFOUND;
                 }
             }
             catch (Exception es)
@@ -107,6 +133,11 @@ namespace opensis.data.Repository
                         blockAddViewModel._message = "Deleted Successfully";
                     }
                 }
+                else
+                {
+                    blockAddViewModel._failure = true;
+                    blockAddViewModel._message = NORECORDFOUND;
+                }
             }
             catch (Exception es)
             {
@@ -125,28 +156,38 @@ namespace opensis.data.Repository
         {
             try
             {
-                int? PeriodId = 1;
-                int? SortOrder = 1;
+                var periodTitle = this.context?.BlockPeriod.FirstOrDefault(x => x.TenantId == blockPeriodAddViewModel.blockPeriod.TenantId && x.SchoolId == blockPeriodAddViewModel.blockPeriod.SchoolId && x.PeriodTitle.ToLower() == blockPeriodAddViewModel.blockPeriod.PeriodTitle.ToLower() && x.BlockId == blockPeriodAddViewModel.blockPeriod.BlockId);
 
-                var blockPeriodData = this.context?.BlockPeriod.Where(x => x.TenantId == blockPeriodAddViewModel.blockPeriod.TenantId && x.SchoolId == blockPeriodAddViewModel.blockPeriod.SchoolId).OrderByDescending(x => x.PeriodId).FirstOrDefault();
-
-                if (blockPeriodData != null)
+                if (periodTitle == null)
                 {
-                    PeriodId = blockPeriodData.PeriodId + 1;
+                    int? PeriodId = 1;
+                    int? SortOrder = 1;
+
+                    var blockPeriodData = this.context?.BlockPeriod.Where(x => x.TenantId == blockPeriodAddViewModel.blockPeriod.TenantId && x.SchoolId == blockPeriodAddViewModel.blockPeriod.SchoolId).OrderByDescending(x => x.PeriodId).FirstOrDefault();
+
+                    if (blockPeriodData != null)
+                    {
+                        PeriodId = blockPeriodData.PeriodId + 1;
+                    }
+
+                    var sortOrderData = this.context?.BlockPeriod.Where(x => x.TenantId == blockPeriodAddViewModel.blockPeriod.TenantId && x.SchoolId == blockPeriodAddViewModel.blockPeriod.SchoolId && x.BlockId == blockPeriodAddViewModel.blockPeriod.BlockId).OrderByDescending(x => x.PeriodSortOrder).FirstOrDefault();
+
+                    if (sortOrderData != null)
+                    {
+                        SortOrder = sortOrderData.PeriodSortOrder + 1;
+                    }
+                    blockPeriodAddViewModel.blockPeriod.PeriodId = (int)PeriodId;
+                    blockPeriodAddViewModel.blockPeriod.PeriodSortOrder = (int)SortOrder;
+                    blockPeriodAddViewModel.blockPeriod.CreatedOn = DateTime.UtcNow;
+                    this.context?.BlockPeriod.Add(blockPeriodAddViewModel.blockPeriod);
+                    this.context?.SaveChanges();
+                    blockPeriodAddViewModel._failure = false;
                 }
-
-                var sortOrderData = this.context?.BlockPeriod.Where(x => x.TenantId == blockPeriodAddViewModel.blockPeriod.TenantId && x.SchoolId == blockPeriodAddViewModel.blockPeriod.SchoolId && x.BlockId== blockPeriodAddViewModel.blockPeriod.BlockId).OrderByDescending(x => x.PeriodSortOrder).FirstOrDefault();
-
-                if (sortOrderData != null)
+                else
                 {
-                    SortOrder = sortOrderData.PeriodSortOrder + 1;
+                    blockPeriodAddViewModel._failure = true;
+                    blockPeriodAddViewModel._message = "Period Title Already Exists";
                 }
-                blockPeriodAddViewModel.blockPeriod.PeriodId = (int)PeriodId;
-                blockPeriodAddViewModel.blockPeriod.PeriodSortOrder = (int)SortOrder;
-                blockPeriodAddViewModel.blockPeriod.CreatedOn = DateTime.UtcNow;
-                this.context?.BlockPeriod.Add(blockPeriodAddViewModel.blockPeriod);
-                this.context?.SaveChanges();
-                blockPeriodAddViewModel._failure = false;
             }
             catch (Exception es)
             {
@@ -166,17 +207,32 @@ namespace opensis.data.Repository
             try
             {
                 var blockPeriodUpdate = this.context?.BlockPeriod.FirstOrDefault(x => x.TenantId == blockPeriodAddViewModel.blockPeriod.TenantId && x.SchoolId == blockPeriodAddViewModel.blockPeriod.SchoolId && x.PeriodId == blockPeriodAddViewModel.blockPeriod.PeriodId);
+
                 if (blockPeriodUpdate != null)
                 {
-                    blockPeriodUpdate.PeriodTitle = blockPeriodAddViewModel.blockPeriod.PeriodTitle;
-                    blockPeriodUpdate.PeriodShortName = blockPeriodAddViewModel.blockPeriod.PeriodShortName;
-                    blockPeriodUpdate.PeriodStartTime = blockPeriodAddViewModel.blockPeriod.PeriodStartTime;
-                    blockPeriodUpdate.PeriodEndTime = blockPeriodAddViewModel.blockPeriod.PeriodEndTime;
-                    blockPeriodUpdate.UpdatedOn = DateTime.UtcNow;
-                    blockPeriodUpdate.UpdatedBy = blockPeriodAddViewModel.blockPeriod.UpdatedBy;
-                    this.context?.SaveChanges();
-                    blockPeriodAddViewModel._failure = false;
-                    blockPeriodAddViewModel._message = "Block-Period Updated Successfully";
+                    var periodTitle = this.context?.BlockPeriod.FirstOrDefault(x => x.TenantId == blockPeriodAddViewModel.blockPeriod.TenantId && x.SchoolId == blockPeriodAddViewModel.blockPeriod.SchoolId && x.BlockId == blockPeriodAddViewModel.blockPeriod.BlockId && x.PeriodId != blockPeriodAddViewModel.blockPeriod.PeriodId && x.PeriodTitle.ToLower() == blockPeriodAddViewModel.blockPeriod.PeriodTitle.ToLower());
+
+                    if (periodTitle == null)
+                    {
+                        blockPeriodAddViewModel.blockPeriod.CreatedBy = blockPeriodUpdate.CreatedBy;
+                        blockPeriodAddViewModel.blockPeriod.CreatedOn = blockPeriodUpdate.CreatedOn;
+                        blockPeriodAddViewModel.blockPeriod.PeriodSortOrder = blockPeriodUpdate.PeriodSortOrder;
+                        blockPeriodAddViewModel.blockPeriod.UpdatedOn = DateTime.Now;
+                        this.context.Entry(blockPeriodUpdate).CurrentValues.SetValues(blockPeriodAddViewModel.blockPeriod);
+                        this.context?.SaveChanges();
+                        blockPeriodAddViewModel._failure = false;
+                        blockPeriodAddViewModel._message = "Block-Period Updated Successfully";                        
+                    }
+                    else
+                    {
+                        blockPeriodAddViewModel._failure = true;
+                        blockPeriodAddViewModel._message = "Period Title Already Exists";
+                    }
+                }
+                else
+                {
+                    blockPeriodAddViewModel._failure = true;
+                    blockPeriodAddViewModel._message = NORECORDFOUND;
                 }
             }
             catch (Exception es)
@@ -204,6 +260,11 @@ namespace opensis.data.Repository
                     this.context?.SaveChanges();
                     blockPeriodAddViewModel._failure = false;
                     blockPeriodAddViewModel._message = "Deleted Successfully";
+                }
+                else
+                {
+                    blockPeriodAddViewModel._failure = true;
+                    blockPeriodAddViewModel._message = NORECORDFOUND;
                 }
             }
             catch (Exception es)

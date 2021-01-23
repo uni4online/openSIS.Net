@@ -35,24 +35,23 @@ export class SelectBarComponent implements OnInit {
   public filteredSchools: ReplaySubject<AllSchoolListModel[]> = new ReplaySubject<AllSchoolListModel[]>(1);
 
   /** Subject that emits when the component has been destroyed. */
-  protected _onDestroy = new Subject<void>();
+  protected onDestroy = new Subject<void>();
 
   constructor(private schoolService: SchoolService,
     private router: Router,
     private markingPeriodService: MarkingPeriodService
   ) {
-    this.schoolService.currentMessage.subscribe((res) => {
+    this.schoolService.currentMessage.pipe(takeUntil(this.onDestroy)).subscribe((res) => {
       if (res) {
         this.checkForAnyNewSchool = res;
         this.callAllSchool();
+        this.callAcademicYearsOnSchoolSelect();
       }
     })
-
-    
-    this.callAllSchool();
   }
 
   ngOnInit() {
+    this.callAllSchool();
     this.markingPeriodService.currentY.subscribe((res) => {
       if (res) {
         this.callAcademicYearsOnSchoolSelect();        
@@ -65,7 +64,7 @@ export class SelectBarComponent implements OnInit {
     this.getSchoolList._token = sessionStorage.getItem("token");
 
     this.schoolService.GetAllSchools(this.getSchoolList).subscribe((data) => {
-      this.schools = data.getSchoolForView;
+      this.schools = data.schoolMaster;
       /** control for the selected School */
       this.schoolCtrl = new FormControl();
       this.schoolFilterCtrl = new FormControl();
@@ -75,7 +74,7 @@ export class SelectBarComponent implements OnInit {
       this.filteredSchools.next(this.schools.slice());
       /** control for the MatSelect filter keyword */
       this.schoolFilterCtrl.valueChanges
-        .pipe(takeUntil(this._onDestroy))
+        .pipe(takeUntil(this.onDestroy))
         .subscribe(() => {
           this.filterSchools();
         });
@@ -110,10 +109,10 @@ export class SelectBarComponent implements OnInit {
     });
     if (index != -1) {
       this.schoolCtrl.setValue(this.schools[index]);
-      sessionStorage.setItem("schoolOpened", this.schools[index].dateSchoolOpened);
+      sessionStorage.setItem("schoolOpened", this.schools[index].schoolDetail[0].dateSchoolOpened);
     } else {
       this.schoolCtrl.setValue(this.schools[0]);
-      sessionStorage.setItem("schoolOpened", this.schools[0].dateSchoolOpened);
+      sessionStorage.setItem("schoolOpened", this.schools[0].schoolDetail[0].dateSchoolOpened);
     }
     if(!this.checkForAnyNewSchool){
       this.callAcademicYearsOnSchoolSelect();
@@ -122,7 +121,7 @@ export class SelectBarComponent implements OnInit {
 
   changeSchool(details) {
     sessionStorage.setItem("selectedSchoolId", details.schoolId);
-    sessionStorage.setItem("schoolOpened", details.dateSchoolOpened);
+    sessionStorage.setItem("schoolOpened", details.schoolDetail[0].dateSchoolOpened);
     this.callAcademicYearsOnSchoolSelect();
     this.router.navigate(['/school/dashboards']);
   }
@@ -218,8 +217,9 @@ export class SelectBarComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this._onDestroy.next();
-    this._onDestroy.complete();
+    this.onDestroy.next();
+    this.onDestroy.complete();
+    this.schoolService.changeMessage(false);
   }
 }
 

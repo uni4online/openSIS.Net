@@ -189,12 +189,12 @@ export class AttendanceCodesComponent implements OnInit {
       if(res._failure){
         if(res._message==="NO RECORD FOUND"){
           this.attendanceCategories=[];
-          this.snackbar.open(res._message, 'LOL THANKS', {
+          this.snackbar.open(res._message, '', {
             duration: 10000
           });
          
         } else{
-          this.snackbar.open('Attendance Category List failed. ' + res._message, 'LOL THANKS', {
+          this.snackbar.open('Attendance Category List failed. ' + res._message, '', {
             duration: 10000
           });
         }
@@ -228,7 +228,7 @@ export class AttendanceCodesComponent implements OnInit {
           duration: 10000
         });
       }else if (res._failure) {
-        this.snackbar.open(res._message, 'LOL THANKS', {
+        this.snackbar.open(res._message, '', {
           duration: 10000
         });
       } else {
@@ -255,7 +255,7 @@ export class AttendanceCodesComponent implements OnInit {
         this.attendanceCodeList = new MatTableDataSource([]);
         this.attendanceCodeList.sort = this.sort;       
       } else{
-        this.snackbar.open('Attendance Codes failed. ' + res._message, 'LOL THANKS', {
+        this.snackbar.open('Attendance Codes failed. ' + res._message, '', {
           duration: 10000
         });
       }
@@ -279,7 +279,7 @@ export class AttendanceCodesComponent implements OnInit {
           duration: 10000
         });
       }else if (res._failure) {
-        this.snackbar.open(res._message, 'LOL THANKS', {
+        this.snackbar.open(res._message, '', {
           duration: 10000
         });
       } else {

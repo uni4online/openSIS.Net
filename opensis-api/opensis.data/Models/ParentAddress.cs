@@ -21,6 +21,6 @@ namespace opensis.data.Models
         public string UpdatedBy { get; set; }
 
         public virtual ParentInfo ParentInfo { get; set; }
-        public virtual StudentMaster StudentMaster { get; set; }
+        //public virtual StudentMaster StudentMaster { get; set; }
     }
 }

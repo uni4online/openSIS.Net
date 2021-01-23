@@ -1,9 +1,17 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import icClose from '@iconify/icons-ic/twotone-close';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
 import { TranslateService } from '@ngx-translate/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { SchoolPeriodService } from 'src/app/services/school-period.service';
+import { LoaderService } from 'src/app/services/loader.service';
+import { ValidationService } from 'src/app/pages/shared/validation.service';
+import { BlockPeriodAddViewModel } from 'src/app/models/schoolPeriodModel';
+import { getTime } from 'date-fns';
+import { SharedFunction } from 'src/app/pages/shared/shared-function';
 
 export const dateTimeCustomFormats = {
 };
@@ -19,13 +27,116 @@ export const dateTimeCustomFormats = {
 })
 export class EditPeriodComponent implements OnInit {
   icClose = icClose;
-  public dateTime2: Date;
-  public dateTime1: Date;
-  constructor(private dialogRef: MatDialogRef<EditPeriodComponent>, public translateService:TranslateService) {
+  form: FormGroup;
+  buttonType: string;
+  periodHeaderTitle: string;
+  currentBlockId: number = null;
+  blockPeriodAddViewModel: BlockPeriodAddViewModel = new BlockPeriodAddViewModel();
+
+  constructor(private dialogRef: MatDialogRef<EditPeriodComponent>,
+    public commonfunction:SharedFunction,
+    public translateService: TranslateService,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private fb: FormBuilder,
+    private snackbar: MatSnackBar,
+    private schoolPeriodService: SchoolPeriodService) {
     translateService.use('en');
+    this.form = fb.group({
+      periodId: [0],
+      title: ['', [Validators.required, ValidationService.noWhitespaceValidator]],
+      shortName: ['', [Validators.required]],
+      startTime: ['', [Validators.required]],
+      endTime: [, [Validators.required]]
+    })
+    if (data.periodData == null) {
+      this.currentBlockId = data.blockId;
+      this.periodHeaderTitle = "addNewPeriod";
+      this.buttonType = "submit";
+    }
+    else {
+      this.buttonType = "update";
+      this.periodHeaderTitle = "editPeriod";
+      this.blockPeriodAddViewModel.blockPeriod = data.periodData;
+      this.currentBlockId = data.periodData.blockId;
+      this.form.controls.periodId.patchValue(data.periodData.periodId);
+      this.form.controls.title.patchValue(data.periodData.periodTitle);
+      this.form.controls.shortName.patchValue(data.periodData.periodShortName);
+      this.form.controls.startTime.patchValue(new Date(data.periodData.periodStartTime));
+      this.form.controls.endTime.patchValue(new Date(data.periodData.periodEndTime));
+    }
+
   }
 
   ngOnInit(): void {
+  }
+
+  submit() {
+    if (this.form.valid) {
+      if (this.form.controls.periodId.value == 0) {
+        this.blockPeriodAddViewModel.blockPeriod.blockId = this.currentBlockId;
+        this.blockPeriodAddViewModel.blockPeriod.periodTitle = this.form.controls.title.value;
+        this.blockPeriodAddViewModel.blockPeriod.periodShortName = this.form.controls.shortName.value;
+        this.blockPeriodAddViewModel.blockPeriod.periodStartTime = this.form.controls.startTime.value.toString().substr(16, 5);
+        this.blockPeriodAddViewModel.blockPeriod.periodEndTime = this.form.controls.endTime.value.toString().substr(16, 5);
+        this.blockPeriodAddViewModel.blockPeriod.createdBy = sessionStorage.getItem('email');
+        this.schoolPeriodService.addBlockPeriod(this.blockPeriodAddViewModel).subscribe(
+          (res: BlockPeriodAddViewModel) => {
+            if (typeof (res) == 'undefined') {
+              this.snackbar.open('Period Creation failed. ' + sessionStorage.getItem("httpError"), '', {
+                duration: 10000
+              });
+            }
+            else {
+              if (res._failure) {
+                this.snackbar.open('Period Creation failed. ' + res._message, '', {
+                  duration: 10000
+                });
+              }
+              else {
+                this.snackbar.open('Period Successfully Created', '', {
+                  duration: 10000
+                });
+                this.dialogRef.close('submited');
+              }
+            }
+          }
+        )
+
+      }
+      else {
+        this.blockPeriodAddViewModel.blockPeriod.schoolId = +sessionStorage.getItem('selectedSchoolId');
+        this.blockPeriodAddViewModel.blockPeriod.tenantId = sessionStorage.getItem('tenantId');
+        this.blockPeriodAddViewModel.blockPeriod.periodId = this.form.controls.periodId.value;
+        this.blockPeriodAddViewModel.blockPeriod.blockId = this.currentBlockId;
+        this.blockPeriodAddViewModel.blockPeriod.periodTitle = this.form.controls.title.value;
+        this.blockPeriodAddViewModel.blockPeriod.periodShortName = this.form.controls.shortName.value;
+        this.blockPeriodAddViewModel.blockPeriod.periodStartTime = this.form.controls.startTime.value.toString().substr(16, 5);
+        this.blockPeriodAddViewModel.blockPeriod.periodEndTime = this.form.controls.endTime.value.toString().substr(16, 5);
+        this.blockPeriodAddViewModel.blockPeriod.updatedBy = sessionStorage.getItem('email');
+        this.schoolPeriodService.updateBlockPeriod(this.blockPeriodAddViewModel).subscribe(
+          (res: BlockPeriodAddViewModel) => {
+            if (typeof (res) == 'undefined') {
+              this.snackbar.open('Period Updation failed. ' + sessionStorage.getItem("httpError"), '', {
+                duration: 10000
+              });
+            }
+            else {
+              if (res._failure) {
+                this.snackbar.open('Period Updation failed. ' + res._message, '', {
+                  duration: 10000
+                });
+              }
+              else {
+                this.snackbar.open('' +res._message+ '', '', {
+                  duration: 10000
+                });
+                this.dialogRef.close('submited');
+              }
+            }
+          }
+        );
+      }
+    }
   }
 
 }

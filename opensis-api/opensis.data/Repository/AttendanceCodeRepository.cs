@@ -24,7 +24,17 @@ namespace opensis.data.Repository
         /// <returns></returns>
         public AttendanceCodeAddViewModel AddAttendanceCode(AttendanceCodeAddViewModel attendanceCodeAddViewModel)
         {
-            int? AttendanceCodeId = Utility.GetMaxPK(this.context, new Func<AttendanceCode, int>(x => x.AttendanceCode1));
+            //int? AttendanceCodeId = Utility.GetMaxPK(this.context, new Func<AttendanceCode, int>(x => x.AttendanceCode1));
+
+            int? AttendanceCodeId = 1;
+
+            var AttendanceCodeData = this.context?.AttendanceCode.Where(x => x.TenantId == attendanceCodeAddViewModel.attendanceCode.TenantId && x.SchoolId == attendanceCodeAddViewModel.attendanceCode.SchoolId).OrderByDescending(x => x.AttendanceCode1).FirstOrDefault();
+
+            if (AttendanceCodeData != null)
+            {
+                AttendanceCodeId = AttendanceCodeData.AttendanceCode1 + 1;
+            }
+
             attendanceCodeAddViewModel.attendanceCode.AttendanceCode1 = (int)AttendanceCodeId;
             attendanceCodeAddViewModel.attendanceCode.LastUpdated = DateTime.UtcNow;            
             this.context?.AttendanceCode.Add(attendanceCodeAddViewModel.attendanceCode);
@@ -74,17 +84,10 @@ namespace opensis.data.Repository
             try
             {
                 var attendanceCodeUpdate = this.context?.AttendanceCode.FirstOrDefault(x => x.TenantId == attendanceCodeAddViewModel.attendanceCode.TenantId && x.SchoolId == attendanceCodeAddViewModel.attendanceCode.SchoolId && x.AttendanceCode1 == attendanceCodeAddViewModel.attendanceCode.AttendanceCode1);
-                attendanceCodeUpdate.AttendanceCategoryId = attendanceCodeAddViewModel.attendanceCode.AttendanceCategoryId;
-                attendanceCodeUpdate.AcademicYear = attendanceCodeAddViewModel.attendanceCode.AcademicYear;
-                attendanceCodeUpdate.Title = attendanceCodeAddViewModel.attendanceCode.Title;
-                attendanceCodeUpdate.ShortName = attendanceCodeAddViewModel.attendanceCode.ShortName;
-                attendanceCodeUpdate.Type = attendanceCodeAddViewModel.attendanceCode.Type;
-                attendanceCodeUpdate.StateCode = attendanceCodeAddViewModel.attendanceCode.StateCode;
-                attendanceCodeUpdate.DefaultCode = attendanceCodeAddViewModel.attendanceCode.DefaultCode;
-                attendanceCodeUpdate.AllowEntryBy = attendanceCodeAddViewModel.attendanceCode.AllowEntryBy;
-                attendanceCodeUpdate.SortOrder = attendanceCodeAddViewModel.attendanceCode.SortOrder;
-                attendanceCodeUpdate.LastUpdated = DateTime.UtcNow;
-                attendanceCodeUpdate.UpdatedBy = attendanceCodeAddViewModel.attendanceCode.UpdatedBy;
+                
+                attendanceCodeAddViewModel.attendanceCode.LastUpdated = DateTime.Now;
+                attendanceCodeAddViewModel.attendanceCode.AttendanceCategoryId = attendanceCodeUpdate.AttendanceCategoryId;
+                this.context.Entry(attendanceCodeUpdate).CurrentValues.SetValues(attendanceCodeAddViewModel.attendanceCode);
                 this.context?.SaveChanges();
                 attendanceCodeAddViewModel._failure = false;
                 attendanceCodeAddViewModel._message = "Entity Updated";
@@ -162,7 +165,17 @@ namespace opensis.data.Repository
         /// <returns></returns>
         public AttendanceCodeCategoriesAddViewModel AddAttendanceCodeCategories(AttendanceCodeCategoriesAddViewModel attendanceCodeCategoriesAddViewModel)
         {
-            int? AttendanceCodeCategoryId = Utility.GetMaxPK(this.context, new Func<AttendanceCodeCategories, int>(x => x.AttendanceCategoryId));
+            //int? AttendanceCodeCategoryId = Utility.GetMaxPK(this.context, new Func<AttendanceCodeCategories, int>(x => x.AttendanceCategoryId));
+
+            int? AttendanceCodeCategoryId = 1;
+
+            var AttendanceCodeCategoriesData = this.context?.AttendanceCodeCategories.Where(x => x.TenantId == attendanceCodeCategoriesAddViewModel.attendanceCodeCategories.TenantId && x.SchoolId == attendanceCodeCategoriesAddViewModel.attendanceCodeCategories.SchoolId).OrderByDescending(x => x.AttendanceCategoryId).FirstOrDefault();
+
+            if (AttendanceCodeCategoriesData != null)
+            {
+                AttendanceCodeCategoryId = AttendanceCodeCategoriesData.AttendanceCategoryId + 1;
+            }
+
             attendanceCodeCategoriesAddViewModel.attendanceCodeCategories.AttendanceCategoryId = (int)AttendanceCodeCategoryId;
             attendanceCodeCategoriesAddViewModel.attendanceCodeCategories.LastUpdated = DateTime.UtcNow;
             this.context?.AttendanceCodeCategories.Add(attendanceCodeCategoriesAddViewModel.attendanceCodeCategories);
@@ -211,10 +224,9 @@ namespace opensis.data.Repository
             try
             {
                 var attendanceCodeCategoriesUpdate = this.context?.AttendanceCodeCategories.FirstOrDefault(x => x.TenantId == attendanceCodeCategoriesAddViewModel.attendanceCodeCategories.TenantId && x.SchoolId == attendanceCodeCategoriesAddViewModel.attendanceCodeCategories.SchoolId && x.AttendanceCategoryId == attendanceCodeCategoriesAddViewModel.attendanceCodeCategories.AttendanceCategoryId);
-                attendanceCodeCategoriesUpdate.AcademicYear = attendanceCodeCategoriesAddViewModel.attendanceCodeCategories.AcademicYear;
-                attendanceCodeCategoriesUpdate.Title = attendanceCodeCategoriesAddViewModel.attendanceCodeCategories.Title;
-                attendanceCodeCategoriesUpdate.LastUpdated = DateTime.UtcNow;
-                attendanceCodeCategoriesUpdate.UpdatedBy = attendanceCodeCategoriesAddViewModel.attendanceCodeCategories.UpdatedBy;
+                
+                attendanceCodeCategoriesAddViewModel.attendanceCodeCategories.LastUpdated = DateTime.Now;
+                this.context.Entry(attendanceCodeCategoriesUpdate).CurrentValues.SetValues(attendanceCodeCategoriesAddViewModel.attendanceCodeCategories);
                 this.context?.SaveChanges();
                 attendanceCodeCategoriesAddViewModel._failure = false;
                 attendanceCodeCategoriesAddViewModel._message = "Entity Updated";

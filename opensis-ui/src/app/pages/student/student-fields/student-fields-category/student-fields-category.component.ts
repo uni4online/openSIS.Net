@@ -8,6 +8,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { CustomFieldService } from '../../../../services/custom-field.service';
 import {FieldsCategoryAddView} from '../../../../models/fieldsCategoryModel';
 import {FieldCategoryModuleEnum} from '../../../../enums/field-category-module.enum'
+import { ValidationService } from 'src/app/pages/shared/validation.service';
 
 @Component({
   selector: 'vex-student-fields-category',
@@ -35,7 +36,7 @@ export class StudentFieldsCategoryComponent implements OnInit {
      ) { 
       this.form= fb.group({
         categoryId:[0],
-        title:['',[Validators.required]],
+        title:['',[Validators.required,ValidationService.noWhitespaceValidator]],
         sortOrder:['',[Validators.required,Validators.min(1)]]
       });
       if(data==null){
@@ -69,7 +70,7 @@ export class StudentFieldsCategoryComponent implements OnInit {
             }
             else{
               if (res._failure) {
-                this.snackbar.open('field category failed. ' + res._message, 'LOL THANKS', {
+                this.snackbar.open('field category failed. ' + res._message, '', {
                   duration: 10000
                 });
               } 
@@ -97,7 +98,7 @@ export class StudentFieldsCategoryComponent implements OnInit {
             }
             else{
               if (res._failure) {
-                this.snackbar.open('field category failed. ' + res._message, 'LOL THANKS', {
+                this.snackbar.open('field category failed. ' + res._message, '', {
                   duration: 10000
                 });
               } 

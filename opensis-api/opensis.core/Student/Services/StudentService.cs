@@ -79,7 +79,7 @@ namespace opensis.core.Student.Services
                 if (TokenManager.CheckToken(pageResult._tenantName, pageResult._token))
                 {
                     studentList = this.studentRepository.GetAllStudentList(pageResult);
-                    if (studentList.getStudentListForViews.Count > 0)
+                    if (studentList.studentMaster.Count > 0)
                     {
                         studentList._message = SUCCESS;
                         studentList._failure = false;

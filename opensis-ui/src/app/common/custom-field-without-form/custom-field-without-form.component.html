@@ -102,9 +102,9 @@
 
 <!--Student Module-->
 
-<div *ngIf="studentAddModel.fieldsCategoryList && module =='Student'">
+<div *ngIf="studentAddModel?.fieldsCategoryList && module =='Student'">
     <div class="py-6" @stagger fxLayout="column"
-        *ngIf="studentAddModel.fieldsCategoryList[categoryId]?.customFields.length > 0">
+        *ngIf="studentAddModel?.fieldsCategoryList[categoryId]?.customFields.length > 0">
         <ul *ngIf="studentCreateMode==schoolCreate.EDIT" class="md:grid md:grid-cols-2 md:col-gap-8 md:row-gap-0 mx-4">
             <fieldset ngModelGroup="vex-custom-field-without-form">
                 <li *ngFor="let customField of studentAddModel.fieldsCategoryList[categoryId]?.customFields; let index = index"
@@ -195,7 +195,7 @@
                 *ngFor="let customField of studentAddModel.fieldsCategoryList[categoryId]?.customFields; let index = index">
                 <label class="text-sm leading-5 text-gray">{{customField.title}}</label>
                 <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
-                    {{studentAddModel.fieldsCategoryList[categoryId].customFields[index]?.customFieldsValue[0].customFieldValue | EmtyValueCheckPipe}}
+                    {{studentAddModel?.fieldsCategoryList[categoryId]?.customFields[index]?.customFieldsValue[0].customFieldValue | EmtyValueCheckPipe}}
                 </p>
             </li>
         </ul>
@@ -204,9 +204,9 @@
 <!---->
 
 <!--Start Staff Module-->
-<div *ngIf="staffAddModel.fieldsCategoryList && module =='Staff'">
+<div *ngIf="staffAddModel?.fieldsCategoryList && module =='Staff'">
     <div class="py-6" @stagger fxLayout="column"
-        *ngIf="staffAddModel.fieldsCategoryList[categoryId]?.customFields.length > 0">
+        *ngIf="staffAddModel?.fieldsCategoryList[categoryId]?.customFields.length > 0">
         <ul *ngIf="staffCreateMode==schoolCreate.EDIT" class="md:grid md:grid-cols-2 md:col-gap-8 md:row-gap-0 mx-4">
             <fieldset ngModelGroup="vex-custom-field-without-form">
                 <li *ngFor="let customField of staffAddModel.fieldsCategoryList[categoryId]?.customFields; let index = index"
@@ -294,10 +294,10 @@
 
         <ul *ngIf="staffCreateMode==schoolCreate.VIEW" class="grid md:grid-cols-3 col-gap-8 row-gap-10 my-3 mx-4">
             <li
-                *ngFor="let customField of staffAddModel.fieldsCategoryList[categoryId]?.customFields; let index = index">
+                *ngFor="let customField of staffAddModel?.fieldsCategoryList[categoryId]?.customFields; let index = index">
                 <label class="text-sm leading-5 text-gray">{{customField.title}}</label>
                 <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
-                    {{staffAddModel.fieldsCategoryList[categoryId].customFields[index]?.customFieldsValue[0].customFieldValue | EmtyValueCheckPipe}}
+                    {{staffAddModel?.fieldsCategoryList[categoryId]?.customFields[index]?.customFieldsValue[0].customFieldValue | EmtyValueCheckPipe}}
                 </p>
             </li>
         </ul>

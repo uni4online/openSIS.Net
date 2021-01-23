@@ -27,29 +27,29 @@ namespace opensis.core.CourseManager.Services
         /// </summary>
         /// <param name="programAddViewModel"></param>
         /// <returns></returns>
-        public ProgramAddViewModel AddProgram(ProgramAddViewModel programAddViewModel)
-        {
-            ProgramAddViewModel ProgramAddModel = new ProgramAddViewModel();
-            try
-            {
-                if (TokenManager.CheckToken(programAddViewModel._tenantName, programAddViewModel._token))
-                {
-                    ProgramAddModel = this.courseManagerRepository.AddProgram(programAddViewModel);
-                }
-                else
-                {
-                    ProgramAddModel._failure = true;
-                    ProgramAddModel._message = TOKENINVALID;
-                }
-            }
-            catch (Exception es)
-            {
+        //public ProgramAddViewModel AddProgram(ProgramAddViewModel programAddViewModel)
+        //{
+        //    ProgramAddViewModel ProgramAddModel = new ProgramAddViewModel();
+        //    try
+        //    {
+        //        if (TokenManager.CheckToken(programAddViewModel._tenantName, programAddViewModel._token))
+        //        {
+        //            ProgramAddModel = this.courseManagerRepository.AddProgram(programAddViewModel);
+        //        }
+        //        else
+        //        {
+        //            ProgramAddModel._failure = true;
+        //            ProgramAddModel._message = TOKENINVALID;
+        //        }
+        //    }
+        //    catch (Exception es)
+        //    {
 
-                ProgramAddModel._failure = true;
-                ProgramAddModel._message = es.Message;
-            }
-            return ProgramAddModel;
-        }
+        //        ProgramAddModel._failure = true;
+        //        ProgramAddModel._message = es.Message;
+        //    }
+        //    return ProgramAddModel;
+        //}
         /// <summary>
         /// Get All Program
         /// </summary>
@@ -83,14 +83,14 @@ namespace opensis.core.CourseManager.Services
         /// </summary>
         /// <param name="programAddViewModel"></param>
         /// <returns></returns>
-        public ProgramAddViewModel UpdateProgram(ProgramAddViewModel programAddViewModel)
+        public ProgramListViewModel AddEditProgram(ProgramListViewModel programListViewModel)
         {
-            ProgramAddViewModel ProgramUpdateModel = new ProgramAddViewModel();
+            ProgramListViewModel ProgramUpdateModel = new ProgramListViewModel();
             try
             {
-                if (TokenManager.CheckToken(programAddViewModel._tenantName, programAddViewModel._token))
+                if (TokenManager.CheckToken(programListViewModel._tenantName, programListViewModel._token))
                 {
-                    ProgramUpdateModel = this.courseManagerRepository.UpdateProgram(programAddViewModel);
+                    ProgramUpdateModel = this.courseManagerRepository.AddEditProgram(programListViewModel);
                 }
                 else
                 {
@@ -139,40 +139,40 @@ namespace opensis.core.CourseManager.Services
         /// </summary>
         /// <param name="subjectAddViewModel"></param>
         /// <returns></returns>
-        public SubjectAddViewModel AddSubject(SubjectAddViewModel subjectAddViewModel)
-        {
-            SubjectAddViewModel subjectAdd = new SubjectAddViewModel();
+        //public SubjectAddViewModel AddSubject(SubjectAddViewModel subjectAddViewModel)
+        //{
+        //    SubjectAddViewModel subjectAdd = new SubjectAddViewModel();
 
-            if (TokenManager.CheckToken(subjectAddViewModel._tenantName, subjectAddViewModel._token))
-            {
-                subjectAdd = this.courseManagerRepository.AddSubject(subjectAddViewModel);
-            }
-            else
-            {
-                subjectAdd._failure = true;
-                subjectAdd._message = TOKENINVALID;
-            }
-            return subjectAdd;
-        }
+        //    if (TokenManager.CheckToken(subjectAddViewModel._tenantName, subjectAddViewModel._token))
+        //    {
+        //        subjectAdd = this.courseManagerRepository.AddSubject(subjectAddViewModel);
+        //    }
+        //    else
+        //    {
+        //        subjectAdd._failure = true;
+        //        subjectAdd._message = TOKENINVALID;
+        //    }
+        //    return subjectAdd;
+        //}
 
         /// <summary>
-        /// Update Subject
+        /// Add & Update Subject
         /// </summary>
-        /// <param name="subjectAddViewModel"></param>
+        /// <param name="subjectListViewModel"></param>
         /// <returns></returns>
-        public SubjectAddViewModel UpdateSubject(SubjectAddViewModel subjectAddViewModel)
+        public SubjectListViewModel AddEditSubject(SubjectListViewModel subjectListViewModel)
         {
-            SubjectAddViewModel subjectUpdate = new SubjectAddViewModel();
-            if (TokenManager.CheckToken(subjectAddViewModel._tenantName, subjectAddViewModel._token))
+            SubjectListViewModel subjectAddUpdate = new SubjectListViewModel();
+            if (TokenManager.CheckToken(subjectListViewModel._tenantName, subjectListViewModel._token))
             {
-                subjectUpdate = this.courseManagerRepository.UpdateSubject(subjectAddViewModel);
+                subjectAddUpdate = this.courseManagerRepository.AddEditSubject(subjectListViewModel);
             }
             else
             {
-                subjectUpdate._failure = true;
-                subjectUpdate._message = TOKENINVALID;
+                subjectAddUpdate._failure = true;
+                subjectAddUpdate._message = TOKENINVALID;
             }
-            return subjectUpdate;
+            return subjectAddUpdate;
         }
 
         /// <summary>
@@ -213,6 +213,119 @@ namespace opensis.core.CourseManager.Services
                 subjectDelete._message = TOKENINVALID;
             }
             return subjectDelete;
+        }
+
+        /// <summary>
+        /// Add Course
+        /// </summary>
+        /// <param name="courseAddViewModel"></param>
+        /// <returns></returns>
+        public CourseAddViewModel AddCourse(CourseAddViewModel courseAddViewModel)
+        {
+            CourseAddViewModel courseAdd = new CourseAddViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(courseAddViewModel._tenantName, courseAddViewModel._token))
+                {
+                    courseAdd = this.courseManagerRepository.AddCourse(courseAddViewModel);
+                }
+                else
+                {
+                    courseAdd._failure = true;
+                    courseAdd._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                courseAdd._failure = true;
+                courseAdd._message = es.Message;
+            }
+            return courseAdd;
+        }
+
+        /// <summary>
+        /// Update Course
+        /// </summary>
+        /// <param name="courseAddViewModel"></param>
+        /// <returns></returns>
+        public CourseAddViewModel UpdateCourse(CourseAddViewModel courseAddViewModel)
+        {
+            CourseAddViewModel courseUpdate = new CourseAddViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(courseAddViewModel._tenantName, courseAddViewModel._token))
+                {
+                    courseUpdate = this.courseManagerRepository.UpdateCourse(courseAddViewModel);
+                }
+                else
+                {
+                    courseUpdate._failure = true;
+                    courseUpdate._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                courseUpdate._failure = true;
+                courseUpdate._message = es.Message;
+            }
+            return courseUpdate;
+        }
+
+        /// <summary>
+        /// Delete Course
+        /// </summary>
+        /// <param name="courseAddViewModel"></param>
+        /// <returns></returns>
+        public CourseAddViewModel DeleteCourse(CourseAddViewModel courseAddViewModel)
+        {
+            CourseAddViewModel courseDelete = new CourseAddViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(courseAddViewModel._tenantName, courseAddViewModel._token))
+                {
+                    courseDelete = this.courseManagerRepository.DeleteCourse(courseAddViewModel);
+                }
+                else
+                {
+                    courseDelete._failure = true;
+                    courseDelete._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                courseDelete._failure = true;
+                courseDelete._message = es.Message;
+            }
+            return courseDelete;
+        }
+
+        /// <summary>
+        /// Get All Course List
+        /// </summary>
+        /// <param name="courseListViewModel"></param>
+        /// <returns></returns>
+        public CourseListViewModel GetAllCourseList(CourseListViewModel courseListViewModel)
+        {
+            CourseListViewModel CourseListModel = new CourseListViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(courseListViewModel._tenantName, courseListViewModel._token))
+                {
+                    CourseListModel = this.courseManagerRepository.GetAllCourseList(courseListViewModel);
+                }
+                else
+                {
+                    CourseListModel._failure = true;
+                    CourseListModel._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                CourseListModel._failure = true;
+                CourseListModel._message = es.Message;
+            }
+
+            return CourseListModel;
         }
     }
 }

@@ -8,10 +8,11 @@ namespace opensis.data.Models
     {
         public StudentMaster()
         {
-            ParentAddress = new HashSet<ParentAddress>();
+            //ParentAddress = new HashSet<ParentAddress>();
             StudentComments = new HashSet<StudentComments>();
             StudentDocuments = new HashSet<StudentDocuments>();
-            
+            StudentEnrollment = new HashSet<StudentEnrollment>();
+
         }
         public Guid TenantId { get; set; }
         public int SchoolId { get; set; }
@@ -102,8 +103,9 @@ namespace opensis.data.Models
         public virtual Language ThirdLanguage { get; set; }
         public virtual Sections Sections { get; set; }
 
-        public virtual ICollection<ParentAddress> ParentAddress { get; set; }
+        //public virtual ICollection<ParentAddress> ParentAddress { get; set; }
         public virtual ICollection<StudentComments> StudentComments { get; set; }
         public virtual ICollection<StudentDocuments> StudentDocuments { get; set; }
+        public virtual ICollection<StudentEnrollment> StudentEnrollment { get; set; }
     }
 }

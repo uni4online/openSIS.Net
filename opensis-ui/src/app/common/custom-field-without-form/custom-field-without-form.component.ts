@@ -96,17 +96,16 @@ export class CustomFieldWithoutFormComponent implements OnInit {
 
   checkStudentCustomValue() {
     if (this.studentAddModel !== undefined) {
-      let catId = this.categoryId;
-      if (this.studentAddModel.fieldsCategoryList !== undefined && this.studentAddModel.fieldsCategoryList !== null) {
+      if (this.studentAddModel?.fieldsCategoryList !== undefined && this.studentAddModel?.fieldsCategoryList !== null) {
 
-        for (let i = 0; i < this.studentAddModel.fieldsCategoryList[this.categoryId]?.customFields.length; i++) {
-          if (this.studentAddModel.fieldsCategoryList[catId].customFields[i]?.customFieldsValue.length == 0) {
+        for (let studentCustomField of this.studentAddModel.fieldsCategoryList[this.categoryId]?.customFields) {
+          if (studentCustomField?.customFieldsValue.length == 0) {
 
-            this.studentAddModel.fieldsCategoryList[catId]?.customFields[i]?.customFieldsValue.push(new CustomFieldsValueModel());
+            studentCustomField?.customFieldsValue.push(new CustomFieldsValueModel());
           }
           else {
-            if (this.studentAddModel.fieldsCategoryList[catId]?.customFields[i]?.type === 'Multiple SelectBox') {
-              this.studentMultiSelectValue = this.studentAddModel.fieldsCategoryList[this.categoryId].customFields[i]?.customFieldsValue[0].customFieldValue.split('|');
+            if (studentCustomField?.type === 'Multiple SelectBox') {
+              this.studentMultiSelectValue = studentCustomField?.customFieldsValue[0].customFieldValue.split('|');
 
             }
           }
@@ -118,17 +117,16 @@ export class CustomFieldWithoutFormComponent implements OnInit {
 
   checkStaffCustomValue(){
     if (this.staffAddModel !== undefined) {
-      let catId = this.categoryId;
-      if (this.staffAddModel.fieldsCategoryList !== undefined && this.staffAddModel.fieldsCategoryList !== null) {
+      if (this.staffAddModel?.fieldsCategoryList !== undefined && this.staffAddModel?.fieldsCategoryList !== null) {
 
-        for (let i = 0; i < this.staffAddModel.fieldsCategoryList[this.categoryId]?.customFields.length; i++) {
-          if (this.staffAddModel.fieldsCategoryList[catId].customFields[i]?.customFieldsValue.length == 0) {
+        for (let staffCustomField of this.staffAddModel?.fieldsCategoryList[this.categoryId]?.customFields) {
+          if (staffCustomField?.customFieldsValue.length == 0) {
 
-            this.staffAddModel.fieldsCategoryList[catId]?.customFields[i]?.customFieldsValue.push(new CustomFieldsValueModel());
+            staffCustomField?.customFieldsValue.push(new CustomFieldsValueModel());
           }
           else {
-            if (this.staffAddModel.fieldsCategoryList[catId]?.customFields[i]?.type === 'Multiple SelectBox') {
-              this.staffMultiSelectValue = this.staffAddModel.fieldsCategoryList[this.categoryId].customFields[i]?.customFieldsValue[0].customFieldValue.split('|');
+            if (staffCustomField?.type === 'Multiple SelectBox') {
+              this.staffMultiSelectValue = staffCustomField?.customFieldsValue[0].customFieldValue.split('|');
               
             }
           }
@@ -141,21 +139,20 @@ export class CustomFieldWithoutFormComponent implements OnInit {
   checkNgOnInitCustomValue() {
 
     if (this.schoolDetailsForViewAndEdit !== undefined) {
-      let catId = this.categoryId;
       if (this.schoolDetailsForViewAndEdit.schoolMaster.fieldsCategory !== undefined) {
         this.schoolAddViewModel = this.schoolDetailsForViewAndEdit;
         if (this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId]?.customFields !== undefined) {
 
 
-          for (let i = 0; i < this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].customFields.length; i++) {
-            if (this.schoolAddViewModel.schoolMaster.fieldsCategory[catId].customFields[i].customFieldsValue.length == 0) {
+          for (let schoolCustomField of this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].customFields) {
+            if (schoolCustomField.customFieldsValue.length == 0) {
 
-              this.schoolAddViewModel.schoolMaster.fieldsCategory[catId].customFields[i].customFieldsValue.push(new CustomFieldsValueModel());
+              schoolCustomField.customFieldsValue.push(new CustomFieldsValueModel());
 
             }
             else {
-              if (this.schoolAddViewModel.schoolMaster.fieldsCategory[catId]?.customFields[i]?.type === 'Multiple SelectBox') {
-                this.schoolMultiSelectValue = this.schoolAddViewModel.schoolMaster.fieldsCategory[catId]?.customFields[i]?.customFieldsValue[0].customFieldValue.split('|');
+              if (schoolCustomField?.type === 'Multiple SelectBox') {
+                this.schoolMultiSelectValue = schoolCustomField?.customFieldsValue[0].customFieldValue.split('|');
   
               }
             }
@@ -167,20 +164,19 @@ export class CustomFieldWithoutFormComponent implements OnInit {
 
   checkCustomValue() {
     if (this.schoolAddViewModel !== undefined) {
-      let catId = this.categoryId;
       if (this.schoolAddViewModel.schoolMaster.fieldsCategory !== undefined && this.schoolAddViewModel.schoolMaster.fieldsCategory !== null) {
 
         if (this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId]?.customFields !== undefined) {
 
 
-          for (let i = 0; i < this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].customFields.length; i++) {
-            if (this.schoolAddViewModel.schoolMaster.fieldsCategory[catId].customFields[i].customFieldsValue.length == 0) {
+          for (let schoolCustomField of this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].customFields) {
+            if (schoolCustomField.customFieldsValue.length == 0) {
 
-              this.schoolAddViewModel.schoolMaster.fieldsCategory[catId].customFields[i].customFieldsValue.push(new CustomFieldsValueModel());
+              schoolCustomField.customFieldsValue.push(new CustomFieldsValueModel());
             }
             else {
-              if (this.schoolAddViewModel.schoolMaster.fieldsCategory[catId]?.customFields[i]?.type === 'Multiple SelectBox') {
-                this.schoolMultiSelectValue = this.schoolAddViewModel.schoolMaster.fieldsCategory[catId]?.customFields[i]?.customFieldsValue[0].customFieldValue.split('|');
+              if (schoolCustomField?.type === 'Multiple SelectBox') {
+                this.schoolMultiSelectValue = schoolCustomField?.customFieldsValue[0].customFieldValue.split('|');
   
               }
             }

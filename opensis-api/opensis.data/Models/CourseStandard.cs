@@ -13,7 +13,7 @@ namespace opensis.data.Models
         public DateTime? CreatedOn { get; set; }
         public string UpdatedBy { get; set; }
         public DateTime? UpdatedOn { get; set; }
-
+        public virtual Course Course { get; set; }
         public virtual GradeUsStandard GradeUsStandard { get; set; }
     }
 }

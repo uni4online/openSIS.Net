@@ -1912,8 +1912,9 @@ namespace opensis.data.Migrations.MySqlMigrations
 
                     b.Property<string>("CourseCategory")
                         .HasColumnName("course_category")
-                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
-                        .HasMaxLength(100)
+                        .HasColumnType("varchar(8) CHARACTER SET utf8mb4")
+                        .HasComment("'Core' or 'Elective'")
+                        .HasMaxLength(8)
                         .IsUnicode(false);
 
                     b.Property<string>("CourseDescription")
@@ -1960,15 +1961,26 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasColumnName("created_on")
                         .HasColumnType("datetime");
 
-                    b.Property<string>("CreditHours")
+                    b.Property<double?>("CreditHours")
                         .HasColumnName("credit_hours")
-                        .HasColumnType("char(5) CHARACTER SET utf8mb4")
-                        .IsFixedLength(true)
-                        .HasMaxLength(5);
+                        .HasColumnType("double");
 
                     b.Property<bool?>("IsCourseActive")
                         .HasColumnName("is_course_active")
                         .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Standard")
+                        .HasColumnName("standard")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasComment("choose between US Common Core library or school specific standards library.")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("StandardRefNo")
+                        .HasColumnName("standard_ref_no")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
 
                     b.Property<string>("UpdatedBy")
                         .HasColumnName("updated_by")
@@ -2506,8 +2518,8 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasColumnName("sort_order")
                         .HasColumnType("int");
 
-                    b.Property<string>("Tite")
-                        .HasColumnName("tite")
+                    b.Property<string>("Title")
+                        .HasColumnName("title")
                         .HasColumnType("longtext CHARACTER SET utf8mb4")
                         .IsUnicode(false);
 
@@ -2827,6 +2839,61 @@ namespace opensis.data.Migrations.MySqlMigrations
                     b.HasIndex("IscedGradeLevel");
 
                     b.ToTable("gradelevels");
+                });
+
+            modelBuilder.Entity("opensis.data.Models.HonorRolls", b =>
+                {
+                    b.Property<Guid>("TenantId")
+                        .HasColumnName("tenant_id")
+                        .HasColumnType("char(36)");
+
+                    b.Property<int>("SchoolId")
+                        .HasColumnName("school_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("HonorRollId")
+                        .HasColumnName("honor_roll_id")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Breakoff")
+                        .HasColumnName("breakoff")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnName("created_by")
+                        .HasColumnType("varchar(150) CHARACTER SET utf8mb4")
+                        .HasMaxLength(150)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnName("created_on")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("HonorRoll")
+                        .HasColumnName("honor_roll")
+                        .HasColumnType("varchar(20) CHARACTER SET utf8mb4")
+                        .HasMaxLength(20)
+                        .IsUnicode(false);
+
+                    b.Property<int>("MarkingPeriodId")
+                        .HasColumnName("marking_period_id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnName("updated_by")
+                        .HasColumnType("varchar(150) CHARACTER SET utf8mb4")
+                        .HasMaxLength(150)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnName("updated_on")
+                        .HasColumnType("datetime");
+
+                    b.HasKey("TenantId", "SchoolId", "HonorRollId");
+
+                    b.HasIndex("TenantId", "SchoolId", "MarkingPeriodId");
+
+                    b.ToTable("honor_rolls");
                 });
 
             modelBuilder.Entity("opensis.data.Models.Language", b =>
@@ -4214,8 +4281,6 @@ namespace opensis.data.Migrations.MySqlMigrations
 
                     b.HasKey("TenantId", "SchoolId", "ParentId", "StudentId")
                         .HasName("PK_parent_address_1");
-
-                    b.HasIndex("TenantId", "SchoolId", "StudentId");
 
                     b.ToTable("parent_address");
                 });
@@ -6208,6 +6273,10 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasMaxLength(50)
                         .IsUnicode(false);
 
+                    b.Property<bool?>("IsActive")
+                        .HasColumnName("is_active")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<DateTime?>("LastUpdated")
                         .HasColumnName("last_updated")
                         .HasColumnType("datetime");
@@ -6252,6 +6321,8 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .IsUnicode(false);
 
                     b.HasKey("TenantId", "SchoolId", "StudentId", "EnrollmentId");
+
+                    b.HasIndex("TenantId", "SchoolId", "StudentGuid");
 
                     b.ToTable("student_enrollment");
                 });
@@ -6350,7 +6421,7 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .IsUnicode(false);
 
                     b.Property<string>("BusNo")
-                        .HasColumnName("bus_No")
+                        .HasColumnName("bus_no")
                         .HasColumnType("varchar(15) CHARACTER SET utf8mb4")
                         .HasMaxLength(15)
                         .IsUnicode(false);
@@ -6758,7 +6829,8 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasColumnType("longtext CHARACTER SET utf8mb4")
                         .IsUnicode(false);
 
-                    b.HasKey("TenantId", "SchoolId", "StudentId");
+                    b.HasKey("TenantId", "SchoolId", "StudentId")
+                        .HasName("PK_student_master_1");
 
                     b.HasIndex("FirstLanguageId");
 
@@ -6767,6 +6839,10 @@ namespace opensis.data.Migrations.MySqlMigrations
                     b.HasIndex("ThirdLanguageId");
 
                     b.HasIndex("TenantId", "SchoolId", "SectionId");
+
+                    b.HasIndex("TenantId", "SchoolId", "StudentGuid")
+                        .IsUnique()
+                        .HasName("IX_student_master");
 
                     b.ToTable("student_master");
                 });
@@ -6995,6 +7071,12 @@ namespace opensis.data.Migrations.MySqlMigrations
 
             modelBuilder.Entity("opensis.data.Models.CourseStandard", b =>
                 {
+                    b.HasOne("opensis.data.Models.Course", "Course")
+                        .WithMany("CourseStandard")
+                        .HasForeignKey("TenantId", "SchoolId", "CourseId")
+                        .HasConstraintName("FK_course_standard_course")
+                        .IsRequired();
+
                     b.HasOne("opensis.data.Models.GradeUsStandard", "GradeUsStandard")
                         .WithMany("CourseStandard")
                         .HasForeignKey("TenantId", "SchoolId", "StandardRefNo")
@@ -7085,6 +7167,15 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("opensis.data.Models.HonorRolls", b =>
+                {
+                    b.HasOne("opensis.data.Models.SchoolYears", "SchoolYears")
+                        .WithMany("HonorRolls")
+                        .HasForeignKey("TenantId", "SchoolId", "MarkingPeriodId")
+                        .HasConstraintName("FK_honor_rolls_honor_rolls")
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("opensis.data.Models.Membership", b =>
                 {
                     b.HasOne("opensis.data.Models.SchoolMaster", "SchoolMaster")
@@ -7100,12 +7191,6 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .WithMany("ParentAddress")
                         .HasForeignKey("TenantId", "SchoolId", "ParentId")
                         .HasConstraintName("FK_parent_address_parent_info")
-                        .IsRequired();
-
-                    b.HasOne("opensis.data.Models.StudentMaster", "StudentMaster")
-                        .WithMany("ParentAddress")
-                        .HasForeignKey("TenantId", "SchoolId", "StudentId")
-                        .HasConstraintName("FK_parent_address_student_master")
                         .IsRequired();
                 });
 
@@ -7252,6 +7337,16 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .WithMany("StudentDocuments")
                         .HasForeignKey("TenantId", "SchoolId", "StudentId")
                         .HasConstraintName("FK_student_documents_student_master")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("opensis.data.Models.StudentEnrollment", b =>
+                {
+                    b.HasOne("opensis.data.Models.StudentMaster", "StudentMaster")
+                        .WithMany("StudentEnrollment")
+                        .HasForeignKey("TenantId", "SchoolId", "StudentGuid")
+                        .HasConstraintName("FK_student_enrollment_student_master")
+                        .HasPrincipalKey("TenantId", "SchoolId", "StudentGuid")
                         .IsRequired();
                 });
 

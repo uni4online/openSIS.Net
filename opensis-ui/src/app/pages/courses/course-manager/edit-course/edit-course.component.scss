@@ -16,8 +16,16 @@
                     @apply opacity-100;
                     margin-bottom: -1px;
                 }
-            }            
+            }
 
+        }
+    }
+}
+
+.mat-green {
+    .mat-slide-toggle.mat-checked {
+        .mat-slide-toggle-thumb {
+            background-color: rgb(76, 175, 80) !important;
         }
     }
 }

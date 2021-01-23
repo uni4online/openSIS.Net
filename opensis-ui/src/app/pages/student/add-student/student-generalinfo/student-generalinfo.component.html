@@ -80,12 +80,12 @@
                     <div class="flex flex-1 mx-4 md:w-1/2">
                         <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'studentID'|translate}}</mat-label>
-                            <input (keyup)="checkInternalId($event)" #studentInternalId="ngModel"
+                            <input [formControl]="internalId"
                                 [(ngModel)]="studentAddModel.studentMaster.studentInternalId" name="studentInternalId"
-                                matInput>
-                            <mat-error *ngIf="studentInternalId.errors?.required">
+                                matInput required>
+                            <mat-error *ngIf="internalId.errors?.required">
                                 {{'studentInternalIdIsRequired'|translate}}</mat-error>
-                            <mat-error *ngIf="studentInternalId.errors?.nomatch">
+                            <mat-error *ngIf="internalId.errors?.nomatch">
                                 {{'studentInternalIdAlreadyExist'|translate}}</mat-error>
                         </mat-form-field>
                     </div>
@@ -315,15 +315,16 @@
                 </div>
                 <vex-custom-field-without-form [schoolDetailsForViewAndEdit]="studentAddModel" [module]="module"
                     [categoryId]="categoryId" [studentCreateMode]="studentCreateMode"></vex-custom-field-without-form>
-                <hr class="-mx-4 mt-6">
+                
                 <div *ngIf="hideAccess">
+                <hr class="-mx-4 mt-6">
                     <h4 class="text-primary pt-6 pb-2 px-4">{{'accessInformation'|translate}}</h4>
                     <div class="mb-2 md:flex md:flex-wrap">
                         <div class="flex flex-1 mx-4 md:w-1/2">
                             <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                                 <mat-label>{{'loginEmailAddress'|translate}}</mat-label>
-                                <input #loginEmail="ngModel" name="loginEmail" (keyup)="checkLoginEmail($event)" [(ngModel)]="studentAddModel.loginEmail"
-                                    matInput [required]="hideAccess ? true : null ">
+                                <input [formControl]="loginEmail" name="loginEmail" [(ngModel)]="studentAddModel.loginEmail"
+                                 matInput [required]="hideAccess ? true : null ">
                                 <mat-error class="text-red" *ngIf="loginEmail.errors?.required && hideAccess">
                                     {{'loginEmailAddressIsRequired'|translate}}</mat-error>
                                     <mat-error *ngIf="loginEmail.errors?.nomatch">
@@ -375,228 +376,10 @@
             <mat-icon [icIcon]="icEdit"></mat-icon> {{'editInformation' |translate}}
         </button>
     </div>
-
-    <mat-card-content>
-
-        <div @stagger fxLayout="column">
-            <h3 class="text-blue pt-6 pb-2 px-4">{{'identificationInformation'|translate}}</h3>
-            <ul class="grid grid-cols-3 col-gap-8 row-gap-10 mt-2 mx-4">
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'studentName' | translate}}</label>
-                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
-                        {{studentAddModel?.studentMaster.firstGivenName}} {{data.middleName}}
-                        {{studentAddModel?.studentMaster.lastFamilyName}}</p>
-                </li>
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'preferredCommonName' | translate}}</label>
-                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
-                        {{studentAddModel?.studentMaster.preferredName|EmtyValueCheckPipe}}
-                    </p>
-                </li>
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'previousMaidenName' | translate}}</label>
-                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
-                        {{studentAddModel?.studentMaster.previousName|EmtyValueCheckPipe}}</p>
-                </li>
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'studentID' | translate}}</label>
-                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
-                        {{studentAddModel?.studentMaster.studentInternalId | EmtyValueCheckPipe}}
-                    </p>
-                </li>
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'alternateID' | translate}}</label>
-                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
-                        {{studentAddModel?.studentMaster.alternateId|EmtyValueCheckPipe}}</p>
-                </li>
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'districtID' | translate}}</label>
-                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
-                        {{studentAddModel?.studentMaster.districtId | EmtyValueCheckPipe}}
-                    </p>
-                </li>
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'stateID' | translate}}</label>
-                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentAddModel?.studentMaster.stateId}}
-                    </p>
-                </li>
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'admissionNumber' | translate}}</label>
-                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
-                        {{studentAddModel?.studentMaster.admissionNumber|EmtyValueCheckPipe}}
-                    </p>
-                </li>
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'rollNumber' | translate}}</label>
-                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
-                        {{studentAddModel?.studentMaster.rollNumber|EmtyValueCheckPipe}}</p>
-                </li>
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'socialSecurityNumber' | translate}}</label>
-                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
-                        {{studentAddModel?.studentMaster.socialSecurityNumber|EmtyValueCheckPipe}}</p>
-                </li>
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'otherGovtIssuedNumber' | translate}}</label>
-                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
-                        {{studentAddModel?.studentMaster.otherGovtIssuedNumber|EmtyValueCheckPipe}}</p>
-                </li>
-            </ul>
-
-            <hr class="-mx-4 mt-6">
-
-            <h3 class="text-blue pt-6 pb-2 px-4">{{'demographicInformation'|translate}}</h3>
-            <ul class="grid grid-cols-3 col-gap-8 row-gap-10 mt-2 mx-4">
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'dateOfBirth' | translate}}</label>
-                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
-                        {{studentAddModel?.studentMaster.dob|date:'mediumDate'}} <span class="dot-separator"></span> {{'age' | translate}} : {{studentAge}}</p>
-                </li>
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'gender' | translate}}</label>
-                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
-                        {{studentAddModel?.studentMaster.gender|EmtyValueCheckPipe}}</p>
-                </li>
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'race' | translate}}</label>
-                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
-                        {{studentAddModel?.studentMaster.race|EmtyValueCheckPipe}}</p>
-                </li>
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'ethnicity' | translate}}</label>
-                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
-                        {{studentAddModel?.studentMaster.ethnicity|EmtyValueCheckPipe}}</p>
-                </li>
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'maritalStatus' | translate}}</label>
-                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
-                        {{studentAddModel?.studentMaster.maritalStatus|EmtyValueCheckPipe}}
-                    </p>
-                </li>
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'countryOfBirth' | translate}}</label>
-                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{countryName}}</p>
-                </li>
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'nationality' | translate}}</label>
-                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{nationality}}</p>
-                </li>
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'firstLanguage' | translate}}</label>
-                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
-                        {{firstLanguageName}}</p>
-                </li>
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'secondLanguage' | translate}}</label>
-                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
-                        {{secondLanguageName}}</p>
-                </li>
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'thirdLanguage' | translate}}</label>
-                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
-                        {{thirdLanguageName}}</p>
-                </li>
-            </ul>
-
-            <hr class="-mx-4 mt-6">
-
-            <h3 class="text-blue pt-6 pb-2 px-4">{{'schoolInformation'|translate}}</h3>
-            <ul class="grid grid-cols-3 col-gap-8 row-gap-10 my-2 mx-4">
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'section' | translate}}</label>
-                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{sectionName}}</p>
-                </li>
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'estimatedGraduationDate' | translate}}</label>
-                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
-                        {{studentAddModel?.studentMaster.estimatedGradDate |date:'mediumDate' |EmtyValueCheckPipe}}</p>
-                </li>
-            </ul>
-            <div class="flex flex-wrap items-start mx-4 mt-10 mb-2">
-
-
-                <div class="mr-4" *ngIf="eligibility504; else NOTEligibility">
-                    <mat-icon [icIcon]="icCheckbox" class="inline-block align-middle mr-2"></mat-icon>
-                    <span class="inline-block text-base align-middle">{{'504Eligibility' |translate}}</span>
-                </div>
-                <ng-template #NOTEligibility>
-                    <div class="mr-4">
-                        <mat-icon [icIcon]="icCheckboxOutline" class="inline-block align-middle mr-2"></mat-icon>
-                        <span class="inline-block text-base align-middle">{{'504Eligibility' |translate}}</span>
-                    </div>
-                </ng-template>
-
-
-                <div class="mr-4" *ngIf="economicDisadvantage; else economicadvantage">
-                    <mat-icon [icIcon]="icCheckbox" class="inline-block align-middle mr-2"></mat-icon>
-                    <span class="inline-block text-base align-middle">{{'economicDisadvantage' |translate}}</span>
-                </div>
-                <ng-template #economicadvantage>
-                    <div class="mr-4">
-                        <mat-icon [icIcon]="icCheckboxOutline" class="inline-block align-middle mr-2"></mat-icon>
-                        <span class="inline-block text-base align-middle">{{'economicDisadvantage' |translate}}</span>
-                    </div>
-                </ng-template>
-
-                <div class="mr-4" *ngIf="freeLunchEligibility; else LunchEligibility">
-                    <mat-icon [icIcon]="icCheckbox" class="inline-block align-middle mr-2"></mat-icon>
-                    <span class="inline-block text-base align-middle">{{'freeLunchEligibility' |translate}}</span>
-                </div>
-                <ng-template #LunchEligibility>
-                    <div class="mr-4">
-                        <mat-icon [icIcon]="icCheckboxOutline" class="inline-block align-middle mr-2"></mat-icon>
-                        <span class="inline-block text-base align-middle">{{'freeLunchEligibility' |translate}}</span>
-                    </div>
-                </ng-template>
-
-                <div class="mr-4" *ngIf="specialEducationIndicator; else nonSpecialEducationIndicator">
-                    <mat-icon [icIcon]="icCheckbox" class="inline-block align-middle mr-2"></mat-icon>
-                    <span class="inline-block text-base align-middle">{{'specialEducationIndicator' |translate}}</span>
-                </div>
-                <ng-template #nonSpecialEducationIndicator>
-                    <div class="mr-4">
-                        <mat-icon [icIcon]="icCheckboxOutline" class="inline-block align-middle mr-2"></mat-icon>
-                        <span class="inline-block text-base align-middle">{{'specialEducationIndicator' |translate}}</span>
-                    </div>
-                </ng-template>
-
-
-                <div class="mr-4" *ngIf="lepIndicator; else Indicator">
-                    <mat-icon [icIcon]="icCheckbox" class="inline-block align-middle mr-2"></mat-icon>
-                    <span class="inline-block text-base align-middle">{{'lepIndicator' |translate}}</span>
-                </div>
-                <ng-template #Indicator>
-                    <div class="mr-4">
-                        <mat-icon [icIcon]="icCheckboxOutline" class="inline-block align-middle mr-2"></mat-icon>
-                        <span class="inline-block text-base align-middle">{{'lepIndicator' |translate}}</span>
-                    </div>
-                </ng-template>
-
-            </div>
-            <vex-custom-field-without-form [schoolDetailsForViewAndEdit]="studentAddModel" [module]="module"
-                [categoryId]="categoryId" [studentCreateMode]="studentCreateMode"></vex-custom-field-without-form>
-            <hr class="-mx-4 mt-6">
-
-            <h3 class="text-blue pt-6 pb-2 px-4">{{'accessInformation'|translate}}</h3>
-            <ul class="grid grid-cols-3 col-gap-8 row-gap-10 my-2 mx-4">
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'loginEmailAddress' | translate}}</label>
-                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
-                        {{studentAddModel?.studentMaster.studentPortalId |EmtyValueCheckPipe }}</p>
-                </li>
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'password' | translate}}</label>
-                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2"><a routerLink=""
-                            class="text-blue cursor-pointer hover:underline">Reset Password</a></p>
-                </li>
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'portalAccess' | translate}}</label>
-                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2 text-green">{{studentAddModel?.portalAccess}}
-                    </p>
-                </li>
-            </ul>
-        </div>
-
-
-    </mat-card-content>
+    <vex-view-student-generalinfo
+     [studentCreateMode]="studentCreateMode"
+     [categoryId]="categoryId"
+     [studentViewDetails]="studentDetailsForViewAndEdit"
+     [nameOfMiscValues]="nameOfMiscValuesForView">
+    </vex-view-student-generalinfo>
 </mat-card>

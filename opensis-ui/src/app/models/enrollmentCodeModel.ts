@@ -21,7 +21,7 @@ export class EnrollmentCodeModel{
         this.sortOrder= null;
         this.type= null;
         this.lastUpdated= null;
-        this.updatedBy= null;
+        this.updatedBy= sessionStorage.getItem('email');
       }
   }
 

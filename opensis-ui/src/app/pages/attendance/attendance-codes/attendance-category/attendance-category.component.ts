@@ -72,7 +72,7 @@ export class AttendanceCategoryComponent implements OnInit {
           duration: 10000
         });
       }else if (res._failure) {
-        this.snackbar.open(res._message, 'LOL THANKS', {
+        this.snackbar.open(res._message, '', {
           duration: 10000
         });
       } else {
@@ -98,7 +98,7 @@ export class AttendanceCategoryComponent implements OnInit {
             duration: 10000
           });
         }else if (res._failure) {
-          this.snackbar.open(res._message, 'LOL THANKS', {
+          this.snackbar.open(res._message, '', {
             duration: 10000
           });
         } else {

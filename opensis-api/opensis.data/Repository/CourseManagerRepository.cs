@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 using opensis.data.Helper;
 using opensis.data.Interface;
 using opensis.data.Models;
@@ -22,31 +23,31 @@ namespace opensis.data.Repository
         /// </summary>
         /// <param name="programAddViewModel"></param>
         /// <returns></returns>
-        public ProgramAddViewModel AddProgram(ProgramAddViewModel programAddViewModel)
-        {
-            //int? ProgramId = Utility.GetMaxPK(this.context, new Func<Programs, int>(x => x.ProgramId));
+        //public ProgramAddViewModel AddProgram(ProgramAddViewModel programAddViewModel)
+        //{
+        //    //int? ProgramId = Utility.GetMaxPK(this.context, new Func<Programs, int>(x => x.ProgramId));
 
-            int? ProgramId = 0;
+        //    int? ProgramId = 0;
 
-            var programData = this.context?.Programs.Where(x => x.SchoolId == programAddViewModel.programs.SchoolId && x.TenantId == programAddViewModel.programs.TenantId).OrderByDescending(x => x.ProgramId).FirstOrDefault();
+        //    var programData = this.context?.Programs.Where(x => x.SchoolId == programAddViewModel.programs.SchoolId && x.TenantId == programAddViewModel.programs.TenantId).OrderByDescending(x => x.ProgramId).FirstOrDefault();
 
-            if (programData != null)
-            {
-                ProgramId = programData.ProgramId + 1;
-            }
-            else
-            {
-                ProgramId = 1;
-            }
+        //    if (programData != null)
+        //    {
+        //        ProgramId = programData.ProgramId + 1;
+        //    }
+        //    else
+        //    {
+        //        ProgramId = 1;
+        //    }
 
-            programAddViewModel.programs.ProgramId = (int)ProgramId;
-            programAddViewModel.programs.CreatedOn = DateTime.UtcNow;
-            this.context?.Programs.Add(programAddViewModel.programs);
-            this.context?.SaveChanges();
-            programAddViewModel._failure = false;
+        //    programAddViewModel.programs.ProgramId = (int)ProgramId;
+        //    programAddViewModel.programs.CreatedOn = DateTime.UtcNow;
+        //    this.context?.Programs.Add(programAddViewModel.programs);
+        //    this.context?.SaveChanges();
+        //    programAddViewModel._failure = false;
 
-            return programAddViewModel;
-        }
+        //    return programAddViewModel;
+        //}
         /// <summary>
         /// Get All Program
         /// </summary>
@@ -89,45 +90,79 @@ namespace opensis.data.Repository
         /// </summary>
         /// <param name="programAddViewModel"></param>
         /// <returns></returns>
-        public ProgramAddViewModel UpdateProgram(ProgramAddViewModel programAddViewModel)
+        public ProgramListViewModel AddEditProgram(ProgramListViewModel programListViewModel)
         {
-            ProgramAddViewModel programUpdateModel = new ProgramAddViewModel();
+            ProgramListViewModel programUpdateModel = new ProgramListViewModel();
             try
             {
-                var programUpdate = this.context?.Programs.FirstOrDefault(x => x.TenantId == programAddViewModel.programs.TenantId && x.SchoolId == programAddViewModel.programs.SchoolId && x.ProgramId == programAddViewModel.programs.ProgramId);
-                
-                if (programUpdate != null)
+                foreach (var programLists in programListViewModel.programList)
                 {
-                    var courseList = this.context?.Course.Where(x => x.TenantId == programUpdate.TenantId && x.SchoolId == programUpdate.SchoolId && x.CourseProgram.ToLower() == programUpdate.ProgramName.ToLower()).ToList();
-                
-                    programUpdate.ProgramName = programAddViewModel.programs.ProgramName;
-                    programUpdate.UpdatedBy = programAddViewModel.programs.UpdatedBy;
-                    programUpdate.UpdatedOn = DateTime.UtcNow;
-
-                    if (courseList.Count > 0)
+                    if (programLists.ProgramId > 0)
                     {
-                        courseList.ForEach(x => x.CourseProgram = programAddViewModel.programs.ProgramName);
+                        var programUpdate = this.context?.Programs.FirstOrDefault(x => x.TenantId == programLists.TenantId && x.SchoolId == programLists.SchoolId && x.ProgramId == programLists.ProgramId);
+                        if (programUpdate!=null)
+                        {
+                            var program = this.context?.Programs.FirstOrDefault(x => x.TenantId == programLists.TenantId && x.SchoolId == programLists.SchoolId && x.ProgramId != programLists.ProgramId && x.ProgramName.ToLower() == programLists.ProgramName.ToLower());
+                            if (program != null)
+                            {
+                                programUpdateModel._message = "Program Name Already Exists";
+                                programUpdateModel._failure = true;
+                                return programUpdateModel;
+                            }
+                            else
+                            {
+                                var courseList = this.context?.Course.Where(x => x.TenantId == programUpdate.TenantId && x.SchoolId == programUpdate.SchoolId && x.CourseProgram.ToLower() == programUpdate.ProgramName.ToLower()).ToList();                               
+
+                                programLists.CreatedBy = programUpdate.CreatedBy;
+                                programLists.CreatedOn = programUpdate.CreatedOn;
+                                programLists.UpdatedOn = DateTime.Now;
+                                this.context.Entry(programUpdate).CurrentValues.SetValues(programLists);
+                                this.context?.SaveChanges();
+
+                                if (courseList.Count > 0)
+                                {
+                                    courseList.ForEach(x => x.CourseProgram = programLists.ProgramName);
+                                }
+                            }
+                        }
                     }
-                    this.context?.SaveChanges();
-                    programAddViewModel._message = "Program Updated Successfully";
-                    programAddViewModel._failure = false;
+                    else
+                    {
+                        int? ProgramId = 1;
+
+                        var programData = this.context?.Programs.Where(x => x.SchoolId == programLists.SchoolId && x.TenantId == programLists.TenantId).OrderByDescending(x => x.ProgramId).FirstOrDefault();
+
+                        if (programData != null)
+                        {
+                            ProgramId = programData.ProgramId + 1;
+                        }
+
+                        var program = this.context?.Programs.Where(x => x.SchoolId == programLists.SchoolId && x.TenantId == programLists.TenantId && x.ProgramName.ToLower() == programLists.ProgramName.ToLower()).FirstOrDefault();
+                        if (program!= null)
+                        {
+                            programUpdateModel._failure = true;
+                            programUpdateModel._message = "Program Name Already Exists";
+                            return programUpdateModel;
+                        }
+                        programLists.ProgramId = (int)ProgramId;
+                        programLists.CreatedOn = DateTime.UtcNow;
+                        this.context?.Programs.AddRange(programLists);
+                        
+                    }                    
                 }
-                else
-                {
-                    programUpdateModel._failure = true;
-                    programUpdateModel._message = NORECORDFOUND;
-                }                
-                
+                this.context?.SaveChanges();
+                programUpdateModel._message = "Program Updated Successfully";
+                programUpdateModel._failure = false;
             }
             catch (Exception es)
             {
 
                 programUpdateModel._message = es.Message;
                 programUpdateModel._failure = true;
-                programUpdateModel._tenantName = programAddViewModel._tenantName;
-                programUpdateModel._token = programAddViewModel._token;
+                programUpdateModel._tenantName = programListViewModel._tenantName;
+                programUpdateModel._token = programListViewModel._token;
             }
-            return programAddViewModel;
+            return programUpdateModel;
         }
         /// <summary>
         /// Delete Program
@@ -167,63 +202,116 @@ namespace opensis.data.Repository
         /// </summary>
         /// <param name="subjectAddViewModel"></param>
         /// <returns></returns>
-        public SubjectAddViewModel AddSubject(SubjectAddViewModel subjectAddViewModel)
-        {
-            try
-            {
-                //int? MasterSubjectId = Utility.GetMaxPK(this.context, new Func<Subject, int>(x => x.SubjectId));
-                int? MasterSubjectId = 1;
+        //public SubjectAddViewModel AddSubject(SubjectAddViewModel subjectAddViewModel)
+        //{
+        //    try
+        //    {
+        //        //int? MasterSubjectId = Utility.GetMaxPK(this.context, new Func<Subject, int>(x => x.SubjectId));
+        //        int? MasterSubjectId = 1;
 
-                var subjectData = this.context?.Subject.Where(x => x.SchoolId == subjectAddViewModel.subject.SchoolId && x.TenantId == subjectAddViewModel.subject.TenantId).OrderByDescending(x => x.SubjectId).FirstOrDefault();
+        //        var subjectData = this.context?.Subject.Where(x => x.SchoolId == subjectAddViewModel.subject.SchoolId && x.TenantId == subjectAddViewModel.subject.TenantId).OrderByDescending(x => x.SubjectId).FirstOrDefault();
 
-                if (subjectData != null)
-                {
-                    MasterSubjectId = subjectData.SubjectId + 1;
-                }
-                subjectAddViewModel.subject.SubjectId = (int)MasterSubjectId;
-                subjectAddViewModel.subject.CreatedOn = DateTime.UtcNow;
-                this.context?.Subject.Add(subjectAddViewModel.subject);
-                this.context?.SaveChanges();
-                subjectAddViewModel._failure = false;
-            }
-            catch (Exception es)
-            {
-                subjectAddViewModel._failure = true;
-                subjectAddViewModel._message = es.Message;
-            }
-            return subjectAddViewModel;
-        }
+        //        if (subjectData != null)
+        //        {
+        //            MasterSubjectId = subjectData.SubjectId + 1;
+        //        }
+        //        subjectAddViewModel.subject.SubjectId = (int)MasterSubjectId;
+        //        subjectAddViewModel.subject.CreatedOn = DateTime.UtcNow;
+        //        this.context?.Subject.Add(subjectAddViewModel.subject);
+        //        this.context?.SaveChanges();
+        //        subjectAddViewModel._failure = false;
+        //    }
+        //    catch (Exception es)
+        //    {
+        //        subjectAddViewModel._failure = true;
+        //        subjectAddViewModel._message = es.Message;
+        //    }
+        //    return subjectAddViewModel;
+        //}
 
         /// <summary>
-        /// Update Subject
+        /// Add & Update Subject
         /// </summary>
-        /// <param name="subjectAddViewModel"></param>
+        /// <param name="subjectListViewModel"></param>
         /// <returns></returns>
-        public SubjectAddViewModel UpdateSubject(SubjectAddViewModel subjectAddViewModel)
+        public SubjectListViewModel AddEditSubject(SubjectListViewModel subjectListViewModel)
         {
             try
             {
-                var Subject = this.context?.Subject.FirstOrDefault(x => x.TenantId == subjectAddViewModel.subject.TenantId && x.SchoolId == subjectAddViewModel.subject.SchoolId && x.SubjectId == subjectAddViewModel.subject.SubjectId);
-
-                var sameSubjectNameExits = this.context?.Course.Where(x => x.SchoolId == Subject.SchoolId && x.TenantId == Subject.TenantId && x.CourseSubject.ToLower() == Subject.SubjectName.ToLower()).ToList();
-
-                if (sameSubjectNameExits.Count > 0)
+                foreach (var subject in subjectListViewModel.subjectList)
                 {
-                    sameSubjectNameExits.ForEach(x => x.CourseSubject = subjectAddViewModel.subject.SubjectName);
+                    if (subject.SubjectId > 0)
+                    {
+                        var SubjectUpdate = this.context?.Subject.FirstOrDefault(x => x.TenantId == subject.TenantId && x.SchoolId == subject.SchoolId && x.SubjectId == subject.SubjectId);
+
+                        if (SubjectUpdate != null)
+                        {
+                            var subjectName = this.context?.Subject.FirstOrDefault(x => x.TenantId == subject.TenantId && x.SchoolId == subject.SchoolId && x.SubjectName.ToLower() == subject.SubjectName.ToLower() && x.SubjectId != subject.SubjectId);
+
+                            if (subjectName == null)
+                            {
+                                var sameSubjectNameExits = this.context?.Course.Where(x => x.SchoolId == SubjectUpdate.SchoolId && x.TenantId == SubjectUpdate.TenantId && x.CourseSubject.ToLower() == SubjectUpdate.SubjectName.ToLower()).ToList();
+                                
+                                if (sameSubjectNameExits.Count > 0)
+                                {
+                                    sameSubjectNameExits.ForEach(x => x.CourseSubject = subject.SubjectName);
+                                }
+
+                                subject.CreatedBy = SubjectUpdate.CreatedBy;
+                                subject.CreatedOn = SubjectUpdate.CreatedOn;
+                                subject.UpdatedOn = DateTime.Now;
+                                this.context.Entry(SubjectUpdate).CurrentValues.SetValues(subject);
+                                this.context?.SaveChanges();
+                            }
+                            else
+                            {
+                                subjectListViewModel._failure = true;
+                                subjectListViewModel._message = "Subject Name Already Exits";
+                                return subjectListViewModel;
+                            }
+                        }
+                        else
+                        {
+                            subjectListViewModel._failure = true;
+                            subjectListViewModel._message = NORECORDFOUND;
+                        }
+                    }
+                    else
+                    {
+                        var subjectName = this.context?.Subject.FirstOrDefault(x => x.TenantId == subject.TenantId && x.SchoolId == subject.SchoolId && x.SubjectName.ToLower() == subject.SubjectName.ToLower());
+
+                        if (subjectName == null)
+                        {
+                            int? SubjectId = 1;
+
+                            var subjectData = this.context?.Subject.Where(x => x.SchoolId == subject.SchoolId && x.TenantId == subject.TenantId).OrderByDescending(x => x.SubjectId).FirstOrDefault();
+
+                            if (subjectData != null)
+                            {
+                                SubjectId = subjectData.SubjectId + 1;
+                            }
+                            subject.SubjectId = (int)SubjectId;
+                            subject.CreatedOn = DateTime.UtcNow;
+                            this.context?.Subject.Add(subject);
+                        }
+                        else
+                        {
+                            subjectListViewModel._failure = true;
+                            subjectListViewModel._message = "Subject Name Already Exits";
+                            return subjectListViewModel;
+                        }
+                    }
                 }
-                Subject.SubjectName = subjectAddViewModel.subject.SubjectName;
-                Subject.UpdatedBy = subjectAddViewModel.subject.UpdatedBy;
-                Subject.UpdatedOn = DateTime.UtcNow;
                 this.context?.SaveChanges();
-                subjectAddViewModel._failure = false;
-                subjectAddViewModel._message = "Subject Updated Successfully";
+                subjectListViewModel._failure = false;
+                subjectListViewModel._message = "Subject Updated Successfully";
             }
             catch (Exception es)
             {
-                subjectAddViewModel._failure = true;
-                subjectAddViewModel._message = es.Message;
+                subjectListViewModel._failure = true;
+                subjectListViewModel._message = es.Message;
             }
-            return subjectAddViewModel;
+            return subjectListViewModel;
         }
 
         /// <summary>
@@ -297,6 +385,263 @@ namespace opensis.data.Repository
                 subjectAddViewModel._message = es.Message;
             }
             return subjectAddViewModel;
+        }
+
+        /// <summary>
+        /// Add Course
+        /// </summary>
+        /// <param name="courseAddViewModel"></param>
+        /// <returns></returns>
+        public CourseAddViewModel AddCourse(CourseAddViewModel courseAddViewModel)
+        {
+            try
+            {
+                if (courseAddViewModel.ProgramId == 0)
+                {
+                    int? ProgramId = 1;
+
+                    var programData = this.context?.Programs.Where(x => x.TenantId == courseAddViewModel.course.TenantId && x.SchoolId == courseAddViewModel.course.SchoolId).OrderByDescending(x => x.ProgramId).FirstOrDefault();
+
+                    if (programData != null)
+                    {
+                        ProgramId = programData.ProgramId + 1;
+                    }
+
+                    var programName = this.context?.Programs.FirstOrDefault(x => x.SchoolId == courseAddViewModel.course.SchoolId && x.TenantId == courseAddViewModel.course.TenantId && x.ProgramName.ToLower() == courseAddViewModel.course.CourseProgram.ToLower());
+                    if (programName != null)
+                    {
+                        courseAddViewModel._failure = true;
+                        courseAddViewModel._message = "Program Name Already Exists";
+                        return courseAddViewModel;
+                    }
+                    var programAdd = new Programs() { TenantId = courseAddViewModel.course.TenantId, SchoolId = courseAddViewModel.course.SchoolId, ProgramId = (int)ProgramId, ProgramName = courseAddViewModel.course.CourseProgram, CreatedOn = DateTime.UtcNow, CreatedBy = courseAddViewModel.course.CreatedBy };
+                    this.context?.Programs.Add(programAdd);
+                }
+                if (courseAddViewModel.SubjectId == 0)
+                {
+                    int? SubjectId = 1;
+
+                    var subjectData = this.context?.Subject.Where(x => x.TenantId == courseAddViewModel.course.TenantId && x.SchoolId == courseAddViewModel.course.SchoolId).OrderByDescending(x => x.SubjectId).FirstOrDefault();
+
+                    if (subjectData != null)
+                    {
+                        SubjectId = subjectData.SubjectId + 1;
+                    }
+
+                    var subjectName = this.context?.Subject.FirstOrDefault(x => x.SchoolId == courseAddViewModel.course.SchoolId && x.TenantId == courseAddViewModel.course.TenantId && x.SubjectName.ToLower() == courseAddViewModel.course.CourseSubject.ToLower());
+                    if (subjectName != null)
+                    {
+                        courseAddViewModel._failure = true;
+                        courseAddViewModel._message = "Subject Name Already Exists";
+                        return courseAddViewModel;
+                    }
+                    var subjectAdd = new Subject() { TenantId = courseAddViewModel.course.TenantId, SchoolId = courseAddViewModel.course.SchoolId, SubjectId = (int)SubjectId, SubjectName = courseAddViewModel.course.CourseSubject, CreatedOn = DateTime.UtcNow, CreatedBy = courseAddViewModel.course.CreatedBy };
+                    this.context?.Subject.Add(subjectAdd);
+                }
+
+                var courseTitle = this.context?.Course.FirstOrDefault(x => x.TenantId == courseAddViewModel.course.TenantId && x.SchoolId == courseAddViewModel.course.SchoolId && x.CourseTitle.ToLower() == courseAddViewModel.course.CourseTitle.ToLower());
+
+                if (courseTitle == null)
+                {
+                    int? CourseId = 1;
+
+                    var courseData = this.context?.Course.Where(x => x.TenantId == courseAddViewModel.course.TenantId && x.SchoolId == courseAddViewModel.course.SchoolId).OrderByDescending(x => x.CourseId).FirstOrDefault();
+
+                    if (courseData != null)
+                    {
+                        CourseId = courseData.CourseId + 1;
+                    }
+                    courseAddViewModel.course.CourseId = (int)CourseId;
+                    courseAddViewModel.course.CreatedOn = DateTime.UtcNow;
+                    courseAddViewModel.course.IsCourseActive = true;
+
+                    if(courseAddViewModel.course.CourseStandard.ToList().Count>0)
+                    {
+                        courseAddViewModel.course.CourseStandard.ToList().ForEach(x => x.CreatedOn = DateTime.UtcNow);
+                    }
+                    
+                    this.context?.Course.Add(courseAddViewModel.course);
+                }
+                else
+                {
+                    courseAddViewModel._failure = true;
+                    courseAddViewModel._message = "Course Title Already Exits";
+                    return courseAddViewModel;
+                }
+                this.context.SaveChanges();
+                courseAddViewModel._failure = false;
+            }
+            catch (Exception es)
+            {
+                courseAddViewModel._failure = true;
+                courseAddViewModel._message = es.Message;
+            }
+            return courseAddViewModel;
+        }
+
+        /// <summary>
+        /// Update Course
+        /// </summary>
+        /// <param name="courseAddViewModel"></param>
+        /// <returns></returns>
+        public CourseAddViewModel UpdateCourse(CourseAddViewModel courseAddViewModel)
+        {
+            try
+            {
+                if (courseAddViewModel.ProgramId == 0)
+                {
+                    int? ProgramId = 1;
+
+                    var programData = this.context?.Programs.Where(x => x.TenantId == courseAddViewModel.course.TenantId && x.SchoolId == courseAddViewModel.course.SchoolId).OrderByDescending(x => x.ProgramId).FirstOrDefault();
+
+                    if (programData != null)
+                    {
+                        ProgramId = programData.ProgramId + 1;
+                    }
+
+                    var programName = this.context?.Programs.FirstOrDefault(x => x.SchoolId == courseAddViewModel.course.SchoolId && x.TenantId == courseAddViewModel.course.TenantId && x.ProgramName.ToLower() == courseAddViewModel.course.CourseProgram.ToLower());
+
+                    if (programName != null)
+                    {
+                        courseAddViewModel._failure = true;
+                        courseAddViewModel._message = "Program Name Already Exists";
+                        return courseAddViewModel;
+                    }
+
+                    var programAdd = new Programs() { TenantId = courseAddViewModel.course.TenantId, SchoolId = courseAddViewModel.course.SchoolId, ProgramId = (int)ProgramId, ProgramName = courseAddViewModel.course.CourseProgram, CreatedOn = DateTime.UtcNow, CreatedBy = courseAddViewModel.course.CreatedBy };
+                    this.context?.Programs.Add(programAdd);
+                }
+
+                if (courseAddViewModel.SubjectId == 0)
+                {
+                    int? SubjectId = 1;
+
+                    var subjectData = this.context?.Subject.Where(x => x.TenantId == courseAddViewModel.course.TenantId && x.SchoolId == courseAddViewModel.course.SchoolId).OrderByDescending(x => x.SubjectId).FirstOrDefault();
+
+                    if (subjectData != null)
+                    {
+                        SubjectId = subjectData.SubjectId + 1;
+                    }
+
+                    var subjectName = this.context?.Subject.FirstOrDefault(x => x.SchoolId == courseAddViewModel.course.SchoolId && x.TenantId == courseAddViewModel.course.TenantId && x.SubjectName.ToLower() == courseAddViewModel.course.CourseSubject.ToLower());
+                    if (subjectName != null)
+                    {
+                        courseAddViewModel._failure = true;
+                        courseAddViewModel._message = "Subject Name Already Exists";
+                        return courseAddViewModel;
+                    }
+
+                    var subjectAdd = new Subject() { TenantId = courseAddViewModel.course.TenantId, SchoolId = courseAddViewModel.course.SchoolId, SubjectId = (int)SubjectId, SubjectName = courseAddViewModel.course.CourseSubject, CreatedOn = DateTime.UtcNow, CreatedBy = courseAddViewModel.course.CreatedBy };
+                    this.context?.Subject.Add(subjectAdd);
+                }
+
+                var courseUpdate = this.context?.Course.Include(x => x.CourseStandard).FirstOrDefault(x => x.TenantId == courseAddViewModel.course.TenantId && x.SchoolId == courseAddViewModel.course.SchoolId && x.CourseId == courseAddViewModel.course.CourseId);
+                
+                if (courseUpdate != null)
+                {
+                    var courseTitle = this.context?.Course.FirstOrDefault(x => x.TenantId == courseAddViewModel.course.TenantId && x.SchoolId == courseAddViewModel.course.SchoolId && x.CourseTitle.ToLower() == courseAddViewModel.course.CourseTitle.ToLower() && x.CourseId != courseAddViewModel.course.CourseId);
+
+                    if (courseTitle == null)
+                    {
+                        courseAddViewModel.course.CreatedBy = courseUpdate.CreatedBy;
+                        courseAddViewModel.course.CreatedOn = courseUpdate.CreatedOn;
+                        courseAddViewModel.course.UpdatedOn = DateTime.Now;
+                        this.context.Entry(courseUpdate).CurrentValues.SetValues(courseAddViewModel.course);
+                        courseAddViewModel._message = "Course Updated Successfully";
+
+                        if (courseAddViewModel.course.CourseStandard.ToList().Count > 0)
+                        {
+                            this.context?.CourseStandard.RemoveRange(courseUpdate.CourseStandard);
+                            courseAddViewModel.course.CourseStandard.ToList().ForEach(x => x.UpdatedOn = DateTime.UtcNow);
+                            this.context?.CourseStandard.AddRange(courseAddViewModel.course.CourseStandard);
+                        }
+                    }
+                    else
+                    {
+                        courseAddViewModel._failure = true;
+                        courseAddViewModel._message = "Course Title Already Exits";
+                        return courseAddViewModel;
+                    }
+                }
+                this.context.SaveChanges();
+                courseAddViewModel._failure = false;
+            }
+            catch(Exception es)
+            {
+                courseAddViewModel._failure = true;
+                courseAddViewModel._message = es.Message;
+            }
+            return courseAddViewModel;
+        }
+
+        /// <summary>
+        /// Delete Course
+        /// </summary>
+        /// <param name="courseAddViewModel"></param>
+        /// <returns></returns>
+        public CourseAddViewModel DeleteCourse(CourseAddViewModel courseAddViewModel)
+        {
+            try
+            {
+                var courseDelete = this.context?.Course.Include(x=>x.CourseStandard).FirstOrDefault(x => x.TenantId == courseAddViewModel.course.TenantId && x.SchoolId == courseAddViewModel.course.SchoolId && x.CourseId == courseAddViewModel.course.CourseId);
+
+                if (courseDelete != null)
+                {
+                    this.context?.CourseStandard.RemoveRange(courseDelete.CourseStandard);
+                    this.context?.Course.Remove(courseDelete);
+                    this.context?.SaveChanges();
+                    courseAddViewModel._failure = false;
+                    courseAddViewModel._message = "Deleted Successfully";
+                }
+                else
+                {
+                    courseAddViewModel._failure = true;
+                    courseAddViewModel._message = NORECORDFOUND;
+                }
+            }
+            catch (Exception es)
+            {
+                courseAddViewModel._failure = true;
+                courseAddViewModel._message = es.Message;
+            }
+            return courseAddViewModel;
+        }
+
+        /// <summary>
+        /// Get All Course List
+        /// </summary>
+        /// <param name="courseListViewModel"></param>
+        /// <returns></returns>
+        public CourseListViewModel GetAllCourseList(CourseListViewModel courseListViewModel)
+        {
+            CourseListViewModel courseListModel = new CourseListViewModel();
+            try
+            {
+                var courseRecords = this.context?.Course.Include(e=>e.CourseStandard).ThenInclude(c=>c.GradeUsStandard).Where(x => x.TenantId == courseListViewModel.TenantId && x.SchoolId == courseListViewModel.SchoolId).ToList();               
+                if (courseRecords.Count > 0)
+                {
+                    courseListModel.courseList = courseRecords;
+                    courseListModel._tenantName = courseListViewModel._tenantName;
+                    courseListModel._token = courseListViewModel._token;
+                    courseListModel._failure = false;
+                }
+                else
+                {
+                    courseListModel.courseList = null;
+                    courseListModel._tenantName = courseListViewModel._tenantName;
+                    courseListModel._token = courseListViewModel._token;
+                    courseListModel._failure = true;
+                    courseListModel._message = NORECORDFOUND;
+                }
+            }
+            catch (Exception es)
+            {
+                courseListModel._message = es.Message;
+                courseListModel._failure = true;
+                courseListModel._tenantName = courseListViewModel._tenantName;
+                courseListModel._token = courseListViewModel._token;
+            }
+            return courseListModel;
         }
     }
 }

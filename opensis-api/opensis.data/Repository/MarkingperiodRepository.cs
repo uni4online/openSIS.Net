@@ -86,8 +86,18 @@ namespace opensis.data.Repository
                 if (SchoolYear.StartDate <= semester.tableSemesters.StartDate && SchoolYear.EndDate >= semester.tableSemesters.EndDate)
                 {
 
-                    int? MasterMarkingPeriodId = Utility.GetMaxPK(this.context, new Func<Semesters, int>(x => x.MarkingPeriodId));
-                    semester.tableSemesters.MarkingPeriodId = (int)MasterMarkingPeriodId;
+                    //int? MasterMarkingPeriodId = Utility.GetMaxPK(this.context, new Func<Semesters, int>(x => x.MarkingPeriodId));
+
+                    int? MarkingPeriodId = 1;
+
+                    var semesterData = this.context?.Semesters.Where(x => x.TenantId == semester.tableSemesters.TenantId && x.SchoolId == semester.tableSemesters.SchoolId).OrderByDescending(x => x.MarkingPeriodId).FirstOrDefault();
+
+                    if (semesterData != null)
+                    {
+                        MarkingPeriodId = semesterData.MarkingPeriodId + 1;
+                    }
+
+                    semester.tableSemesters.MarkingPeriodId = (int)MarkingPeriodId;
                     semester.tableSemesters.AcademicYear = SchoolYear.AcademicYear;
                     semester.tableSemesters.LastUpdated = DateTime.UtcNow;
                     this.context?.Semesters.Add(semester.tableSemesters);
@@ -119,29 +129,12 @@ namespace opensis.data.Repository
                 var SchoolYear = this.context?.SchoolYears.FirstOrDefault(x => x.TenantId == semesterUpdate.TenantId && x.SchoolId == semesterUpdate.SchoolId && x.MarkingPeriodId == semesterUpdate.YearId);
 
                 if(SchoolYear.StartDate <= semester.tableSemesters.StartDate && SchoolYear.EndDate >= semester.tableSemesters.EndDate)
-                { 
-                    semesterUpdate.TenantId = semester.tableSemesters.TenantId;
-                    semesterUpdate.SchoolId = semester.tableSemesters.SchoolId;
-                    semesterUpdate.MarkingPeriodId = semester.tableSemesters.MarkingPeriodId;
-                    semesterUpdate.AcademicYear = SchoolYear.AcademicYear;
-                    semesterUpdate.YearId = semester.tableSemesters.YearId;
-                    semesterUpdate.Title = semester.tableSemesters.Title;
-                    semesterUpdate.ShortName = semester.tableSemesters.ShortName;
-                    semesterUpdate.SortOrder = semester.tableSemesters.SortOrder;
-                    semesterUpdate.StartDate = semester.tableSemesters.StartDate;
-                    semesterUpdate.EndDate = semester.tableSemesters.EndDate;
-                    semesterUpdate.PostStartDate = semester.tableSemesters.PostStartDate;
-                    semesterUpdate.PostEndDate = semester.tableSemesters.PostEndDate;
-                    semesterUpdate.DoesGrades = semester.tableSemesters.DoesGrades;
-                    semesterUpdate.DoesExam = semester.tableSemesters.DoesExam;
-                    semesterUpdate.DoesComments = semester.tableSemesters.DoesComments;
-                    semesterUpdate.RolloverId = semester.tableSemesters.RolloverId;
-                    semesterUpdate.LastUpdated = semester.tableSemesters.LastUpdated;
-                    semesterUpdate.UpdatedBy = semester.tableSemesters.UpdatedBy;
-
-                this.context?.SaveChanges();
-
-                semester._failure = false;
+                {                    
+                    semester.tableSemesters.LastUpdated = DateTime.Now;
+                    semester.tableSemesters.AcademicYear = SchoolYear.AcademicYear;
+                    this.context.Entry(semesterUpdate).CurrentValues.SetValues(semester.tableSemesters);
+                    this.context?.SaveChanges();
+                    semester._failure = false;
                 }
                 else
                 {
@@ -219,9 +212,19 @@ namespace opensis.data.Repository
         {
             var Quarter = this.context?.Quarters.FirstOrDefault(x => x.TenantId == progressPeriod.tableProgressPeriods.TenantId && x.SchoolId == progressPeriod.tableProgressPeriods.SchoolId && x.MarkingPeriodId == progressPeriod.tableProgressPeriods.QuarterId);
             if (Quarter.StartDate <= progressPeriod.tableProgressPeriods.StartDate && Quarter.EndDate >= progressPeriod.tableProgressPeriods.EndDate)
-            { 
-                int? MasterMarkingPeriodId = Utility.GetMaxPK(this.context, new Func<ProgressPeriods, int>(x => x.MarkingPeriodId));
-                progressPeriod.tableProgressPeriods.MarkingPeriodId = (int)MasterMarkingPeriodId;
+            {
+                //int? MasterMarkingPeriodId = Utility.GetMaxPK(this.context, new Func<ProgressPeriods, int>(x => x.MarkingPeriodId));
+
+                int? MarkingPeriodId = 1;
+
+                var progressPeriodData = this.context?.ProgressPeriods.Where(x => x.TenantId == progressPeriod.tableProgressPeriods.TenantId && x.SchoolId == progressPeriod.tableProgressPeriods.SchoolId).OrderByDescending(x => x.MarkingPeriodId).FirstOrDefault();
+
+                if (progressPeriodData != null)
+                {
+                    MarkingPeriodId = progressPeriodData.MarkingPeriodId + 1;
+                }
+
+                progressPeriod.tableProgressPeriods.MarkingPeriodId = (int)MarkingPeriodId;
                 progressPeriod.tableProgressPeriods.AcademicYear = (decimal)Quarter.AcademicYear;
                 progressPeriod.tableProgressPeriods.LastUpdated = DateTime.UtcNow;
                 this.context?.ProgressPeriods.Add(progressPeriod.tableProgressPeriods);
@@ -242,29 +245,14 @@ namespace opensis.data.Repository
             try
             {
                 var progressUpdate = this.context?.ProgressPeriods.FirstOrDefault(x => x.TenantId == progressPeriod.tableProgressPeriods.TenantId && x.SchoolId == progressPeriod.tableProgressPeriods.SchoolId && x.MarkingPeriodId == progressPeriod.tableProgressPeriods.MarkingPeriodId);
+                
                 var Quarter = this.context?.Quarters.FirstOrDefault(x => x.TenantId == progressPeriod.tableProgressPeriods.TenantId && x.SchoolId == progressPeriod.tableProgressPeriods.SchoolId && x.MarkingPeriodId == progressPeriod.tableProgressPeriods.QuarterId);
                 if (Quarter.StartDate <= progressPeriod.tableProgressPeriods.StartDate && Quarter.EndDate >= progressPeriod.tableProgressPeriods.EndDate)
                 {
-                    progressUpdate.TenantId = progressPeriod.tableProgressPeriods.TenantId;
-                    progressUpdate.SchoolId = progressPeriod.tableProgressPeriods.SchoolId;
-                    progressUpdate.MarkingPeriodId = progressPeriod.tableProgressPeriods.MarkingPeriodId;
-                    progressUpdate.AcademicYear = (decimal)Quarter.AcademicYear;
-                    progressUpdate.QuarterId = progressPeriod.tableProgressPeriods.QuarterId;
-                    progressUpdate.Title = progressPeriod.tableProgressPeriods.Title;
-                    progressUpdate.ShortName = progressPeriod.tableProgressPeriods.ShortName;
-                    progressUpdate.SortOrder = progressPeriod.tableProgressPeriods.SortOrder;
-                    progressUpdate.StartDate = progressPeriod.tableProgressPeriods.StartDate;
-                    progressUpdate.EndDate = progressPeriod.tableProgressPeriods.EndDate;
-                    progressUpdate.PostStartDate = progressPeriod.tableProgressPeriods.PostStartDate;
-                    progressUpdate.PostEndDate = progressPeriod.tableProgressPeriods.PostEndDate;
-                    progressUpdate.DoesGrades = progressPeriod.tableProgressPeriods.DoesGrades;
-                    progressUpdate.DoesExam = progressPeriod.tableProgressPeriods.DoesExam;
-                    progressUpdate.DoesComments = progressPeriod.tableProgressPeriods.DoesComments;
-                    progressUpdate.RolloverId = progressPeriod.tableProgressPeriods.RolloverId;
-                    progressUpdate.LastUpdated = progressPeriod.tableProgressPeriods.LastUpdated;
-                    progressUpdate.UpdatedBy = progressPeriod.tableProgressPeriods.UpdatedBy;
+                    progressPeriod.tableProgressPeriods.LastUpdated = DateTime.Now;
+                    progressPeriod.tableProgressPeriods.AcademicYear = (decimal)Quarter.AcademicYear;
+                    this.context.Entry(progressUpdate).CurrentValues.SetValues(progressPeriod.tableProgressPeriods);
                     this.context?.SaveChanges();
-
                     progressPeriod._failure = false;
                 }
                 else
@@ -333,7 +321,17 @@ namespace opensis.data.Repository
         {
             try
             {
-                int? MarkingPeriodId = Utility.GetMaxPK(this.context, new Func<SchoolYears, int>(x => x.MarkingPeriodId));
+                //int? MarkingPeriodId = Utility.GetMaxPK(this.context, new Func<SchoolYears, int>(x => x.MarkingPeriodId));
+
+                int? MarkingPeriodId = 1;
+
+                var schoolYearData = this.context?.SchoolYears.Where(x => x.TenantId == schoolYears.tableSchoolYears.TenantId && x.SchoolId == schoolYears.tableSchoolYears.SchoolId).OrderByDescending(x => x.MarkingPeriodId).FirstOrDefault();
+
+                if (schoolYearData != null)
+                {
+                    MarkingPeriodId = schoolYearData.MarkingPeriodId + 1;
+                }
+
                 schoolYears.tableSchoolYears.MarkingPeriodId = (int)MarkingPeriodId;
                 schoolYears.tableSchoolYears.AcademicYear = schoolYears.tableSchoolYears.StartDate.HasValue == true ? Convert.ToDecimal(schoolYears.tableSchoolYears.StartDate.Value.Year) : (decimal?)null;
                 schoolYears.tableSchoolYears.LastUpdated = DateTime.UtcNow;
@@ -399,23 +397,11 @@ namespace opensis.data.Repository
                 }
                 else
                 {
-                    var schoolYearsMaster = this.context?.SchoolYears.FirstOrDefault(x => x.TenantId == schoolYears.tableSchoolYears.TenantId && x.SchoolId == schoolYears.tableSchoolYears.SchoolId && x.MarkingPeriodId == schoolYears.tableSchoolYears.MarkingPeriodId);
-                    schoolYearsMaster.SchoolId = schoolYears.tableSchoolYears.SchoolId;
-                    schoolYearsMaster.TenantId = schoolYears.tableSchoolYears.TenantId;
-                    schoolYearsMaster.AcademicYear = schoolYears.tableSchoolYears.StartDate.HasValue == true ? Convert.ToDecimal(schoolYears.tableSchoolYears.StartDate.Value.Year) : (decimal?)null;
-                    schoolYearsMaster.Title = schoolYears.tableSchoolYears.Title;
-                    schoolYearsMaster.ShortName = schoolYears.tableSchoolYears.ShortName;
-                    schoolYearsMaster.SortOrder = schoolYears.tableSchoolYears.SortOrder;
-                    schoolYearsMaster.StartDate = schoolYears.tableSchoolYears.StartDate;
-                    schoolYearsMaster.EndDate = schoolYears.tableSchoolYears.EndDate;
-                    schoolYearsMaster.PostStartDate = schoolYears.tableSchoolYears.PostStartDate;
-                    schoolYearsMaster.PostEndDate = schoolYears.tableSchoolYears.PostEndDate;
-                    schoolYearsMaster.DoesGrades = schoolYears.tableSchoolYears.DoesGrades;
-                    schoolYearsMaster.DoesExam = schoolYears.tableSchoolYears.DoesExam;
-                    schoolYearsMaster.DoesComments = schoolYears.tableSchoolYears.DoesComments;
-                    schoolYearsMaster.RolloverId = schoolYears.tableSchoolYears.RolloverId;
+                    var schoolYearsMaster = this.context?.SchoolYears.FirstOrDefault(x => x.TenantId == schoolYears.tableSchoolYears.TenantId && x.SchoolId == schoolYears.tableSchoolYears.SchoolId && x.MarkingPeriodId == schoolYears.tableSchoolYears.MarkingPeriodId);                    
+
+                    schoolYears.tableSchoolYears.AcademicYear= schoolYears.tableSchoolYears.StartDate.HasValue == true ? Convert.ToDecimal(schoolYears.tableSchoolYears.StartDate.Value.Year) : (decimal?)null;
                     schoolYears.tableSchoolYears.LastUpdated = DateTime.UtcNow;
-                    schoolYearsMaster.UpdatedBy = schoolYears.tableSchoolYears.UpdatedBy;
+                    this.context.Entry(schoolYearsMaster).CurrentValues.SetValues(schoolYears.tableSchoolYears);
                     this.context?.SaveChanges();
                     schoolYears._failure = false;
                 }
@@ -469,7 +455,17 @@ namespace opensis.data.Repository
                 var semester = this.context?.Semesters.FirstOrDefault(x => x.TenantId == quarters.tableQuarter.TenantId && x.SchoolId == quarters.tableQuarter.SchoolId && x.MarkingPeriodId == quarters.tableQuarter.SemesterId);
                 if (semester.StartDate <= quarters.tableQuarter.StartDate && semester.EndDate >= quarters.tableQuarter.EndDate)
                 {
-                    int? MarkingPeriodId = Utility.GetMaxPK(this.context, new Func<Quarters, int>(x => x.MarkingPeriodId));
+                    //int? MarkingPeriodId = Utility.GetMaxPK(this.context, new Func<Quarters, int>(x => x.MarkingPeriodId));
+
+                    int? MarkingPeriodId = 1;
+
+                    var quarterData = this.context?.Quarters.Where(x => x.TenantId == quarters.tableQuarter.TenantId && x.SchoolId == quarters.tableQuarter.SchoolId).OrderByDescending(x => x.MarkingPeriodId).FirstOrDefault();
+
+                    if (quarterData != null)
+                    {
+                        MarkingPeriodId = quarterData.MarkingPeriodId + 1;
+                    }
+
                     quarters.tableQuarter.MarkingPeriodId = (int)MarkingPeriodId;
                     quarters.tableQuarter.AcademicYear = semester.AcademicYear;
                     quarters.tableQuarter.LastUpdated = DateTime.UtcNow;
@@ -535,27 +531,13 @@ namespace opensis.data.Repository
             try
             {
                 var quarteMaster = this.context?.Quarters.FirstOrDefault(x => x.TenantId == quarters.tableQuarter.TenantId && x.SchoolId == quarters.tableQuarter.SchoolId && x.MarkingPeriodId == quarters.tableQuarter.MarkingPeriodId);
+                
                 var semester = this.context?.Semesters.FirstOrDefault(x => x.TenantId == quarters.tableQuarter.TenantId && x.SchoolId == quarters.tableQuarter.SchoolId && x.MarkingPeriodId == quarters.tableQuarter.SemesterId);
                 if(semester.StartDate <= quarters.tableQuarter.StartDate && semester.EndDate >= quarters.tableQuarter.EndDate)
                 {
-                    quarteMaster.SchoolId = quarters.tableQuarter.SchoolId;
-                    quarteMaster.TenantId = quarters.tableQuarter.TenantId;
-                    quarteMaster.AcademicYear = semester.AcademicYear;
-                    quarteMaster.SemesterId = quarters.tableQuarter.SemesterId;
-                    quarteMaster.Title = quarters.tableQuarter.Title;
-                    quarteMaster.ShortName = quarters.tableQuarter.ShortName;
-                    quarteMaster.SortOrder = quarters.tableQuarter.SortOrder;
-                    quarteMaster.SortOrder = quarters.tableQuarter.SortOrder;
-                    quarteMaster.StartDate = quarters.tableQuarter.StartDate;
-                    quarteMaster.EndDate = quarters.tableQuarter.EndDate;
-                    quarteMaster.PostStartDate = quarters.tableQuarter.PostStartDate;
-                    quarteMaster.PostEndDate = quarters.tableQuarter.PostEndDate;
-                    quarteMaster.DoesGrades = quarters.tableQuarter.DoesGrades;
-                    quarteMaster.DoesExam = quarters.tableQuarter.DoesExam;
-                    quarteMaster.DoesComments = quarters.tableQuarter.DoesComments;
-                    quarteMaster.RolloverId = quarters.tableQuarter.RolloverId;
-                    quarters.tableQuarter.LastUpdated = DateTime.UtcNow;
-                    quarteMaster.UpdatedBy = quarters.tableQuarter.UpdatedBy;
+                    quarters.tableQuarter.LastUpdated = DateTime.Now;
+                    quarters.tableQuarter.AcademicYear = semester.AcademicYear;
+                    this.context.Entry(quarteMaster).CurrentValues.SetValues(quarters.tableQuarter);
                     this.context?.SaveChanges();
                     quarters._failure = false;
                 }

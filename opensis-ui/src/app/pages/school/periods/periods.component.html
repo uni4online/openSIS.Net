@@ -4,59 +4,16 @@
             <div class="py-4">
                 <h4 class="px-gutter mb-4">{{'blockRotationDays'|translate}}</h4>
                 <hr/>
-
-                <div class="flex items-center justify-between px-6 py-3 bg-skyblue-light">
-                    <a class="cursor-pointer text-primary" routerLink="#">All Days</a>
-                </div>
-                <hr/>
-                <div class="flex items-center justify-between px-6 py-3">
-                    <a class="cursor-pointer">A</a>
+                
+                <div *ngFor="let block of blockListViewModel.blockList" class="flex items-center justify-between px-6 py-1">
+                    <a class="cursor-pointer" [ngClass]="{'font-bold':currentBlockId === block.blockId}" (click)="selectBlock(block)">{{block.blockTitle}} </a>
                     <div>
-                        <a class="cursor-pointer mr-3">
-                            <mat-icon [icIcon]="icEdit"></mat-icon>
-                        </a>
-                        <a class="cursor-pointer">
-                            <mat-icon [icIcon]="icDelete"></mat-icon>
-                        </a>
+                        <a class="cursor-pointer mr-3" (click)="editBlock(block)"><mat-icon [icIcon]="icEdit"></mat-icon></a>
+                        <a *ngIf="block.blockId === 1" ><mat-icon ></mat-icon></a>
+                        <a *ngIf="block.blockId !== 1" class="cursor-pointer" (click)="confirmDeleteBlock(block)"><mat-icon [icIcon]="icDelete"></mat-icon></a>
                     </div>
-                </div>
-                <hr/>
-
-                <div class="flex items-center justify-between px-6 py-3">
-                    <a class="cursor-pointer">B</a>
-                    <div>
-                        <a class="cursor-pointer mr-3">
-                            <mat-icon [icIcon]="icEdit"></mat-icon>
-                        </a>
-                        <a class="cursor-pointer">
-                            <mat-icon [icIcon]="icDelete"></mat-icon>
-                        </a>
-                    </div>
-                </div>
-                <hr/>
-                <div class="flex items-center justify-between px-6 py-3">
-                    <a class="cursor-pointer">Mon-Thr</a>
-                    <div>
-                        <a class="cursor-pointer mr-3">
-                            <mat-icon [icIcon]="icEdit"></mat-icon>
-                        </a>
-                        <a class="cursor-pointer">
-                            <mat-icon [icIcon]="icDelete"></mat-icon>
-                        </a>
-                    </div>
-                </div>
-                <hr/>
-                <div class="flex items-center justify-between px-6 py-3">
-                    <a class="cursor-pointer">Fri</a>
-                    <div>
-                        <a class="cursor-pointer mr-3">
-                            <mat-icon [icIcon]="icEdit"></mat-icon>
-                        </a>
-                        <a class="cursor-pointer">
-                            <mat-icon [icIcon]="icDelete"></mat-icon>
-                        </a>
-                    </div>
-                </div>
+                </div> 
+               
                 <hr class="mb-3" />
                 <button color="" class="w-full text-primary" mat-button type="button" (click)='goToAddBlock()'>
                     <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true" size="24px">
@@ -77,7 +34,135 @@
                 </button>
             </div>
             <hr/> -->
-            <vex-periods-list></vex-periods-list>
+            <div class="bg-white h-16 border-b sticky left-0 px-4" fxLayout="row" fxLayoutAlign="start center">
+                <div class="flex w-full justify-between">
+                    <div class="py-3" fxFlex="300px" fxFlex.lt-md="auto" fxHide.xs fxLayout="row"
+                        fxLayoutAlign="start center">
+        
+                        <div class="flex">
+                            <input
+                            matInput
+                            [(ngModel)]="searchKey"
+                            (keyup)="applyFilter()"
+                            class="py-3 border-0 outline-none w-full bg-transparent"
+                            appearance="outline" color="primary"
+                             placeholder="Search..."
+                            type="search">
+                            <button mat-button matSuffix mat-icon-button aria-label="clear"
+                            *ngIf="searchKey"
+                            (click)="onSearchClear()">
+                            <mat-icon>close</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+        
+        
+                    <div fxFlex="200px" class="pt-3">
+                        <a (click)="exportPeriodListToExcel()" class="cursor-pointer p-1 mt-1 inline-block align-middle"
+                      matTooltip="Export to Excel"><i class="icon icon-file-excel text-lg"></i></a>
+                        <button [matMenuTriggerFor]="columnFilterMenu" class="ml-4" fxFlex="none" mat-icon-button
+                            matTooltip="Filter Columns" type="button">
+                            <mat-icon [icIcon]="icFilterList"></mat-icon>
+                        </button>
+                        <button color="primary" class="ml-4" fxFlex="none" mat-raised-button type="button" (click)='goToAddPeriod()'>
+                            <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true"
+                                size="24px">
+                            </ic-icon>
+                            <span>{{'addNewPeriod'|translate}}</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        
+            <table @stagger mat-table [dataSource]="blockPeriodList" class="table-auto w-full" cdkDropList (cdkDropListDropped)="dropPeriodList($event)">
+        
+                <ng-container matColumnDef="periodId">
+                    <th mat-header-cell *matHeaderCellDef ></th>
+                    <td mat-cell *matCellDef="let element" cdkDrag>
+                        <mat-icon cdkDragHandle>reorder</mat-icon>
+                    </td>
+                </ng-container>
+        
+                <ng-container matColumnDef="periodTitle">
+                    <th mat-header-cell *matHeaderCellDef>{{'title'|translate}}</th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.periodTitle}}
+                    </td>
+                </ng-container>
+        
+                <ng-container matColumnDef="periodShortName">
+                    <th mat-header-cell *matHeaderCellDef>{{'shortName'|translate}}</th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.periodShortName}}
+                    </td>
+                </ng-container>
+        
+                <ng-container matColumnDef="periodStartTime">
+                    <th mat-header-cell *matHeaderCellDef>{{'startTime'|translate}}
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.periodStartTime|transformTimePipe}}
+                    </td>
+                </ng-container>
+        
+                <ng-container matColumnDef="periodEndTime">
+                    <th mat-header-cell *matHeaderCellDef>{{'endTime'|translate}}
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.periodEndTime |transformTimePipe}}
+                    </td>
+                </ng-container>
+        
+                <ng-container matColumnDef="length">
+                    <th mat-header-cell *matHeaderCellDef>{{'lengthInMinutes'|translate}}
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.length}}
+                    </td>
+                </ng-container>
+        
+                <ng-container matColumnDef="action">
+                    <th mat-header-cell *matHeaderCellDef>{{'action'|translate}}</th>
+                    <td mat-cell *matCellDef="let element">
+                        <a (click)="editPeriod(element)" matTooltip="Edit Info" class="mr-3 cursor-pointer">
+                            <mat-icon [icIcon]="icEdit"></mat-icon>
+                        </a>
+                        <a (click)="confirmDeletePeriod(element)" matTooltip="Delete Info" class="mr-3 cursor-pointer">
+                            <mat-icon [icIcon]="icDelete"></mat-icon>
+                        </a>
+                    </td>
+                </ng-container>
+        
+                <ng-container matColumnDef="loading">
+                    <mat-footer-cell *matFooterCellDef colspan="6">
+                        <vex-mat-spinner-overlay *ngIf="loading" color="accent"></vex-mat-spinner-overlay>
+                    </mat-footer-cell>
+                </ng-container>
+                <ng-container matColumnDef="noData">
+                    <td mat-footer-cell *matFooterCellDef colspan="6">
+                      No Data
+                    </td>
+                  </ng-container>
+        
+                  <tr mat-header-row *matHeaderRowDef="visibleColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: visibleColumns" @fadeInUp></tr>
+                  
+                  <tr mat-footer-row *matFooterRowDef="['loading']" [class.hide]="!loading"></tr>
+                  <tr mat-footer-row *matFooterRowDef="['noData']" [class.hide]="blockPeriodList?.data.length!=0"></tr>
+        
+            </table>
+            <!-- <mat-paginator [length]="totalCount" [pageSize]="pageSize" [pageSizeOptions]="[10, 20, 30, 40]" showFirstLastButtons (page)='getPageEvent($event)'></mat-paginator> -->
+            <!-- <mat-paginator [length]="totalCount" [pageSize]="pageSize" [pageSizeOptions]="[10, 20, 30, 40]" showFirstLastButtons (page)='getPageEvent($event)'></mat-paginator> -->
+        
+        
+        <mat-menu #columnFilterMenu="matMenu" xPosition="before" yPosition="below">
+            <button (click)="toggleColumnVisibility(column, $event)" *ngFor="let column of columns"
+                class="checkbox-item mat-menu-item">
+                <mat-checkbox (click)="$event.stopPropagation()" [(ngModel)]="column.visible" color="primary">
+                    {{column.label}}
+                </mat-checkbox>
+            </button>
+        </mat-menu>
         </mat-card>
     </div>
 </div>

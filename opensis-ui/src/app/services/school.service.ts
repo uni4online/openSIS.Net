@@ -52,6 +52,14 @@ export class SchoolService {
     this.schoolImage = imageInBase64;
   }
 
+  public cloneSchoolImage
+  setSchoolCloneImage(image){
+    this.cloneSchoolImage = image;
+  }
+  getSchoolCloneImage(){
+    return this.cloneSchoolImage;
+  }
+
   setSchoolId(id: number) {
     this.schoolId = id
   }

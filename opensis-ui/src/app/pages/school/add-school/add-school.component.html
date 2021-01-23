@@ -11,8 +11,7 @@
                 <div class="hidden sm:block mr-6 ng-tns-c284-386 ng-star-inserted w-1/6">
                     <div class="max-w-xxxs w-full">
                         <div class="h-45 mb-6 flex justify-center sm:px-0">
-                            <vex-profile-image [enableCropTool]="enableCropTool" [responseImage]="responseImage"
-                                ></vex-profile-image>
+                            <vex-profile-image [enableCropTool]="enableCropTool" [customCss]="'rounded'" [responseImage]="responseImage" class="bg-white p-3 rounded"></vex-profile-image>
                         </div>
 
                         <div class="px-gutter sm:px-0">
@@ -20,7 +19,8 @@
                                 <button @fadeInRight class="list-item mt-2 no-underline flex items-center w-full"
                                     [ngClass]="currentCategory == field.categoryId?'bg-primary hover:bg-primary text-white' : ''"
                                     (click)="changeCategory(field,index)" matRipple>
-                                    <span>{{field.title}}</span>
+                                    <span *ngIf="field.categoryId==2">{{field.title|translate}}</span>
+                                    <span *ngIf="field.categoryId!=2">{{field.title}}</span>
                                 </button>
                             </p>
 

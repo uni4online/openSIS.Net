@@ -2,8 +2,8 @@
 <div class="flex container-sidenav-secondary">
     <div class="sidenav-secondary">
         <vex-scrollbar class="flex-auto">
-            <div class="h-45 flex items-center sm:px-0" fxLayout="row" fxLayoutAlign="start center">
-                <vex-profile-image [enableCropTool]="enableCropTool" [responseImage]="responseImage">
+            <div class="h-45 text-center sm:px-0 pt-5 pb-2">
+                <vex-profile-image [enableCropTool]="enableCropTool" [responseImage]="responseImage" class="mx-auto">
                 </vex-profile-image>
 
             </div>
@@ -83,18 +83,18 @@
 
 
         <vex-page-layout>
-            <vex-page-layout-header class="pb-16 pt-6" fxLayoutAlign="center start">
+            <vex-page-layout-header class="pb-10 pt-6" fxLayoutAlign="center start">
                 <vex-secondary-toolbar current="Staff Information" class="w-full">
                     <vex-breadcrumbs [crumbs]="['Staff', pageStatus]" class="flex-auto"></vex-breadcrumbs>
                 </vex-secondary-toolbar>
             </vex-page-layout-header>
-            <vex-page-layout-content class="-mt-14">
+            <vex-page-layout-content class="-mt-4">
                 <mat-drawer-container class="bg-transparent flex-auto flex -mt-16">
                     <mat-drawer-content class="flex-auto flex items-start">
                         <div class="w-full" fxFlex="auto">
 
                             <vex-staff-generalinfo *ngIf="currentCategory==12" [staffCreateMode]="staffCreateMode"
-                                [staffDetailsForViewAndEdit]="staffAddModel" [categoryId]="indexOfCategory">
+                            (dataAfterSavingGeneralInfo)="afterSavingGeneralInfo($event)" [staffDetailsForViewAndEdit]="staffAddModel" [categoryId]="indexOfCategory">
                             </vex-staff-generalinfo>
 
                             <vex-staff-schoolinfo *ngIf="currentCategory==13" [staffCreateMode]="staffCreateMode"

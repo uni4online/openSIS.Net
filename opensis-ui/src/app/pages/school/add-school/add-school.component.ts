@@ -64,12 +64,15 @@ export class AddSchoolComponent implements OnInit, OnDestroy {
         this.pageStatus="Edit School";
       }
     });
-    this.schoolService.categoryToSend.subscribe((res) => {
+    this.schoolService.categoryToSend.pipe(takeUntil(this.destroySubject$)).subscribe((res) => {
         this.currentCategory = this.currentCategory + 1;
     });
-    this.loaderService.isLoading.subscribe((val) => {
+    this.loaderService.isLoading.pipe(takeUntil(this.destroySubject$)).subscribe((val) => {
       this.loading = val;
     });
+    this.schoolService.getSchoolDetailsForGeneral.pipe(takeUntil(this.destroySubject$)).subscribe((res: SchoolAddViewModel) => {
+      this.schoolAddViewModel=res;
+    })
   }
 
   ngOnInit() {
@@ -141,11 +144,13 @@ export class AddSchoolComponent implements OnInit, OnDestroy {
     this.schoolAddViewModel.schoolMaster.schoolId = this.schoolAddViewModel.schoolMaster.schoolDetail[0].schoolId;
     this.schoolService.ViewSchool(this.schoolAddViewModel).subscribe(data => {
       this.schoolAddViewModel = data;
+      this.responseImage = this.schoolAddViewModel.schoolMaster.schoolDetail[0].schoolLogo;
+      this.schoolAddViewModel.schoolMaster.schoolDetail[0].schoolLogo=null;
       this.schoolService.sendDetails(this.schoolAddViewModel);
       this.fieldsCategory = data.schoolMaster.fieldsCategory;
       this.schoolTitle = this.schoolAddViewModel.schoolMaster.schoolName;
-      this.responseImage = this.schoolAddViewModel.schoolMaster.schoolDetail[0].schoolLogo;
       this.schoolService.setSchoolImage(this.responseImage);
+      this.schoolService.setSchoolCloneImage(this.responseImage);
     });
   }
 
@@ -153,6 +158,7 @@ export class AddSchoolComponent implements OnInit, OnDestroy {
     this.schoolService.setSchoolDetails(null)
     this.schoolService.setSchoolImage(null);
     this.schoolService.setSchoolId(null);
+    this.schoolService.setSchoolCloneImage(null);
     this.destroySubject$.next();
     this.destroySubject$.complete();
   }

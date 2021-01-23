@@ -16,17 +16,19 @@ import {EmtyNumberCheckPipe} from './user-define-pipe/emty-number-check.pipe';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { MatCardModule } from '@angular/material/card';
 import { TranslateModule } from '@ngx-translate/core';
-import {InvalidControlScrollDirective} from './directives/invalid-control-scroll.directive';
+import {InvalidControlScrollDirective} from './user-defined-directives/invalid-control-scroll.directive';
 import {EmtyBooleanCheckReversePipe} from './user-define-pipe/emty-boolean-check.reverse.pipe';
 import { SafePipe } from './user-define-pipe/safeHtml.pipe';
 import { TransformDateTimePipe } from './user-define-pipe/transform-datetime-pipe';
 import {EmailvalidatorDirective} from './user-defined-directives/emailvalidator.directive';
 import {PhonevalidatorDirective} from './user-defined-directives/phonevalidator.directive';
 import { AgePipe } from './user-define-pipe/age-calculator-pipe';
+import { TransformTimePipe } from './user-define-pipe/transfrom-time.pipe';
+import { EvenOddPipe } from './user-define-pipe/even-odd.pipe';
 @NgModule({
   declarations: [MatSpinnerOverlayComponent, ProfileImageComponent,PhoneMaskDirective,EmtyBooleanCheckPipe,EmtyBooleanCheckReversePipe,
-    EmtyValueCheckPipe,EmtyNumberCheckPipe, ConfirmDialogComponent,InvalidControlScrollDirective,TransformDateTimePipe,EmailvalidatorDirective,
-    PhonevalidatorDirective,SafePipe,AgePipe],
+    EmtyValueCheckPipe,EmtyNumberCheckPipe, ConfirmDialogComponent,InvalidControlScrollDirective,TransformDateTimePipe,TransformTimePipe,EmailvalidatorDirective,
+    PhonevalidatorDirective,SafePipe,AgePipe,EvenOddPipe],
   imports: [
     CommonModule,
     MatProgressSpinnerModule,
@@ -40,6 +42,6 @@ import { AgePipe } from './user-define-pipe/age-calculator-pipe';
     TranslateModule
   ],
   exports:[MatSpinnerOverlayComponent, ProfileImageComponent,PhoneMaskDirective,EmtyBooleanCheckPipe,EmtyValueCheckPipe,EmtyNumberCheckPipe,InvalidControlScrollDirective,
-    EmtyBooleanCheckReversePipe,TransformDateTimePipe,EmailvalidatorDirective,PhonevalidatorDirective,SafePipe,AgePipe]
+    EmtyBooleanCheckReversePipe,TransformDateTimePipe,TransformTimePipe,EmailvalidatorDirective,PhonevalidatorDirective,SafePipe,AgePipe,EvenOddPipe]
 })
 export class SharedModuleModule { }

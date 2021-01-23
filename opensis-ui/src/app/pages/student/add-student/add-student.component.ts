@@ -88,6 +88,9 @@ export class AddStudentComponent implements OnInit, OnDestroy {
     this.loaderService.isLoading.pipe(takeUntil(this.destroySubject$)).subscribe((currentState) => {
       this.loading = currentState;
     });
+    this.studentService.getStudentDetailsForGeneral.pipe(takeUntil(this.destroySubject$)).subscribe((res: StudentAddModel) => {
+      this.studentAddModel=res;
+    })
   }
 
   ngOnInit(): void {
@@ -162,11 +165,13 @@ export class AddStudentComponent implements OnInit, OnDestroy {
     this.studentAddModel.studentMaster.studentId = this.studentId;
     this.studentService.viewStudent(this.studentAddModel).subscribe(data => {
       this.studentAddModel = data;
-      this.fieldsCategory = data.fieldsCategoryList;
-      this.studentService.sendDetails(this.studentAddModel);
       this.responseImage = this.studentAddModel.studentMaster.studentPhoto;
+      this.fieldsCategory = data.fieldsCategoryList;
+      this.studentAddModel.studentMaster.studentPhoto=null;
+      this.studentService.sendDetails(this.studentAddModel);
       this.studentTitle = this.studentAddModel.studentMaster.firstGivenName + " " + this.studentAddModel.studentMaster.lastFamilyName;
       this.studentService.setStudentImage(this.responseImage);
+      this.studentService.setStudentCloneImage(this.responseImage);
       this.checkCriticalAlertFromMedical(this.studentAddModel);
     });
   }
@@ -184,7 +189,10 @@ export class AddStudentComponent implements OnInit, OnDestroy {
     this.studentService.setStudentDetails(null);
     this.studentService.setStudentImage(null);
     this.studentService.setStudentId(null);
+    this.studentService.sendDetails(null);
+    this.studentService.setStudentCloneImage(null);
     this.destroySubject$.next();
+    this.destroySubject$.complete();
   }
 
 }

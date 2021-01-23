@@ -60,11 +60,11 @@
                     <li>
                         <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'staffId'|translate}}</mat-label>
-                            <input (keyup)="checkInternalId($event)" #staffInternalId="ngModel"
-                                [(ngModel)]="staffAddModel.staffMaster.staffInternalId" name="staffInternalId" matInput>
-                            <mat-error *ngIf="staffInternalId.errors?.required">
+                            <input [formControl]="internalId"
+                                [(ngModel)]="staffAddModel.staffMaster.staffInternalId" name="staffInternalId" matInput required>
+                            <mat-error *ngIf="internalId.errors?.required">
                                 {{'staffInternalIdIsRequired'|translate}}</mat-error>
-                            <mat-error *ngIf="staffInternalId.errors?.nomatch">
+                            <mat-error *ngIf="internalId.errors?.nomatch">
                                 {{'staffInternalIdAlreadyExist'|translate}}</mat-error>
                         </mat-form-field>
                     </li>
@@ -251,13 +251,12 @@
                         <div class="flex flex-1 mx-4 md:w-1/2">
                             <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                                 <mat-label>{{'loginEmailAddress'|translate}}</mat-label>
-                                <input #loginEmailAddress="ngModel" name="loginEmailAddress"
-                                    (keyup)="checkLoginEmail($event)"
+                                <input [formControl]="loginEmail" name="loginEmailAddress"
                                     [(ngModel)]="staffAddModel.staffMaster.loginEmailAddress" matInput
-                                    [required]="hideAccess ? true : null ">
-                                <mat-error class="text-red" *ngIf="loginEmailAddress.errors?.required && hideAccess">
+                                    [required]="hideAccess ? true : null " >
+                                <mat-error class="text-red" *ngIf="loginEmail.errors?.required && hideAccess">
                                     {{'loginEmailAddressIsRequired'|translate}}</mat-error>
-                                <mat-error *ngIf="loginEmailAddress.errors?.nomatch">
+                                <mat-error *ngIf="loginEmail.errors?.nomatch">
                                     {{'loginEmailAddressAlreadyExist'|translate}}</mat-error>
                             </mat-form-field>
                         </div>
@@ -301,131 +300,17 @@
 
 <!--View-->
 <mat-card class="w-full" *ngIf="staffCreateMode == staffCreate.VIEW">
-
     <div class="flex items-center mx-4" fxLayout="row" fxLayoutAlign="center center">
         <h3 class="flex-auto">{{'generalInformation' | translate}}</h3>
         <button mat-button color="primary" (click)="editGeneralInfo()">
             <mat-icon [icIcon]="icEdit"></mat-icon> {{'editInformation' |translate}}
         </button>
     </div>
-    <mat-card-content>
+    <vex-view-staff-generalinfo
+    [staffCreateMode]="staffCreateMode"
+     [categoryId]="categoryId"
+     [staffViewDetails]="staffDetailsForViewAndEdit"
+     [nameOfMiscValues]="nameOfMiscValuesForView">
 
-        <div @stagger fxLayout="column">
-            <h4 class="text-primary pt-6 pb-2 px-4">{{'identificationInformation'|translate}}</h4>
-            <ul class="grid grid-cols-3 col-gap-8 row-gap-10 mt-2 mx-4">
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'staffName' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{staffAddModel.staffMaster.salutation}} {{staffAddModel?.staffMaster.firstGivenName}} {{staffAddModel?.staffMaster.middleName}}
-                        {{staffAddModel?.staffMaster.lastFamilyName}}</p>
-                </li>
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'staffId' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{staffAddModel.staffMaster.staffInternalId | EmtyValueCheckPipe}}</p>
-                </li>
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'alternateId' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{staffAddModel.staffMaster.alternateId | EmtyValueCheckPipe}}</p>
-                </li>
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'districtId' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{staffAddModel.staffMaster.districtId | EmtyValueCheckPipe}}</p>
-                </li>
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'stateId' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{staffAddModel.staffMaster.stateId | EmtyValueCheckPipe}}</p>
-                </li>
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'preferredCommonName' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{staffAddModel.staffMaster.preferredName |EmtyValueCheckPipe}}</p>
-                </li>
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'previousMaidenName' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{staffAddModel.staffMaster.previousName |EmtyValueCheckPipe}}</p>
-                </li>
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'socialSecurityNumber' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{staffAddModel.staffMaster.socialSecurityNumber |EmtyValueCheckPipe}}</p>
-                </li>
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'otherGovtIssuedNumber' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{staffAddModel.staffMaster.otherGovtIssuedNumber |EmtyValueCheckPipe}}</p>
-                </li>
-            </ul>
-            <vex-custom-field-without-form [schoolDetailsForViewAndEdit]="staffAddModel" [module]="module"
-            [categoryId]="categoryId" [staffCreateMode]="staffCreateMode"></vex-custom-field-without-form>
-
-
-            <hr class="-mx-4 mt-6">
-            <h4 class="text-primary pt-6 pb-2 px-4">{{'demographicInformation'|translate}}</h4>
-
-            <ul class="grid grid-cols-3 col-gap-8 row-gap-10 mt-2 mx-4">
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'gender' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{staffAddModel.staffMaster.gender |EmtyValueCheckPipe}}</p>
-                </li>
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'race' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{staffAddModel.staffMaster.race |EmtyValueCheckPipe}}</p>
-                </li>
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'ethnicity' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{staffAddModel.staffMaster.ethnicity |EmtyValueCheckPipe}}</p>
-                </li>
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'maritalStatus' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{staffAddModel.staffMaster.maritalStatus |EmtyValueCheckPipe}}</p>
-                </li>
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'dateOfBirth' | translate}}</label>
-
-                    <p *ngIf ="staffAddModel.staffMaster.dob !== null" class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{staffAddModel.staffMaster.dob | date:'mediumDate' | EmtyValueCheckPipe}} | {{ getAge(staffAddModel.staffMaster.dob)}}</p>
-                    <p *ngIf ="staffAddModel.staffMaster.dob == null" class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{staffAddModel.staffMaster.dob | date:'mediumDate' | EmtyValueCheckPipe}}</p>
-                </li>
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'countryOfBirth' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{countryName}}</p>
-                </li>
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'nationality' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{nationality}}</p>
-                </li>
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'firstLanguage' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{firstLanguageName}}</p>
-                </li>
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'secondLanguage' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{secondLanguageName}}</p>
-                </li>
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'thirdLanguage' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{thirdLanguageName}}</p>
-                </li>
-            </ul>
-
-
-            <hr class="-mx-4 mt-6">
-
-            <h4 class="text-primary pt-6 pb-2 px-4">{{'accessInformation'|translate}}</h4>
-            <ul class="grid grid-cols-3 col-gap-8 row-gap-10 my-2 mx-4">
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'loginEmailAddress' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{staffAddModel.staffMaster.loginEmailAddress | EmtyValueCheckPipe}}</p>
-                </li>
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'password' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2"><a href=""
-                            class="text-primary pointer">Reset Password</a></p>
-                </li>
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'portalAccess' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2 text-green">{{staffPortalAccess}}</p>
-                </li>
-                <!-- <li>
-                    <label class="text-sm leading-5 text-gray">{{'lastLogin' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">Aug 20, 2020, 10:30 AM</p>
-                </li> -->
-            </ul>
-        </div>
-    </mat-card-content>
+    </vex-view-staff-generalinfo>
 </mat-card>

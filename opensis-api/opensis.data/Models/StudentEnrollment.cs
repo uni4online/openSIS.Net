@@ -25,6 +25,8 @@ namespace opensis.data.Models
         
         public DateTime? LastUpdated { get; set; }
         public string UpdatedBy { get; set; }
-       
+        public bool? IsActive { get; set; }
+        public virtual StudentMaster StudentMaster { get; set; }
+
     }
 }

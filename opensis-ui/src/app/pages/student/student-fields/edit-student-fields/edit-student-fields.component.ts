@@ -40,8 +40,8 @@ export class EditStudentFieldsComponent implements OnInit {
      ) {
       this.form=fb.group({
         fieldId:[0],
-        title:['',[Validators.required,ValidationService.noWhitespaceValidator]],
-        fieldType:[],
+        title:['',[ValidationService.noWhitespaceValidator]],
+        fieldType:['',[Validators.required]],
         selectOptions:[''],
         defaultSelection:[,[ValidationService.defaultSelectionValidator]],
         required:[false],
@@ -93,7 +93,7 @@ export class EditStudentFieldsComponent implements OnInit {
             }
             else{
               if (res._failure) {
-                this.snackbar.open('Student field failed. ' + res._message, 'LOL THANKS', {
+                this.snackbar.open('Student field failed. ' + res._message, '', {
                   duration: 10000
                 });
               } 
@@ -130,7 +130,7 @@ export class EditStudentFieldsComponent implements OnInit {
             }
             else{
               if (res._failure) {
-                this.snackbar.open('Student field failed. ' + res._message, 'LOL THANKS', {
+                this.snackbar.open('Student field failed. ' + res._message, '', {
                   duration: 10000
                 });
               } 

@@ -1,5 +1,9 @@
-.mat-radio-button ~ .mat-radio-button {
-    margin-left: 16px;
+@import '../../../../../../node_modules/angular-calendar/css/angular-calendar.css';
+@import "../../../../../@vex/styles/partials/plugins/_angular-calendar.scss";
+
+.mat-radio-button {
+    margin-right: 16px;
+    margin-bottom: 10px;
 }
 
 .calendar {

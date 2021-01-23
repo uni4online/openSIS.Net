@@ -359,5 +359,28 @@ namespace opensis.core.Common.Services
 
         }
 
+        /// <summary>
+        /// Get All Language For Login
+        /// </summary>
+        /// <param name="language"></param>
+        /// <returns></returns>
+        public LanguageListModel GetAllLanguageForLogin(LanguageListModel language)
+        {
+            LanguageListModel languageListModel = new LanguageListModel();
+            try
+            {
+                languageListModel = this.commonRepository.GetAllLanguageForLogin(language);
+                return languageListModel;
+            }
+            catch (Exception ex)
+            {
+
+                languageListModel._failure = true;
+                languageListModel._message = null;
+                return languageListModel;
+            }
+
+        }
+
     }
 }

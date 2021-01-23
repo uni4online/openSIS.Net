@@ -8,14 +8,6 @@
         <mat-drawer-container class="bg-transparent flex-auto flex -mt-16">
             <mat-drawer-content class="flex-auto flex items-start">
                 <div  class="w-full p-0">
-                    <!-- <div *ngIf="pageId === 'US Common Core Standards'">
-                        <vex-us-common-core-standards></vex-us-common-core-standards>
-                    </div>
-
-                    <div *ngIf="pageId === 'School Specific Standards'">
-                        <vex-school-specific-standards></vex-school-specific-standards>
-                    </div> -->
-
                     <div *ngIf="pageId === 'Standard Grade Setup'">
                         <vex-standard-grade-setup></vex-standard-grade-setup>
                     </div>
@@ -26,6 +18,10 @@
 
                     <div *ngIf="pageId === 'Report Card Grades'">
                         <vex-report-card-grades></vex-report-card-grades>
+                    </div>
+
+                    <div *ngIf="pageId === 'Honor Roll Setup'">
+                        <vex-honor-roll-setup></vex-honor-roll-setup>
                     </div>
                 </div>
             </mat-drawer-content>

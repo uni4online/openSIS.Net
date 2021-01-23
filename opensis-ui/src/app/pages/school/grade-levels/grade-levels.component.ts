@@ -130,7 +130,7 @@ export class GradeLevelsComponent implements OnInit {
             }
 
           } else {
-            this.snackbar.open('Grade Level List failed. ' + res._message, 'LOL THANKS', {
+            this.snackbar.open('Grade Level List failed. ' + res._message, '', {
               duration: 10000
             });
           }
@@ -194,7 +194,7 @@ export class GradeLevelsComponent implements OnInit {
           duration: 10000
         });
       } else if (res._failure) {
-        this.snackbar.open(res._message, 'LOL THANKS', {
+        this.snackbar.open(res._message, '', {
           duration: 10000
         });
       } else {

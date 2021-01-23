@@ -89,8 +89,30 @@ export class ValidationService {
     }
   }
   static noWhitespaceValidator(control) {
-    const isWhitespace = (control.value || '').trim().length === 0;
+    const isWhitespace = (control.value || '').toString().trim().length === 0;
     const isValid = !isWhitespace;
     return isValid ? null : { 'whitespace': true };
+  }
+  static lowerCaseValidator(control){
+    let errcode:boolean=false
+    if(control.value===undefined){
+      errcode=false;
+    }else{
+      let ControlChar:string[]=Array.from(control.value);
+      for(let value of ControlChar){
+        if(value=== value.toUpperCase()){
+          errcode=true;
+          break;
+        }
+        else{
+          errcode=false;
+        }
+      }
+    }
+    if (errcode) {
+        return {lowerCase: true};
+    } else {
+        return null;
+    }
   }
 }

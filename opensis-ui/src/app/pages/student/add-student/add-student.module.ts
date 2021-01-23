@@ -48,6 +48,8 @@ import { ViewstudentEnrollmentinfoComponent } from './viewstudent-enrollmentinfo
 import { CustomFieldModule } from '../../../../../src/app/common/custom-field/custom-field.module';
 import { CustomFieldWithoutFormModule } from '../../../../../src/app/common/custom-field-without-form/custom-field-without-form.module';
 import {MatTabsModule} from '@angular/material/tabs';
+import { ViewStudentGeneralinfoComponent } from './view-student-generalinfo/view-student-generalinfo.component';
+import { ViewStudentAddressandcontactsComponent } from './view-student-addressandcontacts/view-student-addressandcontacts.component';
 
 @NgModule({
   declarations: [
@@ -63,7 +65,9 @@ import {MatTabsModule} from '@angular/material/tabs';
     StudentContactsComponent,
     SiblingsinfoComponent,
     ViewstudentLogininfoComponent,
-    ViewstudentEnrollmentinfoComponent
+    ViewstudentEnrollmentinfoComponent,
+    ViewStudentGeneralinfoComponent,
+    ViewStudentAddressandcontactsComponent
   ],
   imports: [
     CommonModule,

@@ -7,8 +7,6 @@ import { SchoolCreate } from '../../../../enums/school-create.enum';
 import { CountryModel } from '../../../../models/countryModel';
 import { StaffAddModel } from '../../../../models/staffModel';
 import { LanguageModel } from '../../../../models/languageModel';
-import icCheckBox from '@iconify/icons-ic/check-box';
-import icCheckBoxOutlineBlank from '@iconify/icons-ic/check-box-outline-blank';
 import icEdit from '@iconify/icons-ic/edit';
 import { TranslateService } from '@ngx-translate/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -19,7 +17,7 @@ import { SharedFunction } from '../../../../pages/shared/shared-function';
 import { StaffRelation } from '../../../../enums/staff-relation.enum';
 import { ImageCropperService } from '../../../../services/image-cropper.service';
 import { LovList } from '../../../../models/lovModel';
-
+import { MiscModel } from '../../../../models/misc-data-student.model';
 @Component({
   selector: 'vex-staff-addressinfo',
   templateUrl: './staff-addressinfo.component.html',
@@ -36,6 +34,7 @@ export class StaffAddressinfoComponent implements OnInit, OnDestroy {
   @Input() categoryId;
   @ViewChild('f') currentForm: NgForm;
   @Input() staffCreateMode: SchoolCreate;
+  nameOfMiscValuesForView:MiscModel = new MiscModel();
   countryModel: CountryModel = new CountryModel();
   staffAddModel: StaffAddModel = new StaffAddModel();
   languages: LanguageModel = new LanguageModel();
@@ -44,22 +43,16 @@ export class StaffAddressinfoComponent implements OnInit, OnDestroy {
   relationshipList = [];
   lovListViewModel: LovList = new LovList();
   module = 'Staff';
-  countryName = "-";
-  mailingAddressCountry = "-";
   data;
   languageList;
   checkBoxChecked = false;
   icEdit = icEdit;
-  icCheckBox = icCheckBox;
-  icCheckBoxOutlineBlank = icCheckBoxOutlineBlank;
   actionButton="submit"
-
+  cloneStaffAddModel;
   constructor(public translateService: TranslateService,
     private snackbar: MatSnackBar,
     private staffService: StaffService,
     private commonService: CommonService,
-    private loginService: LoginService,
-    private commonFunction: SharedFunction,
     private imageCropperService: ImageCropperService) {
     translateService.use('en');
   }
@@ -68,6 +61,7 @@ export class StaffAddressinfoComponent implements OnInit, OnDestroy {
     if (this.staffCreateMode == this.staffCreate.VIEW) {
       this.data = this.staffDetailsForViewAndEdit?.staffMaster;
       this.staffAddModel = this.staffDetailsForViewAndEdit;
+      this.cloneStaffAddModel = JSON.stringify(this.staffAddModel);
       this.imageCropperService.enableUpload(false);
       this.staffService.changePageMode(this.staffCreateMode);
       if (this.data.mailingAddressSameToHome) {
@@ -80,26 +74,46 @@ export class StaffAddressinfoComponent implements OnInit, OnDestroy {
       this.imageCropperService.enableUpload(true);
       this.staffService.changePageMode(this.staffCreateMode);
       this.staffAddModel = this.staffService.getStaffDetails();
+      this.cloneStaffAddModel = JSON.stringify(this.staffAddModel);
     }
     this.getAllRelationship();
     this.getAllCountry();
   }
 
+  editAddressContactInfo() {
+    this.staffCreateMode = this.staffCreate.EDIT;
+    this.staffService.changePageMode(this.staffCreateMode);
+    this.actionButton="update";
+    this.imageCropperService.enableUpload(true);
+    this.staffAddModel.staffMaster.mailingAddressCountry =+this.staffAddModel.staffMaster.mailingAddressCountry ;
+    this.staffAddModel.staffMaster.homeAddressCountry = +this.staffAddModel.staffMaster.homeAddressCountry;
+
+  }
+
+  cancelEdit() {
+    if(this.staffAddModel!==JSON.parse(this.cloneStaffAddModel)){
+      this.staffAddModel=JSON.parse(this.cloneStaffAddModel);
+      this.staffDetailsForViewAndEdit=JSON.parse(this.cloneStaffAddModel);
+      this.staffService.sendDetails(JSON.parse(this.cloneStaffAddModel));
+    }
+    this.staffCreateMode = this.staffCreate.VIEW;
+    this.staffService.changePageMode(this.staffCreateMode);
+    this.imageCropperService.enableUpload(false);
+    this.imageCropperService.cancelImage("staff");
+
+  }
+
   copyHomeAddress(check) {
     if (this.staffAddModel.staffMaster.mailingAddressSameToHome === false || this.staffAddModel.staffMaster.mailingAddressSameToHome === null) {
-
       if (this.staffAddModel.staffMaster.homeAddressLineOne !== undefined && this.staffAddModel.staffMaster.homeAddressCity !== undefined &&
         this.staffAddModel.staffMaster.homeAddressState !== undefined && this.staffAddModel.staffMaster.homeAddressZip !== undefined) {
-
         this.staffAddModel.staffMaster.mailingAddressLineOne = this.staffAddModel.staffMaster.homeAddressLineOne;
         this.staffAddModel.staffMaster.mailingAddressLineTwo = this.staffAddModel.staffMaster.homeAddressLineTwo;
         this.staffAddModel.staffMaster.mailingAddressCity = this.staffAddModel.staffMaster.homeAddressCity;
         this.staffAddModel.staffMaster.mailingAddressState = this.staffAddModel.staffMaster.homeAddressState;
         this.staffAddModel.staffMaster.mailingAddressZip = this.staffAddModel.staffMaster.homeAddressZip;
         this.staffAddModel.staffMaster.mailingAddressCountry = this.staffAddModel.staffMaster.homeAddressCountry;
-
       } else {
-
         this.checkBoxChecked = check ? true : false;
         this.snackbar.open('Please Provide All Mandatory Fields First', '', {
           duration: 10000
@@ -143,18 +157,22 @@ export class StaffAddressinfoComponent implements OnInit, OnDestroy {
         } else {
           this.countryListArr = data.tableCountry;
           if (this.staffCreateMode == this.staffCreate.VIEW) {
-            this.countryListArr.map((val) => {
-              var countryInNumber = +this.data.homeAddressCountry;
-              var mailingAddressCountry = +this.data.mailingAddressCountry;
-              if (val.id === countryInNumber) {
-                this.countryName = val.name;
-              }
-              if (val.id === mailingAddressCountry) {
-                this.mailingAddressCountry = val.name;
-              }
-            })
+          this.findCountryNameById()
           }
         }
+      }
+    })
+  }
+
+  findCountryNameById(){
+    this.countryListArr.map((val) => {
+      var countryInNumber = +this.data.homeAddressCountry;
+      var mailingAddressCountry = +this.data.mailingAddressCountry;
+      if (val.id === countryInNumber) {
+        this.nameOfMiscValuesForView.countryName = val.name;
+      }
+      if (val.id === mailingAddressCountry) {
+        this.nameOfMiscValuesForView.mailingAddressCountry = val.name;
       }
     })
   }
@@ -163,9 +181,9 @@ export class StaffAddressinfoComponent implements OnInit, OnDestroy {
     if (this.staffAddModel.fieldsCategoryList !== null) {
       this.staffAddModel.selectedCategoryId = this.staffAddModel.fieldsCategoryList[this.categoryId].categoryId;
       
-      for (var i = 0; i < this.staffAddModel.fieldsCategoryList[this.categoryId].customFields.length; i++) {
-        if (this.staffAddModel.fieldsCategoryList[this.categoryId].customFields[i].type === "Multiple SelectBox") {
-          this.staffAddModel.fieldsCategoryList[this.categoryId].customFields[i].customFieldsValue[0].customFieldValue = this.staffService.getStaffMultiselectValue().toString().replaceAll(",", "|");
+      for (let staffCustomField of this.staffAddModel.fieldsCategoryList[this.categoryId].customFields) {
+        if (staffCustomField.type === "Multiple SelectBox" && this.staffService.getStaffMultiselectValue() !== undefined) {
+          staffCustomField.customFieldsValue[0].customFieldValue = this.staffService.getStaffMultiselectValue().toString().replaceAll(",", "|");
         }
       }
     }
@@ -186,28 +204,19 @@ export class StaffAddressinfoComponent implements OnInit, OnDestroy {
           this.snackbar.open('Staff Update Successful.', '', {
             duration: 10000
           });
-          this.staffCreateMode = this.staffCreate.VIEW;
+          this.staffService.setStaffCloneImage(data.staffMaster.staffPhoto);
+          data.staffMaster.staffPhoto=null;
           this.data = data.staffMaster;
-           this.imageCropperService.enableUpload(false);
+          this.staffDetailsForViewAndEdit=data;
+          this.cloneStaffAddModel=JSON.stringify(this.staffDetailsForViewAndEdit);
+          this.staffCreateMode = this.staffCreate.VIEW;
+          this.findCountryNameById();
+          this.imageCropperService.enableUpload(false);
           this.staffService.changePageMode(this.staffCreateMode);
+          
         }
       }
-
     })
-  }
-
-
-  editAddressContactInfo() {
-    this.staffCreateMode = this.staffCreate.EDIT;
-    this.staffService.changePageMode(this.staffCreateMode);
-    this.actionButton="update";
-    this.imageCropperService.enableUpload(true);
-  }
-
-  cancelEdit() {
-    this.staffCreateMode = this.staffCreate.VIEW;
-    this.staffService.changePageMode(this.staffCreateMode);
-    this.imageCropperService.enableUpload(false);
   }
 
   ngOnDestroy() {

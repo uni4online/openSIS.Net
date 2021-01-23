@@ -60,7 +60,7 @@ class AttendanceCodeCategories{
 
     constructor(){
         this.tenantId = sessionStorage.getItem("tenantId");
-        this.updatedBy = "Souvik";
+        this.updatedBy = sessionStorage.getItem('email');
     }
 }
 
@@ -82,6 +82,6 @@ class AttendanceCode{
 
     constructor(){
         this.tenantId = sessionStorage.getItem("tenantId");
-        this.updatedBy = "Souvik";
+        this.updatedBy = sessionStorage.getItem('email');
     }
 }

@@ -129,12 +129,12 @@ export class FemaleToiletTypeComponent implements OnInit {
         }
         else{
           if (res._failure) {
-            this.snackbar.open('Female Toilet Type Deletion failed. ' + res._message, 'LOL THANKS', {
+            this.snackbar.open('Female Toilet Type Deletion failed. ' + res._message, '', {
               duration: 10000
             });
           } 
           else { 
-            this.snackbar.open('Female Toilet Type ' + res._message, 'LOL THANKS', {
+            this.snackbar.open('Female Toilet Type ' + res._message, '', {
               duration: 10000
             });
             this.getAllFemaleToiletType()
@@ -170,7 +170,7 @@ export class FemaleToiletTypeComponent implements OnInit {
           if (res._failure) {  
             this.femaleToiletTypeList=new MatTableDataSource(res.dropdownList) ;
             this.listCount=this.femaleToiletTypeList.data;
-            this.snackbar.open('Female Toilet Type List failed. ' + res._message, 'LOL THANKS', {
+            this.snackbar.open('Female Toilet Type List failed. ' + res._message, '', {
               duration: 10000
             });
           } 

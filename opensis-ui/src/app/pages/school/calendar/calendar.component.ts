@@ -61,7 +61,7 @@ const colors: any = {
 
 export class CalendarComponent implements OnInit {
   @ViewChild('modalContent', { static: true }) modalContent: TemplateRef<any>;
-  isMarkingPeriod:string;
+  isMarkingPeriod: string;
   getCalendarList: CalendarListModel = new CalendarListModel();
   getAllMembersList: GetAllMembersList = new GetAllMembersList();
   getAllCalendarEventList: CalendarEventListViewModel = new CalendarEventListViewModel();
@@ -81,30 +81,30 @@ export class CalendarComponent implements OnInit {
   icAdd = icAdd;
   icEdit = icEdit;
   icDelete = icDelete;
-  icWarning=icWarning;
+  icWarning = icWarning;
   events$: Observable<CalendarEvent<{ calendar: CalendarEventModel }>[]>;
   refresh: Subject<any> = new Subject();
   calendarFrom: FormControl;
   cssClass: string;
-  loading:boolean;
-  constructor(private http: HttpClient, 
+  loading: boolean;
+  constructor(private http: HttpClient,
     private dialog: MatDialog,
-    private snackbar: MatSnackBar, 
-    public translate: TranslateService, 
+    private snackbar: MatSnackBar,
+    public translate: TranslateService,
     private membershipService: MembershipService,
-    private calendarEventService: CalendarEventService, 
-    private calendarService: CalendarService, 
+    private calendarEventService: CalendarEventService,
+    private calendarService: CalendarService,
     private layoutService: LayoutService,
-    private loaderService:LoaderService,
+    private loaderService: LoaderService,
     private cdr: ChangeDetectorRef,) {
     this.translate.setDefaultLang('en');
-    if(localStorage.getItem("collapseValue") !== null){
-      if( localStorage.getItem("collapseValue") === "false"){
+    if (localStorage.getItem("collapseValue") !== null) {
+      if (localStorage.getItem("collapseValue") === "false") {
         this.layoutService.expandSidenav();
-      }else{
+      } else {
         this.layoutService.collapseSidenav();
-      } 
-    }else{
+      }
+    } else {
       this.layoutService.expandSidenav();
     }
     this.loaderService.isLoading.subscribe((res) => {
@@ -125,9 +125,9 @@ export class CalendarComponent implements OnInit {
     this.getAllCalendarEvent();
   }
 
-  ngAfterViewChecked(){
+  ngAfterViewChecked() {
     this.cdr.detectChanges();
- }
+  }
 
   //Show all members
   getAllMemberList() {
@@ -166,9 +166,9 @@ export class CalendarComponent implements OnInit {
         }
         this.refresh.next();
       }
-      
+
     });
-   
+
   }
 
   // Rendar all events in calendar
@@ -217,8 +217,8 @@ export class CalendarComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.isMarkingPeriod=sessionStorage.getItem("markingPeriod");
-    if(this.isMarkingPeriod!="null"){
+    this.isMarkingPeriod = sessionStorage.getItem("markingPeriod");
+    if (this.isMarkingPeriod != "null") {
       this.getAllCalendar();
       this.getAllMemberList();
     }
@@ -256,7 +256,7 @@ export class CalendarComponent implements OnInit {
         this.snackbar.open('Event dragging failed. ' + data._message, '', {
           duration: 10000
         });
-      } 
+      }
     });
     this.refresh.next();
   }
@@ -264,7 +264,7 @@ export class CalendarComponent implements OnInit {
   //Open modal for add new calendar
   openAddNewCalendar() {
     this.dialog.open(AddCalendarComponent, {
-      data: { allMembers: this.getAllMembersList, membercount: this.getAllMembersList.getAllMemberList.length,calendarListCount:this.calendars.length },
+      data: { allMembers: this.getAllMembersList, membercount: this.getAllMembersList.getAllMemberList.length, calendarListCount: this.calendars.length },
       width: '600px'
     }).afterClosed().subscribe(data => {
       if (data === 'submited') {
@@ -324,7 +324,7 @@ export class CalendarComponent implements OnInit {
 
   // Open add new event by clicking calendar day
   openAddNewEvent(event) {
-    if (!event.isWeekend) {
+    if (!event.isWeekend && event.inMonth) {
       this.dialog.open(AddEventComponent, {
         data: { allMembers: this.getAllMembersList, membercount: this.getAllMembersList.getAllMemberList.length, day: event },
         width: '600px'
@@ -335,9 +335,16 @@ export class CalendarComponent implements OnInit {
       });
     }
     else {
-      this.snackbar.open('Cannot add event in weekend', '', {
-        duration: 2000
-      });
+      if (event.isWeekend) {
+        this.snackbar.open('Cannot add event in weekend', '', {
+          duration: 2000
+        });
+      }
+      if (!event.isWeekend) {
+        this.snackbar.open('Cannot add event in previous month', '', {
+          duration: 2000
+        });
+      }
 
     }
   }

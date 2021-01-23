@@ -9,6 +9,8 @@ import { ImageCropperService } from '../../../services/image-cropper.service';
 import { SchoolService } from '../../../services/school.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { StaffService } from '../../../services/staff.service';
+import { StudentService } from '../../../services/student.service';
 
 @Component({
   selector: 'vex-profile-image',
@@ -36,11 +38,30 @@ export class ProfileImageComponent implements OnInit,OnDestroy {
   inputType:string="file";
   destroySubject$: Subject<void> = new Subject();
   @Input() enableCropTool=true;
-  @Input() responseImage; 
+  @Input() customCss='rounded-full border-2 border-gray-light';
+  @Input() responseImage;
 
   constructor(private dialog:MatDialog,
     private imageCropperService:ImageCropperService,
-    private snackbar: MatSnackBar) {
+    private snackbar: MatSnackBar,
+    private schoolService:SchoolService,
+    private staffService:StaffService,
+    private studentService:StudentService) {
+      this.imageCropperService.shareImageStatus.pipe(takeUntil(this.destroySubject$)).subscribe((message) => {
+        if(message=="school"){
+          this.preview='';
+          this.responseImage=this.schoolService.getSchoolCloneImage();
+        }
+        if(message=="staff"){
+          this.preview='';
+          this.croppedImage= '';
+          this.responseImage=this.staffService.getStaffCloneImage();
+        }
+        if(message=="student"){
+           this.preview='';
+           this.croppedImage= '';
+           this.responseImage=this.studentService.getStudentCloneImage(); }
+      });
      }
 
      ngOnInit(): void {
@@ -51,6 +72,7 @@ export class ProfileImageComponent implements OnInit,OnDestroy {
             this.inputType="none"
           }
         }); 
+        
     }
      
   imageCropped(event: ImageCroppedEvent) {

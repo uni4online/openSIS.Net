@@ -83,18 +83,11 @@ namespace opensis.data.Repository
                 if (!string.IsNullOrWhiteSpace(customFieldAddViewModel.customFields.Type) && !string.IsNullOrWhiteSpace(customFieldAddViewModel.customFields.Module))
                 {                
                     var customFieldUpdate = this.context?.CustomFields.FirstOrDefault(x => x.TenantId == customFieldAddViewModel.customFields.TenantId && x.SchoolId == customFieldAddViewModel.customFields.SchoolId && x.FieldId == customFieldAddViewModel.customFields.FieldId);
-
-                    customFieldUpdate.Type = customFieldAddViewModel.customFields.Type;
-                    customFieldUpdate.Search = customFieldAddViewModel.customFields.Search;
-                    customFieldUpdate.Title = customFieldAddViewModel.customFields.Title;
-                    customFieldUpdate.SelectOptions = customFieldAddViewModel.customFields.SelectOptions;
-                    customFieldUpdate.SystemField = customFieldAddViewModel.customFields.SystemField;
-                    customFieldUpdate.Required = customFieldAddViewModel.customFields.Required;
-                    customFieldUpdate.DefaultSelection = customFieldAddViewModel.customFields.DefaultSelection;
-                    customFieldUpdate.Hide = customFieldAddViewModel.customFields.Hide;
-                    customFieldUpdate.LastUpdate = DateTime.UtcNow;
-                    customFieldUpdate.UpdatedBy = customFieldAddViewModel.customFields.UpdatedBy;
-
+                    
+                    customFieldAddViewModel.customFields.LastUpdate = DateTime.Now;
+                    customFieldAddViewModel.customFields.SortOrder = customFieldUpdate.SortOrder;
+                    customFieldAddViewModel.customFields.Module = customFieldUpdate.Module;
+                    this.context.Entry(customFieldUpdate).CurrentValues.SetValues(customFieldAddViewModel.customFields);
                     this.context?.SaveChanges();
                     customFieldAddViewModel._failure = false;
                     customFieldAddViewModel._message = "Entity Updated";
@@ -187,15 +180,9 @@ namespace opensis.data.Repository
             try
             {
                 var fieldsCategoryUpdate = this.context?.FieldsCategory.FirstOrDefault(x => x.TenantId == fieldsCategoryAddViewModel.fieldsCategory.TenantId && x.SchoolId == fieldsCategoryAddViewModel.fieldsCategory.SchoolId && x.CategoryId == fieldsCategoryAddViewModel.fieldsCategory.CategoryId);
-                fieldsCategoryUpdate.IsSystemCategory = fieldsCategoryAddViewModel.fieldsCategory.IsSystemCategory;
-                fieldsCategoryUpdate.Search = fieldsCategoryAddViewModel.fieldsCategory.Search;
-                fieldsCategoryUpdate.Title = fieldsCategoryAddViewModel.fieldsCategory.Title;
-                fieldsCategoryUpdate.Module = fieldsCategoryAddViewModel.fieldsCategory.Module;
-                fieldsCategoryUpdate.SortOrder = fieldsCategoryAddViewModel.fieldsCategory.SortOrder;
-                fieldsCategoryUpdate.Required = fieldsCategoryAddViewModel.fieldsCategory.Required;
-                fieldsCategoryUpdate.Hide = fieldsCategoryAddViewModel.fieldsCategory.Hide;
-                fieldsCategoryUpdate.LastUpdate = DateTime.UtcNow;
-                fieldsCategoryUpdate.UpdatedBy = fieldsCategoryAddViewModel.fieldsCategory.UpdatedBy;
+                
+                fieldsCategoryAddViewModel.fieldsCategory.LastUpdate = DateTime.Now;
+                this.context.Entry(fieldsCategoryUpdate).CurrentValues.SetValues(fieldsCategoryAddViewModel.fieldsCategory);
                 this.context?.SaveChanges();
                 fieldsCategoryAddViewModel._failure = false;
                 fieldsCategoryAddViewModel._message = "Entity Updated";

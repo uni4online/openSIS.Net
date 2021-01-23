@@ -88,12 +88,12 @@ export class LanguageComponent implements OnInit {
         }
         else{
           if (res._failure) {
-            this.snackbar.open('Language Deletion failed. ' + res._message, 'LOL THANKS', {
+            this.snackbar.open('Language Deletion failed. ' + res._message, '', {
               duration: 10000
             });
           } 
           else { 
-            this.snackbar.open('Language Deleted Successfully. ' + res._message, 'LOL THANKS', {
+            this.snackbar.open('Language Deleted Successfully. ' + res._message, '', {
               duration: 10000
             });
             this.getLanguageList()
@@ -129,7 +129,7 @@ export class LanguageComponent implements OnInit {
             this.languageModelList.sort=this.sort;
             this.languageModelList.paginator = this.paginator;       
           } else {
-            this.snackbar.open('Language list failed.' + data._message, 'LOL THANKS', {
+            this.snackbar.open('Language list failed.' + data._message, '', {
               duration: 10000
             });
           }

@@ -328,7 +328,13 @@ export class EditContactComponent implements OnInit {
       this.addParentInfoModel.parentInfo.parentAddress[0].studentAddressSame = true;    
     }else{
       this.sameAsStudentAddress = false;
-      this.addParentInfoModel.parentInfo.parentAddress[0].studentAddressSame = false;     
+      this.addParentInfoModel.parentInfo.parentAddress[0].studentAddressSame = false; 
+      this.addParentInfoModel.parentInfo.parentAddress[0].addressLineOne =null;  
+      this.addParentInfoModel.parentInfo.parentAddress[0].addressLineTwo = null;
+      this.addParentInfoModel.parentInfo.parentAddress[0].country = null;
+      this.addParentInfoModel.parentInfo.parentAddress[0].state = null;
+      this.addParentInfoModel.parentInfo.parentAddress[0].city = null;
+      this.addParentInfoModel.parentInfo.parentAddress[0].zip = null;    
     }    
   }
   custodyCheck(event){
@@ -438,11 +444,11 @@ export class EditContactComponent implements OnInit {
               }
               else 
               {       
-                if(data.parentInfoForView.length > 1){
+                if(data.parentInfo.length > 1){
                   this.mode="multipleResult";
                   this.multipleParentInfo =data.parentInfoForView ;
                  
-                }else if(data.parentInfoForView.length == 0){
+                }else if(data.parentInfo.length == 0){
                   this.snackbar.open('No Record Found', '', {
                     duration: 10000
                     });
@@ -450,7 +456,7 @@ export class EditContactComponent implements OnInit {
                   this.singleParentInfo={};              
                 } else{
                   this.mode="singleResult";                  
-                  data.parentInfoForView.map((val,index) => {
+                  data.parentInfo.map((val,index) => {
                      this.singleParentInfo = val;     
                   }) 
                 }         

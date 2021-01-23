@@ -11,6 +11,7 @@ import { SectionsComponent } from '../school/sections/sections.component';
 import { RoomsComponent } from '../school/rooms/rooms.component';
 import {EnrollmentCodesComponent} from '../student/enrollment-codes/enrollment-codes.component';
 import {AttendanceSettingsComponent} from '../settings/attendance-settings/attendance-settings.component';
+import { AdministrationSettingsComponent } from '../settings/administration-settings/administration-settings.component';
 const routes: Routes = [
   {
     path: '',
@@ -57,6 +58,13 @@ const routes: Routes = [
   {
     path:'attendance-settings',
     component:AttendanceSettingsComponent,
+    children:[     
+      
+    ]
+  }, 
+  {
+    path:'administration-settings',
+    component:AdministrationSettingsComponent,
     children:[     
       
     ]

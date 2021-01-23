@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import icAdd from '@iconify/icons-ic/baseline-add';
 import icEdit from '@iconify/icons-ic/twotone-edit';
 import icDelete from '@iconify/icons-ic/twotone-delete';
@@ -11,6 +11,14 @@ import { TranslateService } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material/dialog';
 import { EditGradeScaleComponent } from './edit-grade-scale/edit-grade-scale.component';
 import { EditReportCardGradeComponent } from './edit-report-card-grade/edit-report-card-grade.component';
+import { GradeScaleListView, GradeScaleAddViewModel,GradeAddViewModel, GradeDragDropModel } from '../../../models/grades.model';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTableDataSource } from '@angular/material/table';
+import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confirm-dialog.component';
+import { MatSort } from '@angular/material/sort';
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import { GradesService } from 'src/app/services/grades.service';
+import { ExcelService } from 'src/app/services/excel.service';
 
 @Component({
   selector: 'vex-report-card-grades',
@@ -28,9 +36,9 @@ export class ReportCardGradesComponent implements OnInit {
     { label: 'ID', property: 'id', type: 'number', visible: true },
     { label: 'Title', property: 'title', type: 'text', visible: true },
     { label: 'Breakoff', property: 'breakoff', type: 'text', visible: true },
-    { label: 'Weighted GP Value', property: 'weighted_gp_value', type: 'text', visible: true },
-    { label: 'unweighted GP Value', property: 'unweighted_gp_value', type: 'text', visible: true },
-    { label: 'Comment', property: 'comment', type: 'text', visible: true },
+    { label: 'Weighted GP Value', property: 'weightedGpValue', type: 'text', visible: true },
+    { label: 'unweighted GP Value', property: 'unweightedGpValue', type: 'text', visible: true },
+    { label: 'Comment', property: 'comment', type: 'text', visible: false },
     { label: 'action', property: 'action', type: 'text', visible: true }
   ];
 
@@ -42,19 +50,29 @@ export class ReportCardGradesComponent implements OnInit {
   icSearch = icSearch;
   icFilterList = icFilterList;
   loading:Boolean;
+  @ViewChild(MatSort) sort: MatSort;
+  gradeScaleList;
+  searchKey:string;
+  currentGradeScaleId=null;
+  gradeScaleAddViewModel:GradeScaleAddViewModel=new GradeScaleAddViewModel();
+  gradeAddViewModel:GradeAddViewModel=new GradeAddViewModel();
+  gradeDragDropModel:GradeDragDropModel=new GradeDragDropModel()
+  gradeScaleListView:GradeScaleListView=new GradeScaleListView();
+  gradeList: MatTableDataSource<any>;
 
-  constructor(private router: Router,private dialog: MatDialog,public translateService:TranslateService) {
+  constructor(
+    private router: Router,
+    private dialog: MatDialog,
+    public translateService:TranslateService,
+    private snackbar: MatSnackBar,
+    private gradesService:GradesService,
+    private excelService:ExcelService
+    ) {
     translateService.use('en');
-    this.ReportCardGradesModelList = [
-      {id: 1, title: 'A', breakoff: '90', weighted_gp_value: '0.00', unweighted_gp_value: '4.00', comment: ''},
-      {id: 1, title: 'B', breakoff: '80', weighted_gp_value: '0.00', unweighted_gp_value: '3.00', comment: ''},
-      {id: 1, title: 'C', breakoff: '70', weighted_gp_value: '0.00', unweighted_gp_value: '2.00', comment: ''},
-      {id: 1, title: 'D', breakoff: '60', weighted_gp_value: '0.00', unweighted_gp_value: '1.00', comment: ''},
-      {id: 1, title: 'F', breakoff: '0', weighted_gp_value: '0.00', unweighted_gp_value: '0.00', comment: ''},
-    ]
   }
 
   ngOnInit(): void {
+    this.getAllGradeScale();
   }
 
   getPageEvent(event){    
@@ -62,11 +80,33 @@ export class ReportCardGradesComponent implements OnInit {
     // this.getAllSchool.pageSize=event.pageSize;
     // this.callAllSchool(this.getAllSchool);
   }
+  applyFilter(){
+    this.gradeList.filter = this.searchKey.trim().toLowerCase()
+  }
+  onSearchClear(){
+    this.searchKey="";
+    this.applyFilter();
+  }
 
   goToAddGrade() {
     this.dialog.open(EditReportCardGradeComponent, {
+      data: {gradeScaleId:this.currentGradeScaleId},
       width: '500px'
+    }).afterClosed().subscribe((data)=>{
+      if(data==='submited'){
+        this.getAllGradeScale();
+      }
     });
+  }
+  editGrade(element){
+    this.dialog.open(EditReportCardGradeComponent,{ 
+      data: {information:element},
+      width: '800px'
+    }).afterClosed().subscribe((data)=>{
+      if(data==='submited'){
+        this.getAllGradeScale();
+      }
+    })
   }
 
   toggleColumnVisibility(column, event) {
@@ -78,11 +118,180 @@ export class ReportCardGradesComponent implements OnInit {
   goToAddBlock() {
     this.dialog.open(EditGradeScaleComponent, {
       width: '500px'
+    }).afterClosed().subscribe((data)=>{
+      if(data==='submited'){
+        this.getAllGradeScale();
+      }
     });
+  }
+  editGradeScale(element){
+    this.dialog.open(EditGradeScaleComponent,{ 
+      data: element,
+      width: '800px'
+    }).afterClosed().subscribe((data)=>{
+      if(data==='submited'){
+        this.getAllGradeScale();
+      }
+    })
   }
 
   get visibleColumns() {
     return this.columns.filter(column => column.visible).map(column => column.property);
   }
+  selectGradeScale(element){
+    this.currentGradeScaleId=element.gradeScaleId;
+    this.gradeList=new MatTableDataSource(element.grade) ;
+  }
+  deleteGradeScale(element){
+    this.gradeScaleAddViewModel.gradeScale=element
+   this.gradesService.deleteGradeScale(this.gradeScaleAddViewModel).subscribe(
+     (res:GradeScaleAddViewModel)=>{
+      if(typeof(res)=='undefined'){
+        this.snackbar.open('Grade Scale failed. ' + sessionStorage.getItem("httpError"), '', {
+          duration: 10000
+        });
+      }
+      else{
+        if (res._failure) {
+          this.snackbar.open('Grade Scale failed. ' + res._message, '', {
+            duration: 10000
+          });
+        } 
+        else{
+          this.snackbar.open('Grade Scale ' + res._message, '', {
+            duration: 10000
+          });
+          this.getAllGradeScale();
+        }
+      }
+     }
+   );
+  }
+  confirmDeleteGradeScale(element){
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      maxWidth: "400px",
+      data: {
+          title: "Are you sure?",
+          message: "You are about to delete "+element.gradeScaleName+"."}
+    });
+    dialogRef.afterClosed().subscribe(dialogResult => {
+      if(dialogResult){
+        this.deleteGradeScale(element);
+      }
+   });
+  }
+
+  deleteGrade(element){
+    this.gradeAddViewModel.grade=element
+   this.gradesService.deleteGrade(this.gradeAddViewModel).subscribe(
+     (res:GradeAddViewModel)=>{
+      if(typeof(res)=='undefined'){
+        this.snackbar.open('Grade failed. ' + sessionStorage.getItem("httpError"), '', {
+          duration: 10000
+        });
+      }
+      else{
+        if (res._failure) {
+          this.snackbar.open('Grade failed. ' + res._message, '', {
+            duration: 10000
+          });
+        } 
+        else{
+          this.snackbar.open('Grade ' + res._message, '', {
+            duration: 10000
+          });
+          this.getAllGradeScale();
+        }
+      }
+     }
+   );
+  }
+  confirmDeleteGrade(element){
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      maxWidth: "400px",
+      data: {
+          title: "Are you sure?",
+          message: "You are about to delete "+element.tite+"."}
+    });
+    dialogRef.afterClosed().subscribe(dialogResult => {
+      if(dialogResult){
+        this.deleteGrade(element);
+      }
+   });
+  }
+
+  getAllGradeScale(){
+    this.gradesService.getAllGradeScaleList(this.gradeScaleListView).subscribe(
+      (res:GradeScaleListView)=>{
+        if(typeof(res)=='undefined'){
+          this.snackbar.open('Grade Scale list failed. ' + sessionStorage.getItem("httpError"), '', {
+            duration: 10000
+          });
+        }
+        else{
+          if (res._failure) {
+            this.snackbar.open('Grade Scale list failed. ' + res._message, '', {
+              duration: 10000
+            });
+          } 
+          else{
+            this.gradeScaleList=res.gradeScaleList
+            if(this.currentGradeScaleId==null){
+              this.currentGradeScaleId=res.gradeScaleList[0].gradeScaleId 
+              this.gradeList=new MatTableDataSource(res.gradeScaleList[0].grade) ;
+            } 
+            else{
+              let index = this.gradeScaleList.findIndex((x) => {
+                return x.gradeScaleId === this.currentGradeScaleId
+              });
+              this.gradeList=new MatTableDataSource(res.gradeScaleList[index].grade) ;
+            }
+          }
+        }
+      }
+    );
+  }
+  drop(event: CdkDragDrop<string[]>) {
+    this.gradeDragDropModel.gradeScaleId=this.currentGradeScaleId
+    this.gradeDragDropModel.currentSortOrder=this.gradeList.data[event.currentIndex].sortOrder
+    this.gradeDragDropModel.previousSortOrder=this.gradeList.data[event.previousIndex].sortOrder
+
+    this.gradesService.updateGradeSortOrder(this.gradeDragDropModel).subscribe(
+      (res:GradeDragDropModel)=>{
+        if(typeof(res)=='undefined'){
+          this.snackbar.open('Grade Drag short failed. ' + sessionStorage.getItem("httpError"), '', {
+            duration: 10000
+          });
+        }else{
+          if (res._failure) {
+            this.snackbar.open('Grade Drag short failed. ' + res._message, '', {
+              duration: 10000
+            });
+          } 
+          else{
+            this.getAllGradeScale()
+          }
+        }
+      }
+    );
+  }
+  exportToExcel(){
+    if (this.gradeList.data?.length > 0) {
+      let reportList = this.gradeList.data?.map((x) => {
+        return {
+          Title:x.tite,
+          Breakoff:x.breakoff,
+          Weighted_Gp_Value:x.weightedGpValue,
+          Unweighted_Gp_Value:x.unweightedGpValue
+        }
+      });
+      this.excelService.exportAsExcelFile(reportList,"Report Card Grade List")
+    } else {
+      this.snackbar.open('No Records Found. Failed to Export Report Card Grade List', '', {
+        duration: 5000
+      });
+    }
+  }
+    
 
 }

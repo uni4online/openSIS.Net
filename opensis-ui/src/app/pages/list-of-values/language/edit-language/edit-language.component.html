@@ -13,12 +13,13 @@
         <mat-form-field class="mt-6" appearance="outline" color="primary">
             <mat-label>{{'title' | translate}}</mat-label>
             <input   formControlName="locale"  [(ngModel)]="languageModel.language.locale" name="locale"  cdkFocusInitial matInput required>
-            <mat-error *ngIf="form.get('locale').hasError('required')">{{'titleIsRequired'|translate}}</mat-error>
+            <mat-error *ngIf="form.get('locale').hasError('whitespace')">{{'titleIsRequired'|translate}}</mat-error>
         </mat-form-field>
         <mat-form-field class="w-full" appearance="outline" color="primary">
             <mat-label>{{'shortCode' | translate}}</mat-label>
-            <input formControlName="languageCode"  [(ngModel)]="languageModel.language.languageCode" name="languageCode"  matInput required>
-            <mat-error *ngIf="form.get('languageCode').hasError('required')">{{'shortCodeIsRequired'|translate}}</mat-error>
+            <input formControlName="languageCode"  [(ngModel)]="languageModel.language.languageCode" [maxlength]="3" name="languageCode"  matInput required>
+            <mat-error *ngIf="form.get('languageCode').hasError('whitespace')">{{'shortCodeIsRequired'|translate}}</mat-error>
+            <mat-error *ngIf="form.get('languageCode').hasError('lowerCase')">{{'shortCodeMustBeLowerCase'|translate}}</mat-error>
         </mat-form-field>
     
     </mat-dialog-content>

@@ -87,7 +87,7 @@ export class NoticesComponent implements OnInit, OnDestroy {
         }
         else{
           if (res._failure) {     
-            this.snackbar.open('No Member Found. ' + res._message, 'LOL THANKS', {
+            this.snackbar.open('No Member Found. ' + res._message, '', {
               duration: 10000
             });
           }

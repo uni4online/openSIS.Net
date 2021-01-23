@@ -88,7 +88,16 @@ export class StudentService {
 
  changePageMode(mode:number){
      this.pageMode.next(mode);
- } 
+ }
+ 
+ // for cancel after Student photo added
+ public cloneStudentImage
+ setStudentCloneImage(image){
+   this.cloneStudentImage = image;
+ }
+ getStudentCloneImage(){
+   return this.cloneStudentImage;
+ }
 
   //Student comment
   addStudentComment(obj: StudentCommentsAddView) {
@@ -163,5 +172,6 @@ export class StudentService {
     let apiurl = this.apiUrl + schoolDetails._tenantName + "/School/studentEnrollmentSchoolList";
     return this.http.post<StudentEnrollmentSchoolListModel>(apiurl, schoolDetails)
   }
+
 
 }

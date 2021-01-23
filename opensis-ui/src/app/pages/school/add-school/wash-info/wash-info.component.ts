@@ -16,12 +16,12 @@ import icEdit from '@iconify/icons-ic/twotone-edit';
 import { SchoolCreate } from '../../../../enums/school-create.enum';
 import { LovList } from './../../../../models/lovModel';
 import { CommonService } from '../../../../services/common.service';
+import * as cloneDeep from 'lodash/cloneDeep';
 @Component({
   selector: 'vex-wash-info',
   templateUrl: './wash-info.component.html',
   styleUrls: ['./wash-info.component.scss'],
   animations: [
-
     stagger60ms,
     fadeInUp400ms,
     fadeInRight400ms
@@ -44,85 +44,88 @@ export class WashInfoComponent implements OnInit {
   femaleToiletTypeList;
   maleToiletTypeList;
   commonToiletTypeList;
-
-  lovList:LovList= new LovList();
-  constructor(private fb: FormBuilder,
+  lovList: LovList = new LovList();
+  cloneSchool;
+  constructor(
     private schoolService: SchoolService,
     private snackbar: MatSnackBar,
-    private router: Router,
     public translateService: TranslateService,
-    private loaderService: LoaderService,
-    private commonFunction: SharedFunction,
     private imageCropperService: ImageCropperService,
-    private commonService:CommonService) {
-
+    private commonService: CommonService) {
     translateService.use('en');
-    this.loaderService.isLoading.subscribe((val) => {
-      this.loading = val;
-    });
+
   }
   ngOnInit(): void {
-    this.getAllFemaleToiletType();
-    this.getAllMaleToiletType();
-    this.getAllCommonToiletType();
     if (this.schoolCreateMode == this.schoolCreate.VIEW) {
       this.schoolService.changePageMode(this.schoolCreateMode);
       this.imageCropperService.enableUpload(false);
       this.schoolAddViewModel = this.schoolDetailsForViewAndEdit;
+      this.cloneSchool=JSON.stringify(this.schoolAddViewModel);
     } else {
+      this.initializeDropdownValues();
       this.imageCropperService.enableUpload(true);
       this.schoolService.changePageMode(this.schoolCreateMode);
       this.schoolAddViewModel = this.schoolService.getSchoolDetails();
+      this.cloneSchool=JSON.stringify(this.schoolAddViewModel);
     }
+  }
+
+  initializeDropdownValues() {
+    this.getAllFemaleToiletType();
+    this.getAllMaleToiletType();
+    this.getAllCommonToiletType();
   }
 
   editWashInfo() {
     this.formActionButtonTitle = "update";
+    this.initializeDropdownValues();
     this.imageCropperService.enableUpload(true);
     this.schoolCreateMode = this.schoolCreate.EDIT;
     this.schoolService.changePageMode(this.schoolCreateMode);
   }
   cancelEdit() {
     this.imageCropperService.enableUpload(false);
+    this.imageCropperService.cancelImage("school");
+    if(JSON.stringify(this.schoolAddViewModel)!==this.cloneSchool){
+      this.schoolAddViewModel=JSON.parse(this.cloneSchool);
+      this.schoolDetailsForViewAndEdit=this.schoolAddViewModel;
+      this.schoolService.sendDetails(JSON.parse(this.cloneSchool));
+    }
     this.schoolCreateMode = this.schoolCreate.VIEW;
     this.schoolService.changePageMode(this.schoolCreateMode);
+    
   }
-  getAllFemaleToiletType(){
-    this.lovList.lovName="Female Toilet Type";
+  getAllFemaleToiletType() {
+    this.lovList.lovName = "Female Toilet Type";
     this.commonService.getAllDropdownValues(this.lovList).subscribe(
-      (res:LovList)=>{      
-        this.femaleToiletTypeList = res.dropdownList;            
+      (res: LovList) => {
+        this.femaleToiletTypeList = res.dropdownList;
       }
     );
   }
-  getAllMaleToiletType(){
-    this.lovList.lovName="Male Toilet Type";
+  getAllMaleToiletType() {
+    this.lovList.lovName = "Male Toilet Type";
     this.commonService.getAllDropdownValues(this.lovList).subscribe(
-      (res:LovList)=>{        
-          this.maleToiletTypeList = res.dropdownList;         
+      (res: LovList) => {
+        this.maleToiletTypeList = res.dropdownList;
       }
     );
   }
-  getAllCommonToiletType(){
-    this.lovList.lovName="Common Toilet Type";
+  getAllCommonToiletType() {
+    this.lovList.lovName = "Common Toilet Type";
     this.commonService.getAllDropdownValues(this.lovList).subscribe(
-      (res:LovList)=>{        
-        this.commonToiletTypeList = res.dropdownList;     
-          
+      (res: LovList) => {
+        this.commonToiletTypeList = res.dropdownList;
+
       }
     );
   }
-  
+
   submit() {
     this.currentForm.form.markAllAsTouched();
     if (this.currentForm.form.valid) {
-      if(this.schoolAddViewModel.schoolMaster.fieldsCategory !== null){
-        this.schoolAddViewModel.selectedCategoryId = this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].categoryId;
-        for (var i = 0; i < this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].customFields.length; i++) {
-          if (this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].customFields[i].type === "Multiple SelectBox") {
-            this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].customFields[i].customFieldsValue[0].customFieldValue = this.schoolService.getSchoolMultiselectValue().toString().replaceAll(",", "|");
-          }
-        }
+      if (this.schoolAddViewModel.schoolMaster.fieldsCategory !== null) {
+        this.modifyCustomFields();
       }
       this.schoolService.UpdateSchool(this.schoolAddViewModel).subscribe(data => {
         if (typeof (data) == 'undefined') {
@@ -140,14 +143,26 @@ export class WashInfoComponent implements OnInit {
               duration: 10000
             });
             this.schoolCreateMode = this.schoolCreate.VIEW;
-            this.schoolService.changeMessage(true);
-           this.schoolService.changePageMode(this.schoolCreateMode);
-            
+            this.schoolService.setSchoolCloneImage(data.schoolMaster.schoolDetail[0].schoolLogo);
+            data.schoolMaster.schoolDetail[0].schoolLogo=null;
+            this.schoolDetailsForViewAndEdit=data;
+            this.cloneSchool=JSON.stringify(this.schoolDetailsForViewAndEdit);
+            this.schoolService.changePageMode(this.schoolCreateMode);
+            this.imageCropperService.enableUpload(false);
           }
         }
 
       })
     }
+  }
+
+  modifyCustomFields(){
+    this.schoolAddViewModel.selectedCategoryId = this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].categoryId;
+        for (let schoolCustomField of this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].customFields) {
+          if (schoolCustomField.type === "Multiple SelectBox" && this.schoolService.getSchoolMultiselectValue() !== undefined) {
+            schoolCustomField.customFieldsValue[0].customFieldValue = this.schoolService.getSchoolMultiselectValue().toString().replaceAll(",", "|");
+          }
+        }
   }
 
 }

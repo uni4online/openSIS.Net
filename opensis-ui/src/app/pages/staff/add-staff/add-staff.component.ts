@@ -81,6 +81,9 @@ export class AddStaffComponent implements OnInit, OnDestroy {
         this.pageStatus="Edit Staff";
       }
     });
+    this.staffService.getStaffDetailsForGeneral.pipe(takeUntil(this.destroySubject$)).subscribe((res: StaffAddModel) => {
+      this.staffAddModel=res;
+    })
     this.loaderService.isLoading.pipe(takeUntil(this.destroySubject$)).subscribe((currentState) => {
       this.loading = currentState;
     });
@@ -103,6 +106,15 @@ export class AddStaffComponent implements OnInit, OnDestroy {
   onViewMode() {
     //this.staffService.setStaffImage(this.responseImage);
     this.pageStatus = "View Staff"
+  }
+
+  afterSavingGeneralInfo(data){
+    if(data.staffMaster.salutation!=null){
+      this.staffTitle = data.staffMaster.salutation+" "+ data.staffMaster.firstGivenName + " " + data.staffMaster.lastFamilyName;
+    }else{
+      this.staffTitle = data.staffMaster.firstGivenName + " " + data.staffMaster.lastFamilyName;
+    }
+    
   }
 
   changeCategory(field, index) {
@@ -132,14 +144,17 @@ export class AddStaffComponent implements OnInit, OnDestroy {
     this.staffService.viewStaff(this.staffAddModel).subscribe(data => {
       this.staffAddModel = data;
       this.fieldsCategory = data.fieldsCategoryList;
-      this.staffService.sendDetails(this.staffAddModel);
       this.responseImage = this.staffAddModel.staffMaster.staffPhoto;
+      this.staffService.setStaffCloneImage(this.staffAddModel.staffMaster.staffPhoto);
+      this.staffAddModel.staffMaster.staffPhoto=null;
+      this.staffService.sendDetails(this.staffAddModel);
       if(this.staffAddModel.staffMaster.salutation!=null){
         this.staffTitle =this.staffAddModel.staffMaster.salutation+" "+ this.staffAddModel.staffMaster.firstGivenName + " " + this.staffAddModel.staffMaster.lastFamilyName;
       }else{
         this.staffTitle =this.staffAddModel.staffMaster.firstGivenName + " " + this.staffAddModel.staffMaster.lastFamilyName;
       }
       this.staffService.setStaffImage(this.responseImage);
+      
     });
   }
 
@@ -172,7 +187,8 @@ export class AddStaffComponent implements OnInit, OnDestroy {
     this.staffService.setStaffDetails(null);
     this.staffService.setStaffImage(null);
     this.staffService.setStaffId(null);
+    this.staffService.setStaffCloneImage(null);
     this.destroySubject$.next();
+    this.destroySubject$.complete();
   }
-
 }

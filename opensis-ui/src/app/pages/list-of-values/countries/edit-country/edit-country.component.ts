@@ -63,7 +63,7 @@ export class EditCountryComponent implements OnInit {
           }
           else {
             if (data._failure) {
-              this.snackbar.open('Country Updation failed. ' + data._message, 'LOL THANKS', {
+              this.snackbar.open('Country Updation failed. ' + data._message, '', {
                 duration: 10000
               });
             } else {
@@ -86,7 +86,7 @@ export class EditCountryComponent implements OnInit {
           }
           else {
             if (data._failure) {
-              this.snackbar.open('Country Submission failed. ' + data._message, 'LOL THANKS', {
+              this.snackbar.open('Country Submission failed. ' + data._message, '', {
                 duration: 10000
               });
             } else {

@@ -15,7 +15,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ViewParentInfoModel } from '../../../../models/parentInfoModel';
 import { ParentInfoService } from '../../../../services/parent-info.service';
 import { ImageCropperService } from '../../../../services/image-cropper.service';
-
 @Component({
   selector: 'vex-student-medicalinfo',
   templateUrl: './student-medicalinfo.component.html',
@@ -41,6 +40,7 @@ export class StudentMedicalinfoComponent implements OnInit, OnDestroy {
   icAdd = icAdd;
   icComment = icComment;
   parentsFullName = [];
+  cloneStudentAddModel;
   constructor(private fb: FormBuilder,
     public translateService: TranslateService,
     private studentService: StudentService,
@@ -55,6 +55,7 @@ export class StudentMedicalinfoComponent implements OnInit, OnDestroy {
     if (this.studentCreateMode == this.studentCreate.VIEW) {
       this.studentService.changePageMode(this.studentCreateMode);
       this.studentAddModel = this.studentDetailsForViewAndEdit;
+      this.cloneStudentAddModel = JSON.stringify(this.studentAddModel);
       this.imageCropperService.enableUpload(false);
     } else {
       this.getAllParents();
@@ -71,15 +72,20 @@ export class StudentMedicalinfoComponent implements OnInit, OnDestroy {
   }
 
   cancelEdit() {
+    if(JSON.stringify(this.studentAddModel)!==this.cloneStudentAddModel){
+      this.studentAddModel=JSON.parse(this.cloneStudentAddModel);
+      this.studentService.sendDetails(JSON.parse(this.cloneStudentAddModel));
+    }
     this.studentCreateMode = this.studentCreate.VIEW;
     this.studentService.changePageMode(this.studentCreateMode);
     this.imageCropperService.enableUpload(false);
+    this.imageCropperService.cancelImage("student");
   }
 
   getAllParents() {
     this.parentInfoModel.studentId = this.studentAddModel.studentMaster.studentId;
     this.parentInfoService.ViewParentListForStudent(this.parentInfoModel).subscribe((res) => {
-      this.concatenateParentsName(res.parentInfoList);
+      this.concatenateParentsName(res.parentInfoListForView);
     })
   }
 
@@ -95,9 +101,9 @@ export class StudentMedicalinfoComponent implements OnInit, OnDestroy {
       if(this.studentAddModel.fieldsCategoryList!==null){
         this.studentAddModel.selectedCategoryId = this.studentAddModel.fieldsCategoryList[this.categoryId].categoryId;
         
-        for (var i = 0; i < this.studentAddModel.fieldsCategoryList[this.categoryId].customFields.length; i++) {
-          if (this.studentAddModel.fieldsCategoryList[this.categoryId].customFields[i].type === "Multiple SelectBox") {
-            this.studentAddModel.fieldsCategoryList[this.categoryId].customFields[i].customFieldsValue[0].customFieldValue = this.studentService.getStudentMultiselectValue().toString().replaceAll(",", "|");
+        for (let studentCustomField of this.studentAddModel.fieldsCategoryList[this.categoryId].customFields) {
+          if (studentCustomField.type === "Multiple SelectBox" && this.studentService.getStudentMultiselectValue() !== undefined) {
+            studentCustomField.customFieldsValue[0].customFieldValue = this.studentService.getStudentMultiselectValue().toString().replaceAll(",", "|");
           }
         }
       }
@@ -118,6 +124,9 @@ export class StudentMedicalinfoComponent implements OnInit, OnDestroy {
             this.snackbar.open('Medical Information Update Successful.', '', {
               duration: 10000
             });
+          this.studentService.setStudentCloneImage(data.studentMaster.studentPhoto);
+            data.studentMaster.studentPhoto=null;
+            this.cloneStudentAddModel=JSON.stringify(data);
             this.studentCreateMode = this.studentCreate.VIEW;
             this.studentService.changePageMode(this.studentCreateMode);
             this.studentDetailsForParent.emit(data);

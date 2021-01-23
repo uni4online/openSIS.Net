@@ -129,12 +129,12 @@ export class SchoolLevelComponent implements OnInit {
         }
         else{
           if (res._failure) {
-            this.snackbar.open('School Level Deletion failed. ' + res._message, 'LOL THANKS', {
+            this.snackbar.open('School Level Deletion failed. ' + res._message, '', {
               duration: 10000
             });
           } 
           else { 
-            this.snackbar.open('School Level ' + res._message, 'LOL THANKS', {
+            this.snackbar.open('School Level Deleted Successfully' , '', {
               duration: 10000
             });
             this.getAllSchoolLevel()
@@ -162,7 +162,7 @@ export class SchoolLevelComponent implements OnInit {
     this.commonService.getAllDropdownValues(this.lovList).subscribe(
       (res:LovList)=>{
         if(typeof(res)=='undefined'){
-          this.snackbar.open('School Level List failed. ' + sessionStorage.getItem("httpError"), '', {
+          this.snackbar.open('No Record Found For School Level.. ' + sessionStorage.getItem("httpError"), '', {
             duration: 10000
           });
         }
@@ -170,7 +170,7 @@ export class SchoolLevelComponent implements OnInit {
           if (res._failure) {  
             this.schoolLevelList=new MatTableDataSource(res.dropdownList) ;
             this.listCount=this.schoolLevelList.data;
-            this.snackbar.open('School Level List failed. ' + res._message, 'LOL THANKS', {
+            this.snackbar.open('No Record Found For School Level. ', '', {
               duration: 10000
             });
           } 

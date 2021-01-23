@@ -99,7 +99,7 @@
             </button>
         </div>
         <mat-divider class="-mx-6 text-border"></mat-divider>
-        <form  (ngSubmit)="f.form.valid && submit()" #f="ngForm" novalidate>
+        <form  (ngSubmit)="f.form.valid && submit()" #f="ngForm" appInvalidControlScroll novalidate>
             
             <mat-dialog-content fxLayout="column">    
                 <div  *ngIf="editMode === false">

@@ -37,7 +37,7 @@ export class StaffMasterModel {
     public portalAccess: boolean;
     public loginEmailAddress: string;
     public profile: string;
-    public JobTitle: string;
+    public jobTitle: string;
     public joiningDate: string;
     public endDate: string;
     public homeroomTeacher: boolean;
@@ -59,14 +59,14 @@ export class StaffMasterModel {
     public homeAddressLineTwo: string;
     public homeAddressCity: string;
     public homeAddressState: string;
-    public homeAddressCountry: string;
+    public homeAddressCountry: string | number;
     public homeAddressZip: string;
     public mailingAddressSameToHome: boolean;
     public mailingAddressLineOne: string;
     public mailingAddressLineTwo: string;
     public mailingAddressCity: string;
     public mailingAddressState: string;
-    public mailingAddressCountry: string;
+    public mailingAddressCountry: string | number;
     public mailingAddressZip: string;
     public busNo: string;
     public busPickup : boolean;
@@ -127,6 +127,7 @@ export class StaffListModel {
 
 export class GetAllStaffModel {
     getStaffListForView: [StaffListModel];
+    staffMaster:[StaffMasterModel]
     tenantId: string;
     schoolId: number;
     pageNumber: number;

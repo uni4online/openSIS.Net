@@ -7,14 +7,18 @@ namespace opensis.core.CourseManager.Interfaces
 {
     public interface ICourseManagerService
     {
-        public ProgramAddViewModel AddProgram(ProgramAddViewModel programAddViewModel);
+        //public ProgramAddViewModel AddProgram(ProgramAddViewModel programAddViewModel);
         public ProgramListViewModel GetAllProgram(ProgramListViewModel programListViewModel);
-        public ProgramAddViewModel UpdateProgram(ProgramAddViewModel programAddViewModel);
+        public ProgramListViewModel AddEditProgram(ProgramListViewModel programListViewModel);
         public ProgramAddViewModel DeleteProgram(ProgramAddViewModel programAddViewModel);
-        public SubjectAddViewModel AddSubject(SubjectAddViewModel subjectAddViewModel);
-        public SubjectAddViewModel UpdateSubject(SubjectAddViewModel subjectAddViewModel);
+        //public SubjectAddViewModel AddSubject(SubjectAddViewModel subjectAddViewModel);
+        public SubjectListViewModel AddEditSubject(SubjectListViewModel subjectListViewModel);
         public SubjectListViewModel GetAllSubjectList(SubjectListViewModel subjectListViewModel);
         public SubjectAddViewModel DeleteSubject(SubjectAddViewModel subjectAddViewModel);
+        public CourseAddViewModel AddCourse(CourseAddViewModel courseAddViewModel);
+        public CourseAddViewModel UpdateCourse(CourseAddViewModel courseAddViewModel);
+        public CourseAddViewModel DeleteCourse(CourseAddViewModel courseAddViewModel);
+        public CourseListViewModel GetAllCourseList(CourseListViewModel courseListViewModel);
     }
 }
 

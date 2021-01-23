@@ -26,7 +26,16 @@ namespace opensis.data.Repository
         /// <returns></returns>
         public CalendarAddViewModel AddCalendar(CalendarAddViewModel calendar)
         {
-            int? calenderId = Utility.GetMaxPK(this.context, new Func<SchoolCalendars, int>(x => x.CalenderId));
+            //int? calenderId = Utility.GetMaxPK(this.context, new Func<SchoolCalendars, int>(x => x.CalenderId));
+            int? calenderId = 1;
+
+            var calenderData = this.context?.SchoolCalendars.Where(x => x.TenantId == calendar.schoolCalendar.TenantId && x.SchoolId == calendar.schoolCalendar.SchoolId).OrderByDescending(x => x.CalenderId).FirstOrDefault();
+
+            if (calenderData != null)
+            {
+                calenderId = calenderData.CalenderId + 1;
+            }
+
             calendar.schoolCalendar.CalenderId = (int)calenderId;
             calendar.schoolCalendar.LastUpdated = DateTime.UtcNow;
             var checkDefaultCalendar = this.context?.SchoolCalendars.Where(x => x.AcademicYear == calendar.schoolCalendar.AcademicYear && x.TenantId == calendar.schoolCalendar.TenantId && x.SchoolId == calendar.schoolCalendar.SchoolId).ToList().Find(x => x.DefaultCalender == true);
@@ -89,10 +98,6 @@ namespace opensis.data.Repository
             try
             {
                 var calendarRepository = this.context?.SchoolCalendars.FirstOrDefault(x => x.TenantId == calendar.schoolCalendar.TenantId && x.SchoolId == calendar.schoolCalendar.SchoolId && x.CalenderId == calendar.schoolCalendar.CalenderId);
-                calendarRepository.SchoolId = calendar.schoolCalendar.SchoolId;
-                calendarRepository.TenantId = calendar.schoolCalendar.TenantId;
-                calendarRepository.Title = calendar.schoolCalendar.Title;
-                calendarRepository.AcademicYear = calendar.schoolCalendar.AcademicYear;
 
                 var enrollmentCalendar = this.context?.StudentEnrollment.FirstOrDefault(x => x.TenantId == calendar.schoolCalendar.TenantId && x.SchoolId == calendar.schoolCalendar.SchoolId && x.CalenderId == calendar.schoolCalendar.CalenderId);
 
@@ -108,7 +113,7 @@ namespace opensis.data.Repository
 
                 if (checkDefaultCalendar == null)
                 {
-                    calendarRepository.DefaultCalender = true;
+                    calendar.schoolCalendar.DefaultCalender = true;
                 }
                 else
                 {
@@ -121,7 +126,7 @@ namespace opensis.data.Repository
                         calendar._message = "Existing Default Calendar cannot be updated because it has already enrollment.";
                         return calendar;
                     }
-                    calendarRepository.DefaultCalender = calendar.schoolCalendar.DefaultCalender;                        
+                    //calendarRepository.DefaultCalender = calendar.schoolCalendar.DefaultCalender;                        
                 }
                 
                 if (calendar.schoolCalendar.DefaultCalender == true )
@@ -130,14 +135,11 @@ namespace opensis.data.Repository
                      where p.CalenderId != calendarRepository.CalenderId && p.AcademicYear == calendar.schoolCalendar.AcademicYear && p.TenantId == calendar.schoolCalendar.TenantId && p.SchoolId == calendar.schoolCalendar.SchoolId
                      select p).ToList().ForEach(x => x.DefaultCalender = false);
 
-                }
+                }                
+                calendar.schoolCalendar.LastUpdated = DateTime.Now;
+                this.context.Entry(calendarRepository).CurrentValues.SetValues(calendar.schoolCalendar);
+                this.context?.SaveChanges();
 
-                calendarRepository.Days = calendar.schoolCalendar.Days;
-                calendarRepository.LastUpdated = DateTime.UtcNow;
-                calendarRepository.VisibleToMembershipId = calendar.schoolCalendar.VisibleToMembershipId;
-                calendarRepository.UpdatedBy = calendar.schoolCalendar.UpdatedBy;
-                calendarRepository.StartDate = calendar.schoolCalendar.StartDate;
-                calendarRepository.EndDate = calendar.schoolCalendar.EndDate;
                 this.context?.SaveChanges();
                 calendar._failure = false;
                 return calendar;

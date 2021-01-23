@@ -85,16 +85,9 @@ namespace opensis.data.Repository
             try
             {
                 var GradeLevel = this.context?.Gradelevels.FirstOrDefault(x => x.TenantId == gradelevel.tblGradelevel.TenantId && x.SchoolId == gradelevel.tblGradelevel.SchoolId && x.GradeId == gradelevel.tblGradelevel.GradeId);
-                GradeLevel.Title = gradelevel.tblGradelevel.Title;
-                GradeLevel.LastUpdated = DateTime.UtcNow;
-                GradeLevel.NextGradeId = gradelevel.tblGradelevel.NextGradeId;
-                GradeLevel.ShortName = gradelevel.tblGradelevel.ShortName;
-                GradeLevel.SortOrder = gradelevel.tblGradelevel.SortOrder;
-                GradeLevel.UpdatedBy = gradelevel.tblGradelevel.UpdatedBy;
-                GradeLevel.IscedGradeLevel = gradelevel.tblGradelevel.IscedGradeLevel;
-               /* GradeLevel.AgeRange = gradelevel.tblGradelevel.AgeRange;
-                GradeLevel.EducationalStage = gradelevel.tblGradelevel.EducationalStage;
-                GradeLevel.GradeLevelEquivalency = gradelevel.tblGradelevel.GradeLevelEquivalency;*/
+                
+                gradelevel.tblGradelevel.LastUpdated = DateTime.Now;
+                this.context.Entry(GradeLevel).CurrentValues.SetValues(gradelevel.tblGradelevel);
                 this.context?.SaveChanges();
                 gradelevel._failure = false;
                 gradelevel._message = "Entity Updated";

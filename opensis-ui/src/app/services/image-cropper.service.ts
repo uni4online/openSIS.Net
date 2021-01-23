@@ -9,6 +9,9 @@ export class ImageCropperService {
   private unCropEventSubject = new Subject<any>();
   private message = new BehaviorSubject(false);
   sharedMessage = this.message.asObservable();
+
+  private imageStatus = new BehaviorSubject(null);
+  shareImageStatus = this.imageStatus.asObservable();
   constructor() { }
 
   sendCroppedEvent(event) {
@@ -27,5 +30,9 @@ export class ImageCropperService {
 
   enableUpload(message: boolean) {
     this.message.next(message)
+  }
+
+  cancelImage(imageStatus: string) {
+    this.imageStatus.next(imageStatus)
   }
 }

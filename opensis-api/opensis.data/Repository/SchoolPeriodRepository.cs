@@ -26,9 +26,17 @@ namespace opensis.data.Repository
         public SchoolPeriodAddViewModel AddSchoolPeriod(SchoolPeriodAddViewModel schoolPeriod)
         {
 
-            int? MasterSchoolPeriodId = Utility.GetMaxPK(this.context, new Func<SchoolPeriods, int>(x => x.PeriodId));
-            schoolPeriod.tableSchoolPeriods.PeriodId = (int)MasterSchoolPeriodId;
-            
+            //int? MasterSchoolPeriodId = Utility.GetMaxPK(this.context, new Func<SchoolPeriods, int>(x => x.PeriodId));
+            int? MasterSchoolPeriodId = 1;
+
+            var schoolPeriodData = this.context?.SchoolPeriods.Where(x => x.TenantId == schoolPeriod.tableSchoolPeriods.TenantId && x.SchoolId == schoolPeriod.tableSchoolPeriods.SchoolId).OrderByDescending(x => x.PeriodId).FirstOrDefault();
+
+            if (schoolPeriodData != null)
+            {
+                MasterSchoolPeriodId = schoolPeriodData.PeriodId + 1;
+            }
+
+            schoolPeriod.tableSchoolPeriods.PeriodId = (int)MasterSchoolPeriodId;           
             schoolPeriod.tableSchoolPeriods.LastUpdated = DateTime.UtcNow;
             this.context?.SchoolPeriods.Add(schoolPeriod.tableSchoolPeriods);
             this.context?.SaveChanges();
@@ -47,24 +55,9 @@ namespace opensis.data.Repository
             {
                 var schoolPeriodUpdate = this.context?.SchoolPeriods.FirstOrDefault(x => x.TenantId == schoolPeriod.tableSchoolPeriods.TenantId && x.SchoolId == schoolPeriod.tableSchoolPeriods.SchoolId && x.PeriodId == schoolPeriod.tableSchoolPeriods.PeriodId);
 
-                schoolPeriodUpdate.TenantId = schoolPeriod.tableSchoolPeriods.TenantId;
-                schoolPeriodUpdate.SchoolId = schoolPeriod.tableSchoolPeriods.SchoolId;
-                schoolPeriodUpdate.PeriodId = schoolPeriod.tableSchoolPeriods.PeriodId;               
-                schoolPeriodUpdate.AcademicYear = schoolPeriod.tableSchoolPeriods.AcademicYear;
-                schoolPeriodUpdate.SortOrder = schoolPeriod.tableSchoolPeriods.SortOrder;
-                schoolPeriodUpdate.Title = schoolPeriod.tableSchoolPeriods.Title;
-                schoolPeriodUpdate.ShortName = schoolPeriod.tableSchoolPeriods.ShortName;
-                schoolPeriodUpdate.Length = schoolPeriod.tableSchoolPeriods.Length;
-                schoolPeriodUpdate.Block = schoolPeriod.tableSchoolPeriods.Block;
-                schoolPeriodUpdate.IgnoreScheduling = schoolPeriod.tableSchoolPeriods.IgnoreScheduling;
-                schoolPeriodUpdate.Attendance = schoolPeriod.tableSchoolPeriods.Attendance;
-                schoolPeriodUpdate.RolloverId = schoolPeriod.tableSchoolPeriods.RolloverId;
-                schoolPeriodUpdate.StartTime = schoolPeriod.tableSchoolPeriods.StartTime;
-                schoolPeriodUpdate.EndTime = schoolPeriod.tableSchoolPeriods.EndTime;
-                schoolPeriodUpdate.LastUpdated = schoolPeriod.tableSchoolPeriods.LastUpdated;
-                schoolPeriodUpdate.UpdatedBy = schoolPeriod.tableSchoolPeriods.UpdatedBy;
+                schoolPeriod.tableSchoolPeriods.LastUpdated = DateTime.UtcNow;
+                this.context.Entry(schoolPeriodUpdate).CurrentValues.SetValues(schoolPeriod.tableSchoolPeriods);
                 this.context?.SaveChanges();
-
                 schoolPeriod._failure = false;
                 return schoolPeriod;
             }

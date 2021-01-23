@@ -67,7 +67,7 @@ deleteNotice(id){
   this.noticeService.deleteNotice(this.noticeDeleteModel).subscribe(
     (res) => {
     if (res._failure) {
-      this.snackbar.open('Notice Deletion failed. ' + res._message, 'LOL THANKS', {
+      this.snackbar.open('Notice Deletion failed. ' + res._message, '', {
         duration: 10000
       });
     } else {

@@ -19,6 +19,11 @@ export class LoginService {
     return this.http.post<LanguageModel>(apiurl, obj)
   }
 
+  getAllLanguageForLogin(obj: LanguageModel) {
+    let apiurl = this.apiUrl + obj._tenantName + "/Common/getAllLanguageForLogin";
+    return this.http.post<LanguageModel>(apiurl, obj)
+  }
+
   ValidateLogin(obj: UserViewModel) {
     obj.password = this.cryptoService.encrypt(obj.password);
     let apiurl = this.apiUrl + obj._tenantName + "/User/ValidateLogin";

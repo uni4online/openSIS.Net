@@ -5,30 +5,21 @@
                 <h4 class="px-gutter mb-4">{{'gradeScale'|translate}}</h4>
                 <hr/>
 
-                <div class="flex items-center justify-between px-6 py-3 bg-skyblue-light text-blue">
-                    <a class="cursor-pointer" routerLink="#">Main</a>
-                    <div>
-                        <a class="cursor-pointer mr-3">
-                            <mat-icon [icIcon]="icEdit"></mat-icon>
-                        </a>
-                        <a class="cursor-pointer">
-                            <mat-icon [icIcon]="icDelete"></mat-icon>
-                        </a>
+                <div *ngFor="let gradeScale of gradeScaleList">
+                    <div class="flex items-center justify-between px-6 py-3" [ngClass]="{'bg-skyblue-light text-blue':currentGradeScaleId==gradeScale.gradeScaleId}">
+                        <a class="cursor-pointer" (click)="selectGradeScale(gradeScale)">{{gradeScale.gradeScaleName}}</a>
+                        <div>
+                            <a (click)="editGradeScale(gradeScale)" class="cursor-pointer mr-3">
+                                <mat-icon [icIcon]="icEdit"></mat-icon>
+                            </a>
+                            <a class="cursor-pointer" (click)="confirmDeleteGradeScale(gradeScale)">
+                                <mat-icon [icIcon]="icDelete"></mat-icon>
+                            </a>
+                        </div>
                     </div>
+                    <hr/>
                 </div>
-                <hr/>
 
-                <div class="flex items-center justify-between px-6 py-3">
-                    <a class="cursor-pointer">Standards Grade Scale</a>
-                    <div>
-                        <a class="cursor-pointer mr-3">
-                            <mat-icon [icIcon]="icEdit"></mat-icon>
-                        </a>
-                        <a class="cursor-pointer">
-                            <mat-icon [icIcon]="icDelete"></mat-icon>
-                        </a>
-                    </div>
-                </div>
                 <hr class="mb-3" />
                 <button color="" class="w-full text-primary" mat-button type="button" (click)='goToAddBlock()'>
                     <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true" size="24px">
@@ -46,17 +37,25 @@
                         fxLayoutAlign="start center">
         
                         <div class="flex">
-                            <input class="px-2 py-3 border-0 outline-none w-full bg-transparent" placeholder="Search..."
-                                type="search">
-                            <button class="ml-4" fxFlex="none" fxHide.gt-xs mat-icon-button type="button">
-                                <mat-icon [icIcon]="icSearch"></mat-icon>
+                            <input 
+                            matInput
+                            [(ngModel)]="searchKey"
+                            (keyup)="applyFilter()"
+                            class="py-3 border-0 outline-none w-full bg-transparent"
+                            appearance="outline" color="primary" 
+                            placeholder="Search..."
+                            type="search">
+                            <button mat-button matSuffix mat-icon-button aria-label="clear"
+                            *ngIf="searchKey"
+                            (click)="onSearchClear()">
+                            <mat-icon>close</mat-icon>
                             </button>
                         </div>
                     </div>
         
         
                     <div fxFlex="200px" class="pt-3">
-                        <a routerLink="" class="cursor-pointer p-1 mt-1 inline-block align-middle"
+                        <a (click)="exportToExcel()" class="cursor-pointer p-1 mt-1 inline-block align-middle"
                             matTooltip="Export to Excel"><i class="icon icon-file-excel text-lg"></i></a>
                         <button [matMenuTriggerFor]="columnFilterMenu" class="ml-4" fxFlex="none" mat-icon-button
                             matTooltip="Filter Columns" type="button">
@@ -72,48 +71,49 @@
                 </div>
             </div>
         
-            <table @stagger mat-table [dataSource]="ReportCardGradesModelList" class="table-auto w-full"
-                matSort>
+            <table @stagger mat-table [dataSource]="gradeList" 
+            class="table-auto w-full"
+            cdkDropList (cdkDropListDropped)="drop($event)">
         
                 <ng-container matColumnDef="id">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
-                    <td mat-cell *matCellDef="let element">
+                    <th mat-header-cell *matHeaderCellDef></th>
+                    <td mat-cell *matCellDef="let element" cdkDrag>
                         <mat-icon cdkDragHandle>reorder</mat-icon>
                     </td>
                 </ng-container>
         
                 <ng-container matColumnDef="title">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'title'|translate}}</th>
+                    <th mat-header-cell *matHeaderCellDef>{{'title'|translate}}</th>
                     <td mat-cell *matCellDef="let element">
                         {{element.title}}
                     </td>
                 </ng-container>
         
                 <ng-container matColumnDef="breakoff">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'breakoff'|translate}}</th>
+                    <th mat-header-cell *matHeaderCellDef>{{'breakoff'|translate}}</th>
                     <td mat-cell *matCellDef="let element">
                         {{element.breakoff}}
                     </td>
                 </ng-container>
         
-                <ng-container matColumnDef="weighted_gp_value">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'weightedGPValue'|translate}}
+                <ng-container matColumnDef="weightedGpValue">
+                    <th mat-header-cell *matHeaderCellDef>{{'weightedGPValue'|translate}}
                     </th>
                     <td mat-cell *matCellDef="let element">
-                        {{element.weighted_gp_value}}
+                        {{element.weightedGpValue}}
                     </td>
                 </ng-container>
         
-                <ng-container matColumnDef="unweighted_gp_value">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'unweightedGPValue'|translate}}
+                <ng-container matColumnDef="unweightedGpValue">
+                    <th mat-header-cell *matHeaderCellDef>{{'unweightedGPValue'|translate}}
                     </th>
                     <td mat-cell *matCellDef="let element">
-                        {{element.unweighted_gp_value}}
+                        {{element.unweightedGpValue}}
                     </td>
                 </ng-container>
         
                 <ng-container matColumnDef="comment">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'comment'|translate}}
+                    <th mat-header-cell *matHeaderCellDef>{{'comment'|translate}}
                     </th>
                     <td mat-cell *matCellDef="let element">
                         {{element.comment}}
@@ -123,10 +123,10 @@
                 <ng-container matColumnDef="action">
                     <th mat-header-cell *matHeaderCellDef>{{'actions'|translate}}</th>
                     <td mat-cell *matCellDef="let element">
-                        <a routerLink="" matTooltip="Edit Info" class="mr-3 cursor-pointer">
+                        <a (click)="editGrade(element)" matTooltip="Edit Info" class="mr-3 cursor-pointer">
                             <mat-icon [icIcon]="icEdit"></mat-icon>
                         </a>
-                        <a routerLink="" matTooltip="Delete Info" class="mr-3 cursor-pointer">
+                        <a (click)="confirmDeleteGrade(element)" matTooltip="Delete Info" class="mr-3 cursor-pointer">
                             <mat-icon [icIcon]="icDelete"></mat-icon>
                         </a>
                     </td>

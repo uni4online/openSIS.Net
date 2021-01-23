@@ -85,6 +85,13 @@
   top: -3px !important;
 }
 
+.mat-paginator-page-size {
+  .mat-form-field-appearance-fill {
+    .mat-select-arrow-wrapper {
+      transform: translateY(0%);
+    }
+  }
+}
 
 .mat-form-field {
   margin-bottom: 15px;
@@ -226,7 +233,7 @@
     }
 
     .mat-form-field-underline {
-    display: none !important
+      display: none !important;
     }
   }
 

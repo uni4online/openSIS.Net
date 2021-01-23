@@ -1,8 +1,6 @@
 
 
  <mat-card class="w-full" *ngIf="mode ==='view'; else add">
-   <mat-card class="w-full">
-
         <div class="flex items-center mx-4" fxLayout="row" fxLayoutAlign="center center">
             <h3 class="flex-auto">{{'generalInformation' | translate}}</h3>
             <button mat-button color="primary" (click) = "editGeneralInfo()">
@@ -106,7 +104,6 @@
                 </div>
             </div>
         </mat-card-content>
-    </mat-card>
 </mat-card>
 <ng-template  #add>
    <mat-card class="w-full">

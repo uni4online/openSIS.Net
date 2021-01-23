@@ -41,9 +41,9 @@ namespace opensis.data.Models
         public virtual DbSet<Grade> Grade { get; set; }
         public virtual DbSet<GradeEquivalency> GradeEquivalency { get; set; }
         public virtual DbSet<GradeScale> GradeScale { get; set; }
-        public virtual DbSet<GradeUsStandard> GradeUsStandard { get; set; }
-       
+        public virtual DbSet<GradeUsStandard> GradeUsStandard { get; set; }   
         public virtual DbSet<Gradelevels> Gradelevels { get; set; }
+        public virtual DbSet<HonorRolls> HonorRolls { get; set; }
         public virtual DbSet<Language> Language { get; set; }
         public virtual DbSet<Membership> Membership { get; set; }
         public virtual DbSet<Notice> Notice { get; set; }
@@ -432,8 +432,9 @@ namespace opensis.data.Models
 
                 entity.Property(e => e.CourseCategory)
                     .HasColumnName("course_category")
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
+                    .HasMaxLength(8)
+                    .IsUnicode(false)
+                    .HasComment("'Core' or 'Elective'");
 
                 entity.Property(e => e.CourseDescription)
                     .HasColumnName("course_description")
@@ -473,13 +474,20 @@ namespace opensis.data.Models
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.CreditHours)
-                    .HasColumnName("credit_hours")
-                    .HasMaxLength(5)
-                    .IsFixedLength();
-
-             
-
+                    .HasColumnName("credit_hours");
+     
                 entity.Property(e => e.IsCourseActive).HasColumnName("is_course_active");
+
+                entity.Property(e => e.Standard)
+                    .HasColumnName("standard")
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasComment("choose between US Common Core library or school specific standards library.");
+
+                entity.Property(e => e.StandardRefNo)
+                    .HasColumnName("standard_ref_no")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UpdatedBy)
                     .HasColumnName("updated_by")
@@ -525,6 +533,12 @@ namespace opensis.data.Models
                 entity.Property(e => e.UpdatedOn)
                     .HasColumnName("updated_on")
                     .HasColumnType("datetime");
+
+                entity.HasOne(d => d.Course)
+                   .WithMany(p => p.CourseStandard)
+                   .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.CourseId })
+                   .OnDelete(DeleteBehavior.ClientSetNull)
+                   .HasConstraintName("FK_course_standard_course");
 
                 entity.HasOne(d => d.GradeUsStandard)
                     .WithMany(p => p.CourseStandard)
@@ -932,8 +946,8 @@ namespace opensis.data.Models
 
                 entity.Property(e => e.SortOrder).HasColumnName("sort_order");
 
-                entity.Property(e => e.Tite)
-                    .HasColumnName("tite")
+                entity.Property(e => e.Title)
+                    .HasColumnName("title")
                     .IsUnicode(false);
 
                 entity.Property(e => e.UnweightedGpValue)
@@ -1127,7 +1141,7 @@ namespace opensis.data.Models
                      .HasMaxLength(8)
                      .IsUnicode(false);
 
-                
+
 
 
                 entity.Property(e => e.LastUpdated)
@@ -1166,6 +1180,51 @@ namespace opensis.data.Models
 
             });
 
+            modelBuilder.Entity<HonorRolls>(entity =>
+            {
+                entity.HasKey(e => new { e.TenantId, e.SchoolId, e.HonorRollId });
+
+                entity.ToTable("honor_rolls");
+
+                entity.Property(e => e.TenantId).HasColumnName("tenant_id");
+
+                entity.Property(e => e.SchoolId).HasColumnName("school_id");
+
+                entity.Property(e => e.HonorRollId).HasColumnName("honor_roll_id");
+
+                entity.Property(e => e.Breakoff).HasColumnName("breakoff");
+
+                entity.Property(e => e.CreatedBy)
+                    .HasColumnName("created_by")
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CreatedOn)
+                    .HasColumnName("created_on")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.HonorRoll)
+                    .HasColumnName("honor_roll")
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.MarkingPeriodId).HasColumnName("marking_period_id");
+
+                entity.Property(e => e.UpdatedBy)
+                    .HasColumnName("updated_by")
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UpdatedOn)
+                    .HasColumnName("updated_on")
+                    .HasColumnType("datetime");
+
+                entity.HasOne(d => d.SchoolYears)
+                    .WithMany(p => p.HonorRolls)
+                    .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.MarkingPeriodId })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_honor_rolls_honor_rolls");
+            });
 
             modelBuilder.Entity<Language>(entity =>
             {
@@ -1377,11 +1436,7 @@ namespace opensis.data.Models
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_parent_address_parent_info");
 
-                entity.HasOne(d => d.StudentMaster)
-                    .WithMany(p => p.ParentAddress)
-                    .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.StudentId })
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_parent_address_student_master");
+               
             });
 
             modelBuilder.Entity<ParentAssociationship>(entity =>
@@ -3014,6 +3069,7 @@ namespace opensis.data.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
+                entity.Property(e => e.IsActive).HasColumnName("is_active");
 
                 entity.Property(e => e.LastUpdated)
                     .HasColumnName("last_updated")
@@ -3047,7 +3103,13 @@ namespace opensis.data.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-               
+                entity.HasOne(d => d.StudentMaster)
+                    .WithMany(p => p.StudentEnrollment)
+                    .HasPrincipalKey(p => new { p.TenantId, p.SchoolId, p.StudentGuid })
+                    .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.StudentGuid })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_student_enrollment_student_master");
+
             });
 
             modelBuilder.Entity<StudentEnrollmentCode>(entity =>
@@ -3102,9 +3164,14 @@ namespace opensis.data.Models
 
             modelBuilder.Entity<StudentMaster>(entity =>
             {
-                entity.HasKey(e => new { e.TenantId, e.SchoolId, e.StudentId });
+                entity.HasKey(e => new { e.TenantId, e.SchoolId, e.StudentId })
+                    .HasName("PK_student_master_1");
 
                 entity.ToTable("student_master");
+
+                entity.HasIndex(e => new { e.TenantId, e.SchoolId, e.StudentGuid })
+                   .HasName("IX_student_master")
+                   .IsUnique();
 
                 entity.Property(e => e.TenantId).HasColumnName("tenant_id");
 
@@ -3133,7 +3200,7 @@ namespace opensis.data.Models
                     .HasComment("tenantid#schoolid#studentid | tenantid#schoolid#studentid | ....");
 
                 entity.Property(e => e.BusNo)
-                    .HasColumnName("bus_No")
+                    .HasColumnName("bus_no")
                     .HasMaxLength(15)
                     .IsUnicode(false);
 
@@ -4116,8 +4183,8 @@ namespace opensis.data.Models
             if (!optionsBuilder.IsConfigured)
             {
                 string[] tenants = new string[] { "TenantA" };
-                string connectionString = "Server=SABYA\\SQLEXPRESS;Database={tenant};User Id=sa; Password=admin@123;MultipleActiveResultSets=true";
-                optionsBuilder.UseSqlServer(connectionString.Replace("{tenant}", "opensisv2_dev"));
+                string connectionString = "Server=DESKTOP-40434IR\\SQLEXPRESS;Database={tenant};User Id=sa; Password=os4ed;MultipleActiveResultSets=true";
+                optionsBuilder.UseSqlServer(connectionString.Replace("{tenant}", "opensisv2"));
 
                 //foreach (string tenant in tenants)
                 //{
