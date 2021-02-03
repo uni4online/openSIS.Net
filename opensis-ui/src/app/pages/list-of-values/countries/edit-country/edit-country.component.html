@@ -1,9 +1,9 @@
-<form [formGroup]="form" (ngSubmit)="submit()">
+<form [formGroup]="form" >
 
     <div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
         <h2 class="headline m-0"  fxFlex="auto">{{countryModalTitle |translate}}</h2>
    
-        <button class="text-secondary" (click) = 'closeDialog()' mat-dialog-close mat-icon-button type="button">
+        <button class="text-secondary"  mat-dialog-close mat-icon-button type="button">
             <mat-icon [icIcon]="icClose"></mat-icon>
         </button>
     </div>
@@ -12,19 +12,19 @@
     <mat-dialog-content fxLayout="column">
         <mat-form-field class="mt-6" appearance="outline" color="primary">
             <mat-label>{{'title' | translate}}</mat-label>
-            <input   formControlName="name"  [(ngModel)]="countryAddModel.country.name" name="name"  cdkFocusInitial matInput required>
+            <input   formControlName="name"   name="name"  cdkFocusInitial matInput required>
             <mat-error *ngIf="form.get('name').hasError('required')">{{'titleIsRequired'|translate}}</mat-error>
         </mat-form-field>
         <mat-form-field class="w-full" appearance="outline" color="primary">
             <mat-label>{{'shortName' | translate}}</mat-label>
-            <input formControlName="countryCode"  [(ngModel)]="countryAddModel.country.countryCode" name="countryCode"  matInput required>
+            <input formControlName="countryCode"  name="countryCode"  matInput required>
             <mat-error *ngIf="form.get('countryCode').hasError('required')">{{'shortNameIsRequired'|translate}}</mat-error>
         </mat-form-field>
     
     </mat-dialog-content>
     
     <mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" class="py-6">
-        <button mat-button mat-dialog-close type="button" (click) = 'closeDialog()'>{{'cancel' | translate}}</button>
-        <button color="primary" mat-raised-button type="submit">{{countryModalActionTitle | translate}}</button>
+        <button mat-button mat-dialog-close type="button">{{'cancel' | translate}}</button>
+        <button color="primary" (click)= "submit()" mat-raised-button type="submit">{{countryModalActionTitle | translate}}</button>
     </mat-dialog-actions>
     </form>

@@ -21,6 +21,9 @@ import { CommonService } from '../../../services/common.service';
 import { MatPaginator } from '@angular/material/paginator';
 import {LanguageAddModel} from '../../../models/languageModel';
 import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confirm-dialog.component';
+import { ExcelService } from '../../../services/excel.service';
+import { SharedFunction } from '../../shared/shared-function';
+
 @Component({
   selector: 'vex-language',
   templateUrl: './language.component.html',
@@ -56,6 +59,7 @@ export class LanguageComponent implements OnInit {
   languageModel: LanguageModel = new LanguageModel();  
   languageAddModel = new LanguageAddModel();
   languageModelList: MatTableDataSource<any>;
+  languageListForExcel = [];
   searchKey:string;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -64,7 +68,9 @@ export class LanguageComponent implements OnInit {
     public translateService:TranslateService,
     public loaderService:LoaderService,
     public commonService:CommonService,
-    public snackbar:MatSnackBar
+    public snackbar:MatSnackBar,
+    private excelService:ExcelService,
+    public commonfunction:SharedFunction
     ) {
     translateService.use('en');
     this.loaderService.isLoading.subscribe((val) => {
@@ -129,12 +135,13 @@ export class LanguageComponent implements OnInit {
             this.languageModelList.sort=this.sort;
             this.languageModelList.paginator = this.paginator;       
           } else {
-            this.snackbar.open('Language list failed.' + data._message, '', {
+            this.snackbar.open('' + data._message, '', {
               duration: 10000
             });
           }
         }else{ 
           this.languageModelList = new MatTableDataSource(data.tableLanguage);
+          this.languageListForExcel= data.tableLanguage;
           this.languageModelList.sort=this.sort; 
           this.languageModelList.paginator = this.paginator;         
         } 
@@ -142,11 +149,30 @@ export class LanguageComponent implements OnInit {
     });
   }
 
+  exportLanguageListToExcel(){
+    if(this.languageListForExcel.length!=0){
+      let languageList=this.languageListForExcel?.map((item)=>{
+        return{
+          Title: item.locale,
+          ShortName: item.languageCode,
+          CreatedBy: item.createdBy!==null ? item.createdBy: '-',
+          CreateDate: this.commonfunction.transformDateWithTime(item.createdOn),
+          UpdatedBy: item.updatedBy!==null ? item.updatedBy: '-',
+          UpdateDate:  this.commonfunction.transformDateWithTime(item.updatedOn)
+        }
+      });
+      this.excelService.exportAsExcelFile(languageList,'Language_List_')
+     }
+     else{
+    this.snackbar.open('No Records Found. Failed to Export Language List','', {
+      duration: 5000
+    });
+  }
+}
+
   goToAdd(){
     this.dialog.open(EditLanguageComponent, {
-      data: {
-        mode:"add"       
-      },  
+      
       width: '500px'
     }).afterClosed().subscribe((data) => {
       if(data){
@@ -157,10 +183,7 @@ export class LanguageComponent implements OnInit {
 
   goToEdit(editDetails){
     this.dialog.open(EditLanguageComponent, {
-      data: {
-        mode:"edit",
-        editDetails:editDetails
-      },  
+      data: editDetails,
       width: '500px'
     }).afterClosed().subscribe((data) => {
       if(data){

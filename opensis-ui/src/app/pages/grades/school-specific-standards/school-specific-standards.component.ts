@@ -298,30 +298,25 @@ export class SchoolSpecificStandardsComponent implements OnInit,OnDestroy {
   filterSchoolSpecificStandardsList(){
     this.form.markAllAsTouched();
     if(this.form.valid){
-      if(this.form.value.subject=="all" && this.form.value.course=="all" && this.form.value.gradeLevel=="all"){
-      this.getAllSchoolSpecificList();
-      }else{
         let filterParams= [
           {
             columnName: "subject",
-            filterValue: this.form.value.subject,
+            filterValue: this.form.value.subject=="all"?null:this.form.value.subject,
             filterOption: 11
           },
           {
             columnName: "course",
-            filterValue: this.form.value.course,
+            filterValue: this.form.value.course=="all"?null:this.form.value.course,
             filterOption: 11
           },
           {
             columnName: "gradeLevel",
-            filterValue: this.form.value.gradeLevel,
+            filterValue: this.form.value.gradeLevel=="all"?null:this.form.value.gradeLevel,
             filterOption: 11
           }
         ]
         Object.assign(this.schoolSpecificStandardsList, { filterParams: filterParams });
-        this.getAllSchoolSpecificList();
-      }
-      
+        this.getAllSchoolSpecificList();      
     }
   }
 

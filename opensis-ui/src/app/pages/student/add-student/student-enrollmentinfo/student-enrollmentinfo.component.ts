@@ -306,8 +306,8 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
     for (let i = 0; i < this.studentEnrollmentModel.studentEnrollments?.length; i++) {
       this.studentEnrollmentModel.studentEnrollments[i].studentId = this.studentService.getStudentId();
       this.studentEnrollmentModel.studentEnrollments[i].academicYear = +sessionStorage.getItem("academicyear");
-      // this.studentEnrollmentModel.studentEnrollments[i].enrollmentDate=this.commonFunction.formatDateSaveWithoutTime(this.studentEnrollmentModel.studentEnrollments[i].enrollmentDate)
-      // this.studentEnrollmentModel.studentEnrollments[i].exitDate=this.commonFunction.formatDateSaveWithoutTime(this.studentEnrollmentModel.studentEnrollments[i].exitDate)
+      this.studentEnrollmentModel.studentEnrollments[i].enrollmentDate=this.commonFunction.formatDateSaveWithoutTime(this.studentEnrollmentModel.studentEnrollments[i].enrollmentDate)
+      this.studentEnrollmentModel.studentEnrollments[i].exitDate=this.commonFunction.formatDateSaveWithoutTime(this.studentEnrollmentModel.studentEnrollments[i].exitDate)
       if (details != null) {
         this.studentEnrollmentModel.studentEnrollments[i].studentGuid = details.studentMaster.studentGuid;
       } else {

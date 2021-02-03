@@ -538,5 +538,25 @@ namespace opensis.core.Student.Services
             }
             return studentEnrollmentUpdate;
         }
+
+        /// <summary>
+        /// Add or Update Student Photo
+        /// </summary>
+        /// <param name="studentAddViewModel"></param>
+        /// <returns></returns>
+        public StudentAddViewModel AddUpdateStudentPhoto(StudentAddViewModel studentAddViewModel)
+        {
+            StudentAddViewModel studentPhotoUpdate = new StudentAddViewModel();
+            if (TokenManager.CheckToken(studentAddViewModel._tenantName, studentAddViewModel._token))
+            {
+                studentPhotoUpdate = this.studentRepository.AddUpdateStudentPhoto(studentAddViewModel);
+            }
+            else
+            {
+                studentPhotoUpdate._failure = true;
+                studentPhotoUpdate._message = TOKENINVALID;
+            }
+            return studentPhotoUpdate;
+        }
     }
 }

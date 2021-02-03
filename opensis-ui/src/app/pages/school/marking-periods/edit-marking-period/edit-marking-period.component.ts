@@ -193,16 +193,8 @@ export class EditMarkingPeriodComponent implements OnInit {
   }
 
   checkStartDate(){
-    let startDate = new Date(this.markingPeriodAddModel.tableSchoolYears.startDate).getTime();
-    let dateSchoolOpened = new Date(sessionStorage.getItem("schoolOpened")).getTime();
-
-    if(startDate<dateSchoolOpened){
-      this.form.controls.startDate.setErrors({schoolOpenedNotMatch:true})
-    }else{
-      if(this.form.controls.startDate.errors?.schoolOpenedNotMatch){
-        this.form.controls.startDate.setErrors(null);
-      }
-    }
+    let dateSchoolOpened = new Date(sessionStorage.getItem("schoolOpened"));
+    return dateSchoolOpened;
   }
 
   checkGrade(data){

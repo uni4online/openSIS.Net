@@ -43,7 +43,7 @@ export class EditMaleToiletTypeComponent implements OnInit {
       }  
       else{
         
-        this.lovAddView.dropdownValue=data;
+       // this.lovAddView.dropdownValue=data;
         this.maleToiletTypeTitle="editMaleToiletType";
         this.buttonType="update";
         this.form.controls.id.patchValue(data.id)
@@ -60,6 +60,7 @@ export class EditMaleToiletTypeComponent implements OnInit {
       if(this.form.controls.id.value==0){
         this.lovAddView.dropdownValue.lovColumnValue=this.form.controls.lovColumnValue.value;
         this.lovAddView.dropdownValue.lovName=this.form.controls.lovName.value;
+        this.lovAddView.dropdownValue.createdBy=sessionStorage.getItem("email");
         this.commonService.addDropdownValue(this.lovAddView).subscribe(
           (res:LovAddView)=>{
             if(typeof(res)=='undefined'){
@@ -87,7 +88,7 @@ export class EditMaleToiletTypeComponent implements OnInit {
         this.lovAddView.dropdownValue.id=this.form.controls.id.value;
         this.lovAddView.dropdownValue.lovName=this.form.controls.lovName.value;
         this.lovAddView.dropdownValue.lovColumnValue=this.form.controls.lovColumnValue.value;
-
+        this.lovAddView.dropdownValue.updatedBy=sessionStorage.getItem("email");
         this.commonService.updateDropdownValue(this.lovAddView).subscribe(
           (res:LovAddView)=>{
             if(typeof(res)=='undefined'){

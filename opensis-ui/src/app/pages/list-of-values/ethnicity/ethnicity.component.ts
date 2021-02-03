@@ -20,6 +20,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confirm-dialog.component';
+import { ExcelService } from '../../../services/excel.service';
+import { SharedFunction } from '../../shared/shared-function';
 
 @Component({
   selector: 'vex-ethnicity',
@@ -50,6 +52,7 @@ export class EthnicityComponent implements OnInit {
   icSearch = icSearch;
   icImpersonate = icImpersonate;
   icFilterList = icFilterList;
+  ethnicityForExcel =[];
   loading: Boolean;
   listCount;
   searchKey: string;
@@ -62,7 +65,9 @@ export class EthnicityComponent implements OnInit {
     public translateService: TranslateService,
     private loaderService: LoaderService,
     private snackbar: MatSnackBar,
-    private commonService: CommonService) {
+    private commonService: CommonService,
+    private excelService:ExcelService,
+    public commonfunction:SharedFunction) {
     translateService.use('en');
 
     this.loaderService.isLoading.subscribe((val) => {
@@ -88,18 +93,38 @@ export class EthnicityComponent implements OnInit {
           if (res._failure) {
             this.ethnicityListModel=new MatTableDataSource(res.dropdownList) ;
             this.listCount=this.ethnicityListModel.data;
-            this.snackbar.open('Ethnicity List failed. ' + res._message, '', {
+            this.snackbar.open('' + res._message, '', {
               duration: 10000
             });
           }
           else {
             this.ethnicityListModel = new MatTableDataSource(res.dropdownList);
+            this.ethnicityForExcel = res.dropdownList;
             this.listCount=this.ethnicityListModel.data;
             this.ethnicityListModel.sort = this.sort;
           }
         }
       })
   }
+  exportEthnicityListToExcel(){
+    if(this.ethnicityForExcel.length!=0){
+      let ethnicity=this.ethnicityForExcel?.map((item)=>{
+        return{
+          Title: item.lovColumnValue,
+          CreatedBy: item.createdBy!==null ? item.createdBy: '-',
+          CreateDate: this.commonfunction.transformDateWithTime(item.createdOn),
+          UpdatedBy: item.updatedBy!==null ? item.updatedBy: '-',
+          UpdateDate:  this.commonfunction.transformDateWithTime(item.updatedOn)
+        }
+      });
+      this.excelService.exportAsExcelFile(ethnicity,'Ethnicity_List_')
+     }
+     else{
+    this.snackbar.open('No Records Found. Failed to Export Ethnicity List','', {
+      duration: 5000
+    });
+  }
+}
 
   onSearchClear() {
     this.searchKey = "";

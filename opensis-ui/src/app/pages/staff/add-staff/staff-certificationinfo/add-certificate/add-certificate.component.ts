@@ -12,6 +12,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import {WashInfoEnum} from '../../../../../enums/wash-info.enum'
 import { TranslateService } from '@ngx-translate/core';
 import { StaffCertificateModel } from '../../../../../models/staffModel';
+import { SharedFunction } from '../../../../shared/shared-function';
 
 @Component({
   selector: 'vex-add-certificate',
@@ -38,7 +39,8 @@ export class AddCertificateComponent implements OnInit {
       @Inject(MAT_DIALOG_DATA) public data:any,
       private fb: FormBuilder,
       private snackbar:MatSnackBar,
-      private staffService:StaffService
+      private staffService:StaffService,
+      private commonFunction: SharedFunction
     ) 
     {
       this.form=fb.group({
@@ -89,25 +91,25 @@ export class AddCertificateComponent implements OnInit {
             this.staffCertificateModel.staffCertificateInfo.shortName=this.form.controls.shortName.value;
             this.staffCertificateModel.staffCertificateInfo.certificationCode=this.form.controls.certificationCode.value;
             this.staffCertificateModel.staffCertificateInfo.primaryCertification=this.form.controls.primaryCertification.value;
-            this.staffCertificateModel.staffCertificateInfo.certificationDate=this.form.controls.certificationDate.value;
-            this.staffCertificateModel.staffCertificateInfo.certificationExpiryDate=this.form.controls.certificationExpiryDate.value;
+            this.staffCertificateModel.staffCertificateInfo.certificationDate=this.commonFunction.formatDateSaveWithoutTime(this.form.controls.certificationDate.value);
+            this.staffCertificateModel.staffCertificateInfo.certificationExpiryDate=this.commonFunction.formatDateSaveWithoutTime(this.form.controls.certificationExpiryDate.value);
             this.staffCertificateModel.staffCertificateInfo.certificationDescription=this.form.controls.certificationDescription.value;
           
             this.staffService.addStaffCertificateInfo(this.staffCertificateModel).subscribe(
               (res:StaffCertificateModel)=>{
                 if(typeof(res)=='undefined'){
-                  this.snackbar.open('Staff Certificate insertion failed. ' + sessionStorage.getItem("httpError"), '', {
+                  this.snackbar.open('Staff Certificate Insertion failed. ' + sessionStorage.getItem("httpError"), '', {
                     duration: 10000
                   });
                 }
                 else{
                   if (res._failure) {
-                    this.snackbar.open('Staff Certificate insertion failed. ' + res._message, 'LOL THANKS', {
+                    this.snackbar.open('Staff Certificate Insertion failed. ' + res._message, 'LOL THANKS', {
                       duration: 10000
                     });
                   } 
                   else { 
-                    this.snackbar.open('Staff Certificate inserted Successfully. ' + res._message, 'LOL THANKS', {
+                    this.snackbar.open('Staff Certificate Inserted Successfully. ', 'LOL THANKS', {
                       duration: 10000
                     });
                     this.dialogRef.close('submited');
@@ -124,24 +126,24 @@ export class AddCertificateComponent implements OnInit {
             this.staffCertificateModel.staffCertificateInfo.shortName=this.form.controls.shortName.value;
             this.staffCertificateModel.staffCertificateInfo.certificationCode=this.form.controls.certificationCode.value;
             this.staffCertificateModel.staffCertificateInfo.primaryCertification=this.form.controls.primaryCertification.value;
-            this.staffCertificateModel.staffCertificateInfo.certificationDate=this.form.controls.certificationDate.value;
-            this.staffCertificateModel.staffCertificateInfo.certificationExpiryDate=this.form.controls.certificationExpiryDate.value;
+            this.staffCertificateModel.staffCertificateInfo.certificationDate=this.commonFunction.formatDateSaveWithoutTime(this.form.controls.certificationDate.value);
+            this.staffCertificateModel.staffCertificateInfo.certificationExpiryDate=this.commonFunction.formatDateSaveWithoutTime(this.form.controls.certificationExpiryDate.value);
             this.staffCertificateModel.staffCertificateInfo.certificationDescription=this.form.controls.certificationDescription.value;
             this.staffService.updateStaffCertificateInfo(this.staffCertificateModel).subscribe(
               (res:StaffCertificateModel)=>{
                 if(typeof(res)=='undefined'){
-                  this.snackbar.open('Staff Certificate update failed. ' + sessionStorage.getItem("httpError"), '', {
+                  this.snackbar.open('Staff Certificate Update failed. ' + sessionStorage.getItem("httpError"), '', {
                     duration: 10000
                   });
                 }
                 else{
                   if (res._failure) {
-                    this.snackbar.open('Staff Certificate update failed. ' + res._message, 'LOL THANKS', {
+                    this.snackbar.open('Staff Certificate Update failed. ' + res._message, 'LOL THANKS', {
                       duration: 10000
                     });
                   } 
                   else { 
-                    this.snackbar.open('Staff Certificate updateed Successfully. ' + res._message, 'LOL THANKS', {
+                    this.snackbar.open('Staff Certificate Updateed Successfully. ', 'LOL THANKS', {
                       duration: 10000
                     });
                     this.dialogRef.close('submited');

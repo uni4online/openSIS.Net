@@ -2,7 +2,7 @@
     <div class="border border-solid rounded p-4" *ngFor="let parent of parentListArray">
         <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px">
             <div class="relative cursor-pointer" fxFlex="none" (click)='openViewDetails(parent)'>
-                <img src="assets/img/default.jpg" class="avatar">
+                <img src="assets/img/default-person.jpg" class="avatar">
             </div>
             <div class="overflow-hidden cursor-pointer" fxFlex="auto" (click)='openViewDetails(parent)'>
                 <div class="subheading-2 leading-snug text-primary">{{parent.firstname}} {{parent.lastname}}</div>

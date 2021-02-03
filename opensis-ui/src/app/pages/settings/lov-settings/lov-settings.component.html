@@ -24,12 +24,24 @@
                         <vex-female-toilet-type></vex-female-toilet-type>
                     </div>
 
+                    <div *ngIf="pageId === 'Female Toilet Accessibility'">
+                        <vex-female-toilet-accessibility></vex-female-toilet-accessibility>
+                    </div>
+
                     <div *ngIf="pageId === 'Male Toilet Type'">
                         <vex-male-toilet-type></vex-male-toilet-type>
                     </div>
 
+                    <div *ngIf="pageId === 'Male Toilet Accessibility'">
+                        <vex-male-toilet-accessibility></vex-male-toilet-accessibility>
+                    </div>
+
                     <div *ngIf="pageId === 'Common Toilet Type'">
                         <vex-common-toilet-type></vex-common-toilet-type>
+                    </div>
+
+                    <div *ngIf="pageId === 'Common Toilet Accessibility'">
+                        <vex-common-toilet-accessibility></vex-common-toilet-accessibility>
                     </div>
 
                     <div *ngIf="pageId === 'Race'">

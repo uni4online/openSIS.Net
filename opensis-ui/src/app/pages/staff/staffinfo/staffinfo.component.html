@@ -16,7 +16,8 @@
                         <div class="flex">
                             <input [formControl]="searchCtrl" class="px-4 py-3 border-0 outline-none w-full bg-transparent" placeholder="Search..."
                                 type="search">
-                            <button class="ml-4" fxFlex="none" fxHide.gt-xs mat-icon-button type="button">
+                            <mat-progress-spinner matSuffix *ngIf="loading" class="ml-4" fxFlex="none" color="primary" diameter="20" mode="indeterminate"></mat-progress-spinner>
+                            <button *ngIf="!loading" class="ml-4" fxFlex="none" fxHide.gt-xs mat-icon-button type="button">
                                 <mat-icon [icIcon]="icSearch"></mat-icon>
                             </button>
                         </div>
@@ -90,7 +91,7 @@
                     <th mat-header-cell *matHeaderCellDef>{{'action'|translate}}
                     </th>
                     <td mat-cell *matCellDef="let element">
-                        <a href="javascript:void(0);" matTooltip="Impersonate as Parent" class="mr-3 cursor-pointer">
+                        <a matTooltip="Impersonate as Staff" class="mr-3 cursor-pointer">
                             <mat-icon [icIcon]="icImpersonate"></mat-icon>
                         </a>
                     </td>
@@ -98,12 +99,12 @@
 
                 <ng-container matColumnDef="loading">
                     <mat-footer-cell *matFooterCellDef colspan="7">
-                      <vex-mat-spinner-overlay *ngIf="loading" color="accent"></vex-mat-spinner-overlay>
+                      <!-- <vex-mat-spinner-overlay *ngIf="loading" color="accent"></vex-mat-spinner-overlay> -->
                     </mat-footer-cell>
                   </ng-container>
                   <ng-container matColumnDef="noData">
                     <td mat-footer-cell *matFooterCellDef colspan="7">
-                      {{loading?'Fetching Data...':'No Data'}}
+                        {{loading?('fetchingData' | translate):('noData' | translate) }}
                     </td>
                   </ng-container>
 

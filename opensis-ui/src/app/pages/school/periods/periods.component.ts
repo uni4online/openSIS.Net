@@ -40,6 +40,8 @@ export class PeriodsComponent implements OnInit {
   icFilterList = icFilterList;
   blockPeriodList: MatTableDataSource<any>;
   @ViewChild(MatSort) sort: MatSort;
+  blockCount:number;
+  currentBlockName:string;
   blockListViewModel: BlockListViewModel = new BlockListViewModel();
   blockPeriodSortOrderViewModel: BlockPeriodSortOrderViewModel = new BlockPeriodSortOrderViewModel();
   blockPeriodAddViewModel: BlockPeriodAddViewModel = new BlockPeriodAddViewModel();
@@ -115,8 +117,10 @@ export class PeriodsComponent implements OnInit {
           }
           else {
             this.blockListViewModel = res;
+            this.blockCount= res.blockList.length;
             if (this.currentBlockId == null) {
               this.currentBlockId = res.blockList[0].blockId;
+              this.currentBlockName = res.blockList[0].blockTitle;
               let periodList= this.itemInPeriodList(0 , res);
               this.blockPeriodList = new MatTableDataSource(periodList);
               this.blockPeriodList.sort = this.sort;
@@ -196,6 +200,7 @@ export class PeriodsComponent implements OnInit {
             this.snackbar.open('' + res._message, '', {
               duration: 10000
             });
+            this.currentBlockId = null;
             this.getAllBlockList()
           }
         }
@@ -222,7 +227,8 @@ export class PeriodsComponent implements OnInit {
     this.dialog.open(EditBlockComponent, {
       width: '500px'
     }).afterClosed().subscribe((data) => {
-      if (data === 'submited') {
+      if (data.mode === 'submited') {
+        this.currentBlockId = data.currentBlockId;
         this.getAllBlockList();
       }
     });
@@ -249,14 +255,29 @@ export class PeriodsComponent implements OnInit {
             if (this.currentBlockId == null) {
               this.currentBlockId = res.blockList[0].blockId;
               let periodList= this.excelPeriodList(0, res);
-              this.excelService.exportAsExcelFile(periodList,'Period_List_')
+              if(periodList.length!=0){
+                this.excelService.exportAsExcelFile(periodList,'Period_List_')
+              }
+              else{
+                this.snackbar.open('No Records Found. Failed to Export Period List','', {
+                  duration: 5000
+                });
+              }
+              
             }
             else {
               let index = this.blockListViewModel.blockList.findIndex((x) => {
                 return x.blockId === this.currentBlockId
               });
               let periodList= this.excelPeriodList(index, res);
-              this.excelService.exportAsExcelFile(periodList,'Period_List_')
+              if(periodList.length!=0){
+                this.excelService.exportAsExcelFile(periodList,'Period_List_')
+              }
+              else{
+                this.snackbar.open('No Records Found. Failed to Export Period List','', {
+                  duration: 5000
+                });
+              }
               
             }
           }

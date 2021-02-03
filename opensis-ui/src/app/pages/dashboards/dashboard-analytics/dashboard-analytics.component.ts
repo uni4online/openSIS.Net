@@ -3,10 +3,18 @@ import icGroup from '@iconify/icons-ic/twotone-group';
 import icPageView from '@iconify/icons-ic/twotone-pageview';
 import icCloudOff from '@iconify/icons-ic/twotone-cloud-off';
 import icTimer from '@iconify/icons-ic/twotone-timer';
+import icSchool from '@iconify/icons-ic/twotone-account-balance';
+import icStudent from '@iconify/icons-ic/twotone-school';
+import icStaff from '@iconify/icons-ic/twotone-people';
+import icParent from '@iconify/icons-ic/twotone-escalator-warning';
+import icMissingAttendance from '@iconify/icons-ic/twotone-alarm-off';
 import { defaultChartOptions } from '../../../../@vex/utils/default-chart-options';
 import { Order, tableSalesData } from '../../../../static-data/table-sales-data';
 import { TableColumn } from '../../../../@vex/interfaces/table-column.interface';
 import icMoreVert from '@iconify/icons-ic/twotone-more-vert';
+import icPreview from '@iconify/icons-ic/round-preview';
+import icPeople from '@iconify/icons-ic/twotone-people';
+import { LayoutService } from 'src/@vex/services/layout.service';
 
 @Component({
   selector: 'vex-dashboard-analytics',
@@ -48,13 +56,9 @@ export class DashboardAnalyticsComponent implements OnInit {
 
   userSessionsSeries: ApexAxisChartSeries = [
     {
-      name: 'Users',
-      data: [10, 50, 26, 50, 38, 60, 50, 25, 61, 80, 40, 60]
-    },
-    {
-      name: 'Sessions',
-      data: [5, 21, 42, 70, 41, 20, 35, 50, 10, 15, 30, 50]
-    },
+      name: 'Attendance',
+      data: [38480, 40203, 36890, 41520, 38005, 34060, 23150, 35002, 29161, 38054, 40250, 36492]
+    }
   ];
 
   salesSeries: ApexAxisChartSeries = [{
@@ -85,8 +89,30 @@ export class DashboardAnalyticsComponent implements OnInit {
   icCloudOff = icCloudOff;
   icTimer = icTimer;
   icMoreVert = icMoreVert;
+  icSchool = icSchool;
+  icStudent = icStudent;
+  icStaff = icStaff;
+  icParent = icParent;
+  icPreview = icPreview;
+  icPeople = icPeople;
+  icMissingAttendance = icMissingAttendance;
+  scheduleType = '1';
+  durationType = '1';
+  addCalendarDay = 0;
 
-  constructor(private cd: ChangeDetectorRef) { }
+
+  constructor(private cd: ChangeDetectorRef, private layoutService: LayoutService) {
+    if (localStorage.getItem("collapseValue") !== null) {
+      if (localStorage.getItem("collapseValue") === "false") {
+        this.layoutService.expandSidenav();
+      } else {
+        this.layoutService.collapseSidenav();
+      }
+    } else {
+      this.layoutService.expandSidenav();
+    }
+
+  }
 
   ngOnInit() {
     setTimeout(() => {

@@ -375,7 +375,13 @@ namespace opensis.data.Repository
         {
             GetAllParentInfoListForView parentInfoListModel = new GetAllParentInfoListForView();
             IQueryable<ParentInfo> transactionIQ = null;
-            var ParentInfoList = this.context?.ParentInfo.Include(x=>x.ParentAddress).ToList().Where(x => x.TenantId == pageResult.TenantId && x.SchoolId==pageResult.SchoolId);
+
+            var containParentId = this.context?.ParentAssociationship.Where(x => x.TenantId == pageResult.TenantId && x.SchoolId == pageResult.SchoolId  && x.Associationship == true).Select(x => x.ParentId).Distinct().ToList();
+            
+            List<int> parentIDs = new List<int> { };
+            parentIDs = containParentId;
+
+            var ParentInfoList = this.context?.ParentInfo.Include(x=>x.ParentAddress).ToList().Where(x => x.TenantId == pageResult.TenantId && x.SchoolId==pageResult.SchoolId &&(parentIDs == null || (parentIDs.Contains(x.ParentId))));
             
             try
             {
@@ -591,12 +597,13 @@ namespace opensis.data.Repository
                                 LastFamilyName = student.LastFamilyName,
                                 Dob = student.Dob,
                                 Gender = student.Gender,
-                                Address = ToFullAddress(student.HomeAddressLineOne, student.HomeAddressLineTwo,student.HomeAddressCity,student.HomeAddressState,
+                                Address = ToFullAddress(student.HomeAddressLineOne, student.HomeAddressLineTwo, student.HomeAddressCity, student.HomeAddressState,
                                 student.HomeAddressCountry, student.HomeAddressZip),
                                 SchoolName = this.context?.SchoolMaster.Where(x => x.SchoolId == student.SchoolId)?.Select(s => s.SchoolName).FirstOrDefault(),
                                 GradeLevelTitle = this.context?.StudentEnrollment.Where(x => x.TenantId == student.TenantId && x.SchoolId == student.SchoolId && x.StudentId == student.StudentId).OrderByDescending(x => x.EnrollmentDate).LastOrDefault().GradeLevelTitle,
                                 IsCustodian = studentAssociateWithParent.IsCustodian,
-                                Relationship = studentAssociateWithParent.Relationship
+                                Relationship = studentAssociateWithParent.Relationship,
+                                StudentPhoto = student.StudentPhoto
                             };
                             parentInfoViewModel.getStudentForView.Add(studentForView);
 

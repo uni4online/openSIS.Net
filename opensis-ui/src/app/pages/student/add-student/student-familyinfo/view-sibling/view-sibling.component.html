@@ -17,7 +17,7 @@
         </li>
         <li>
             <label class="text-sm leading-5 text-gray">{{'dateOfBirth' | translate}}</label>
-            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{data.siblingDetails.dob | date|EmtyValueCheckPipe}} | Age : {{data.siblingDetails.dob|date|age|EmtyValueCheckPipe}}</p>
+            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{data.siblingDetails.dob | date|EmtyValueCheckPipe}}<span *ngIf="data.siblingDetails.dob!=null"> | Age : {{data.siblingDetails.dob|date|age|EmtyValueCheckPipe}}</span></p>
         </li>
         <li>
             <label class="text-sm leading-5 text-gray">{{'studentID' | translate}}</label>
@@ -25,7 +25,7 @@
         </li>
         <li>
             <label class="text-sm leading-5 text-gray">{{'gradeLevel' | translate}}</label>
-            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">9</p>
+            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{data.siblingDetails.studentEnrollment[0]?.gradeLevelTitle|EmtyValueCheckPipe}}</p>
         </li>
         <li>
             <label class="text-sm leading-5 text-gray">{{'school' | translate}}</label>
@@ -33,9 +33,9 @@
         </li>
     </ul>
     
-    <div>
+    <div class="mt-6">
         <label class="text-sm leading-5 text-gray">{{'Address' | translate}}</label>
-        <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2"><a href="javascript:void(0)" class="text-blue cursor-pointer">{{address}}<i class="icon icon-sphere"></i></a></p>
+        <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2"><a href="javascript:void(0)" class="text-blue cursor-pointer">{{address|EmtyValueCheckPipe}}<i *ngIf="address!=null" class="icon icon-sphere"></i></a></p>
     </div>
 </mat-dialog-content>
 <mat-dialog-actions class="py-6"></mat-dialog-actions>

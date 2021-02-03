@@ -137,4 +137,11 @@ export class StaffService {
     return this.http.put<StaffSchoolInfoModel>(apiurl, obj)
   }
 
+  addUpdateStaffPhoto(obj:StaffAddModel){
+    obj.staffMaster.staffId = this.getStaffId();
+    obj.staffMaster.staffPhoto = this.staffImage;
+    let apiurl = this.apiUrl + obj._tenantName + "/Staff/addUpdateStaffPhoto";
+    return this.http.put<StaffAddModel>(apiurl, obj)
+  }
+
 }

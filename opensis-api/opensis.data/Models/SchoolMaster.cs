@@ -9,6 +9,7 @@ namespace opensis.data.Models
         {
             AttendanceCodeCategories = new HashSet<AttendanceCodeCategories>();
             Block = new HashSet<Block>();
+            CourseSection = new HashSet<CourseSection>();
             CustomFields = new HashSet<CustomFields>();
             DpdownValuelist = new HashSet<DpdownValuelist>();
             FieldsCategory = new HashSet<FieldsCategory>();
@@ -60,6 +61,7 @@ namespace opensis.data.Models
         public virtual Plans Plans { get; set; }
         public virtual ICollection<AttendanceCodeCategories> AttendanceCodeCategories { get; set; }
         public virtual ICollection<Block> Block { get; set; }
+        public virtual ICollection<CourseSection> CourseSection { get; set; }
         public virtual ICollection<CustomFields> CustomFields { get; set; }
         public virtual ICollection<DpdownValuelist> DpdownValuelist { get; set; }
         public virtual ICollection<FieldsCategory> FieldsCategory { get; set; }

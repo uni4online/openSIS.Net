@@ -109,7 +109,7 @@
             </li>
             <li>
                 <label class="text-sm leading-5 text-gray">{{'portalAccess' | translate}}</label>
-                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2 text-green">{{staffPortalAccess}}</p>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2 text-green">{{staffViewDetails?.staffMaster?.portalAccess ? 'Yes' :'No'}}</p>
             </li>
             <!-- <li>
                 <label class="text-sm leading-5 text-gray">{{'lastLogin' | translate}}</label>

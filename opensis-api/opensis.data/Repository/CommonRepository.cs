@@ -12,7 +12,7 @@ namespace opensis.data.Repository
     public class CommonRepository : ICommonRepository
     {
         private CRMContext context;
-        private static readonly string NORECORDFOUND = "NO RECORD FOUND";
+        private static readonly string NORECORDFOUND = "No data found";
         public CommonRepository(IDbContextFactory dbContextFactory)
         {
             this.context = dbContextFactory.Create();
@@ -177,12 +177,20 @@ namespace opensis.data.Repository
             {
                 var getLanguageData = this.context?.Language.FirstOrDefault(x => x.LangId == languageUpdate.Language.LangId);
 
-                languageUpdate.Language.CreatedBy = getLanguageData.CreatedBy;
-                languageUpdate.Language.CreatedOn = getLanguageData.CreatedOn;
-                languageUpdate.Language.UpdatedOn = DateTime.Now;
-                this.context.Entry(getLanguageData).CurrentValues.SetValues(languageUpdate.Language);
-                this.context?.SaveChanges();
-                languageUpdate._failure = false;
+                if (getLanguageData.Lcid.ToLower() == "en-us".ToLower() || getLanguageData.Lcid.ToLower() == "fr-fr".ToLower() || getLanguageData.Lcid.ToLower() == "es-es".ToLower())
+                {
+                    languageUpdate._message = "This Language is not editable";
+                    languageUpdate._failure = true;
+                }
+                else
+                {
+                    languageUpdate.Language.CreatedBy = getLanguageData.CreatedBy;
+                    languageUpdate.Language.CreatedOn = getLanguageData.CreatedOn;
+                    languageUpdate.Language.UpdatedOn = DateTime.Now;
+                    this.context.Entry(getLanguageData).CurrentValues.SetValues(languageUpdate.Language);
+                    this.context?.SaveChanges();
+                    languageUpdate._failure = false;
+                }   
             }
             return languageUpdate;
         }
@@ -237,6 +245,13 @@ namespace opensis.data.Repository
                 {
 
                     var getStudentLanguageData = this.context?.StudentMaster.Where(x => x.FirstLanguageId == languageAddModel.Language.LangId || x.SecondLanguageId == languageAddModel.Language.LangId || x.ThirdLanguageId == languageAddModel.Language.LangId).ToList();
+
+                    if (getLanguageValue.Lcid.ToLower() == "en-us".ToLower() || getLanguageValue.Lcid.ToLower() == "fr-fr".ToLower() || getLanguageValue.Lcid.ToLower() == "es-es".ToLower())
+                    {
+                        deleteLanguageModel._message = "This Language is not deletable";
+                        deleteLanguageModel._failure = true;
+                        return deleteLanguageModel;
+                    }
                     if (getStudentLanguageData.Count > 0)
                     {
                         deleteLanguageModel._message = "Language cannot be deleted because it has its association";
@@ -257,7 +272,6 @@ namespace opensis.data.Repository
                         deleteLanguageModel._failure = true;
                         return deleteLanguageModel;
                     }
-
 
                     this.context?.Language.Remove(getLanguageValue);
                     this.context?.SaveChanges();
@@ -313,7 +327,7 @@ namespace opensis.data.Repository
             {
                 try
                 {
-                    var getDpdownData = this.context?.DpdownValuelist.Where(x => x.LovColumnValue.ToLower() == dpdownValue.DropdownValue.LovColumnValue.ToLower() && x.Id != dpdownValue.DropdownValue.Id && x.SchoolId == dpdownValue.DropdownValue.SchoolId).ToList();
+                    var getDpdownData = this.context?.DpdownValuelist.Where(x => x.LovColumnValue.ToLower() == dpdownValue.DropdownValue.LovColumnValue.ToLower() && x.LovName.ToLower() == dpdownValue.DropdownValue.LovName.ToLower() && x.Id != dpdownValue.DropdownValue.Id && x.SchoolId == dpdownValue.DropdownValue.SchoolId).ToList();
 
                     if (getDpdownData.Count > 0)
                     {
@@ -841,6 +855,63 @@ namespace opensis.data.Repository
             return languageListModel;
 
         }
+
+        /// <summary>
+        /// Dashboard View
+        /// </summary>
+        /// <param name="dashboardViewModel"></param>
+        /// <returns></returns>
+        public DashboardViewModel GetDashboardView(DashboardViewModel dashboardViewModel)
+        {
+            DashboardViewModel dashboardView = new DashboardViewModel();
+            try
+            {
+                dashboardView.TenantId = dashboardViewModel.TenantId;
+                dashboardView.SchoolId = dashboardViewModel.SchoolId;
+                dashboardView.AcademicYear = dashboardViewModel.AcademicYear;
+
+                dashboardView.SuperAdministratorName = this.context?.UserMaster.FirstOrDefault(x => x.TenantId == dashboardViewModel.TenantId && x.SchoolId == dashboardViewModel.SchoolId && x.MembershipId == 1)?.Name;
+
+                dashboardView.SchoolName = this.context?.SchoolMaster.FirstOrDefault(x => x.TenantId == dashboardViewModel.TenantId && x.SchoolId == dashboardViewModel.SchoolId)?.SchoolName;
+
+                dashboardView.TotalStudent= this.context?.StudentMaster.Where(x => x.TenantId == dashboardViewModel.TenantId && x.SchoolId == dashboardViewModel.SchoolId && x.IsActive == true).ToList().Count();
+
+                //dashboardView.TotalParent = this.context?.ParentAssociationship.Where(x => x.TenantId == dashboardViewModel.TenantId && x.SchoolId == dashboardViewModel.SchoolId && x.Associationship == true).Select(s => new { s.TenantId, s.SchoolId, s.ParentId }).Distinct().ToList().Count();
+
+                dashboardView.TotalStaff= this.context?.StaffMaster.Where(x => x.TenantId == dashboardViewModel.TenantId && x.SchoolId == dashboardViewModel.SchoolId).ToList().Count();
+
+                dashboardView.TotalParent = this.context?.ParentAssociationship.Where(x => x.TenantId == dashboardViewModel.TenantId && x.SchoolId == dashboardViewModel.SchoolId && x.Associationship == true).Select(x => x.ParentId).ToList().Distinct().Count();
+                
+                var notice = this.context?.Notice.Where(x => x.TenantId == dashboardViewModel.TenantId && x.SchoolId == dashboardViewModel.SchoolId && x.Isactive == true).OrderByDescending(x => x.ValidFrom).FirstOrDefault();
+                if (notice != null)
+                {
+                    dashboardView.NoticeTitle = notice.Title;
+                    dashboardView.NoticeBody = notice.Body;
+                }
+
+                var defaultCalender = this.context?.SchoolCalendars.Where(x => x.TenantId == dashboardViewModel.TenantId && x.SchoolId == dashboardViewModel.SchoolId && x.AcademicYear == dashboardViewModel.AcademicYear && x.DefaultCalender == true).FirstOrDefault();
+                if (defaultCalender != null)
+                {
+                    dashboardView.schoolCalendar = defaultCalender;
+
+                    var Events = this.context?.CalendarEvents.Where(x => x.TenantId == dashboardViewModel.TenantId && x.SchoolId == dashboardViewModel.SchoolId && x.AcademicYear == dashboardViewModel.AcademicYear && ((x.CalendarId == defaultCalender.CalenderId && x.SystemWideEvent == false) || x.SystemWideEvent == true)).ToList();
+                    if (Events.Count > 0)
+                    {
+                        dashboardView.calendarEventList = Events;
+                    }
+                }
+
+                dashboardView._tenantName = dashboardViewModel._tenantName;
+                dashboardView._token = dashboardViewModel._token;
+            }
+            catch (Exception es)
+            {
+                dashboardView._failure = true;
+                dashboardView._message = es.Message;
+            }
+            return dashboardView;
+        }
+
 
     }
 }

@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, Optional, ViewChild } from '@angular/core';
+import { Component, ElementRef, Inject, OnDestroy, OnInit, Optional, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import icClose from '@iconify/icons-ic/twotone-close';
 import icAdd from '@iconify/icons-ic/add-circle-outline';
@@ -13,7 +13,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { GradesService } from '../../../../services/grades.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs/internal/Subject';
 
 @Component({
@@ -25,12 +25,11 @@ import { Subject } from 'rxjs/internal/Subject';
     fadeInUp400ms
   ]
 })
-export class EditSchoolSpecificStandardComponent implements OnInit {
+export class EditSchoolSpecificStandardComponent implements OnInit, OnDestroy{
+  @ViewChild('subject') subject: ElementRef;
   icClose = icClose;
   icAdd = icAdd;
 
-  visibleSubjectTextBox=false;
-  visibleCourseTextBox=false;
   gradeLevelList: GetAllGradeLevelsModel = new GetAllGradeLevelsModel();
   schoolSpecificStandard:SchoolSpecificStandarModel= new SchoolSpecificStandarModel();
   subjectList:GradeStandardSubjectCourseListModel=new GradeStandardSubjectCourseListModel();
@@ -41,12 +40,19 @@ export class EditSchoolSpecificStandardComponent implements OnInit {
   editDetails;
   modalActionButton="submit"
   modalDialogTitle="addNewStandard"
+  destroySubject$: Subject<void> = new Subject();
+  loading:boolean;
   constructor(private dialogRef: MatDialogRef<EditSchoolSpecificStandardComponent>,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: any,
     private gradeLevelService: GradeLevelService,
     private snackbar: MatSnackBar,
     private fb: FormBuilder,
-    private gradesService:GradesService) { 
+    private gradesService:GradesService,
+    private loaderService: LoaderService) { 
+      this.loaderService.isLoading.pipe(takeUntil(this.destroySubject$)).subscribe((val) => {
+        this.loading = val;
+      });
+
       if(this.data.editMode){
         this.editMode = this.data.editMode;
         this.editDetails= this.data.schoolSpecificStandards;
@@ -88,6 +94,7 @@ export class EditSchoolSpecificStandardComponent implements OnInit {
     
   }
   ngAfterViewInit(){
+
     this.form.controls['standardRefNo'].setErrors({ 'nomatch': false });
     this.form.controls['standardRefNo'].valueChanges.pipe(debounceTime(500),distinctUntilChanged()).subscribe((term)=>{
       if(term!=''){
@@ -108,11 +115,17 @@ export class EditSchoolSpecificStandardComponent implements OnInit {
   }
 
   activeSubjectTextBox(){
-    this.visibleSubjectTextBox=true;
+    document.getElementById("subject").className='hidden';
+    document.getElementById("subject1").classList.remove('hidden');
+    document.getElementById("subjectFocus").focus();
+    this.form.controls.subject.markAsTouched();
   }
 
   activeCourseTextBox(){
-    this.visibleCourseTextBox=true;
+    document.getElementById("course").className='hidden';
+    document.getElementById("course1").classList.remove('hidden');
+    document.getElementById("courseFocus").focus();
+
   }
 
   getAllGradeLevel() {
@@ -267,5 +280,10 @@ export class EditSchoolSpecificStandardComponent implements OnInit {
       }
     })
 
+  }
+
+  ngOnDestroy(){
+    this.destroySubject$.next();
+    this.destroySubject$.complete();
   }
 }

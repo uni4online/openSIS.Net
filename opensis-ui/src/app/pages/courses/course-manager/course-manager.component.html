@@ -55,7 +55,10 @@
                     <div class="flex justify-between w-full px-6 py-3 align-middle">
                         <h3 *ngIf = "filterCourseList.length > 0 ; else noFilterCount">{{filterCourseCount}} Course Found</h3>
                         <ng-template #noFilterCount>
-                            <h3 >{{totalCourse}} Course Found</h3>
+                            <h3 *ngIf = "globalFilterCourseList.length > 0; else noGlobalFilterCount">{{globalFilterCourseCount}} Course Found</h3>
+                            <ng-template #noGlobalFilterCount>
+                                <h3 >{{totalCourse}} Course Found</h3>
+                            </ng-template>
                         </ng-template>
                         <button mat-raised-button color="primary" (click)="openModalEditCourse()">
                             <mat-icon [icIcon]="icAdd" class="mr-2"></mat-icon>{{'addNewCourse'|translate}}
@@ -64,9 +67,9 @@
                     <hr />
                     <input
                         class="w-full border-0 focus:border-0 focus:border-none focus:outline-none px-6 py-4 box-border"
-                        type="text" placeholder="Search...">
+                        type="text" #myInput placeholder="Search..." [(ngModel)]="name" (input)="globalFilter(myInput.value)">
                     <hr />
-                    <div *ngIf = "filterCourseList.length > 0 ; else noFilter">
+                    <div *ngIf = "filterCourseList.length > 0 ; else globalSearch">
                         <ul *ngFor="let course of filterCourseList; let index = index">
                             <li class="pl-6 pr-2 py-3 bg-green-light border-b">
                                 <div class="flex items-center w-full justify-between">
@@ -97,40 +100,73 @@
                             </li>                    
                         </ul>
                     </div>
-                   <ng-template #noFilter>
-                    <ul *ngFor="let course of courseList; let index = index">
-                        <li class="pl-6 pr-2 py-3 bg-green-light border-b">
-                            <div class="flex items-center w-full justify-between">
-                                <a href="javascript:void(0)" (click)="showDetails(course,index)" class="cursor-pointer">
-                                    <h4 class="text-green font-bold" *ngIf = "index === courseIndex; else notSelected">{{course.courseTitle}}</h4>
-                                    <ng-template #notSelected>
-                                        <h4 class="font-bold">{{course.courseTitle}}</h4>
-                                    </ng-template>
-                                    <p>{{course.courseSubject}}<span class="dot-separator"></span>{{course.courseProgram}}</p>
-                                </a>
-                                <div>
-                                    <span (click)="courseSections()" class="mr-4 text-blue cursor-pointer">Sections
-                                        (4)</span>
-                                    <a [matMenuTriggerFor]="addNewMenu"
-                                        class="cursor-pointer inline-block ml-3 pt-1 align-middle">
-                                        <mat-icon [icIcon]="icMoreVertical" class="mr-2"></mat-icon>
+                   <ng-template #globalSearch>
+                       <div *ngIf = "globalFilterCourseList.length > 0 ; else noFilter">
+                        <ul *ngFor="let course of globalFilterCourseList; let index = index">
+                            <li class="pl-6 pr-2 py-3 bg-green-light border-b">
+                                <div class="flex items-center w-full justify-between">
+                                    <a href="javascript:void(0)" (click)="showDetails(course,index)" class="cursor-pointer">
+                                        <h4 class="text-green font-bold" *ngIf = "index === courseIndex; else notSelected">{{course.courseTitle}}</h4>
+                                        <ng-template #notSelected>
+                                            <h4 class="font-bold">{{course.courseTitle}}</h4>
+                                        </ng-template>
+                                        <p>{{course.courseSubject}}<span class="dot-separator"></span>{{course.courseProgram}}</p>
                                     </a>
+                                    <div>
+                                        <span (click)="courseSections()" class="mr-4 text-blue cursor-pointer">Sections
+                                            (4)</span>
+                                        <a [matMenuTriggerFor]="addNewMenu"
+                                            class="cursor-pointer inline-block ml-3 pt-1 align-middle">
+                                            <mat-icon [icIcon]="icMoreVertical" class="mr-2"></mat-icon>
+                                        </a>
+                                    </div>
                                 </div>
-                            </div>
-                            <mat-menu #addNewMenu="matMenu" [overlapTrigger]="false" xPosition="before" yPosition="below">
-                                <button mat-menu-item (click) = "editCourse(course)">
-                                    <span>{{'editItem' | translate}}</span>
-                                </button>
-                                <button mat-menu-item (click) = "confirmDelete()">
-                                    <span>{{'deleteItem' | translate}}</span>
-                                </button>
-                            </mat-menu>
-                        </li>                    
-                    </ul>
+                                <mat-menu #addNewMenu="matMenu" [overlapTrigger]="false" xPosition="before" yPosition="below">
+                                    <button mat-menu-item (click) = "editCourse(course)">
+                                        <span>{{'editItem' | translate}}</span>
+                                    </button>
+                                    <button mat-menu-item (click) = "confirmDelete()">
+                                        <span>{{'deleteItem' | translate}}</span>
+                                    </button>
+                                </mat-menu>
+                            </li>                    
+                        </ul>
+                       </div>
+                     <ng-template #noFilter>
+                        <ul *ngFor="let course of courseList; let index = index">
+                            <li class="pl-6 pr-2 py-3 bg-green-light border-b">
+                                <div class="flex items-center w-full justify-between">
+                                    <a href="javascript:void(0)" (click)="showDetails(course,index)" class="cursor-pointer">
+                                        <h4 class="text-green font-bold" *ngIf = "index === courseIndex; else notSelected">{{course.courseTitle}}</h4>
+                                        <ng-template #notSelected>
+                                            <h4 class="font-bold">{{course.courseTitle}}</h4>
+                                        </ng-template>
+                                        <p>{{course.courseSubject}}<span class="dot-separator"></span>{{course.courseProgram}}</p>
+                                    </a>
+                                    <div>
+                                        <span (click)="courseSections()" class="mr-4 text-blue cursor-pointer">Sections
+                                            (4)</span>
+                                        <a [matMenuTriggerFor]="addNewMenu"
+                                            class="cursor-pointer inline-block ml-3 pt-1 align-middle">
+                                            <mat-icon [icIcon]="icMoreVertical" class="mr-2"></mat-icon>
+                                        </a>
+                                    </div>
+                                </div>
+                                <mat-menu #addNewMenu="matMenu" [overlapTrigger]="false" xPosition="before" yPosition="below">
+                                    <button mat-menu-item (click) = "editCourse(course)">
+                                        <span>{{'editItem' | translate}}</span>
+                                    </button>
+                                    <button mat-menu-item (click) = "confirmDelete()">
+                                        <span>{{'deleteItem' | translate}}</span>
+                                    </button>
+                                </mat-menu>
+                            </li>                    
+                        </ul>
+                     </ng-template>
                    </ng-template>
                 </div>
             </div>
-            <div class="lg:w-1/2 lg:pl-6 course-details">
+            <div class="lg:w-1/2 lg:pl-6 course-details" *ngIf="totalCourse > 0">
                 <div class="card overflow-auto">
                     <div class="flex justify-between w-full pl-6 py-3 align-middle">
                         <h3 class="pt-1">{{selectedCourse.courseTitle}}</h3>

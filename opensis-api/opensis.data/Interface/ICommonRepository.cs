@@ -25,5 +25,6 @@ namespace opensis.data.Interface
         public DropdownValueAddModel DeleteDropdownValue(DropdownValueAddModel dpdownValue);
         public LanguageAddModel DeleteLanguage(LanguageAddModel languageAddModel);
         public LanguageListModel GetAllLanguageForLogin(LanguageListModel languageListModel);
+        public DashboardViewModel GetDashboardView(DashboardViewModel dashboardViewModel);
     }
 }

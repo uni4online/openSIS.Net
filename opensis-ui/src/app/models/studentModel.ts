@@ -132,6 +132,7 @@ export class StudentAddModel extends CommonField {
     public loginEmail: string;
     public passwordHash: string;
     public portalAccess: boolean;
+    public currentGradeLevel:string;
     public studentEnrollment: {};
     constructor() {
         super();
@@ -145,11 +146,13 @@ export class StudentAddModel extends CommonField {
 
 export class CheckStudentInternalIdViewModel extends CommonField {
     public tenantId: string;
+    public schoolId: number;
     public studentInternalId: string;
     public isValidInternalId: boolean;
     constructor() {
         super();
         this.tenantId = sessionStorage.getItem("tenantId");
+        this.schoolId = +sessionStorage.getItem("selectedSchoolId")
         this._tenantName = sessionStorage.getItem("tenant");
         this._token = sessionStorage.getItem("token");
     }

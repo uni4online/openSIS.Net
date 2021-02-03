@@ -16,6 +16,7 @@ import { LoaderService } from '../../../services/loader.service';
 import { SchoolCreate } from '../../../enums/school-create.enum';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { ModuleIdentifier } from '../../../enums/module-identifier.enum';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'vex-add-school',
@@ -44,6 +45,7 @@ export class AddSchoolComponent implements OnInit, OnDestroy {
   currentCategory = 1;
   loading: boolean;
   destroySubject$: Subject<void> = new Subject();
+  moduleIdentifier=ModuleIdentifier;
   constructor(private imageCropperService: ImageCropperService,
     private Activeroute: ActivatedRoute,
     private snackbar: MatSnackBar,
@@ -85,7 +87,7 @@ export class AddSchoolComponent implements OnInit, OnDestroy {
       this.onViewMode();
     }else if (this.schoolCreateMode == this.schoolCreate.ADD) {
       this.getAllFieldsCategory();
-      this.imageCropperService.enableUpload(true);
+      this.imageCropperService.enableUpload({module:this.moduleIdentifier.SCHOOL,upload:true,mode:this.schoolCreate.ADD});
     }
 
   }

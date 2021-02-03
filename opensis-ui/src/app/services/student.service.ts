@@ -173,5 +173,12 @@ export class StudentService {
     return this.http.post<StudentEnrollmentSchoolListModel>(apiurl, schoolDetails)
   }
 
+  addUpdateStudentPhoto(obj: StudentAddModel){
+    obj.studentMaster.studentId = this.getStudentId();
+    obj.studentMaster.studentPhoto = this.studentImage;
+    let apiurl = this.apiUrl + obj._tenantName + "/Student/addUpdateStudentPhoto";
+    return this.http.put<StudentAddModel>(apiurl, obj)
+  }
+
 
 }

@@ -50,6 +50,15 @@
             </mat-select>
             <mat-error *ngIf="form.get('language').hasError('required')">{{'languageIsRequired'|translate}}</mat-error>
           </mat-form-field>
+          <!-- <mat-form-field appearance="outline" class="vex-flex-form-field" color="primary">
+            <mat-label>{{'language'|translate}}</mat-label>
+            <mat-select formControlName="language" matNativeControl required (selectionChange)="switchLang($event.value)">
+              <mat-option *ngFor="let language of languageList" [value]="language">
+                {{language}}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="form.get('language').hasError('required')">{{'languageIsRequired'|translate}}</mat-error>
+          </mat-form-field> -->
         </div>
   
         <div fxLayout="row" fxLayoutAlign="space-between center" class="mb-3">

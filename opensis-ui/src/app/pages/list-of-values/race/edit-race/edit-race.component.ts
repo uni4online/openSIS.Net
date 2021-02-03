@@ -44,7 +44,7 @@ export class EditRaceComponent implements OnInit {
     else {
       this.editMode = true;
       this.raceTitle = "editRace";
-      this.raceAddViewModel.dropdownValue = data;
+    //  this.raceAddViewModel.dropdownValue = data;
       this.form.controls.id.patchValue(data.id)
       this.form.controls.lovColumnValue.patchValue(data.lovColumnValue)
 
@@ -59,6 +59,7 @@ export class EditRaceComponent implements OnInit {
       if (this.form.controls.id.value == 0) {
         this.raceAddViewModel.dropdownValue.lovColumnValue = this.form.controls.lovColumnValue.value;
         this.raceAddViewModel.dropdownValue.lovName = "Race";
+        this.raceAddViewModel.dropdownValue.createdBy=sessionStorage.getItem("email");
         this.commonService.addDropdownValue(this.raceAddViewModel).subscribe(
           (res) => {
             if (typeof (res) == 'undefined') {
@@ -87,6 +88,7 @@ export class EditRaceComponent implements OnInit {
         this.raceAddViewModel.dropdownValue.id = this.form.controls.id.value
         this.raceAddViewModel.dropdownValue.lovColumnValue = this.form.controls.lovColumnValue.value;
         this.raceAddViewModel.dropdownValue.lovName = "Race";
+        this.raceAddViewModel.dropdownValue.updatedBy=sessionStorage.getItem("email");
         this.commonService.updateDropdownValue(this.raceAddViewModel).subscribe(
           (res) => {
             if (typeof (res) == 'undefined') {
@@ -96,12 +98,12 @@ export class EditRaceComponent implements OnInit {
             }
             else {
               if (res._failure) {
-                this.snackbar.open('Race Updation failed. ' + res._message, 'LOL THANKS', {
+                this.snackbar.open('Race Updation failed. ' + res._message, '', {
                   duration: 10000
                 });
               }
               else {
-                this.snackbar.open('Race Updated Successfully. ' + res._message, 'LOL THANKS', {
+                this.snackbar.open('Race Updated Successfully. ' + res._message, '', {
                   duration: 10000
                 });
                 this.dialogRef.close('submited');

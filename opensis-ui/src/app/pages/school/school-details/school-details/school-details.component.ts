@@ -25,6 +25,7 @@ import { ImageCropperService } from '../../../../services/image-cropper.service'
 import { LayoutService } from 'src/@vex/services/layout.service';
 import { ExcelService } from '../../../../services/excel.service';
 import { Subject } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 @Component({
   selector: 'vex-school-details',
   templateUrl: './school-details.component.html',
@@ -68,9 +69,10 @@ export class SchoolDetailsComponent implements OnInit,OnDestroy {
     private loaderService:LoaderService,
     private imageCropperService:ImageCropperService,
     private layoutService: LayoutService,
-    private excelService:ExcelService
+    private excelService:ExcelService,
+    public translateService: TranslateService,
     ) 
-    { 
+    { translateService.use('en');
       if(localStorage.getItem("collapseValue") !== null){
         if( localStorage.getItem("collapseValue") === "false"){
           this.layoutService.expandSidenav();

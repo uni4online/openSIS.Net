@@ -30,11 +30,21 @@ namespace opensis.data.Repository
         {
             try
             {
-                int? GradeLevelId = Utility.GetMaxPK(this.context, new Func<Gradelevels, int>(x => x.GradeId));
-                gradelevel.tblGradelevel.GradeId = (int)GradeLevelId;
-                this.context?.Gradelevels.Add(gradelevel.tblGradelevel);
-                this.context?.SaveChanges();
-                gradelevel._failure = false;
+                var checkGradelevelTitle = this.context?.Gradelevels.Where(x => x.SchoolId == gradelevel.tblGradelevel.SchoolId && x.TenantId == gradelevel.tblGradelevel.TenantId && x.Title.ToLower() == gradelevel.tblGradelevel.Title.ToLower()).FirstOrDefault();
+
+                if (checkGradelevelTitle !=null)
+                {
+                    gradelevel._failure = true;
+                    gradelevel._message = "Gradelevel Title Already Exists";
+                }
+                else
+                {
+                    int? GradeLevelId = Utility.GetMaxPK(this.context, new Func<Gradelevels, int>(x => x.GradeId));
+                    gradelevel.tblGradelevel.GradeId = (int)GradeLevelId;
+                    this.context?.Gradelevels.Add(gradelevel.tblGradelevel);
+                    this.context?.SaveChanges();
+                    gradelevel._failure = false;
+                }                
             }
             catch (Exception es)
             {
@@ -85,12 +95,31 @@ namespace opensis.data.Repository
             try
             {
                 var GradeLevel = this.context?.Gradelevels.FirstOrDefault(x => x.TenantId == gradelevel.tblGradelevel.TenantId && x.SchoolId == gradelevel.tblGradelevel.SchoolId && x.GradeId == gradelevel.tblGradelevel.GradeId);
-                
-                gradelevel.tblGradelevel.LastUpdated = DateTime.Now;
-                this.context.Entry(GradeLevel).CurrentValues.SetValues(gradelevel.tblGradelevel);
-                this.context?.SaveChanges();
-                gradelevel._failure = false;
-                gradelevel._message = "Entity Updated";
+
+                if (GradeLevel != null)
+                {
+                    var checkGradelevelTitle = this.context?.Gradelevels.Where(x => x.SchoolId == gradelevel.tblGradelevel.SchoolId && x.TenantId == gradelevel.tblGradelevel.TenantId && x.GradeId != gradelevel.tblGradelevel.GradeId && x.Title.ToLower() == gradelevel.tblGradelevel.Title.ToLower()).FirstOrDefault();
+
+                    if (checkGradelevelTitle !=null)
+                    {
+                        gradelevel._failure = true;
+                        gradelevel._message = "Gradelevel Title Already Exists";
+                    }
+                    else
+                    {
+                        gradelevel.tblGradelevel.LastUpdated = DateTime.Now;
+                        this.context.Entry(GradeLevel).CurrentValues.SetValues(gradelevel.tblGradelevel);
+                        this.context?.SaveChanges();
+                        gradelevel._failure = false;
+                        gradelevel._message = "Entity Updated";
+                    }                    
+                }
+                else
+                {
+                    gradelevel.tblGradelevel = null;
+                    gradelevel._failure = true;
+                    gradelevel._message = NORECORDFOUND;
+                }
             }
             catch(Exception es)
             {

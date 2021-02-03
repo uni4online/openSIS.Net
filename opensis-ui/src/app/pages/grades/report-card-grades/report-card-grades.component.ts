@@ -101,7 +101,7 @@ export class ReportCardGradesComponent implements OnInit {
   editGrade(element){
     this.dialog.open(EditReportCardGradeComponent,{ 
       data: {information:element},
-      width: '800px'
+      width: '500px'
     }).afterClosed().subscribe((data)=>{
       if(data==='submited'){
         this.getAllGradeScale();
@@ -127,7 +127,7 @@ export class ReportCardGradesComponent implements OnInit {
   editGradeScale(element){
     this.dialog.open(EditGradeScaleComponent,{ 
       data: element,
-      width: '800px'
+      width: '500px'
     }).afterClosed().subscribe((data)=>{
       if(data==='submited'){
         this.getAllGradeScale();

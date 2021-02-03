@@ -5,7 +5,7 @@
 
                 <div class="flex">
                     <input [formControl]="searchCtrl" name="search"
-                        class="px-4 py-3 border-0 outline-none w-full bg-transparent" placeholder="Search..."
+                        class="pr-4 py-3 border-0 outline-none w-full bg-transparent" placeholder="Search..."
                         type="search">
                     <button class="ml-4" fxFlex="none" fxHide.gt-xs mat-icon-button type="button">
                         <mat-icon [icIcon]="icSearch"></mat-icon>
@@ -36,36 +36,36 @@
             [cdkDropListData]="effortGradeScaleModelList" (cdkDropListDropped)="drop($event)" matSort>
 
             <ng-container matColumnDef="order">
-                <th mat-header-cell *matHeaderCellDef width="50"></th>
-                <td mat-cell *matCellDef="let element" cdkDrag>
+                <th mat-header-cell *matHeaderCellDef style="width:50px ;"></th>
+                <td mat-cell *matCellDef="let element" style="width:50px ;">
                     <mat-icon class="cursor-move" cdkDragHandle>reorder</mat-icon>
                 </td>
             </ng-container>
 
             <ng-container matColumnDef="gradeScaleValue">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'value'|translate}}</th>
-                <td mat-cell *matCellDef="let element">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>{{'value'|translate}}</mat-header-cell>
+                <mat-cell *matCellDef="let element">
                     {{element.gradeScaleValue}}
-                </td>
+                </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="gradeScaleComment">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'comment'|translate}}</th>
-                <td mat-cell *matCellDef="let element">
+                <mat-header-cell  *matHeaderCellDef mat-sort-header>{{'comment'|translate}}</mat-header-cell>
+                <mat-cell *matCellDef="let element">
                     {{element.gradeScaleComment}}
-                </td>
+                </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="actions">
-                <th mat-header-cell *matHeaderCellDef width="150">{{'action'|translate}}</th>
-                <td mat-cell *matCellDef="let element">
+                <mat-header-cell *matHeaderCellDef width="150">{{'action'|translate}}</mat-header-cell>
+                <mat-cell *matCellDef="let element">
                     <a (click)="openEdit(element)" matTooltip="Edit Item" class="mr-3 cursor-pointer">
                         <mat-icon [icIcon]="icEdit"></mat-icon>
                     </a>
                     <a (click)="confirmDelete(element)" matTooltip="Delete Item" class="mr-3 cursor-pointer">
                         <mat-icon [icIcon]="icDelete"></mat-icon>
                     </a>
-                </td>
+                </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="loading">
@@ -78,9 +78,9 @@
                     {{loading?'Fetching Data...':'No Data'}}
                 </td>
             </ng-container>
-            <tr mat-header-row *matHeaderRowDef="visibleColumns"></tr>
+            <mat-header-row *matHeaderRowDef="visibleColumns"></mat-header-row>
             <tr mat-footer-row *matFooterRowDef="['noData']" [class.hide]="totalCount!=0"></tr>
-            <tr mat-row *matRowDef="let row; columns: visibleColumns" @fadeInUp></tr>
+            <mat-row cdkDrag *matRowDef="let row; columns: visibleColumns" @fadeInUp></mat-row>
             <mat-footer-row *matFooterRowDef="['loading']" [class.hide]="!loading"></mat-footer-row>
 
         </table>

@@ -7,6 +7,7 @@ import icMoreVert from '@iconify/icons-ic/more-vert';
 import icMenu from '@iconify/icons-ic/menu';
 import icAdd from '@iconify/icons-ic/add';
 import icClose from '@iconify/icons-ic/close';
+import icInfo from '@iconify/icons-ic/info';
 import { MatDialog } from '@angular/material/dialog';
 import { fadeInUp400ms } from '../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../@vex/animations/stagger.animation';
@@ -36,6 +37,7 @@ export class MarkingPeriodsComponent implements OnInit {
   icCheckBoxOutlineBlank = icCheckBoxOutlineBlank;
   icMoreVert = icMoreVert;
   icMenu = icMenu;
+  icInfo = icInfo;
   icAdd = icAdd;
   icClose = icClose;
   menuOpen = false;

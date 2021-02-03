@@ -28,6 +28,8 @@ import { ImageCropperService } from 'src/app/services/image-cropper.service';
 import { SchoolCreate } from '../../../../enums/school-create.enum';
 import { LovList } from './../../../../models/lovModel';
 import { CommonService } from '../../../../services/common.service';
+import { ModuleIdentifier } from '../../../../enums/module-identifier.enum';
+import { CommonLOV } from '../../../shared-module/lov/common-lov';
 
 @Component({
   selector: 'vex-editparent-generalinfo',
@@ -74,6 +76,9 @@ export class EditparentGeneralinfoComponent implements OnInit,OnDestroy {
   suffixList;
   salutation;
   suffix;
+  moduleIdentifier = ModuleIdentifier;
+  destroySubject$: Subject<void> = new Subject();
+
   constructor(
     public translateService:TranslateService, 
     private cd: ChangeDetectorRef,  
@@ -82,28 +87,27 @@ export class EditparentGeneralinfoComponent implements OnInit,OnDestroy {
     private router:Router,
     private dialog: MatDialog,
     private imageCropperService:ImageCropperService,
-    private commonService:CommonService
+    private commonService:CommonService,
+    private commonLOV:CommonLOV
     ) {
     translateService.use('en');
     
   }
 
   ngOnInit(): void {
-    this.getAllSalutation();
-    this.getAllSuffix();    
+    this.imageCropperService.enableUpload({module:this.moduleIdentifier.PARENT,upload:false,mode:this.parentCreate.VIEW});
+    this.callLOVs();    
     this.parentInfo = {};
     if(this.parentDetailsForViewAndEdit.parentInfo.hasOwnProperty('firstname')){
       this.addParentInfoModel = this.parentDetailsForViewAndEdit;     
       this.parentInfo = this.addParentInfoModel.parentInfo;
       this.studentInfo = this.addParentInfoModel.getStudentForView;  
-      
       this.setEmptyValue(this.parentInfo,this.studentInfo);     
     }else{    
       this.parentInfoService.getParentDetailsForGeneral.subscribe((res: AddParentInfoModel) => {       
         this.addParentInfoModel = res;        
         this.parentInfo = this.addParentInfoModel.parentInfo;
         this.studentInfo = this.addParentInfoModel.getStudentForView; 
-       
         this.setEmptyValue(this.parentInfo,this.studentInfo);   
       })
     }   
@@ -151,46 +155,18 @@ export class EditparentGeneralinfoComponent implements OnInit,OnDestroy {
     this.mode = "add"; 
     this.parentCreateMode=this.parentCreate.EDIT
     this.addParentInfoModel.parentInfo = this.parentInfo;
-    this.imageCropperService.enableUpload(true);
+    this.imageCropperService.enableUpload({module:this.moduleIdentifier.PARENT,upload:true,mode:this.parentCreate.EDIT});
     this.parentInfoService.changePageMode(this.parentCreateMode);     
-    console.log()
   }
 
-  getAllSalutation(){
-    this.lovList.lovName="Salutation";
-    this.commonService.getAllDropdownValues(this.lovList).subscribe(
-      (res:LovList)=>{      
-        this.salutationList = res.dropdownList; 
-        if (this.schoolCreateMode == SchoolCreate.VIEW) {
-          this.findSalutationNameByIdOnViewMode();
-        }       
-      }
-    );
+  callLOVs(){
+    this.commonLOV.getLovByName('Salutation').pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
+      this.salutationList=res;  
+    });
+    this.commonLOV.getLovByName('Suffix').pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
+      this.suffixList=res;  
+    });
   }
-  getAllSuffix(){
-    this.lovList.lovName="Suffix";
-    this.commonService.getAllDropdownValues(this.lovList).subscribe(
-      (res:LovList)=>{      
-        this.suffixList = res.dropdownList; 
-        if (this.schoolCreateMode == SchoolCreate.VIEW) {
-          this.findSuffixNameByIdOnViewMode();
-        }       
-      }
-    );
-  }
-  findSalutationNameByIdOnViewMode(){
-    let index = this.salutationList.findIndex((x) => {      
-      return x.id === +this.addParentInfoModel.parentInfo.salutation;
-    });    
-    this.salutation = this.salutationList[index]?.lovColumnValue; 
-  }
-  findSuffixNameByIdOnViewMode(){
-    let index = this.suffixList.findIndex((x) => {      
-      return x.id === +this.addParentInfoModel.parentInfo.suffix;
-    });    
-    this.suffix = this.suffixList[index]?.lovColumnValue; 
-  }
-  
 
   submit()
   {  
@@ -225,7 +201,8 @@ export class EditparentGeneralinfoComponent implements OnInit,OnDestroy {
   openViewDetails(studentDetails) {
     this.dialog.open(ViewSiblingComponent, {
       data:{     
-        siblingDetails:studentDetails,
+        siblingDetails:this.parentInfo,
+        studentDetails:studentDetails,
         flag:"Parent"
       },
        width: '600px'
@@ -308,7 +285,9 @@ export class EditparentGeneralinfoComponent implements OnInit,OnDestroy {
   }
 
   ngOnDestroy(){
-    this.imageCropperService.enableUpload(false);
+    this.imageCropperService.enableUpload({module:this.moduleIdentifier.PARENT,upload:false,mode:this.parentCreate.VIEW});
+    this.destroySubject$.next();
+    this.destroySubject$.complete();
 
   }
 

@@ -439,3 +439,75 @@ export class EffortGradeLlibraryDragDropModel extends CommonField{
             this.currentSortOrder=0;
         }
 }
+export class HonorRollModel {
+      tenantId: string
+      schoolId: number
+      markingPeriodId: number
+      honorRollId: number
+      honorRoll: string
+      breakoff: number
+      createdBy:string
+      createdOn: string
+      updatedBy: string
+      updatedOn: string
+      constructor(){
+          this.tenantId=sessionStorage.getItem("tenantId");
+          this.schoolId=+sessionStorage.getItem("selectedSchoolId");
+          this.markingPeriodId=+sessionStorage.getItem("markingPeriodId");
+          this.honorRollId=0;
+          this.createdBy=sessionStorage.getItem('email');
+          this.createdOn=null;
+          this.updatedBy=sessionStorage.getItem('email');
+          this.updatedOn=null;
+      }
+  }
+  export class HonorRollAddViewModel extends CommonField{
+    honorRolls:HonorRollModel;
+    constructor(){
+        super();
+        this.honorRolls=new HonorRollModel();
+        this._tenantName=sessionStorage.getItem("tenant");
+        this._token = sessionStorage.getItem("token");
+    }
+  }
+  export class HonorRollListModel extends CommonField {
+    honorRollList:[];
+    tenantId: string;
+    schoolId: number;
+    pageNumber: number;
+    totalCount:number;
+    pageSize: number;
+    sortingModel: sorting;
+    filterParams: filterParams;
+   
+    constructor() {
+        super();
+        this.schoolId = +sessionStorage.getItem("selectedSchoolId");
+        this.pageNumber=1;
+        this.pageSize=10;
+        this.sortingModel=new sorting();
+        this.filterParams=null;
+        this.tenantId = sessionStorage.getItem("tenantId");
+        this._tenantName = sessionStorage.getItem('tenant');
+        this._token = sessionStorage.getItem("token");
+    }
+}
+export class GetHonorRollModel extends CommonField {
+    tenantId:string;
+    pageNumber: number;
+    pageSize: number;
+    sortingModel:sorting;
+    filterParams:filterParams;
+    constructor() {
+        super()
+        this.tenantId= sessionStorage.getItem("tenantId");
+        this.pageNumber=1;
+        this.pageSize=10;
+        this.sortingModel=new sorting();
+        this.filterParams=null;
+        this._tenantName=sessionStorage.getItem("tenant");
+        this._token=sessionStorage.getItem("token");
+        this._failure=false;
+        this._message="";
+    }
+}

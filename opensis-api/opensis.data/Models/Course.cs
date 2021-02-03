@@ -8,6 +8,7 @@ namespace opensis.data.Models
         public Course()
         {
             CourseStandard = new HashSet<CourseStandard>();
+            CourseSection = new HashSet<CourseSection>();
         }
         public Guid TenantId { get; set; }
         public int SchoolId { get; set; }
@@ -29,5 +30,6 @@ namespace opensis.data.Models
         public DateTime? UpdatedOn { get; set; }
 
         public virtual ICollection<CourseStandard> CourseStandard { get; set; }
+        public virtual ICollection<CourseSection> CourseSection { get; set; }
     }
 }

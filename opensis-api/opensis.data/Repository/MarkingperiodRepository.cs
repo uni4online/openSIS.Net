@@ -28,36 +28,96 @@ namespace opensis.data.Repository
             MarkingPeriod markingPeriodModel = new MarkingPeriod();
             try
             {
-                var MarkingperiodViews = this.context?.SchoolYears.Where(x=>x.SchoolId==markingPeriod.SchoolId && x.TenantId==markingPeriod.TenantId && x.AcademicYear==markingPeriod.AcademicYear).Select(x => new SchoolYearView()
+                var MarkingperiodData = this.context?.SchoolYears.Include(x => x.Semesters).ThenInclude(p => p.Quarters).ThenInclude(a => a.ProgressPeriods).Where(x => x.SchoolId == markingPeriod.SchoolId && x.TenantId == markingPeriod.TenantId && x.AcademicYear == markingPeriod.AcademicYear).ToList();            
+                if (MarkingperiodData.Count > 0)
+                {     
+                    foreach (var year in MarkingperiodData)
+                    {
+                        SchoolYearView schoolYearView = new SchoolYearView();
+                        schoolYearView.TenantId = year.TenantId;
+                        schoolYearView.SchoolId = year.SchoolId;
+                        schoolYearView.MarkingPeriodId = year.MarkingPeriodId;
+                        schoolYearView.Title = year.Title;
+                        schoolYearView.ShortName = year.ShortName;
+                        schoolYearView.DoesComments = year.DoesComments;
+                        schoolYearView.DoesExam = year.DoesExam;
+                        schoolYearView.DoesGrades = year.DoesGrades;
+                        schoolYearView.StartDate = year.StartDate;
+                        schoolYearView.EndDate = year.EndDate;
+                        schoolYearView.PostEndDate = year.PostEndDate;
+                        schoolYearView.PostStartDate = year.PostStartDate;
+                        schoolYearView.IsParent = true;
+                        var semesterList = year.Semesters.ToList();
+                        foreach (var semester in semesterList)
+                        {                           
+                            SchoolSemesterView schoolSemesterView = new SchoolSemesterView();
+                            schoolSemesterView.TenantId = semester.TenantId;
+                            schoolSemesterView.SchoolId = semester.SchoolId;
+                            schoolSemesterView.MarkingPeriodId = semester.MarkingPeriodId;
+                            schoolSemesterView.Title = semester.Title;
+                            schoolSemesterView.YearId =(int) semester.YearId;
+                            schoolSemesterView.ShortName = semester.ShortName;
+                            schoolSemesterView.DoesComments = semester.DoesComments;
+                            schoolSemesterView.DoesExam = semester.DoesExam;
+                            schoolSemesterView.DoesGrades = semester.DoesGrades;
+                            schoolSemesterView.StartDate = semester.StartDate;
+                            schoolSemesterView.EndDate = semester.EndDate;
+                            schoolSemesterView.PostEndDate = semester.PostEndDate;
+                            schoolSemesterView.PostStartDate = semester.PostStartDate;
+                            schoolSemesterView.IsParent = false;
+                            schoolYearView.Children.Add(schoolSemesterView);
+                            var quaterList = semester.Quarters.ToList();
+                            foreach (var quarter in quaterList)
+                            {                                
+                                SchoolQuarterView schoolQuarterView = new SchoolQuarterView();
+                                schoolQuarterView.TenantId = quarter.TenantId;
+                                schoolQuarterView.SchoolId = quarter.SchoolId;
+                                schoolQuarterView.MarkingPeriodId = quarter.MarkingPeriodId;
+                                schoolQuarterView.Title = quarter.Title;
+                                schoolQuarterView.SemesterId =(int) quarter.SemesterId;
+                                schoolQuarterView.ShortName = quarter.ShortName;
+                                schoolQuarterView.DoesComments = quarter.DoesComments;
+                                schoolQuarterView.DoesExam = quarter.DoesExam;
+                                schoolQuarterView.DoesGrades = quarter.DoesGrades;
+                                schoolQuarterView.StartDate = quarter.StartDate;
+                                schoolQuarterView.EndDate = quarter.EndDate;
+                                schoolQuarterView.PostEndDate = quarter.PostEndDate;
+                                schoolQuarterView.PostStartDate = quarter.PostStartDate;
+                                schoolQuarterView.IsParent = false;
+                                schoolSemesterView.Children.Add(schoolQuarterView);
+                                var ProgressPeriodList = quarter.ProgressPeriods.ToList();
+                                foreach (var progressPeriod in ProgressPeriodList)
+                                {                                    
+                                    SchoolProgressPeriodView schoolProgressPeriodView = new SchoolProgressPeriodView();
+                                    schoolProgressPeriodView.TenantId = progressPeriod.TenantId;
+                                    schoolProgressPeriodView.SchoolId = progressPeriod.SchoolId;
+                                    schoolProgressPeriodView.MarkingPeriodId = progressPeriod.MarkingPeriodId;
+                                    schoolProgressPeriodView.Title = progressPeriod.Title;
+                                    schoolProgressPeriodView.QuarterId =(int) progressPeriod.QuarterId;
+                                    schoolProgressPeriodView.ShortName = progressPeriod.ShortName;
+                                    schoolProgressPeriodView.DoesComments = progressPeriod.DoesComments;
+                                    schoolProgressPeriodView.DoesExam = progressPeriod.DoesExam;
+                                    schoolProgressPeriodView.DoesGrades = progressPeriod.DoesGrades;
+                                    schoolProgressPeriodView.StartDate = progressPeriod.StartDate;
+                                    schoolProgressPeriodView.EndDate = progressPeriod.EndDate;
+                                    schoolProgressPeriodView.PostEndDate = progressPeriod.PostEndDate;
+                                    schoolProgressPeriodView.PostStartDate = progressPeriod.PostStartDate;
+                                    schoolProgressPeriodView.IsParent = false;
+                                    schoolQuarterView.Children.Add(schoolProgressPeriodView);
+                                }                               
+                            }
+                        }
+                        markingPeriodModel.schoolYearsView.Add(schoolYearView);
+                    }                    
+                }
+                if (markingPeriodModel.schoolYearsView.Count > 0)
                 {
-                    SchoolId = x.SchoolId,
-                    MarkingPeriodId = x.MarkingPeriodId,
-                    ShortName = x.ShortName,
-                    Title = x.Title,
-                    TenantId = x.TenantId,
-                    IsParent = true,
-                    DoesComments=x.DoesComments,
-                    DoesExam=x.DoesExam,
-                    DoesGrades=x.DoesGrades,
-                    EndDate=x.EndDate,
-                    PostStartDate=x.PostStartDate,
-                    PostEndDate=x.PostEndDate,
-                    StartDate=x.StartDate,
-                    Children = this.context.Semesters.Where(y => y.YearId == x.MarkingPeriodId && y.AcademicYear == markingPeriod.AcademicYear).Select(y => new SchoolSemesterView()
-                    { TenantId = y.TenantId,DoesComments=y.DoesComments,DoesExam=y.DoesExam,DoesGrades=y.DoesGrades,StartDate=y.StartDate,EndDate=y.EndDate,PostStartDate=y.PostStartDate,PostEndDate=y.PostEndDate, Title = y.Title, SchoolId = y.SchoolId, YearId = (int)y.YearId, MarkingPeriodId = y.MarkingPeriodId, IsParent = false, ShortName = y.ShortName,
-                    Children=this.context.Quarters.Where(z=>z.SemesterId==y.MarkingPeriodId && z.AcademicYear == markingPeriod.AcademicYear).Select(z=> new SchoolQuarterView() {MarkingPeriodId=z.MarkingPeriodId,SemesterId=(int)z.SemesterId,IsParent=false,SchoolId=z.SchoolId,
-                    Title=z.Title,ShortName=z.ShortName,TenantId=z.TenantId,DoesComments=z.DoesComments,DoesExam=z.DoesExam,DoesGrades=z.DoesGrades,StartDate=z.StartDate,EndDate=z.EndDate,PostStartDate=z.PostStartDate,PostEndDate=z.PostEndDate,
-                    Children=this.context.ProgressPeriods.Where(a=>a.QuarterId==z.MarkingPeriodId && a.AcademicYear == markingPeriod.AcademicYear).Select(a=> new SchoolProgressPeriodView() {IsParent=false,MarkingPeriodId=a.MarkingPeriodId,SchoolId=a.SchoolId,
-                    QuarterId=a.QuarterId,ShortName=a.ShortName,TenantId=a.TenantId,Title=a.Title,DoesComments=a.DoesComments,DoesExam=a.DoesExam,DoesGrades=a.DoesGrades,StartDate=a.StartDate,EndDate=a.EndDate,PostStartDate=a.PostStartDate,PostEndDate=a.PostEndDate}).ToList() }).ToList() }).ToList() }).ToList();
-                if(MarkingperiodViews.Count > 0)
-                {
-                    markingPeriodModel.schoolYearsView = MarkingperiodViews;
                     markingPeriodModel._tenantName = markingPeriod._tenantName;
                     markingPeriodModel._token = markingPeriod._token;
                     markingPeriodModel._failure = false;
                     markingPeriodModel.TenantId = markingPeriod.TenantId;
                     markingPeriodModel.SchoolId = markingPeriod.SchoolId;
-                }
+                }  
                 else
                 {
                     markingPeriodModel.schoolYearsView = null;
@@ -67,8 +127,7 @@ namespace opensis.data.Repository
                     markingPeriodModel.TenantId = markingPeriod.TenantId;
                     markingPeriodModel.SchoolId = markingPeriod.SchoolId;
                     markingPeriodModel._message = NORECORDFOUND;
-                }
-               
+                }              
             }
             catch (Exception es)
             {
@@ -611,33 +670,34 @@ namespace opensis.data.Repository
             {
                 periodViewModel.period = new List<PeriodView>();
                 var SemesterList = this.context?.Semesters.Include(x=>x.Quarters).ThenInclude(x=>x.ProgressPeriods).Where(x => x.AcademicYear == periodViewModel.AcademicYear && x.SchoolId==periodViewModel.SchoolId && x.TenantId==periodViewModel.TenantId).ToList();
+                
                 if (SemesterList.Count > 0)
                 {
                     foreach (var Semester in SemesterList)
                     {
                         var QuarterList = Semester.Quarters.Where(x => x.SemesterId == Semester.MarkingPeriodId && x.AcademicYear== periodViewModel.AcademicYear).ToList();
+                        
                         if (QuarterList.Count > 0)
                         {
                             foreach (var Quarter in QuarterList)
                             {
                                 var ProgressPeriodList = Quarter.ProgressPeriods.Where(x => x.QuarterId == Quarter.MarkingPeriodId && x.AcademicYear == periodViewModel.AcademicYear).ToList();
+                                
                                 if (ProgressPeriodList.Count > 0)
                                 {
                                     foreach (var ProgressPeriod in ProgressPeriodList)
                                     {
-                                        var ProgressList = new PeriodView() { PeriodTitle = ProgressPeriod.Title, EndDate = ProgressPeriod.EndDate, StartDate = ProgressPeriod.StartDate };
+                                        var ProgressList = new PeriodView() { MarkingPeriodId = Semester.YearId, PeriodTitle = ProgressPeriod.Title, EndDate = ProgressPeriod.EndDate, StartDate = ProgressPeriod.StartDate };
                                         periodViewModel.period.Add(ProgressList);
                                     }
-
                                 }
                                 else
                                 {
                                     if (periodViewModel.period.Count == 0)
                                     {
-                                        var QuaterTitleList = SemesterList.SelectMany(x => x.Quarters).ToList().Select(x => new PeriodView() { PeriodTitle = x.Title, EndDate = x.EndDate, StartDate = x.StartDate }).ToList();
+                                        var QuaterTitleList = SemesterList.SelectMany(x => x.Quarters).ToList().Select(x => new PeriodView() { MarkingPeriodId = Semester.YearId, PeriodTitle = x.Title, EndDate = x.EndDate, StartDate = x.StartDate }).ToList();
                                         periodViewModel.period.AddRange(QuaterTitleList);
                                     }
-
                                 }
                             }
                         }
@@ -645,16 +705,15 @@ namespace opensis.data.Repository
                         {
                             if (periodViewModel.period.Count == 0)
                             {
-                                var SemesterTitleList = SemesterList.Select(x => new PeriodView() { PeriodTitle = x.Title, EndDate = x.EndDate, StartDate = x.StartDate }).ToList();
+                                var SemesterTitleList = SemesterList.Select(x => new PeriodView() { MarkingPeriodId = Semester.YearId, PeriodTitle = x.Title, EndDate = x.EndDate, StartDate = x.StartDate }).ToList();
                                 periodViewModel.period.AddRange(SemesterTitleList);
                             }
-
                         }
                     }
                 }
                 else
                 {
-                    var YearTitle = this.context?.SchoolYears.Where(x => x.TenantId == periodViewModel.TenantId && x.SchoolId == periodViewModel.SchoolId && x.AcademicYear == periodViewModel.AcademicYear).Select(x => new PeriodView() { PeriodTitle = x.Title, EndDate = x.EndDate, StartDate = x.StartDate }).FirstOrDefault();
+                    var YearTitle = this.context?.SchoolYears.Where(x => x.TenantId == periodViewModel.TenantId && x.SchoolId == periodViewModel.SchoolId && x.AcademicYear == periodViewModel.AcademicYear).Select(x => new PeriodView() {MarkingPeriodId=x.MarkingPeriodId, PeriodTitle = x.Title, EndDate = x.EndDate, StartDate = x.StartDate }).FirstOrDefault();
                     periodViewModel.period.Add(YearTitle);
                 }
                 periodViewModel._failure = false;
@@ -663,8 +722,7 @@ namespace opensis.data.Repository
             {
                 periodViewModel._message = "Provide valid year id";
                 periodViewModel._failure = true;
-            }
-            
+            }            
             return periodViewModel;
         }
     }

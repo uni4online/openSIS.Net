@@ -43,7 +43,7 @@ export class EditEthnicityComponent implements OnInit {
     else {
       this.editMode = true;
       this.raceTitle = "editEthnicity";
-      this.ethnicityAddViewModel.dropdownValue = data;
+      //this.ethnicityAddViewModel.dropdownValue = data;
       this.form.controls.id.patchValue(data.id)
       this.form.controls.lovColumnValue.patchValue(data.lovColumnValue)
 
@@ -59,6 +59,7 @@ export class EditEthnicityComponent implements OnInit {
       if (this.form.controls.id.value == 0) {
         this.ethnicityAddViewModel.dropdownValue.lovColumnValue = this.form.controls.lovColumnValue.value;
         this.ethnicityAddViewModel.dropdownValue.lovName = "Ethnicity";
+        this.ethnicityAddViewModel.dropdownValue.createdBy = sessionStorage.getItem("email");
         this.commonService.addDropdownValue(this.ethnicityAddViewModel).subscribe(
           (res) => {
             if (typeof (res) == 'undefined') {
@@ -68,7 +69,7 @@ export class EditEthnicityComponent implements OnInit {
             }
             else {
               if (res._failure) {
-                this.snackbar.open('Ethnicity Addition failed. ' + res._message, '', {
+                this.snackbar.open('' + res._message, '', {
                   duration: 10000
                 });
               }
@@ -87,6 +88,7 @@ export class EditEthnicityComponent implements OnInit {
         this.ethnicityAddViewModel.dropdownValue.id = this.form.controls.id.value
         this.ethnicityAddViewModel.dropdownValue.lovColumnValue = this.form.controls.lovColumnValue.value;
         this.ethnicityAddViewModel.dropdownValue.lovName = "Ethnicity";
+        this.ethnicityAddViewModel.dropdownValue.updatedBy = sessionStorage.getItem("email");
         this.commonService.updateDropdownValue(this.ethnicityAddViewModel).subscribe(
           (res) => {
             if (typeof (res) == 'undefined') {
@@ -96,7 +98,7 @@ export class EditEthnicityComponent implements OnInit {
             }
             else {
               if (res._failure) {
-                this.snackbar.open('Ethnicity Updation failed. ' + res._message, '', {
+                this.snackbar.open('' + res._message, '', {
                   duration: 10000
                 });
               }

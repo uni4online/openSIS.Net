@@ -9,6 +9,7 @@ namespace opensis.data.Models
         public AttendanceCodeCategories()
         {
             AttendanceCode = new HashSet<AttendanceCode>();
+            CourseSection = new HashSet<CourseSection>();
         }
 
         public Guid TenantId { get; set; }
@@ -21,5 +22,6 @@ namespace opensis.data.Models
 
         public virtual SchoolMaster SchoolMaster { get; set; }
         public virtual ICollection<AttendanceCode> AttendanceCode { get; set; }
+        public virtual ICollection<CourseSection> CourseSection { get; set; }
     }
 }

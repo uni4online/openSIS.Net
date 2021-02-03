@@ -35,5 +35,6 @@ namespace opensis.core.Student.Interfaces
         public StudentEnrollmentListModel AddStudentEnrollment(StudentEnrollmentListModel studentEnrollmentListModel);
         public StudentEnrollmentListViewModel GetAllStudentEnrollment(StudentEnrollmentListViewModel studentEnrollmentListModel);
         public StudentEnrollmentListModel UpdateStudentEnrollment(StudentEnrollmentListModel studentEnrollmentListModel);
+        public StudentAddViewModel AddUpdateStudentPhoto(StudentAddViewModel studentAddViewModel); 
     }
 }

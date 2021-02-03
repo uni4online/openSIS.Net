@@ -19,6 +19,9 @@ import { MatSort } from '@angular/material/sort';
 import { LoaderService } from '../../../services/loader.service';
 import { CommonService } from '../../../services/common.service';
 import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confirm-dialog.component';
+import { ExcelService } from '../../../services/excel.service';
+import { SharedFunction } from '../../shared/shared-function';
+
 @Component({
   selector: 'vex-school-classification',
   templateUrl: './school-classification.component.html',
@@ -55,13 +58,16 @@ export class SchoolClassificationComponent implements OnInit {
   saveClassification: LovAddView = new LovAddView(); 
   ClassificationModelList: MatTableDataSource<any>;
   searchKey:string;
+  schoolClassificationListForExcel=[];
   @ViewChild(MatSort) sort: MatSort;
   constructor(private router: Router,
     private dialog: MatDialog,
     public translateService:TranslateService,
     public loaderService:LoaderService,
     public commonService:CommonService,
-    public snackbar:MatSnackBar
+    public snackbar:MatSnackBar,
+    private excelService:ExcelService,
+    public commonfunction:SharedFunction
     ) {
     translateService.use('en');
     this.loaderService.isLoading.subscribe((val) => {
@@ -85,11 +91,12 @@ export class SchoolClassificationComponent implements OnInit {
         if(data._failure){
           this.ClassificationModelList=new MatTableDataSource(data.dropdownList) ;
             this.listCount=this.ClassificationModelList.data;
-            this.snackbar.open('No Record Found For School Classification. ', '', {
+            this.snackbar.open('' + data._message, '', {
               duration: 10000
             });
         }else{     
           this.ClassificationModelList=new MatTableDataSource(data.dropdownList) ;
+          this.schoolClassificationListForExcel = data.dropdownList;
           this.ClassificationModelList.sort=this.sort;           
           this.listCount=this.ClassificationModelList.data.length;
         }
@@ -99,10 +106,7 @@ export class SchoolClassificationComponent implements OnInit {
   }
 
   goToAdd(){
-    this.dialog.open(EditSchoolClassificationComponent, {
-      data: {
-        mode:"add"       
-      },  
+    this.dialog.open(EditSchoolClassificationComponent, {     
       width: '500px'
     }).afterClosed().subscribe((data) => {
       if(data){
@@ -156,10 +160,7 @@ export class SchoolClassificationComponent implements OnInit {
   }
   goToEdit(editDetails){
     this.dialog.open(EditSchoolClassificationComponent, {
-      data: {
-        mode:"edit",
-        editDetails:editDetails
-      },  
+      data: editDetails,
       width: '500px'
     }).afterClosed().subscribe((data) => {
       if(data){
@@ -186,5 +187,25 @@ export class SchoolClassificationComponent implements OnInit {
   applyFilter(){
     this.ClassificationModelList.filter = this.searchKey.trim().toLowerCase()
   }
+
+  exportSchoolClassificationListToExcel(){
+    if(this.schoolClassificationListForExcel.length!=0){
+      let schoolClassificationList=this.schoolClassificationListForExcel?.map((item)=>{
+        return{
+          Title: item.lovColumnValue,
+          CreatedBy: item.createdBy!==null ? item.createdBy: '-',
+          CreateDate: this.commonfunction.transformDateWithTime(item.createdOn),
+          UpdatedBy: item.updatedBy!==null ? item.updatedBy: '-',
+          UpdateDate:  this.commonfunction.transformDateWithTime(item.updatedOn)
+        }
+      });
+      this.excelService.exportAsExcelFile(schoolClassificationList,'School_Classification_List_')
+     }
+     else{
+    this.snackbar.open('No Records Found. Failed to Export School Classification List','', {
+      duration: 5000
+    });
+  }
+}
 
 }

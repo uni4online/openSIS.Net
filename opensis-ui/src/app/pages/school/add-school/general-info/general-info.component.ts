@@ -27,6 +27,8 @@ import { SchoolCreate } from '../../../../enums/school-create.enum';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { LovList } from './../../../../models/lovModel';
 import icEdit from '@iconify/icons-ic/twotone-edit';
+import { CommonLOV } from '../../../shared-module/lov/common-lov';
+import { ModuleIdentifier } from '../../../../enums/module-identifier.enum';
 
 @Component({
   selector: 'vex-general-info',
@@ -52,12 +54,14 @@ export class GeneralInfoComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() schoolDetailsForViewAndEdit;
   @Input() categoryId;
 
+  moduleIdentifier=ModuleIdentifier;
   cityName:string;
   stateName:string
   countryName = "";
-  schoolLevelOptions = [];
-  schoolClassificationOptions = [];
+  schoolLevelOptions;
+  schoolClassificationOptions;
   genderOptions = [];
+  isSchoolInternalId :boolean= false;
   gradeLevel = [];
   destroySubject$: Subject<void> = new Subject();
   customFieldModel = new CustomFieldListViewModel();
@@ -91,6 +95,7 @@ export class GeneralInfoComponent implements OnInit, AfterViewInit, OnDestroy {
     private commonService: CommonService,
     private commonFunction: SharedFunction,
     private imageCropperService: ImageCropperService,
+    private commonLOV:CommonLOV
   ) {
     translateService.use('en');
     this.schoolService.getSchoolDetailsForGeneral.pipe(takeUntil(this.destroySubject$)).subscribe((res: SchoolAddViewModel) => {
@@ -103,6 +108,7 @@ export class GeneralInfoComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     this.internalId = new FormControl('',Validators.required);
+    this.genderOptions = ["Male","Female","Co-education"];
     if (this.schoolCreateMode == this.schoolCreate.ADD) {
       this.initializeDropdownsForSchool();
       this.getAllCountry();
@@ -112,7 +118,7 @@ export class GeneralInfoComponent implements OnInit, AfterViewInit, OnDestroy {
       this.schoolAddViewModel=this.schoolDetailsForViewAndEdit;
       this.cloneSchool=JSON.stringify(this.schoolAddViewModel);
       this.schoolInternalId = this.schoolDetailsForViewAndEdit.schoolMaster.schoolInternalId;
-      this.imageCropperService.enableUpload(false);
+      this.imageCropperService.enableUpload({module:this.moduleIdentifier.SCHOOL,upload:false,mode:this.schoolCreate.VIEW});
     }
     else if (this.schoolCreateMode == this.schoolCreate.EDIT && (this.schoolDetailsForViewAndEdit != undefined || this.schoolDetailsForViewAndEdit != null)) {
       this.getAllCountry();
@@ -125,10 +131,19 @@ export class GeneralInfoComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   initializeDropdownsForSchool() {
-    this.getAllSchoolLevel();
-    this.getAllGender();
-    this.getSchoolClassificationList();
-    this.getAllGradeLevel();
+    this.commonLOV.getLovByName('School Level').pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
+      this.schoolLevelOptions=res;  
+    });
+    this.commonLOV.getLovByName('School Classification').pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
+      this.schoolClassificationOptions=res;  
+    });
+    this.commonLOV.getLovByName('Grade Level').pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
+      this.gradeLevel=res;
+      if(this.schoolCreateMode == this.schoolCreate.EDIT){
+        this.checkGradeLevelsOnEdit();
+      }
+    });
+    
   }
 
   ngAfterViewInit() {
@@ -139,58 +154,25 @@ export class GeneralInfoComponent implements OnInit, AfterViewInit, OnDestroy {
           this.internalId.setErrors(null);
         }
         else {
+          this.isSchoolInternalId= true;
           this.checkSchoolInternalIdViewModel.schoolInternalId = term;
           this.schoolService.checkSchoolInternalId(this.checkSchoolInternalIdViewModel).pipe(debounceTime(500), distinctUntilChanged()).subscribe(data => {
             if (data.isValidInternalId) {
               this.internalId.setErrors(null);
+              this.isSchoolInternalId= false;
             }
             else {
               this.internalId.markAsTouched();
               this.internalId.setErrors({ 'nomatch': true });
+              this.isSchoolInternalId= false;
             }
           });
         }
       } else {
         this.internalId.markAsTouched();
+        this.isSchoolInternalId= false;
       }
     })
-  }
-
-  getAllSchoolLevel() {
-    this.lovList.lovName = "School Level";
-    this.commonService.getAllDropdownValues(this.lovList).subscribe(
-      (res: LovList) => {
-        this.schoolLevelOptions = res.dropdownList;
-      }
-    );
-  }
-
-  getAllGender() {
-    this.lovList.lovName = "Gender";
-    this.commonService.getAllDropdownValues(this.lovList).subscribe(
-      (res: LovList) => {
-        this.genderOptions = res.dropdownList;
-      }
-    );
-  }
-
-  getAllGradeLevel() {
-    this.lovList.lovName = "Grade Level";
-    this.commonService.getAllDropdownValues(this.lovList).subscribe(
-      (res: LovList) => {
-        this.gradeLevel = res.dropdownList;
-        if(this.schoolCreateMode == this.schoolCreate.EDIT){
-          this.checkGradeLevelsOnEdit();
-        }
-      }
-    );
-  }
-
-  getSchoolClassificationList() {
-    this.lovList.lovName = "School Classification";
-    this.commonService.getAllDropdownValues(this.lovList).subscribe(data => {
-      this.schoolClassificationOptions = data.dropdownList;
-    });
   }
 
   editGeneralInfo() {
@@ -199,12 +181,12 @@ export class GeneralInfoComponent implements OnInit, AfterViewInit, OnDestroy {
     this.formActionButtonTitle = "update";
     this.getAllCountry();
     this.initializeDropdownsForSchool();
-    this.imageCropperService.enableUpload(true);
+    this.imageCropperService.enableUpload({module:this.moduleIdentifier.SCHOOL,upload:true,mode:this.schoolCreate.EDIT});
   }
   cancelEdit() {
     this.schoolCreateMode = this.schoolCreate.VIEW;
     this.imageCropperService.cancelImage("school");
-    this.imageCropperService.enableUpload(false);
+    this.imageCropperService.enableUpload({module:this.moduleIdentifier.SCHOOL,upload:false,mode:this.schoolCreate.VIEW});
     if(JSON.stringify(this.schoolAddViewModel)!==this.cloneSchool){
       this.schoolAddViewModel=JSON.parse(this.cloneSchool);
       this.schoolDetailsForViewAndEdit=this.schoolAddViewModel;
@@ -226,12 +208,13 @@ export class GeneralInfoComponent implements OnInit, AfterViewInit, OnDestroy {
       } else {
         this.currentForm.controls.lowestGradeLevel.setErrors(null);
         if (this.currentForm.controls.highestGradeLevel.errors != null) {
-          this.currentForm.controls.highestGradeLevel.errors.nomatch = false;
+          this.currentForm.form.get('highestGradeLevel').setErrors(null);
+          this.currentForm.form.controls.highestGradeLevel.markAsUntouched();
         }
       }
     }
-
   }
+
   checkHighGradeLevel(event) {
     let index = this.gradeLevel?.findIndex((val) => {
       return val.lovColumnValue == event.value;
@@ -245,7 +228,8 @@ export class GeneralInfoComponent implements OnInit, AfterViewInit, OnDestroy {
       } else {
         this.currentForm.controls.highestGradeLevel.setErrors(null);
         if (this.currentForm.form.controls.lowestGradeLevel.errors != null) {
-          this.currentForm.form.controls.lowestGradeLevel.errors.nomatch = false;
+          this.currentForm.form.get('lowestGradeLevel').setErrors(null);
+          this.currentForm.form.controls.lowestGradeLevel.markAsUntouched();
         }
       }
     }
@@ -267,11 +251,10 @@ export class GeneralInfoComponent implements OnInit, AfterViewInit, OnDestroy {
     this.minDate = this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolOpened;
     let minDate = new Date(this.minDate)
     this.minDate = new Date(minDate.setDate(minDate.getDate() + 1));
-
   }
 
   getAllCountry() {
-    this.commonService.GetAllCountry(this.countryModel).subscribe(data => {
+    this.commonService.GetAllCountry(this.countryModel).pipe(takeUntil(this.destroySubject$)).subscribe(data => {
       if (typeof (data) == 'undefined') {
         this.countryListArr = [];
       }
@@ -279,7 +262,7 @@ export class GeneralInfoComponent implements OnInit, AfterViewInit, OnDestroy {
         if (data._failure) {
           this.countryListArr = [];
         } else {
-          this.countryListArr = data.tableCountry;
+          this.countryListArr=data.tableCountry?.sort((a, b) => {return a.name < b.name ? -1 : 1;} )   
           this.stateCount = data.stateCount;
           if (this.schoolCreateMode == SchoolCreate.VIEW) {
             // this.findCountryNameByIdOnViewMode(); //No Need Now, because we will send the name directly
@@ -419,6 +402,7 @@ export class GeneralInfoComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   submit() {
+    
     this.currentForm.form.markAllAsTouched();
     if (this.currentForm.form.valid) {
       if (this.schoolCreateMode == this.schoolCreate.EDIT) {
@@ -442,13 +426,14 @@ export class GeneralInfoComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   addSchool() {
+    
     if (this.internalId.invalid) {
       this.invalidScroll();
       return
     }
     this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolOpened = this.commonFunction.formatDateSaveWithoutTime(this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolOpened);
     this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolClosed = this.commonFunction.formatDateSaveWithoutTime(this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolClosed);
-    this.schoolService.AddSchool(this.schoolAddViewModel).subscribe(data => {
+    this.schoolService.AddSchool(this.schoolAddViewModel).pipe(takeUntil(this.destroySubject$)).subscribe(data => {
       if (typeof (data) == 'undefined') {
         this.snackbar.open('General Info Submission failed. ' + sessionStorage.getItem("httpError"), '', {
           duration: 10000
@@ -477,13 +462,14 @@ export class GeneralInfoComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   updateSchool() {
+   
     if (this.internalId.invalid) {
       this.invalidScroll();
       return
     }
     this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolOpened = this.commonFunction.formatDateSaveWithoutTime(this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolOpened);
     this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolClosed = this.commonFunction.formatDateSaveWithoutTime(this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolClosed);
-    this.schoolService.UpdateSchool(this.schoolAddViewModel).subscribe(data => {
+    this.schoolService.UpdateSchool(this.schoolAddViewModel).pipe(takeUntil(this.destroySubject$)).subscribe(data => {
       if (typeof (data) == 'undefined') {
         this.snackbar.open('General Info Updation failed. ' + sessionStorage.getItem("httpError"), '', {
           duration: 10000
@@ -505,7 +491,7 @@ export class GeneralInfoComponent implements OnInit, AfterViewInit, OnDestroy {
           this.schoolCreateMode = this.schoolCreate.VIEW;
           this.cloneSchool=JSON.stringify(data);
           this.schoolService.changePageMode(this.schoolCreateMode);
-          this.imageCropperService.enableUpload(false);
+          this.imageCropperService.enableUpload({module:this.moduleIdentifier.SCHOOL,upload:false,mode:this.schoolCreate.VIEW});
         }
       }
     });

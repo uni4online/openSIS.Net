@@ -75,6 +75,21 @@ export class SharedFunction {
     }
   }
 
+  transformDateWithTime(value: string): string {
+    if(value!==null && value!==undefined){
+      if(value.trim()!==""){       
+        let getDateTime = this.serverToLocalDateAndTime(value);
+        let formattedDateTime = moment(getDateTime, ["YYYY-MM-DD hh:mm:ss"]).format("DD-MM-YYYY"+" | "+"h:mm A");
+        return formattedDateTime
+      }else{
+        return "-";
+      }
+    }
+    else{
+      return "-"
+    }
+  }
+
   checkEmptyObject(data) {
     if (data && (Object.keys(data).length !== 0 || Object.keys(data).length > 0)) {
       return true;

@@ -18,6 +18,10 @@ import { StaffRelation } from '../../../../enums/staff-relation.enum';
 import { ImageCropperService } from '../../../../services/image-cropper.service';
 import { LovList } from '../../../../models/lovModel';
 import { MiscModel } from '../../../../models/misc-data-student.model';
+import { ModuleIdentifier } from '../../../../enums/module-identifier.enum';
+import { CommonLOV } from '../../../shared-module/lov/common-lov';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 @Component({
   selector: 'vex-staff-addressinfo',
   templateUrl: './staff-addressinfo.component.html',
@@ -30,6 +34,7 @@ import { MiscModel } from '../../../../models/misc-data-student.model';
 })
 export class StaffAddressinfoComponent implements OnInit, OnDestroy {
   staffCreate = SchoolCreate;
+  moduleIdentifier=ModuleIdentifier;
   @Input() staffDetailsForViewAndEdit;
   @Input() categoryId;
   @ViewChild('f') currentForm: NgForm;
@@ -49,11 +54,13 @@ export class StaffAddressinfoComponent implements OnInit, OnDestroy {
   icEdit = icEdit;
   actionButton="submit"
   cloneStaffAddModel;
+  destroySubject$: Subject<void> = new Subject();
   constructor(public translateService: TranslateService,
     private snackbar: MatSnackBar,
     private staffService: StaffService,
     private commonService: CommonService,
-    private imageCropperService: ImageCropperService) {
+    private imageCropperService: ImageCropperService,
+    private commonLOV:CommonLOV) {
     translateService.use('en');
   }
 
@@ -62,7 +69,6 @@ export class StaffAddressinfoComponent implements OnInit, OnDestroy {
       this.data = this.staffDetailsForViewAndEdit?.staffMaster;
       this.staffAddModel = this.staffDetailsForViewAndEdit;
       this.cloneStaffAddModel = JSON.stringify(this.staffAddModel);
-      this.imageCropperService.enableUpload(false);
       this.staffService.changePageMode(this.staffCreateMode);
       if (this.data.mailingAddressSameToHome) {
         this.mailingAddressSameToHome = true;
@@ -71,12 +77,11 @@ export class StaffAddressinfoComponent implements OnInit, OnDestroy {
       }
       this.getAllCountry();
     } else {
-      this.imageCropperService.enableUpload(true);
       this.staffService.changePageMode(this.staffCreateMode);
       this.staffAddModel = this.staffService.getStaffDetails();
       this.cloneStaffAddModel = JSON.stringify(this.staffAddModel);
     }
-    this.getAllRelationship();
+    this.callLOVs();
     this.getAllCountry();
   }
 
@@ -84,7 +89,6 @@ export class StaffAddressinfoComponent implements OnInit, OnDestroy {
     this.staffCreateMode = this.staffCreate.EDIT;
     this.staffService.changePageMode(this.staffCreateMode);
     this.actionButton="update";
-    this.imageCropperService.enableUpload(true);
     this.staffAddModel.staffMaster.mailingAddressCountry =+this.staffAddModel.staffMaster.mailingAddressCountry ;
     this.staffAddModel.staffMaster.homeAddressCountry = +this.staffAddModel.staffMaster.homeAddressCountry;
 
@@ -98,7 +102,6 @@ export class StaffAddressinfoComponent implements OnInit, OnDestroy {
     }
     this.staffCreateMode = this.staffCreate.VIEW;
     this.staffService.changePageMode(this.staffCreateMode);
-    this.imageCropperService.enableUpload(false);
     this.imageCropperService.cancelImage("staff");
 
   }
@@ -130,20 +133,10 @@ export class StaffAddressinfoComponent implements OnInit, OnDestroy {
     }
   }
 
-  getAllRelationship() {
-    this.lovListViewModel.lovName = "Relationship";
-    this.commonService.getAllDropdownValues(this.lovListViewModel).subscribe(
-      (res: LovList) => {
-        if (typeof (res) == 'undefined') {
-        }
-        else {
-          if (res._failure) {
-          }
-          else {
-            this.relationshipList = res.dropdownList;
-          }
-        }
-      })
+  callLOVs(){
+    this.commonLOV.getLovByName('Relationship').pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
+      this.relationshipList=res;  
+    });
   }
   
   getAllCountry() {
@@ -155,7 +148,7 @@ export class StaffAddressinfoComponent implements OnInit, OnDestroy {
         if (data._failure) {
           this.countryListArr = [];
         } else {
-          this.countryListArr = data.tableCountry;
+          this.countryListArr=data.tableCountry?.sort((a, b) => {return a.name < b.name ? -1 : 1;} )   
           if (this.staffCreateMode == this.staffCreate.VIEW) {
           this.findCountryNameById()
           }
@@ -211,7 +204,6 @@ export class StaffAddressinfoComponent implements OnInit, OnDestroy {
           this.cloneStaffAddModel=JSON.stringify(this.staffDetailsForViewAndEdit);
           this.staffCreateMode = this.staffCreate.VIEW;
           this.findCountryNameById();
-          this.imageCropperService.enableUpload(false);
           this.staffService.changePageMode(this.staffCreateMode);
           
         }
@@ -220,7 +212,8 @@ export class StaffAddressinfoComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.imageCropperService.enableUpload(false);
+    this.destroySubject$.next();
+    this.destroySubject$.complete();
   }
 
 

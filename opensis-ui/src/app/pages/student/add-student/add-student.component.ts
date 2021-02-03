@@ -25,6 +25,7 @@ import { SchoolCreate } from '../../../enums/school-create.enum';
 import icHospital from '@iconify/icons-ic/baseline-medical-services';
 import { takeUntil } from 'rxjs/operators';
 import { LoaderService } from '../../../services/loader.service';
+import { ModuleIdentifier } from '../../../enums/module-identifier.enum';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -55,7 +56,6 @@ export class AddStudentComponent implements OnInit, OnDestroy {
   studentTitle:string;
   pageStatus = "Add Student"
   module = 'Student';
-  studentGrade:string;
   responseImage: string;
   enableCropTool = true;
   studentAddModel: StudentAddModel = new StudentAddModel();
@@ -63,6 +63,7 @@ export class AddStudentComponent implements OnInit, OnDestroy {
   criticalAlert = false;
   destroySubject$: Subject<void> = new Subject();
   loading: boolean;
+  moduleIdentifier=ModuleIdentifier;
   constructor(private layoutService: LayoutService,
     private studentService: StudentService,
     private snackbar: MatSnackBar,
@@ -97,10 +98,12 @@ export class AddStudentComponent implements OnInit, OnDestroy {
     this.studentCreateMode = this.studentCreate.ADD
     this.studentId = this.studentService.getStudentId();
     if (this.studentId != null || this.studentId != undefined) {
+     this.imageCropperService.enableUpload({module:this.moduleIdentifier.STUDENT,upload:true,mode:this.studentCreate.VIEW});
       this.studentCreateMode = this.studentCreate.VIEW;
       this.getStudentDetailsUsingId();
       this.onViewMode();
     } else if (this.studentCreateMode == this.studentCreate.ADD) {
+      this.imageCropperService.enableUpload({module:this.moduleIdentifier.STUDENT,upload:true,mode:this.studentCreate.ADD});
       this.getAllFieldsCategory();
     }
 

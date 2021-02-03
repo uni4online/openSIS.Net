@@ -15,6 +15,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ViewParentInfoModel } from '../../../../models/parentInfoModel';
 import { ParentInfoService } from '../../../../services/parent-info.service';
 import { ImageCropperService } from '../../../../services/image-cropper.service';
+import { ModuleIdentifier } from '../../../../enums/module-identifier.enum';
 @Component({
   selector: 'vex-student-medicalinfo',
   templateUrl: './student-medicalinfo.component.html',
@@ -26,6 +27,7 @@ import { ImageCropperService } from '../../../../services/image-cropper.service'
   ]
 })
 export class StudentMedicalinfoComponent implements OnInit, OnDestroy {
+  moduleIdentifier=ModuleIdentifier;
   studentCreate = SchoolCreate;
   @Input() studentCreateMode: SchoolCreate;
   @Input() categoryId;
@@ -56,7 +58,7 @@ export class StudentMedicalinfoComponent implements OnInit, OnDestroy {
       this.studentService.changePageMode(this.studentCreateMode);
       this.studentAddModel = this.studentDetailsForViewAndEdit;
       this.cloneStudentAddModel = JSON.stringify(this.studentAddModel);
-      this.imageCropperService.enableUpload(false);
+      this.imageCropperService.enableUpload({module:this.moduleIdentifier.STUDENT,upload:false,mode:this.studentCreate.VIEW});
     } else {
       this.getAllParents();
       this.studentService.changePageMode(this.studentCreateMode);
@@ -68,7 +70,7 @@ export class StudentMedicalinfoComponent implements OnInit, OnDestroy {
     this.getAllParents();
     this.studentCreateMode = this.studentCreate.EDIT;
     this.studentService.changePageMode(this.studentCreateMode);
-    this.imageCropperService.enableUpload(true);
+    this.imageCropperService.enableUpload({module:this.moduleIdentifier.STUDENT,upload:true,mode:this.studentCreate.VIEW});
   }
 
   cancelEdit() {
@@ -78,7 +80,7 @@ export class StudentMedicalinfoComponent implements OnInit, OnDestroy {
     }
     this.studentCreateMode = this.studentCreate.VIEW;
     this.studentService.changePageMode(this.studentCreateMode);
-    this.imageCropperService.enableUpload(false);
+    this.imageCropperService.enableUpload({module:this.moduleIdentifier.STUDENT,upload:false,mode:this.studentCreate.VIEW});
     this.imageCropperService.cancelImage("student");
   }
 
@@ -139,7 +141,7 @@ export class StudentMedicalinfoComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.imageCropperService.enableUpload(false);
+    this.imageCropperService.enableUpload({module:this.moduleIdentifier.STUDENT,upload:false,mode:this.studentCreate.VIEW});
   }
 
 }

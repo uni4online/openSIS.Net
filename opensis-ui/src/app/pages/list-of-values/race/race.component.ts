@@ -20,7 +20,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { CommonService } from '../../../services/common.service';
-
+import { ExcelService } from '../../../services/excel.service';
+import { SharedFunction } from '../../shared/shared-function';
 
 @Component({
   selector: 'vex-race',
@@ -54,6 +55,7 @@ export class RaceComponent implements OnInit {
   loading: Boolean;
   searchKey: string;
   listCount;
+  raceListForExcel=[];
   raceListModel: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator: MatPaginator
   @ViewChild(MatSort) sort: MatSort;
@@ -63,7 +65,9 @@ export class RaceComponent implements OnInit {
     public translateService: TranslateService,
     private loaderService: LoaderService,
     private snackbar: MatSnackBar,
-    private commonService: CommonService) {
+    private commonService: CommonService,
+    private excelService:ExcelService,
+    public commonfunction:SharedFunction) {
     translateService.use('en');
 
     this.loaderService.isLoading.subscribe((val) => {
@@ -118,12 +122,13 @@ export class RaceComponent implements OnInit {
           if (res._failure) {
             this.raceListModel=new MatTableDataSource(res.dropdownList) ;
             this.listCount=this.raceListModel.data;
-            this.snackbar.open('Race List failed. ' + res._message, '', {
+            this.snackbar.open('' + res._message, '', {
               duration: 10000
             });
           }
           else {
             this.raceListModel = new MatTableDataSource(res.dropdownList);
+            this.raceListForExcel =res.dropdownList;
             this.listCount=this.raceListModel.data;
             this.raceListModel.sort = this.sort;
           }
@@ -131,6 +136,25 @@ export class RaceComponent implements OnInit {
       })
   }
 
+  exportRaceListToExcel(){
+    if(this.raceListForExcel.length!=0){
+      let raceList=this.raceListForExcel?.map((item)=>{
+        return{
+          Title: item.lovColumnValue,
+          CreatedBy: item.createdBy!==null ? item.createdBy: '-',
+          CreateDate: this.commonfunction.transformDateWithTime(item.createdOn),
+          UpdatedBy: item.updatedBy!==null ? item.updatedBy: '-',
+          UpdateDate:  this.commonfunction.transformDateWithTime(item.updatedOn)
+        }
+      });
+      this.excelService.exportAsExcelFile(raceList,'Race_List_')
+     }
+     else{
+    this.snackbar.open('No Records Found. Failed to Export Race List','', {
+      duration: 5000
+    });
+  }
+}
   onSearchClear(){
     this.searchKey="";
     this.applyFilter();

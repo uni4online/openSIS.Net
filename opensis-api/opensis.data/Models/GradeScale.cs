@@ -8,6 +8,7 @@ namespace opensis.data.Models
         public GradeScale()
         {
             Grade = new HashSet<Grade>();
+            CourseSection = new HashSet<CourseSection>();
         }
 
         public Guid TenantId { get; set; }
@@ -26,5 +27,6 @@ namespace opensis.data.Models
 
         public virtual SchoolMaster SchoolMaster { get; set; }
         public virtual ICollection<Grade> Grade { get; set; }
+        public virtual ICollection<CourseSection> CourseSection { get; set; }
     }
 }

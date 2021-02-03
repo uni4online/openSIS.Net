@@ -16,6 +16,7 @@ export class ViewGeneralInfoComponent implements OnInit {
   module = "School";
   status: string;
   mapUrl:string;
+  mailText:string;
   constructor(private snackbar: MatSnackBar) {
   }
 
@@ -37,6 +38,34 @@ export class ViewGeneralInfoComponent implements OnInit {
       });
     }
   }
+  goToWebsite(){
+    window.open(this.schoolViewDetails?.schoolMaster.schoolDetail[0].website, "_blank");
+  }
+  goToTwitter(){
+    window.open(this.schoolViewDetails?.schoolMaster.schoolDetail[0].twitter, "_blank");
+    
+  }
+  goToFacebook(){
+    window.open(this.schoolViewDetails?.schoolMaster.schoolDetail[0].facebook, "_blank");
+   
+  }
 
+  goToInstagram(){
+    window.open(this.schoolViewDetails?.schoolMaster.schoolDetail[0].instagram, "_blank");
+    
+  }
+  goToYoutube(){
+    window.open(this.schoolViewDetails?.schoolMaster.schoolDetail[0].youtube, "_blank");
+   
+  }
+  goToLinkedin(){
+    window.open(this.schoolViewDetails?.schoolMaster.schoolDetail[0].linkedIn, "_blank");
+   
+  }
+  goToEmail(){
+    this.mailText = "mailto:"+this.schoolViewDetails?.schoolMaster.schoolDetail[0].email;
+    window.open(this.mailText, "_blank");
+    
+  }
 
 }

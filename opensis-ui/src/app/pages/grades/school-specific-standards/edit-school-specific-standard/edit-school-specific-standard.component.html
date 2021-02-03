@@ -9,7 +9,7 @@
 
 <mat-dialog-content fxLayout="column" [formGroup]="form">
 
-    <div class="mt-6 mb-4" *ngIf="!visibleSubjectTextBox">
+    <div class="mt-6 mb-4" id="subject">
         <mat-form-field class="w-full mb-1" appearance="outline" color="primary">
         <mat-label>{{'subject' | translate}}</mat-label>
         <mat-select name="subject" formControlName="subject" required>
@@ -18,18 +18,18 @@
         <mat-error *ngIf="form.get('subject').hasError('required')">{{'subjectIsRequired'|translate}}
         </mat-error>
     </mat-form-field>
-        <a class="cursor-pointer text-blue" *ngIf="!editMode" (click)="activeSubjectTextBox()"><mat-icon [icIcon]="icAdd" class="mr-1 align-bottom"></mat-icon>{{'addNewSubject' | translate}}</a>
+        <a class="cursor-pointer text-blue" *ngIf="!editMode" (click)="activeSubjectTextBox();"><mat-icon [icIcon]="icAdd" class="mr-1 align-bottom"></mat-icon>{{'addNewSubject' | translate}}</a>
     </div>
-    <div class="mt-6 mb-4" *ngIf="visibleSubjectTextBox">
+    <div class="mt-6 mb-4 hidden" id="subject1">
         <mat-form-field class="w-full mb-1" appearance="outline" color="primary">
         <mat-label>{{'subject' | translate}}</mat-label>
-        <input name="subject1" formControlName="subject" type="text" matInput required>
+        <input id="subjectFocus" name="subject1" formControlName="subject" type="text" matInput required>
         <mat-error *ngIf="form.get('subject').hasError('required')">{{'subjectIsRequired'|translate}}
         </mat-error>
     </mat-form-field>
     </div>
 
-    <div class="mb-4" *ngIf="!visibleCourseTextBox">
+    <div class="mb-4" id="course">
         <mat-form-field class="w-full mb-1" appearance="outline" color="primary">
         <mat-label>{{'course' | translate}}</mat-label>
         <mat-select formControlName="course" name="course" required>
@@ -40,10 +40,10 @@
     </mat-form-field>
         <a class="cursor-pointer text-blue" *ngIf="!editMode" (click)="activeCourseTextBox()"><mat-icon [icIcon]="icAdd" class="mr-1 align-bottom"></mat-icon>{{'addNewCourse' | translate}}</a>
     </div>
-    <div class="mb-4" *ngIf="visibleCourseTextBox">
+    <div class="mb-4 hidden" id="course1">
         <mat-form-field class="w-full mb-1" appearance="outline" color="primary">
         <mat-label>{{'course' | translate}}</mat-label>
-        <input name="course1" formControlName="course" type="text" matInput required>
+        <input id="courseFocus" name="course1" formControlName="course" type="text" matInput required>
         <mat-error *ngIf="form.get('course').hasError('required')">{{'courseIsRequired'|translate}}
         </mat-error>
     </mat-form-field>
@@ -73,6 +73,7 @@
     <mat-form-field class="w-full" appearance="outline" color="primary">
         <mat-label>{{'standardRefNo' | translate}}</mat-label>
         <input name="standardRefNo" formControlName="standardRefNo"  type="text" matInput required>
+        <mat-progress-spinner matSuffix *ngIf="loading" color="primary" diameter="18" mode="indeterminate" class="float-right"></mat-progress-spinner>
         <mat-error *ngIf="form.get('standardRefNo').hasError('required')">{{'standardRefNoIsRequired'|translate}}
         </mat-error>
         <mat-error *ngIf="form.controls['standardRefNo'].errors?.nomatch">

@@ -62,6 +62,7 @@
                             <mat-label>{{'staffId'|translate}}</mat-label>
                             <input [formControl]="internalId"
                                 [(ngModel)]="staffAddModel.staffMaster.staffInternalId" name="staffInternalId" matInput required>
+                                <mat-progress-spinner matSuffix *ngIf="isStaffInternalId" color="primary" diameter="18" mode="indeterminate" ></mat-progress-spinner>
                             <mat-error *ngIf="internalId.errors?.required">
                                 {{'staffInternalIdIsRequired'|translate}}</mat-error>
                             <mat-error *ngIf="internalId.errors?.nomatch">
@@ -119,7 +120,7 @@
                     [categoryId]="categoryId" [staffCreateMode]="staffCreateMode"></vex-custom-field-without-form>
 
 
-
+                <hr class="-mx-4">
                 <h4 class="text-primary pt-6 pb-2 px-4">{{'demographicInformation'|translate}}</h4>
                 <ul class="grid grid-cols-2 col-gap-8 row-gap-2 mt-2 mx-4">
                     <li>
@@ -243,10 +244,16 @@
                     </li>
                 </ul>
 
-
+                <hr class="-mx-4 my-4">
+                <div class="mx-4">
+                    <mat-slide-toggle color="primary" [checked]="staffAddModel.staffMaster.portalAccess"
+                        (change)="isPortalAccess($event)" class="mb-4">
+                        {{'portalAccess' | translate}}
+                    </mat-slide-toggle>
+                </div>
                 
                 <div *ngIf="hideAccess">
-                    <h4 class="text-primary pt-6 pb-2 px-4">{{'accessInformation'|translate}}</h4>
+                    <h4 class="text-primary pt-3 pb-2 px-4">{{'accessInformation'|translate}}</h4>
                     <div class="mb-2 md:flex md:flex-wrap">
                         <div class="flex flex-1 mx-4 md:w-1/2">
                             <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
@@ -254,6 +261,7 @@
                                 <input [formControl]="loginEmail" name="loginEmailAddress"
                                     [(ngModel)]="staffAddModel.staffMaster.loginEmailAddress" matInput
                                     [required]="hideAccess ? true : null " >
+                                    <mat-progress-spinner matSuffix *ngIf="isUser" color="primary" diameter="18" mode="indeterminate" class="float-right"></mat-progress-spinner>
                                 <mat-error class="text-red" *ngIf="loginEmail.errors?.required && hideAccess">
                                     {{'loginEmailAddressIsRequired'|translate}}</mat-error>
                                 <mat-error *ngIf="loginEmail.errors?.nomatch">
@@ -274,17 +282,12 @@
                                     <mat-icon *ngIf="!visible" [icIcon]="icVisibilityOff"></mat-icon>
                                 </button>
                             </mat-form-field>
-                            <p *ngIf="hidePasswordAccess" class="flex-none -mt-3 mb-4"><a (click)="generate()"
+                            <p *ngIf="hidePasswordAccess" class="flex-none mb-4"><a (click)="generate()"
                                     class="text-primary underline cursor-pointer">Auto Generate Password</a></p>
                         </div>
                     </div>
                 </div>
-                <div class="mb-6 mx-4">
-                    <mat-slide-toggle color="primary" [checked]="staffAddModel.staffMaster.portalAccess"
-                        (change)="isPortalAccess($event)" class="mb-4">
-                        {{'portalAccess' | translate}}
-                    </mat-slide-toggle>
-                </div>
+                
 
                 <div class="px-4 pt-3 mb-4 text-right">
                     <button mat-button type="button" *ngIf="staffCreateMode == staffCreate.EDIT"

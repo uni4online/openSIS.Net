@@ -8,9 +8,28 @@
                 <ul class="md:grid md:grid-cols-2 md:col-gap-8 md:row-gap-0 mx-4">
                     <li>
                         <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                            <mat-label>{{'schoolName'|translate}}</mat-label>
+                            <input #school_Name="ngModel" maxlength="100"
+                                [(ngModel)]="schoolAddViewModel.schoolMaster.schoolName" name="school_Name" matInput
+                                required>
+
+                            <mat-error *ngIf="school_Name.errors?.required">
+                                {{'schoolNameIsRequired'|translate}}</mat-error>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                            <mat-label>{{'alternateName'|translate}}</mat-label>
+                            <input maxlength="100" [(ngModel)]="schoolAddViewModel.schoolMaster.alternateName"
+                                name="alternate_name" matInput>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'schoolId'|translate}}</mat-label>
                             <input [(ngModel)]="schoolAddViewModel.schoolMaster.schoolInternalId"
                             [formControl]="internalId" name="schoolId" maxlength="50" required matInput>
+                            <mat-progress-spinner matSuffix *ngIf="isSchoolInternalId" color="primary" diameter="18" mode="indeterminate" class="float-right"></mat-progress-spinner>
                                 <mat-error *ngIf="internalId.errors?.required">
                                     {{'schoolIdIsRequired'|translate}}</mat-error>
                                     <mat-error *ngIf="internalId.errors?.nomatch">
@@ -66,24 +85,6 @@
                                 <mat-error *ngIf="school_classification.errors?.required">
                                     {{'schoolClassificationIsRequired'|translate}}</mat-error>
                             
-                        </mat-form-field>
-                    </li>
-                    <li>
-                        <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
-                            <mat-label>{{'schoolName'|translate}}</mat-label>
-                            <input #school_Name="ngModel" maxlength="100"
-                                [(ngModel)]="schoolAddViewModel.schoolMaster.schoolName" name="school_Name" matInput
-                                required>
-                           
-                                <mat-error *ngIf="school_Name.errors?.required">
-                                    {{'schoolNameIsRequired'|translate}}</mat-error>
-                        </mat-form-field>
-                    </li>
-                    <li>
-                        <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
-                            <mat-label>{{'alternateName'|translate}}</mat-label>
-                            <input maxlength="100" [(ngModel)]="schoolAddViewModel.schoolMaster.alternateName"
-                                name="alternate_name" matInput>
                         </mat-form-field>
                     </li>
                     <li>
@@ -167,8 +168,8 @@
                             <mat-label>{{'gender'|translate}}</mat-label>
                             <mat-select [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].gender"
                                 name="gender">
-                                <mat-option *ngFor="let key of genderOptions" [value]="key.lovColumnValue">
-                                    {{key.lovColumnValue}}
+                                <mat-option *ngFor="let key of genderOptions" [value]="key">
+                                    {{key}}
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
@@ -246,12 +247,14 @@
                     <li>
                         <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'country'|translate}}</mat-label>
-                            <mat-select #country (selectionChange)="getAllStateByCountry($event)"
+                            <mat-select #country="ngModel" (selectionChange)="getAllStateByCountry($event)"
                                 [(ngModel)]="schoolAddViewModel.schoolMaster.country" name="country" required>
                                 <mat-option *ngFor="let country of countryListArr" [value]="country.name">
                                     {{country.name}}
                                 </mat-option>
                             </mat-select>
+                            <mat-error *ngIf="country.errors?.required">
+                                {{'countryIsRequired'|translate}}</mat-error>
                         </mat-form-field>
                     </li>
                     <li>
@@ -373,14 +376,12 @@
                     <li>
                         <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'telephone'|translate}}</mat-label>
-                            <input #telephone="ngModel" maxlength="12" appPhoneMask
+                            <input #telephone="ngModel" maxlength="30" 
                                 [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].telephone" name="telephone"
                                 matInput required>
                             <mat-error *ngIf="telephone.errors?.required">
                                 {{'telephoneIsRequired'|translate}}</mat-error>
-                            <mat-error
-                                *ngIf="!telephone.errors?.required && telephone.errors?.invalidPhoneNumber">
-                                {{'invalidTelephoneNumber'|translate}}</mat-error>
+                           
                         </mat-form-field>
                     </li>
                     <li>

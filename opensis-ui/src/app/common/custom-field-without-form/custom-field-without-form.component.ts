@@ -96,7 +96,7 @@ export class CustomFieldWithoutFormComponent implements OnInit {
 
   checkStudentCustomValue() {
     if (this.studentAddModel !== undefined) {
-      if (this.studentAddModel?.fieldsCategoryList !== undefined && this.studentAddModel?.fieldsCategoryList !== null) {
+      if (this.studentAddModel?.fieldsCategoryList !== undefined && this.studentAddModel?.fieldsCategoryList?.length >0) {
 
         for (let studentCustomField of this.studentAddModel.fieldsCategoryList[this.categoryId]?.customFields) {
           if (studentCustomField?.customFieldsValue.length == 0) {

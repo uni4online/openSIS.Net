@@ -337,5 +337,25 @@ namespace opensis.core.Staff.Services
             }
             return staffCertificateInfoDelete;
         }
+
+        /// <summary>
+        /// Add or Update Staff Photo
+        /// </summary>
+        /// <param name="staffAddViewModel"></param>
+        /// <returns></returns>
+        public StaffAddViewModel AddUpdateStaffPhoto(StaffAddViewModel staffAddViewModel)
+        {
+            StaffAddViewModel staffPhotoUpdate = new StaffAddViewModel();
+            if (TokenManager.CheckToken(staffAddViewModel._tenantName, staffAddViewModel._token))
+            {
+                staffPhotoUpdate = this.staffRepository.AddUpdateStaffPhoto(staffAddViewModel);
+            }
+            else
+            {
+                staffPhotoUpdate._failure = true;
+                staffPhotoUpdate._message = TOKENINVALID;
+            }
+            return staffPhotoUpdate;
+        }
     }
 }

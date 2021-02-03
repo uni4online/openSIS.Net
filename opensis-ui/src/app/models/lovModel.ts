@@ -15,8 +15,6 @@ export class lovModel{
         this.id=0;
         this.tenantId=sessionStorage.getItem("tenantId");
         this.schoolId=+sessionStorage.getItem("selectedSchoolId");
-        this.createdBy=sessionStorage.getItem("email");
-        this.updatedBy=sessionStorage.getItem("email");
         this.createdOn=null;
         this.updatedOn=null;
     }

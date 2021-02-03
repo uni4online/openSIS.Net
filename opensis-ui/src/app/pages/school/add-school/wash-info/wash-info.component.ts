@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, Input, ViewChild, OnDestroy } from '@angular/core';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
 import { Router } from '@angular/router';
@@ -17,6 +17,10 @@ import { SchoolCreate } from '../../../../enums/school-create.enum';
 import { LovList } from './../../../../models/lovModel';
 import { CommonService } from '../../../../services/common.service';
 import * as cloneDeep from 'lodash/cloneDeep';
+import { CommonLOV } from '../../../shared-module/lov/common-lov';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { ModuleIdentifier } from '../../../../enums/module-identifier.enum';
 @Component({
   selector: 'vex-wash-info',
   templateUrl: './wash-info.component.html',
@@ -27,8 +31,9 @@ import * as cloneDeep from 'lodash/cloneDeep';
     fadeInRight400ms
   ]
 })
-export class WashInfoComponent implements OnInit {
+export class WashInfoComponent implements OnInit,OnDestroy {
   schoolCreate = SchoolCreate;
+  moduleIdentifier = ModuleIdentifier;
   @Input() schoolCreateMode: SchoolCreate;
   icEdit = icEdit;
   @Input() schoolDetailsForViewAndEdit;
@@ -46,24 +51,26 @@ export class WashInfoComponent implements OnInit {
   commonToiletTypeList;
   lovList: LovList = new LovList();
   cloneSchool;
+  destroySubject$: Subject<void> = new Subject();
   constructor(
     private schoolService: SchoolService,
     private snackbar: MatSnackBar,
     public translateService: TranslateService,
     private imageCropperService: ImageCropperService,
-    private commonService: CommonService) {
+    private commonService: CommonService,
+    private commonLOV:CommonLOV) {
     translateService.use('en');
 
   }
   ngOnInit(): void {
     if (this.schoolCreateMode == this.schoolCreate.VIEW) {
       this.schoolService.changePageMode(this.schoolCreateMode);
-      this.imageCropperService.enableUpload(false);
+      this.imageCropperService.enableUpload({module:this.moduleIdentifier.SCHOOL,upload:false,mode:this.schoolCreate.VIEW});
       this.schoolAddViewModel = this.schoolDetailsForViewAndEdit;
       this.cloneSchool=JSON.stringify(this.schoolAddViewModel);
     } else {
       this.initializeDropdownValues();
-      this.imageCropperService.enableUpload(true);
+      this.imageCropperService.enableUpload({module:this.moduleIdentifier.SCHOOL,upload:true,mode:this.schoolCreate.EDIT});
       this.schoolService.changePageMode(this.schoolCreateMode);
       this.schoolAddViewModel = this.schoolService.getSchoolDetails();
       this.cloneSchool=JSON.stringify(this.schoolAddViewModel);
@@ -71,20 +78,26 @@ export class WashInfoComponent implements OnInit {
   }
 
   initializeDropdownValues() {
-    this.getAllFemaleToiletType();
-    this.getAllMaleToiletType();
-    this.getAllCommonToiletType();
+    this.commonLOV.getLovByName("Female Toilet Type").pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
+      this.femaleToiletTypeList=res;  
+    });
+    this.commonLOV.getLovByName("Male Toilet Type").pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
+      this.maleToiletTypeList=res;  
+    });
+    this.commonLOV.getLovByName("Common Toilet Type").pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
+      this.commonToiletTypeList=res;  
+    });
   }
 
   editWashInfo() {
     this.formActionButtonTitle = "update";
     this.initializeDropdownValues();
-    this.imageCropperService.enableUpload(true);
+    this.imageCropperService.enableUpload({module:this.moduleIdentifier.SCHOOL,upload:true,mode:this.schoolCreate.EDIT});
     this.schoolCreateMode = this.schoolCreate.EDIT;
     this.schoolService.changePageMode(this.schoolCreateMode);
   }
   cancelEdit() {
-    this.imageCropperService.enableUpload(false);
+    this.imageCropperService.enableUpload({module:this.moduleIdentifier.SCHOOL,upload:false,mode:this.schoolCreate.VIEW});
     this.imageCropperService.cancelImage("school");
     if(JSON.stringify(this.schoolAddViewModel)!==this.cloneSchool){
       this.schoolAddViewModel=JSON.parse(this.cloneSchool);
@@ -95,31 +108,6 @@ export class WashInfoComponent implements OnInit {
     this.schoolService.changePageMode(this.schoolCreateMode);
     
   }
-  getAllFemaleToiletType() {
-    this.lovList.lovName = "Female Toilet Type";
-    this.commonService.getAllDropdownValues(this.lovList).subscribe(
-      (res: LovList) => {
-        this.femaleToiletTypeList = res.dropdownList;
-      }
-    );
-  }
-  getAllMaleToiletType() {
-    this.lovList.lovName = "Male Toilet Type";
-    this.commonService.getAllDropdownValues(this.lovList).subscribe(
-      (res: LovList) => {
-        this.maleToiletTypeList = res.dropdownList;
-      }
-    );
-  }
-  getAllCommonToiletType() {
-    this.lovList.lovName = "Common Toilet Type";
-    this.commonService.getAllDropdownValues(this.lovList).subscribe(
-      (res: LovList) => {
-        this.commonToiletTypeList = res.dropdownList;
-
-      }
-    );
-  }
 
   submit() {
     this.currentForm.form.markAllAsTouched();
@@ -127,7 +115,7 @@ export class WashInfoComponent implements OnInit {
       if (this.schoolAddViewModel.schoolMaster.fieldsCategory !== null) {
         this.modifyCustomFields();
       }
-      this.schoolService.UpdateSchool(this.schoolAddViewModel).subscribe(data => {
+      this.schoolService.UpdateSchool(this.schoolAddViewModel).pipe(takeUntil(this.destroySubject$)).subscribe(data => {
         if (typeof (data) == 'undefined') {
           this.snackbar.open(`Wash Info Updation failed` + sessionStorage.getItem("httpError"), '', {
             duration: 10000
@@ -148,7 +136,7 @@ export class WashInfoComponent implements OnInit {
             this.schoolDetailsForViewAndEdit=data;
             this.cloneSchool=JSON.stringify(this.schoolDetailsForViewAndEdit);
             this.schoolService.changePageMode(this.schoolCreateMode);
-            this.imageCropperService.enableUpload(false);
+            this.imageCropperService.enableUpload({module:this.moduleIdentifier.SCHOOL,upload:false,mode:this.schoolCreate.VIEW});
           }
         }
 
@@ -163,6 +151,11 @@ export class WashInfoComponent implements OnInit {
             schoolCustomField.customFieldsValue[0].customFieldValue = this.schoolService.getSchoolMultiselectValue().toString().replaceAll(",", "|");
           }
         }
+  }
+
+  ngOnDestroy() {
+    this.destroySubject$.next();
+    this.destroySubject$.complete();
   }
 
 }

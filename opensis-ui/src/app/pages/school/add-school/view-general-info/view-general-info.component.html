@@ -3,6 +3,15 @@
         <div class="my-6">
             <ul class="md:grid md:grid-cols-3 md:col-gap-8 md:row-gap-10">
                 <li>
+                    <label class="text-sm leading-5 text-gray">{{'schoolName' | translate}} </label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolViewDetails?.schoolMaster.schoolName|EmtyValueCheckPipe}}
+                    </p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'alternateName' | translate}}</label>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolViewDetails?.schoolMaster.alternateName|EmtyValueCheckPipe}}</p>
+                </li>
+                <li>
                     <label class="text-sm leading-5 text-gray">{{'schoolId' | translate}}</label>
                     <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolViewDetails?.schoolMaster.schoolInternalId|EmtyValueCheckPipe}}</p>
                 </li>
@@ -25,15 +34,6 @@
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'schoolClassification' | translate}}</label>
                     <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolViewDetails?.schoolMaster.schoolClassification |EmtyValueCheckPipe}}</p>
-                </li>
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'schoolName' | translate}} </label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolViewDetails?.schoolMaster.schoolName|EmtyValueCheckPipe}}
-                    </p>
-                </li>
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'shortName' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolViewDetails?.schoolMaster.alternateName|EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'affiliation' | translate}}</label>
@@ -161,37 +161,56 @@
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'website' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolViewDetails?.schoolMaster.schoolDetail[0].website|EmtyValueCheckPipe}}
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                        <a (click) = "goToWebsite()"  target="_blank"  class="text-primary cursor-pointer">
+                        {{schoolViewDetails?.schoolMaster.schoolDetail[0].website|EmtyValueCheckPipe}}
+                        </a>
                     </p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'email' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolViewDetails?.schoolMaster.schoolDetail[0].email|EmtyValueCheckPipe}}
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                        <a (click) = "goToEmail()" target="_blank"  class="text-primary cursor-pointer">
+                            {{schoolViewDetails?.schoolMaster.schoolDetail[0].email|EmtyValueCheckPipe}}
+                        </a>
+                        
                     </p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'twitter' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolViewDetails?.schoolMaster.schoolDetail[0].twitter|EmtyValueCheckPipe}}</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                        <a (click) = "goToTwitter()"  target="_blank"  class="text-primary cursor-pointer">
+                            {{schoolViewDetails?.schoolMaster.schoolDetail[0].twitter|EmtyValueCheckPipe}}
+                        </a>
+                       </p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'facebook' | translate}}</label>
                     <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2"><a
-                            href="{{schoolViewDetails?.schoolMaster.schoolDetail[0].facebook}}" target="_blank"
-                            class="text-primary">{{schoolViewDetails?.schoolMaster.schoolDetail[0].facebook|EmtyValueCheckPipe}}</a></p>
+                        (click) = "goToFacebook()"   target="_blank"
+                            class="text-primary cursor-pointer">{{schoolViewDetails?.schoolMaster.schoolDetail[0].facebook|EmtyValueCheckPipe}}</a></p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'instagram' | translate}}</label>
                     <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2"><a
-                            href="{{schoolViewDetails?.schoolMaster.schoolDetail[0].instagram}}" target="_blank"
-                            class="text-primary">{{schoolViewDetails?.schoolMaster.schoolDetail[0].instagram|EmtyValueCheckPipe}}</a></p>
+                        (click) = "goToInstagram()"  target="_blank"
+                            class="text-primary cursor-pointer">{{schoolViewDetails?.schoolMaster.schoolDetail[0].instagram|EmtyValueCheckPipe}}</a></p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'youtube' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolViewDetails?.schoolMaster.schoolDetail[0].youtube|EmtyValueCheckPipe}}</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                        <a (click) = "goToYoutube()"  target="_blank"  class="text-primary cursor-pointer">
+                            {{schoolViewDetails?.schoolMaster.schoolDetail[0].youtube|EmtyValueCheckPipe}}
+                        </a>
+                        </p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'linkedIn' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolViewDetails?.schoolMaster.schoolDetail[0].linkedIn|EmtyValueCheckPipe}}</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                        <a (click) = "goToLinkedin()" target="_blank"  class="text-primary cursor-pointer">
+                            {{schoolViewDetails?.schoolMaster.schoolDetail[0].linkedIn|EmtyValueCheckPipe}}
+                        </a>
+                       </p>
                 </li>
             </ul>
         </div>

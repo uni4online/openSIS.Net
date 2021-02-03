@@ -19,6 +19,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import icEdit from '@iconify/icons-ic/edit';
 import moment from 'moment';
 import { ImageCropperService } from '../../../../services/image-cropper.service';
+import { ModuleIdentifier } from '../../../../enums/module-identifier.enum';
+import { SharedFunction } from '../../../shared/shared-function';
 
 @Component({
   selector: 'vex-staff-schoolinfo',
@@ -48,12 +50,14 @@ export class StaffSchoolinfoComponent implements OnInit {
   otherGradeLevelTaught;
   otherSubjectTaught;
   cloneStaffModel;
+  moduleIdentifier=ModuleIdentifier;
   constructor(public translateService: TranslateService,
     private snackbar: MatSnackBar,
     private staffService:StaffService,
     private gradeLevelService:GradeLevelService,
     private schoolService: SchoolService,
-    private imageCropperService:ImageCropperService) {
+    private imageCropperService:ImageCropperService,
+    private commonFunction: SharedFunction) {
     translateService.use('en');
   }
 
@@ -174,15 +178,18 @@ export class StaffSchoolinfoComponent implements OnInit {
 
   updateSchoolInfo(){
     this.staffSchoolInfoModel.staffId=this.staffService.getStaffId();
+    this.staffSchoolInfoModel.joiningDate=this.commonFunction.formatDateSaveWithoutTime(this.staffSchoolInfoModel.joiningDate)
     if(this.otherGradeLevelTaught!=undefined){
       this.staffSchoolInfoModel.otherGradeLevelTaught=this.otherGradeLevelTaught.toString()
     }
     if(this.otherSubjectTaught!=undefined){
       this.staffSchoolInfoModel.otherSubjectTaught=this.otherSubjectTaught.toString()
     }
-    for(let i=0;i<this.staffSchoolInfoModel.staffSchoolInfoList.length;i++){
-      this.staffSchoolInfoModel.staffSchoolInfoList[i].staffId=this.staffService.getStaffId();
-    }
+    this.staffSchoolInfoModel?.staffSchoolInfoList?.map((item)=>{
+      item.staffId=this.staffService.getStaffId();
+      item.startDate=this.commonFunction.formatDateSaveWithoutTime(item.startDate);
+      item.endDate=this.commonFunction.formatDateSaveWithoutTime(item.endDate)
+    });
     this.staffSchoolInfoModel._token=sessionStorage.getItem("token");
     this.staffSchoolInfoModel._tenantName=sessionStorage.getItem("tenant");
        this.staffService.updateStaffSchoolInfo(this.staffSchoolInfoModel).subscribe((res)=>{
@@ -204,7 +211,6 @@ export class StaffSchoolinfoComponent implements OnInit {
             this.cloneStaffModel=JSON.stringify(this.staffSchoolInfoModel)
             if(this.staffCreateMode==this.staffCreate.EDIT || this.staffCreateMode==this.staffCreate.ADD){
               this.staffCreateMode = this.staffCreate.VIEW
-              this.imageCropperService.enableUpload(false);
             }
           this.staffService.changePageMode(this.staffCreateMode);
             this.manipulateArray();     
@@ -224,7 +230,6 @@ export class StaffSchoolinfoComponent implements OnInit {
     this.getAllGradeLevel();
     this.callAllSchool();
     this.staffCreateMode=this.staffCreate.EDIT;
-    this.imageCropperService.enableUpload(true);
     this.staffService.changePageMode(this.staffCreateMode);
   }
   cancelEdit(){
@@ -233,7 +238,6 @@ export class StaffSchoolinfoComponent implements OnInit {
       this.staffService.sendDetails(JSON.parse(this.cloneStaffModel));
     }
     this.staffCreateMode=this.staffCreate.VIEW;
-    this.imageCropperService.enableUpload(false);
     this.staffService.changePageMode(this.staffCreateMode);
     this.imageCropperService.cancelImage("staff");
   }

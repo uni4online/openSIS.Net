@@ -20,6 +20,8 @@ import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confi
 import { LovList, LovAddView } from './../../../models/lovModel';
 import { CommonService } from './../../../services/common.service';
 import { MatPaginator } from '@angular/material/paginator';
+import { ExcelService } from '../../../services/excel.service';
+import { SharedFunction } from '../../shared/shared-function';
 
 @Component({
   selector: 'vex-female-toilet-type',
@@ -54,6 +56,7 @@ export class FemaleToiletTypeComponent implements OnInit {
   lovAddView:LovAddView= new LovAddView();
   lovList:LovList= new LovList();
   lovName="Female Toilet Type";
+  femaleToiletTypeListForExcel =[];
   femaleToiletTypeList: MatTableDataSource<any>;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
@@ -66,6 +69,8 @@ export class FemaleToiletTypeComponent implements OnInit {
     private snackbar: MatSnackBar,
     private commonService:CommonService,
     private loaderService:LoaderService,
+    private excelService:ExcelService,
+    public commonfunction:SharedFunction
     ) {
     translateService.use('en');
     this.loaderService.isLoading.subscribe((val) => {
@@ -170,12 +175,13 @@ export class FemaleToiletTypeComponent implements OnInit {
           if (res._failure) {  
             this.femaleToiletTypeList=new MatTableDataSource(res.dropdownList) ;
             this.listCount=this.femaleToiletTypeList.data;
-            this.snackbar.open('Female Toilet Type List failed. ' + res._message, '', {
+            this.snackbar.open('' + res._message, '', {
               duration: 10000
             });
           } 
           else { 
             this.femaleToiletTypeList=new MatTableDataSource(res.dropdownList) ;
+            this.femaleToiletTypeListForExcel= res.dropdownList;
             this.femaleToiletTypeList.sort=this.sort;    
             this.femaleToiletTypeList.paginator=this.paginator;
             this.listCount=this.femaleToiletTypeList.data.length;
@@ -184,5 +190,25 @@ export class FemaleToiletTypeComponent implements OnInit {
       }
     );
   }
+
+  exportFemaleToiletTypeListToExcel(){
+    if(this.femaleToiletTypeListForExcel.length!=0){
+      let femaleToiletType=this.femaleToiletTypeListForExcel?.map((item)=>{
+        return{
+          Title: item.lovColumnValue,
+          CreatedBy: item.createdBy!==null ? item.createdBy: '-',
+          CreateDate: this.commonfunction.transformDateWithTime(item.createdOn),
+          UpdatedBy: item.updatedBy!==null ? item.updatedBy: '-',
+          UpdateDate:  this.commonfunction.transformDateWithTime(item.updatedOn)
+        }
+      });
+      this.excelService.exportAsExcelFile(femaleToiletType,'Female_Toilet_Type_List_')
+     }
+     else{
+    this.snackbar.open('No Records Found. Failed to Export Female Toilet Type List','', {
+      duration: 5000
+    });
+  }
+}
 
 }

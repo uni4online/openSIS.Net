@@ -75,7 +75,7 @@
                     <div class="border border-solid rounded mb-4" *ngFor="let student of studentInfo">
                         <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px">
                             <div class="relative cursor-pointer py-4 pl-4" fxFlex="none" (click)='openViewDetails(student)'>
-                                <img src="assets/img/default.jpg" class="avatar">
+                                <img src="{{student.studentPhoto==null?'assets/img/default-person.jpg':'data:image/png;base64,'+ student.studentPhoto}}" class="avatar">
                             </div>
                             <div class="overflow-hidden cursor-pointer py-2" fxFlex="auto" (click)='openViewDetails(student)'>
                                 <div class="subheading-2 leading-snug text-primary">{{student.firstGivenName+' '+student.middleName+' '+student.lastFamilyName | EmtyValueCheckPipe}}</div>
@@ -183,6 +183,8 @@
                 </div>
             </div>
 
+            <hr class="-mx-4">
+
             <h4 class="text-primary pt-6 pb-2 px-4">{{'contactInformation'|translate}}</h4>
             <div class="mb-2 md:flex md:flex-wrap">
                 <div class="px-4 md:w-1/2">
@@ -225,7 +227,7 @@
                     </mat-form-field>
                 </div>
             </div>
-            <div class="mb-2 md:flex md:flex-wrap">
+            <div class="md:flex md:flex-wrap">
                 <div class="px-4 md:w-1/2">
                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                         <mat-label>{{'workPhone'|translate}}</mat-label>
@@ -236,7 +238,9 @@
                     </mat-form-field>
                 </div>
             </div>
-            <div class="mx-4 mt-6 ">
+
+            <hr class="-mx-4 my-4">
+            <div class="mx-4">
                 <mat-slide-toggle (change)="portalUserCheck($event)"  [checked] = "isPortalUser" color="primary">{{'portalAccess' | translate}}</mat-slide-toggle>
             </div>
            <div *ngIf="isPortalUser">

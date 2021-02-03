@@ -18,7 +18,10 @@ import { MatSort } from '@angular/material/sort';
 import { LoaderService } from './../../../services/loader.service';
 import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confirm-dialog.component';
 import { LovList, LovAddView } from './../../../models/lovModel';
+import { ExcelService } from '../../../services/excel.service';
+import { SharedFunction } from '../../shared/shared-function';
 import { CommonService } from './../../../services/common.service';
+
 
 @Component({
   selector: 'vex-common-toilet-type',
@@ -52,6 +55,7 @@ export class CommonToiletTypeComponent implements OnInit {
   searchKey:string;
   lovAddView:LovAddView= new LovAddView();
   lovList:LovList= new LovList();
+  commonToiletTypeListForExcel =[];
   lovName="Common Toilet Type";
   commonToiletTypeList: MatTableDataSource<any>;
   @ViewChild(MatSort) sort: MatSort;
@@ -64,6 +68,8 @@ export class CommonToiletTypeComponent implements OnInit {
     private snackbar: MatSnackBar,
     private commonService:CommonService,
     private loaderService:LoaderService,
+    private excelService:ExcelService,
+    public commonfunction:SharedFunction
     ) {
     translateService.use('en');
     this.loaderService.isLoading.subscribe((val) => {
@@ -169,12 +175,13 @@ export class CommonToiletTypeComponent implements OnInit {
           if (res._failure) { 
             this.commonToiletTypeList=new MatTableDataSource(res.dropdownList) ;
             this.listCount=this.commonToiletTypeList.data 
-            this.snackbar.open('Common Toilet Type List failed. ' + res._message, '', {
+            this.snackbar.open('' + res._message, '', {
               duration: 10000
             });
           } 
           else { 
             this.commonToiletTypeList=new MatTableDataSource(res.dropdownList) ;
+            this.commonToiletTypeListForExcel = res.dropdownList;
             this.commonToiletTypeList.sort=this.sort;  
             this.listCount=this.commonToiletTypeList.data   
           }
@@ -182,4 +189,24 @@ export class CommonToiletTypeComponent implements OnInit {
       }
     );
   }
+
+  exportCommonToiletTypeListToExcel(){
+    if(this.commonToiletTypeListForExcel.length!=0){
+      let commonToiletType=this.commonToiletTypeListForExcel?.map((item)=>{
+        return{
+          Title: item.lovColumnValue,
+          CreatedBy: item.createdBy!==null ? item.createdBy: '-',
+          CreateDate: this.commonfunction.transformDateWithTime(item.createdOn),
+          UpdatedBy: item.updatedBy!==null ? item.updatedBy: '-',
+          UpdateDate:  this.commonfunction.transformDateWithTime(item.updatedOn)
+        }
+      });
+      this.excelService.exportAsExcelFile(commonToiletType,'Common_Toilet_Type_List_')
+     }
+     else{
+    this.snackbar.open('No Records Found. Failed to Export Common Toilet Type List','', {
+      duration: 5000
+    });
+  }
+}
 }

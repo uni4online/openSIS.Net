@@ -300,5 +300,21 @@ namespace opensisAPI.Controllers
             return languageListModel;
         }
 
+        [HttpPost("getDashboardView")]
+        public ActionResult<DashboardViewModel> GetDashboardView(DashboardViewModel dashboardViewModel)
+        {
+            DashboardViewModel dashboardView = new DashboardViewModel();
+            try
+            {
+                dashboardView = _commonService.GetDashboardView(dashboardViewModel);
+            }
+            catch (Exception es)
+            {
+                dashboardView._failure = true;
+                dashboardView._message = es.Message;
+            }
+            return dashboardView;
+        }
+
     }
 }

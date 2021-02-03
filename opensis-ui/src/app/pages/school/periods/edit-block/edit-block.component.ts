@@ -76,7 +76,7 @@ export class EditBlockComponent implements OnInit {
                 this.snackbar.open('Block/Rotation Days Successfully Created', '', {
                   duration: 10000
                 });
-                this.dialogRef.close('submited');
+                this.dialogRef.close({mode:'submited', currentBlockId:res.block.blockId});
               }
             }
           }

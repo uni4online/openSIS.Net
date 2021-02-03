@@ -242,18 +242,6 @@ export class AppComponent {
         ]
       },
       { type: 'dropdown',
-        label: 'Extracurricular',
-        icon: icactivity,
-        children: [
-          {
-            type: 'link',
-            label: 'Student Screen',
-            route: '/school/Studentscreen',
-            icon: icinfo
-          }
-        ]
-      },
-      { type: 'dropdown',
         label: 'Messaging',
         icon: icmessage,
         children: [

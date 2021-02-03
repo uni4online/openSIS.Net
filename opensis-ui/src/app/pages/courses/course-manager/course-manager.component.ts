@@ -28,6 +28,8 @@ import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confi
 import {GradeLevelService} from '../../../services/grade-level.service';
 import {GetAllGradeLevelsModel } from '../../../models/gradeLevelModel';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { LayoutService } from 'src/@vex/services/layout.service';
+
 @Component({
   selector: 'vex-course-manager',
   templateUrl: './course-manager.component.html',
@@ -76,6 +78,7 @@ export class CourseManagerComponent implements OnInit {
   form:FormGroup;
   filterCourseList=[];
   filterCourseCount=0;
+  globalFilterCourseList=[];
   selectedCourse={
     "tenantId": "",
     "schoolId": 0,
@@ -94,7 +97,7 @@ export class CourseManagerComponent implements OnInit {
     "updatedBy": "",
     "updatedOn": ""
   };
-  
+  globalFilterCourseCount=0;
   courseIndex = 0;
   totalCourse= 0;
   programList=[];
@@ -103,25 +106,30 @@ export class CourseManagerComponent implements OnInit {
   noFilterMode=true; 
   courseListClone=[];
   standard;
+  name;
+  cloneFilterCourseList=[];
+  selectedCourseFlag:boolean;
   constructor(
     public translateService:TranslateService,
     private dialog: MatDialog,
     private gradeLevelService:GradeLevelService,
     private courseManager:CourseManagerService,
     private snackbar: MatSnackBar,
-    private fb: FormBuilder) {
+    private fb: FormBuilder,
+    private layoutService: LayoutService) {
       this.getAllCourse();
-    translateService.use('en');
-    this.EffortGradeScaleModelList = [
-      {student_name: 'Danny Anderson', student_id: '5', grade_level: 'Grade 9', schedule_date: 'Jan 02, 2021'},
-      {student_name: 'Justin Aponte', student_id: '55', grade_level: 'Grade 9', schedule_date: 'Jan 02, 2021'},
-      {student_name: 'Julie Davis', student_id: '63', grade_level: 'Grade 9', schedule_date: 'Jan 02, 2021'},
-      {student_name: 'Javier Holmes', student_id: '15', grade_level: 'Grade 9', schedule_date: 'Jan 02, 2021'},
-      {student_name: 'Roman Loafer', student_id: '91', grade_level: 'Grade 9', schedule_date: 'Jan 02, 2021'},
-      {student_name: 'Laura Paiva', student_id: '27', grade_level: 'Grade 9', schedule_date: 'Jan 02, 2021'},
-      {student_name: 'Colin Parker', student_id: '41', grade_level: 'Grade 9', schedule_date: 'Jan 02, 2021'},
-    ]
-  }
+      translateService.use('en');
+      if(localStorage.getItem("collapseValue") !== null){
+        if( localStorage.getItem("collapseValue") === "false"){
+          this.layoutService.expandSidenav();
+        }else{
+          this.layoutService.collapseSidenav();
+        } 
+      }else{
+        this.layoutService.expandSidenav();
+      }
+    
+    }
 
   ngOnInit(): void {
     this.searchCtrl = new FormControl();
@@ -133,6 +141,7 @@ export class CourseManagerComponent implements OnInit {
     this.getAllProgramList();
     this.getAllSubjectList();
     this.getAllGradeLevelList();
+    
   }
 
   getAllCourse(){
@@ -140,18 +149,23 @@ export class CourseManagerComponent implements OnInit {
       if(data._failure){
         if(data._message==="NO RECORD FOUND"){
           this.courseList=[];
+          this.totalCourse = 0;
+          this.courseListClone =[];
+          for (const prop of Object.getOwnPropertyNames(this.selectedCourse)) {
+            delete this.selectedCourse[prop];
+          }
           this.snackbar.open('NO RECORD FOUND. ', '', {
-            duration: 10000
+            duration: 1000
           });        
         }
       }else{      
-        this.courseList=data.courseList;
-        
-        
-        this.courseListClone = data.courseList;
-        this.selectedCourse = this.courseList[0]; 
-        this.standard = this.courseList[0].courseStandard;
-        this.totalCourse = this.courseList.length;        
+        this.courseList=data.courseList;     
+        this.courseListClone = data.courseList;           
+        this.totalCourse = this.courseList.length;  
+        if(this.totalCourse > 0){
+          this.selectedCourse = this.courseList[0]; 
+          this.standard = this.courseList[0].courseStandard;
+        }      
       }
     });
   }
@@ -180,8 +194,62 @@ export class CourseManagerComponent implements OnInit {
     column.visible = !column.visible;
   }
 
-  get visibleColumns() {
-    return this.columns.filter(column => column.visible).map(column => column.property);
+ 
+
+  globalFilter(value){    
+    var chkFlag = "N";
+    if(this.cloneFilterCourseList.length > 0){
+      if(value != ""){
+      for(let i = 0;i< this.cloneFilterCourseList.length ;i++){
+        var obj1 = {};     
+        if(value == this.cloneFilterCourseList[i].courseTitle || value == this.cloneFilterCourseList[i].courseSubject || value == this.cloneFilterCourseList[i].courseProgram){   
+                     
+            obj1["courseTitle"]= this.cloneFilterCourseList[i].courseTitle,
+            obj1["courseShortName"] = this.cloneFilterCourseList[i].courseShortName,
+            obj1["courseGradeLevel"] = this.cloneFilterCourseList[i].courseGradeLevel,
+            obj1["courseProgram"] = this.cloneFilterCourseList[i].courseProgram,
+            obj1["courseSubject"] = this.cloneFilterCourseList[i].courseSubject   
+            this.globalFilterCourseList.push(obj1);  
+            chkFlag = "Y";    
+            this.filterCourseList = [];             
+          }    
+        }
+        if(chkFlag=="N"){
+          this.globalFilterCourseList = [];
+          this.courseList = [];
+        }
+      }else{
+        this.getAllCourse();
+      }
+    }else{
+      if(value != ""){
+        for(let i = 0;i< this.courseListClone.length ;i++){
+          var obj1 = {};     
+          if(value == this.courseListClone[i].courseTitle || value == this.courseListClone[i].courseSubject || value == this.courseListClone[i].courseProgram){                   
+              obj1["courseTitle"]= this.courseListClone[i].courseTitle,
+              obj1["courseShortName"] = this.courseListClone[i].courseShortName,
+              obj1["courseGradeLevel"] = this.courseListClone[i].courseGradeLevel,
+              obj1["courseProgram"] = this.courseListClone[i].courseProgram,
+              obj1["courseSubject"] = this.courseListClone[i].courseSubject   
+              this.globalFilterCourseList.push(obj1);  
+              chkFlag = "Y";                 
+            }    
+          }
+          this.globalFilterCourseCount = this.globalFilterCourseList.length;
+          if(this.globalFilterCourseList.length > 0){
+            this.selectedCourse = this.globalFilterCourseList[0]; 
+            
+          }   
+          if(chkFlag=="N"){            
+            this.globalFilterCourseList = [];
+            this.courseList = [];
+            this.globalFilterCourseCount=0;
+            this.totalCourse=0;
+          }
+      }else{
+        this.getAllCourse();
+      }     
+    }    
   }
   filterCourse(event,category){
   
@@ -196,9 +264,9 @@ export class CourseManagerComponent implements OnInit {
       var program  = this.form.value.program; 
     }
     if(category === "Grade"){
-      var gradeLevel  = event.value.toUpperCase(); 
+      var gradeLevel  = event.value; 
     }else{
-      var gradeLevel  = this.form.value.gradeLevel.toUpperCase(); 
+      var gradeLevel  = this.form.value.gradeLevel; 
     }
     
     if(subject !== "all" && program !== "all" && gradeLevel !== "all"){
@@ -206,9 +274,9 @@ export class CourseManagerComponent implements OnInit {
       var l_flag = "N";
       for(let i = 0;i< this.courseListClone.length ;i++){
         var obj1 = {};      
+       
+        if(subject == this.courseListClone[i].courseSubject && program == this.courseListClone[i].courseProgram && gradeLevel == this.courseListClone[i].courseGradeLevel ){
         
-        if(subject == this.courseListClone[i].courseSubject && program == this.courseListClone[i].courseProgram ){
-         // if( gradeLevel == this.courseListClone[i].courseGradeLevel){
             var l_flag = "Y";             
             obj1["courseTitle"]= this.courseListClone[i].courseTitle,
             obj1["courseShortName"] = this.courseListClone[i].courseShortName,
@@ -216,7 +284,8 @@ export class CourseManagerComponent implements OnInit {
             obj1["courseProgram"] = this.courseListClone[i].courseProgram,
             obj1["courseSubject"] = this.courseListClone[i].courseSubject   
             this.filterCourseList.push(obj1);  
-          //}
+            this.cloneFilterCourseList.push(obj1);  
+         
                      
           }
           
@@ -230,11 +299,12 @@ export class CourseManagerComponent implements OnInit {
         if(l_flag == "N"){
           this.totalCourse = 0;
           this.filterCourseList = [];
+          this.cloneFilterCourseList = [];
           this.courseList=[];
           
         }
       }else{
-        
+        this.cloneFilterCourseList = [];
         this.filterCourseList = [];       
         this.getAllCourse();
       }
@@ -252,8 +322,7 @@ export class CourseManagerComponent implements OnInit {
   }
 
   showDetails(element,index) {
-    this.courseIndex = index;
-    
+    this.courseIndex = index;    
     this.selectedCourse = element;
     this.standard = element.courseStandard;
   }
@@ -300,13 +369,17 @@ export class CourseManagerComponent implements OnInit {
   openModalManageSubjects() {
     this.dialog.open(ManageSubjectsComponent, {
       width: '500px'
-    });
+    }).afterClosed().subscribe((data) => {
+      this.getAllSubjectList();
+    });   
   }
 
   openModalManagePrograms() {
     this.dialog.open(ManageProgramsComponent, {
       width: '500px'
-    });
+    }).afterClosed().subscribe((data) => {
+      this.getAllProgramList();
+    });   
   }
   confirmDelete(){
     

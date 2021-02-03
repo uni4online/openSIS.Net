@@ -17,6 +17,7 @@ import icCheckBoxOutlineBlank from '@iconify/icons-ic/check-box-outline-blank';
 import icEdit from '@iconify/icons-ic/edit';
 import { ImageCropperService } from '../../../../services/image-cropper.service';
 import { MiscModel } from '../../../../models/misc-data-student.model';
+import { ModuleIdentifier } from '../../../../enums/module-identifier.enum';
 @Component({
   selector: 'vex-student-addressandcontacts',
   templateUrl: './student-addressandcontacts.component.html',
@@ -30,8 +31,8 @@ import { MiscModel } from '../../../../models/misc-data-student.model';
 export class StudentAddressandcontactsComponent implements OnInit {
   @Input() studentDetailsForViewAndEdit;
   @ViewChild('f') currentForm: NgForm;
+  @ViewChild('checkBox') checkBox;
   f: NgForm;
-
   nameOfMiscValuesForView:MiscModel=new MiscModel;
   icEdit = icEdit;
   icCheckBox = icCheckBox;
@@ -63,7 +64,6 @@ export class StudentAddressandcontactsComponent implements OnInit {
       this.data=this.studentDetailsForViewAndEdit?.studentMaster;
       this.studentAddModel = this.studentDetailsForViewAndEdit;
       this.cloneStudentAddModel=JSON.stringify(this.studentAddModel);
-      this.imageCropperService.enableUpload(false);
     }else{
       this.studentService.changePageMode(this.studentCreateMode);
       this.studentAddModel = this.studentService.getStudentDetails();
@@ -79,7 +79,6 @@ export class StudentAddressandcontactsComponent implements OnInit {
     this.getAllCountry();
     this.studentAddModel.studentMaster.homeAddressCountry=+this.studentAddModel.studentMaster.homeAddressCountry;
     this.studentAddModel.studentMaster.mailingAddressCountry=+this.studentAddModel.studentMaster.mailingAddressCountry;
-    this.imageCropperService.enableUpload(true);
   }
 
   cancelEdit(){
@@ -92,7 +91,6 @@ export class StudentAddressandcontactsComponent implements OnInit {
     this.studentCreateMode = this.studentCreate.VIEW;
     this.studentService.changePageMode(this.studentCreateMode);
     this.data=this.studentAddModel.studentMaster; 
-    this.imageCropperService.enableUpload(false);
     this.imageCropperService.cancelImage("student");
   }
 
@@ -132,7 +130,7 @@ export class StudentAddressandcontactsComponent implements OnInit {
         if (data._failure) {
           this.countryListArr=[];
         } else {        
-          this.countryListArr=data.tableCountry;    
+          this.countryListArr=data.tableCountry?.sort((a, b) => {return a.name < b.name ? -1 : 1;} )   
          if(this.studentCreateMode==this.studentCreate.VIEW){
           this.findCountryNameById();
          }
@@ -154,7 +152,18 @@ export class StudentAddressandcontactsComponent implements OnInit {
       })  
   }
 
+  checkBoxCheckInEditMode(){
+    if(this.checkBox?.checked){
+      this.studentAddModel.studentMaster.mailingAddressLineOne=this.studentAddModel.studentMaster.homeAddressLineOne;
+      this.studentAddModel.studentMaster.mailingAddressLineTwo=this.studentAddModel.studentMaster.homeAddressLineTwo;
+      this.studentAddModel.studentMaster.mailingAddressCity=this.studentAddModel.studentMaster.homeAddressCity;
+      this.studentAddModel.studentMaster.mailingAddressState=this.studentAddModel.studentMaster.homeAddressState;
+      this.studentAddModel.studentMaster.mailingAddressZip=this.studentAddModel.studentMaster.homeAddressZip;
+      this.studentAddModel.studentMaster.mailingAddressCountry=+this.studentAddModel.studentMaster.homeAddressCountry;
+    }
+  }
   submit(){
+    this.checkBoxCheckInEditMode();
     this.studentService.UpdateStudent(this.studentAddModel).subscribe(data => {                        
       if (typeof (data) == 'undefined') {
         this.snackbar.open('Student Updation failed. ' + sessionStorage.getItem("httpError"), '', {

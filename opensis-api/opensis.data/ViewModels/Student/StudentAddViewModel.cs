@@ -14,5 +14,6 @@ namespace opensis.data.ViewModels.Student
         public string LoginEmail { get; set; }
         public string PasswordHash { get; set; }
         public bool? PortalAccess { get; set; }
+        public string CurrentGradeLevel { get; set; }
     }
 }

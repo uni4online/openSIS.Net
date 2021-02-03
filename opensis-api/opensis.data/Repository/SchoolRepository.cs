@@ -522,11 +522,11 @@ namespace opensis.data.Repository
                 };
                 school.schoolMaster.StudentEnrollmentCode = new List<StudentEnrollmentCode>()
                 {
-                     new StudentEnrollmentCode(){TenantId=school.schoolMaster.TenantId, SchoolId=school.schoolMaster.SchoolId, EnrollmentCode=1, Title="New", ShortName="NEW", Type="Add", LastUpdated=DateTime.UtcNow, UpdatedBy=school.schoolMaster.CreatedBy },
-                     new StudentEnrollmentCode(){TenantId=school.schoolMaster.TenantId, SchoolId=school.schoolMaster.SchoolId, EnrollmentCode=2, Title="Dropped Out", ShortName="DROP", Type="Drop", LastUpdated=DateTime.UtcNow, UpdatedBy=school.schoolMaster.CreatedBy },
-                     new StudentEnrollmentCode(){TenantId=school.schoolMaster.TenantId, SchoolId=school.schoolMaster.SchoolId, EnrollmentCode=3, Title="Rolled Over", ShortName="ROLL", Type="Rolled Over", LastUpdated=DateTime.UtcNow, UpdatedBy=school.schoolMaster.CreatedBy },
-                     new StudentEnrollmentCode(){TenantId=school.schoolMaster.TenantId, SchoolId=school.schoolMaster.SchoolId, EnrollmentCode=4, Title="Transferred In", ShortName="TRAN", Type="Enroll (Transfer)", LastUpdated=DateTime.UtcNow, UpdatedBy=school.schoolMaster.CreatedBy },
-                     new StudentEnrollmentCode(){TenantId=school.schoolMaster.TenantId, SchoolId=school.schoolMaster.SchoolId, EnrollmentCode=5, Title="Transferred Out", ShortName="TRAN", Type="Drop (Transfer)", LastUpdated=DateTime.UtcNow, UpdatedBy=school.schoolMaster.CreatedBy }
+                     new StudentEnrollmentCode(){TenantId=school.schoolMaster.TenantId, SchoolId=school.schoolMaster.SchoolId, EnrollmentCode=1, Title="New", ShortName="NEW", SortOrder=1, Type="Add", LastUpdated=DateTime.UtcNow, UpdatedBy=school.schoolMaster.CreatedBy },
+                     new StudentEnrollmentCode(){TenantId=school.schoolMaster.TenantId, SchoolId=school.schoolMaster.SchoolId, EnrollmentCode=2, Title="Dropped Out", ShortName="DROP", SortOrder=2, Type="Drop", LastUpdated=DateTime.UtcNow, UpdatedBy=school.schoolMaster.CreatedBy },
+                     new StudentEnrollmentCode(){TenantId=school.schoolMaster.TenantId, SchoolId=school.schoolMaster.SchoolId, EnrollmentCode=3, Title="Rolled Over", ShortName="ROLL", SortOrder=3, Type="Rolled Over", LastUpdated=DateTime.UtcNow, UpdatedBy=school.schoolMaster.CreatedBy },
+                     new StudentEnrollmentCode(){TenantId=school.schoolMaster.TenantId, SchoolId=school.schoolMaster.SchoolId, EnrollmentCode=4, Title="Transferred In", ShortName="TRAN", SortOrder=4, Type="Enroll (Transfer)", LastUpdated=DateTime.UtcNow, UpdatedBy=school.schoolMaster.CreatedBy },
+                     new StudentEnrollmentCode(){TenantId=school.schoolMaster.TenantId, SchoolId=school.schoolMaster.SchoolId, EnrollmentCode=5, Title="Transferred Out", ShortName="TRAN", SortOrder=5, Type="Drop (Transfer)", LastUpdated=DateTime.UtcNow, UpdatedBy=school.schoolMaster.CreatedBy }
                 };
 
                 school.schoolMaster.Block = new List<Block>()

@@ -1,7 +1,10 @@
 <mat-card-content>
 
     <div @stagger fxLayout="column">
-        <h3 class="text-blue pt-6 pb-2 px-4">{{'studentHomeAddress'|translate}}</h3>
+        <div class="flex w-full items-center pb-4 px-4">
+            <h4 class="text-blue font-medium">{{'studentHomeAddress' | translate}}</h4>
+            <a class="cursor-pointer bg-primary hover:bg-blue text-white font-bold py-2 px-4 rounded ml-5"><i class="icon icon-location4 mr-3"></i>Show on Map</a>
+        </div>
         <ul class="grid grid-cols-3 col-gap-8 row-gap-10 mt-2 mx-4">
             <li>
                 <label class="text-sm leading-5 text-gray">{{'streetAddress1' | translate}}</label>
@@ -43,7 +46,10 @@
 
         <hr class="-mx-4 mt-6">
 
-        <h3 class="text-blue pt-6 pb-2 px-4">{{'studentMailingAddress'|translate}}</h3>
+        <div class="flex w-full items-center py-4 mx-4">
+            <h4 class="text-blue font-medium">{{'studentMailingAddress' | translate}}</h4>
+            <a class="cursor-pointer bg-primary hover:bg-blue text-white font-bold py-2 px-4 rounded ml-5"><i class="icon icon-location4 mr-3"></i>Show on Map</a>
+        </div>
         <div class="mx-4 flex mb-4" *ngIf="studentViewDetails.studentMaster?.mailingAddressSameToHome; else mailingAddressNotSameToHome">
             <mat-icon [icIcon]="icCheckBox" class="mr-3"></mat-icon>
             <span class="text-base">{{'sameAsHomeAddress' | translate}}</span>

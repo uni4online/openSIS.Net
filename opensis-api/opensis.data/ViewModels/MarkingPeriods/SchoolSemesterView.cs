@@ -6,6 +6,10 @@ namespace opensis.data.ViewModels.MarkingPeriods
 {
     public class SchoolSemesterView
     {
+        public SchoolSemesterView()
+        {
+            Children = new List<SchoolQuarterView>();
+        }
         public Guid TenantId { get; set; }
         public int SchoolId { get; set; }
         public int MarkingPeriodId { get; set; }

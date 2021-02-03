@@ -16,7 +16,8 @@ import {MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { ParentInfoService } from '../../../../../services/parent-info.service';
 import { GetAllGradeLevelsModel } from '../../../../../models/gradeLevelModel';
 import { GradeLevelService } from '../../../../../services/grade-level.service';
-
+import { LovList } from '../../../../../models/lovModel';
+import { CommonService } from '../../../../../services/common.service';
 @Component({
   selector: 'vex-add-sibling',
   templateUrl: './add-sibling.component.html',
@@ -38,21 +39,23 @@ export class AddSiblingComponent implements OnInit {
   hideSearchBoxAfterSearch=true;
   associatStudent:AssociateStudent=new AssociateStudent();
   associateMultipleStudents: NgForm;
-  relationShipEnum = Object.keys(relationShip);
+  relationShipList = [];
   addParentInfoModel: AddParentInfoModel = new AddParentInfoModel();
   parentData;
   mode;
   gradeLevelArr;
+  lovList: LovList = new LovList();
   constructor(private dialogRef: MatDialogRef<AddSiblingComponent>,
     private fb: FormBuilder,
     private studentService:StudentService,
     private snackbar: MatSnackBar,
     private parentInfoService:ParentInfoService,
     private gradeLevelService:GradeLevelService,
+    private commonService:CommonService,
     @Inject(MAT_DIALOG_DATA) public val) { }
 
   ngOnInit(): void {
-    
+    this.getRelationship();
     this.getGradeLevel();
     this.form = this.fb.group(
       {
@@ -69,7 +72,17 @@ export class AddSiblingComponent implements OnInit {
   cancel(){
     this.dialogRef.close(false);
   }
-
+  getRelationship(){
+    
+      this.lovList.lovName="Relationship";
+      this.commonService.getAllDropdownValues(this.lovList).subscribe(
+        (res:LovList)=>{      
+          this.relationShipList = res.dropdownList; 
+                
+        }
+      );
+   
+  }
   getGradeLevel(){
     this.getAllGradeLevelsModel.schoolId=+sessionStorage.getItem("selectedSchoolId");
     this.getAllGradeLevelsModel._tenantName=sessionStorage.getItem("tenant");
@@ -243,7 +256,7 @@ export class AddSiblingComponent implements OnInit {
           }
         })    
       }
-    }
+    } 
   }else{
       this.studentSiblingAssociation.studentMaster.studentId=studentDetails.studentId;
       this.studentSiblingAssociation.studentMaster.schoolId=studentDetails.schoolId;

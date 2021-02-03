@@ -382,5 +382,25 @@ namespace opensis.core.Common.Services
 
         }
 
+        /// <summary>
+        /// Dashboard View
+        /// </summary>
+        /// <param name="dashboardViewModel"></param>
+        /// <returns></returns>
+        public DashboardViewModel GetDashboardView(DashboardViewModel dashboardViewModel)
+        {
+            DashboardViewModel dashboardView = new DashboardViewModel();
+            if (TokenManager.CheckToken(dashboardViewModel._tenantName, dashboardViewModel._token))
+            {
+                dashboardView = this.commonRepository.GetDashboardView(dashboardViewModel);
+            }
+            else
+            {
+                dashboardView._failure = true;
+                dashboardView._message = TOKENINVALID;              
+            }
+            return dashboardView;
+        }
+
     }
 }

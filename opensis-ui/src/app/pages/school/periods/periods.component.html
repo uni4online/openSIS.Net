@@ -1,5 +1,7 @@
-<div class="mb-2 lg:flex lg:flex-wrap">
-    <div class="lg:w-3/12 lg:pr-4">
+
+
+<div class="mb-2 lg:flex w-full lg:flex-wrap">
+    <div class="lg:w-3/12 lg:pr-4" *ngIf="blockCount > 1">
         <mat-card class="w-full p-0" fxFlex="auto">
             <div class="py-4">
                 <h4 class="px-gutter mb-4">{{'blockRotationDays'|translate}}</h4>
@@ -23,17 +25,18 @@
             </div>
         </mat-card>
     </div>
-    <div class="lg:w-9/12 lg:pl-4">
+
+    <div [ngClass]="(blockCount > 1)?'lg:w-9/12 lg:pl-4':'flex-1' ">
         <mat-card class="w-full p-0" fxFlex="auto">
-            <!-- <div class="flex justify-between mx-6 py-4">
-                <h4>Showing All Day Rotation</h4>
-                <button color="" class="text-primary" mat-button type="button" (click)='goToAddBlock()'>
+            <div *ngIf="2 > blockCount" class="flex items-center mx-6 py-4">
+                <h4>Showing {{currentBlockName}} Rotation</h4>
+                <button color="primary" class="ml-4" mat-raised-button type="button" (click)='goToAddBlock()'>
                     <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true" size="24px">
                     </ic-icon>
                     <span>{{'addBlockRotationDay'|translate}}</span>
                 </button>
             </div>
-            <hr/> -->
+            <hr/>
             <div class="bg-white h-16 border-b sticky left-0 px-4" fxLayout="row" fxLayoutAlign="start center">
                 <div class="flex w-full justify-between">
                     <div class="py-3" fxFlex="300px" fxFlex.lt-md="auto" fxHide.xs fxLayout="row"

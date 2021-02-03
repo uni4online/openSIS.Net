@@ -14,6 +14,7 @@ import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
   ]
 })
 
+
 export class ViewStaffAddressinfoComponent implements OnInit {
   @Input() staffCreateMode
   @Input() categoryId

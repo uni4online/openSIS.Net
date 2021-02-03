@@ -15,11 +15,7 @@
                         <div class="flex">
                             <input matInput [(ngModel)]="searchKey" (keyup)="applyFilter()"
                                 class="py-3 border-0 outline-none w-full bg-transparent" appearance="outline"
-                                color="primary" placeholder="Search..." type="text">
-                            <button mat-button matSuffix mat-icon-button aria-label="clear" *ngIf="searchKey"
-                                (click)="onSearchClear()">
-                                <mat-icon>close</mat-icon>
-                            </button>
+                                color="primary" placeholder="Search..." type="search" (search)="onSearchClear()">
                         </div>
                     </div>
 

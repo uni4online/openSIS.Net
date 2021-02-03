@@ -80,19 +80,19 @@
 
             <h3 class="text-blue px-4 pb-2 pt-10">{{'studentMailingAddress'|translate}}</h3>
             <div class="px-4 pb-3">
-                <mat-checkbox [checked]="checkBoxChecked" [(ngModel)]="studentAddModel.studentMaster.mailingAddressSameToHome" (click)="copyHomeAddress($event)" name="mailingAddressSameToHome" color="primary">{{'sameAsHomeAddress' | translate}}</mat-checkbox>
+                <mat-checkbox [checked]="checkBoxChecked" #checkBox [(ngModel)]="studentAddModel.studentMaster.mailingAddressSameToHome" (click)="copyHomeAddress($event)" name="mailingAddressSameToHome" color="primary">{{'sameAsHomeAddress' | translate}}</mat-checkbox>
             </div>
             <div class="mb-2 md:flex md:flex-wrap">
                 <div class="flex flex-1 mx-4 md:w-1/2">
                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                         <mat-label>{{'streetAddress1'|translate}}</mat-label>
-                        <input [(ngModel)]="studentAddModel.studentMaster.mailingAddressLineOne"  name="mailingAddressLineOne" matInput>
+                        <input [disabled]="checkBox.checked" [(ngModel)]="studentAddModel.studentMaster.mailingAddressLineOne"  name="mailingAddressLineOne" matInput>
                     </mat-form-field>
                 </div>
                 <div class="flex flex-1 mx-4 md:w-1/2">
                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                         <mat-label>{{'streetAddress2'|translate}}</mat-label>
-                        <input [(ngModel)]="studentAddModel.studentMaster.mailingAddressLineTwo"  name="mailingAddressLineTwo" matInput>
+                        <input [disabled]="checkBox.checked"  [(ngModel)]="studentAddModel.studentMaster.mailingAddressLineTwo"  name="mailingAddressLineTwo" matInput>
                     </mat-form-field>
                 </div>
             </div>
@@ -100,18 +100,19 @@
                 <div class="flex flex-1 mx-4 md:w-1/2">
                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                         <mat-label>{{'country'|translate}}</mat-label>
-                        <mat-select [(ngModel)]="studentAddModel.studentMaster.mailingAddressCountry"  name="mailingAddressCountry">
+                        <mat-select [disabled]="checkBox.checked"  [(ngModel)]="studentAddModel.studentMaster.mailingAddressCountry"  name="mailingAddressCountry">
                             <mat-option value=""></mat-option>
                             <mat-option *ngFor="let country of countryListArr" [value]= 'country.id'>
                                 {{country.name}}
                             </mat-option>
                         </mat-select>
+                  
                     </mat-form-field>
                 </div>
                 <div class="flex flex-1 mx-4 md:w-1/2">
                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                         <mat-label>{{'stateProvinceLocality'|translate}}</mat-label>
-                        <input [(ngModel)]="studentAddModel.studentMaster.mailingAddressState"  name="mailingAddressState" matInput>
+                        <input [disabled]="checkBox.checked"  [(ngModel)]="studentAddModel.studentMaster.mailingAddressState"  name="mailingAddressState" matInput>
                     </mat-form-field>
                 </div>
             </div>
@@ -119,13 +120,13 @@
                 <div class="flex flex-1 mx-4 md:w-1/2">
                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                         <mat-label>{{'city'|translate}}</mat-label>
-                        <input [(ngModel)]="studentAddModel.studentMaster.mailingAddressCity"  name="mailingAddressCity" matInput>
+                        <input [disabled]="checkBox.checked"  [(ngModel)]="studentAddModel.studentMaster.mailingAddressCity"  name="mailingAddressCity" matInput>
                     </mat-form-field>
                 </div>
                 <div class="flex flex-1 mx-4 md:w-1/2">
                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                         <mat-label>{{'zip/Postal Code'|translate}}</mat-label>
-                        <input [(ngModel)]="studentAddModel.studentMaster.mailingAddressZip"  name="mailingAddressZip" matInput>
+                        <input [disabled]="checkBox.checked"  [(ngModel)]="studentAddModel.studentMaster.mailingAddressZip"  name="mailingAddressZip" matInput>
                     </mat-form-field>
                 </div>
             </div>
@@ -137,7 +138,7 @@
                 <div class="flex flex-1 mx-4 md:w-1/2">
                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                         <mat-label>{{'homePhone'|translate}}</mat-label>
-                        <input #homePhone="ngModel" maxlength="12" appPhoneMask [(ngModel)]="studentAddModel.studentMaster.homePhone"  name="homePhone" matInput>
+                        <input #homePhone="ngModel" maxlength="30" [(ngModel)]="studentAddModel.studentMaster.homePhone"  name="homePhone" matInput>
                         <mat-error
                         *ngIf="!homePhone.errors?.required && homePhone.errors?.invalidPhoneNumber">
                         {{'invalidTelephoneNumber'|translate}}</mat-error>
@@ -146,7 +147,7 @@
                 <div class="flex flex-1 mx-4 md:w-1/2">
                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                         <mat-label>{{'mobilePhone'|translate}}</mat-label>
-                        <input [(ngModel)]="studentAddModel.studentMaster.mobilePhone" appPhonevalidator #mobilePhone="ngModel" name="mobilePhone" matInput>
+                        <input maxlength="30" [(ngModel)]="studentAddModel.studentMaster.mobilePhone" #mobilePhone="ngModel" name="mobilePhone" matInput>
                         <mat-error  *ngIf="mobilePhone.errors?.phonevalidator">
                             {{'pleaseProvideAValidMobileNo'|translate}} 
                           </mat-error>

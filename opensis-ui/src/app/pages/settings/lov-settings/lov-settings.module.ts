@@ -26,8 +26,11 @@ import { SchoolLevelComponent } from '../../list-of-values/school-level/school-l
 import { SchoolClassificationComponent } from '../../list-of-values/school-classification/school-classification.component';
 import { CountriesComponent } from '../../list-of-values/countries/countries.component';
 import { MaleToiletTypeComponent } from '../../list-of-values/male-toilet-type/male-toilet-type.component';
+import { MaleToiletAccessibilityComponent } from '../../list-of-values/male-toilet-accessibility/male-toilet-accessibility.component';
 import { FemaleToiletTypeComponent } from '../../list-of-values/female-toilet-type/female-toilet-type.component';
+import { FemaleToiletAccessibilityComponent } from '../../list-of-values/female-toilet-accessibility/female-toilet-accessibility.component';
 import { CommonToiletTypeComponent } from '../../list-of-values/common-toilet-type/common-toilet-type.component';
+import { CommonToiletAccessibilityComponent } from '../../list-of-values/common-toilet-accessibility/common-toilet-accessibility.component';
 import { RaceComponent } from '../../list-of-values/race/race.component';
 import { EthnicityComponent } from '../../list-of-values/ethnicity/ethnicity.component';
 import { LanguageComponent } from '../../list-of-values/language/language.component';
@@ -48,8 +51,11 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
     SchoolClassificationComponent,
     CountriesComponent,
     MaleToiletTypeComponent,
+    MaleToiletAccessibilityComponent,
     FemaleToiletTypeComponent,
+    FemaleToiletAccessibilityComponent,
     CommonToiletTypeComponent,
+    CommonToiletAccessibilityComponent,
     RaceComponent,
     EthnicityComponent,
     LanguageComponent

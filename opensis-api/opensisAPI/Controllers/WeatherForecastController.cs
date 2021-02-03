@@ -312,11 +312,11 @@ namespace opensisAPI.Controllers
                 },
                    StudentEnrollmentCode= new List<StudentEnrollmentCode>()
                 {
-                     new StudentEnrollmentCode(){TenantId=tenantId, SchoolId=(int)schoolId, EnrollmentCode=1, Title="New", ShortName="NEW", Type="Add", LastUpdated=DateTime.UtcNow, UpdatedBy="Sayan Das" },
-                     new StudentEnrollmentCode(){TenantId=tenantId, SchoolId=(int)schoolId, EnrollmentCode=2, Title="Dropped Out", ShortName="DROP", Type="Drop", LastUpdated=DateTime.UtcNow, UpdatedBy="Sayan Das" },
-                     new StudentEnrollmentCode(){TenantId=tenantId, SchoolId=(int)schoolId, EnrollmentCode=3, Title="Rolled Over", ShortName="ROLL", Type="Rolled Over", LastUpdated=DateTime.UtcNow, UpdatedBy="Sayan Das" },
-                     new StudentEnrollmentCode(){TenantId=tenantId, SchoolId=(int)schoolId, EnrollmentCode=4, Title="Transferred In", ShortName="TRAN", Type="Enroll (Transfer)", LastUpdated=DateTime.UtcNow, UpdatedBy="Sayan Das" },
-                     new StudentEnrollmentCode(){TenantId=tenantId, SchoolId=(int)schoolId, EnrollmentCode=5, Title="Transferred Out", ShortName="TRAN", Type="Drop (Transfer)", LastUpdated=DateTime.UtcNow, UpdatedBy="Sayan Das" }
+                     new StudentEnrollmentCode(){TenantId=tenantId, SchoolId=(int)schoolId, EnrollmentCode=1, Title="New", ShortName="NEW", SortOrder=1, Type="Add", LastUpdated=DateTime.UtcNow, UpdatedBy="Sayan Das" },
+                     new StudentEnrollmentCode(){TenantId=tenantId, SchoolId=(int)schoolId, EnrollmentCode=2, Title="Dropped Out", ShortName="DROP", SortOrder=2, Type="Drop", LastUpdated=DateTime.UtcNow, UpdatedBy="Sayan Das" },
+                     new StudentEnrollmentCode(){TenantId=tenantId, SchoolId=(int)schoolId, EnrollmentCode=3, Title="Rolled Over", ShortName="ROLL", SortOrder=3, Type="Rolled Over", LastUpdated=DateTime.UtcNow, UpdatedBy="Sayan Das" },
+                     new StudentEnrollmentCode(){TenantId=tenantId, SchoolId=(int)schoolId, EnrollmentCode=4, Title="Transferred In", ShortName="TRAN", SortOrder=4, Type="Enroll (Transfer)", LastUpdated=DateTime.UtcNow, UpdatedBy="Sayan Das" },
+                     new StudentEnrollmentCode(){TenantId=tenantId, SchoolId=(int)schoolId, EnrollmentCode=5, Title="Transferred Out", ShortName="TRAN", SortOrder=5, Type="Drop (Transfer)", LastUpdated=DateTime.UtcNow, UpdatedBy="Sayan Das" }
                 },Block=new List<Block>()
                 {
                      new Block(){TenantId=tenantId, SchoolId=(int)schoolId, BlockId=1, BlockTitle="All Day", BlockSortOrder=1, CreatedOn=DateTime.UtcNow, CreatedBy="Sayan Das" }

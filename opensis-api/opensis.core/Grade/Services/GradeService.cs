@@ -815,7 +815,120 @@ namespace opensis.core.Grade.Services
             }
             return checkStandardRefNo;
         }
+        /// <summary>
+        /// Add Honor Roll
+        /// </summary>
+        /// <param name="honorRollsAddViewModel"></param>
+        /// <returns></returns>
+        public HonorRollsAddViewModel AddHonorRoll(HonorRollsAddViewModel honorRollsAddViewModel)
+        {
+            HonorRollsAddViewModel HonorRollsdAdd = new HonorRollsAddViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(honorRollsAddViewModel._tenantName, honorRollsAddViewModel._token))
+                {
+                    HonorRollsdAdd = this.gradeRepository.AddHonorRoll(honorRollsAddViewModel);
+                }
+                else
+                {
+                    HonorRollsdAdd._failure = true;
+                    HonorRollsdAdd._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                HonorRollsdAdd._failure = true;
+                HonorRollsdAdd._message = es.Message;
+            }
+            return HonorRollsdAdd;
+        }
+        /// <summary>
+        /// Update Honor Roll
+        /// </summary>
+        /// <param name="honorRollsAddViewModel"></param>
+        /// <returns></returns>
+        public HonorRollsAddViewModel UpdateHonorRoll(HonorRollsAddViewModel honorRollsAddViewModel)
+        {
+            HonorRollsAddViewModel honorRollUpdate = new HonorRollsAddViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(honorRollsAddViewModel._tenantName, honorRollsAddViewModel._token))
+                {
+                    honorRollUpdate = this.gradeRepository.UpdateHonorRoll(honorRollsAddViewModel);
+                }
+                else
+                {
+                    honorRollUpdate._failure = true;
+                    honorRollUpdate._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                honorRollUpdate._failure = true;
+                honorRollUpdate._message = es.Message;
+            }
+            return honorRollUpdate;
+        }
+        /// <summary>
+        /// Get All Honor Roll List
+        /// </summary>
+        /// <param name="pageResult"></param>
+        /// <returns></returns>
+        public HonorRollsListViewModel GetAllHonorRollList(PageResult pageResult)
+        {
+            logger.Info("Method GetAllHonorRollList called.");
+            HonorRollsListViewModel honorRollList = new HonorRollsListViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(pageResult._tenantName, pageResult._token))
+                {
+                    honorRollList = this.gradeRepository.GetAllHonorRollList(pageResult);
+                    honorRollList._message = SUCCESS;
+                    honorRollList._failure = false;
+                    logger.Info("Method GetAllHonorRollList end with success.");
+                }
+                else
+                {
+                    honorRollList._failure = true;
+                    honorRollList._message = TOKENINVALID;
+                    return honorRollList;
+                }
+            }
+            catch (Exception ex)
+            {
+                honorRollList._message = ex.Message;
+                honorRollList._failure = true;
+                logger.Error("Method GetAllHonorRollList end with error :" + ex.Message);
+            }
+            return honorRollList;
+        }
+        /// <summary>
+        /// Delete Honor Roll
+        /// </summary>
+        /// <param name="honorRollsAddViewModel"></param>
+        /// <returns></returns>
+        public HonorRollsAddViewModel DeleteHonorRoll(HonorRollsAddViewModel honorRollsAddViewModel)
+        {
+            HonorRollsAddViewModel honorRollDelete = new HonorRollsAddViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(honorRollsAddViewModel._tenantName, honorRollsAddViewModel._token))
+                {
+                    honorRollDelete = this.gradeRepository.DeleteHonorRoll(honorRollsAddViewModel);
+                }
+                else
+                {
+                    honorRollDelete._failure = true;
+                    honorRollDelete._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                honorRollDelete._failure = true;
+                honorRollDelete._message = es.Message;
+            }
+            return honorRollDelete;
+        }
     }
-
 }  
 

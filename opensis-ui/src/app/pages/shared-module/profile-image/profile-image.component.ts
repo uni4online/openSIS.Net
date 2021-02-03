@@ -1,94 +1,115 @@
-import { Component, OnInit, ViewChild, TemplateRef, Input, OnDestroy } from '@angular/core';
-import {ImageCroppedEvent,base64ToFile} from 'ngx-image-cropper';
-import { MatDialog,MatDialogConfig } from '@angular/material/dialog';
+import { Component, OnInit, ViewChild, TemplateRef, Input, OnDestroy, OnChanges } from '@angular/core';
+import { ImageCroppedEvent, base64ToFile } from 'ngx-image-cropper';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import {fadeInRight400ms} from '../../../../@vex/animations/fade-in-right.animation';
-import icCrop from '@iconify/icons-ic/crop';
+import { fadeInRight400ms } from '../../../../@vex/animations/fade-in-right.animation';
 import icClose from '@iconify/icons-ic/twotone-close';
+import icUpload from '@iconify/icons-ic/cloud-upload';
 import { ImageCropperService } from '../../../services/image-cropper.service';
 import { SchoolService } from '../../../services/school.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { StaffService } from '../../../services/staff.service';
 import { StudentService } from '../../../services/student.service';
+import { ImageModel } from '../../../models/image-cropper.model';
+import { SchoolCreate } from '../../../enums/school-create.enum';
+import { ModuleIdentifier } from '../../../enums/module-identifier.enum';
+import { StaffAddModel } from '../../../models/staffModel';
+import { StudentAddModel } from '../../../models/studentModel';
+import { LoaderService } from '../../../services/loader.service';
 
 @Component({
   selector: 'vex-profile-image',
   templateUrl: './profile-image.component.html',
   styleUrls: ['./profile-image.component.scss'],
-   animations: [
+  animations: [
     fadeInRight400ms
   ]
 })
-export class ProfileImageComponent implements OnInit,OnDestroy {
+export class ProfileImageComponent implements OnInit, OnDestroy {
   @ViewChild('mytemplate') mytemplate: TemplateRef<any>;
-  @ViewChild('modalClickButton') modalClickButton: TemplateRef<any>;
 
-  icCrop=icCrop;
+  icUpload = icUpload;
   icClose = icClose;
-  preview:string='';originalFileName:string;
-  imageChangedEvent= '';
-  croppedImage= '';
-  showCropTool:boolean=false;
-  showCropperandButton:boolean;
+  modes = SchoolCreate;
+  createMode: SchoolCreate;
+  moduleIdentifier: ModuleIdentifier;
+  modules = ModuleIdentifier;
+  preview: string = '';
+  originalFileName: string;
+  imageChangedEvent = '';
+  croppedImage = '';
+  showCropTool: boolean = false;
+  showCropperandButton: boolean;
   // afterConvertingBase64toFile;
-  fileUploader:any;
-  hideCropperToolButton:Boolean=true;
-  enableUpload:boolean;
-  inputType:string="file";
+  fileUploader: any;
+  hideCropperToolButton: boolean = true;
+  enableUpload: boolean;
+  inputType: string = "file";
   destroySubject$: Subject<void> = new Subject();
-  @Input() enableCropTool=true;
-  @Input() customCss='rounded-full border-2 border-gray-light';
+  @Input() enableCropTool = true;
+  @Input() customCss = 'rounded-full border-2 border-gray-light';
   @Input() responseImage;
-
-  constructor(private dialog:MatDialog,
-    private imageCropperService:ImageCropperService,
+  loading:boolean;
+  staffAddModel: StaffAddModel = new StaffAddModel();
+  studentAddModel:StudentAddModel = new StudentAddModel();
+  constructor(private dialog: MatDialog,
+    private imageCropperService: ImageCropperService,
     private snackbar: MatSnackBar,
-    private schoolService:SchoolService,
-    private staffService:StaffService,
-    private studentService:StudentService) {
-      this.imageCropperService.shareImageStatus.pipe(takeUntil(this.destroySubject$)).subscribe((message) => {
-        if(message=="school"){
-          this.preview='';
-          this.responseImage=this.schoolService.getSchoolCloneImage();
-        }
-        if(message=="staff"){
-          this.preview='';
-          this.croppedImage= '';
-          this.responseImage=this.staffService.getStaffCloneImage();
-        }
-        if(message=="student"){
-           this.preview='';
-           this.croppedImage= '';
-           this.responseImage=this.studentService.getStudentCloneImage(); }
+    private schoolService: SchoolService,
+    private staffService: StaffService,
+    private studentService: StudentService,
+    private loaderService: LoaderService) {
+      this.loaderService.isLoading.pipe(takeUntil(this.destroySubject$)).subscribe((val) => {
+        this.loading = val;
       });
-     }
 
-     ngOnInit(): void {
-        this.imageCropperService.sharedMessage.pipe(takeUntil(this.destroySubject$)).subscribe((message) => {
-          if(message){
-            this.inputType="file"
-          }else{
-            this.inputType="none"
-          }
-        }); 
-        
-    }
-     
+    this.imageCropperService.shareImageStatus.pipe(takeUntil(this.destroySubject$)).subscribe((message) => {
+      if (message == "school") {
+        this.preview = '';
+        this.responseImage = this.schoolService.getSchoolCloneImage();
+      }
+      if (message == "staff") {
+        this.preview = '';
+        this.croppedImage = '';
+        this.responseImage = this.staffService.getStaffCloneImage();
+      }
+      if (message == "student") {
+        this.preview = '';
+        this.croppedImage = '';
+        this.responseImage = this.studentService.getStudentCloneImage();
+      }
+    });
+  }
+
+  ngOnInit(): void {
+    this.imageCropperService.sharedMessage.pipe(takeUntil(this.destroySubject$)).subscribe((res: ImageModel) => {
+      if (res.upload) {
+        this.moduleIdentifier = res.module;
+        this.createMode = res.mode;
+        this.inputType = "file"
+      } else {
+        this.moduleIdentifier = res.module;
+        this.createMode = res.mode;
+        this.inputType = "none"
+      }
+    });
+  }
+
   imageCropped(event: ImageCroppedEvent) {
     this.croppedImage = event.base64;
-    let base64ImageSplit=this.croppedImage.split(',')
-    let sendCropImage=(croppedImage)=>{
+    let base64ImageSplit = this.croppedImage.split(',')
+    let sendCropImage = (croppedImage) => {
       this.imageCropperService.sendCroppedEvent(croppedImage);
-      } 
+    }
     sendCropImage(base64ImageSplit);
   }
 
-  setImage(){
-    this.showCropperandButton=true;
+  setImage() {
+    this.showCropperandButton = true;
   }
-  unsetImage(){
-    this.hideCropperToolButton=!this.hideCropperToolButton;
+  unsetImage() {
+    this.hideCropperToolButton = !this.hideCropperToolButton;
   }
 
   imageLoaded() {
@@ -101,15 +122,15 @@ export class ProfileImageComponent implements OnInit,OnDestroy {
     // console.log("Failed to Load!!")
   }
 
-  uploadFile(event,fileUpload){
-  this.fileUploader=fileUpload;
-  this.responseImage=null;
-  this.hideCropperToolButton=true;
-    if(event.target.files[0]?.size>307200){
-      this.snackbar.open('Warning: File must be less than 300kb', '', {duration: 10000});
-    }else if((event.target.files[0]?.type=="image/jpeg") || 
-    (event.target.files[0]?.type=="image/jpg") || 
-    (event.target.files[0]?.type=="image/png")){
+  uploadFile(event, fileUpload) {
+    this.fileUploader = fileUpload;
+    this.responseImage = null;
+    this.hideCropperToolButton = true;
+    if (event.target.files[0]?.size > 307200) {
+      this.snackbar.open('Warning: File must be less than 300kb', '', { duration: 10000 });
+    } else if ((event.target.files[0]?.type == "image/jpeg") ||
+      (event.target.files[0]?.type == "image/jpg") ||
+      (event.target.files[0]?.type == "image/png")) {
       this.originalFileName = event.target.files[0].name;
       this.showCropTool = false;
       var files = event.target.files;
@@ -125,14 +146,14 @@ export class ProfileImageComponent implements OnInit,OnDestroy {
         }
         img.src = _URL.createObjectURL(files[i]);
       }
-    }else{
-      if(event.target.files[0]?.size>0){
-      this.snackbar.open('Warning: Only jpg/jpeg/png will support', '', {duration: 10000});
+    } else {
+      if (event.target.files[0]?.size > 0) {
+        this.snackbar.open('Warning: Only jpg/jpeg/png will support', '', { duration: 10000 });
       }
     }
   }
 
-  callCropper(event){
+  callCropper(event) {
     this.croppedImage
     this.imageChangedEvent = event;
     this.showCropTool = true;
@@ -140,7 +161,7 @@ export class ProfileImageComponent implements OnInit,OnDestroy {
     return false;
   }
 
-  callUncropper(event){
+  callUncropper(event) {
     const file = (event.target as HTMLInputElement).files[0];
     if (file) {
       const reader = new FileReader();
@@ -155,32 +176,104 @@ export class ProfileImageComponent implements OnInit,OnDestroy {
   }
 
   handleReaderLoaded(e) {
-    this.croppedImage='';
-    let sendImageData2 =(e)=>{
+    this.croppedImage = '';
+    let sendImageData2 = (e) => {
       this.imageCropperService.sendUncroppedEvent(e);
-      this.fileUploader.value=null;
-      }
-      sendImageData2(e);
+      this.fileUploader.value = null;
+    }
+    sendImageData2(e);
   }
 
   openModal() {
-    let dialogRef = this.dialog.open(this.mytemplate, {
-        width: '700px',
+        let dialogRef = this.dialog.open(this.mytemplate, {
+      width: '700px',
     });
 
     dialogRef.afterClosed().subscribe(result => {
-        // Do Something after Dialog Closed
-    });
-}
+      // Do Something after Dialog Closed
+      this.fileUploader.value = null;
 
-onClose(){
-  this.hideCropperToolButton=false;
-  this.fileUploader.value=null;
-  // this.showCropperandButton=true;
-  this.dialog.closeAll();
-}
-ngOnDestroy(): void {
-  this.destroySubject$.next();
-}
+    });
+  }
+
+  onClose() {
+    this.hideCropperToolButton = false;
+    this.fileUploader.value = null;
+    // this.showCropperandButton=true;
+    this.dialog.closeAll();
+  }
+
+  cancelPhoto(){
+    if (this.moduleIdentifier == this.modules.STUDENT) {
+      this.preview = '';
+      this.croppedImage = '';
+      this.responseImage = this.studentService.getStudentCloneImage();
+      this.dialog.closeAll();
+    } else if (this.moduleIdentifier == this.modules.STAFF) {
+       this.preview = '';
+        this.croppedImage = '';
+        this.responseImage = this.staffService.getStaffCloneImage();
+      this.dialog.closeAll();
+    }
+  }
+
+  uploadPhotoDirectly() {
+    if (this.moduleIdentifier == this.modules.STUDENT) {
+      this.updateStudentImage();
+    } else if (this.moduleIdentifier == this.modules.STAFF) {
+        this.updateStaffImage();
+    }
+  }
+
+  updateStudentImage(){
+    this.studentService.addUpdateStudentPhoto(this.studentAddModel).pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
+      if (typeof (res) == 'undefined') {
+        this.snackbar.open('Student Image Update failed. ' + sessionStorage.getItem("httpError"), '', {
+          duration: 10000
+        });
+      }
+      else {
+        if (res._failure) {
+          this.snackbar.open('Student Update failed. ' + res._message, '', {
+            duration: 10000
+          });
+        } else {
+          this.snackbar.open('Student Image Updated Successfully.', '', {
+            duration: 10000
+          });
+          this.studentService.setStudentCloneImage(res.studentMaster.studentPhoto);
+          this.dialog.closeAll();
+        }
+      }
+    });
+  }
+
+  updateStaffImage(){
+    this.staffService.addUpdateStaffPhoto(this.staffAddModel).pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
+      if (typeof (res) == 'undefined') {
+        this.snackbar.open('Staff Image Update failed. ' + sessionStorage.getItem("httpError"), '', {
+          duration: 10000
+        });
+      }
+      else {
+        if (res._failure) {
+          this.snackbar.open('Staff Update failed. ' + res._message, '', {
+            duration: 10000
+          });
+        } else {
+          this.snackbar.open('Staff Image Updated Successfully.', '', {
+            duration: 10000
+          });
+          this.staffService.setStaffCloneImage(res.staffMaster.staffPhoto);
+          this.dialog.closeAll();
+        }
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.destroySubject$.next();
+    this.destroySubject$.complete();
+  }
 
 }

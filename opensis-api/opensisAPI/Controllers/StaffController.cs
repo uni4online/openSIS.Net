@@ -266,5 +266,21 @@ namespace opensisAPI.Controllers
             }
             return staffCertificateInfolDelete;
         }
+
+        [HttpPut("addUpdateStaffPhoto")]
+        public ActionResult<StaffAddViewModel> AddUpdateStaffPhoto(StaffAddViewModel staffAddViewModel)
+        {
+            StaffAddViewModel staffPhotoUpdate = new StaffAddViewModel();
+            try
+            {
+                staffPhotoUpdate = _staffService.AddUpdateStaffPhoto(staffAddViewModel);
+            }
+            catch (Exception es)
+            {
+                staffPhotoUpdate._failure = true;
+                staffPhotoUpdate._message = es.Message;
+            }
+            return staffPhotoUpdate;
+        }
     }
 }

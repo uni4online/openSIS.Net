@@ -1145,17 +1145,22 @@ namespace opensis.data.Repository
                     {
                         if (pageResult.FilterParams.Count == 3 && pageResult.FilterParams.ElementAt(0).ColumnName.ToLower() == "subject" && pageResult.FilterParams.ElementAt(1).ColumnName.ToLower() == "course" && pageResult.FilterParams.ElementAt(2).ColumnName.ToLower() == "gradelevel")
                         {
-                            transactionIQ = Utility.FilteredData(pageResult.FilterParams, gradeUsStandardData).AsQueryable();
+                            transactionIQ = gradeUsStandardData.Where(x => x.TenantId == pageResult.TenantId && (pageResult.FilterParams.ElementAt(0).FilterValue == null || (x.Subject == pageResult.FilterParams.ElementAt(0).FilterValue)) && (pageResult.FilterParams.ElementAt(1).FilterValue == null || (x.Course == pageResult.FilterParams.ElementAt(1).FilterValue)) && (pageResult.FilterParams.ElementAt(2).FilterValue == null || (x.GradeLevel == pageResult.FilterParams.ElementAt(2).FilterValue)));                     
                         }
-                        else
-                        {
-                            gradeUsStandardList._message = NORECORDFOUND;
-                            gradeUsStandardList._failure = true;
-                            gradeUsStandardList._tenantName = pageResult._tenantName;
-                            gradeUsStandardList._token = pageResult._token;
-                            return gradeUsStandardList;
-                        }
-                        
+
+                        //if (pageResult.FilterParams.Count == 3 && pageResult.FilterParams.ElementAt(0).ColumnName.ToLower() == "subject" && pageResult.FilterParams.ElementAt(1).ColumnName.ToLower() == "course" && pageResult.FilterParams.ElementAt(2).ColumnName.ToLower() == "gradelevel")
+                        //{
+                        //    transactionIQ = Utility.FilteredData(pageResult.FilterParams, gradeUsStandardData).AsQueryable();
+                        //}
+                        //else
+                        //{
+                        //    gradeUsStandardList._message = NORECORDFOUND;
+                        //    gradeUsStandardList._failure = true;
+                        //    gradeUsStandardList._tenantName = pageResult._tenantName;
+                        //    gradeUsStandardList._token = pageResult._token;
+                        //    return gradeUsStandardList;
+                        //}
+
                     }
                 }
                 if (pageResult.SortingModel != null)
@@ -1312,6 +1317,185 @@ namespace opensis.data.Repository
                 checkStandardRefNoViewModel._message = "StandardRefNo Id Is Valid";
             }
             return checkStandardRefNoViewModel;
+        }
+        /// <summary>
+        /// Add Honor Roll
+        /// </summary>
+        /// <param name="honorRollsAddViewModel"></param>
+        /// <returns></returns>
+        public HonorRollsAddViewModel AddHonorRoll(HonorRollsAddViewModel honorRollsAddViewModel)
+        {
+            try
+            {
+                var checkHonorRoll = this.context?.HonorRolls.Where(x => x.SchoolId == honorRollsAddViewModel.honorRolls.SchoolId && x.TenantId == honorRollsAddViewModel.honorRolls.TenantId && x.HonorRoll.ToLower() == honorRollsAddViewModel.honorRolls.HonorRoll.ToLower()).FirstOrDefault();
+                if (checkHonorRoll != null)
+                {
+                    honorRollsAddViewModel._failure = false;
+                    honorRollsAddViewModel._message = "Honor Roll Already Exists";
+                }
+                else
+                {
+                    int? HonorRollId = 1;
+
+                    var HonorRollData = this.context?.HonorRolls.Where(x => x.SchoolId == honorRollsAddViewModel.honorRolls.SchoolId && x.TenantId == honorRollsAddViewModel.honorRolls.TenantId).OrderByDescending(x => x.HonorRollId).FirstOrDefault();
+
+                    if (HonorRollData != null)
+                    {
+                        HonorRollId = HonorRollData.HonorRollId + 1;
+                    }
+
+                    honorRollsAddViewModel.honorRolls.HonorRollId = (int)HonorRollId;                    
+                    honorRollsAddViewModel.honorRolls.CreatedOn = DateTime.UtcNow;
+                    this.context?.HonorRolls.Add(honorRollsAddViewModel.honorRolls);
+                    this.context?.SaveChanges();
+                    honorRollsAddViewModel._failure = false;
+                }
+            }
+            catch (Exception es)
+            {
+                honorRollsAddViewModel._failure = true;
+                honorRollsAddViewModel._message = es.Message;
+            }
+            return honorRollsAddViewModel;
+        }
+        /// <summary>
+        /// Update Honor Roll
+        /// </summary>
+        /// <param name="honorRollsAddViewModel"></param>
+        /// <returns></returns>
+        public HonorRollsAddViewModel UpdateHonorRoll(HonorRollsAddViewModel honorRollsAddViewModel)
+        {
+            try
+            {
+                var honorRollUpdate = this.context?.HonorRolls.FirstOrDefault(x => x.TenantId == honorRollsAddViewModel.honorRolls.TenantId && x.SchoolId == honorRollsAddViewModel.honorRolls.SchoolId && x.HonorRollId == honorRollsAddViewModel.honorRolls.HonorRollId);
+                if (honorRollUpdate != null)
+                {
+                    var checkHonorRoll= this.context?.HonorRolls.Where(x => x.SchoolId == honorRollsAddViewModel.honorRolls.SchoolId && x.TenantId == honorRollsAddViewModel.honorRolls.TenantId  && x.HonorRollId != honorRollsAddViewModel.honorRolls.HonorRollId && x.HonorRoll.ToLower() == honorRollsAddViewModel.honorRolls.HonorRoll.ToLower()).FirstOrDefault();
+
+                    if (checkHonorRoll != null)
+                    {
+                        honorRollsAddViewModel._failure = true;
+                        honorRollsAddViewModel._message = "Honor Roll Already Exists";
+                    }
+                    else
+                    {
+                        honorRollsAddViewModel.honorRolls.CreatedBy = honorRollUpdate.CreatedBy;
+                        honorRollsAddViewModel.honorRolls.CreatedOn = honorRollUpdate.CreatedOn;
+                        honorRollsAddViewModel.honorRolls.UpdatedOn = DateTime.Now;
+                        this.context.Entry(honorRollUpdate).CurrentValues.SetValues(honorRollsAddViewModel.honorRolls);
+                        this.context?.SaveChanges();
+                        honorRollsAddViewModel._failure = false;
+                        honorRollsAddViewModel._message = "Honor Roll Updated Successfully";
+                    }
+                }
+                else
+                {
+                    honorRollsAddViewModel.honorRolls = null;
+                    honorRollsAddViewModel._failure = true;
+                    honorRollsAddViewModel._message = NORECORDFOUND;
+                }
+            }
+            catch (Exception es)
+            {
+
+                honorRollsAddViewModel._failure = true;
+                honorRollsAddViewModel._message = es.Message;
+            }
+            return honorRollsAddViewModel;
+        }
+        /// <summary>
+        /// Get All Honor Roll List
+        /// </summary>
+        /// <param name="pageResult"></param>
+        /// <returns></returns>
+        public HonorRollsListViewModel GetAllHonorRollList(PageResult pageResult)
+        {
+            HonorRollsListViewModel honorRollList = new HonorRollsListViewModel();
+            IQueryable<HonorRolls> transactionIQ = null;
+
+            var honorRollsData = this.context?.HonorRolls.Where(x => x.TenantId == pageResult.TenantId && x.SchoolId == pageResult.SchoolId);
+            try
+            {
+                if (pageResult.FilterParams == null || pageResult.FilterParams.Count == 0)
+                {
+                    transactionIQ = honorRollsData;
+                }
+                else
+                {
+                    if (pageResult.FilterParams != null && pageResult.FilterParams.ElementAt(0).ColumnName == null && pageResult.FilterParams.Count == 1)
+                    {
+                        string Columnvalue = pageResult.FilterParams.ElementAt(0).FilterValue;
+                        transactionIQ = honorRollsData.Where(x => x.HonorRoll != null && x.Breakoff.ToString() == Columnvalue.ToString() || x.HonorRoll != null && x.HonorRoll.ToLower().Contains(Columnvalue.ToLower()));
+                    }
+                    else
+                    {
+                        transactionIQ = Utility.FilteredData(pageResult.FilterParams, honorRollsData).AsQueryable();
+                    }
+                }
+                if (pageResult.SortingModel != null)
+                {
+                    transactionIQ = Utility.Sort(transactionIQ, pageResult.SortingModel.SortColumn, pageResult.SortingModel.SortDirection.ToLower());
+                }
+                int totalCount = transactionIQ.Count();
+                if (pageResult.PageNumber > 0 && pageResult.PageSize > 0)
+                {
+                    transactionIQ = transactionIQ.Select(e=>new HonorRolls
+                    {                        
+                        MarkingPeriodId=e.MarkingPeriodId,
+                        HonorRollId=e.HonorRollId,
+                        HonorRoll=e.HonorRoll,
+                        Breakoff=e.Breakoff
+                    }).Skip((pageResult.PageNumber - 1) * pageResult.PageSize).Take(pageResult.PageSize);
+                }
+                honorRollList.TenantId = pageResult.TenantId;
+                honorRollList.SchoolId = pageResult.SchoolId;
+                honorRollList.honorRollList = transactionIQ.ToList();               
+                honorRollList.TotalCount = totalCount;
+                honorRollList.PageNumber = pageResult.PageNumber;
+                honorRollList._pageSize = pageResult.PageSize;
+                honorRollList._tenantName = pageResult._tenantName;
+                honorRollList._token = pageResult._token;
+                honorRollList._failure = false;
+            }
+            catch (Exception es)
+            {
+                honorRollList._message = es.Message;
+                honorRollList._failure = true;
+                honorRollList._tenantName = pageResult._tenantName;
+                honorRollList._token = pageResult._token;
+            }
+            return honorRollList;
+        }
+        /// <summary>
+        /// Delete Honor Roll
+        /// </summary>
+        /// <param name="honorRollsAddViewModel"></param>
+        /// <returns></returns>
+        public HonorRollsAddViewModel DeleteHonorRoll(HonorRollsAddViewModel honorRollsAddViewModel)
+        {
+            try
+            {
+                var honorRollDelete = this.context?.HonorRolls.FirstOrDefault(x => x.TenantId == honorRollsAddViewModel.honorRolls.TenantId && x.SchoolId == honorRollsAddViewModel.honorRolls.SchoolId && x.HonorRollId == honorRollsAddViewModel.honorRolls.HonorRollId);
+
+                if (honorRollDelete != null)
+                {
+                    this.context?.HonorRolls.Remove(honorRollDelete);
+                    this.context?.SaveChanges();
+                    honorRollsAddViewModel._failure = false;
+                    honorRollsAddViewModel._message = "Honor Roll Deleted Successfully";
+                }
+                else
+                {
+                    honorRollsAddViewModel._message = NORECORDFOUND;
+                    honorRollsAddViewModel._failure = true;
+                }
+            }
+            catch (Exception es)
+            {
+                honorRollsAddViewModel._failure = true;
+                honorRollsAddViewModel._message = es.Message;
+            }
+            return honorRollsAddViewModel;
         }
     }
 }

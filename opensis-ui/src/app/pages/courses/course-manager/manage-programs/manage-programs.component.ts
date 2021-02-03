@@ -12,6 +12,7 @@ import {MatSnackBar} from  '@angular/material/snack-bar';
 import { FormBuilder,NgForm,FormGroup, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { ConfirmDialogComponent } from '../../../shared-module/confirm-dialog/confirm-dialog.component';
+
 import { MatDialog } from '@angular/material/dialog';
 @Component({
   selector: 'vex-manage-programs',
@@ -49,7 +50,8 @@ export class ManageProgramsComponent implements OnInit {
     private snackbar: MatSnackBar,
     private fb: FormBuilder,
     public translateService:TranslateService,
-    private dialog: MatDialog, ) { 
+    private dialog: MatDialog
+   ) { 
       translateService.use('en');   
     }
 
@@ -77,6 +79,10 @@ export class ManageProgramsComponent implements OnInit {
       }
     });
   }
+
+  
+
+
   confirmDelete(deleteDetails){
     
     // call our modal window

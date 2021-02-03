@@ -91,7 +91,7 @@ export class SelectBarComponent implements OnInit {
   selectSchoolOnLoad() {
     if (!sessionStorage.getItem("selectedSchoolId")) {
       sessionStorage.setItem("selectedSchoolId", this.schools[0].schoolId);
-      sessionStorage.setItem("schoolOpened", this.schools[0].dateSchoolOpened);
+      sessionStorage.setItem("schoolOpened", this.schools[0].schoolDetail[0].dateSchoolOpened);
       this.callAcademicYearsOnSchoolSelect();
     } else {
       this.setSchool();
@@ -135,6 +135,7 @@ export class SelectBarComponent implements OnInit {
         this.academicYearsCtrl.setValue(this.academicYears[this.academicYears.length - 1]);
         sessionStorage.setItem("academicyear", this.academicYearsCtrl.value.academyYear);
         sessionStorage.setItem("markingPeriod",this.academicYearsCtrl.value.startDate);
+        
       } else {
        
         this.academicYearsCtrl.setValue(this.nullValueForDropdown);
@@ -181,16 +182,20 @@ export class SelectBarComponent implements OnInit {
             let endDate = new Date(this.periods[i]?.endDate).setHours(0, 0, 0, 0);
             if (today <= endDate && today >= startDate) {
               this.periodCtrl.setValue(this.periods[i].periodTitle);
+              sessionStorage.setItem("markingPeriodId",this.periods[i].markingPeriodId);
             } else {
               this.periodCtrl.setValue(this.periods[0].periodTitle);
+              sessionStorage.setItem("markingPeriodId",this.periods[i].markingPeriodId);
             }
           }
         } else {
           this.periodCtrl.setValue(this.nullValueForDropdown);
+          sessionStorage.setItem("markingPeriodId",null);
         }
       })
     } else {
       this.periodCtrl.setValue(this.nullValueForDropdown);
+      sessionStorage.setItem("markingPeriodId",null);
     }
   }
 

@@ -14,7 +14,7 @@
                     <li>
                         <mat-form-field class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'homePhone'|translate}}</mat-label>
-                            <input #homePhone="ngModel" maxlength="12" appPhoneMask
+                            <input #homePhone="ngModel" maxlength="30"
                                 [(ngModel)]="staffAddModel.staffMaster.homePhone" name="homePhone" matInput matInput>
                             <mat-error *ngIf="homePhone.errors?.invalidPhoneNumber">
                                 {{'invalidTelephoneNumber'|translate}}</mat-error>
@@ -23,7 +23,7 @@
                     <li>
                         <mat-form-field class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'mobilePhone'|translate}}</mat-label>
-                            <input [(ngModel)]="staffAddModel.staffMaster.mobilePhone" appPhonevalidator
+                            <input [(ngModel)]="staffAddModel.staffMaster.mobilePhone" maxlength="30"
                                 #mobilePhone="ngModel" name="mobilePhone" matInput>
                             <mat-error *ngIf="mobilePhone.errors?.phonevalidator">
                                 {{'pleaseProvideAValidMobileNo'|translate}}
@@ -33,7 +33,7 @@
                     <li>
                         <mat-form-field class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'officePhone'|translate}}</mat-label>
-                            <input [(ngModel)]="staffAddModel.staffMaster.officePhone" appPhonevalidator
+                            <input [(ngModel)]="staffAddModel.staffMaster.officePhone" maxlength="30"
                                 #officePhone="ngModel" name="officePhone" matInput>
                         </mat-form-field>
                     </li>
@@ -252,21 +252,21 @@
                     <li>
                         <mat-form-field class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'homePhone'|translate}}</mat-label>
-                            <input [(ngModel)]="staffAddModel.staffMaster.emergencyHomePhone" name="emergencyHomePhone"
+                            <input [(ngModel)]="staffAddModel.staffMaster.emergencyHomePhone" name="emergencyHomePhone" maxlength="30"
                                 matInput>
                         </mat-form-field>
                     </li>
                     <li>
                         <mat-form-field class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'workPhone'|translate}}</mat-label>
-                            <input [(ngModel)]="staffAddModel.staffMaster.emergencyWorkPhone" name="emergencyWorkPhone"
+                            <input [(ngModel)]="staffAddModel.staffMaster.emergencyWorkPhone" name="emergencyWorkPhone" maxlength="30"
                                 matInput>
                         </mat-form-field>
                     </li>
                     <li>
                         <mat-form-field class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'mobilePhone'|translate}}</mat-label>
-                            <input [(ngModel)]="staffAddModel.staffMaster.emergencyMobilePhone"
+                            <input [(ngModel)]="staffAddModel.staffMaster.emergencyMobilePhone" maxlength="30"
                                 name="emergencyMobilePhone" matInput>
                         </mat-form-field>
                     </li>

@@ -25,22 +25,39 @@ namespace opensis.data.Repository
         /// <returns></returns>
         public SectionAddViewModel AddSection(SectionAddViewModel section)
         {
-            //int? MasterSectionId = Utility.GetMaxPK(this.context, new Func<Sections, int>(x => x.SectionId));
-
-            int? MasterSectionId = 1;
-
-            var SectionData = this.context?.Sections.Where(x => x.SchoolId == section.tableSections.SchoolId && x.TenantId == section.tableSections.TenantId).OrderByDescending(x => x.SectionId).FirstOrDefault();
-
-            if (SectionData != null)
+            try
             {
-                MasterSectionId = SectionData.SectionId + 1;
-            }
+                var checkSectionName = this.context?.Sections.Where(x => x.SchoolId == section.tableSections.SchoolId && x.TenantId == section.tableSections.TenantId && x.Name.ToLower() == section.tableSections.Name.ToLower()).FirstOrDefault();
 
-            section.tableSections.SectionId = (int)MasterSectionId;
-            section.tableSections.LastUpdated = DateTime.UtcNow;
-            this.context?.Sections.Add(section.tableSections);
-            this.context?.SaveChanges();
-            section._failure = false;
+                if (checkSectionName != null)
+                {
+                    section._failure = true;
+                    section._message = "Section Name Already Exists";
+                }
+                else
+                {
+                    //int? MasterSectionId = Utility.GetMaxPK(this.context, new Func<Sections, int>(x => x.SectionId));
+                    int? MasterSectionId = 1;
+
+                    var SectionData = this.context?.Sections.Where(x => x.SchoolId == section.tableSections.SchoolId && x.TenantId == section.tableSections.TenantId).OrderByDescending(x => x.SectionId).FirstOrDefault();
+
+                    if (SectionData != null)
+                    {
+                        MasterSectionId = SectionData.SectionId + 1;
+                    }
+
+                    section.tableSections.SectionId = (int)MasterSectionId;
+                    section.tableSections.LastUpdated = DateTime.UtcNow;
+                    this.context?.Sections.Add(section.tableSections);
+                    this.context?.SaveChanges();
+                    section._failure = false;
+                }                
+            }
+            catch(Exception es)
+            {
+                section._failure = true;
+                section._message = es.Message;
+            }            
             return section;
         }
 
@@ -55,21 +72,36 @@ namespace opensis.data.Repository
             try
             {
                 var sectionUpdate = this.context?.Sections.FirstOrDefault(x => x.TenantId == section.tableSections.TenantId && x.SchoolId == section.tableSections.SchoolId && x.SectionId == section.tableSections.SectionId);
+                if (sectionUpdate!=null)
+                {
+                    var checkSectionName = this.context?.Sections.Where(x => x.SchoolId == section.tableSections.SchoolId && x.TenantId == section.tableSections.TenantId && x.SectionId!=section.tableSections.SectionId && x.Name.ToLower() == section.tableSections.Name.ToLower()).FirstOrDefault();
 
-                section.tableSections.LastUpdated = DateTime.UtcNow;
-                this.context.Entry(sectionUpdate).CurrentValues.SetValues(section.tableSections);
-                this.context?.SaveChanges();
-                section._failure = false;
-                return section;
+                    if (checkSectionName != null)
+                    {
+                        section._failure = true;
+                        section._message = "Section Name Already Exists";
+                    }
+                    else
+                    {
+                        section.tableSections.LastUpdated = DateTime.UtcNow;
+                        this.context.Entry(sectionUpdate).CurrentValues.SetValues(section.tableSections);
+                        this.context?.SaveChanges();
+                        section._failure = false;
+                    }                    
+                }
+                else
+                {
+                    section.tableSections = null;
+                    section._failure = true;
+                    section._message = NORECORDFOUND;
+                }                
             }
             catch (Exception ex)
             {
-                section.tableSections = null;
                 section._failure = true;
-                section._message = NORECORDFOUND;
-                return section;
+                section._message = ex.Message;
             }
-
+            return section;
         }
 
         /// <summary>

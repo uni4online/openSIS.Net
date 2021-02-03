@@ -132,7 +132,7 @@
                     <mat-label>{{'lastFamilyName' | translate}}</mat-label>
                     <input  [(ngModel)]="addParentInfoModel.parentInfo.lastname" type="text" name="lastname" #lastname="ngModel" matInput required>
                     <mat-error class="text-red" *ngIf="lastname.errors?.required">
-                        {{'lastGivenNameIsRequired'|translate}}</mat-error>
+                        {{'lastFamilyNameIsRequired'|translate}}</mat-error>
                 </mat-form-field>
         
                 <mat-form-field appearance="outline" color="primary">
@@ -165,7 +165,7 @@
                 </mat-form-field>
                 <mat-form-field appearance="outline" color="primary">
                     <mat-label>{{'mobilePhone' | translate}}</mat-label>
-                    <input  [(ngModel)]="addParentInfoModel.parentInfo.mobile" appPhonevalidator #mobile="ngModel"  type="text" name="mobile" matInput>
+                    <input  [(ngModel)]="addParentInfoModel.parentInfo.mobile" maxlength="30" #mobile="ngModel"  type="text" name="mobile" matInput>
                     <mat-error  *ngIf="mobile.errors?.phonevalidator">
                         {{'pleaseProvideAValidMobileNo'|translate}} 
                       </mat-error>
@@ -174,7 +174,7 @@
         
                 <mat-form-field appearance="outline" color="primary">
                     <mat-label>{{'workPhone' | translate}}</mat-label>
-                    <input  [(ngModel)]="addParentInfoModel.parentInfo.workPhone"  appPhoneMask  #workPhone="ngModel" type="text" name="workPhone" matInput>
+                    <input  [(ngModel)]="addParentInfoModel.parentInfo.workPhone"  maxlength="30"  #workPhone="ngModel" type="text" name="workPhone" matInput>
                     <mat-error
                         *ngIf="workPhone.errors?.invalidPhoneNumber">
                         {{'invalidTelephoneNumber'|translate}}</mat-error>
@@ -182,7 +182,7 @@
         
                 <mat-form-field appearance="outline" color="primary">
                     <mat-label>{{'homePhone' | translate}}</mat-label>
-                    <input  [(ngModel)]="addParentInfoModel.parentInfo.homePhone"  appPhoneMask #homePhone="ngModel"  type="text" name="homePhone" matInput>
+                    <input  [(ngModel)]="addParentInfoModel.parentInfo.homePhone"  maxlength="30" #homePhone="ngModel"  type="text" name="homePhone" matInput>
                     <mat-error
                         *ngIf="homePhone.errors?.invalidPhoneNumber">
                         {{'invalidTelephoneNumber'|translate}}</mat-error>
@@ -272,7 +272,7 @@
                         <mat-label>{{'stateProvinceLocality'|translate}}</mat-label>
                         <input   [(ngModel)]="addParentInfoModel.parentInfo.parentAddress[0].state" name="state" #state="ngModel" matInput required>
                         <mat-error class="text-red" *ngIf="state.errors?.required">
-                            {{'stateIsRequired'|translate}}</mat-error>
+                            {{'stateProvinceLocalityIsRequired'|translate}}</mat-error>
                     </mat-form-field>
             
                     <mat-form-field *ngIf="sameAsStudentAddress === false" fxFlex="auto" appearance="outline" color="primary">
@@ -286,7 +286,7 @@
                         <mat-label>{{'zipPostalCode'|translate}}</mat-label>
                         <input   [(ngModel)]="addParentInfoModel.parentInfo.parentAddress[0].zip" name="zip" #zip="ngModel" matInput required>
                         <mat-error class="text-red" *ngIf="zip.errors?.required">
-                            {{'zipIsRequired'|translate}}</mat-error>
+                            {{'zipPostalCodeIsRequired'|translate}}</mat-error>
                     </mat-form-field>              
         
             </mat-dialog-content>

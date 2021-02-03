@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import icCheckCircle from '@iconify/icons-ic/twotone-check-circle';
+import icError from '@iconify/icons-ic/twotone-error';
 
 @Component({
   selector: 'vex-widget-assistant',
@@ -9,6 +10,7 @@ import icCheckCircle from '@iconify/icons-ic/twotone-check-circle';
 export class WidgetAssistantComponent implements OnInit {
 
   icCheckCircle = icCheckCircle;
+  icError = icError;
 
   constructor() { }
 

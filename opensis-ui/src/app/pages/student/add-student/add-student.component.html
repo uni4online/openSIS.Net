@@ -8,7 +8,7 @@
         </div>
         <div class="text-center px-4">
             <h5 class="text-primary font-semibold mb-0">{{studentTitle}}</h5>
-            <div class="rounded-full py-1 px-3 bg-gray text-white inline-block mt-3" *ngIf="studentGrade">Grade Not Assigned</div>
+            <div class="rounded-full py-1 px-3 bg-gray text-white inline-block mt-3" *ngIf="studentAddModel.currentGradeLevel">{{studentAddModel.currentGradeLevel}}</div>
         </div>
         <hr class="mt-4"/>
         <mat-accordion>

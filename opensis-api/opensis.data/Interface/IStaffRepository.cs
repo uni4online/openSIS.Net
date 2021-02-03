@@ -20,6 +20,7 @@ namespace opensis.data.Interface
         public StaffCertificateInfoListModel GetAllStaffCertificateInfo(StaffCertificateInfoListModel staffCertificateInfoListModel);
         public StaffCertificateInfoAddViewModel UpdateStaffCertificateInfo(StaffCertificateInfoAddViewModel staffCertificateInfoAddViewModel);
         public StaffCertificateInfoAddViewModel DeleteStaffCertificateInfo(StaffCertificateInfoAddViewModel staffCertificateInfoAddViewModel);
+        public StaffAddViewModel AddUpdateStaffPhoto(StaffAddViewModel staffAddViewModel);
 
     }
 }

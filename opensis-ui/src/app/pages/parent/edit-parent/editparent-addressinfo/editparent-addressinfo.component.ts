@@ -14,6 +14,7 @@ import { CommonService } from '../../../../services/common.service';
 import { ParentInfoService } from '../../../../services/parent-info.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ImageCropperService } from 'src/app/services/image-cropper.service';
+import { ModuleIdentifier } from '../../../../enums/module-identifier.enum';
 
 @Component({
   selector: 'vex-editparent-addressinfo',
@@ -42,6 +43,7 @@ export class EditparentAddressinfoComponent implements OnInit,OnDestroy {
   country = '-';
   data;
   parentInfo;
+  moduleIdentifier=ModuleIdentifier;
   constructor(private fb: FormBuilder,
     private snackbar: MatSnackBar,
     public translateService: TranslateService,
@@ -58,7 +60,6 @@ export class EditparentAddressinfoComponent implements OnInit,OnDestroy {
     this.addParentInfoModel = this.parentDetailsForViewAndEdit;   
     this.addParentInfoModel.parentInfo.parentAddress[0].country = +this.parentDetailsForViewAndEdit.parentInfo.parentAddress[0].country; 
     this.getAllCountry();
-    console.log(this.addParentInfoModel.parentInfo.parentAddress[0].studentAddressSame);
   }
 
   
@@ -66,8 +67,7 @@ export class EditparentAddressinfoComponent implements OnInit,OnDestroy {
 
   editAddressContactInfo() {
     this.parentCreateMode = this.parentCreate.EDIT;
-    this.parentInfoService.changePageMode(this.parentCreateMode);
-    this.imageCropperService.enableUpload(true);
+    this.imageCropperService.enableUpload({module:this.moduleIdentifier.PARENT,upload:true,mode:this.parentCreate.EDIT});
   }
 
   getAllCountry() {
@@ -79,8 +79,7 @@ export class EditparentAddressinfoComponent implements OnInit,OnDestroy {
         if (data._failure) {
           this.countryListArr = [];
         } else {
-
-          this.countryListArr = data.tableCountry;
+          this.countryListArr=data.tableCountry?.sort((a, b) => {return a.name < b.name ? -1 : 1;} )   
           if (this.parentCreateMode == this.parentCreate.VIEW) {
             this.viewCountryName();
           }
@@ -133,7 +132,7 @@ export class EditparentAddressinfoComponent implements OnInit,OnDestroy {
           this.viewCountryName();
           this.parentCreateMode = this.parentCreate.VIEW;
           this.parentInfoService.changePageMode(this.parentCreateMode);
-          this.imageCropperService.enableUpload(false);
+          this.imageCropperService.enableUpload({module:this.moduleIdentifier.PARENT,upload:false,mode:this.parentCreate.VIEW});
         }
       }
 
@@ -141,6 +140,6 @@ export class EditparentAddressinfoComponent implements OnInit,OnDestroy {
   }
 
   ngOnDestroy(){
-    this.imageCropperService.enableUpload(false);
+    this.imageCropperService.enableUpload({module:this.moduleIdentifier.PARENT,upload:false,mode:this.parentCreate.VIEW});
   }
 }

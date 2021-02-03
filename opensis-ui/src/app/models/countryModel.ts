@@ -13,15 +13,14 @@ export class TableCountryModel {
         this.state = null;
         this.id= 0;
         this.name=null;
-        this.countryCode=null;    
-        this.createdBy = sessionStorage.getItem("email"); 
-        this.updatedBy = sessionStorage.getItem("email");    
+        this.countryCode=null;  
     }   
 }
 
 
+
 export class CountryModel extends CommonField {    
-    public tableCountry : [];
+    public tableCountry : [TableCountryModel];
     public stateCount: number;   
     constructor() {
         super();

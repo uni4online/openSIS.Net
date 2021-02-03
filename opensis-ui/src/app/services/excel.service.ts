@@ -28,7 +28,7 @@ export class ExcelService {
     const data: Blob = new Blob([buffer], {
       type: EXCEL_TYPE
     });
-    FileSaver.saveAs(data, fileName + formatDate(Date(), 'MM-dd-yyyy-HH-mm-ss', 'en-US') + EXCEL_EXTENSION);
+    FileSaver.saveAs(data, fileName + formatDate(Date(), 'MM-dd-yyyy', 'en-US') + EXCEL_EXTENSION);
   }
 
   //Function to auto adjust space between elements 

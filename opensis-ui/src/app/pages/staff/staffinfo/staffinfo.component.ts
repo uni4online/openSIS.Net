@@ -23,6 +23,8 @@ import { ImageCropperService } from '../../../services/image-cropper.service';
 import { LayoutService } from 'src/@vex/services/layout.service';
 import { ExcelService } from '../../../services/excel.service';
 import { Subject } from 'rxjs';
+import { ModuleIdentifier } from '../../../enums/module-identifier.enum';
+import { SchoolCreate } from '../../../enums/school-create.enum';
 
 @Component({
   selector: 'vex-staffinfo',
@@ -64,7 +66,8 @@ export class StaffinfoComponent implements OnInit, AfterViewInit {
   pageSize: number;
   searchCtrl: FormControl;
   destroySubject$: Subject<void> = new Subject();
-
+  moduleIdentifier=ModuleIdentifier;
+  createMode=SchoolCreate;
   constructor(private snackbar: MatSnackBar,
     private router: Router,
     private loaderService: LoaderService,
@@ -183,14 +186,16 @@ export class StaffinfoComponent implements OnInit, AfterViewInit {
   }
 
   viewStaffDetails(id) {
+    this.imageCropperService.enableUpload({module:this.moduleIdentifier.STAFF,upload:true,mode:this.createMode.VIEW});
     this.staffService.setStaffId(id);
     this.router.navigate(["school/staff/add-staff"]); 
   }
 
   goToAdd() {
     this.staffService.setStaffId(null);
-    this.imageCropperService.enableUpload(true);
     this.router.navigate(["school/staff/add-staff"]);
+    this.imageCropperService.enableUpload({module:this.moduleIdentifier.STAFF,upload:true,mode:this.createMode.ADD});
+
   }
 
   callStaffList() {

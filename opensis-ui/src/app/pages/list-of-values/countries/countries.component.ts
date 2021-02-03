@@ -21,6 +21,9 @@ import { EditCountryComponent } from './edit-country/edit-country.component';
 import { MatPaginator } from '@angular/material/paginator';
 import { CountryAddModel } from '../../../models/countryModel';
 import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confirm-dialog.component';
+import { ExcelService } from '../../../services/excel.service';
+import { SharedFunction } from '../../shared/shared-function';
+
 @Component({
   selector: 'vex-countries',
   templateUrl: './countries.component.html',
@@ -53,6 +56,7 @@ export class CountriesComponent implements OnInit {
   totalCount:Number;pageNumber:Number;pageSize:Number;
   getCountryModel: CountryModel = new CountryModel();  
   CountryModelList: MatTableDataSource<any>;
+  countryListForExcel=[];
   searchKey:string;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -61,7 +65,9 @@ export class CountriesComponent implements OnInit {
     public translateService:TranslateService,
     public loaderService:LoaderService,
     public commonService:CommonService,
-    public snackbar:MatSnackBar
+    public snackbar:MatSnackBar,
+    private excelService:ExcelService,
+    public commonfunction:SharedFunction
     ) {
     translateService.use('en');
     this.loaderService.isLoading.subscribe((val) => {
@@ -85,12 +91,13 @@ export class CountriesComponent implements OnInit {
             this.CountryModelList.sort=this.sort;      
             this.CountryModelList.paginator = this.paginator;   
           } else {
-            this.snackbar.open('Country list failed.' + data._message, '', {
+            this.snackbar.open('' + data._message, '', {
               duration: 10000
             });
           }
         }else{
           this.CountryModelList = new MatTableDataSource(data.tableCountry);
+          this.countryListForExcel= data.tableCountry;
           this.CountryModelList.sort=this.sort;      
           this.CountryModelList.paginator = this.paginator;  
         }
@@ -98,11 +105,29 @@ export class CountriesComponent implements OnInit {
     });
   }
 
+  exportCountryListToExcel(){
+    if(this.countryListForExcel.length!=0){
+      let countryList=this.countryListForExcel?.map((item)=>{
+        return{
+          Title: item.name,
+          ShortName: item.countryCode,
+          CreatedBy: item.createdBy!==null ? item.createdBy: '-',
+          CreateDate: this.commonfunction.transformDateWithTime(item.createdOn),
+          UpdatedBy: item.updatedBy!==null ? item.updatedBy: '-',
+          UpdateDate:  this.commonfunction.transformDateWithTime(item.updatedOn)
+        }
+      });
+      this.excelService.exportAsExcelFile(countryList,'Country_List_')
+     }
+     else{
+    this.snackbar.open('No Records Found. Failed to Export Country List','', {
+      duration: 5000
+    });
+  }
+}
+
   goToAdd(){
-    this.dialog.open(EditCountryComponent, {
-      data: {
-        mode:"add"       
-      },  
+    this.dialog.open(EditCountryComponent, {      
       width: '500px'
     }).afterClosed().subscribe((data) => {
       if(data){
@@ -152,10 +177,7 @@ export class CountriesComponent implements OnInit {
   }
   goToEdit(editDetails){
     this.dialog.open(EditCountryComponent, {
-      data: {
-        mode:"edit",
-        editDetails:editDetails
-      },  
+      data: editDetails,  
       width: '500px'
     }).afterClosed().subscribe((data) => {
       if(data){

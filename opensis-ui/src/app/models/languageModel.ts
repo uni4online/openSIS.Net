@@ -11,11 +11,6 @@ class tableLanguage {
     updatedBy: string;
     updatedOn: string;
     userMaster: []
-    constructor() {       
-        this.createdBy = sessionStorage.getItem("email"); 
-        this.updatedBy = sessionStorage.getItem("email");
-          
-    }
 }
 
 export class LanguageAddModel {    
@@ -37,7 +32,7 @@ export class LanguageAddModel {
 
 export class LanguageModel  {
     
-    public tableLanguage : [];
+    public tableLanguage : [tableLanguage];
     public _failure: boolean;
     public _message:string;
     public _tenantName:string;

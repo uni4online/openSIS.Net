@@ -9,6 +9,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router} from '@angular/router';
 import { SelectionModel } from '@angular/cdk/collections';
 import { fadeInUp400ms } from '../../../../@vex/animations/fade-in-up.animation';
+import { fadeInRight400ms } from '../../../../@vex/animations/fade-in-right.animation';
 import { stagger40ms } from '../../../../@vex/animations/stagger.animation';
 import { MatPaginator} from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -20,7 +21,12 @@ import { ImageCropperService } from '../../../services/image-cropper.service';
 import { LayoutService } from 'src/@vex/services/layout.service';
 import { ExcelService } from '../../../services/excel.service';
 import icImpersonate from '@iconify/icons-ic/twotone-account-circle';
+import { TranslateService } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { SaveFilterComponent } from './save-filter/save-filter.component';
+import { ModuleIdentifier } from '../../../enums/module-identifier.enum';
+import { SchoolCreate } from '../../../enums/school-create.enum';
 
 @Component({
   selector: 'vex-student',
@@ -28,7 +34,8 @@ import { Subject } from 'rxjs';
   styleUrls: ['./student.component.scss'],
   animations: [
     fadeInUp400ms,
-    stagger40ms
+    stagger40ms,
+    fadeInRight400ms
   ]
 })
 export class StudentComponent implements OnInit,OnDestroy { 
@@ -58,7 +65,10 @@ export class StudentComponent implements OnInit,OnDestroy {
   destroySubject$: Subject<void> = new Subject();
   getAllStudent: StudentListModel = new StudentListModel(); 
   StudentModelList: MatTableDataSource<any>;
+  showAdvanceSearchPanel: boolean = false;
   
+  moduleIdentifier=ModuleIdentifier;
+  createMode=SchoolCreate;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator; 
   @ViewChild(MatSort) sort:MatSort
 
@@ -69,9 +79,11 @@ export class StudentComponent implements OnInit,OnDestroy {
     private loaderService:LoaderService,
     private imageCropperService:ImageCropperService,
     private layoutService: LayoutService,
-    private excelService:ExcelService
-    ) 
-    { 
+    private excelService: ExcelService,
+    public translateService: TranslateService,
+    private dialog: MatDialog
+  ) {
+    translateService.use('en');
      this.getAllStudent.filterParams=null;
      if(localStorage.getItem("collapseValue") !== null){
       if( localStorage.getItem("collapseValue") === "false"){
@@ -158,10 +170,17 @@ export class StudentComponent implements OnInit,OnDestroy {
 
   goToAdd(){   
     this.router.navigate(["school/students/student-generalinfo"]);
-    this.imageCropperService.enableUpload(true);
+    this.imageCropperService.enableUpload({module:this.moduleIdentifier.STUDENT,upload:true,mode:this.createMode.ADD});
+  }
+
+  saveFilter(){
+    this.dialog.open(SaveFilterComponent, {
+      width: '500px'
+    })
   }
 
   viewStudentDetails(id){  
+    this.imageCropperService.enableUpload({module:this.moduleIdentifier.STUDENT,upload:true,mode:this.createMode.VIEW});
     this.studentService.setStudentId(id)
     this.router.navigate(["school/students/student-generalinfo"]); 
   }
@@ -226,9 +245,9 @@ export class StudentComponent implements OnInit,OnDestroy {
              let middleName=x.middleName==null?' ':' '+x.middleName+' ';
                return {
                 Name: x.firstGivenName+middleName+x.lastFamilyName,
-                StudentId: x.studentInternalId,
-                AlternativeId: x.alternateId,
-                GradeLevel:x.studentEnrollment[0]?.gradeLevelTitle,
+                'Student Id': x.studentInternalId,
+                'Alternative Id': x.alternateId,
+                'Grade Level':x.studentEnrollment[0]?.gradeLevelTitle,
                 Email:x.schoolEmail,
                 Telephone: x.mobilePhone
               }
@@ -241,6 +260,14 @@ export class StudentComponent implements OnInit,OnDestroy {
           }
         }
       });
+  }
+
+  showAdvanceSearch() {
+    this.showAdvanceSearchPanel = true;
+  }
+
+  hideAdvanceSearch(event){
+    this.showAdvanceSearchPanel = false;
   }
 
 

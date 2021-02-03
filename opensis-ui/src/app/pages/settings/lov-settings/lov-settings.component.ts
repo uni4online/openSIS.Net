@@ -10,7 +10,7 @@ import { fadeInRight400ms } from '../../../../@vex/animations/fade-in-right.anim
   ]
 })
 export class LovSettingsComponent implements OnInit {
-  pages=['School Level', 'School Classification', 'Countries', 'Female Toilet Type', 'Male Toilet Type', 'Common Toilet Type', 'Race', 'Ethnicity', 'Language']
+  pages=['School Level', 'School Classification', 'Countries', 'Female Toilet Type', 'Female Toilet Accessibility', 'Male Toilet Type', 'Male Toilet Accessibility', 'Common Toilet Type', 'Common Toilet Accessibility', 'Race', 'Ethnicity', 'Language']
   parentSettings=true;
   pageTitle = 'School Level';
   pageId: string = '';

@@ -1,4 +1,4 @@
-import { Component, OnInit ,Inject,ViewChild,Input} from '@angular/core';
+import { Component, OnInit ,Inject,ViewChild,Input, OnDestroy} from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, NgForm, Validators } from '@angular/forms';
 import icClose from '@iconify/icons-ic/twotone-close';
@@ -16,6 +16,9 @@ import { CountryModel } from '../../../../../models/countryModel';
 import { CommonService } from '../../../../../services/common.service';
 import { SharedFunction } from '../../../../shared/shared-function';
 import { LovList } from '../../../../../models/lovModel';
+import { CommonLOV } from '../../../../shared-module/lov/common-lov';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'vex-edit-contact',
@@ -27,7 +30,7 @@ import { LovList } from '../../../../../models/lovModel';
   ]
 
 })
-export class EditContactComponent implements OnInit {
+export class EditContactComponent implements OnInit,OnDestroy {
   @ViewChild('f') currentForm: NgForm;
   f: NgForm;
   search: NgForm;
@@ -65,6 +68,8 @@ export class EditContactComponent implements OnInit {
   disablePassword=false;
   studentDetailsForViewAndEditDataDetails;
   parentAddress=[];
+  destroySubject$: Subject<void> = new Subject();
+
   constructor(
       private dialogRef: MatDialogRef<EditContactComponent>,
       private fb: FormBuilder, 
@@ -72,6 +77,7 @@ export class EditContactComponent implements OnInit {
       private parentInfoService:ParentInfoService,
       private snackbar: MatSnackBar,
       private router:Router,
+      private commonLOV:CommonLOV,
       private commonService:CommonService,
       private commonFunction:SharedFunction,
       @Inject(MAT_DIALOG_DATA) public data
@@ -82,16 +88,17 @@ export class EditContactComponent implements OnInit {
    
     this.studentDetailsForViewAndEditDataDetails=this.data.studentDetailsForViewAndEditData; 
     this.getAllCountry(); 
-    this.getAllRelationship();
-    this.getAllSalutation();
-    this.getAllSuffix();
+    this.callLOVs();
     
       if(this.data.mode === "view"){       
        this.mode = "view";
-       this.viewData = this.data.parentInfo;       
+       this.viewData = this.data.parentInfo;  
        if(this.viewData.middlename === null){
         this.viewData.middlename = "";
-       }  
+       }
+       if(this.viewData.salutation === null){
+        this.viewData.salutation = "";
+       }
       }else{
         if(this.data.mode === "add"){
         this.disableAddressFlag =true;
@@ -185,52 +192,16 @@ export class EditContactComponent implements OnInit {
     this.submit();
   }
 
-  getAllSuffix() {
-    this.lovListViewModel.lovName = "Suffix";
-    this.commonService.getAllDropdownValues(this.lovListViewModel).subscribe(
-      (res: LovList) => {
-        if (typeof (res) == 'undefined') {
-        }
-        else {
-          if (res._failure) {
-          }
-          else {
-            this.suffixList = res.dropdownList;
-          }
-        }
-      })
-  }
-
-  getAllSalutation() {
-    this.lovListViewModel.lovName = "Salutation";
-    this.commonService.getAllDropdownValues(this.lovListViewModel).subscribe(
-      (res: LovList) => {
-        if (typeof (res) == 'undefined') {
-        }
-        else {
-          if (res._failure) {
-          }
-          else {
-            this.salutationList = res.dropdownList;
-          }
-        }
-      })
-  }
-
-  getAllRelationship() {
-    this.lovListViewModel.lovName = "Relationship";
-    this.commonService.getAllDropdownValues(this.lovListViewModel).subscribe(
-      (res: LovList) => {
-        if (typeof (res) == 'undefined') {
-        }
-        else {
-          if (res._failure) {
-          }
-          else {
-            this.relationshipList = res.dropdownList;
-          }
-        }
-      })
+  callLOVs(){
+    this.commonLOV.getLovByName('Relationship').pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
+      this.relationshipList=res;  
+    });
+    this.commonLOV.getLovByName('Salutation').pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
+      this.salutationList=res;  
+    });
+    this.commonLOV.getLovByName('Suffix').pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
+      this.suffixList=res;  
+    });
   }
 
   associateMultipleStudentsToParent(){
@@ -295,7 +266,7 @@ export class EditContactComponent implements OnInit {
         if (data._failure) {
           this.countryListArr = [];
         } else {
-          this.countryListArr = data.tableCountry; 
+          this.countryListArr=data.tableCountry?.sort((a, b) => {return a.name < b.name ? -1 : 1;} )   
           if(this.mode === "view"){
             this.countryListArr.map((val) => {
               var countryInNumber = +this.viewData.parentAddress.country;            
@@ -446,7 +417,7 @@ export class EditContactComponent implements OnInit {
               {       
                 if(data.parentInfo.length > 1){
                   this.mode="multipleResult";
-                  this.multipleParentInfo =data.parentInfoForView ;
+                  this.multipleParentInfo =data.parentInfo ;
                  
                 }else if(data.parentInfo.length == 0){
                   this.snackbar.open('No Record Found', '', {
@@ -464,5 +435,10 @@ export class EditContactComponent implements OnInit {
             }
           })     
         }
+    }
+
+    ngOnDestroy(){
+      this.destroySubject$.next();
+      this.destroySubject$.complete();
     }
 }

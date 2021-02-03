@@ -27,7 +27,7 @@ namespace opensis.data.ViewModels.Student
         public string GradeLevelTitle { get; set; }
         public bool? IsCustodian { get; set; }
         public string Relationship { get; set; }
-
+        public byte[] StudentPhoto { get; set; }
 
     }
 }

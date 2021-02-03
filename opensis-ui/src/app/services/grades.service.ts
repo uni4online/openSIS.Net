@@ -17,7 +17,9 @@ import {
    EffortGradeLibraryCategoryListView,
    EffortGradeLibraryCategoryAddViewModel,
    EffortGradeLlibraryDragDropModel,
-   EffortGradeLibraryCategoryItemAddViewModel} from '../models/grades.model';
+   EffortGradeLibraryCategoryItemAddViewModel,
+   HonorRollAddViewModel,
+   HonorRollListModel} from '../models/grades.model';
 
 @Injectable({
   providedIn: 'root'
@@ -151,5 +153,24 @@ export class GradesService {
   updateEffortGradeLlibraryCategorySortOrder(obj:EffortGradeLlibraryDragDropModel){
     let apiurl = this.apiUrl + obj._tenantName+"/Grade/updateEffortGradeLlibraryCategorySortOrder";
     return this.http.put<EffortGradeLlibraryDragDropModel>(apiurl,obj)
+  }
+
+
+  //honor setup
+  addHonorRoll(obj:HonorRollAddViewModel){
+    let apiurl = this.apiUrl + obj._tenantName+"/Grade/addHonorRoll";
+    return this.http.post<HonorRollAddViewModel>(apiurl,obj);
+  }
+  updateHonorRoll(obj:HonorRollAddViewModel){
+    let apiurl = this.apiUrl + obj._tenantName+"/Grade/updateHonorRoll";
+    return this.http.put<HonorRollAddViewModel>(apiurl,obj);
+  }
+  deleteHonorRoll(obj:HonorRollAddViewModel){
+    let apiurl = this.apiUrl + obj._tenantName+"/Grade/deleteHonorRoll";
+    return this.http.post<HonorRollAddViewModel>(apiurl,obj);
+  }
+  getAllHonorRollList(obj:HonorRollListModel){
+    let apiurl = this.apiUrl + obj._tenantName+"/Grade/getAllHonorRollList";
+    return this.http.post<HonorRollListModel>(apiurl,obj)
   }
 }

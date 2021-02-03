@@ -72,7 +72,7 @@
                             <mat-label>{{'contactRelationship' | translate}}</mat-label>
                             <mat-select [(ngModel)]="associatStudent.contactRelationship" #contactRelationship="ngModel" name="contactRelationship" required>
                                 <mat-option value=""></mat-option>
-                                <mat-option *ngFor="let relationShip of relationShipEnum" [value]="relationShip">{{relationShip}}</mat-option>
+                                <mat-option *ngFor="let relationShip of relationShipList" [value]="relationShip.lovColumnValue">{{relationShip.lovColumnValue}}</mat-option>
                             </mat-select>
                             <mat-error class="text-red" *ngIf="contactRelationship.errors?.required">
                                 {{'contactRelationshipIsRequired'|translate}}</mat-error>
@@ -127,7 +127,7 @@
                             <mat-label>{{'contactRelationship' | translate}}</mat-label>
                             <mat-select [(ngModel)]="associatStudent.contactRelationship" #contactRelationship="ngModel" name="contactRelationship" required>
                                 <mat-option value=""></mat-option>
-                                <mat-option *ngFor="let relationShip of relationShipEnum" [value]="relationShip">{{relationShip}}</mat-option>
+                                <mat-option *ngFor="let relationShip of relationShipList" [value]="relationShip.lovColumnValue">{{relationShip.lovColumnValue}}</mat-option>
                             </mat-select>
                             <mat-error class="text-red" *ngIf="contactRelationship.errors?.required">
                                 {{'contactRelationshipIsRequired'|translate}}</mat-error>

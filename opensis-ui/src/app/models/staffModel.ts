@@ -214,8 +214,8 @@ export class StaffSchoolInfoListModel extends CommonField {
     schoolAttachedName: string;
     staffMaster: {};
     profile: string;
-    startDate: Date;
-    endDate: Date;
+    startDate: Date | string;
+    endDate: Date | string;
     hide: boolean; //This is not a backend key, Its only for frontend check.
     updatedBy: string;
     updatedAt: string;

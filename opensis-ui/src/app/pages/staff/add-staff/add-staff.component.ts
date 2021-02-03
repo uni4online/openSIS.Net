@@ -21,6 +21,7 @@ import { FieldsCategoryListView } from '../../../models/fieldsCategoryModel';
 import { CustomFieldService } from '../../../services/custom-field.service';
 import { takeUntil } from 'rxjs/operators';
 import { LoaderService } from '../../../services/loader.service';
+import { ModuleIdentifier } from '../../../enums/module-identifier.enum';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -56,7 +57,7 @@ export class AddStaffComponent implements OnInit, OnDestroy {
   icSchedule = icSchedule;
   icCustomCategory = icCustomCategory;
   loading: boolean;
-
+  moduleIdentifier=ModuleIdentifier;
   pageId = 'General Info';
 
   constructor(private layoutService: LayoutService, public translateService: TranslateService,
@@ -94,10 +95,12 @@ export class AddStaffComponent implements OnInit, OnDestroy {
     this.staffId = this.staffService.getStaffId();
     if (this.staffId != null || this.staffId != undefined) {
       this.staffCreateMode = this.staffCreate.VIEW;
+     this.imageCropperService.enableUpload({module:this.moduleIdentifier.STAFF,upload:true,mode:this.staffCreate.VIEW});
       this.getStaffDetailsUsingId();
       this.onViewMode();
     } else if (this.staffCreateMode == this.staffCreate.ADD) {
       this.getAllFieldsCategory();
+     this.imageCropperService.enableUpload({module:this.moduleIdentifier.STAFF,upload:true,mode:this.staffCreate.ADD});
     }
   }
   ngAfterViewChecked(){

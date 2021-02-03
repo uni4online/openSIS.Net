@@ -20,6 +20,8 @@ import { MatSort } from '@angular/material/sort';
 import { LoaderService } from './../../../services/loader.service';
 import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confirm-dialog.component';
 import { MatPaginator } from '@angular/material/paginator';
+import { ExcelService } from '../../../services/excel.service';
+import { SharedFunction } from '../../shared/shared-function';
 
 @Component({
   selector: 'vex-school-level',
@@ -55,6 +57,7 @@ export class SchoolLevelComponent implements OnInit {
   lovList:LovList= new LovList();
   lovName="School Level";
   schoolLevelList: MatTableDataSource<any>;
+  schoolLevelListForExcel=[];
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   listCount;
@@ -65,7 +68,9 @@ export class SchoolLevelComponent implements OnInit {
     private snackbar: MatSnackBar,
     private commonService:CommonService,
     private loaderService:LoaderService,
-    public translateService:TranslateService
+    public translateService:TranslateService,
+    private excelService:ExcelService,
+    public commonfunction:SharedFunction
     ) {
     translateService.use('en');
     this.loaderService.isLoading.subscribe((val) => {
@@ -170,12 +175,13 @@ export class SchoolLevelComponent implements OnInit {
           if (res._failure) {  
             this.schoolLevelList=new MatTableDataSource(res.dropdownList) ;
             this.listCount=this.schoolLevelList.data;
-            this.snackbar.open('No Record Found For School Level. ', '', {
+            this.snackbar.open('' + res._message, '', {
               duration: 10000
             });
           } 
           else { 
             this.schoolLevelList=new MatTableDataSource(res.dropdownList) ;
+            this.schoolLevelListForExcel = res.dropdownList;
             this.schoolLevelList.sort=this.sort;  
             this.schoolLevelList.paginator=this.paginator; 
             this.listCount=this.schoolLevelList.data.length;
@@ -184,5 +190,25 @@ export class SchoolLevelComponent implements OnInit {
       }
     );
   }
+
+  exportSchoolLevelListToExcel(){
+    if(this.schoolLevelListForExcel.length!=0){
+      let schoolLevelList=this.schoolLevelListForExcel?.map((item)=>{
+        return{
+          Title: item.lovColumnValue,
+          CreatedBy: item.createdBy!==null ? item.createdBy: '-',
+          CreateDate: this.commonfunction.transformDateWithTime(item.createdOn),
+          UpdatedBy: item.updatedBy!==null ? item.updatedBy: '-',
+          UpdateDate:  this.commonfunction.transformDateWithTime(item.updatedOn)
+        }
+      });
+      this.excelService.exportAsExcelFile(schoolLevelList,'School_Level_List_')
+     }
+     else{
+    this.snackbar.open('No Records Found. Failed to Export School Level List','', {
+      duration: 5000
+    });
+  }
+}
 
 }

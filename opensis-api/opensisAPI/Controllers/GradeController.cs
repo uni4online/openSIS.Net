@@ -471,6 +471,69 @@ namespace opensisAPI.Controllers
             return checkStandardRefNo;
         }
 
+        [HttpPost("addHonorRoll")]
+        public ActionResult<HonorRollsAddViewModel> AddHonorRoll(HonorRollsAddViewModel honorRollsAddViewModel)
+        {
+            HonorRollsAddViewModel honorRollAdd = new HonorRollsAddViewModel();
+            try
+            {
+                honorRollAdd = _gradeService.AddHonorRoll(honorRollsAddViewModel);
+            }
+            catch (Exception es)
+            {
+                honorRollAdd._failure = false;
+                honorRollAdd._message = es.Message;
+            }
+            return honorRollAdd;
+        }
 
+        [HttpPut("updateHonorRoll")]
+        public ActionResult<HonorRollsAddViewModel> UpdateHonorRoll(HonorRollsAddViewModel honorRollsAddViewModel)
+        {
+            HonorRollsAddViewModel honorRollUpdate = new HonorRollsAddViewModel();
+            try
+            {
+                honorRollUpdate = _gradeService.UpdateHonorRoll(honorRollsAddViewModel);
+            }
+            catch (Exception es)
+            {
+                honorRollUpdate._failure = true;
+                honorRollUpdate._message = es.Message;
+            }
+            return honorRollUpdate;
+        }
+
+        [HttpPost("getAllHonorRollList")]
+
+        public ActionResult<HonorRollsListViewModel> GetAllHonorRollList(PageResult pageResult)
+        {
+            HonorRollsListViewModel honorRollList = new HonorRollsListViewModel();
+            try
+            {
+                honorRollList = _gradeService.GetAllHonorRollList(pageResult);
+            }
+            catch (Exception es)
+            {
+                honorRollList._message = es.Message;
+                honorRollList._failure = true;
+            }
+            return honorRollList;
+        }
+
+        [HttpPost("deleteHonorRoll")]
+        public ActionResult<HonorRollsAddViewModel> DeleteHonorRoll(HonorRollsAddViewModel honorRollsAddViewModel)
+        {
+            HonorRollsAddViewModel honorRollDelete = new HonorRollsAddViewModel();
+            try
+            {
+                honorRollDelete = _gradeService.DeleteHonorRoll(honorRollsAddViewModel);
+            }
+            catch (Exception es)
+            {
+                honorRollDelete._failure = true;
+                honorRollDelete._message = es.Message;
+            }
+            return honorRollDelete;
+        }
     }
 }

@@ -22,61 +22,41 @@ export class EditCountryComponent implements OnInit {
   icClose = icClose;
   countryAddModel = new CountryAddModel();
   form: FormGroup;
-  countryModalTitle="addCountry";
-  countryModalActionTitle="submit";
-  constructor(private dialogRef: MatDialogRef<EditCountryComponent>,
-    private fb: FormBuilder,
+  countryModalTitle:string;
+  countryModalActionTitle:string;
+  constructor(
+    private dialogRef: MatDialogRef<EditCountryComponent>,
+    @Inject(MAT_DIALOG_DATA) public data:any,
+    private snackbar:MatSnackBar,
     private commonService:CommonService,
-    private snackbar: MatSnackBar,
-    @Inject(MAT_DIALOG_DATA) public data) { }
-
-  ngOnInit(): void {
-    this.form = this.fb.group(
-      {
+    fb:FormBuilder
+    ) {
+      this.form=fb.group({
+        id:[0],
         name: ['', Validators.required],
-        countryCode: ['']    
-      });
-      
-      if(this.data.mode === "edit"){
-        this.countryAddModel.country = this.data.editDetails;
+        countryCode: ['']  
+      })
+      if(data==null){
+        this.countryModalTitle="addCountry";
+        this.countryModalActionTitle="submit";
+      }  
+      else{        
         this.countryModalTitle="editCountry";
         this.countryModalActionTitle="update";
+        this.form.controls.id.patchValue(data.id)
+        this.form.controls.name.patchValue(data.name)
+        this.form.controls.countryCode.patchValue(data.countryCode)
       }
-  }
+     }
 
-  get f() {
-    return this.form.controls;
-  }
-  closeDialog(){
-    this.dialogRef.close(false);
-  }
+
+  ngOnInit(): void {}
+  
   submit() {    
     if (this.form.valid) {   
-      if(this.data.mode === "edit"){
-        this.countryAddModel.country.updatedBy = sessionStorage.getItem("email");
-        this.countryAddModel.country.createdBy = sessionStorage.getItem("email");
-        this.commonService.UpdateCountry(this.countryAddModel).subscribe(data => {
-          if (typeof (data) == 'undefined') {
-            this.snackbar.open('Country Updation failed. ' + sessionStorage.getItem("httpError"), '', {
-              duration: 10000
-            });
-          }
-          else {
-            if (data._failure) {
-              this.snackbar.open('Country Updation failed. ' + data._message, '', {
-                duration: 10000
-              });
-            } else {
-              this.snackbar.open('Country Updation Successful.', '', {
-                duration: 10000
-              });              
-              this.dialogRef.close(true);
-            }
-          }
-  
-        })
-      }else{
-        this.countryAddModel.country.updatedBy = "";
+      if(this.form.controls.id.value==0){
+        this.countryAddModel.country.name=this.form.controls.name.value;
+        this.countryAddModel.country.countryCode=this.form.controls.countryCode.value;
         this.countryAddModel.country.createdBy = sessionStorage.getItem("email");
         this.commonService.AddCountry(this.countryAddModel).subscribe(data => {
           if (typeof (data) == 'undefined') {
@@ -97,7 +77,33 @@ export class EditCountryComponent implements OnInit {
             }
           }
   
+        })     
+      }else{
+        this.countryAddModel.country.id=this.form.controls.id.value;
+        this.countryAddModel.country.name=this.form.controls.name.value;
+        this.countryAddModel.country.countryCode=this.form.controls.countryCode.value;
+        this.countryAddModel.country.updatedBy = sessionStorage.getItem("email");
+        this.commonService.UpdateCountry(this.countryAddModel).subscribe(data => {
+          if (typeof (data) == 'undefined') {
+            this.snackbar.open('Country Updation failed. ' + sessionStorage.getItem("httpError"), '', {
+              duration: 10000
+            });
+          }
+          else {
+            if (data._failure) {
+              this.snackbar.open('Country Updation failed. ' + data._message, '', {
+                duration: 10000
+              });
+            } else {
+              this.snackbar.open('Country Updation Successful.', '', {
+                duration: 10000
+              });              
+              this.dialogRef.close(true);
+            }
+          }
+  
         })
+        
       }  
       
     }

@@ -1,13 +1,16 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject,Observable, Subject } from 'rxjs';
+import {ImageModel} from '../models/image-cropper.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ImageCropperService {
+  imageStat:ImageModel=new ImageModel();
+
   private cropEventSubject = new Subject<any>();
   private unCropEventSubject = new Subject<any>();
-  private message = new BehaviorSubject(false);
+  private message = new BehaviorSubject(this.imageStat);
   sharedMessage = this.message.asObservable();
 
   private imageStatus = new BehaviorSubject(null);
@@ -28,7 +31,7 @@ export class ImageCropperService {
     return this.unCropEventSubject.asObservable();
   }
 
-  enableUpload(message: boolean) {
+  enableUpload(message: ImageModel) {
     this.message.next(message)
   }
 

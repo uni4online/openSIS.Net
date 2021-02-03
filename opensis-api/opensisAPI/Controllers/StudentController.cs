@@ -514,5 +514,21 @@ namespace opensisAPI.Controllers
             }
             return studentEnrollmentUpdate;
         }
+
+        [HttpPut("addUpdateStudentPhoto")]
+        public ActionResult<StudentAddViewModel> AddUpdateStudentPhoto(StudentAddViewModel studentAddViewModel)
+        {
+            StudentAddViewModel studentPhotoUpdate = new StudentAddViewModel();
+            try
+            {
+                studentPhotoUpdate = _studentService.AddUpdateStudentPhoto(studentAddViewModel);
+            }
+            catch (Exception es)
+            {
+                studentPhotoUpdate._failure = true;
+                studentPhotoUpdate._message = es.Message;
+            }
+            return studentPhotoUpdate;
+        }
     }
 }

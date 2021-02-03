@@ -802,5 +802,35 @@ namespace opensis.data.Repository
             }
             return staffCertificateInfoAddViewModel;
         }
+
+        /// <summary>
+        /// Add or Update Staff Photo
+        /// </summary>
+        /// <param name="staffAddViewModel"></param>
+        /// <returns></returns>
+        public StaffAddViewModel AddUpdateStaffPhoto(StaffAddViewModel staffAddViewModel)
+        {
+            try
+            {
+                var staffUpdate = this.context?.StaffMaster.FirstOrDefault(x => x.TenantId == staffAddViewModel.staffMaster.TenantId && x.StaffId == staffAddViewModel.staffMaster.StaffId);
+                if(staffUpdate != null)
+                {
+                    staffUpdate.StaffPhoto = staffAddViewModel.staffMaster.StaffPhoto;
+                    this.context?.SaveChanges();
+                    staffAddViewModel._message = "Updated Successfully";
+                }
+                else
+                {
+                    staffAddViewModel._failure = true;
+                    staffAddViewModel._message = NORECORDFOUND;
+                }
+            }
+            catch(Exception es)
+            {
+                staffAddViewModel._failure = true;
+                staffAddViewModel._message = es.Message;
+            }
+            return staffAddViewModel;
+        }
     }
 }

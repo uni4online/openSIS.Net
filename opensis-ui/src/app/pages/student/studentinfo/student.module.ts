@@ -21,8 +21,21 @@ import { SharedModuleModule } from '../../shared-module/shared-module.module';
 import { StudentRoutingModule } from '../studentinfo/student-routing-module';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import {MatSortModule} from '@angular/material/sort';
+import { SearchStudentComponent } from './search-student/search-student.component';
+import { TranslateModule } from '@ngx-translate/core';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatInputModule } from '@angular/material/input';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatRippleModule } from '@angular/material/core';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
+
 @NgModule({
-  declarations: [StudentComponent],
+  declarations: [StudentComponent, SearchStudentComponent],
   imports: [
     CommonModule,
     SecondaryToolbarModule,
@@ -45,7 +58,17 @@ import {MatSortModule} from '@angular/material/sort';
     SharedModuleModule,
     StudentRoutingModule,
     MatTooltipModule,
-    MatSortModule
+    MatSortModule,
+    TranslateModule,
+    MatExpansionModule,
+    MatInputModule,
+    MatDividerModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatFormFieldModule,
+    MatSlideToggleModule,
+    MatRippleModule,
+    MatProgressSpinnerModule
   ]
 })
 export class StudentModule { }
