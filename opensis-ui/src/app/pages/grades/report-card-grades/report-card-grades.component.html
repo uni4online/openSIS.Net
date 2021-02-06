@@ -132,15 +132,15 @@
                     </td>
                 </ng-container>
         
-                <!-- <ng-container matColumnDef="loading">
+                <ng-container matColumnDef="loading">
                     <mat-footer-cell *matFooterCellDef colspan="6">
                         <vex-mat-spinner-overlay *ngIf="loading" color="accent"></vex-mat-spinner-overlay>
                     </mat-footer-cell>
-                </ng-container> -->
+                </ng-container> 
         
                 <tr mat-header-row *matHeaderRowDef="visibleColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: visibleColumns" @fadeInUp></tr>
-                <!-- <mat-footer-row *matFooterRowDef="['loading']" [class.hide]="!loading"></mat-footer-row> -->
+                <mat-footer-row *matFooterRowDef="['loading']" [class.hide]="!loading"></mat-footer-row>
         
             </table>
             <!-- <mat-paginator [length]="totalCount" [pageSize]="pageSize" [pageSizeOptions]="[10, 20, 30, 40]" showFirstLastButtons (page)='getPageEvent($event)'></mat-paginator> -->

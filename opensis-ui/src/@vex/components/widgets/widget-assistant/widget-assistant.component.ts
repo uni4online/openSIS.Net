@@ -11,10 +11,13 @@ export class WidgetAssistantComponent implements OnInit {
 
   icCheckCircle = icCheckCircle;
   icError = icError;
-
+  today : Date;
+  userName: string;
   constructor() { }
 
   ngOnInit() {
+    this.today = new Date();
+    this.userName = sessionStorage.getItem('user');
   }
 
 }

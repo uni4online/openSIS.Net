@@ -11,34 +11,32 @@
                 <mat-card @stagger class="w-full">
                     <div class="flex items-center pl-0" fxLayout="row" fxLayoutAlign="center center">
                         <h6 class="flex-auto">{{'markingPeriodsList' | translate}}</h6>
-                        <button (click)="openAddNew()" type="button" color="primary" mat-button><ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 rtl:ml-2 ic-inline" inline="true"></ic-icon></button>
+                        <!-- <button (click)="openAddNew()" type="button" color="primary" mat-button><ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 rtl:ml-2 ic-inline" inline="true"></ic-icon></button> -->
                     </div>
                     <p class="text-gray text-xs pb-5">{{'clickAnItemToViewDetailsOnTheRightSide' | translate}}</p>
                     <ul class="marking-period-tree">
                         <ng-template #recursiveList let-list>
                             <li *ngFor="let item of list;let indexOfelement=index;">                             
-                                <div  [ngClass]= "indexOfelement === 0 && item.isParent? 'tree-node card flex shadow-none border-solid border commonClass active' :'tree-node card flex shadow-none border-solid border commonClass' ">
+                                <div class="tree-node card flex justify-between shadow-none border-solid border commonClass" [ngClass]= "indexOfelement === 0 && item.isParent? 'active' :''">
                                     <a  (click) = "viewDetails(item,$event.target)"  class="w-full p-3 cursor-pointer"> {{item.title}}</a>
-                                    <button [matMenuTriggerFor]="addNewMenu" class="w-10 pt-3" type="button">
+                                    <!-- <button [matMenuTriggerFor]="addNewMenu" class="w-10 pt-3" type="button">
                                         <mat-icon [icIcon]="icArrowDropDown" size="20px"></mat-icon>
+                                    </button> -->
+                                    <div>
+                                        <div class="flex items-center">
+                                            <div *ngIf="item.isParent || (item.semesterId > 0 && item.isParent === false) || (item.semesterId > 0 &&  item.isParent === false) || (item.yearId > 0 && item.isParent === false)">
+                                                <button (click) = "addChildren(item)" matTooltip="Add Child Marking Period" class="px-2 pt-3 pb-1">
+                                                    <mat-icon [icIcon]="icAdd"></mat-icon>
                                     </button>
-    
-                                    <mat-menu #addNewMenu="matMenu" [overlapTrigger]="false" xPosition="before"
-                                        yPosition="below">
-                                        <button (click) = "editItem(item)" mat-menu-item>
-                                            <span>{{'editItem' | translate}}</span>
+                                            </div>
+                                            <button (click) = "editItem(item)" matTooltip="Edit Item" class="px-2 pt-3 pb-1">
+                                                <mat-icon [icIcon]="icEdit"></mat-icon>
                                         </button>
-    
-                                        <button (click) = "confirmDelete(item)" mat-menu-item>
-                                            <span>{{'deleteItem' | translate}}</span>
-                                        </button>
-                                        <div *ngIf="item.isParent || (item.semesterId > 0 && item.isParent === false) || (item.semesterId > 0 &&  item.isParent === false) || (item.yearId > 0 && item.isParent === false)">
-                                            <button (click) = "addChildren(item)"  mat-menu-item>
-                                                <span>{{'addChildMarkingPeriod' | translate}}</span>
+                                            <button (click) = "confirmDelete(item)" matTooltip="Delete Item" class="px-2 pt-3 pb-1">
+                                                <mat-icon [icIcon]="icDelete"></mat-icon>
                                             </button>
                                         </div>
-                                        
-                                    </mat-menu>
+                                    </div>
                                 </div>              
                                 
                                 <ul *ngIf="item.children && item.children.length > 0">
@@ -55,7 +53,7 @@
                 <mat-card @stagger class="hidden md:block mr-6 ng-tns-c284-386 ng-star-inserted md:w-5/12">
                     <div class="flex items-center pl-0" fxLayout="row" fxLayoutAlign="center center">
                         <h6 class="flex-auto">{{'markingPeriodsList' | translate}}</h6>
-                        <button (click)="openAddNew()" type="button" color="primary" mat-button><ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2 ic-inline" inline="true"></ic-icon> {{'addMarkingPeriod' | translate}}</button>
+                        <!-- <button (click)="openAddNew()" type="button" color="primary" mat-button><ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2 ic-inline" inline="true"></ic-icon> {{'addMarkingPeriod' | translate}}</button> -->
                     </div>
                     <p class="text-gray text-xs pb-5">{{'clickAnItemToViewDetailsOnTheRightSide' | translate}}</p>
                     <ul class="marking-period-tree">

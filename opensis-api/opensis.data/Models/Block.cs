@@ -7,7 +7,7 @@ namespace opensis.data.Models
     {
         public Block()
         {
-            BlockPeriod = new HashSet<BlockPeriod>();
+            
             CourseBlockSchedule = new HashSet<CourseBlockSchedule>();
         }
 
@@ -22,7 +22,7 @@ namespace opensis.data.Models
         public DateTime? UpdatedOn { get; set; }
 
         public virtual SchoolMaster SchoolMaster { get; set; }
-        public virtual ICollection<BlockPeriod> BlockPeriod { get; set; }
+      
         public virtual ICollection<CourseBlockSchedule> CourseBlockSchedule { get; set; }
     }
 }

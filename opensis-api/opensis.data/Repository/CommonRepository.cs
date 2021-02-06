@@ -893,6 +893,7 @@ namespace opensis.data.Repository
                 if (defaultCalender != null)
                 {
                     dashboardView.schoolCalendar = defaultCalender;
+                    dashboardView.schoolCalendar.SchoolMaster = null;
 
                     var Events = this.context?.CalendarEvents.Where(x => x.TenantId == dashboardViewModel.TenantId && x.SchoolId == dashboardViewModel.SchoolId && x.AcademicYear == dashboardViewModel.AcademicYear && ((x.CalendarId == defaultCalender.CalenderId && x.SystemWideEvent == false) || x.SystemWideEvent == true)).ToList();
                     if (Events.Count > 0)

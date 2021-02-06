@@ -27,13 +27,19 @@ export class ViewGeneralInfoComponent implements OnInit {
   }
 
   showOnGoogleMap(){
+    let stAdd1 = this.schoolViewDetails.schoolMaster.streetAddress1;
+    let stAdd2 = this.schoolViewDetails.schoolMaster.streetAddress2;
+    let city = this.schoolViewDetails.schoolMaster.city;
+    let country = this.schoolViewDetails.schoolMaster.country;
+    let state = this.schoolViewDetails.schoolMaster.state;
+    let zip = this.schoolViewDetails.schoolMaster.zip;
     let longitude=this.schoolViewDetails.schoolMaster.longitude;
     let latitude=this.schoolViewDetails.schoolMaster.latitude;
-    if(longitude && latitude){
-      this.mapUrl=`https://maps.google.com/?q=${latitude},${longitude}`
+    if(stAdd1 && country && city && zip){
+      this.mapUrl=`https://maps.google.com/?q=${stAdd1},${stAdd2},${city},${state},${zip},${country}`
       window.open(this.mapUrl,'_blank');
     }else{
-      this.snackbar.open('Invalid Longitude, Latitude.', 'Ok', {
+      this.snackbar.open('Invalid School Address', 'Ok', {
         duration: 5000
       });
     }

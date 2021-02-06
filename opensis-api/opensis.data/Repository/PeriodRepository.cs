@@ -282,39 +282,56 @@ namespace opensis.data.Repository
         /// <returns></returns>
         public BlockListViewModel GetAllBlockList(BlockListViewModel blockListViewModel)
         {
-            BlockListViewModel blockList = new BlockListViewModel();
+            BlockListViewModel blockListModel = new BlockListViewModel();
             try
             {
-                var blockDataList = this.context?.Block.Include(x => x.BlockPeriod).Where(x => x.TenantId == blockListViewModel.TenantId && x.SchoolId == blockListViewModel.SchoolId).OrderBy(x => x.BlockSortOrder).ToList();
-
+                var blockDataList = this.context?.Block.Where(x => x.TenantId == blockListViewModel.TenantId && x.SchoolId == blockListViewModel.SchoolId).OrderBy(x => x.BlockSortOrder).ToList();
+                
                 if (blockDataList.Count > 0)
                 {
                     foreach (var block in blockDataList)
                     {
-                        block.BlockPeriod = block.BlockPeriod.OrderBy(x => x.PeriodSortOrder).ToList();
+                        var blockList = new GetBlockListForView()
+                        {
+                            TenantId = block.TenantId,
+                            SchoolId = block.SchoolId,
+                            BlockId = block.BlockId,
+                            BlockTitle = block.BlockTitle,
+                            BlockSortOrder = block.BlockSortOrder,
+                            CreatedBy = block.CreatedBy,
+                            CreatedOn = block.CreatedOn,
+                            UpdatedBy = block.UpdatedBy,
+                            UpdatedOn = block.UpdatedOn
+                        };              
+                        var blockPeriodDataList = this.context?.BlockPeriod.Where(x => x.TenantId == block.TenantId && x.SchoolId == block.SchoolId && x.BlockId==block.BlockId).OrderBy(x => x.PeriodSortOrder).ToList();
+                        if(blockPeriodDataList.Count>0)
+                        {
+                            blockList.BlockPeriod = blockPeriodDataList;
+                        }
+                        //block.BlockPeriod = block.BlockPeriod.OrderBy(x => x.PeriodSortOrder).ToList();
+                        blockListModel.getBlockListForView.Add(blockList);
                     }
-                    blockListViewModel.blockList = blockDataList;
-                    blockListViewModel._tenantName = blockListViewModel._tenantName;
-                    blockListViewModel._token = blockListViewModel._token;
-                    blockListViewModel._failure = false;
+                    blockListModel._tenantName = blockListViewModel._tenantName;
+                    blockListModel._token = blockListViewModel._token;
+                    blockListModel._failure = false;
                 }
                 else
                 {
-                    blockListViewModel.blockList = null;
-                    blockListViewModel._message = NORECORDFOUND;
-                    blockListViewModel._failure = true;
-                    blockListViewModel._tenantName = blockListViewModel._tenantName;
-                    blockListViewModel._token = blockListViewModel._token;
-                }              
+                    blockListModel.getBlockListForView = null;
+                    blockListModel._message = NORECORDFOUND;
+                    blockListModel._failure = true;
+                    blockListModel._tenantName = blockListViewModel._tenantName;
+                    blockListModel._token = blockListViewModel._token;
+                }
             }
             catch (Exception es)
             {
-                blockListViewModel._message = es.Message;
-                blockListViewModel._failure = true;
-                blockListViewModel._tenantName = blockListViewModel._tenantName;
-                blockListViewModel._token = blockListViewModel._token;
+                blockListModel._message = es.Message;
+                blockListModel._failure = true;
+                blockListModel._tenantName = blockListViewModel._tenantName;
+                blockListModel._token = blockListViewModel._token;
             }
-            return blockListViewModel;
+            return blockListModel;
         }
 
         /// <summary>

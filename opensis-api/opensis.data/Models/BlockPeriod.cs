@@ -5,6 +5,13 @@ namespace opensis.data.Models
 {
     public partial class BlockPeriod
     {
+        public BlockPeriod()
+        {
+            CourseBlockSchedule = new HashSet<CourseBlockSchedule>();
+            CourseCalendarSchedule = new HashSet<CourseCalendarSchedule>();
+            CourseFixedSchedule = new HashSet<CourseFixedSchedule>();
+            CourseVariableSchedule = new HashSet<CourseVariableSchedule>();
+        }
         public Guid TenantId { get; set; }
         public int SchoolId { get; set; }
         public int BlockId { get; set; }
@@ -19,6 +26,10 @@ namespace opensis.data.Models
         public string UpdatedBy { get; set; }
         public DateTime? UpdatedOn { get; set; }
 
-        public virtual Block Block { get; set; }
+        public virtual SchoolMaster SchoolMaster { get; set; }
+        public virtual ICollection<CourseBlockSchedule> CourseBlockSchedule { get; set; }
+        public virtual ICollection<CourseCalendarSchedule> CourseCalendarSchedule { get; set; }
+        public virtual ICollection<CourseFixedSchedule> CourseFixedSchedule { get; set; }
+        public virtual ICollection<CourseVariableSchedule> CourseVariableSchedule { get; set; }
     }
 }

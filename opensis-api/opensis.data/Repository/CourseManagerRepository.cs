@@ -643,5 +643,390 @@ namespace opensis.data.Repository
             }
             return courseListModel;
         }
+        /// <summary>
+        /// Add Course Section
+        /// </summary>
+        /// <param name="courseSectionAddViewModel"></param>
+        /// <returns></returns>
+        public CourseSectionAddViewModel AddCourseSection(CourseSectionAddViewModel courseSectionAddViewModel)
+        {
+            using (var transaction = this.context.Database.BeginTransaction())
+            {
+                try
+                {
+                    List<CourseBlockSchedule> courseBlockScheduleList = new List<CourseBlockSchedule>();
+                    List<CourseVariableSchedule> courseVariableScheduleList = new List<CourseVariableSchedule>();
+
+                    if (!(bool)courseSectionAddViewModel.courseSection.DurationBasedOnPeriod)
+                    {
+                        var CalenderData = this.context?.SchoolCalendars.FirstOrDefault(x => x.CalenderId == courseSectionAddViewModel.courseSection.CalendarId);
+
+
+                        if (CalenderData != null)
+                        {
+                            if (CalenderData.StartDate >= courseSectionAddViewModel.courseSection.DurationStartDate || CalenderData.EndDate <= courseSectionAddViewModel.courseSection.DurationEndDate)
+                            {                                
+                                courseSectionAddViewModel._message = "Start Date And End Date of Course Section Should Be Between Start Date And End Date of School Calender";
+                                courseSectionAddViewModel._failure = true;
+                                return courseSectionAddViewModel;
+                            }
+                        }
+                    }
+
+                    int? CourseSectionId = 1;
+
+                    var CourseSectionData = this.context?.CourseSection.Where(x => x.TenantId == courseSectionAddViewModel.courseSection.TenantId && x.SchoolId == courseSectionAddViewModel.courseSection.SchoolId).OrderByDescending(x => x.CourseSectionId).FirstOrDefault();
+
+
+                    if (CourseSectionData != null)
+                    {
+                        CourseSectionId = CourseSectionData.CourseSectionId + 1;
+                    }
+
+                    if (courseSectionAddViewModel.courseSection.ScheduleType != null)
+                    {
+                        switch (courseSectionAddViewModel.courseSection.ScheduleType.ToLower())
+                        {
+                            case "fixedschedule":
+
+                                if (courseSectionAddViewModel.courseFixedSchedule != null)
+                                {
+                                    var roomCapacity = this.context?.Rooms.FirstOrDefault(e => e.TenantId == courseSectionAddViewModel.courseFixedSchedule.TenantId && e.SchoolId == courseSectionAddViewModel.courseFixedSchedule.SchoolId && e.RoomId == courseSectionAddViewModel.courseFixedSchedule.RoomId)?.Capacity;
+
+                                    if (roomCapacity < courseSectionAddViewModel.courseSection.Seats)
+                                    {
+                                        courseSectionAddViewModel._message = "Invalid Seat Capacity";
+                                        courseSectionAddViewModel._failure = true;
+                                        return courseSectionAddViewModel;
+                                    }
+                                    else
+                                    {
+                                        int? fixedscheduleSerial = 1;
+
+                                        var CourseSectionfixedscheduleData = this.context?.CourseFixedSchedule.Where(x => x.TenantId == courseSectionAddViewModel.courseSection.TenantId && x.SchoolId == courseSectionAddViewModel.courseSection.SchoolId).OrderByDescending(x => x.Serial).FirstOrDefault();
+
+
+                                        if (CourseSectionfixedscheduleData != null)
+                                        {
+                                            fixedscheduleSerial = CourseSectionfixedscheduleData.Serial + 1;
+                                        }
+
+                                        var courseFixedSchedule = new CourseFixedSchedule()
+                                        {
+                                            TenantId = courseSectionAddViewModel.courseSection.TenantId,
+                                            SchoolId = courseSectionAddViewModel.courseSection.SchoolId,
+                                            CourseId = courseSectionAddViewModel.courseSection.CourseId,
+                                            CourseSectionId = (int)CourseSectionId,
+                                            GradeScaleId = courseSectionAddViewModel.courseSection.GradeScaleId,
+                                            Serial = (int)fixedscheduleSerial,
+                                            RoomId = courseSectionAddViewModel.courseFixedSchedule.RoomId,
+                                            PeriodId = courseSectionAddViewModel.courseFixedSchedule.PeriodId,
+                                            CreatedBy = courseSectionAddViewModel.courseFixedSchedule.CreatedBy,
+                                            CreatedOn = DateTime.UtcNow
+                                        };
+                                        this.context?.CourseFixedSchedule.Add(courseFixedSchedule);
+                                        courseSectionAddViewModel.courseSection.ScheduleType = "Fixed Schedule (1)";
+                                    }
+                                }
+                                break;
+
+                            case "variableschedule":
+
+                                if (courseSectionAddViewModel.courseVariableScheduleList.Count > 0)
+                                {
+                                    int? variablescheduleSerial = 1;
+
+                                    var CourseSectionvariablescheduleData = this.context?.CourseVariableSchedule.Where(x => x.TenantId == courseSectionAddViewModel.courseSection.TenantId && x.SchoolId == courseSectionAddViewModel.courseSection.SchoolId).OrderByDescending(x => x.Serial).FirstOrDefault();
+
+                                    if (CourseSectionvariablescheduleData != null)
+                                    {
+                                        variablescheduleSerial = CourseSectionvariablescheduleData.Serial + 1;
+                                    }
+
+                                    foreach (var courseVariableSchedules in courseSectionAddViewModel.courseVariableScheduleList)
+                                    {
+                                        var roomCapacity = this.context?.Rooms.FirstOrDefault(e => e.TenantId == courseSectionAddViewModel.courseFixedSchedule.TenantId && e.SchoolId == courseSectionAddViewModel.courseFixedSchedule.SchoolId && e.RoomId == courseVariableSchedules.RoomId)?.Capacity;
+
+                                        if (roomCapacity < courseSectionAddViewModel.courseSection.Seats)
+                                        {
+                                            courseSectionAddViewModel._message = "Invalid Seat Capacity";
+                                            courseSectionAddViewModel._failure = true;
+                                            return courseSectionAddViewModel;
+                                        }
+                                        else
+                                        {
+                                            var courseeVariableSchedule = new CourseVariableSchedule()
+                                            {
+                                                TenantId = courseSectionAddViewModel.courseSection.TenantId,
+                                                SchoolId = courseSectionAddViewModel.courseSection.SchoolId,
+                                                CourseId = courseSectionAddViewModel.courseSection.CourseId,
+                                                CourseSectionId = (int)CourseSectionId,
+                                                GradeScaleId = courseSectionAddViewModel.courseSection.GradeScaleId,
+                                                Serial = (int)variablescheduleSerial,
+                                                Day = courseVariableSchedules.Day,
+                                                PeriodId = courseVariableSchedules.PeriodId,
+                                                RoomId = courseVariableSchedules.RoomId,
+                                                TakeAttendance = courseVariableSchedules.TakeAttendance,
+                                                CreatedBy = courseSectionAddViewModel.courseSection.CreatedBy,
+                                                CreatedOn = DateTime.UtcNow,
+
+                                            };
+                                            //this.context?.CourseVariableSchedule.Add(courseeVariableSchedule);
+                                            courseVariableScheduleList.Add(courseeVariableSchedule);
+                                            variablescheduleSerial++;
+                                        }
+                                    }
+                                    this.context?.CourseVariableSchedule.AddRange(courseVariableScheduleList);
+                                    courseSectionAddViewModel.courseSection.ScheduleType = "Variable Schedule (2)";
+                                }
+                                break;
+
+                            case "calendarschedule":
+
+                                if (courseSectionAddViewModel.courseCalendarSchedule != null)
+                                {
+
+                                    var roomCapacity = this.context?.Rooms.FirstOrDefault(e => e.TenantId == courseSectionAddViewModel.courseFixedSchedule.TenantId && e.SchoolId == courseSectionAddViewModel.courseFixedSchedule.SchoolId && e.RoomId == courseSectionAddViewModel.courseCalendarSchedule.RoomId)?.Capacity;
+
+                                    if (roomCapacity < courseSectionAddViewModel.courseSection.Seats)
+                                    {
+                                        courseSectionAddViewModel._message = "Invalid Seat Capacity";
+                                        courseSectionAddViewModel._failure = true;
+                                        return courseSectionAddViewModel;
+                                    }
+                                    else
+                                    {
+                                        int? calendarscheduleSerial = 1;
+
+                                        var CourseSectioncalendarscheduleData = this.context?.CourseCalendarSchedule.Where(x => x.TenantId == courseSectionAddViewModel.courseSection.TenantId && x.SchoolId == courseSectionAddViewModel.courseSection.SchoolId).OrderByDescending(x => x.Serial).FirstOrDefault();
+
+                                        if (CourseSectioncalendarscheduleData != null)
+                                        {
+                                            calendarscheduleSerial = CourseSectioncalendarscheduleData.Serial + 1;
+                                        }
+
+                                        var calendarschedule = new CourseCalendarSchedule()
+                                        {
+                                            TenantId = courseSectionAddViewModel.courseSection.TenantId,
+                                            SchoolId = courseSectionAddViewModel.courseSection.SchoolId,
+                                            CourseId = courseSectionAddViewModel.courseSection.CourseId,
+                                            CourseSectionId = (int)CourseSectionId,
+                                            GradeScaleId = courseSectionAddViewModel.courseSection.GradeScaleId,
+                                            Serial = (int)calendarscheduleSerial,
+                                            Date = courseSectionAddViewModel.courseCalendarSchedule.Date,
+                                            PeriodId = courseSectionAddViewModel.courseCalendarSchedule.PeriodId,
+                                            RoomId = courseSectionAddViewModel.courseCalendarSchedule.RoomId,
+                                            TakeAttendance = courseSectionAddViewModel.courseCalendarSchedule.TakeAttendance,
+                                            CreatedBy = courseSectionAddViewModel.courseSection.CreatedBy,
+                                            CreatedOn = DateTime.UtcNow,
+                                        };
+                                        this.context?.CourseCalendarSchedule.Add(calendarschedule);
+                                        courseSectionAddViewModel.courseSection.ScheduleType = "Calendar Schedule (3)";
+                                    }
+                                }
+                                break;
+
+                            case "blockschedule":
+
+                                if (courseSectionAddViewModel.courseBlockScheduleList.Count > 0)
+                                {
+                                    int? blockscheduleSerial = 1;
+
+                                    var CourseSectionblockscheduleData = this.context?.CourseBlockSchedule.Where(x => x.TenantId == courseSectionAddViewModel.courseSection.TenantId && x.SchoolId == courseSectionAddViewModel.courseSection.SchoolId).OrderByDescending(x => x.Serial).FirstOrDefault();
+
+                                    if (CourseSectionblockscheduleData != null)
+                                    {
+                                        blockscheduleSerial = CourseSectionblockscheduleData.Serial + 1;
+                                    }
+
+                                    foreach (var courseBlockSchedules in courseSectionAddViewModel.courseBlockScheduleList)
+                                    {
+
+                                        var roomCapacity = this.context?.Rooms.FirstOrDefault(e => e.TenantId == courseSectionAddViewModel.courseFixedSchedule.TenantId && e.SchoolId == courseSectionAddViewModel.courseFixedSchedule.SchoolId && e.RoomId == courseBlockSchedules.RoomId)?.Capacity;
+
+                                        if (roomCapacity < courseSectionAddViewModel.courseSection.Seats)
+                                        {
+                                            courseSectionAddViewModel._message = "Invalid Seat Capacity";
+                                            courseSectionAddViewModel._failure = true;
+                                            return courseSectionAddViewModel;
+                                        }
+                                        else
+                                        {
+                                            var courseBlockSchedule = new CourseBlockSchedule()
+                                            {
+                                                TenantId = courseSectionAddViewModel.courseSection.TenantId,
+                                                SchoolId = courseSectionAddViewModel.courseSection.SchoolId,
+                                                CourseId = courseSectionAddViewModel.courseSection.CourseId,
+                                                CourseSectionId = (int)CourseSectionId,
+                                                GradeScaleId = courseSectionAddViewModel.courseSection.GradeScaleId,
+                                                Serial = (int)blockscheduleSerial,
+                                                BlockId = courseBlockSchedules.BlockId,
+                                                PeriodId = courseBlockSchedules.PeriodId,
+                                                RoomId = courseBlockSchedules.RoomId,
+                                                TakeAttendance = courseBlockSchedules.TakeAttendance,
+                                                CreatedBy = courseSectionAddViewModel.courseSection.CreatedBy,
+                                                CreatedOn = DateTime.UtcNow
+                                            };
+                                            //this.context?.CourseBlockSchedule.AddRange(courseBlockSchedule);
+                                            courseBlockScheduleList.Add(courseBlockSchedule);
+                                            blockscheduleSerial++;
+                                        }
+                                    }
+                                    this.context?.CourseBlockSchedule.AddRange(courseBlockScheduleList);
+                                    courseSectionAddViewModel.courseSection.ScheduleType = "Block Schedule (4)";
+                                }
+                                break;
+                        }
+                    }
+                    courseSectionAddViewModel.courseSection.CourseSectionId = (int)CourseSectionId;
+                    this.context?.CourseSection.Add(courseSectionAddViewModel.courseSection);
+                    this.context?.SaveChanges();
+                    courseSectionAddViewModel._failure = false;
+                    transaction.Commit();
+                }
+                catch (Exception es)
+                {
+                    transaction.Rollback();
+                    courseSectionAddViewModel._message = es.Message;
+                    courseSectionAddViewModel._failure = true;
+                }
+            }
+            return courseSectionAddViewModel;
+        }
+
+        /// <summary>
+        /// Get All CourseSection
+        /// </summary>
+        /// <param name="courseSectionViewModel"></param>
+        /// <returns></returns>
+        public CourseSectionViewModel GetAllCourseSection(CourseSectionViewModel courseSectionViewModel)
+        {
+            CourseSectionViewModel courseSectionView = new CourseSectionViewModel();
+            try
+            {
+                var courseSectionData = this.context?.CourseSection.Include(x => x.Course).Include(x => x.AttendanceCodeCategories).Include(x => x.GradeScale).Include(x => x.SchoolCalendars).Include(x => x.SchoolYears).Include(x => x.Semesters).Include(x => x.Quarters).Where(x => x.TenantId == courseSectionViewModel.TenantId && x.SchoolId == courseSectionViewModel.SchoolId && x.CourseId == courseSectionViewModel.CourseId).ToList().Select(cs => new CourseSection
+                {
+                    TenantId = cs.TenantId,
+                    SchoolId = cs.SchoolId,
+                    CourseId = cs.CourseId,
+                    CourseSectionId = cs.CourseSectionId,
+                    GradeScaleId = cs.GradeScaleId,
+                    CourseSectionName = cs.CourseSectionName,
+                    CalendarId = cs.CalendarId,
+                    AttendanceCategoryId = cs.AttendanceCategoryId,
+                    CreditHours = cs.CreditHours,
+                    Seats = cs.Seats,
+                    IsWeightedCourse = cs.IsWeightedCourse,
+                    AffectsClassRank = cs.AffectsClassRank,
+                    AffectsHonorRoll = cs.AffectsHonorRoll,
+                    OnlineClassRoom = cs.OnlineClassRoom,
+                    OnlineClassroomUrl = cs.OnlineClassroomUrl,
+                    OnlineClassroomPassword = cs.OnlineClassroomPassword,
+                    StandardGradeScaleId = cs.StandardGradeScaleId,
+                    UseStandards = cs.UseStandards,
+                    DurationBasedOnPeriod = cs.DurationBasedOnPeriod,
+                    DurationStartDate = cs.DurationStartDate,
+                    DurationEndDate = cs.DurationEndDate,
+                    ScheduleType = cs.ScheduleType,
+                    MeetingDays = cs.MeetingDays,
+                    AttendanceTaken = cs.AttendanceTaken,
+                    IsActive = cs.IsActive,
+                    CreatedBy = cs.CreatedBy,
+                    CreatedOn = cs.CreatedOn,
+                    UpdatedBy = cs.UpdatedBy,
+                    UpdatedOn = cs.UpdatedOn,
+                    QtrMarkingPeriodId = cs.QtrMarkingPeriodId,
+                    SmstrMarkingPeriodId = cs.SmstrMarkingPeriodId,
+                    YrMarkingPeriodId = cs.YrMarkingPeriodId,
+                    Course=new Course { CourseTitle=cs.Course.CourseTitle},
+                    GradeScale = new GradeScale { GradeScaleName = cs.GradeScale.GradeScaleName },
+                    AttendanceCodeCategories = new AttendanceCodeCategories { Title = cs.AttendanceCodeCategories.Title },
+                    SchoolCalendars = cs.SchoolCalendars != null ? new SchoolCalendars { TenantId = cs.SchoolCalendars.TenantId, SchoolId = cs.SchoolCalendars.SchoolId, CalenderId = cs.SchoolCalendars.CalenderId, Title = cs.SchoolCalendars.Title, StartDate = cs.SchoolCalendars.StartDate, EndDate = cs.SchoolCalendars.EndDate, AcademicYear = cs.SchoolCalendars.AcademicYear, DefaultCalender = cs.SchoolCalendars.DefaultCalender, Days=cs.SchoolCalendars.Days,RolloverId=cs.SchoolCalendars.RolloverId,VisibleToMembershipId=cs.SchoolCalendars.VisibleToMembershipId,LastUpdated=cs.SchoolCalendars.LastUpdated,UpdatedBy=cs.SchoolCalendars.UpdatedBy} : null,
+                    Quarters = cs.Quarters != null ? new Quarters { Title = cs.Quarters.Title, StartDate = cs.Quarters.StartDate, EndDate = cs.Quarters.EndDate, } : null,
+                    Semesters= cs.Semesters != null ? new Semesters { Title = cs.Semesters.Title, StartDate = cs.Semesters.StartDate, EndDate = cs.Semesters.EndDate, } : null,
+                    SchoolYears=cs.SchoolYears != null? new SchoolYears { Title = cs.SchoolYears.Title, StartDate = cs.SchoolYears.StartDate, EndDate = cs.SchoolYears.EndDate, }: null,
+
+                });
+
+                if (courseSectionData.Count()>0)
+                {
+                    foreach (var courseSection in courseSectionData)
+                    {
+                        if (courseSection.ScheduleType.ToLower() == "Fixed Schedule".ToLower())
+                        {
+                            var fixedScheduleData = this.context?.CourseFixedSchedule.Include(f => f.Rooms).Include(f => f.BlockPeriod).Where(x => x.TenantId == courseSection.TenantId && x.SchoolId == courseSection.SchoolId && x.CourseId == courseSection.CourseId && x.CourseSectionId == courseSection.CourseSectionId).Select(s=>new CourseFixedSchedule { Serial = s.Serial, Rooms =new Rooms { Title=s.Rooms.Title},BlockPeriod=new BlockPeriod { PeriodTitle= s.BlockPeriod.PeriodTitle}}).FirstOrDefault();
+                            if (fixedScheduleData != null)
+                            {
+                                GetCourseSectionForView getFixedSchedule = new GetCourseSectionForView
+                                {
+                                    courseFixedSchedule = fixedScheduleData,
+                                    courseSection = courseSection
+                                };
+                                courseSectionView.getCourseSectionForView.Add(getFixedSchedule);
+                            }
+                        }
+
+                        if (courseSection.ScheduleType.ToLower() == "Variable Schedule".ToLower())
+                        {
+                            var variableScheduleData = this.context?.CourseVariableSchedule.Where(x => x.TenantId == courseSection.TenantId && x.SchoolId == courseSection.SchoolId && x.CourseId == courseSection.CourseId && x.CourseSectionId == courseSection.CourseSectionId).Include(f => f.Rooms).Include(f => f.BlockPeriod).Select(s => new CourseVariableSchedule { Serial = s.Serial, Day =s.Day,TakeAttendance=s.TakeAttendance, Rooms = new Rooms { Title = s.Rooms.Title }, BlockPeriod = new BlockPeriod { PeriodTitle = s.BlockPeriod.PeriodTitle } }).ToList();
+                           
+                            if (variableScheduleData.Count> 0)
+                            {
+                                GetCourseSectionForView getVariableSchedule = new GetCourseSectionForView
+                                {
+                                    courseVariableSchedule = variableScheduleData,
+                                    courseSection = courseSection
+                                };
+                                courseSectionView.getCourseSectionForView.Add(getVariableSchedule);
+                            }
+                        }
+
+                        if (courseSection.ScheduleType.ToLower() == "Calendar Schedule".ToLower())
+                        {
+                            var calendarScheduleData = this.context?.CourseCalendarSchedule.Where(x => x.TenantId == courseSection.TenantId && x.SchoolId == courseSection.SchoolId && x.CourseId == courseSection.CourseId && x.CourseSectionId == courseSection.CourseSectionId).Include(f => f.Rooms).Include(f => f.BlockPeriod).Select(s => new CourseCalendarSchedule { Serial = s.Serial, Date =s.Date,TakeAttendance=s.TakeAttendance,Rooms = new Rooms { Title = s.Rooms.Title }, BlockPeriod = new BlockPeriod { PeriodTitle = s.BlockPeriod.PeriodTitle } }).FirstOrDefault();
+                            if (calendarScheduleData != null)
+                            {
+                                GetCourseSectionForView getCalendarSchedule = new GetCourseSectionForView
+                                {
+                                    courseCalendarSchedule = calendarScheduleData,
+                                    courseSection = courseSection
+                                };
+                                courseSectionView.getCourseSectionForView.Add(getCalendarSchedule);
+                            }                            
+                        }
+
+                        if (courseSection.ScheduleType.ToLower() == "Block/Rotating Schedule".ToLower())
+                        {
+                            var blockScheduleData = this.context?.CourseBlockSchedule.Where(x => x.TenantId == courseSection.TenantId && x.SchoolId == courseSection.SchoolId && x.CourseId == courseSection.CourseId && x.CourseSectionId == courseSection.CourseSectionId).Include(f => f.Rooms).Include(f => f.BlockPeriod).Select(s => new CourseBlockSchedule { Serial=s.Serial, TakeAttendance = s.TakeAttendance, Rooms = new Rooms { Title = s.Rooms.Title }, BlockPeriod = new BlockPeriod { PeriodTitle = s.BlockPeriod.PeriodTitle } }).ToList();
+                            if (blockScheduleData.Count > 0)
+                            {
+                                GetCourseSectionForView getBlockSchedule = new GetCourseSectionForView
+                                {
+                                    courseBlockSchedule = blockScheduleData,
+                                    courseSection = courseSection
+                                };
+                                courseSectionView.getCourseSectionForView.Add(getBlockSchedule);
+                            }
+                        }
+                    }
+                    courseSectionView._tenantName = courseSectionViewModel._tenantName;
+                    courseSectionView._token = courseSectionViewModel._token;
+                    courseSectionView._failure = false;     
+                }              
+                else
+                {
+                    courseSectionView._failure = true;
+                    courseSectionView._message = NORECORDFOUND;
+                    courseSectionView._tenantName = courseSectionViewModel._tenantName;
+                    courseSectionView._token = courseSectionViewModel._token;
+                }               
+            }
+            catch(Exception es)
+            {
+                courseSectionView._failure = true;
+                courseSectionView._message = es.Message;
+            }
+            return courseSectionView;
+        }
     }
 }

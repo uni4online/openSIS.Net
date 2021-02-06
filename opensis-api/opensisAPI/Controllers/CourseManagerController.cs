@@ -224,5 +224,37 @@ namespace opensisAPI.Controllers
             }
             return courseList;
         }
+
+        [HttpPost("addCourseSection")]
+        public ActionResult<CourseSectionAddViewModel> AddCourseSection(CourseSectionAddViewModel courseSectionAddViewModel)
+        {
+            CourseSectionAddViewModel courseSectionAdd = new CourseSectionAddViewModel();
+            try
+            {
+                courseSectionAdd = _courseManagerService.AddCourseSection(courseSectionAddViewModel);
+            }
+            catch (Exception es)
+            {
+                courseSectionAdd._failure = true;
+                courseSectionAdd._message = es.Message;
+            }
+            return courseSectionAdd;
+        }
+
+        [HttpPost("getAllCourseSection")]
+        public ActionResult<CourseSectionViewModel> GetAllCourseSection(CourseSectionViewModel courseSectionViewModel)
+        {
+            CourseSectionViewModel courseSectionView = new CourseSectionViewModel();
+            try
+            {
+                courseSectionView = _courseManagerService.GetAllCourseSection(courseSectionViewModel);
+            }
+            catch (Exception es)
+            {
+                courseSectionView._failure = true;
+                courseSectionView._message = es.Message;
+            }
+            return courseSectionView;
+        }
     }
 }

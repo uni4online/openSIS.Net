@@ -17,8 +17,9 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confirm-dialog.component';
 import { MatSort } from '@angular/material/sort';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { GradesService } from 'src/app/services/grades.service';
-import { ExcelService } from 'src/app/services/excel.service';
+import { GradesService } from '../../../services/grades.service';
+import { ExcelService } from '../../../services/excel.service';
+import { LoaderService } from '../../../services/loader.service';
 
 @Component({
   selector: 'vex-report-card-grades',
@@ -59,6 +60,8 @@ export class ReportCardGradesComponent implements OnInit {
   gradeDragDropModel:GradeDragDropModel=new GradeDragDropModel()
   gradeScaleListView:GradeScaleListView=new GradeScaleListView();
   gradeList: MatTableDataSource<any>;
+  
+  gradeScaleListForExcel=[];
 
   constructor(
     private router: Router,
@@ -66,9 +69,13 @@ export class ReportCardGradesComponent implements OnInit {
     public translateService:TranslateService,
     private snackbar: MatSnackBar,
     private gradesService:GradesService,
+    private loaderService:LoaderService,
     private excelService:ExcelService
     ) {
     translateService.use('en');
+    this.loaderService.isLoading.subscribe((val) => {
+      this.loading = val;
+    }); 
   }
 
   ngOnInit(): void {
@@ -239,12 +246,14 @@ export class ReportCardGradesComponent implements OnInit {
             if(this.currentGradeScaleId==null){
               this.currentGradeScaleId=res.gradeScaleList[0].gradeScaleId 
               this.gradeList=new MatTableDataSource(res.gradeScaleList[0].grade) ;
+              this.gradeScaleListForExcel=res.gradeScaleList[0].grade
             } 
             else{
               let index = this.gradeScaleList.findIndex((x) => {
                 return x.gradeScaleId === this.currentGradeScaleId
               });
               this.gradeList=new MatTableDataSource(res.gradeScaleList[index].grade) ;
+              this.gradeScaleListForExcel=res.gradeScaleList[0].grade
             }
           }
         }
@@ -276,18 +285,18 @@ export class ReportCardGradesComponent implements OnInit {
     );
   }
   exportToExcel(){
-    if (this.gradeList.data?.length > 0) {
-      let reportList = this.gradeList.data?.map((x) => {
+    if (this.gradeScaleListForExcel?.length > 0) {
+      let reportList = this.gradeScaleListForExcel?.map((x) => {
         return {
           Title:x.tite,
           Breakoff:x.breakoff,
-          Weighted_Gp_Value:x.weightedGpValue,
-          Unweighted_Gp_Value:x.unweightedGpValue
+          "Weighted Gp Value":x.weightedGpValue,
+          "Unweighted Gp Value":x.unweightedGpValue
         }
       });
-      this.excelService.exportAsExcelFile(reportList,"Report Card Grade List")
+      this.excelService.exportAsExcelFile(reportList,"Report_Card_Grade_List_")
     } else {
-      this.snackbar.open('No Records Found. Failed to Export Report Card Grade List', '', {
+      this.snackbar.open('No records found. failed to export report card grade list', '', {
         duration: 5000
       });
     }

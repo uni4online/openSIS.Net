@@ -6,6 +6,7 @@ import icCheckBoxOutlineBlank from '@iconify/icons-ic/check-box-outline-blank';
 import icMoreVert from '@iconify/icons-ic/more-vert';
 import icMenu from '@iconify/icons-ic/menu';
 import icAdd from '@iconify/icons-ic/add';
+import icDelete from '@iconify/icons-ic/twotone-delete';
 import icClose from '@iconify/icons-ic/close';
 import icInfo from '@iconify/icons-ic/info';
 import { MatDialog } from '@angular/material/dialog';
@@ -40,6 +41,7 @@ export class MarkingPeriodsComponent implements OnInit {
   icInfo = icInfo;
   icAdd = icAdd;
   icClose = icClose;
+  icDelete = icDelete;
   menuOpen = false;
   markingPeriodListModel: MarkingPeriodListModel = new MarkingPeriodListModel();
   markingPeriodAddModel: MarkingPeriodAddModel = new MarkingPeriodAddModel();

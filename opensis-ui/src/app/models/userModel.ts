@@ -6,6 +6,8 @@ export class UserViewModel extends CommonField {
     
     public password : string;
     public email: string;
+    public name: string;
+    public membershipName : string;
     public userId?:  number;
     public tenantId: string;
     constructor() {

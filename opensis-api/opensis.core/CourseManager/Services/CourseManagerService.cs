@@ -327,6 +327,61 @@ namespace opensis.core.CourseManager.Services
 
             return CourseListModel;
         }
+        /// <summary>
+        /// Add Course Section
+        /// </summary>
+        /// <param name="courseSectionAddViewModel"></param>
+        /// <returns></returns>
+        public CourseSectionAddViewModel AddCourseSection(CourseSectionAddViewModel courseSectionAddViewModel)
+        {
+            CourseSectionAddViewModel courseSectionAdd = new CourseSectionAddViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(courseSectionAddViewModel._tenantName, courseSectionAddViewModel._token))
+                {
+                    courseSectionAdd = this.courseManagerRepository.AddCourseSection(courseSectionAddViewModel);
+                }
+                else
+                {
+                    courseSectionAdd._failure = true;
+                    courseSectionAdd._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                courseSectionAdd._failure = true;
+                courseSectionAdd._message = es.Message;
+            }
+            return courseSectionAdd;
+        }
+
+        /// <summary>
+        /// Get All CourseSection
+        /// </summary>
+        /// <param name="courseSectionViewModel"></param>
+        /// <returns></returns>
+        public CourseSectionViewModel GetAllCourseSection(CourseSectionViewModel courseSectionViewModel)
+        {
+            CourseSectionViewModel courseSectionView = new CourseSectionViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(courseSectionViewModel._tenantName, courseSectionViewModel._token))
+                {
+                    courseSectionView = this.courseManagerRepository.GetAllCourseSection(courseSectionViewModel);
+                }
+                else
+                {
+                    courseSectionView._failure = true;
+                    courseSectionView._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                courseSectionView._failure = true;
+                courseSectionView._message = es.Message;
+            }
+            return courseSectionView;
+        }
     }
 }
  

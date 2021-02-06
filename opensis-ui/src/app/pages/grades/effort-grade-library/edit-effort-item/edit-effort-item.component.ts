@@ -45,7 +45,7 @@ export class EditEffortItemComponent implements OnInit {
       else{
         this.buttonType="update";
         this.effortCategoryItemTitle="editEffortItem";
-        this.effortGradeLibraryCategoryItemAddViewModel.effortGradeLibraryCategoryItem=data.information;
+        this.effortGradeLibraryCategoryItemAddViewModel.effortGradeLibraryCategoryItem.effortCategoryId=data.information.effortCategoryId
         this.form.controls.effortItemId.patchValue(data.information.effortItemId);
         this.form.controls.effortItemTitle.patchValue(data.information.effortItemTitle);
       }

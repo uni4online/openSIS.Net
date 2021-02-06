@@ -24,7 +24,9 @@ namespace opensis.data.Models
         public bool? UseStandards { get; set; }
         public int? StandardGradeScaleId { get; set; }
         public bool? DurationBasedOnPeriod { get; set; }
-        public int? MarkingPeriodId { get; set; }
+        public int? YrMarkingPeriodId { get; set; }
+        public int? SmstrMarkingPeriodId { get; set; }
+        public int? QtrMarkingPeriodId { get; set; }
         public DateTime? DurationStartDate { get; set; }
         public DateTime? DurationEndDate { get; set; }
         public string ScheduleType { get; set; }
@@ -39,7 +41,10 @@ namespace opensis.data.Models
         public virtual AttendanceCodeCategories AttendanceCodeCategories { get; set; }
         public virtual Course Course { get; set; }
         public virtual GradeScale GradeScale { get; set; }
+        public virtual Quarters Quarters { get; set; }
         public virtual SchoolCalendars SchoolCalendars { get; set; }
         public virtual SchoolMaster SchoolMaster { get; set; }
+        public virtual SchoolYears SchoolYears { get; set; }
+        public virtual Semesters Semesters { get; set; }
     }
 }

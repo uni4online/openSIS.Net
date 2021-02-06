@@ -2015,6 +2015,10 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasColumnName("course_section_id")
                         .HasColumnType("int");
 
+                    b.Property<int>("Serial")
+                        .HasColumnName("serial")
+                        .HasColumnType("int");
+
                     b.Property<int?>("BlockId")
                         .HasColumnName("block_id")
                         .HasColumnType("int");
@@ -2041,10 +2045,6 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasColumnName("room_id")
                         .HasColumnType("int");
 
-                    b.Property<int>("Serial")
-                        .HasColumnName("serial")
-                        .HasColumnType("int");
-
                     b.Property<bool?>("TakeAttendance")
                         .HasColumnName("take_attendance")
                         .HasColumnType("tinyint(1)");
@@ -2059,14 +2059,12 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasColumnName("updated_on")
                         .HasColumnType("datetime");
 
-                    b.HasKey("TenantId", "SchoolId", "CourseId", "CourseSectionId")
+                    b.HasKey("TenantId", "SchoolId", "CourseId", "CourseSectionId", "Serial")
                         .HasName("PK_course_block_schedule_1");
 
-                    b.HasIndex("TenantId", "SchoolId", "BlockId");
-
-                    b.HasIndex("TenantId", "SchoolId", "PeriodId");
-
                     b.HasIndex("TenantId", "SchoolId", "RoomId");
+
+                    b.HasIndex("TenantId", "SchoolId", "BlockId", "PeriodId");
 
                     b.ToTable("course_block_schedule");
                 });
@@ -2087,6 +2085,14 @@ namespace opensis.data.Migrations.MySqlMigrations
 
                     b.Property<int>("CourseSectionId")
                         .HasColumnName("course_section_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Serial")
+                        .HasColumnName("serial")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("BlockId")
+                        .HasColumnName("block_id")
                         .HasColumnType("int");
 
                     b.Property<string>("CreatedBy")
@@ -2115,10 +2121,6 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasColumnName("room_id")
                         .HasColumnType("int");
 
-                    b.Property<int>("Serial")
-                        .HasColumnName("serial")
-                        .HasColumnType("int");
-
                     b.Property<bool?>("TakeAttendance")
                         .HasColumnName("take_attendance")
                         .HasColumnType("tinyint(1)");
@@ -2133,12 +2135,12 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasColumnName("updated_on")
                         .HasColumnType("datetime");
 
-                    b.HasKey("TenantId", "SchoolId", "CourseId", "CourseSectionId")
+                    b.HasKey("TenantId", "SchoolId", "CourseId", "CourseSectionId", "Serial")
                         .HasName("PK_course_calendar_schedule_1");
 
-                    b.HasIndex("TenantId", "SchoolId", "PeriodId");
-
                     b.HasIndex("TenantId", "SchoolId", "RoomId");
+
+                    b.HasIndex("TenantId", "SchoolId", "BlockId", "PeriodId");
 
                     b.ToTable("course_calendar_schedule");
                 });
@@ -2159,6 +2161,14 @@ namespace opensis.data.Migrations.MySqlMigrations
 
                     b.Property<int>("CourseSectionId")
                         .HasColumnName("course_section_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Serial")
+                        .HasColumnName("serial")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("BlockId")
+                        .HasColumnName("block_id")
                         .HasColumnType("int");
 
                     b.Property<string>("CreatedBy")
@@ -2183,10 +2193,6 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasColumnName("room_id")
                         .HasColumnType("int");
 
-                    b.Property<int>("Serial")
-                        .HasColumnName("serial")
-                        .HasColumnType("int");
-
                     b.Property<string>("UpdatedBy")
                         .HasColumnName("updated_by")
                         .HasColumnType("varchar(150) CHARACTER SET utf8mb4")
@@ -2197,12 +2203,12 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasColumnName("updated_on")
                         .HasColumnType("datetime");
 
-                    b.HasKey("TenantId", "SchoolId", "CourseId", "CourseSectionId")
+                    b.HasKey("TenantId", "SchoolId", "CourseId", "CourseSectionId", "Serial")
                         .HasName("PK_course_fixed_schedule_1");
 
-                    b.HasIndex("TenantId", "SchoolId", "PeriodId");
-
                     b.HasIndex("TenantId", "SchoolId", "RoomId");
+
+                    b.HasIndex("TenantId", "SchoolId", "BlockId", "PeriodId");
 
                     b.ToTable("course_fixed_schedule");
                 });
@@ -2289,10 +2295,6 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasColumnName("is_weighted_course")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<int?>("MarkingPeriodId")
-                        .HasColumnName("marking_period_id")
-                        .HasColumnType("int");
-
                     b.Property<string>("MeetingDays")
                         .HasColumnName("meeting_days")
                         .HasColumnType("varchar(13) CHARACTER SET utf8mb4")
@@ -2316,6 +2318,10 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasMaxLength(250)
                         .IsUnicode(false);
 
+                    b.Property<int?>("QtrMarkingPeriodId")
+                        .HasColumnName("qtr_marking_period_id")
+                        .HasColumnType("int");
+
                     b.Property<string>("ScheduleType")
                         .HasColumnName("schedule_type")
                         .HasColumnType("varchar(25) CHARACTER SET utf8mb4")
@@ -2325,6 +2331,10 @@ namespace opensis.data.Migrations.MySqlMigrations
 
                     b.Property<int?>("Seats")
                         .HasColumnName("seats")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SmstrMarkingPeriodId")
+                        .HasColumnName("smstr_marking_period_id")
                         .HasColumnType("int");
 
                     b.Property<int?>("StandardGradeScaleId")
@@ -2345,6 +2355,10 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasColumnName("use_standards")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<int?>("YrMarkingPeriodId")
+                        .HasColumnName("yr_marking_period_id")
+                        .HasColumnType("int");
+
                     b.HasKey("TenantId", "SchoolId", "CourseId", "CourseSectionId")
                         .HasName("PK_course_section_1");
 
@@ -2353,6 +2367,12 @@ namespace opensis.data.Migrations.MySqlMigrations
                     b.HasIndex("TenantId", "SchoolId", "CalendarId");
 
                     b.HasIndex("TenantId", "SchoolId", "GradeScaleId");
+
+                    b.HasIndex("TenantId", "SchoolId", "QtrMarkingPeriodId");
+
+                    b.HasIndex("TenantId", "SchoolId", "SmstrMarkingPeriodId");
+
+                    b.HasIndex("TenantId", "SchoolId", "YrMarkingPeriodId");
 
                     b.ToTable("course_section");
                 });
@@ -2422,6 +2442,14 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasColumnName("course_section_id")
                         .HasColumnType("int");
 
+                    b.Property<int>("Serial")
+                        .HasColumnName("serial")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("BlockId")
+                        .HasColumnName("block_id")
+                        .HasColumnType("int");
+
                     b.Property<string>("CreatedBy")
                         .HasColumnName("created_by")
                         .HasColumnType("varchar(150) CHARACTER SET utf8mb4")
@@ -2450,10 +2478,6 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasColumnName("room_id")
                         .HasColumnType("int");
 
-                    b.Property<int>("Serial")
-                        .HasColumnName("serial")
-                        .HasColumnType("int");
-
                     b.Property<bool?>("TakeAttendance")
                         .HasColumnName("take_attendance")
                         .HasColumnType("tinyint(1)");
@@ -2468,12 +2492,12 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasColumnName("updated_on")
                         .HasColumnType("datetime");
 
-                    b.HasKey("TenantId", "SchoolId", "CourseId", "CourseSectionId")
+                    b.HasKey("TenantId", "SchoolId", "CourseId", "CourseSectionId", "Serial")
                         .HasName("PK_course_variable_schedule_1");
 
-                    b.HasIndex("TenantId", "SchoolId", "PeriodId");
-
                     b.HasIndex("TenantId", "SchoolId", "RoomId");
+
+                    b.HasIndex("TenantId", "SchoolId", "BlockId", "PeriodId");
 
                     b.ToTable("course_variable_schedule");
                 });
@@ -5686,7 +5710,7 @@ namespace opensis.data.Migrations.MySqlMigrations
                     b.ToTable("school_master");
                 });
 
-            modelBuilder.Entity("opensis.data.Models.SchoolPeriods", b =>
+            modelBuilder.Entity("opensis.data.Models.SchoolPeriodsObsolete", b =>
                 {
                     b.Property<Guid>("TenantId")
                         .HasColumnName("tenant_id")
@@ -5765,7 +5789,7 @@ namespace opensis.data.Migrations.MySqlMigrations
                     b.HasKey("TenantId", "SchoolId", "PeriodId")
                         .HasName("pk_table_school_periods");
 
-                    b.ToTable("school_periods");
+                    b.ToTable("school_periods_obsolete");
                 });
 
             modelBuilder.Entity("opensis.data.Models.SchoolYears", b =>
@@ -7488,10 +7512,10 @@ namespace opensis.data.Migrations.MySqlMigrations
 
             modelBuilder.Entity("opensis.data.Models.BlockPeriod", b =>
                 {
-                    b.HasOne("opensis.data.Models.Block", "Block")
+                    b.HasOne("opensis.data.Models.SchoolMaster", "SchoolMaster")
                         .WithMany("BlockPeriod")
-                        .HasForeignKey("TenantId", "SchoolId", "BlockId")
-                        .HasConstraintName("FK_block_period_block")
+                        .HasForeignKey("TenantId", "SchoolId")
+                        .HasConstraintName("FK_block_period_school_master")
                         .IsRequired();
                 });
 
@@ -7510,41 +7534,41 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasForeignKey("TenantId", "SchoolId", "BlockId")
                         .HasConstraintName("FK_course_block_schedule_block");
 
-                    b.HasOne("opensis.data.Models.SchoolPeriods", "SchoolPeriods")
-                        .WithMany("CourseBlockSchedule")
-                        .HasForeignKey("TenantId", "SchoolId", "PeriodId")
-                        .HasConstraintName("FK_course_block_schedule_school_periods");
-
                     b.HasOne("opensis.data.Models.Rooms", "Rooms")
                         .WithMany("CourseBlockSchedule")
                         .HasForeignKey("TenantId", "SchoolId", "RoomId")
                         .HasConstraintName("FK_course_block_schedule_rooms");
+
+                    b.HasOne("opensis.data.Models.BlockPeriod", "BlockPeriod")
+                        .WithMany("CourseBlockSchedule")
+                        .HasForeignKey("TenantId", "SchoolId", "BlockId", "PeriodId")
+                        .HasConstraintName("FK_course_block_schedule_block_periods");
                 });
 
             modelBuilder.Entity("opensis.data.Models.CourseCalendarSchedule", b =>
                 {
-                    b.HasOne("opensis.data.Models.SchoolPeriods", "SchoolPeriods")
-                        .WithMany("CourseCalendarSchedule")
-                        .HasForeignKey("TenantId", "SchoolId", "PeriodId")
-                        .HasConstraintName("FK_course_calendar_schedule_school_periods");
-
                     b.HasOne("opensis.data.Models.Rooms", "Rooms")
                         .WithMany("CourseCalendarSchedule")
                         .HasForeignKey("TenantId", "SchoolId", "RoomId")
                         .HasConstraintName("FK_course_calendar_schedule_rooms");
+
+                    b.HasOne("opensis.data.Models.BlockPeriod", "BlockPeriod")
+                        .WithMany("CourseCalendarSchedule")
+                        .HasForeignKey("TenantId", "SchoolId", "BlockId", "PeriodId")
+                        .HasConstraintName("FK_course_calendar_schedule_block_periods");
                 });
 
             modelBuilder.Entity("opensis.data.Models.CourseFixedSchedule", b =>
                 {
-                    b.HasOne("opensis.data.Models.SchoolPeriods", "SchoolPeriods")
-                        .WithMany("CourseFixedSchedule")
-                        .HasForeignKey("TenantId", "SchoolId", "PeriodId")
-                        .HasConstraintName("FK_course_fixed_schedule_school_periods");
-
                     b.HasOne("opensis.data.Models.Rooms", "Rooms")
                         .WithMany("CourseFixedSchedule")
                         .HasForeignKey("TenantId", "SchoolId", "RoomId")
                         .HasConstraintName("FK_course_fixed_schedule_rooms");
+
+                    b.HasOne("opensis.data.Models.BlockPeriod", "BlockPeriod")
+                        .WithMany("CourseFixedSchedule")
+                        .HasForeignKey("TenantId", "SchoolId", "BlockId", "PeriodId")
+                        .HasConstraintName("FK_course_fixed_schedule_block_periods");
                 });
 
             modelBuilder.Entity("opensis.data.Models.CourseSection", b =>
@@ -7576,6 +7600,21 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasForeignKey("TenantId", "SchoolId", "GradeScaleId")
                         .HasConstraintName("FK_course_section_grade_scale")
                         .IsRequired();
+
+                    b.HasOne("opensis.data.Models.Quarters", "Quarters")
+                        .WithMany("CourseSection")
+                        .HasForeignKey("TenantId", "SchoolId", "QtrMarkingPeriodId")
+                        .HasConstraintName("FK_course_section_quarters");
+
+                    b.HasOne("opensis.data.Models.Semesters", "Semesters")
+                        .WithMany("CourseSection")
+                        .HasForeignKey("TenantId", "SchoolId", "SmstrMarkingPeriodId")
+                        .HasConstraintName("FK_course_section_semesters");
+
+                    b.HasOne("opensis.data.Models.SchoolYears", "SchoolYears")
+                        .WithMany("CourseSection")
+                        .HasForeignKey("TenantId", "SchoolId", "YrMarkingPeriodId")
+                        .HasConstraintName("FK_course_section_school_years");
                 });
 
             modelBuilder.Entity("opensis.data.Models.CourseStandard", b =>
@@ -7595,15 +7634,15 @@ namespace opensis.data.Migrations.MySqlMigrations
 
             modelBuilder.Entity("opensis.data.Models.CourseVariableSchedule", b =>
                 {
-                    b.HasOne("opensis.data.Models.SchoolPeriods", "SchoolPeriods")
-                        .WithMany("CourseVariableSchedule")
-                        .HasForeignKey("TenantId", "SchoolId", "PeriodId")
-                        .HasConstraintName("FK_course_variable_schedule_school_periods");
-
                     b.HasOne("opensis.data.Models.Rooms", "Rooms")
                         .WithMany("CourseVariableSchedule")
                         .HasForeignKey("TenantId", "SchoolId", "RoomId")
                         .HasConstraintName("FK_course_variable_schedule_rooms");
+
+                    b.HasOne("opensis.data.Models.BlockPeriod", "BlockPeriod")
+                        .WithMany("CourseVariableSchedule")
+                        .HasForeignKey("TenantId", "SchoolId", "BlockId", "PeriodId")
+                        .HasConstraintName("FK_course_variable_schedule_block_periods");
                 });
 
             modelBuilder.Entity("opensis.data.Models.CustomFields", b =>
@@ -7762,15 +7801,6 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .WithMany("SchoolMaster")
                         .HasForeignKey("TenantId", "SchoolId", "PlanId")
                         .HasConstraintName("FK_school_master_plans");
-                });
-
-            modelBuilder.Entity("opensis.data.Models.SchoolPeriods", b =>
-                {
-                    b.HasOne("opensis.data.Models.SchoolMaster", "SchoolMaster")
-                        .WithMany("SchoolPeriods")
-                        .HasForeignKey("TenantId", "SchoolId")
-                        .HasConstraintName("FK_school_periods_school_master")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("opensis.data.Models.SchoolYears", b =>

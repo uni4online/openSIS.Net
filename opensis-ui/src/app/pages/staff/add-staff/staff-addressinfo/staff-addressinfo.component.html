@@ -296,9 +296,9 @@
 
 <!--Staff Address View -->
 <mat-card class="w-full" *ngIf="staffCreateMode == staffCreate.VIEW">
-    <div class="flex items-center mx-4" fxLayout="row" fxLayoutAlign="center center">
+    <div class="flex items-center mx-2" fxLayout="row" fxLayoutAlign="center center">
         <h3 class="flex-auto">{{'addressAndContact' | translate}}</h3>
-        <button mat-button (click)="editAddressContactInfo()" color="primary">
+        <button mat-raised-button (click)="editAddressContactInfo()" color="primary">
             <mat-icon [icIcon]="icEdit"></mat-icon> {{'editInformation' |translate}}
         </button>
     </div>

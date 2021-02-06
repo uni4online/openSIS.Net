@@ -15,6 +15,7 @@ export class WidgetTableComponent<T> implements OnInit, OnChanges, AfterViewInit
   @Input() data: T[];
   @Input() columns: TableColumn<T>[];
   @Input() pageSize = 6;
+  @Input() calendarEvents;
 
   visibleColumns: Array<keyof T | string>;
   dataSource = new MatTableDataSource<T>();
@@ -27,13 +28,16 @@ export class WidgetTableComponent<T> implements OnInit, OnChanges, AfterViewInit
 
   constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.columns) {
       this.visibleColumns = this.columns.map(column => column.property);
     }
-
+    this.calendarEvents.toPromise().then( data => {
+    });
     if (changes.data) {
       this.dataSource.data = this.data;
     }

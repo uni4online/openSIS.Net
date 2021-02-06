@@ -113,7 +113,7 @@ export class SectionsComponent implements OnInit {
           }
          
         } else{
-          this.snackbar.open('Section List failed. ' + data._message, 'LOL THANKS', {
+          this.snackbar.open('Section List failed. ' + data._message, '', {
             duration: 10000
           });
         }
@@ -167,7 +167,7 @@ export class SectionsComponent implements OnInit {
       }
       else {
         if (data._failure) {
-          this.snackbar.open('Section Deletion failed. ' + data._message, 'LOL THANKS', {
+          this.snackbar.open('Section Deletion failed. ' + data._message, '', {
             duration: 10000
           });
         } else {

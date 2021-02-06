@@ -112,6 +112,16 @@ const routes: Routes = [
         path: '',
         children: [
           {
+            path: 'schedule-teacher',
+            loadChildren: () => import('./pages/scheduling/schedule-teacher/schedule-teacher.module').then(m => m.ScheduleTeacherModule),
+            //canActivate: [AuthGuard]            
+          }
+        ]
+      },
+      {
+        path: '',
+        children: [
+          {
             path: 'settings',
             loadChildren: () => import('./pages/settings/settings.module').then(m => m.SettingsModule),
             canActivate: [AuthGuard]            

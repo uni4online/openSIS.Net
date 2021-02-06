@@ -152,7 +152,7 @@ namespace opensis.data.Repository
             try
             {
 
-                var room = this.context?.Rooms.Where(x => x.TenantId == roomList.TenantId && x.SchoolId == roomList.SchoolId).OrderBy(x => x.SortOrder).ToList();
+                var room = this.context?.Rooms.Where(x => x.TenantId == roomList.TenantId && x.SchoolId == roomList.SchoolId && x.IsActive == true).OrderBy(x => x.SortOrder).ToList();
                 if (room.Count > 0)
                 {
                     roomListModel.TableroomList = room;

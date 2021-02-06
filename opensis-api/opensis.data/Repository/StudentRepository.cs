@@ -429,6 +429,18 @@ namespace opensis.data.Repository
                 PersonalEmail = e.PersonalEmail,
                 SchoolEmail = e.SchoolEmail,
                 StudentGuid = e.StudentGuid,
+                AdmissionNumber=e.AdmissionNumber,
+                RollNumber=e.RollNumber,
+                Dob=e.Dob,
+                Gender=e.Gender,
+                Race=e.Race,
+                Ethnicity=e.Ethnicity,
+                MaritalStatus=e.MaritalStatus,
+                CountryOfBirth=e.CountryOfBirth,
+                Nationality=e.Nationality,
+                FirstLanguage=e.FirstLanguage,
+                SecondLanguage=e.SecondLanguage,
+                ThirdLanguage=e.ThirdLanguage,
                 StudentEnrollment = e.StudentEnrollment.Where(d => d.IsActive == true).Select(s => new StudentEnrollment
                 {
                     EnrollmentDate = s.EnrollmentDate,
@@ -1017,6 +1029,26 @@ namespace opensis.data.Repository
                                             }
 
                                             studentEnrollmentList.TenantId = studentEnrollmentList.TenantId;
+                                            studentEnrollmentList.SchoolId = (int)studentEnrollmentList.SchoolId;
+                                            studentEnrollmentList.EnrollmentId = (int)EnrollmentId;
+                                            studentEnrollmentList.EnrollmentDate = null;
+                                            studentEnrollmentList.EnrollmentCode = null;
+                                            studentEnrollmentList.ExitCode = studentExitCode.Title;
+                                            studentEnrollmentList.ExitDate = studentEnrollmentList.ExitDate;
+                                            studentEnrollmentList.SchoolName = studentEnrollmentList.SchoolTransferred;
+                                            studentEnrollmentList.SchoolTransferred = null;
+                                            studentEnrollmentList.TransferredSchoolId = studentEnrollmentList.TransferredSchoolId;
+                                            studentEnrollmentList.GradeLevelTitle = null;
+                                            studentEnrollmentList.TransferredGrade = studentEnrollmentList.TransferredGrade;
+                                            studentEnrollmentList.CalenderId = calenderId;
+                                            studentEnrollmentList.RollingOption = studentEnrollmentListModel.RollingOption;
+                                            studentEnrollmentList.LastUpdated = DateTime.UtcNow;
+                                            studentEnrollmentList.IsActive = false;
+                                            this.context?.StudentEnrollment.AddRange(studentEnrollmentList);
+                                            this.context?.SaveChanges();
+                                            EnrollmentId++;
+                                            
+                                            studentEnrollmentList.TenantId = studentEnrollmentList.TenantId;
                                             studentEnrollmentList.SchoolId = (int)studentEnrollmentList.TransferredSchoolId;
                                             studentEnrollmentList.EnrollmentId = (int)EnrollmentId;
                                             studentEnrollmentList.EnrollmentDate = studentEnrollmentList.EnrollmentDate;
@@ -1210,7 +1242,8 @@ namespace opensis.data.Repository
                         ExitDate = y.ExitDate,
                         StudentGuid=y.StudentGuid,
                         EnrollmentType=this.context?.StudentEnrollmentCode.FirstOrDefault(s => s.TenantId==y.TenantId && s.SchoolId==y.SchoolId && s.Title == y.EnrollmentCode)?.Type,
-                        ExitType = this.context?.StudentEnrollmentCode.FirstOrDefault(s => s.TenantId == y.TenantId && s.SchoolId == y.SchoolId && s.Title == y.ExitCode)?.Type
+                        ExitType = this.context?.StudentEnrollmentCode.FirstOrDefault(s => s.TenantId == y.TenantId && s.SchoolId == y.SchoolId && s.Title == y.ExitCode)?.Type,
+                        Type = this.context?.StudentMaster.FirstOrDefault(s => s.TenantId == y.TenantId && s.SchoolId == y.SchoolId && s.StudentId == y.StudentId)?.EnrollmentType
                     }).ToList();
                     studentEnrollmentListView.studentEnrollmentListForView = studentEnrollment;
                     studentEnrollmentListView.TenantId = studentEnrollmentListViewModel.TenantId;

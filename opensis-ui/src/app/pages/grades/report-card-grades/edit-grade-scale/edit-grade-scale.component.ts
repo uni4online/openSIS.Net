@@ -52,7 +52,6 @@ export class EditGradeScaleComponent implements OnInit {
         this.buttonType="update";
         this.gradeScaleTitle="editGradeScale";
         
-        this.gradeScaleAddViewModel.gradeScale=data;
         this.form.controls.gradeScaleId.patchValue(this.data.gradeScaleId)
         this.form.controls.gradeScaleName.patchValue(this.data.gradeScaleName)
         this.form.controls.gradeScaleValue.patchValue(this.data.gradeScaleValue)

@@ -61,16 +61,24 @@ namespace opensis.core.Staff.Services
         /// <returns></returns>
         public StaffListModel GetAllStaffList(PageResult pageResult)
         {
-            logger.Info("Method getAllSchoolList called.");
+            logger.Info("Method getAllStaffList called.");
             StaffListModel staffList = new StaffListModel();
             try
             {
                 if (TokenManager.CheckToken(pageResult._tenantName, pageResult._token))
                 {
                     staffList = this.staffRepository.GetAllStaffList(pageResult);
-                    staffList._message = SUCCESS;
-                    staffList._failure = false;
-                    logger.Info("Method getAllSchoolList end with success.");
+                    if (staffList.staffMaster.Count > 0)
+                    {
+                        staffList._message = SUCCESS;
+                        staffList._failure = false;
+                    }
+                    else
+                    {
+                        staffList._message = "NO RECORD FOUND";
+                        staffList._failure = true;
+                    }
+                    logger.Info("Method getAllStaffList end with success.");
                 }
 
                 else
@@ -84,7 +92,7 @@ namespace opensis.core.Staff.Services
             {
                 staffList._message = ex.Message;
                 staffList._failure = true;
-                logger.Error("Method getAllSchools end with error :" + ex.Message);
+                logger.Error("Method getAllStaffList end with error :" + ex.Message);
             }
             return staffList;
         }

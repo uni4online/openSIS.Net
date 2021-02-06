@@ -352,6 +352,7 @@ export class StudentEnrollmentDetails extends CommonField{
     exitDate: string;
     exitCode: string;
     exitType:string;
+    type:string;
     transferredSchoolId: number | string;
     schoolTransferred: string;
     transferredGrade: string;

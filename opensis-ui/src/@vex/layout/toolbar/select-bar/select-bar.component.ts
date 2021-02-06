@@ -7,7 +7,7 @@ import { AllSchoolListModel, OnlySchoolListModel } from '../../../../app/models/
 import { Router } from '@angular/router';
 import { MarkingPeriodService } from '../../../../app/services/marking-period.service';
 import { GetAcademicYearListModel, GetMarkingPeriodTitleListModel } from '../../../../app/models/markingPeriodModel';
-
+import { DasboardService } from '../../../../app/services/dasboard.service';
 
 @Component({
   selector: 'vex-select-bar',
@@ -39,7 +39,8 @@ export class SelectBarComponent implements OnInit {
 
   constructor(private schoolService: SchoolService,
     private router: Router,
-    private markingPeriodService: MarkingPeriodService
+    private markingPeriodService: MarkingPeriodService,
+    private dasboardService:DasboardService
   ) {
     this.schoolService.currentMessage.pipe(takeUntil(this.onDestroy)).subscribe((res) => {
       if (res) {
@@ -124,6 +125,7 @@ export class SelectBarComponent implements OnInit {
     sessionStorage.setItem("schoolOpened", details.schoolDetail[0].dateSchoolOpened);
     this.callAcademicYearsOnSchoolSelect();
     this.router.navigate(['/school/dashboards']);
+    this.dasboardService.sendPageLoadEvent(true);
   }
 
   callAcademicYearsOnSchoolSelect() {

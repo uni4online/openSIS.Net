@@ -72,7 +72,7 @@ export class EditSectionComponent implements OnInit {
           }
           else {
             if (data._failure) {
-              this.snackbar.open('Section Updation failed. ' + data._message, 'LOL THANKS', {
+              this.snackbar.open('Section Updation failed. ' + data._message, '', {
                 duration: 10000
               });
             } else {
@@ -95,7 +95,7 @@ export class EditSectionComponent implements OnInit {
           }
           else {
             if (data._failure) {
-              this.snackbar.open('Section Submission failed. ' + data._message, 'LOL THANKS', {
+              this.snackbar.open('Section Submission failed. ' + data._message, '', {
                 duration: 10000
               });
             } else {

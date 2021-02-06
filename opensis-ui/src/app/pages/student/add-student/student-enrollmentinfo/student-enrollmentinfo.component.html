@@ -283,7 +283,16 @@
                                     <mat-panel-title class="font-semibold h-full">
                                         <div class="flex w-full justify-between items-center h-full">
                                             <div class="h-full">
-                                                <span
+                                                <ng-container *ngIf="enrollment.type=='External' else internal">
+                                                    <span
+                                                    class="bg-blue inline-block align-middle h-full px-2 pt-3 pb-2 mr-2"
+                                                    *ngIf="enrollment.enrollmentType=='Add'">
+                                                    <mat-icon [icIcon]="icExternal" class="text-white" matTooltip="Enrolled as External">
+                                                    </mat-icon>
+                                                </span>
+                                                </ng-container>
+                                                <ng-template #internal>
+                                                    <span
                                                     class="bg-blue inline-block align-middle h-full px-2 pt-3 pb-2 mr-2"
                                                     *ngIf="enrollment.enrollmentType=='Add'">
                                                     <mat-icon [icIcon]="icAdd" class="text-white" matTooltip="New">
@@ -316,6 +325,8 @@
                                                         matTooltip="Enroll (Transfer)">
                                                     </mat-icon>
                                                 </span>
+                                                </ng-template>
+                                                
                                                 <h5 class="inline-block font-medium">{{enrollment.schoolName}}<mat-icon
                                                         *ngIf="index==0" [icIcon]="icHomeSchool"
                                                         class="text-deep-purple align-middle ml-2 text-sm mt-2"
@@ -323,7 +334,7 @@
                                                 </h5>
                                             </div>
                                             <div class="inline-block justify-self-stretch text-right font-normal pt-1">
-                                                {{enrollment.enrollmentCode}} to <span
+                                                {{enrollment.type=='External'?'Enrolled as ': enrollment.enrollmentCode=='Rolled Over'?'Promoted':enrollment.enrollmentCode}}<span class="font-medium" *ngIf="enrollment.type=='External'">External Student</span> {{enrollment.type=='External'?'at':'to'}} <span
                                                     class="font-medium">{{enrollment.gradeLevelTitle}}</span> on
                                                 {{enrollment.enrollmentDate | date}}
                                             </div>
@@ -380,30 +391,32 @@
                     </thead>
                     <tbody>
                         <tr *ngFor="let enrollment of studentEnrollmentModel.studentEnrollmentListForView"
-                            [ngClass]="enrollment.exitCode!=null?'bg-skyblue-light':''">
+                            [ngClass]="enrollment.exitType=='Drop (Transfer)'?'bg-skyblue-light':''">
                             <td>{{enrollment.academicYear}}</td>
-                            <td><span *ngIf="enrollment.exitCode==null">{{enrollment.enrollmentDate | date}}
+                            <td><span *ngIf="enrollment.exitType!='Drop (Transfer)'">{{enrollment.enrollmentDate | date}}
+                                <mat-icon [icIcon]="icExternal" class="text-blue align-middle mx-2"
+                                        *ngIf="enrollment.enrollmentType=='Add' && enrollment.type=='External'"></mat-icon>
                                     <mat-icon [icIcon]="icAdd" class="text-blue align-middle mx-2"
-                                        *ngIf="enrollment.enrollmentType=='Add'"></mat-icon>
+                                        *ngIf="enrollment.enrollmentType=='Add' && enrollment.type=='Internal'"></mat-icon>
                                     <mat-icon [icIcon]="icDrop" class="text-warn align-middle mx-2"
-                                        *ngIf="enrollment.enrollmentType=='Drop'"></mat-icon>
+                                        *ngIf="enrollment.enrollmentType=='Drop' && enrollment.type=='Internal'"></mat-icon>
                                     <mat-icon [icIcon]="icPromoted" class="text-green align-middle mx-2"
-                                        *ngIf="enrollment.enrollmentType=='Rolled Over'"></mat-icon>
+                                        *ngIf="enrollment.enrollmentType=='Rolled Over' && enrollment.type=='Internal'"></mat-icon>
                                     <mat-icon [icIcon]="icTrasnferOut" class="text-deep-orangealign-middle mx-2"
-                                        *ngIf="enrollment.enrollmentType=='Drop (Transfer)'"></mat-icon>
+                                        *ngIf="enrollment.enrollmentType=='Drop (Transfer)' && enrollment.type=='Internal'"></mat-icon>
                                     <mat-icon [icIcon]="icTrasnferIn" class="text-blue align-middle mx-2"
-                                        *ngIf="enrollment.enrollmentType=='Enroll (Transfer)'"></mat-icon>
-                                    {{enrollment.enrollmentCode}}
+                                        *ngIf="enrollment.enrollmentType=='Enroll (Transfer)' && enrollment.type=='Internal'"></mat-icon>
+                                    {{enrollment.type=="External"?'Enrolled as External Student':enrollment.enrollmentCode=='Rolled Over'?'Promoted':enrollment.enrollmentCode}}
                                 </span></td>
-                            <td><span *ngIf="enrollment.exitCode==null">{{enrollment.gradeLevelTitle}}</span></td>
-                            <td><span *ngIf="enrollment.exitCode!=null">{{enrollment.exitDate | date}}
-                                <mat-icon [icIcon]="icTrasnferOut" class="text-blue align-middle mx-2"
+                            <td><span>{{enrollment.gradeLevelTitle}}</span></td>
+                            <td><span *ngIf="enrollment.exitType=='Drop (Transfer)'">{{enrollment.exitDate | date}}
+                                <mat-icon [icIcon]="icTrasnferOut" class="text-warn align-middle mx-2"
                                         *ngIf="enrollment.exitType=='Drop (Transfer)'"></mat-icon>
                                         <mat-icon [icIcon]="icPromoted" class="text-blue align-middle mx-2"
                                         *ngIf="enrollment.exitType=='Rolled Over'"></mat-icon>
                                         <mat-icon [icIcon]="icDrop" class="text-warn align-middle mx-2"
                                         *ngIf="enrollment.exitType=='Drop'"></mat-icon>
-                                    {{enrollment.exitCode}}</span></td>
+                                    {{enrollment.exitCode=='Rolled Over'?'Promoted':enrollment.exitCode}}</span></td>
                             <td>{{enrollment.schoolName}}</td>
                         </tr>
                     </tbody>

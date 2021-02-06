@@ -11,33 +11,17 @@
   <div gdColumn="1 / 4" gdColumn.lt-md="1 / -1" gdColumn.lt-sm="1">
     <vex-widget-assistant></vex-widget-assistant>
 
-    <div class="card px-6 py-4 bg-red my-4 text-white">
+    <div class="card px-6 py-4 bg-red my-4 text-white hide">
       <mat-icon [icIcon]="icMissingAttendance" class="align-middle mr-3"></mat-icon> 10 Missing Attendance Found
 </div>
 
     <div class="card my-4">
       <div class="px-6 py-4">
-        <h3 class="text-primary font-bold">Notice</h3>
+        <h3 class="text-primary font-bold">{{noticeTitle}}</h3>
       </div>
-      <hr />
-      <div class="px-6 py-4">
-        <h3 class="pb-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit</h3>
-        <p class="mb-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam non arcu sapien. Phasellus semper
-          lectus sed
-          nibh bibendum pellentesque. Suspendisse condimentum enim sed nunc ultrices hendrerit. Integer vitae suscipit
-          diam. Donec consectetur rutrum diam, nec porttitor ligula luctus a. Donec erat arcu, malesuada sit amet augue
-          porttitor, varius vestibulum purus. Phasellus gravida tincidunt fringilla. Nunc sed velit eu erat scelerisque
-          cursus. Etiam ut sem non ex semper gravida id eget ante. Sed facilisis nec odio at placerat. Nulla ut nibh at
-          dui tristique pellentesque quis non est. Morbi convallis convallis sagittis. Vestibulum augue quam, iaculis ac
-          libero at, accumsan aliquam dui.</p>
-        <p>Phasellus in vulputate massa. Integer interdum, tortor vitae tristique vulputate, eros enim luctus velit, nec
-          accumsan lectus nunc ac nisl. Curabitur malesuada eleifend orci nec finibus. Aliquam hendrerit urna et erat
-          consectetur, sit amet tristique sapien egestas. In egestas, nisl non condimentum accumsan, libero elit
-          imperdiet leo, id luctus sapien risus vitae purus. Proin vel mauris et velit euismod lobortis sit amet non
-          tortor. Quisque feugiat malesuada metus. Donec massa lacus, varius tristique dictum ac, lobortis sed diam.
-          Phasellus rutrum ac eros et suscipit. Quisque eget consectetur purus, vulputate condimentum ex. In facilisis
-          facilisis eleifend. Nunc quis enim in risus luctus consequat cursus sit amet dolor. In a nisi nisi. Donec
-          consequat ipsum massa, eu tempus mauris mollis id. Praesent ac purus lacus.</p>
+      <hr *ngIf="noticeHide" />
+      <div *ngIf="noticeHide" class="px-6 py-4 ql-snow">
+        <div class="ql-editor" [innerHTML]="noticeBody|safe:'html'"></div>
       </div>
     </div>
     <vex-widget-large-chart [series]="userSessionsSeries"></vex-widget-large-chart>
@@ -48,87 +32,47 @@
     <div gdColumns="1fr 1fr 1fr" gdColumns.lt-md="1fr 1fr" gdColumns.lt-sm="1fr"
       gdGap="16px" vexContainer>
       <vex-widget-quick-value-center [icon]="icStudent" iconClass="text-orange bg-orange-light" gdColumn.lt-sm="1"
-        label="Students" value="40543"></vex-widget-quick-value-center>
+        label="Students" [value]='studentCount'></vex-widget-quick-value-center>
       <vex-widget-quick-value-center [icon]="icStaff" iconClass="text-deep-orange bg-deep-orange-light"
-        gdColumn.lt-sm="1" label="Staff" value="367"></vex-widget-quick-value-center>
+        gdColumn.lt-sm="1" label="Staff" [value]='staffCount'></vex-widget-quick-value-center>
       <vex-widget-quick-value-center [icon]="icParent" iconClass="text-teal bg-teal-light" gdColumn.lt-sm="1"
-        label="Parents" value="68456"></vex-widget-quick-value-center>
+        label="Parents" [value]='parentCount'></vex-widget-quick-value-center>
     </div>
 
     <div class="card my-4">
-      <div class="px-6 py-4 flex justify-between">
-        <h3 class="text-primary font-bold">School Calendar</h3>
-        <div class="text-gray">January 2021</div>
+      <div *ngIf="!showCalendarView"class="px-6 py-4">
+        <h3 class="text-primary font-bold">No calendar found!</h3>
+      </div>
+      <div *ngIf="showCalendarView" class="px-6 py-4 flex justify-between">
+        <h3 class="text-primary font-bold">{{calendarTitle}}</h3>
+        <div  class="text-gray"> {{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</div>
       </div>
       <hr />
-      <table class="w-full text-center widget-events-calendar">
-        <thead>
-          <tr>
-            <th>Mon</th>
-            <th>Tue</th>
-            <th>Wed</th>
-            <th>Thu</th>
-            <th>Fri</th>
-            <th>Sat</th>
-            <th>Sun</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="text-gray-light">28</td>
-            <td class="text-gray-light">29</td>
-            <td class="text-gray-light">30</td>
-            <td class="text-gray-light">31</td>
-            <td>1</td>
-            <td>2</td>
-            <td>3</td>
-          </tr>
-          <tr>
-            <td>4</td>
-            <td>5</td>
-            <td>6</td>
-            <td>7</td>
-            <td>8</td>
-            <td>9<div><span class="event-bullet bg-green"></span></div>
-            </td>
-            <td>10</td>
-          </tr>
-          <tr>
-            <td>11</td>
-            <td>12<div><span class="event-bullet bg-warn"></span><span class="event-bullet bg-green"></span></div>
-            </td>
-            <td>13</td>
-            <td>14</td>
-            <td>15</td>
-            <td>16<div><span class="event-bullet bg-orange"></span></div>
-            </td>
-            <td>17</td>
-          </tr>
-          <tr>
-            <td>18</td>
-            <td>19</td>
-            <td>20</td>
-            <td class="cal-today">21<div><span class="event-bullet bg-purple"></span><span
-                  class="event-bullet bg-blue"></span></div>
-            </td>
-            <td>22</td>
-            <td>23</td>
-            <td>24</td>
-          </tr>
-          <tr>
-            <td>25</td>
-            <td>26</td>
-            <td>27</td>
-            <td>28</td>
-            <td>29</td>
-            <td>30</td>
-            <td>31</td>
-          </tr>
-        </tbody>
-      </table>
+      <ng-template #customCellTemplate let-day="day" let-locale="locale">
+        <div class="cal-cell-top text-center">
+          <span class="cal-day-number">{{ day.date | calendarDate:'monthViewDayNumber':locale }}</span>
+        </div>
+        <div class="cal-events pl-2 pb-2 justify-center" *ngIf="day.events.length > 0">
+          <div class="mr-2" *ngFor="let event of day.events;">
+           
+              <span #tooltip="matTooltip"
+              [matTooltip]= "event.title" class="inline-block w-3 h-3 rounded-full" [style.backgroundColor]="event.meta.calendar.eventColor"></span>
+              
+          </div>
+        </div>
+        
+    </ng-template>
+    <vex-scrollbar *ngIf="events$ | async; let event" [ngSwitch]="view" class="px-0 shadow flex-auto relative"
+    vexContainer>
+    <div [ngSwitch]="view">
+        <mwl-calendar-month-view *ngSwitchCase="'month'" [viewDate]="viewDate" [events]="event"
+        [weekendDays]="weekendDays" (beforeViewRender)="beforeMonthViewRender($event)" [cellTemplate]="customCellTemplate">
+        </mwl-calendar-month-view>
+    </div>
+    </vex-scrollbar>
     </div>
 
-    <vex-widget-table [columns]="tableColumns" [data]="tableData" class="w-full overflow-auto shadow"></vex-widget-table>
+    <vex-widget-table [columns]="tableColumns" [data]="tableData" [calendarEvents] ="events$" class="w-full overflow-auto shadow"></vex-widget-table>
   </div>
 
 

@@ -646,8 +646,11 @@
     "courseSubjectIsRequired":"Course Subject is Required",
     "accessibilityName":"Accessibility Name",
     "addNewFemaleToiletAccessibility":"Add New Female Toilet Accessibility",
+    "editFemaleToiletAccessibility":"Edit Female Toilet Accessibility",
     "addNewMaleToiletAccessibility":"Add New Male Toilet Accessibility",
+    "editMaleToiletAccessibility":"Edit Male Toilet Accessibility",
     "addNewCommonToiletAccessibility":"Add New Common Toilet Accessibility",
+    "editCommonToiletAccessibility":"Edit Common Toilet Accessibility",
     "addNewAccessibility":"Add New Accessibility",
     "editHonorRoll":"Edit Honor Roll",
     "honorRollIsRequired":"Honor roll is required",
@@ -656,11 +659,12 @@
     "allGradeLevel":"All Grade Level",
     "advanceSearch":"Advance Search",
     "addNew":"Add New",
-    "fetchingData":"Fetchind Data...",
+    "fetchingData":"Fetching Data...",
     "noData":"No Data",
     "groupByFamily":"Group by Family",
     "includeInactiveStudents":"Include Inactive Students",
     "searchBirthdaysBetweenDateRange":"Search Birthdays Between Date Range",
     "reset":"Reset",
-    "editCertificate":"Edit Certificate"
+    "editCertificate":"Edit Certificate",
+    "accessibilityNameIsRequired":"Accessibility name is required"
 }

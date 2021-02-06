@@ -32,6 +32,8 @@ export class SidenavComponent implements OnInit {
   icCollapseSidebar = icCollapseSidebar;
   icExpandSidebar = icExpandSidebar;
   icArrowDropDown = icArrowDropDown;
+  userName :string;
+  membershipName:string;
 
   constructor(private navigationService: NavigationService,
               private layoutService: LayoutService,
@@ -39,7 +41,8 @@ export class SidenavComponent implements OnInit {
               private router:Router) { }
 
   ngOnInit() {
-    
+    this.userName= sessionStorage.getItem('user');
+    this.membershipName= sessionStorage.getItem('membershipName');
   }
 
   onMouseEnter() {

@@ -63,7 +63,7 @@ namespace opensis.data.Models
         public virtual DbSet<SchoolCalendars> SchoolCalendars { get; set; }
         public virtual DbSet<SchoolDetail> SchoolDetail { get; set; }
         public virtual DbSet<SchoolMaster> SchoolMaster { get; set; }
-        public virtual DbSet<SchoolPeriods> SchoolPeriods { get; set; }
+        public virtual DbSet<SchoolPeriodsObsolete> SchoolPeriodsObsolete { get; set; }
         public virtual DbSet<SchoolYears> SchoolYears { get; set; }
         public virtual DbSet<Sections> Sections { get; set; }
         public virtual DbSet<Semesters> Semesters { get; set; }
@@ -282,11 +282,11 @@ namespace opensis.data.Models
                     .HasColumnName("updated_on")
                     .HasColumnType("datetime");
 
-                entity.HasOne(d => d.Block)
-                    .WithMany(p => p.BlockPeriod)
-                    .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.BlockId })
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_block_period_block");
+                entity.HasOne(d => d.SchoolMaster)
+                   .WithMany(p => p.BlockPeriod)
+                   .HasForeignKey(d => new { d.TenantId, d.SchoolId })
+                   .OnDelete(DeleteBehavior.ClientSetNull)
+                   .HasConstraintName("FK_block_period_school_master");
             });
 
 
@@ -506,7 +506,7 @@ namespace opensis.data.Models
 
             modelBuilder.Entity<CourseBlockSchedule>(entity =>
             {
-                entity.HasKey(e => new { e.TenantId, e.SchoolId, e.CourseId, e.CourseSectionId })
+                entity.HasKey(e => new { e.TenantId, e.SchoolId, e.CourseId, e.CourseSectionId, e.Serial })
                     .HasName("PK_course_block_schedule_1");
 
                 entity.ToTable("course_block_schedule");
@@ -518,6 +518,7 @@ namespace opensis.data.Models
                 entity.Property(e => e.CourseId).HasColumnName("course_id");
 
                 entity.Property(e => e.CourseSectionId).HasColumnName("course_section_id");
+               
 
                 entity.Property(e => e.BlockId).HasColumnName("block_id");
 
@@ -554,21 +555,23 @@ namespace opensis.data.Models
                     .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.BlockId })
                     .HasConstraintName("FK_course_block_schedule_block");
 
-                entity.HasOne(d => d.SchoolPeriods)
-                    .WithMany(p => p.CourseBlockSchedule)
-                    .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.PeriodId })
-                    .HasConstraintName("FK_course_block_schedule_school_periods");
+               
 
                 entity.HasOne(d => d.Rooms)
                     .WithMany(p => p.CourseBlockSchedule)
                     .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.RoomId })
                     .HasConstraintName("FK_course_block_schedule_rooms");
+
+                entity.HasOne(d => d.BlockPeriod)
+                    .WithMany(p => p.CourseBlockSchedule)
+                    .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.BlockId, d.PeriodId })
+                    .HasConstraintName("FK_course_block_schedule_block_periods");
             });
 
             modelBuilder.Entity<CourseCalendarSchedule>(entity =>
             {
-                entity.HasKey(e => new { e.TenantId, e.SchoolId, e.CourseId, e.CourseSectionId })
-                    .HasName("PK_course_calendar_schedule_1");
+                entity.HasKey(e => new { e.TenantId, e.SchoolId, e.CourseId, e.CourseSectionId, e.Serial })
+                     .HasName("PK_course_calendar_schedule_1");
 
                 entity.ToTable("course_calendar_schedule");
 
@@ -579,6 +582,10 @@ namespace opensis.data.Models
                 entity.Property(e => e.CourseId).HasColumnName("course_id");
 
                 entity.Property(e => e.CourseSectionId).HasColumnName("course_section_id");
+
+                entity.Property(e => e.Serial).HasColumnName("serial");
+
+                entity.Property(e => e.BlockId).HasColumnName("block_id");
 
                 entity.Property(e => e.CreatedBy)
                     .HasColumnName("created_by")
@@ -599,8 +606,6 @@ namespace opensis.data.Models
 
                 entity.Property(e => e.RoomId).HasColumnName("room_id");
 
-                entity.Property(e => e.Serial).HasColumnName("serial");
-
                 entity.Property(e => e.TakeAttendance).HasColumnName("take_attendance");
 
                 entity.Property(e => e.UpdatedBy)
@@ -612,21 +617,21 @@ namespace opensis.data.Models
                     .HasColumnName("updated_on")
                     .HasColumnType("datetime");
 
-                entity.HasOne(d => d.SchoolPeriods)
-                    .WithMany(p => p.CourseCalendarSchedule)
-                    .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.PeriodId })
-                    .HasConstraintName("FK_course_calendar_schedule_school_periods");
-
                 entity.HasOne(d => d.Rooms)
                     .WithMany(p => p.CourseCalendarSchedule)
                     .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.RoomId })
                     .HasConstraintName("FK_course_calendar_schedule_rooms");
+
+                entity.HasOne(d => d.BlockPeriod)
+                    .WithMany(p => p.CourseCalendarSchedule)
+                    .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.BlockId, d.PeriodId })
+                    .HasConstraintName("FK_course_calendar_schedule_block_periods");
             });
 
             modelBuilder.Entity<CourseFixedSchedule>(entity =>
             {
-                entity.HasKey(e => new { e.TenantId, e.SchoolId, e.CourseId, e.CourseSectionId })
-                    .HasName("PK_course_fixed_schedule_1");
+                entity.HasKey(e => new { e.TenantId, e.SchoolId, e.CourseId, e.CourseSectionId, e.Serial })
+                     .HasName("PK_course_fixed_schedule_1");
 
                 entity.ToTable("course_fixed_schedule");
 
@@ -637,6 +642,10 @@ namespace opensis.data.Models
                 entity.Property(e => e.CourseId).HasColumnName("course_id");
 
                 entity.Property(e => e.CourseSectionId).HasColumnName("course_section_id");
+
+                entity.Property(e => e.Serial).HasColumnName("serial");
+
+                entity.Property(e => e.BlockId).HasColumnName("block_id");
 
                 entity.Property(e => e.CreatedBy)
                     .HasColumnName("created_by")
@@ -653,8 +662,6 @@ namespace opensis.data.Models
 
                 entity.Property(e => e.RoomId).HasColumnName("room_id");
 
-                entity.Property(e => e.Serial).HasColumnName("serial");
-
                 entity.Property(e => e.UpdatedBy)
                     .HasColumnName("updated_by")
                     .HasMaxLength(150)
@@ -664,15 +671,15 @@ namespace opensis.data.Models
                     .HasColumnName("updated_on")
                     .HasColumnType("datetime");
 
-                entity.HasOne(d => d.SchoolPeriods)
-                    .WithMany(p => p.CourseFixedSchedule)
-                    .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.PeriodId })
-                    .HasConstraintName("FK_course_fixed_schedule_school_periods");
-
                 entity.HasOne(d => d.Rooms)
                     .WithMany(p => p.CourseFixedSchedule)
                     .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.RoomId })
                     .HasConstraintName("FK_course_fixed_schedule_rooms");
+
+                entity.HasOne(d => d.BlockPeriod)
+                    .WithMany(p => p.CourseFixedSchedule)
+                    .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.BlockId, d.PeriodId })
+                    .HasConstraintName("FK_course_fixed_schedule_block_periods");
             });
 
             modelBuilder.Entity<CourseSection>(entity =>
@@ -734,8 +741,6 @@ namespace opensis.data.Models
 
                 entity.Property(e => e.IsWeightedCourse).HasColumnName("is_weighted_course");
 
-                entity.Property(e => e.MarkingPeriodId).HasColumnName("marking_period_id");
-
                 entity.Property(e => e.MeetingDays)
                     .HasColumnName("meeting_days")
                     .HasMaxLength(13)
@@ -754,6 +759,8 @@ namespace opensis.data.Models
                     .HasMaxLength(250)
                     .IsUnicode(false);
 
+                entity.Property(e => e.QtrMarkingPeriodId).HasColumnName("qtr_marking_period_id");
+
                 entity.Property(e => e.ScheduleType)
                     .HasColumnName("schedule_type")
                     .HasMaxLength(25)
@@ -761,6 +768,8 @@ namespace opensis.data.Models
                     .HasComment("Fixed Schedule (1) / Variable Schedule (2) / Calendar Days (3) / Bell schedule (4)");
 
                 entity.Property(e => e.Seats).HasColumnName("seats");
+
+                entity.Property(e => e.SmstrMarkingPeriodId).HasColumnName("smstr_marking_period_id");
 
                 entity.Property(e => e.StandardGradeScaleId).HasColumnName("standard_grade_scale_id");
 
@@ -774,6 +783,8 @@ namespace opensis.data.Models
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.UseStandards).HasColumnName("use_standards");
+
+                entity.Property(e => e.YrMarkingPeriodId).HasColumnName("yr_marking_period_id");
 
                 entity.HasOne(d => d.SchoolMaster)
                     .WithMany(p => p.CourseSection)
@@ -802,6 +813,21 @@ namespace opensis.data.Models
                     .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.GradeScaleId })
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_course_section_grade_scale");
+
+                entity.HasOne(d => d.Quarters)
+                    .WithMany(p => p.CourseSection)
+                    .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.QtrMarkingPeriodId })
+                    .HasConstraintName("FK_course_section_quarters");
+
+                entity.HasOne(d => d.Semesters)
+                    .WithMany(p => p.CourseSection)
+                    .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.SmstrMarkingPeriodId })
+                    .HasConstraintName("FK_course_section_semesters");
+
+                entity.HasOne(d => d.SchoolYears)
+                    .WithMany(p => p.CourseSection)
+                    .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.YrMarkingPeriodId })
+                    .HasConstraintName("FK_course_section_school_years");
             });
 
             modelBuilder.Entity<CourseStandard>(entity =>
@@ -854,7 +880,7 @@ namespace opensis.data.Models
 
             modelBuilder.Entity<CourseVariableSchedule>(entity =>
             {
-                entity.HasKey(e => new { e.TenantId, e.SchoolId, e.CourseId, e.CourseSectionId })
+                entity.HasKey(e => new { e.TenantId, e.SchoolId, e.CourseId, e.CourseSectionId, e.Serial })
                     .HasName("PK_course_variable_schedule_1");
 
                 entity.ToTable("course_variable_schedule");
@@ -866,6 +892,10 @@ namespace opensis.data.Models
                 entity.Property(e => e.CourseId).HasColumnName("course_id");
 
                 entity.Property(e => e.CourseSectionId).HasColumnName("course_section_id");
+
+                entity.Property(e => e.Serial).HasColumnName("serial");
+
+                entity.Property(e => e.BlockId).HasColumnName("block_id");
 
                 entity.Property(e => e.CreatedBy)
                     .HasColumnName("created_by")
@@ -887,8 +917,6 @@ namespace opensis.data.Models
 
                 entity.Property(e => e.RoomId).HasColumnName("room_id");
 
-                entity.Property(e => e.Serial).HasColumnName("serial");
-
                 entity.Property(e => e.TakeAttendance).HasColumnName("take_attendance");
 
                 entity.Property(e => e.UpdatedBy)
@@ -900,15 +928,15 @@ namespace opensis.data.Models
                     .HasColumnName("updated_on")
                     .HasColumnType("datetime");
 
-                entity.HasOne(d => d.SchoolPeriods)
-                    .WithMany(p => p.CourseVariableSchedule)
-                    .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.PeriodId })
-                    .HasConstraintName("FK_course_variable_schedule_school_periods");
-
                 entity.HasOne(d => d.Rooms)
                     .WithMany(p => p.CourseVariableSchedule)
                     .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.RoomId })
                     .HasConstraintName("FK_course_variable_schedule_rooms");
+
+                entity.HasOne(d => d.BlockPeriod)
+                    .WithMany(p => p.CourseVariableSchedule)
+                    .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.BlockId, d.PeriodId })
+                    .HasConstraintName("FK_course_variable_schedule_block_periods");
             });
             modelBuilder.Entity<CustomFields>(entity =>
             {
@@ -2578,12 +2606,12 @@ namespace opensis.data.Models
                     .HasConstraintName("FK_school_master_plans");
             });
 
-            modelBuilder.Entity<SchoolPeriods>(entity =>
+            modelBuilder.Entity<SchoolPeriodsObsolete>(entity =>
             {
                 entity.HasKey(e => new { e.TenantId, e.SchoolId, e.PeriodId })
                     .HasName("pk_table_school_periods");
 
-                entity.ToTable("school_periods");
+                entity.ToTable("school_periods_obsolete");
 
                 entity.Property(e => e.TenantId).HasColumnName("tenant_id");
 
@@ -2617,17 +2645,14 @@ namespace opensis.data.Models
                     .HasColumnName("length")
                     .HasColumnType("decimal(10, 0)");
 
-                entity.Property(e => e.RolloverId)
-                    .HasColumnName("rollover_id");
-                    
+                entity.Property(e => e.RolloverId).HasColumnName("rollover_id");
 
                 entity.Property(e => e.ShortName)
                     .HasColumnName("short_name")
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
-                entity.Property(e => e.SortOrder)
-                    .HasColumnName("sort_order");
+                entity.Property(e => e.SortOrder).HasColumnName("sort_order");
 
                 entity.Property(e => e.StartTime).HasColumnName("start_time");
 
@@ -2640,12 +2665,6 @@ namespace opensis.data.Models
                     .HasColumnName("updated_by")
                     .HasMaxLength(100)
                     .IsUnicode(false);
-
-                entity.HasOne(d => d.SchoolMaster)
-                    .WithMany(p => p.SchoolPeriods)
-                    .HasForeignKey(d => new { d.TenantId, d.SchoolId })
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_school_periods_school_master");
             });
 
             modelBuilder.Entity<SchoolYears>(entity =>

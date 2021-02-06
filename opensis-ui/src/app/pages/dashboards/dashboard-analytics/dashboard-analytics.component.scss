@@ -1,3 +1,23 @@
+
+@import '../../../../../node_modules/angular-calendar/css/angular-calendar.css';
+@import "../../../../@vex/styles/partials/plugins/_angular-calendar.scss";
+
+
+:host::ng-deep .cal-month-view .cal-day-cell {
+     min-height: 0px; 
+}
+
+:host::ng-deep .cal-month-view .cal-cell-top{
+    min-height: 50px; 
+}
+
+:host::ng-deep .cal-month-view .cal-day-number {
+   
+     float: none; 
+     margin-right: 0;
+}
+
+
 .widget-events-calendar {
     tr {
         th {

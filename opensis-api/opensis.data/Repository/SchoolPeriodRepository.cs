@@ -27,20 +27,20 @@ namespace opensis.data.Repository
         {
 
             //int? MasterSchoolPeriodId = Utility.GetMaxPK(this.context, new Func<SchoolPeriods, int>(x => x.PeriodId));
-            int? MasterSchoolPeriodId = 1;
+            //int? MasterSchoolPeriodId = 1;
 
-            var schoolPeriodData = this.context?.SchoolPeriods.Where(x => x.TenantId == schoolPeriod.tableSchoolPeriods.TenantId && x.SchoolId == schoolPeriod.tableSchoolPeriods.SchoolId).OrderByDescending(x => x.PeriodId).FirstOrDefault();
+            //var schoolPeriodData = this.context?.SchoolPeriods.Where(x => x.TenantId == schoolPeriod.tableSchoolPeriods.TenantId && x.SchoolId == schoolPeriod.tableSchoolPeriods.SchoolId).OrderByDescending(x => x.PeriodId).FirstOrDefault();
 
-            if (schoolPeriodData != null)
-            {
-                MasterSchoolPeriodId = schoolPeriodData.PeriodId + 1;
-            }
+            //if (schoolPeriodData != null)
+            //{
+            //    MasterSchoolPeriodId = schoolPeriodData.PeriodId + 1;
+            //}
 
-            schoolPeriod.tableSchoolPeriods.PeriodId = (int)MasterSchoolPeriodId;           
-            schoolPeriod.tableSchoolPeriods.LastUpdated = DateTime.UtcNow;
-            this.context?.SchoolPeriods.Add(schoolPeriod.tableSchoolPeriods);
-            this.context?.SaveChanges();
-            schoolPeriod._failure = false;
+            //schoolPeriod.tableSchoolPeriods.PeriodId = (int)MasterSchoolPeriodId;           
+            //schoolPeriod.tableSchoolPeriods.LastUpdated = DateTime.UtcNow;
+            //this.context?.SchoolPeriods.Add(schoolPeriod.tableSchoolPeriods);
+            //this.context?.SaveChanges();
+            //schoolPeriod._failure = false;
             return schoolPeriod;
         }
 
@@ -51,23 +51,24 @@ namespace opensis.data.Repository
         /// <returns></returns>
         public SchoolPeriodAddViewModel UpdateSchoolPeriod(SchoolPeriodAddViewModel schoolPeriod)
         {
-            try
-            {
-                var schoolPeriodUpdate = this.context?.SchoolPeriods.FirstOrDefault(x => x.TenantId == schoolPeriod.tableSchoolPeriods.TenantId && x.SchoolId == schoolPeriod.tableSchoolPeriods.SchoolId && x.PeriodId == schoolPeriod.tableSchoolPeriods.PeriodId);
+            return null;
+            //try
+            //{
+            //    var schoolPeriodUpdate = this.context?.SchoolPeriods.FirstOrDefault(x => x.TenantId == schoolPeriod.tableSchoolPeriods.TenantId && x.SchoolId == schoolPeriod.tableSchoolPeriods.SchoolId && x.PeriodId == schoolPeriod.tableSchoolPeriods.PeriodId);
 
-                schoolPeriod.tableSchoolPeriods.LastUpdated = DateTime.UtcNow;
-                this.context.Entry(schoolPeriodUpdate).CurrentValues.SetValues(schoolPeriod.tableSchoolPeriods);
-                this.context?.SaveChanges();
-                schoolPeriod._failure = false;
-                return schoolPeriod;
-            }
-            catch (Exception ex)
-            {
-                schoolPeriod.tableSchoolPeriods = null;
-                schoolPeriod._failure = true;
-                schoolPeriod._message = NORECORDFOUND;
-                return schoolPeriod;
-            }
+            //    schoolPeriod.tableSchoolPeriods.LastUpdated = DateTime.UtcNow;
+            //    this.context.Entry(schoolPeriodUpdate).CurrentValues.SetValues(schoolPeriod.tableSchoolPeriods);
+            //    this.context?.SaveChanges();
+            //    schoolPeriod._failure = false;
+            //    return schoolPeriod;
+            //}
+            //catch (Exception ex)
+            //{
+            //    schoolPeriod.tableSchoolPeriods = null;
+            //    schoolPeriod._failure = true;
+            //    schoolPeriod._message = NORECORDFOUND;
+            //    return schoolPeriod;
+            //}
         }
 
         /// <summary>
@@ -77,27 +78,28 @@ namespace opensis.data.Repository
         /// <returns></returns>
         public SchoolPeriodAddViewModel ViewSchoolPeriod(SchoolPeriodAddViewModel schoolPeriod)
         {
-            try
-            {
-                SchoolPeriodAddViewModel schoolPeriodView = new SchoolPeriodAddViewModel();
-                var schoolPeriodById = this.context?.SchoolPeriods.FirstOrDefault(x => x.TenantId == schoolPeriod.tableSchoolPeriods.TenantId && x.SchoolId == schoolPeriod.tableSchoolPeriods.SchoolId && x.PeriodId == schoolPeriod.tableSchoolPeriods.PeriodId);
-                if (schoolPeriodById != null)
-                {
-                    schoolPeriodView.tableSchoolPeriods = schoolPeriodById;
-                    return schoolPeriodView;
-                }
-                else
-                {
-                    schoolPeriodView._failure = true;
-                    schoolPeriodView._message = NORECORDFOUND;
-                    return schoolPeriodView;
-                }
-            }
-            catch (Exception es)
-            {
+            return null;
+            //try
+            //{
+            //    SchoolPeriodAddViewModel schoolPeriodView = new SchoolPeriodAddViewModel();
+            //    var schoolPeriodById = this.context?.SchoolPeriods.FirstOrDefault(x => x.TenantId == schoolPeriod.tableSchoolPeriods.TenantId && x.SchoolId == schoolPeriod.tableSchoolPeriods.SchoolId && x.PeriodId == schoolPeriod.tableSchoolPeriods.PeriodId);
+            //    if (schoolPeriodById != null)
+            //    {
+            //        schoolPeriodView.tableSchoolPeriods = schoolPeriodById;
+            //        return schoolPeriodView;
+            //    }
+            //    else
+            //    {
+            //        schoolPeriodView._failure = true;
+            //        schoolPeriodView._message = NORECORDFOUND;
+            //        return schoolPeriodView;
+            //    }
+            //}
+            //catch (Exception es)
+            //{
 
-                throw;
-            }
+            //    throw;
+            //}
         }
         /// <summary>
         /// Delete School Period
@@ -106,21 +108,21 @@ namespace opensis.data.Repository
         /// <returns></returns>
         public SchoolPeriodAddViewModel DeleteSchoolPeriod(SchoolPeriodAddViewModel schoolPeriod)
         {
-            try
-            {
-                var schoolPeriodDelete = this.context?.SchoolPeriods.FirstOrDefault(x => x.TenantId == schoolPeriod.tableSchoolPeriods.TenantId && x.SchoolId == schoolPeriod.tableSchoolPeriods.SchoolId && x.PeriodId == schoolPeriod.tableSchoolPeriods.PeriodId);
+            //try
+            //{
+            //    var schoolPeriodDelete = this.context?.SchoolPeriods.FirstOrDefault(x => x.TenantId == schoolPeriod.tableSchoolPeriods.TenantId && x.SchoolId == schoolPeriod.tableSchoolPeriods.SchoolId && x.PeriodId == schoolPeriod.tableSchoolPeriods.PeriodId);
 
-                this.context?.SchoolPeriods.Remove(schoolPeriodDelete);
-                this.context?.SaveChanges();
-                schoolPeriod._failure = false;
-                schoolPeriod._message = "Deleted";
-            }
+            //    this.context?.SchoolPeriods.Remove(schoolPeriodDelete);
+            //    this.context?.SaveChanges();
+            //    schoolPeriod._failure = false;
+            //    schoolPeriod._message = "Deleted";
+            //}
 
-            catch (Exception es)
-            {
-                schoolPeriod._failure = true;
-                schoolPeriod._message = es.Message;
-            }
+            //catch (Exception es)
+            //{
+            //    schoolPeriod._failure = true;
+            //    schoolPeriod._message = es.Message;
+            //}
             return schoolPeriod;
         }
 

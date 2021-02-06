@@ -1,8 +1,8 @@
 <mat-card-content>
 
     <div @stagger fxLayout="column">
-        <h3 class="text-blue pt-6 pb-2 px-4">{{'identificationInformation'|translate}}</h3>
-        <ul class="grid grid-cols-3 col-gap-8 row-gap-10 mt-2 mx-4">
+        <h3 class="text-blue pt-6 pb-2 px-2">{{'identificationInformation'|translate}}</h3>
+        <ul class="grid grid-cols-3 col-gap-8 row-gap-10 mt-2 mx-2">
             <li>
                 <label class="text-sm leading-5 text-gray">{{'studentName' | translate}}</label>
                 <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
@@ -67,8 +67,8 @@
 
         <hr class="-mx-4 mt-6">
 
-        <h3 class="text-blue pt-6 pb-2 px-4">{{'demographicInformation'|translate}}</h3>
-        <ul class="grid grid-cols-3 col-gap-8 row-gap-10 mt-2 mx-4">
+        <h3 class="text-blue pt-6 pb-2 px-2">{{'demographicInformation'|translate}}</h3>
+        <ul class="grid grid-cols-3 col-gap-8 row-gap-10 mt-2 mx-2">
             <li>
                 <label class="text-sm leading-5 text-gray">{{'dateOfBirth' | translate}}</label>
                 <p *ngIf ="studentViewDetails?.studentMaster.dob !== null" class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentViewDetails?.studentMaster.dob | date:'mediumDate' | EmtyValueCheckPipe}}<span class="dot-separator"></span>{{'age' | translate}} : {{ getAge(studentViewDetails?.studentMaster.dob)}}</p>
@@ -123,8 +123,8 @@
 
         <hr class="-mx-4 mt-6">
 
-        <h3 class="text-blue pt-6 pb-2 px-4">{{'schoolInformation'|translate}}</h3>
-        <ul class="grid grid-cols-3 col-gap-8 row-gap-10 my-2 mx-4">
+        <h3 class="text-blue pt-6 pb-2 px-2">{{'schoolInformation'|translate}}</h3>
+        <ul class="grid grid-cols-3 col-gap-8 row-gap-10 my-2 mx-2">
             <li>
                 <label class="text-sm leading-5 text-gray">{{'section' | translate}}</label>
                 <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{nameOfMiscValues?.sectionName}}</p>
@@ -134,74 +134,74 @@
                 <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
                     {{studentViewDetails?.studentMaster.estimatedGradDate |date:'mediumDate' |EmtyValueCheckPipe}}</p>
             </li>
-        </ul>
-        <div class="flex flex-wrap items-start mx-4 mt-10 mb-2">
-
-
-            <div class="mr-4" *ngIf="studentViewDetails?.studentMaster.eligibility504; else NOTEligibility">
+            <li class="col-span-3">
+                <div class="flex items-center">
+                    <div class="mr-6" *ngIf="studentViewDetails?.studentMaster.eligibility504; else NOTEligibility">
                 <mat-icon [icIcon]="icCheckbox" class="inline-block align-middle mr-2"></mat-icon>
                 <span class="inline-block text-base align-middle">{{'504Eligibility' |translate}}</span>
             </div>
             <ng-template #NOTEligibility>
-                <div class="mr-4">
+                        <div class="mr-6">
                     <mat-icon [icIcon]="icCheckboxOutline" class="inline-block align-middle mr-2"></mat-icon>
                     <span class="inline-block text-base align-middle">{{'504Eligibility' |translate}}</span>
                 </div>
             </ng-template>
 
 
-            <div class="mr-4" *ngIf="studentViewDetails?.studentMaster.economicDisadvantage; else economicadvantage">
+                    <div class="mr-6" *ngIf="studentViewDetails?.studentMaster.economicDisadvantage; else economicadvantage">
                 <mat-icon [icIcon]="icCheckbox" class="inline-block align-middle mr-2"></mat-icon>
                 <span class="inline-block text-base align-middle">{{'economicDisadvantage' |translate}}</span>
             </div>
             <ng-template #economicadvantage>
-                <div class="mr-4">
+                        <div class="mr-6">
                     <mat-icon [icIcon]="icCheckboxOutline" class="inline-block align-middle mr-2"></mat-icon>
                     <span class="inline-block text-base align-middle">{{'economicDisadvantage' |translate}}</span>
                 </div>
             </ng-template>
 
-            <div class="mr-4" *ngIf="studentViewDetails?.studentMaster.freeLunchEligibility; else LunchEligibility">
+                    <div class="mr-6" *ngIf="studentViewDetails?.studentMaster.freeLunchEligibility; else LunchEligibility">
                 <mat-icon [icIcon]="icCheckbox" class="inline-block align-middle mr-2"></mat-icon>
                 <span class="inline-block text-base align-middle">{{'freeLunchEligibility' |translate}}</span>
             </div>
             <ng-template #LunchEligibility>
-                <div class="mr-4">
+                        <div class="mr-6">
                     <mat-icon [icIcon]="icCheckboxOutline" class="inline-block align-middle mr-2"></mat-icon>
                     <span class="inline-block text-base align-middle">{{'freeLunchEligibility' |translate}}</span>
                 </div>
             </ng-template>
 
-            <div class="mr-4" *ngIf="studentViewDetails?.studentMaster.specialEducationIndicator; else nonSpecialEducationIndicator">
+                    <div class="mr-6" *ngIf="studentViewDetails?.studentMaster.specialEducationIndicator; else nonSpecialEducationIndicator">
                 <mat-icon [icIcon]="icCheckbox" class="inline-block align-middle mr-2"></mat-icon>
                 <span class="inline-block text-base align-middle">{{'specialEducationIndicator' |translate}}</span>
             </div>
             <ng-template #nonSpecialEducationIndicator>
-                <div class="mr-4">
+                        <div class="mr-6">
                     <mat-icon [icIcon]="icCheckboxOutline" class="inline-block align-middle mr-2"></mat-icon>
                     <span class="inline-block text-base align-middle">{{'specialEducationIndicator' |translate}}</span>
                 </div>
             </ng-template>
 
 
-            <div class="mr-4" *ngIf="studentViewDetails?.studentMaster.lepIndicator; else Indicator">
+                    <div class="mr-6" *ngIf="studentViewDetails?.studentMaster.lepIndicator; else Indicator">
                 <mat-icon [icIcon]="icCheckbox" class="inline-block align-middle mr-2"></mat-icon>
                 <span class="inline-block text-base align-middle">{{'lepIndicator' |translate}}</span>
             </div>
             <ng-template #Indicator>
-                <div class="mr-4">
+                        <div class="mr-6">
                     <mat-icon [icIcon]="icCheckboxOutline" class="inline-block align-middle mr-2"></mat-icon>
                     <span class="inline-block text-base align-middle">{{'lepIndicator' |translate}}</span>
                 </div>
             </ng-template>
+                </div>
+            </li>
+        </ul>
 
-        </div>
         <vex-custom-field-without-form [schoolDetailsForViewAndEdit]="studentViewDetails" [module]="module"
             [categoryId]="categoryId" [studentCreateMode]="studentCreateMode"></vex-custom-field-without-form>
         <hr class="-mx-4 mt-6">
 
-        <h3 class="text-blue pt-6 pb-2 px-4">{{'accessInformation'|translate}}</h3>
-        <ul class="grid grid-cols-3 col-gap-8 row-gap-10 my-2 mx-4">
+        <h3 class="text-blue pt-6 pb-2 px-2">{{'accessInformation'|translate}}</h3>
+        <ul class="grid grid-cols-3 col-gap-8 row-gap-10 my-2 mx-2">
             <li>
                 <label class="text-sm leading-5 text-gray">{{'loginEmailAddress' | translate}}</label>
                 <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">

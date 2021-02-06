@@ -211,6 +211,12 @@ export class AppComponent {
           },
           {
             type: 'link',
+            label: 'Schedule Teacher',
+            route: '/school/schedule-teacher',
+            icon: icinfo
+          },
+          {
+            type: 'link',
             label: 'Run Scheduler',
             route: '/school/runscheduler',
             icon: icinfo

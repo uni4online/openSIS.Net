@@ -1,11 +1,9 @@
 <mat-card class="w-full" *ngIf="schoolCreateMode==schoolCreate.EDIT || schoolCreateMode==schoolCreate.ADD">
     <form (ngSubmit)="submit()" #f="ngForm" novalidate appInvalidControlScroll>
-        <mat-card-header>
-            <mat-card-title>{{'generalInformation'|translate}}</mat-card-title>
-        </mat-card-header>
+        <h3 class="font-medium mx-2">{{'generalInformation'|translate}}</h3>
         <mat-card-content>
-            <div class="py-6" @stagger fxLayout="column">
-                <ul class="md:grid md:grid-cols-2 md:col-gap-8 md:row-gap-0 mx-4">
+            <div class="pt-6" @stagger fxLayout="column">
+                <ul class="md:grid md:grid-cols-2 md:col-gap-8 md:row-gap-0 mx-2">
                     <li>
                         <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'schoolName'|translate}}</mat-label>
@@ -220,12 +218,13 @@
                      </ul>
                      <vex-custom-field-without-form  [schoolDetailsForViewAndEdit]="schoolAddViewModel" [categoryId] = "categoryId" [module] = "module" [schoolCreateMode]="schoolCreateMode"></vex-custom-field-without-form>
             </div>
-            <div class="pb-6" @stagger fxLayout="column">
+            <hr class="-mx-4 mt-4 mb-6">
+            <div @stagger fxLayout="column">
                 <div class="px-4 pb-3">
-                    <h4 class="text-primary">{{'addressInformation'|translate}}</h4>
+                    <h4 class="text-primary font-medium">{{'addressInformation'|translate}}</h4>
                 </div>
 
-                <ul class="md:grid md:grid-cols-2 md:col-gap-8 md:row-gap-0 mx-4">
+                <ul class="md:grid md:grid-cols-2 md:col-gap-8 md:row-gap-0 mx-2">
                     <li>
                         <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'streetAddress1'|translate}}</mat-label>
@@ -350,11 +349,12 @@
                     </li>
                 </ul>
             </div>
+            <hr class="-mx-4 mt-4 mb-6">
             <div @stagger fxLayout="column">
                 <div class="px-4 pb-3">
-                    <h4 class="text-primary">{{'contactInformation'|translate}}</h4>
+                    <h4 class="text-primary font-medium">{{'contactInformation'|translate}}</h4>
                 </div>
-                <ul class="md:grid md:grid-cols-2 md:col-gap-8 md:row-gap-0 mx-4">
+                <ul class="md:grid md:grid-cols-2 md:col-gap-8 md:row-gap-0 mx-2">
                     <li>
                         <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'principal'|translate}}</mat-label>
@@ -464,9 +464,9 @@
     </form>
 </mat-card>
 <mat-card @fadeInUp class="w-full" fxFlex="auto" *ngIf="schoolCreateMode == schoolCreate.VIEW">
-    <div class="flex items-center mx-4" fxLayout="row" fxLayoutAlign="center center">
-        <h3 class="flex-auto">{{'generalInformation' | translate}}</h3>
-        <button mat-button color="primary" (click)="editGeneralInfo()"><mat-icon [icIcon]="icEdit"></mat-icon>{{'editInformation' |translate}}</button>
+    <div class="flex items-center mx-2" fxLayout="row" fxLayoutAlign="center center">
+        <h3 class="flex-auto font-medium">{{'generalInformation' | translate}}</h3>
+        <button mat-raised-button color="primary" (click)="editGeneralInfo()"><mat-icon [icIcon]="icEdit" style="font-size: 20px;" class="mr-1"></mat-icon>{{'editInformation' |translate}}</button>
     </div>
     <vex-view-general-info [schoolCreateMode]="schoolCreateMode"
      [categoryId]="categoryId"

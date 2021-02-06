@@ -30,7 +30,7 @@ namespace opensis.data.Repository
                 var checkGradeScaleName = this.context?.GradeScale.Where(x => x.SchoolId == gradeScaleAddViewModel.gradeScale.SchoolId && x.TenantId == gradeScaleAddViewModel.gradeScale.TenantId && x.GradeScaleName.ToLower() == gradeScaleAddViewModel.gradeScale.GradeScaleName.ToLower()).FirstOrDefault();
                 if (checkGradeScaleName != null)
                 {
-                    gradeScaleAddViewModel._failure = false;
+                    gradeScaleAddViewModel._failure = true;
                     gradeScaleAddViewModel._message = "Grade Scale Name Already Exists";
                 }
                 else
@@ -84,7 +84,7 @@ namespace opensis.data.Repository
 
                     if (checkGradeScaleName != null)
                     {
-                        gradeScaleAddViewModel._failure = false;
+                        gradeScaleAddViewModel._failure = true;
                         gradeScaleAddViewModel._message = "Grade Scale Name Already Exists";
                     }
                     else

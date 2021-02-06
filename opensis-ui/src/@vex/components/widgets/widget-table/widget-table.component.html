@@ -5,47 +5,25 @@
       <mat-icon [icIcon]="icMoreHoriz" class="text-secondary"></mat-icon>
     </button> -->
   </div>
-
+  <!-- <div  class="px-6 py-4">
+    <h3 class="text-primary font-bold">No events founds!</h3>
+  </div> -->
   <div class="flex w-full items-center font-bold">
     <div class="w-6/12 py-3 pl-6 pr-4">Event Title</div>
     <div class="w-3/12 py-3 px-4">Start Date</div>
     <div class="w-3/12 py-3 pl-4 pr-6">End Date</div>
   </div>
   <hr>
-  <div class="flex w-full items-center">
-    <div class="w-6/12 py-3 pl-6 pr-4"><div class="truncate"><span class="inline-block w-2 h-2 mr-3 rounded-full bg-green align-middle"></span> Martin Luther King Jr. Day</div></div>
-    <div class="w-3/12 py-3 px-4">Jan 18, 2021</div>
-    <div class="w-3/12 py-3 pl-4 pr-6">Jan 18, 2021</div>
-  </div>
-  <hr>
-  <div class="flex w-full items-center">
-    <div class="w-6/12 py-3 pl-6 pr-4"><div class="truncate"><span class="inline-block w-2 h-2 mr-3 rounded-full bg-purple align-middle"></span> Memorial Day</div></div>
-    <div class="w-3/12 py-3 px-4">May 31, 2021</div>
-    <div class="w-3/12 py-3 pl-4 pr-6">May 31, 2021</div>
-  </div>
-  <hr>
-  <div class="flex w-full items-center">
-    <div class="w-6/12 py-3 pl-6 pr-4"><div class="truncate"><span class="inline-block w-2 h-2 mr-3 rounded-full bg-blue align-middle"></span> Independence Day</div></div>
-    <div class="w-3/12 py-3 px-4">Jul 5, 2021</div>
-    <div class="w-3/12 py-3 pl-4 pr-6">Jul 5, 2021</div>
-  </div>
-  <hr>
-  <div class="flex w-full items-center">
-    <div class="w-6/12 py-3 pl-6 pr-4"><div class="truncate"><span class="inline-block w-2 h-2 mr-3 rounded-full bg-orange align-middle"></span> Labor Day</div></div>
-    <div class="w-3/12 py-3 px-4">Sep 6, 2021</div>
-    <div class="w-3/12 py-3 pl-4 pr-6">Sep 6, 2021</div>
-  </div>
-  <hr>
-  <div class="flex w-full items-center">
-    <div class="w-6/12 py-3 pl-6 pr-4"><div class="truncate"><span class="inline-block w-2 h-2 mr-3 rounded-full bg-warn align-middle"></span> Veterans Day</div></div>
-    <div class="w-3/12 py-3 px-4">Nov 11, 2021</div>
-    <div class="w-3/12 py-3 pl-4 pr-6">Nov 11, 2021</div>
-  </div>
-  <hr>
-  <div class="flex w-full items-center">
-    <div class="w-6/12 py-3 pl-6 pr-4"><div class="truncate"><span class="inline-block w-2 h-2 mr-3 rounded-full bg-green align-middle"></span> Thanksgiving</div></div>
-    <div class="w-3/12 py-3 px-4">Nov 25, 2021</div>
-    <div class="w-3/12 py-3 pl-4 pr-6">Nov 25, 2021</div>
+  <div *ngFor="let calendarEvent of calendarEvents | async">
+    <div class="flex w-full items-center">
+      <div class="w-6/12 py-3 pl-6 pr-4">
+        <div class="truncate"><span class="inline-block w-2 h-2 mr-3 rounded-full align-middle"
+            [style.backgroundColor]="calendarEvent.meta.calendar.eventColor"></span>{{calendarEvent.title}}</div>
+      </div>
+      <div class="w-3/12 py-3 px-4">{{calendarEvent.start | date:'mediumDate'}}</div>
+      <div class="w-3/12 py-3 pl-4 pr-6">{{calendarEvent.end | date:'mediumDate'}}</div>
+    </div>
+    <hr>
   </div>
 
 </div>

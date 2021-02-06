@@ -24,6 +24,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { ExcelService } from '../../../services/excel.service';
 import { ValidationService } from '../../shared/validation.service';
+import { takeUntil } from 'rxjs/operators';
+import { LoaderService } from '../../../services/loader.service';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'vex-effort-grade-library',
@@ -36,7 +39,7 @@ import { ValidationService } from '../../shared/validation.service';
 })
 export class EffortGradeLibraryComponent implements OnInit {
   columns = [
-    { label: 'ID', property: 'gradeId', type: 'number', visible: true },
+    { label: 'Order', property: 'order', type: 'number', visible: true },
     { label: 'Title', property: 'effortItemTitle', type: 'text', visible: true },
     { label: 'Action', property: 'action', type: 'text', visible: true }
   ];
@@ -62,6 +65,7 @@ export class EffortGradeLibraryComponent implements OnInit {
   form:FormGroup
   buttonType: string;
   effortCategoryTitle: string;
+  destroySubject$: Subject<void> = new Subject();
 
   constructor(
     private router: Router,
@@ -70,9 +74,13 @@ export class EffortGradeLibraryComponent implements OnInit {
     private snackbar: MatSnackBar,
     private gradesService:GradesService,
     private fb:FormBuilder,
+    private loaderService: LoaderService,
     private excelService:ExcelService
     ) {
     translateService.use('en');
+    this.loaderService.isLoading.pipe(takeUntil(this.destroySubject$)).subscribe((val) => {
+      this.loading = val;
+    });
     this.form=fb.group({
       effortCategoryId:[0],
       categoryName:['',[ValidationService.noWhitespaceValidator]]
@@ -231,7 +239,8 @@ export class EffortGradeLibraryComponent implements OnInit {
           else{
             this.effortCategoriesList= res.effortGradeLibraryCategoryList;
             if(this.currentEffortCategoryId==null){
-              this.currentEffortCategoryId=res.effortGradeLibraryCategoryList[0].effortCategoryId
+              this.currentEffortCategoryId=res.effortGradeLibraryCategoryList[0]?.effortCategoryId
+              this.effortItemList=new MatTableDataSource(res.effortGradeLibraryCategoryList[0]?.effortGradeLibraryCategoryItem) ;
             }
             else{
               let index = this.effortCategoriesList.findIndex((x) => {
@@ -250,7 +259,8 @@ export class EffortGradeLibraryComponent implements OnInit {
   submit(){
     this.form.markAllAsTouched();
     if(this.form.valid){
-      if(this.form.controls.effortCategoryId.value==0){
+      if(this.effortCategoryTitle=="addNewEffortCategory"){
+        this.effortGradeLibraryCategoryAddViewModel.effortGradeLibraryCategory.effortCategoryId=0
         this.effortGradeLibraryCategoryAddViewModel.effortGradeLibraryCategory.categoryName=this.form.controls.categoryName.value
         this.gradesService.addEffortGradeLibraryCategory(this.effortGradeLibraryCategoryAddViewModel).subscribe(
           (res:EffortGradeLibraryCategoryAddViewModel)=>{
@@ -366,11 +376,16 @@ export class EffortGradeLibraryComponent implements OnInit {
           Title:x.effortItemTitle
         }
       });
-      this.excelService.exportAsExcelFile(reportList,"Effort Item List")
+      this.excelService.exportAsExcelFile(reportList,"Effort_Item_List_")
     } else {
-      this.snackbar.open('No Records Found. Failed to Export Effort Item List', '', {
+      this.snackbar.open('No records found. failed to export effort item list', '', {
         duration: 5000
       });
     }
+  }
+
+  ngOnDestroy(){
+    this.destroySubject$.next();
+    this.destroySubject$.complete();
   }
 }

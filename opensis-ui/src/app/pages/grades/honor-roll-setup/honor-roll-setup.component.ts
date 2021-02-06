@@ -261,7 +261,6 @@ export class HonorRollSetupComponent implements OnInit,AfterViewInit {
             this.pageSize = res.pageSize;
             this.honorROllModList= new MatTableDataSource(res.honorRollList);
             this.honorRollListModel=new HonorRollListModel();
-            console.log(this.totalCount)
           }
         }
       }
@@ -279,13 +278,13 @@ export class HonorRollSetupComponent implements OnInit,AfterViewInit {
     if (this.honorROllModList.data?.length > 0) {
       let reportList = this.honorROllModList.data?.map((x) => {
         return {
-          Honor_Roll:x.honorRoll,
+          "Honor Roll":x.honorRoll,
           Breakoff:x.breakoff
         }
       });
-      this.excelService.exportAsExcelFile(reportList,"Honor Roll List")
+      this.excelService.exportAsExcelFile(reportList,"Honor_Roll_List_")
     } else {
-      this.snackbar.open('No Records Found. Failed to Export Honor Roll List', '', {
+      this.snackbar.open('No records found. failed to export honor roll list', '', {
         duration: 5000
       });
     }

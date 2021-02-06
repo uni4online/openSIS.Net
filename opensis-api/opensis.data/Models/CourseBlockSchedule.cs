@@ -21,7 +21,8 @@ namespace opensis.data.Models
         public DateTime? UpdatedOn { get; set; }
 
         public virtual Block Block { get; set; }
+        public virtual BlockPeriod BlockPeriod { get; set; }
         public virtual Rooms Rooms { get; set; }
-        public virtual SchoolPeriods SchoolPeriods { get; set; }
+       
     }
 }

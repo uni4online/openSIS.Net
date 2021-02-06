@@ -19,6 +19,8 @@ namespace opensis.core.CourseManager.Interfaces
         public CourseAddViewModel UpdateCourse(CourseAddViewModel courseAddViewModel);
         public CourseAddViewModel DeleteCourse(CourseAddViewModel courseAddViewModel);
         public CourseListViewModel GetAllCourseList(CourseListViewModel courseListViewModel);
+        public CourseSectionAddViewModel AddCourseSection(CourseSectionAddViewModel courseSectionAddViewModel);
+        public CourseSectionViewModel GetAllCourseSection(CourseSectionViewModel courseSectionViewModel);
     }
 }
 

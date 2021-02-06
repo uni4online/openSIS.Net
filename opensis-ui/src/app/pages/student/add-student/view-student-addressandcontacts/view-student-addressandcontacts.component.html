@@ -2,8 +2,8 @@
 
     <div @stagger fxLayout="column">
         <div class="flex w-full items-center pb-4 px-4">
-            <h4 class="text-blue font-medium">{{'studentHomeAddress' | translate}}</h4>
-            <a class="cursor-pointer bg-primary hover:bg-blue text-white font-bold py-2 px-4 rounded ml-5"><i class="icon icon-location4 mr-3"></i>Show on Map</a>
+            <h4 class="text-blue font-medium mr-4">{{'studentHomeAddress' | translate}} &nbsp; <span class="text-gray-light">|</span></h4>
+            <a class="cursor-pointer"><i class="icon icon-location4 mr-2"></i>Show on Map</a>
         </div>
         <ul class="grid grid-cols-3 col-gap-8 row-gap-10 mt-2 mx-4">
             <li>
@@ -47,8 +47,8 @@
         <hr class="-mx-4 mt-6">
 
         <div class="flex w-full items-center py-4 mx-4">
-            <h4 class="text-blue font-medium">{{'studentMailingAddress' | translate}}</h4>
-            <a class="cursor-pointer bg-primary hover:bg-blue text-white font-bold py-2 px-4 rounded ml-5"><i class="icon icon-location4 mr-3"></i>Show on Map</a>
+            <h4 class="text-blue font-medium mr-4">{{'studentMailingAddress' | translate}} &nbsp; <span class="text-gray-light">|</span></h4>
+            <a class="cursor-pointer"><i class="icon icon-location4 mr-2"></i>Show on Map</a>
         </div>
         <div class="mx-4 flex mb-4" *ngIf="studentViewDetails.studentMaster?.mailingAddressSameToHome; else mailingAddressNotSameToHome">
             <mat-icon [icIcon]="icCheckBox" class="mr-3"></mat-icon>

@@ -283,6 +283,7 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
     this.filteredEnrollmentInfoInViewMode = this.studentEnrollmentModel.studentEnrollmentListForView.filter((x) => {
       return x.exitCode == null;
     });
+    this.filteredEnrollmentInfoInViewMode=this.filteredEnrollmentInfoInViewMode.reverse();
     if (this.studentEnrollmentModel.calenderId != null) {
       for (let i = 0; i < this.studentEnrollmentModel.studentEnrollmentListForView?.length; i++) {
         this.studentEnrollmentModel.calenderId = this.studentEnrollmentModel.calenderId.toString();

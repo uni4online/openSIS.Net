@@ -51,7 +51,6 @@ export class EditReportCardGradeComponent implements OnInit {
       else{
         this.buttonType="update";
         this.gradeTitle="editGrade";
-        this.gradeAddViewModel.grade=data.information
         this.form.controls.gradeId.patchValue(data.information.gradeId)
         this.form.controls.gradeScaleId.patchValue(data.information.gradeScaleId)
         this.form.controls.title.patchValue(data.information.title)

@@ -1,8 +1,8 @@
 <mat-card-content>
 
     <div @stagger fxLayout="column">
-        <h4 class="text-primary pt-6 pb-2 px-4">{{'identificationInformation'|translate}}</h4>
-        <ul class="grid grid-cols-3 col-gap-8 row-gap-10 mt-2 mx-4">
+        <h4 class="text-primary pt-6 pb-2 px-2">{{'identificationInformation'|translate}}</h4>
+        <ul class="grid grid-cols-3 col-gap-8 row-gap-10 mt-2 mx-2">
             <li>
                 <label class="text-sm leading-5 text-gray">{{'staffName' | translate}}</label>
                 <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{staffViewDetails?.staffMaster.salutation}} {{staffViewDetails?.staffMaster.firstGivenName}} {{staffViewDetails?.staffMaster.middleName}}
@@ -46,9 +46,9 @@
 
 
         <hr class="-mx-4 mt-6">
-        <h4 class="text-primary pt-6 pb-2 px-4">{{'demographicInformation'|translate}}</h4>
+        <h4 class="text-primary pt-6 pb-2 px-2">{{'demographicInformation'|translate}}</h4>
 
-        <ul class="grid grid-cols-3 col-gap-8 row-gap-10 mt-2 mx-4">
+        <ul class="grid grid-cols-3 col-gap-8 row-gap-10 mt-2 mx-2">
             <li>
                 <label class="text-sm leading-5 text-gray">{{'gender' | translate}}</label>
                 <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{staffViewDetails?.staffMaster.gender |EmtyValueCheckPipe}}</p>
@@ -96,8 +96,8 @@
 
         <hr class="-mx-4 mt-6">
 
-        <h4 class="text-primary pt-6 pb-2 px-4">{{'accessInformation'|translate}}</h4>
-        <ul class="grid grid-cols-3 col-gap-8 row-gap-10 my-2 mx-4">
+        <h4 class="text-primary pt-6 pb-2 px-2">{{'accessInformation'|translate}}</h4>
+        <ul class="grid grid-cols-3 col-gap-8 row-gap-10 my-2 mx-2">
             <li>
                 <label class="text-sm leading-5 text-gray">{{'loginEmailAddress' | translate}}</label>
                 <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{staffViewDetails?.staffMaster.loginEmailAddress | EmtyValueCheckPipe}}</p>
