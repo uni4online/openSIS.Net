@@ -28,7 +28,16 @@ namespace opensis.data.Repository
         public CalendarEventAddViewModel AddCalendarEvent(CalendarEventAddViewModel calendarEvent)
         {
 
-            int? eventId = Utility.GetMaxPK(this.context, new Func<CalendarEvents, int>(x => x.EventId));
+            //int? eventId = Utility.GetMaxPK(this.context, new Func<CalendarEvents, int>(x => x.EventId));
+            int? eventId = 1;
+
+            var eventData = this.context?.CalendarEvents.Where(x => x.TenantId == calendarEvent.schoolCalendarEvent.TenantId && x.SchoolId == calendarEvent.schoolCalendarEvent.SchoolId).OrderByDescending(x => x.EventId).FirstOrDefault();
+
+            if (eventData != null)
+            {
+                eventId = eventData.EventId + 1;
+            }
+
             calendarEvent.schoolCalendarEvent.EventId = (int)eventId;
             calendarEvent.schoolCalendarEvent.LastUpdated = DateTime.UtcNow;
             this.context?.CalendarEvents.Add(calendarEvent.schoolCalendarEvent);
@@ -79,19 +88,9 @@ namespace opensis.data.Repository
             try
             {
                 var calendarEventRepository = this.context?.CalendarEvents.FirstOrDefault(x => x.TenantId == calendarEvent.schoolCalendarEvent.TenantId && x.SchoolId == calendarEvent.schoolCalendarEvent.SchoolId && x.EventId == calendarEvent.schoolCalendarEvent.EventId);
-                calendarEventRepository.SchoolId = calendarEvent.schoolCalendarEvent.SchoolId;
-                calendarEventRepository.TenantId = calendarEvent.schoolCalendarEvent.TenantId;
-                calendarEventRepository.Title = calendarEvent.schoolCalendarEvent.Title;
-                calendarEventRepository.AcademicYear = calendarEvent.schoolCalendarEvent.AcademicYear;
-                calendarEventRepository.Description = calendarEvent.schoolCalendarEvent.Description;
-                calendarEventRepository.VisibleToMembershipId = calendarEvent.schoolCalendarEvent.VisibleToMembershipId;
-                calendarEventRepository.SchoolDate = calendarEvent.schoolCalendarEvent.SchoolDate;
-                calendarEventRepository.LastUpdated = DateTime.UtcNow;
-                calendarEventRepository.EventColor = calendarEvent.schoolCalendarEvent.EventColor;
-                calendarEventRepository.SystemWideEvent = calendarEvent.schoolCalendarEvent.SystemWideEvent;
-                calendarEventRepository.StartDate = calendarEvent.schoolCalendarEvent.StartDate;
-                calendarEventRepository.EndDate = calendarEvent.schoolCalendarEvent.EndDate;
-                calendarEventRepository.UpdatedBy = calendarEvent.schoolCalendarEvent.UpdatedBy;
+                
+                calendarEvent.schoolCalendarEvent.LastUpdated = DateTime.Now;
+                this.context.Entry(calendarEventRepository).CurrentValues.SetValues(calendarEvent.schoolCalendarEvent);
                 this.context?.SaveChanges();
                 calendarEvent._failure = false;
                 return calendarEvent;
@@ -115,10 +114,20 @@ namespace opensis.data.Repository
             try
             {
                 var eventList = this.context?.CalendarEvents.Where(x => x.TenantId == calendarEventList.TenantId && x.SchoolId == calendarEventList.SchoolId && x.AcademicYear == calendarEventList.AcademicYear && ((x.CalendarId == calendarEventList.CalendarId && x.SystemWideEvent == false) || x.SystemWideEvent == true)).OrderBy(x => x.Title).ToList();
+
                 calendarEventListViewModel.calendarEventList = eventList;
                 calendarEventListViewModel._tenantName = calendarEventList._tenantName;
                 calendarEventListViewModel._token = calendarEventList._token;
-                calendarEventListViewModel._failure = false;
+
+                if (eventList.Count > 0)
+                {
+                    calendarEventListViewModel._failure = false;
+                }
+                else
+                {
+                    calendarEventListViewModel._failure = true;
+                    calendarEventListViewModel._message = NORECORDFOUND;
+                }
             }
             catch (Exception es)
             {

@@ -8,13 +8,14 @@ import {
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { LoaderService } from './loader.service';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class LoaderInterceptor implements HttpInterceptor {
   private requests: HttpRequest<any>[] = [];
-
+  apiUrl: string = environment.apiURL;
   constructor(private loaderService: LoaderService) { }
-
+  tenant: string = sessionStorage.getItem('tenant');
   removeRequest(req: HttpRequest<any>) {
     const i = this.requests.indexOf(req);
     if (i >= 0) {
@@ -24,12 +25,22 @@ export class LoaderInterceptor implements HttpInterceptor {
   }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    if (req.url !== this.apiUrl + this.tenant + "/User/checkUserLoginEmail" && req.url !== this.apiUrl + this.tenant + "/Student/checkStudentInternalId"  && req.url !== this.apiUrl + this.tenant + "/Staff/checkStaffInternalId" 
+    && req.url !== this.apiUrl + this.tenant + "/School/checkSchoolInternalId" && req.url !== this.apiUrl + this.tenant +"/Grade/checkStandardRefNo") {
+      this.requests.push(req);
 
-    this.requests.push(req);
+      // console.log("No of requests--->" + this.requests.length);
 
-    // console.log("No of requests--->" + this.requests.length);
+      this.loaderService.isLoading.next(true);
+     return this.returnRequest(req,next);
+    }
+    else {
+      return this.returnRequest(req,next);
+    }
 
-    this.loaderService.isLoading.next(true);
+  }
+
+  returnRequest(req,next){
     return Observable.create(observer => {
       const subscription = next.handle(req)
         .subscribe(

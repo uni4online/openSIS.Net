@@ -9,6 +9,7 @@ namespace opensis.data.Models
         public Guid TenantId { get; set; }
         public int SchoolId { get; set; }
         public int StudentId { get; set; }
+        public Guid StudentGuid { get; set; }
         public int EnrollmentId { get; set; }
         public int? CalenderId { get; set; }
         public string RollingOption { get; set; }
@@ -18,12 +19,14 @@ namespace opensis.data.Models
         public string EnrollmentCode { get; set; }
         public DateTime? ExitDate { get; set; }
         public string ExitCode { get; set; }
+        public int? TransferredSchoolId { get; set; }
         public string SchoolTransferred { get; set; }
         public string TransferredGrade { get; set; }
+        
         public DateTime? LastUpdated { get; set; }
         public string UpdatedBy { get; set; }
-
-        public virtual SchoolCalendars SchoolCalendars { get; set; }
+        public bool? IsActive { get; set; }
         public virtual StudentMaster StudentMaster { get; set; }
+
     }
 }

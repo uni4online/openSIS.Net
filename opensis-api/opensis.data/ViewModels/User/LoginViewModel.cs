@@ -15,5 +15,7 @@ namespace opensis.data.ViewModels.User
         public Guid? TenantId { get; set; }
 
         public int? UserId { get; set; }
+        public string Name { get; set; }
+        public string MembershipName { get; set; }
     }
 }

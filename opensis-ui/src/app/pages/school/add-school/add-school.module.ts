@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { IconModule } from '@visurel/iconify-angular';
 import { MatCardModule } from '@angular/material/card';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -26,10 +27,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModuleModule } from '../../shared-module/shared-module.module';
 import { CustomFieldModule } from "../../../common/custom-field/custom-field.module";
 import { CustomFieldWithoutFormModule } from "../../../common/custom-field-without-form/custom-field-without-form.module";
+import { ViewGeneralInfoComponent } from './view-general-info/view-general-info.component';
+import { ViewWashInfoComponent } from './view-wash-info/view-wash-info.component';
 
 
 @NgModule({
-  declarations: [AddSchoolComponent,GeneralInfoComponent,WashInfoComponent],
+  declarations: [AddSchoolComponent,GeneralInfoComponent,WashInfoComponent, ViewGeneralInfoComponent, ViewWashInfoComponent],
   imports: [
     CommonModule,
     MatIconModule,
@@ -48,6 +51,7 @@ import { CustomFieldWithoutFormModule } from "../../../common/custom-field-witho
     ContainerModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatProgressSpinnerModule,
     TranslateModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,

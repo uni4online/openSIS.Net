@@ -1,44 +1,42 @@
 <vex-page-layout>
     <vex-page-layout-header class="pb-16" fxLayout="column" fxLayoutAlign="center start">
         <vex-secondary-toolbar current="Marking Period" class="w-full">
-            <vex-breadcrumbs [crumbs]="['School','Marking Period']" class="flex-auto"></vex-breadcrumbs>
+            <vex-breadcrumbs [crumbs]="['School Info','Marking Period']" class="flex-auto"></vex-breadcrumbs>
         </vex-secondary-toolbar>
     </vex-page-layout-header>
     <vex-mat-spinner-overlay *ngIf="loading"></vex-mat-spinner-overlay>
     <div class="-mt-6 absolute w-full" vexContainer>
-        <mat-drawer-container class="bg-transparent flex-auto flex flex -mt-16" *ngIf="list.length > 0 ; else noData" vexContainer>
+        <mat-drawer-container class="bg-transparent flex-auto flex -mt-16" *ngIf="list.length > 0 ; else noData" vexContainer>
             <mat-drawer [(opened)]="menuOpen" mode="over" class="w-10/12">
                 <mat-card @stagger class="w-full">
                     <div class="flex items-center pl-0" fxLayout="row" fxLayoutAlign="center center">
                         <h6 class="flex-auto">{{'markingPeriodsList' | translate}}</h6>
-                        <button (click)="openAddNew()" type="button" color="primary" mat-button><ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 rtl:ml-2 ic-inline" inline="true"></ic-icon></button>
+                        <!-- <button (click)="openAddNew()" type="button" color="primary" mat-button><ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 rtl:ml-2 ic-inline" inline="true"></ic-icon></button> -->
                     </div>
                     <p class="text-gray text-xs pb-5">{{'clickAnItemToViewDetailsOnTheRightSide' | translate}}</p>
                     <ul class="marking-period-tree">
                         <ng-template #recursiveList let-list>
                             <li *ngFor="let item of list;let indexOfelement=index;">                             
-                                <div  [ngClass]= "indexOfelement === 0 && item.isParent? 'tree-node card flex shadow-none border-solid border commonClass active' :'tree-node card flex shadow-none border-solid border commonClass' ">
+                                <div class="tree-node card flex justify-between shadow-none border-solid border commonClass" [ngClass]= "indexOfelement === 0 && item.isParent? 'active' :''">
                                     <a  (click) = "viewDetails(item,$event.target)"  class="w-full p-3 cursor-pointer"> {{item.title}}</a>
-                                    <button [matMenuTriggerFor]="addNewMenu" class="w-10 pt-3" type="button">
+                                    <!-- <button [matMenuTriggerFor]="addNewMenu" class="w-10 pt-3" type="button">
                                         <mat-icon [icIcon]="icArrowDropDown" size="20px"></mat-icon>
+                                    </button> -->
+                                    <div>
+                                        <div class="flex items-center">
+                                            <div *ngIf="item.isParent || (item.semesterId > 0 && item.isParent === false) || (item.semesterId > 0 &&  item.isParent === false) || (item.yearId > 0 && item.isParent === false)">
+                                                <button (click) = "addChildren(item)" matTooltip="Add Child Marking Period" class="px-2 pt-3 pb-1">
+                                                    <mat-icon [icIcon]="icAdd"></mat-icon>
                                     </button>
-    
-                                    <mat-menu #addNewMenu="matMenu" [overlapTrigger]="false" xPosition="before"
-                                        yPosition="below">
-                                        <button (click) = "editItem(item)" mat-menu-item>
-                                            <span>{{'editItem' | translate}}</span>
+                                            </div>
+                                            <button (click) = "editItem(item)" matTooltip="Edit Item" class="px-2 pt-3 pb-1">
+                                                <mat-icon [icIcon]="icEdit"></mat-icon>
                                         </button>
-    
-                                        <button (click) = "confirmDelete(item)" mat-menu-item>
-                                            <span>{{'deleteItem' | translate}}</span>
-                                        </button>
-                                        <div *ngIf="item.isParent || (item.semesterId > 0 && item.isParent === false) || (item.semesterId > 0 &&  item.isParent === false) || (item.yearId > 0 && item.isParent === false)">
-                                            <button (click) = "addChildren(item)"  mat-menu-item>
-                                                <span>{{'addChildMarkingPeriod' | translate}}</span>
+                                            <button (click) = "confirmDelete(item)" matTooltip="Delete Item" class="px-2 pt-3 pb-1">
+                                                <mat-icon [icIcon]="icDelete"></mat-icon>
                                             </button>
                                         </div>
-                                        
-                                    </mat-menu>
+                                    </div>
                                 </div>              
                                 
                                 <ul *ngIf="item.children && item.children.length > 0">
@@ -55,7 +53,7 @@
                 <mat-card @stagger class="hidden md:block mr-6 ng-tns-c284-386 ng-star-inserted md:w-5/12">
                     <div class="flex items-center pl-0" fxLayout="row" fxLayoutAlign="center center">
                         <h6 class="flex-auto">{{'markingPeriodsList' | translate}}</h6>
-                        <button (click)="openAddNew()" type="button" color="primary" mat-button><ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2 ic-inline" inline="true"></ic-icon> {{'addMarkingPeriod' | translate}}</button>
+                        <!-- <button (click)="openAddNew()" type="button" color="primary" mat-button><ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2 ic-inline" inline="true"></ic-icon> {{'addMarkingPeriod' | translate}}</button> -->
                     </div>
                     <p class="text-gray text-xs pb-5">{{'clickAnItemToViewDetailsOnTheRightSide' | translate}}</p>
                     <ul class="marking-period-tree">
@@ -174,24 +172,22 @@
             </mat-drawer-content>
         </mat-drawer-container>
         <ng-template #noData>
-            <mat-drawer-container class="bg-transparent flex-auto flex flex -mt-16" vexContainer>
+            <mat-drawer-container class="bg-transparent flex-auto flex -mt-16" vexContainer>
                 <mat-drawer-content class="flex-auto flex items-start p-gutter">
                     <mat-card @stagger class="w-full text-center py-20 md:py-32">
 
-                        <div @fadeInUp class="md:flex justify-center w-full items-center">
-                            <div class="w-full md:w-4/12 lg:w-3/12 xl:w-2/12">
-                                <img src="assets/img/unhappy-little-boy.jpg" class="rounded-full inline-block mb-10 md:mb-0 w-2/4 md:w-full">
+                        <div @fadeInUp class="text-center">
+                            <div class="mb-6">
+                                <ic-icon [icon]="icInfo" size="60px"></ic-icon>
                             </div>
-                            <div class="w-full md:w-6/12 lg:w-6/12 xl:w-4/12 text-center md:text-left pl-10">
-                                <h1 class="mb-10 opacity-75">No <span class="font-bold">Marking Period</span> Data Found!</h1>
-                                <button (click)="openAddNew()" class="uppercase" type="button" color="primary" mat-raised-button>
+                            <h1 class="mb-6 opacity-75">No <span class="font-bold">Marking Period</span> Data
+                                Found!</h1>
+                            <button (click)="openAddNew()" type="button" color="primary" mat-raised-button>
                                     <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2 ic-inline"
                                         inline="true">
                                     </ic-icon> {{'addAFullYearToBegin' | translate}}
                                 </button>
             </div>
-                        </div>
-
                     </mat-card>
                 </mat-drawer-content>
             </mat-drawer-container>

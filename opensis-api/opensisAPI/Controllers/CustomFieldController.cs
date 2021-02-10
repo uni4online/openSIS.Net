@@ -200,5 +200,20 @@ namespace opensisAPI.Controllers
             return fieldsCategoryList;
         }
 
+        [HttpPut("updateCustomFieldSortOrder")]
+        public ActionResult<CustomFieldSortOrderModel> UpdateCustomFieldSortOrder(CustomFieldSortOrderModel customFieldSortOrderModel)
+        {
+            CustomFieldSortOrderModel customFieldSortOrderUpdate = new CustomFieldSortOrderModel();
+            try
+            {
+                customFieldSortOrderUpdate = _customFieldService.UpdateCustomFieldSortOrder(customFieldSortOrderModel);
+            }
+            catch (Exception es)
+            {
+                customFieldSortOrderUpdate._failure = true;
+                customFieldSortOrderUpdate._message = es.Message;
+            }
+            return customFieldSortOrderUpdate;
+        }
     }
 }

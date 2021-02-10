@@ -11,7 +11,7 @@
     <mat-form-field class="mt-6" appearance="outline" color="primary">
         <mat-label>{{'categoryTitle' | translate}}</mat-label>
         <input formControlName="title" cdkFocusInitial matInput required>
-        <mat-error *ngIf="form.get('title').hasError('required')">{{'titleIsRequired'|translate}}</mat-error>
+        <mat-error *ngIf="form.get('title').hasError('whitespace')">{{'titleIsRequired'|translate}}</mat-error>
     </mat-form-field>
     
     <mat-form-field class="w-full" appearance="outline" color="primary">

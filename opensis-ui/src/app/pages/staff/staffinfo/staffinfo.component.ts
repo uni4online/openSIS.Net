@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import icMoreVert from '@iconify/icons-ic/twotone-more-vert';
 import icAdd from '@iconify/icons-ic/baseline-add';
 import icEdit from '@iconify/icons-ic/twotone-edit';
@@ -6,12 +6,25 @@ import icDelete from '@iconify/icons-ic/twotone-delete';
 import icSearch from '@iconify/icons-ic/search';
 import icFilterList from '@iconify/icons-ic/filter-list';
 import icImpersonate from '@iconify/icons-ic/twotone-account-circle';
-import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router} from '@angular/router';
+import { Router } from '@angular/router';
 import { fadeInUp400ms } from '../../../../@vex/animations/fade-in-up.animation';
 import { stagger40ms } from '../../../../@vex/animations/stagger.animation';
 import { TranslateService } from '@ngx-translate/core';
+import { StaffService } from 'src/app/services/staff.service';
+import { LoaderService } from '../../../services/loader.service';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { FormControl } from '@angular/forms';
+import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
+import { GetAllStaffModel,StaffListModel, StaffMasterModel } from '../../../models/staffModel';
+import { ImageCropperService } from '../../../services/image-cropper.service';
+import { LayoutService } from 'src/@vex/services/layout.service';
+import { ExcelService } from '../../../services/excel.service';
+import { Subject } from 'rxjs';
+import { ModuleIdentifier } from '../../../enums/module-identifier.enum';
+import { SchoolCreate } from '../../../enums/school-create.enum';
 
 @Component({
   selector: 'vex-staffinfo',
@@ -22,19 +35,22 @@ import { TranslateService } from '@ngx-translate/core';
     stagger40ms
   ]
 })
-export class StaffinfoComponent implements OnInit {
-  @Input()
+export class StaffinfoComponent implements OnInit, AfterViewInit {
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort
+
+  getAllStaff: GetAllStaffModel = new GetAllStaffModel();
+  staffList: MatTableDataSource<StaffMasterModel>;
+
   columns = [
-    { label: 'Name', property: 'name', type: 'text', visible: true },
-    { label: 'Staff ID', property: 'staff_id', type: 'text', visible: true },
+    { label: 'Name', property: 'lastFamilyName', type: 'text', visible: true },
+    { label: 'Staff ID', property: 'staffInternalId', type: 'text', visible: true },
     { label: 'openSIS Profile', property: 'profile', type: 'text', visible: true },
-    { label: 'Job Title', property: 'job_title', type: 'text', visible: true },
-    { label: 'School Email', property: 'school_email', type: 'text', visible: true },
-    { label: 'Mobile Phone', property: 'mobile_phone', type: 'number', visible: true },
+    { label: 'Job Title', property: 'jobTitle', type: 'text', visible: true },
+    { label: 'School Email', property: 'schoolEmail', type: 'text', visible: true },
+    { label: 'Mobile Phone', property: 'mobilePhone', type: 'number', visible: true },
     { label: 'Actions', property: 'actions', type: 'text', visible: true }
   ];
-
-  StaffFieldsModelList;
 
   icMoreVert = icMoreVert;
   icAdd = icAdd;
@@ -43,35 +59,196 @@ export class StaffinfoComponent implements OnInit {
   icSearch = icSearch;
   icImpersonate = icImpersonate;
   icFilterList = icFilterList;
-  loading:Boolean;
 
-  constructor(private router: Router,private dialog: MatDialog,public translateService:TranslateService) {
+  loading: boolean;
+  totalCount: number = 0;
+  pageNumber: number;
+  pageSize: number;
+  searchCtrl: FormControl;
+  destroySubject$: Subject<void> = new Subject();
+  moduleIdentifier=ModuleIdentifier;
+  createMode=SchoolCreate;
+  constructor(private snackbar: MatSnackBar,
+    private router: Router,
+    private loaderService: LoaderService,
+    public translateService: TranslateService,
+    private staffService: StaffService,
+    private imageCropperService:ImageCropperService,
+    private layoutService: LayoutService,
+    private excelService:ExcelService) {
     translateService.use('en');
-    this.StaffFieldsModelList = [
-      {name: 'Danielle Boucher', staff_id: '1', profile: 'Super Administrator', job_title: 'Head Teacher', school_email: 'danielle.boucher@example.com', mobile_phone: '1234567980', last_login: 'Aug 21, 2020, 03:39 PM'},
-      {name: 'Andrew Brown', staff_id: '2', profile: 'Teacher', job_title: 'Asst. Teacher', school_email: 'andrew_brown@example.com', mobile_phone: '1234567980', last_login: 'Aug 21, 2020, 12:51 PM'},
-      {name: 'Ella Brown', staff_id: '3', profile: 'Teacher', job_title: 'Asst. Teacher', school_email: 'ella_brown@example.com', mobile_phone: '1234567980', last_login: 'Aug 21, 2020, 04:17 PM'},
-      {name: 'Lian Fang', staff_id: '4', profile: 'Teacher', job_title: 'Asst. Teacher', school_email: 'lian_fang@example.com', mobile_phone: '1234567980', last_login: 'Aug 21, 2020, 14:08 PM'},
-      {name: 'Adriana Garcia', staff_id: '5', profile: 'Teacher', job_title: 'Asst. Teacher', school_email: 'adriana.garcia@example.com', mobile_phone: '1234567980', last_login: 'Aug 20, 2020, 05:55 PM'},
-      {name: 'Olivia Jones', staff_id: '6', profile: 'Teacher', job_title: 'Asst. Teacher', school_email: 'olivia.jones@example.com', mobile_phone: '1234567980', last_login: 'Aug 21, 2020, 3:29 PM'},
-      {name: 'Amare Keita', staff_id: '7', profile: 'Teacher', job_title: 'Asst. Teacher', school_email: 'amare_keita@example.com', mobile_phone: '1234567980', last_login: 'Aug 21, 2020, 04:10 PM'},
-      {name: 'Amber Keita', staff_id: '8', profile: 'Teacher', job_title: 'Asst. Teacher', school_email: 'amber_keita@example.com', mobile_phone: '1234567980', last_login: 'Aug 21, 2020, 02:17 PM'},
-      {name: 'Alyssa Kimathi', staff_id: '9', profile: 'Teacher', job_title: 'Asst. Teacher', school_email: 'alyssa_kimathi@example.com', mobile_phone: '1234567980', last_login: 'Aug 21, 2020, 03:01 PM'},
-      {name: 'Robert Miller', staff_id: '10', profile: 'Teacher', job_title: 'Asst. Teacher', school_email: 'robert_miller@example.com', mobile_phone: '1234567980', last_login: 'Aug 21, 2020, 03:39 PM'}
-    ]
+    if(localStorage.getItem("collapseValue") !== null){
+      if( localStorage.getItem("collapseValue") === "false"){
+        this.layoutService.expandSidenav();
+      }else{
+        this.layoutService.collapseSidenav();
+      } 
+    }else{
+      this.layoutService.expandSidenav();
+    }
+    this.getAllStaff.filterParams = null;
+    this.loaderService.isLoading.pipe(takeUntil(this.destroySubject$)).subscribe((val) => {
+      this.loading = val;
+    });
+    this.callStaffList();
   }
 
   ngOnInit(): void {
+    this.searchCtrl = new FormControl();
   }
 
-  getPageEvent(event){    
-    // this.getAllSchool.pageNumber=event.pageIndex+1;
-    // this.getAllSchool.pageSize=event.pageSize;
-    // this.callAllSchool(this.getAllSchool);
+  ngAfterViewInit() {
+    //  Sorting
+    this.getAllStaff = new GetAllStaffModel();
+    this.sort.sortChange.subscribe((res) => {
+      this.getAllStaff.pageNumber = this.pageNumber
+      this.getAllStaff.pageSize = this.pageSize;
+      this.getAllStaff.sortingModel.sortColumn = res.active;
+      if (this.searchCtrl.value != null && this.searchCtrl.value != "") {
+        let filterParams = [
+          {
+            columnName: null,
+            filterValue: this.searchCtrl.value,
+            filterOption: 4
+          }
+        ]
+        Object.assign(this.getAllStaff, { filterParams: filterParams });
+      }
+      if (res.direction == "") {
+        this.getAllStaff.sortingModel = null;
+        this.callStaffList();
+        this.getAllStaff = new GetAllStaffModel();
+        this.getAllStaff.sortingModel = null;
+      } else {
+        this.getAllStaff.sortingModel.sortDirection = res.direction;
+        this.callStaffList();
+      }
+    });
+
+    //  Searching
+    this.searchCtrl.valueChanges.pipe(debounceTime(500), distinctUntilChanged()).subscribe((term) => {
+      if (term != '') {
+        this.callWithFilterValue(term);
+      } else {
+        this.callWithoutFilterValue()
+      }
+    });
   }
 
-  goToAdd(){
+  callWithFilterValue(term) {
+    let filterParams = [
+      {
+        columnName: null,
+        filterValue: term,
+        filterOption: 4
+      }
+    ]
+    if (this.sort.active != undefined && this.sort.direction != "") {
+      this.getAllStaff.sortingModel.sortColumn = this.sort.active;
+      this.getAllStaff.sortingModel.sortDirection = this.sort.direction;
+    }
+    Object.assign(this.getAllStaff, { filterParams: filterParams });
+    this.getAllStaff.pageNumber = 1;
+    this.paginator.pageIndex = 0;
+    this.getAllStaff.pageSize = this.pageSize;
+    this.callStaffList();
+  }
+
+  callWithoutFilterValue() {
+    Object.assign(this.getAllStaff, { filterParams: null });
+    this.getAllStaff.pageNumber = this.paginator.pageIndex + 1;
+    this.getAllStaff.pageSize = this.pageSize;
+    if (this.sort.active != undefined && this.sort.direction != "") {
+      this.getAllStaff.sortingModel.sortColumn = this.sort.active;
+      this.getAllStaff.sortingModel.sortDirection = this.sort.direction;
+    }
+    this.callStaffList();
+  }
+
+  getPageEvent(event) {
+    if (this.sort.active != undefined && this.sort.direction != "") {
+      this.getAllStaff.sortingModel.sortColumn = this.sort.active;
+      this.getAllStaff.sortingModel.sortDirection = this.sort.direction;
+    }
+    if (this.searchCtrl.value != null && this.searchCtrl.value != "") {
+      let filterParams = [
+        {
+          columnName: null,
+          filterValue: this.searchCtrl.value,
+          filterOption: 3
+        }
+      ]
+      Object.assign(this.getAllStaff, { filterParams: filterParams });
+    }
+    this.getAllStaff.pageNumber = event.pageIndex + 1;
+    this.getAllStaff.pageSize = event.pageSize;
+    this.callStaffList();
+  }
+
+  viewStaffDetails(id) {
+    this.imageCropperService.enableUpload({module:this.moduleIdentifier.STAFF,upload:true,mode:this.createMode.VIEW});
+    this.staffService.setStaffId(id);
+    this.router.navigate(["school/staff/add-staff"]); 
+  }
+
+  goToAdd() {
+    this.staffService.setStaffId(null);
     this.router.navigate(["school/staff/add-staff"]);
+    this.imageCropperService.enableUpload({module:this.moduleIdentifier.STAFF,upload:true,mode:this.createMode.ADD});
+
+  }
+
+  callStaffList() {
+    if (this.getAllStaff.sortingModel?.sortColumn == "") {
+      this.getAllStaff.sortingModel = null
+    }
+    this.staffService.getAllStaffList(this.getAllStaff).subscribe(res => {
+      if (res._failure) {
+        this.snackbar.open('Staff information failed. ' + res._message, 'LOL THANKS', {
+          duration: 10000
+        });
+      } else {
+        this.totalCount = res.totalCount;
+        this.pageNumber = res.pageNumber;
+        this.pageSize = res._pageSize;
+        this.staffList = new MatTableDataSource(res.staffMaster);
+        this.getAllStaff = new GetAllStaffModel();
+      }
+    });
+  }
+
+  exportStaffListToExcel(){
+    let getAllStaff: GetAllStaffModel = new GetAllStaffModel();
+    getAllStaff.pageNumber=0;
+    getAllStaff.pageSize=0;
+    getAllStaff.sortingModel=null;
+      this.staffService.getAllStaffList(getAllStaff).subscribe(res => {
+        if(res._failure){
+          this.snackbar.open('Failed to Export Staff List.'+ res._message, 'LOL THANKS', {
+          duration: 10000
+          });
+        }else{
+          if(res.staffMaster.length>0){
+            let staffList = res.staffMaster?.map((x)=>{
+              let middleName=x.middleName==null?' ':' '+x.middleName+' ';
+              return {
+               Name: x.firstGivenName+middleName+x.lastFamilyName,
+               StaffId: x.staffInternalId,
+               openSisProfile: x.profile,
+               JobTitle: x.jobTitle,
+               SchoolEmail:x.schoolEmail,
+               MobilePhone:x.mobilePhone
+             }
+            });
+            this.excelService.exportAsExcelFile(staffList,'Staffs_List_')
+          }else{
+            this.snackbar.open('No Records Found. Failed to Export Staff List','LOL THANKS', {
+              duration: 5000
+            });
+          }
+        }
+      });
+    
   }
 
   toggleColumnVisibility(column, event) {
@@ -82,6 +259,11 @@ export class StaffinfoComponent implements OnInit {
 
   get visibleColumns() {
     return this.columns.filter(column => column.visible).map(column => column.property);
+  }
+
+  ngOnDestroy(){
+    this.destroySubject$.next();
+    this.destroySubject$.complete();
   }
 
 }

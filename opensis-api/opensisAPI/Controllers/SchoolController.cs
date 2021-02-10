@@ -127,6 +127,22 @@ namespace opensisAPI.Controllers
             return checkInternalId;
         }
 
+        [HttpPost("studentEnrollmentSchoolList")]
 
+        public ActionResult<SchoolListViewModel> StudentEnrollmentSchoolList(SchoolListViewModel schoolListViewModel)
+        {
+
+            SchoolListViewModel schoolListView = new SchoolListViewModel();
+            try
+            {
+                schoolListView = _schoolRegisterService.StudentEnrollmentSchoolList(schoolListViewModel);
+            }
+            catch (Exception es)
+            {
+                schoolListView._message = es.Message;
+                schoolListView._failure = true;
+            }
+            return schoolListView;
+        }
     }
 }

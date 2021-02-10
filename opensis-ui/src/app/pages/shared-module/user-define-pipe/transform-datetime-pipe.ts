@@ -12,7 +12,7 @@ export class TransformDateTimePipe implements PipeTransform {
     if(value!==null && value!==undefined){
       if(value.trim()!==""){       
         let getDateTime = this.commonfunction.serverToLocalDateAndTime(value);
-        let formattedDateTime = moment(getDateTime, ["YYYY-MM-DD hh:mm:ss"]).format("DD-MM-YYYY h:mm A");
+        let formattedDateTime = moment(getDateTime, ["YYYY-MM-DD hh:mm:ss"]).format("DD-MM-YYYY"+" | "+"h:mm A");
         return formattedDateTime
       }else{
         return "-";

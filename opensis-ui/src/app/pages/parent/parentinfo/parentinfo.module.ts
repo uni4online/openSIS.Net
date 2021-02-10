@@ -21,9 +21,7 @@ import { SharedModuleModule } from '../../shared-module/shared-module.module';
 import { ParentRoutingModule } from '../parentinfo/parent-routing-module';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
-
-
-
+import {MatSortModule} from '@angular/material/sort';
 
 @NgModule({
   declarations: [ParentinfoComponent],
@@ -49,7 +47,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     SharedModuleModule,
     ParentRoutingModule,
     TranslateModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatSortModule
   ]
 })
 export class ParentinfoModule { }

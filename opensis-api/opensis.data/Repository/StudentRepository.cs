@@ -30,88 +30,138 @@ namespace opensis.data.Repository
             {
                 try
                 {
-                    int? MasterStudentId = Utility.GetMaxPK(this.context, new Func<StudentMaster, int>(x => x.StudentId));
-                    student.studentMaster.StudentId = (int)MasterStudentId;
-                    bool checkInternalID = CheckInternalID(student.studentMaster.TenantId,student.studentMaster.StudentInternalId);
-                    if (checkInternalID == true)
+                    //int? MasterStudentId = Utility.GetMaxPK(this.context, new Func<StudentMaster, int>(x => x.StudentId));
+                    int? MasterStudentId = 1;
+
+                    var studentData = this.context?.StudentMaster.Where(x => x.SchoolId == student.studentMaster.SchoolId && x.TenantId == student.studentMaster.TenantId).OrderByDescending(x => x.StudentId).FirstOrDefault();
+
+                    if (studentData != null)
                     {
-                        int? MasterEnrollmentId = Utility.GetMaxPK(this.context, new Func<StudentEnrollment, int>(x => (int)x.EnrollmentId));
-                        var schoolName = this.context?.SchoolMaster.Where(x => x.TenantId == student.studentMaster.TenantId && x.SchoolId == student.studentMaster.SchoolId).Select(s => s.SchoolName).FirstOrDefault();
+                        MasterStudentId = studentData.StudentId + 1;
+                    }
 
-                        var StudentEnrollmentData = new StudentEnrollment() { TenantId = student.studentMaster.TenantId, SchoolId = student.studentMaster.SchoolId, StudentId = student.studentMaster.StudentId, EnrollmentId = (int)MasterEnrollmentId, SchoolName = schoolName, RollingOption = "New", EnrollmentDate = DateTime.UtcNow };
+                    student.studentMaster.StudentId = (int)MasterStudentId;
+                    Guid GuidId = Guid.NewGuid();
+                    var GuidIdExist = this.context?.StudentMaster.FirstOrDefault(x => x.StudentGuid == GuidId);
+                    if (GuidIdExist != null)
+                    {
+                        student._failure = true;
+                        student._message = "Guid is already exist, Please try again.";
+                        return student;
+                    }
+                    student.studentMaster.StudentGuid = GuidId;
+                    student.studentMaster.IsActive = true;
+                    student.studentMaster.EnrollmentType = "Internal";
 
-                        student.studentMaster.StudentEnrollment.Add(StudentEnrollmentData);
-
-                        //Update StudentPortalId in Studentmaster table.
-                        if (!string.IsNullOrWhiteSpace(student.PasswordHash) && !string.IsNullOrWhiteSpace(student.LoginEmail))
+                    if (!string.IsNullOrEmpty(student.studentMaster.StudentInternalId))
+                    {
+                        bool checkInternalID = CheckInternalID(student.studentMaster.TenantId, student.studentMaster.StudentInternalId, student.studentMaster.SchoolId);
+                        if (checkInternalID == false)
                         {
-                            student.studentMaster.StudentPortalId = student.LoginEmail;
+                            student.studentMaster = null;
+                            student.fieldsCategoryList = null;
+                            student._failure = true;
+                            student._message = "Student InternalID Already Exist";
+                            return student;
                         }
-
-                        this.context?.StudentMaster.Add(student.studentMaster);
-                        this.context?.SaveChanges();
-
-                        if (student.fieldsCategoryList != null && student.fieldsCategoryList.ToList().Count > 0)
-                        {
-                            var fieldsCategory = student.fieldsCategoryList.FirstOrDefault(x => x.CategoryId == student.SelectedCategoryId);
-                            if (fieldsCategory != null)
-                            {
-                                foreach (var customFields in fieldsCategory.CustomFields.ToList())
-                                {
-                                    if (customFields.CustomFieldsValue != null && customFields.CustomFieldsValue.ToList().Count > 0)
-                                    {
-                                        customFields.CustomFieldsValue.FirstOrDefault().Module = "Student";
-                                        customFields.CustomFieldsValue.FirstOrDefault().CategoryId = customFields.CategoryId;
-                                        customFields.CustomFieldsValue.FirstOrDefault().FieldId = customFields.FieldId;
-                                        customFields.CustomFieldsValue.FirstOrDefault().CustomFieldTitle = customFields.Title;
-                                        customFields.CustomFieldsValue.FirstOrDefault().CustomFieldType = customFields.Type;
-                                        customFields.CustomFieldsValue.FirstOrDefault().SchoolId = student.studentMaster.SchoolId;
-                                        customFields.CustomFieldsValue.FirstOrDefault().TargetId = student.studentMaster.StudentId;
-                                        this.context?.CustomFieldsValue.AddRange(customFields.CustomFieldsValue);
-                                        this.context?.SaveChanges();
-                                    }
-                                }
-
-                            }
-                        }
-
-                        if (!string.IsNullOrWhiteSpace(student.PasswordHash) && !string.IsNullOrWhiteSpace(student.LoginEmail))
-                        {
-                            UserMaster userMaster = new UserMaster();
-
-                            var decrypted = Utility.Decrypt(student.PasswordHash);
-                            string passwordHash = Utility.GetHashedPassword(decrypted);
-
-                            var loginInfo = this.context?.UserMaster.FirstOrDefault(x => x.TenantId == student.studentMaster.TenantId && x.SchoolId == student.studentMaster.SchoolId && x.EmailAddress == student.LoginEmail);
-
-                            if (loginInfo == null)
-                            {
-                                var membership = this.context?.Membership.FirstOrDefault(x => x.TenantId == student.studentMaster.TenantId && x.SchoolId == student.studentMaster.SchoolId && x.Profile == "Student");
-
-                                userMaster.SchoolId = student.studentMaster.SchoolId;
-                                userMaster.TenantId = student.studentMaster.TenantId;
-                                userMaster.UserId = student.studentMaster.StudentId;
-                                userMaster.LangId = 1;
-                                userMaster.MembershipId = membership.MembershipId;
-                                userMaster.EmailAddress = student.LoginEmail;
-                                userMaster.PasswordHash = passwordHash;
-                                userMaster.Name = student.studentMaster.FirstGivenName;
-                                userMaster.LastUpdated = DateTime.UtcNow;
-                                userMaster.IsActive = true;
-
-                                this.context?.UserMaster.Add(userMaster);
-                                this.context?.SaveChanges();
-                            }
-                        }
-                        student._failure = false;
                     }
                     else
                     {
-                        student.studentMaster = null;
-                        student._failure = true;
-                        student._message = "Student InternalID Already Exist";
+                        student.studentMaster.StudentInternalId = MasterStudentId.ToString();
                     }
-                    transaction.Commit();                    
+
+                    var schoolName = this.context?.SchoolMaster.Where(x => x.TenantId == student.studentMaster.TenantId && x.SchoolId == student.studentMaster.SchoolId).Select(s => s.SchoolName).FirstOrDefault();
+
+                    //Insert data into Enrollment table
+                    int? calenderId = null;
+                    string enrollmentCode = null;
+
+                    var defaultCalender = this.context?.SchoolCalendars.FirstOrDefault(x => x.TenantId == student.studentMaster.TenantId && x.SchoolId == student.studentMaster.SchoolId && x.AcademicYear.ToString() == student.AcademicYear && x.DefaultCalender == true);
+
+                    if (defaultCalender != null)
+                    {
+                        calenderId = defaultCalender.CalenderId;
+                    }
+
+                    var enrollmentType = this.context?.StudentEnrollmentCode.FirstOrDefault(x => x.TenantId == student.studentMaster.TenantId && x.SchoolId == student.studentMaster.SchoolId && x.Type.ToLower() == "Add".ToLower());
+
+                    if (enrollmentType != null)
+                    {
+                        enrollmentCode = enrollmentType.Title;
+                    }
+
+                    var gradeLevel = this.context?.Gradelevels.Where(x => x.SchoolId == student.studentMaster.SchoolId).OrderBy(x => x.GradeId).FirstOrDefault();
+                    var StudentEnrollmentData = new StudentEnrollment() { TenantId = student.studentMaster.TenantId, SchoolId = student.studentMaster.SchoolId, StudentId = student.studentMaster.StudentId, EnrollmentId = 1, SchoolName = schoolName, RollingOption = "Next grade at current school", EnrollmentCode = enrollmentCode, CalenderId = calenderId, GradeLevelTitle = (gradeLevel != null) ? gradeLevel.Title : null, EnrollmentDate = DateTime.UtcNow, StudentGuid = GuidId, IsActive = true };
+
+                    //Add student portal access
+                    if (!string.IsNullOrWhiteSpace(student.PasswordHash) && !string.IsNullOrWhiteSpace(student.LoginEmail))
+                    {
+                        UserMaster userMaster = new UserMaster();
+
+                        var decrypted = Utility.Decrypt(student.PasswordHash);
+                        string passwordHash = Utility.GetHashedPassword(decrypted);
+
+                        var loginInfo = this.context?.UserMaster.FirstOrDefault(x => x.TenantId == student.studentMaster.TenantId && x.EmailAddress == student.LoginEmail);
+
+                        if (loginInfo == null)
+                        {
+                            var membership = this.context?.Membership.FirstOrDefault(x => x.TenantId == student.studentMaster.TenantId && x.SchoolId == student.studentMaster.SchoolId && x.Profile == "Student");
+
+                            userMaster.SchoolId = student.studentMaster.SchoolId;
+                            userMaster.TenantId = student.studentMaster.TenantId;
+                            userMaster.UserId = student.studentMaster.StudentId;
+                            userMaster.LangId = 1;
+                            userMaster.MembershipId = membership.MembershipId;
+                            userMaster.EmailAddress = student.LoginEmail;
+                            userMaster.PasswordHash = passwordHash;
+                            userMaster.Name = student.studentMaster.FirstGivenName;
+                            userMaster.LastUpdated = DateTime.UtcNow;
+                            userMaster.IsActive = student.PortalAccess;
+                            student.studentMaster.StudentPortalId = student.LoginEmail;
+                            this.context?.UserMaster.Add(userMaster);
+                            this.context?.SaveChanges();
+                        }
+                        else
+                        {
+                            student.studentMaster = null;
+                            student.fieldsCategoryList = null;
+                            student._failure = true;
+                            student._message = "Student Login Email Already Exist";
+                            return student;
+                        }
+                    }
+
+                    this.context?.StudentMaster.Add(student.studentMaster);
+                    this.context?.StudentEnrollment.Add(StudentEnrollmentData);
+                    this.context?.SaveChanges();
+
+                    if (student.fieldsCategoryList != null && student.fieldsCategoryList.ToList().Count > 0)
+                    {
+                        var fieldsCategory = student.fieldsCategoryList.FirstOrDefault(x => x.CategoryId == student.SelectedCategoryId);
+                        if (fieldsCategory != null)
+                        {
+                            foreach (var customFields in fieldsCategory.CustomFields.ToList())
+                            {
+                                if (customFields.CustomFieldsValue != null && customFields.CustomFieldsValue.ToList().Count > 0)
+                                {
+                                    customFields.CustomFieldsValue.FirstOrDefault().Module = "Student";
+                                    customFields.CustomFieldsValue.FirstOrDefault().CategoryId = customFields.CategoryId;
+                                    customFields.CustomFieldsValue.FirstOrDefault().FieldId = customFields.FieldId;
+                                    customFields.CustomFieldsValue.FirstOrDefault().CustomFieldTitle = customFields.Title;
+                                    customFields.CustomFieldsValue.FirstOrDefault().CustomFieldType = customFields.Type;
+                                    customFields.CustomFieldsValue.FirstOrDefault().SchoolId = student.studentMaster.SchoolId;
+                                    customFields.CustomFieldsValue.FirstOrDefault().TargetId = student.studentMaster.StudentId;
+                                    this.context?.CustomFieldsValue.AddRange(customFields.CustomFieldsValue);
+                                    this.context?.SaveChanges();
+                                }
+                            }
+
+                        }
+                    }
+
+                    student._failure = false;
+
+                    transaction.Commit();
                 }
                 catch (Exception es)
                 {
@@ -122,12 +172,19 @@ namespace opensis.data.Repository
             }
             return student;
         }
-        private bool CheckInternalID(Guid TenantId, string InternalID)
+        private bool CheckInternalID(Guid TenantId, string InternalID,int SchoolId)
         {
-            var checkInternalId = this.context?.StudentMaster.Where(x => x.TenantId == TenantId && x.StudentInternalId == InternalID).ToList();
-            if (checkInternalId.Count() > 0)
+            if (InternalID != null && InternalID != "")
             {
-                return false;
+                var checkInternalId = this.context?.StudentMaster.Where(x => x.TenantId == TenantId && x.StudentInternalId == InternalID && x.SchoolId == SchoolId).ToList();
+                if (checkInternalId.Count() > 0)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
             }
             else
             {
@@ -146,96 +203,120 @@ namespace opensis.data.Repository
             {
                 try
                 {
-                    var studentUpdate = this.context?.StudentMaster.FirstOrDefault(x => x.TenantId == student.studentMaster.TenantId && x.SchoolId == student.studentMaster.SchoolId && x.StudentId == student.studentMaster.StudentId);
-
-                    studentUpdate.Salutation = student.studentMaster.Salutation;
-                    studentUpdate.Suffix = student.studentMaster.Suffix;
-                    studentUpdate.FirstGivenName = student.studentMaster.FirstGivenName;
-                    studentUpdate.MiddleName = student.studentMaster.MiddleName;
-                    studentUpdate.LastFamilyName = student.studentMaster.LastFamilyName;
-                    studentUpdate.PreferredName = student.studentMaster.PreferredName;
-                    studentUpdate.PreviousName = student.studentMaster.PreviousName;
-                    studentUpdate.AlternateId = student.studentMaster.AlternateId;
-                    studentUpdate.DistrictId = student.studentMaster.DistrictId;
-                    studentUpdate.StateId = student.studentMaster.StateId;
-                    studentUpdate.AdmissionNumber = student.studentMaster.AdmissionNumber;
-                    studentUpdate.RollNumber = student.studentMaster.RollNumber;
-                    studentUpdate.SocialSecurityNumber = student.studentMaster.SocialSecurityNumber;
-                    studentUpdate.OtherGovtIssuedNumber = student.studentMaster.OtherGovtIssuedNumber;
-                    studentUpdate.Dob = student.studentMaster.Dob;
-                    studentUpdate.Gender = student.studentMaster.Gender;
-                    studentUpdate.Race = student.studentMaster.Race;
-                    studentUpdate.Ethnicity = student.studentMaster.Ethnicity;
-                    studentUpdate.MaritalStatus = student.studentMaster.MaritalStatus;
-                    studentUpdate.CountryOfBirth = student.studentMaster.CountryOfBirth;
-                    studentUpdate.Nationality = student.studentMaster.Nationality;
-                    studentUpdate.FirstLanguageId = student.studentMaster.FirstLanguageId;
-                    studentUpdate.SecondLanguageId = student.studentMaster.SecondLanguageId;
-                    studentUpdate.ThirdLanguageId = student.studentMaster.ThirdLanguageId;
-
-                    studentUpdate.HomeAddressLineOne = student.studentMaster.HomeAddressLineOne;
-                    studentUpdate.HomeAddressLineTwo = student.studentMaster.HomeAddressLineTwo;
-                    studentUpdate.HomeAddressCountry = student.studentMaster.HomeAddressCountry;
-                    studentUpdate.HomeAddressState = student.studentMaster.HomeAddressState;
-                    studentUpdate.HomeAddressCity = student.studentMaster.HomeAddressCity;
-                    studentUpdate.HomeAddressZip = student.studentMaster.HomeAddressZip;
-                    studentUpdate.BusNo = student.studentMaster.BusNo;
-                    studentUpdate.SchoolBusPickUp = student.studentMaster.SchoolBusPickUp;
-                    studentUpdate.SchoolBusDropOff = student.studentMaster.SchoolBusDropOff;
-                    studentUpdate.MailingAddressSameToHome = student.studentMaster.MailingAddressSameToHome;
-                    studentUpdate.MailingAddressLineOne = student.studentMaster.MailingAddressLineOne;
-                    studentUpdate.MailingAddressLineTwo = student.studentMaster.MailingAddressLineTwo;
-                    studentUpdate.MailingAddressCountry = student.studentMaster.MailingAddressCountry;
-                    studentUpdate.MailingAddressState = student.studentMaster.MailingAddressState;
-                    studentUpdate.MailingAddressCity = student.studentMaster.MailingAddressCity;
-                    studentUpdate.MailingAddressZip = student.studentMaster.MailingAddressZip;
-                    studentUpdate.HomePhone = student.studentMaster.HomePhone;
-                    studentUpdate.MobilePhone = student.studentMaster.MobilePhone;
-                    studentUpdate.PersonalEmail = student.studentMaster.PersonalEmail;
-                    studentUpdate.SchoolEmail = student.studentMaster.SchoolEmail;
-                    studentUpdate.Twitter = student.studentMaster.Twitter;
-                    studentUpdate.Facebook = student.studentMaster.Facebook;
-                    studentUpdate.Instagram = student.studentMaster.Instagram;
-                    studentUpdate.Youtube = student.studentMaster.Youtube;
-                    studentUpdate.Linkedin = student.studentMaster.Linkedin;
-
-                    studentUpdate.StudentPhoto = student.studentMaster.StudentPhoto;
-
-                    studentUpdate.CriticalAlert = student.studentMaster.CriticalAlert;
-                    studentUpdate.AlertDescription = student.studentMaster.AlertDescription;
-                    studentUpdate.PrimaryCarePhysician = student.studentMaster.PrimaryCarePhysician;
-                    studentUpdate.PrimaryCarePhysicianPhone = student.studentMaster.PrimaryCarePhysicianPhone;
-                    studentUpdate.MedicalFacility = student.studentMaster.MedicalFacility;
-                    studentUpdate.MedicalFacilityPhone = student.studentMaster.MedicalFacilityPhone;
-                    studentUpdate.InsuranceCompany = student.studentMaster.InsuranceCompany;
-                    studentUpdate.InsuranceCompanyPhone = student.studentMaster.InsuranceCompanyPhone;
-                    studentUpdate.PolicyNumber = student.studentMaster.PolicyNumber;
-                    studentUpdate.PolicyHolder = student.studentMaster.PolicyHolder;
-                    studentUpdate.Dentist = student.studentMaster.Dentist;
-                    studentUpdate.DentistPhone = student.studentMaster.DentistPhone;
-                    studentUpdate.Vision = student.studentMaster.Vision;
-                    studentUpdate.VisionPhone = student.studentMaster.VisionPhone;
-
-                    studentUpdate.Eligibility504 = student.studentMaster.Eligibility504;
-                    studentUpdate.EconomicDisadvantage = student.studentMaster.EconomicDisadvantage;
-                    studentUpdate.FreeLunchEligibility = student.studentMaster.FreeLunchEligibility;
-                    studentUpdate.SpecialEducationIndicator = student.studentMaster.SpecialEducationIndicator;
-                    studentUpdate.LepIndicator = student.studentMaster.LepIndicator;
-                    studentUpdate.SectionId = student.studentMaster.SectionId;
-                    studentUpdate.EstimatedGradDate = student.studentMaster.EstimatedGradDate;
-                    studentUpdate.StudentInternalId = student.studentMaster.StudentInternalId;
-                    studentUpdate.LastUpdated = DateTime.UtcNow;
-                    studentUpdate.UpdatedBy = student.studentMaster.UpdatedBy;
-
-                    var checkInternalId = this.context?.StudentMaster.Where(x => x.TenantId ==student.studentMaster.TenantId && x.StudentInternalId == student.studentMaster.StudentInternalId && x.StudentId != student.studentMaster.StudentId).ToList();
+                    var checkInternalId = this.context?.StudentMaster.Where(x => x.TenantId == student.studentMaster.TenantId && x.StudentInternalId == student.studentMaster.StudentInternalId && x.StudentInternalId != null && x.StudentId != student.studentMaster.StudentId ).ToList();
                     if(checkInternalId.Count()>0)
                     {
                         student.studentMaster = null;
+                        student.fieldsCategoryList = null;
                         student._failure = true;
                         student._message = "Student InternalID Already Exist";
                     }
                     else
                     {
+                        var studentUpdate = this.context?.StudentMaster.FirstOrDefault(x => x.TenantId == student.studentMaster.TenantId && x.SchoolId == student.studentMaster.SchoolId && x.StudentId == student.studentMaster.StudentId);
+
+                        if(string.IsNullOrEmpty(student.studentMaster.StudentInternalId))
+                        {
+                            student.studentMaster.StudentInternalId = studentUpdate.StudentInternalId;
+                        }
+
+                        //Add or Update student portal access
+                        if (studentUpdate.StudentPortalId != null)
+                        {
+                            if (!string.IsNullOrWhiteSpace(student.LoginEmail))
+                            {
+                                if (studentUpdate.StudentPortalId != student.LoginEmail)
+                                {
+                                    var loginInfo = this.context?.UserMaster.FirstOrDefault(x => x.TenantId == student.studentMaster.TenantId && x.EmailAddress == student.LoginEmail);
+
+                                    if (loginInfo != null)
+                                    {
+                                        student.studentMaster = null;
+                                        student.fieldsCategoryList = null;
+                                        student._failure = true;
+                                        student._message = "Student Login Email Already Exist";
+                                        return student;
+                                    }
+                                    else
+                                    {
+                                        var loginInfoData = this.context?.UserMaster.FirstOrDefault(x => x.TenantId == student.studentMaster.TenantId && x.EmailAddress == studentUpdate.StudentPortalId);
+
+                                        loginInfoData.EmailAddress = student.LoginEmail;
+                                        loginInfoData.IsActive = student.PortalAccess;
+
+                                        this.context?.UserMaster.Add(loginInfoData);
+                                        this.context?.SaveChanges();
+
+                                        //Update StudentPortalId in Studentmaster table.
+                                        //studentUpdate.StudentPortalId = student.LoginEmail;
+                                        student.studentMaster.StudentPortalId = student.LoginEmail;
+                                    }
+                                }
+                                else
+                                {
+                                    var loginInfo = this.context?.UserMaster.FirstOrDefault(x => x.TenantId == student.studentMaster.TenantId && x.EmailAddress == studentUpdate.StudentPortalId);
+
+                                    loginInfo.IsActive = student.PortalAccess;
+
+                                    this.context?.SaveChanges();
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (!string.IsNullOrWhiteSpace(student.LoginEmail) && !string.IsNullOrWhiteSpace(student.PasswordHash))
+                            {
+                                var decrypted = Utility.Decrypt(student.PasswordHash);
+                                string passwordHash = Utility.GetHashedPassword(decrypted);
+
+                                UserMaster userMaster = new UserMaster();
+
+                                var loginInfo = this.context?.UserMaster.FirstOrDefault(x => x.TenantId == student.studentMaster.TenantId && x.EmailAddress == student.LoginEmail);
+
+                                if (loginInfo == null)
+                                {
+                                    var membership = this.context?.Membership.FirstOrDefault(x => x.TenantId == student.studentMaster.TenantId && x.SchoolId == student.studentMaster.SchoolId && x.Profile == "Student");
+
+                                    userMaster.SchoolId = student.studentMaster.SchoolId;
+                                    userMaster.TenantId = student.studentMaster.TenantId;
+                                    userMaster.UserId = student.studentMaster.StudentId;
+                                    userMaster.LangId = 1;
+                                    userMaster.MembershipId = membership.MembershipId;
+                                    userMaster.EmailAddress = student.LoginEmail;
+                                    userMaster.PasswordHash = passwordHash;
+                                    userMaster.Name = student.studentMaster.FirstGivenName;
+                                    userMaster.LastUpdated = DateTime.UtcNow;
+                                    userMaster.IsActive = student.PortalAccess;
+
+                                    this.context?.UserMaster.Add(userMaster);
+                                    this.context?.SaveChanges();
+
+
+                                    //Update StudentPortalId in Studentmaster table.
+                                    //studentUpdate.StudentPortalId = student.LoginEmail;
+                                    student.studentMaster.StudentPortalId = student.LoginEmail;
+                                }
+                                else
+                                {
+                                    student.studentMaster = null;
+                                    student.fieldsCategoryList = null;
+                                    student._failure = true;
+                                    student._message = "Student Login Email Already Exist";
+                                    return student;
+                                }
+                            }
+                        }
+
+                        student.studentMaster.Associationship = studentUpdate.Associationship;
+                        student.studentMaster.EnrollmentType = studentUpdate.EnrollmentType;
+                        student.studentMaster.IsActive = studentUpdate.IsActive;
+                        student.studentMaster.StudentGuid = studentUpdate.StudentGuid;
+                        student.studentMaster.LastUpdated = DateTime.UtcNow;
+                        this.context.Entry(studentUpdate).CurrentValues.SetValues(student.studentMaster);
+                        this.context?.SaveChanges();
+
+                        
+
                         this.context?.SaveChanges();
 
                         if (student.fieldsCategoryList != null && student.fieldsCategoryList.ToList().Count > 0)
@@ -266,41 +347,41 @@ namespace opensis.data.Repository
                             }
                         }
 
-                        if (!string.IsNullOrWhiteSpace(student.PasswordHash) && !string.IsNullOrWhiteSpace(student.LoginEmail))
-                        {
-                            UserMaster userMaster = new UserMaster();
+                        //if (!string.IsNullOrWhiteSpace(student.PasswordHash) && !string.IsNullOrWhiteSpace(student.LoginEmail))
+                        //{
+                        //    UserMaster userMaster = new UserMaster();
 
-                            var decrypted = Utility.Decrypt(student.PasswordHash);
-                            string passwordHash = Utility.GetHashedPassword(decrypted);
+                        //    var decrypted = Utility.Decrypt(student.PasswordHash);
+                        //    string passwordHash = Utility.GetHashedPassword(decrypted);
 
-                            var loginInfo = this.context?.UserMaster.FirstOrDefault(x => x.TenantId == student.studentMaster.TenantId && x.SchoolId == student.studentMaster.SchoolId && x.EmailAddress == student.LoginEmail);
+                        //    var loginInfo = this.context?.UserMaster.FirstOrDefault(x => x.TenantId == student.studentMaster.TenantId && x.SchoolId == student.studentMaster.SchoolId && x.EmailAddress == student.LoginEmail);
 
-                            if (loginInfo == null)
-                            {
-                                var membership = this.context?.Membership.FirstOrDefault(x => x.TenantId == student.studentMaster.TenantId && x.SchoolId == student.studentMaster.SchoolId && x.Profile == "Student");
+                        //    if (loginInfo == null)
+                        //    {
+                        //        var membership = this.context?.Membership.FirstOrDefault(x => x.TenantId == student.studentMaster.TenantId && x.SchoolId == student.studentMaster.SchoolId && x.Profile == "Student");
 
-                                userMaster.SchoolId = student.studentMaster.SchoolId;
-                                userMaster.TenantId = student.studentMaster.TenantId;
-                                userMaster.UserId = student.studentMaster.StudentId;
-                                userMaster.LangId = 1;
-                                userMaster.MembershipId = membership.MembershipId;
-                                userMaster.EmailAddress = student.LoginEmail;
-                                userMaster.PasswordHash = passwordHash;
-                                userMaster.Name = student.studentMaster.FirstGivenName;
-                                userMaster.LastUpdated = DateTime.UtcNow;
-                                userMaster.IsActive = true;
+                        //        userMaster.SchoolId = student.studentMaster.SchoolId;
+                        //        userMaster.TenantId = student.studentMaster.TenantId;
+                        //        userMaster.UserId = student.studentMaster.StudentId;
+                        //        userMaster.LangId = 1;
+                        //        userMaster.MembershipId = membership.MembershipId;
+                        //        userMaster.EmailAddress = student.LoginEmail;
+                        //        userMaster.PasswordHash = passwordHash;
+                        //        userMaster.Name = student.studentMaster.FirstGivenName;
+                        //        userMaster.LastUpdated = DateTime.UtcNow;
+                        //        userMaster.IsActive = true;
 
-                                this.context?.UserMaster.Add(userMaster);
-                                this.context?.SaveChanges();
+                        //        this.context?.UserMaster.Add(userMaster);
+                        //        this.context?.SaveChanges();
 
 
-                                //Update StudentPortalId in Studentmaster table.
-                                var studentPortalId = this.context?.StudentMaster.FirstOrDefault(x => x.TenantId == student.studentMaster.TenantId && x.SchoolId == student.studentMaster.SchoolId && x.StudentId == student.studentMaster.StudentId);
-                                studentUpdate.StudentPortalId = student.LoginEmail;
+                        //        //Update StudentPortalId in Studentmaster table.
+                        //        var studentPortalId = this.context?.StudentMaster.FirstOrDefault(x => x.TenantId == student.studentMaster.TenantId && x.SchoolId == student.studentMaster.SchoolId && x.StudentId == student.studentMaster.StudentId);
+                        //        studentUpdate.StudentPortalId = student.LoginEmail;
 
-                                this.context?.SaveChanges();
-                            }
-                        }
+                        //        this.context?.SaveChanges();
+                        //    }
+                        //}
                         student._failure = false;
                     }
                     transaction.Commit();
@@ -324,53 +405,99 @@ namespace opensis.data.Repository
         /// </summary>
         /// <param name="pageResult"></param>
         /// <returns></returns>
-
         public StudentListModel GetAllStudentList(PageResult pageResult)
         {
-            
+
             StudentListModel studentListModel = new StudentListModel();
             IQueryable<StudentMaster> transactionIQ = null;
-            
-            var StudentMasterList = this.context?.StudentMaster.Include(x=>x.StudentEnrollment).Where(x => x.TenantId == pageResult.TenantId && x.SchoolId == pageResult.SchoolId);           
+
+
+            //var studentDataList = this.context?.StudentMaster.Include(x => x.StudentEnrollment).Where(x => x.TenantId == pageResult.TenantId && x.SchoolId == pageResult.SchoolId && x.IsActive != false);
+
+            var studentDataList = this.context?.StudentMaster.Include(x => x.StudentEnrollment).Where(x => x.TenantId == pageResult.TenantId && x.SchoolId == pageResult.SchoolId && x.IsActive != false).AsNoTracking().Select(e => new StudentMaster
+            {
+                TenantId = e.TenantId,
+                SchoolId = e.SchoolId,
+                StudentId = e.StudentId,
+                FirstGivenName = e.FirstGivenName,
+                MiddleName = e.MiddleName,
+                LastFamilyName = e.LastFamilyName,
+                AlternateId = e.AlternateId,
+                StudentInternalId = e.StudentInternalId,
+                MobilePhone = e.MobilePhone,
+                HomePhone = e.HomePhone,
+                PersonalEmail = e.PersonalEmail,
+                SchoolEmail = e.SchoolEmail,
+                StudentGuid = e.StudentGuid,
+                AdmissionNumber=e.AdmissionNumber,
+                RollNumber=e.RollNumber,
+                Dob=e.Dob,
+                Gender=e.Gender,
+                Race=e.Race,
+                Ethnicity=e.Ethnicity,
+                MaritalStatus=e.MaritalStatus,
+                CountryOfBirth=e.CountryOfBirth,
+                Nationality=e.Nationality,
+                FirstLanguage=e.FirstLanguage,
+                SecondLanguage=e.SecondLanguage,
+                ThirdLanguage=e.ThirdLanguage,
+                StudentEnrollment = e.StudentEnrollment.Where(d => d.IsActive == true).Select(s => new StudentEnrollment
+                {
+                    EnrollmentDate = s.EnrollmentDate,
+                    GradeLevelTitle = s.GradeLevelTitle,
+                    TenantId = s.TenantId,
+                    SchoolId = s.SchoolId,
+                    StudentId = s.StudentId,
+                    EnrollmentId = s.EnrollmentId, 
+                    StudentGuid = s.StudentGuid,
+                }).ToList()
+            });
 
             try
             {
                 if (pageResult.FilterParams == null || pageResult.FilterParams.Count == 0)
                 {
-
-                    transactionIQ = StudentMasterList;
+                    transactionIQ = studentDataList;
                 }
                 else
                 {
+                    string Columnvalue = pageResult.FilterParams.ElementAt(0).FilterValue;
                     if (pageResult.FilterParams != null && pageResult.FilterParams.ElementAt(0).ColumnName == null && pageResult.FilterParams.Count == 1)
                     {
-                        string Columnvalue = pageResult.FilterParams.ElementAt(0).FilterValue;
-                        transactionIQ = StudentMasterList.Where(x =>x.FirstGivenName!=null && x.FirstGivenName.ToLower().Contains(Columnvalue.ToLower()) ||
+                        transactionIQ = studentDataList.Where(x => x.FirstGivenName != null && x.FirstGivenName.ToLower().Contains(Columnvalue.ToLower()) ||
                                                                     x.MiddleName != null && x.MiddleName.ToLower().Contains(Columnvalue.ToLower()) ||
                                                                     x.LastFamilyName != null && x.LastFamilyName.ToLower().Contains(Columnvalue.ToLower()) ||
                                                                     x.StudentInternalId != null && x.StudentInternalId.ToLower().Contains(Columnvalue.ToLower()) ||
                                                                     x.AlternateId != null && x.AlternateId.Contains(Columnvalue) ||
-                                                                    x.HomePhone !=null && x.HomePhone.Contains(Columnvalue) || 
-                                                                    x.MobilePhone !=null && x.MobilePhone.Contains(Columnvalue)||
-                                                                    x.PersonalEmail !=null && x.PersonalEmail.Contains(Columnvalue));
+                                                                    x.HomePhone != null && x.HomePhone.Contains(Columnvalue) ||
+                                                                    x.MobilePhone != null && x.MobilePhone.Contains(Columnvalue) ||
+                                                                    x.PersonalEmail != null && x.PersonalEmail.Contains(Columnvalue) ||
+                                                                    x.SchoolEmail != null && x.SchoolEmail.Contains(Columnvalue));
 
-                        //search for gradeLavelTitle
-                        //var childGrader = StudentMasterList.Where(x => x.StudentEnrollment.FirstOrDefault().EnrollmentDate);
-                         var childGradeFilter = StudentMasterList.Where(x => x.StudentEnrollment.FirstOrDefault() != null ? x.StudentEnrollment.FirstOrDefault().GradeLevelTitle.ToLower().Contains(Columnvalue.ToLower()) : string.Empty.Contains(Columnvalue));
-                        if (childGradeFilter.ToList().Count > 0)
+                        //for GradeLevel Searching
+                        var gradeLevelFilter = studentDataList.AsNoTracking().ToList().Where(x => x.StudentEnrollment.ToList().Count > 0 ? x.StudentEnrollment.FirstOrDefault().GradeLevelTitle.ToLower().Contains(Columnvalue.ToLower()) : string.Empty.Contains(Columnvalue)).AsQueryable();
+
+                        if (gradeLevelFilter.ToList().Count > 0)
                         {
-                            transactionIQ = transactionIQ.Concat(childGradeFilter);
+                            transactionIQ = transactionIQ.AsNoTracking().ToList().Concat(gradeLevelFilter).AsQueryable();
+                          //transactionIQ = gradeLevelFilter;
                         }
-                        //search for Section
-                        /*var childSectionFilter = StudentMasterList.Where(x => x.Sections != null ? x.Sections.Name.ToLower().Contains(Columnvalue.ToLower()) : string.Empty.Contains(Columnvalue));
-                        //if (childSectionFilter.ToList().Count > 0)
-                        //{
-                        //    transactionIQ = transactionIQ.Concat(childSectionFilter);
-                        //}*/
                     }
                     else
                     {
-                        transactionIQ = Utility.FilteredData(pageResult.FilterParams, StudentMasterList).AsQueryable();
+                        if (pageResult.FilterParams.FirstOrDefault().ColumnName.ToLower() == "gradeleveltitle")
+                        {
+                            var filterGradeLevelTitle = studentDataList.AsNoTracking().ToList().Where(x => x.StudentEnrollment.FirstOrDefault().GradeLevelTitle == Columnvalue).AsQueryable();
+                            if (filterGradeLevelTitle.ToList().Count() > 0)
+                            {
+                                transactionIQ = filterGradeLevelTitle;
+                            }
+                        }
+                        else
+                        {
+                            transactionIQ = Utility.FilteredData(pageResult.FilterParams, studentDataList).AsQueryable();
+                        }
+
                     }
                     //transactionIQ = transactionIQ.Distinct();
                 }
@@ -379,58 +506,36 @@ namespace opensis.data.Repository
                 {
                     switch (pageResult.SortingModel.SortColumn.ToLower())
                     {
-                        //Sorting For GradeLevelTitle
-                        case "GradeLevelTitle":
+                        //For GradeLevel Sorting
+                        case "gradeleveltitle":
 
                             if (pageResult.SortingModel.SortDirection.ToLower() == "asc")
                             {
-
-                                transactionIQ = transactionIQ.OrderBy(a => a.StudentEnrollment != null ? a.StudentEnrollment.FirstOrDefault().GradeLevelTitle : null);
+                               
+                                transactionIQ = transactionIQ.AsNoTracking().ToList().OrderBy(a => a.StudentEnrollment.Count > 0 ? a.StudentEnrollment.FirstOrDefault().GradeLevelTitle : null).AsQueryable();
                             }
                             else
                             {
-                                transactionIQ = transactionIQ.OrderByDescending(a => a.StudentEnrollment != null ? a.StudentEnrollment.FirstOrDefault().GradeLevelTitle : null);
+                             
+                                transactionIQ = transactionIQ.AsNoTracking().ToList().OrderByDescending(a => a.StudentEnrollment.Count > 0 ? a.StudentEnrollment.FirstOrDefault().GradeLevelTitle : null).AsQueryable();
                             }
                             break;
-                            //sorting for Section
-                        /*case "name":
 
-                        //    if (pageResult.SortingModel.SortDirection.ToLower() == "asc")
-                        //    {
-                        //        transactionIQ = transactionIQ.OrderBy(b => b.Sections != null ? b.Sections.Name : null);
-                        //    }
-                        //    else
-                        //    {
-                        //        transactionIQ = transactionIQ.OrderByDescending(b => b.Sections != null ? b.Sections.Name : null);
-                        //    }
-                        //    break;*/
                         default:
                             transactionIQ = Utility.Sort(transactionIQ, pageResult.SortingModel.SortColumn, pageResult.SortingModel.SortDirection.ToLower());
                             break;
                     }
+                    
                 }
-
                 int totalCount = transactionIQ.Count();
-                transactionIQ = transactionIQ.Skip((pageResult.PageNumber - 1) * pageResult.PageSize).Take(pageResult.PageSize);
-                var studentList = transactionIQ.AsNoTracking().Select(s => new GetStudentListForView
+                if (pageResult.PageNumber > 0 && pageResult.PageSize > 0)
                 {
-                    SchoolId = s.SchoolId,
-                    StudentId = s.StudentId,
-                    TenantId = s.TenantId,
-                    GradeLevelTitle=s.StudentEnrollment.OrderByDescending(s => s.EnrollmentDate).FirstOrDefault().GradeLevelTitle,                  
-                    StudentInternalId=s.StudentInternalId,
-                    FirstGivenName=s.FirstGivenName,
-                    MiddleName=s.MiddleName,
-                    LastFamilyName=s.LastFamilyName,
-                    AlternateId=s.AlternateId,
-                    MobilePhone=s.MobilePhone,
-                    PersonalEmail=s.PersonalEmail,                   
-                }).ToList();
-
+                    transactionIQ = transactionIQ.Skip((pageResult.PageNumber - 1) * pageResult.PageSize).Take(pageResult.PageSize);
+                }
+                
                 studentListModel.TenantId = pageResult.TenantId;
                 studentListModel.SchoolId = pageResult.SchoolId;
-                studentListModel.getStudentListForViews = studentList;
-                studentListModel.studentMaster = null;
+                studentListModel.studentMaster = transactionIQ.ToList();
                 studentListModel.TotalCount = totalCount;
                 studentListModel.PageNumber = pageResult.PageNumber;
                 studentListModel._pageSize = pageResult.PageSize;
@@ -446,7 +551,6 @@ namespace opensis.data.Repository
                 studentListModel._token = pageResult._token;
             }
             return studentListModel;
-
         }
 
         /// <summary>
@@ -495,9 +599,9 @@ namespace opensis.data.Repository
             try
             {
                 var studentDocumentUpdate = this.context?.StudentDocuments.FirstOrDefault(x => x.TenantId == studentDocumentAddViewModel.studentDocuments.FirstOrDefault().TenantId && x.SchoolId == studentDocumentAddViewModel.studentDocuments.FirstOrDefault().SchoolId && x.StudentId == studentDocumentAddViewModel.studentDocuments.FirstOrDefault().StudentId && x.DocumentId == studentDocumentAddViewModel.studentDocuments.FirstOrDefault().DocumentId);
-                studentDocumentUpdate.FileUploaded = studentDocumentAddViewModel.studentDocuments.FirstOrDefault().FileUploaded;
-                studentDocumentUpdate.UploadedOn = DateTime.UtcNow;
-                studentDocumentUpdate.UploadedBy = studentDocumentAddViewModel.studentDocuments.FirstOrDefault().UploadedBy;
+
+                studentDocumentAddViewModel.studentDocuments.FirstOrDefault().UploadedOn = DateTime.UtcNow;
+                this.context.Entry(studentDocumentUpdate).CurrentValues.SetValues(studentDocumentAddViewModel.studentDocuments.FirstOrDefault());
                 this.context?.SaveChanges();
                 studentDocumentAddViewModel._failure = false;
                 studentDocumentAddViewModel._message = "Updated Successfully";
@@ -520,12 +624,22 @@ namespace opensis.data.Repository
             StudentDocumentListViewModel studentDocumentsList = new StudentDocumentListViewModel();
             try
             {
-
                 var StudentDocumentsAll = this.context?.StudentDocuments.Where(x => x.TenantId == studentDocumentListViewModel.TenantId && x.SchoolId == studentDocumentListViewModel.SchoolId && x.StudentId == studentDocumentListViewModel.StudentId).OrderByDescending(x=>x.DocumentId).ToList();
-                studentDocumentsList.studentDocumentsList = StudentDocumentsAll;
-                studentDocumentsList._tenantName = studentDocumentListViewModel._tenantName;
-                studentDocumentsList._token = studentDocumentListViewModel._token;
-                studentDocumentsList._failure = false;
+                if (StudentDocumentsAll.Count > 0)
+                {
+                    studentDocumentsList.studentDocumentsList = StudentDocumentsAll;
+                    studentDocumentsList._tenantName = studentDocumentListViewModel._tenantName;
+                    studentDocumentsList._token = studentDocumentListViewModel._token;
+                    studentDocumentsList._failure = false;
+                }
+                else
+                {
+                    studentDocumentsList.studentDocumentsList = null;
+                    studentDocumentsList._tenantName = studentDocumentListViewModel._tenantName;
+                    studentDocumentsList._token = studentDocumentListViewModel._token;
+                    studentDocumentsList._failure = true;
+                    studentDocumentsList._message = NORECORDFOUND;
+                }
             }
             catch (Exception es)
             {
@@ -646,9 +760,8 @@ namespace opensis.data.Repository
             {
                 var studentCommentUpdate = this.context?.StudentComments.FirstOrDefault(x => x.TenantId == studentCommentAddViewModel.studentComments.TenantId && x.SchoolId == studentCommentAddViewModel.studentComments.SchoolId && x.StudentId == studentCommentAddViewModel.studentComments.StudentId && x.CommentId == studentCommentAddViewModel.studentComments.CommentId);
 
-                studentCommentUpdate.Comment = studentCommentAddViewModel.studentComments.Comment;
-                studentCommentUpdate.LastUpdated = DateTime.UtcNow;
-                studentCommentUpdate.UpdatedBy = studentCommentAddViewModel.studentComments.UpdatedBy;
+                studentCommentAddViewModel.studentComments.LastUpdated = DateTime.UtcNow;
+                this.context.Entry(studentCommentUpdate).CurrentValues.SetValues(studentCommentAddViewModel.studentComments);
                 this.context?.SaveChanges();
                 studentCommentAddViewModel._failure = false;
                 studentCommentAddViewModel._message = "Updated Successfully";
@@ -672,10 +785,21 @@ namespace opensis.data.Repository
             {
 
                 var StudentCommentsAll = this.context?.StudentComments.Where(x => x.TenantId == studentCommentListViewModel.TenantId && x.SchoolId == studentCommentListViewModel.SchoolId && x.StudentId == studentCommentListViewModel.StudentId).OrderByDescending(x => x.CommentId).ToList();
-                studentCommentsList.studentCommentsList = StudentCommentsAll;
-                studentCommentsList._tenantName = studentCommentListViewModel._tenantName;
-                studentCommentsList._token = studentCommentListViewModel._token;
-                studentCommentsList._failure = false;
+                if (StudentCommentsAll.Count > 0)
+                {
+                    studentCommentsList.studentCommentsList = StudentCommentsAll;
+                    studentCommentsList._tenantName = studentCommentListViewModel._tenantName;
+                    studentCommentsList._token = studentCommentListViewModel._token;
+                    studentCommentsList._failure = false;
+                }
+                else
+                {
+                    studentCommentsList.studentCommentsList = null;
+                    studentCommentsList._tenantName = studentCommentListViewModel._tenantName;
+                    studentCommentsList._token = studentCommentListViewModel._token;
+                    studentCommentsList._failure = true;
+                    studentCommentsList._message = NORECORDFOUND;
+                }
             }
             catch (Exception es)
             {
@@ -725,6 +849,8 @@ namespace opensis.data.Repository
                 {                  
                     
                     studentEnrollment.EnrollmentId = (int)EnrollmentId;
+                    studentEnrollment.CalenderId = studentEnrollmentListModel.CalenderId;
+                    studentEnrollment.RollingOption = studentEnrollmentListModel.RollingOption;
                     studentEnrollment.LastUpdated = DateTime.UtcNow;
                     this.context?.StudentEnrollment.AddRange(studentEnrollment);
                     EnrollmentId++;
@@ -740,27 +866,399 @@ namespace opensis.data.Repository
 
             return studentEnrollmentListModel;
         }
-
-        public StudentEnrollmentListModel GetAllStudentEnrollment(StudentEnrollmentListModel studentEnrollmentListModel)
+        /// <summary>
+        /// Update Student Enrollment
+        /// </summary>
+        /// <param name="studentEnrollmentListModel"></param>
+        /// <returns></returns>
+        public StudentEnrollmentListModel UpdateStudentEnrollment(StudentEnrollmentListModel studentEnrollmentListModel)
         {
-            StudentEnrollmentListModel studentEnrollmentListView = new StudentEnrollmentListModel();
+            using (var transaction = this.context.Database.BeginTransaction())
+            {
+                try
+                {
+                    int? EnrollmentId = 1;
+                    //EnrollmentId = Utility.GetMaxPK(this.context, new Func<StudentEnrollment, int>(x => x.EnrollmentId));
+
+                    var studentEnrollmentData = this.context?.StudentEnrollment.Where(x=>x.StudentGuid==studentEnrollmentListModel.StudentGuid).OrderByDescending(x => x.EnrollmentId).FirstOrDefault();
+
+                    if (studentEnrollmentData != null)
+                    {
+                        EnrollmentId = studentEnrollmentData.EnrollmentId + 1;
+                    }
+
+                    foreach (var studentEnrollmentList in studentEnrollmentListModel.studentEnrollments)
+                    {
+                        //Update Existing Enrollment Data
+                        if (studentEnrollmentList.EnrollmentId > 0) 
+                        {
+                            var studentEnrollmentUpdate = this.context?.StudentEnrollment.FirstOrDefault(x => x.TenantId == studentEnrollmentList.TenantId && x.SchoolId == studentEnrollmentList.SchoolId && x.StudentId == studentEnrollmentList.StudentId && x.EnrollmentId == studentEnrollmentList.EnrollmentId);
+                            if (studentEnrollmentUpdate != null)
+                            {
+                                StudentEnrollment studentEnrollment = new StudentEnrollment();
+                                if (studentEnrollmentList.ExitCode != null)
+                                {
+                                    //This block for Roll Over,Drop (Transfer),Enroll (Transfer)
+                                    var studentExitCode = this.context?.StudentEnrollmentCode.FirstOrDefault(x => x.TenantId == studentEnrollmentList.TenantId && x.SchoolId == studentEnrollmentList.SchoolId && x.EnrollmentCode.ToString() == studentEnrollmentList.ExitCode); //fetching enrollemnt code type 
+
+                                    if (studentExitCode.Type.ToLower() == "Drop (Transfer)".ToLower())
+                                    {     
+                                        //This block for student drop(transfer) & enroll(transfer) new school
+
+                                        //update student's existing enrollment details 
+                                        studentEnrollmentUpdate.ExitCode = studentExitCode.Title;
+                                        studentEnrollmentUpdate.ExitDate = studentEnrollmentList.ExitDate;
+                                        studentEnrollmentUpdate.TransferredGrade = studentEnrollmentList.TransferredGrade;
+                                        studentEnrollmentUpdate.TransferredSchoolId = studentEnrollmentList.TransferredSchoolId;
+                                        studentEnrollmentUpdate.SchoolTransferred = studentEnrollmentList.SchoolTransferred;
+                                        studentEnrollmentUpdate.LastUpdated = DateTime.UtcNow;
+                                        studentEnrollmentUpdate.UpdatedBy = studentEnrollmentList.UpdatedBy;
+                                        studentEnrollmentUpdate.IsActive = false;
+
+                                        //fetching enrollment code where student enroll(transfer).
+                                        var studentTransferIn = this.context?.StudentEnrollmentCode.FirstOrDefault(x => x.TenantId == studentEnrollmentList.TenantId && x.SchoolId == studentEnrollmentList.TransferredSchoolId && x.Type.ToLower() == "Enroll (Transfer)".ToLower());
+
+                                        if(studentTransferIn != null)
+                                        {
+                                            //fetching student details from studentMaster table for the new school if exist previously
+                                            var checkStudentAlreadyExistInTransferredSchool = this.context?.StudentMaster.FirstOrDefault(x => x.TenantId == studentEnrollmentList.TenantId && x.SchoolId == studentEnrollmentList.TransferredSchoolId && x.StudentGuid == studentEnrollmentListModel.StudentGuid);
+
+                                            if (checkStudentAlreadyExistInTransferredSchool != null)
+                                            {
+                                                //fetching student details from studentMaster table
+                                                var studentData = this.context?.StudentMaster.FirstOrDefault(x => x.TenantId == studentEnrollmentListModel.TenantId && x.SchoolId == studentEnrollmentListModel.SchoolId && x.StudentId == studentEnrollmentListModel.StudentId);
+
+                                                //fetching all student's active details from studentMaster table
+                                                var otherSchoolEnrollment = this.context?.StudentMaster.Where(x => x.TenantId == studentData.TenantId && x.StudentGuid == studentData.StudentGuid).ToList();
+
+                                                if (otherSchoolEnrollment.Count > 0)
+                                                {
+                                                    foreach (var enrollmentData in otherSchoolEnrollment)
+                                                    {
+                                                        //this loop for update student's IsActive details and make it false for previos school
+                                                        enrollmentData.IsActive = false;
+                                                        this.context?.SaveChanges();
+                                                    }
+                                                }
+                                                checkStudentAlreadyExistInTransferredSchool.IsActive = true;
+                                                checkStudentAlreadyExistInTransferredSchool.EnrollmentType = "Internal";
+                                                this.context?.SaveChanges();
+
+                                                studentEnrollmentList.StudentId = (int)checkStudentAlreadyExistInTransferredSchool.StudentId;
+                                            }
+                                            else
+                                            {
+                                                //fetching student details from studentMaster table
+                                                var studentData = this.context?.StudentMaster.FirstOrDefault(x => x.TenantId == studentEnrollmentListModel.TenantId && x.SchoolId == studentEnrollmentListModel.SchoolId && x.StudentId == studentEnrollmentListModel.StudentId);
+                                                if (studentData != null)
+                                                {
+                                                    //fetching all student's active details from studentMaster table
+                                                    var otherSchoolEnrollment = this.context?.StudentMaster.Where(x => x.TenantId == studentData.TenantId && x.StudentGuid == studentData.StudentGuid).ToList();
+                                                    if (otherSchoolEnrollment.Count > 0)
+                                                    {
+                                                        foreach (var enrollmentData in otherSchoolEnrollment)
+                                                        {
+                                                            //this loop for update student's IsActive details and make it false for previos school
+                                                            enrollmentData.IsActive = false;
+                                                            this.context?.SaveChanges();
+                                                        }
+                                                    }
+
+                                                    //generate StudentId where student enroll(Transfer) & save data
+                                                    int? MasterStudentId = 0;
+
+                                                    var studentDataForTransferredSchool = this.context?.StudentMaster.Where(x => x.SchoolId == studentEnrollmentList.TransferredSchoolId && x.TenantId == studentEnrollmentList.TenantId).OrderByDescending(x => x.StudentId).FirstOrDefault();
+
+                                                    if (studentDataForTransferredSchool != null)
+                                                    {
+                                                        MasterStudentId = studentDataForTransferredSchool.StudentId + 1;
+                                                    }
+                                                    else
+                                                    {
+                                                        MasterStudentId = 1;
+                                                    }
+
+                                                    //studentData.SchoolId = (int)studentEnrollmentList.TransferredSchoolId;
+                                                    //studentData.StudentId = (int)MasterStudentId;
+                                                    //studentData.EnrollmentType = "Internal";
+                                                    //studentData.IsActive = true;
+                                                    //studentData.LastUpdated = DateTime.UtcNow;                                                   
+                                                    //this.context?.StudentMaster.Add(studentData);
+                                                    
+                                                    StudentMaster studentMaster = new StudentMaster() { TenantId = studentData.TenantId, SchoolId = (int)studentEnrollmentList.TransferredSchoolId, StudentId = (int)MasterStudentId, AlternateId = studentData.AlternateId, DistrictId = studentData.DistrictId, StateId = studentData.StateId, AdmissionNumber = studentData.AdmissionNumber, RollNumber = studentData.RollNumber, Salutation = studentData.Salutation, FirstGivenName = studentData.FirstGivenName, MiddleName = studentData.MiddleName, LastFamilyName = studentData.LastFamilyName, Suffix = studentData.Suffix, PreferredName = studentData.PreferredName, PreviousName = studentData.PreviousName, SocialSecurityNumber = studentData.SocialSecurityNumber, OtherGovtIssuedNumber = studentData.OtherGovtIssuedNumber, StudentPhoto = studentData.StudentPhoto, Dob = studentData.Dob, Gender = studentData.Gender, Race = studentData.Race, Ethnicity = studentData.Ethnicity, MaritalStatus = studentData.MaritalStatus, CountryOfBirth = studentData.CountryOfBirth, Nationality = studentData.Nationality, FirstLanguageId = studentData.FirstLanguageId, SecondLanguageId = studentData.SecondLanguageId, ThirdLanguageId = studentData.ThirdLanguageId, HomePhone = studentData.HomePhone, MobilePhone = studentData.MobilePhone, PersonalEmail = studentData.PersonalEmail, SchoolEmail = studentData.SchoolEmail, Twitter = studentData.Twitter, Facebook = studentData.Facebook, Instagram = studentData.Instagram, Youtube = studentData.Youtube, Linkedin = studentData.Linkedin, HomeAddressLineOne = studentData.HomeAddressLineOne, HomeAddressLineTwo = studentData.HomeAddressLineTwo, HomeAddressCountry = studentData.HomeAddressCountry, HomeAddressState = studentData.HomeAddressState, HomeAddressCity = studentData.HomeAddressCity, HomeAddressZip = studentData.HomeAddressZip, BusNo = studentData.BusNo, SchoolBusPickUp = studentData.SchoolBusPickUp, SchoolBusDropOff = studentData.SchoolBusDropOff, MailingAddressSameToHome = studentData.MailingAddressSameToHome, MailingAddressLineOne = studentData.MailingAddressLineOne, MailingAddressLineTwo = studentData.MailingAddressLineTwo, MailingAddressCountry = studentData.MailingAddressCountry, MailingAddressState = studentData.MailingAddressState, MailingAddressCity = studentData.MailingAddressCity, MailingAddressZip = studentData.MailingAddressZip, StudentPortalId = studentData.StudentPortalId, AlertDescription = studentData.AlertDescription, CriticalAlert = studentData.CriticalAlert, Dentist = studentData.Dentist, DentistPhone = studentData.DentistPhone, InsuranceCompany = studentData.InsuranceCompany, InsuranceCompanyPhone = studentData.InsuranceCompanyPhone, MedicalFacility = studentData.MedicalFacility, MedicalFacilityPhone = studentData.MedicalFacilityPhone, PolicyHolder = studentData.PolicyHolder, PolicyNumber = studentData.PolicyNumber, PrimaryCarePhysician = studentData.PrimaryCarePhysician, PrimaryCarePhysicianPhone = studentData.PrimaryCarePhysicianPhone, Vision = studentData.Vision, VisionPhone = studentData.VisionPhone, Associationship = studentData.Associationship, EconomicDisadvantage = studentData.EconomicDisadvantage, Eligibility504 = studentData.Eligibility504, EstimatedGradDate = studentData.EstimatedGradDate, FreeLunchEligibility = studentData.FreeLunchEligibility, LepIndicator = studentData.LepIndicator, SectionId = studentData.SectionId, SpecialEducationIndicator = studentData.SpecialEducationIndicator, StudentInternalId = studentData.StudentInternalId, LastUpdated = DateTime.UtcNow, UpdatedBy = studentData.UpdatedBy, EnrollmentType = "Internal", IsActive = true, StudentGuid = studentData.StudentGuid };
+                                                    
+                                                    this.context?.StudentMaster.Add(studentMaster);
+                                                    
+                                                    //Student Protal Access
+                                                    if (studentData.StudentPortalId != null)
+                                                    {
+                                                        var userMasterData = this.context?.UserMaster.FirstOrDefault(x => x.EmailAddress == studentData.StudentPortalId && x.TenantId == studentData.TenantId);
+                                                        if (userMasterData != null)
+                                                        {
+                                                            userMasterData.IsActive = false;
+                                                            UserMaster userMaster = new UserMaster();
+                                                            userMaster.TenantId = studentData.TenantId;
+                                                            userMaster.SchoolId = (int)studentEnrollmentList.TransferredSchoolId;
+                                                            userMaster.UserId = (int)MasterStudentId;
+                                                            userMaster.Name = userMasterData.Name;
+                                                            userMaster.EmailAddress = userMasterData.EmailAddress;
+                                                            userMaster.PasswordHash = userMasterData.PasswordHash;
+                                                            userMaster.LangId = userMasterData.LangId;
+                                                            var membershipsId = this.context?.Membership.Where(x => x.SchoolId == (int)studentEnrollmentList.TransferredSchoolId && x.TenantId == studentEnrollmentList.TenantId && x.Title == "Student").Select(x => x.MembershipId).FirstOrDefault();
+                                                            userMaster.MembershipId = (int)membershipsId;
+                                                            userMaster.LastUpdated = DateTime.UtcNow;
+                                                            userMaster.UpdatedBy = studentEnrollmentList.UpdatedBy;
+                                                            userMaster.IsActive = true;
+                                                            this.context?.UserMaster.Add(userMaster);
+                                                        }
+                                                    }
+                                                    this.context?.SaveChanges();
+
+                                                    studentEnrollmentList.StudentId = (int)MasterStudentId;
+                                                }
+                                            }
+
+                                            //fetch default calender for enroll(transfer) school and save details in StudentEnrollment table.
+                                            int? calenderId = null;
+
+                                            var defaultCalender = this.context?.SchoolCalendars.FirstOrDefault(x => x.TenantId == studentEnrollmentList.TenantId && x.SchoolId == studentEnrollmentList.TransferredSchoolId && x.AcademicYear == studentEnrollmentListModel.AcademicYear && x.DefaultCalender == true);
+
+                                            if (defaultCalender != null)
+                                            {
+                                                calenderId = defaultCalender.CalenderId;
+                                            }
+
+                                            studentEnrollmentList.TenantId = studentEnrollmentList.TenantId;
+                                            studentEnrollmentList.SchoolId = (int)studentEnrollmentList.SchoolId;
+                                            studentEnrollmentList.EnrollmentId = (int)EnrollmentId;
+                                            studentEnrollmentList.EnrollmentDate = null;
+                                            studentEnrollmentList.EnrollmentCode = null;
+                                            studentEnrollmentList.ExitCode = studentExitCode.Title;
+                                            studentEnrollmentList.ExitDate = studentEnrollmentList.ExitDate;
+                                            studentEnrollmentList.SchoolName = studentEnrollmentList.SchoolTransferred;
+                                            studentEnrollmentList.SchoolTransferred = null;
+                                            studentEnrollmentList.TransferredSchoolId = studentEnrollmentList.TransferredSchoolId;
+                                            studentEnrollmentList.GradeLevelTitle = null;
+                                            studentEnrollmentList.TransferredGrade = studentEnrollmentList.TransferredGrade;
+                                            studentEnrollmentList.CalenderId = calenderId;
+                                            studentEnrollmentList.RollingOption = studentEnrollmentListModel.RollingOption;
+                                            studentEnrollmentList.LastUpdated = DateTime.UtcNow;
+                                            studentEnrollmentList.IsActive = false;
+                                            this.context?.StudentEnrollment.AddRange(studentEnrollmentList);
+                                            this.context?.SaveChanges();
+                                            EnrollmentId++;
+                                            
+                                            studentEnrollmentList.TenantId = studentEnrollmentList.TenantId;
+                                            studentEnrollmentList.SchoolId = (int)studentEnrollmentList.TransferredSchoolId;
+                                            studentEnrollmentList.EnrollmentId = (int)EnrollmentId;
+                                            studentEnrollmentList.EnrollmentDate = studentEnrollmentList.EnrollmentDate;
+                                            studentEnrollmentList.EnrollmentCode = studentTransferIn.Title;
+                                            studentEnrollmentList.ExitCode = null;
+                                            studentEnrollmentList.ExitDate = null;
+                                            studentEnrollmentList.SchoolName = studentEnrollmentList.SchoolTransferred;
+                                            studentEnrollmentList.SchoolTransferred = null;
+                                            studentEnrollmentList.TransferredSchoolId = null;
+                                            studentEnrollmentList.GradeLevelTitle = studentEnrollmentList.TransferredGrade;
+                                            studentEnrollmentList.TransferredGrade = null;
+                                            studentEnrollmentList.CalenderId = calenderId;
+                                            studentEnrollmentList.RollingOption = studentEnrollmentListModel.RollingOption;
+                                            studentEnrollmentList.LastUpdated = DateTime.UtcNow;
+                                            studentEnrollmentList.IsActive = true;
+                                            this.context?.StudentEnrollment.AddRange(studentEnrollmentList);
+                                            EnrollmentId++;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        //This block save data for student's Roll over or Drop in same grade details
+                                        studentEnrollmentUpdate.ExitCode = studentExitCode.Title;
+                                        studentEnrollmentUpdate.ExitDate = studentEnrollmentList.ExitDate;
+                                        studentEnrollmentUpdate.TransferredGrade = studentEnrollmentList.GradeLevelTitle;                                
+                                        studentEnrollmentUpdate.LastUpdated = DateTime.UtcNow;
+                                        studentEnrollmentUpdate.UpdatedBy = studentEnrollmentList.UpdatedBy;
+                                        studentEnrollmentUpdate.IsActive = false;
+
+                                        studentEnrollment.EnrollmentId = (int)EnrollmentId;
+                                        studentEnrollment.TenantId = studentEnrollmentList.TenantId;
+                                        studentEnrollment.SchoolId = (int)studentEnrollmentList.SchoolId;
+                                        studentEnrollment.StudentId = studentEnrollmentList.StudentId;
+                                        studentEnrollment.CalenderId = studentEnrollmentListModel.CalenderId;
+                                        studentEnrollment.SchoolName = studentEnrollmentList.SchoolName;
+                                        studentEnrollment.EnrollmentDate = studentEnrollmentList.ExitDate;
+                                        studentEnrollment.EnrollmentCode = studentExitCode.Title;
+                                        studentEnrollment.GradeLevelTitle = studentEnrollmentList.GradeLevelTitle;
+                                        studentEnrollment.RollingOption = studentEnrollmentListModel.RollingOption;
+                                        studentEnrollment.UpdatedBy = studentEnrollmentList.UpdatedBy;
+                                        studentEnrollment.LastUpdated = DateTime.UtcNow;
+                                        studentEnrollment.StudentGuid = studentEnrollmentUpdate.StudentGuid;
+                                        studentEnrollment.IsActive = true;
+                                        this.context?.StudentEnrollment.Add(studentEnrollment);
+                                        EnrollmentId++;
+                                    }                                  
+                                }
+                                else
+                                {
+                                    //This block for update existing enrollment details only
+                                    var studentEnrollmentCode = this.context?.StudentEnrollmentCode.FirstOrDefault(x => x.TenantId == studentEnrollmentList.TenantId && x.SchoolId == studentEnrollmentList.SchoolId && x.EnrollmentCode.ToString() == studentEnrollmentList.EnrollmentCode);
+
+                                    studentEnrollmentUpdate.EnrollmentCode = studentEnrollmentCode.Title;
+                                    studentEnrollmentUpdate.EnrollmentDate = studentEnrollmentList.EnrollmentDate;
+                                    studentEnrollmentUpdate.GradeLevelTitle = studentEnrollmentList.GradeLevelTitle;
+                                    studentEnrollmentUpdate.RollingOption = studentEnrollmentListModel.RollingOption;
+                                    studentEnrollmentUpdate.CalenderId = studentEnrollmentListModel.CalenderId;
+                                    studentEnrollmentUpdate.LastUpdated = DateTime.UtcNow;
+                                    studentEnrollmentUpdate.UpdatedBy = studentEnrollmentList.UpdatedBy;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            //fetching student details from studentMaster table for the new school if exist previously
+                            var checkStudentAlreadyExistInTransferredSchool = this.context?.StudentMaster.FirstOrDefault(x => x.TenantId == studentEnrollmentList.TenantId && x.SchoolId == studentEnrollmentList.SchoolId && x.StudentGuid == studentEnrollmentListModel.StudentGuid);
+
+                            if (checkStudentAlreadyExistInTransferredSchool != null)
+                            {
+                                checkStudentAlreadyExistInTransferredSchool.IsActive = true;
+                                checkStudentAlreadyExistInTransferredSchool.EnrollmentType = "External";
+                                this.context?.SaveChanges();
+
+                                studentEnrollmentList.StudentId = (int)checkStudentAlreadyExistInTransferredSchool.StudentId;
+                            }
+                            else
+                            {
+                                //This block for student new enrollment in another school as external school
+                                var studentData = this.context?.StudentMaster.FirstOrDefault(x => x.TenantId == studentEnrollmentListModel.TenantId && x.SchoolId == studentEnrollmentListModel.SchoolId && x.StudentId == studentEnrollmentListModel.StudentId);
+                                if (studentData != null)
+                                {
+                                    int? MasterStudentId = 0;
+
+                                    var studentDataForNewSchool = this.context?.StudentMaster.Where(x => x.SchoolId == studentEnrollmentList.SchoolId && x.TenantId == studentEnrollmentList.TenantId).OrderByDescending(x => x.StudentId).FirstOrDefault();
+
+                                    if (studentDataForNewSchool != null)
+                                    {
+                                        MasterStudentId = studentDataForNewSchool.StudentId + 1;
+                                    }
+                                    else
+                                    {
+                                        MasterStudentId = 1;
+                                    }
+
+                                    StudentMaster studentMaster = new StudentMaster() { TenantId = studentData.TenantId, SchoolId = studentEnrollmentList.SchoolId, StudentId = (int)MasterStudentId, AlternateId = studentData.AlternateId, DistrictId = studentData.DistrictId, StateId = studentData.StateId, AdmissionNumber = studentData.AdmissionNumber, RollNumber = studentData.RollNumber, Salutation = studentData.Salutation, FirstGivenName = studentData.FirstGivenName, MiddleName = studentData.MiddleName, LastFamilyName = studentData.LastFamilyName, Suffix = studentData.Suffix, PreferredName = studentData.PreferredName, PreviousName = studentData.PreviousName, SocialSecurityNumber = studentData.SocialSecurityNumber, OtherGovtIssuedNumber = studentData.OtherGovtIssuedNumber, StudentPhoto = studentData.StudentPhoto, Dob = studentData.Dob, Gender = studentData.Gender, Race = studentData.Race, Ethnicity = studentData.Ethnicity, MaritalStatus = studentData.MaritalStatus, CountryOfBirth = studentData.CountryOfBirth, Nationality = studentData.Nationality, FirstLanguageId = studentData.FirstLanguageId, SecondLanguageId = studentData.SecondLanguageId, ThirdLanguageId = studentData.ThirdLanguageId, HomePhone = studentData.HomePhone, MobilePhone = studentData.MobilePhone, PersonalEmail = studentData.PersonalEmail, SchoolEmail = studentData.SchoolEmail, Twitter = studentData.Twitter, Facebook = studentData.Facebook, Instagram = studentData.Instagram, Youtube = studentData.Youtube, Linkedin = studentData.Linkedin, HomeAddressLineOne = studentData.HomeAddressLineOne, HomeAddressLineTwo = studentData.HomeAddressLineTwo, HomeAddressCountry = studentData.HomeAddressCountry, HomeAddressState = studentData.HomeAddressState, HomeAddressCity = studentData.HomeAddressCity, HomeAddressZip = studentData.HomeAddressZip, BusNo = studentData.BusNo, SchoolBusPickUp = studentData.SchoolBusPickUp, SchoolBusDropOff = studentData.SchoolBusDropOff, MailingAddressSameToHome = studentData.MailingAddressSameToHome, MailingAddressLineOne = studentData.MailingAddressLineOne, MailingAddressLineTwo = studentData.MailingAddressLineTwo, MailingAddressCountry = studentData.MailingAddressCountry, MailingAddressState = studentData.MailingAddressState, MailingAddressCity = studentData.MailingAddressCity, MailingAddressZip = studentData.MailingAddressZip, StudentPortalId = studentData.StudentPortalId, AlertDescription = studentData.AlertDescription, CriticalAlert = studentData.CriticalAlert, Dentist = studentData.Dentist, DentistPhone = studentData.DentistPhone, InsuranceCompany = studentData.InsuranceCompany, InsuranceCompanyPhone = studentData.InsuranceCompanyPhone, MedicalFacility = studentData.MedicalFacility, MedicalFacilityPhone = studentData.MedicalFacilityPhone, PolicyHolder = studentData.PolicyHolder, PolicyNumber = studentData.PolicyNumber, PrimaryCarePhysician = studentData.PrimaryCarePhysician, PrimaryCarePhysicianPhone = studentData.PrimaryCarePhysicianPhone, Vision = studentData.Vision, VisionPhone = studentData.VisionPhone, Associationship = studentData.Associationship, EconomicDisadvantage = studentData.EconomicDisadvantage, Eligibility504 = studentData.Eligibility504, EstimatedGradDate = studentData.EstimatedGradDate, FreeLunchEligibility = studentData.FreeLunchEligibility, LepIndicator = studentData.LepIndicator, SectionId = studentData.SectionId, SpecialEducationIndicator = studentData.SpecialEducationIndicator, StudentInternalId = studentData.StudentInternalId, LastUpdated = DateTime.UtcNow, UpdatedBy = studentData.UpdatedBy, EnrollmentType = "External", IsActive = true, StudentGuid = studentData.StudentGuid };
+
+                                    //studentData.SchoolId = studentEnrollmentList.SchoolId;
+                                    //studentData.StudentId = (int)MasterStudentId;
+                                    //studentData.EnrollmentType = "External";
+                                    //studentData.IsActive = true;
+                                    //studentData.LastUpdated = DateTime.UtcNow;
+                                    //this.context?.StudentMaster.Add(studentData);
+                                    this.context?.StudentMaster.Add(studentMaster);
+                                    this.context?.SaveChanges();
+
+                                    studentEnrollmentList.StudentId = (int)MasterStudentId;
+                                }
+                            }
+
+                            var studentEnrollmentCode = this.context?.StudentEnrollmentCode.FirstOrDefault(x => x.TenantId == studentEnrollmentList.TenantId && x.SchoolId == studentEnrollmentList.SchoolId && x.EnrollmentCode.ToString() == studentEnrollmentList.EnrollmentCode);
+
+                            int? calenderId = null;
+
+                            var defaultCalender = this.context?.SchoolCalendars.FirstOrDefault(x => x.TenantId == studentEnrollmentList.TenantId && x.SchoolId == studentEnrollmentList.SchoolId && x.AcademicYear == studentEnrollmentListModel.AcademicYear && x.DefaultCalender == true);
+
+                            if (defaultCalender != null)
+                            {
+                                calenderId = defaultCalender.CalenderId;
+                            }
+
+                            studentEnrollmentList.TenantId = studentEnrollmentList.TenantId;
+                            studentEnrollmentList.SchoolId = studentEnrollmentList.SchoolId;
+                            
+                            studentEnrollmentList.EnrollmentId = (int)EnrollmentId;
+                            studentEnrollmentList.EnrollmentDate = studentEnrollmentList.EnrollmentDate;
+                            studentEnrollmentList.EnrollmentCode = studentEnrollmentCode.Title;
+                            studentEnrollmentList.CalenderId = calenderId;
+                            studentEnrollmentList.RollingOption = studentEnrollmentListModel.RollingOption;
+                            studentEnrollmentList.LastUpdated = DateTime.UtcNow;
+                            studentEnrollmentList.IsActive = true;
+                            this.context?.StudentEnrollment.AddRange(studentEnrollmentList);
+                            EnrollmentId++;
+                        }
+                    }
+                    this.context?.SaveChanges();
+                    transaction.Commit();
+                    studentEnrollmentListModel._failure = false;
+                }
+                catch (Exception es)
+                {
+                    transaction.Rollback();
+                    studentEnrollmentListModel._failure = true;
+                    studentEnrollmentListModel._message = es.Message;
+                }
+                return studentEnrollmentListModel;
+            }
+        }
+        /// <summary>
+        /// Get All Student Enrollment
+        /// </summary>
+        /// <param name="studentEnrollmentListViewModel"></param>
+        /// <returns></returns>
+        public StudentEnrollmentListViewModel GetAllStudentEnrollment(StudentEnrollmentListViewModel studentEnrollmentListViewModel)
+        {
+            StudentEnrollmentListViewModel studentEnrollmentListView = new StudentEnrollmentListViewModel();
             try
             {
+                //fetch default calender id
+                int? calenderId = null;                
 
-                var studentEnrollmentList = this.context?.StudentEnrollment.Where(x => x.TenantId == studentEnrollmentListModel.TenantId && x.StudentId == studentEnrollmentListModel.StudentId).ToList();
-                if (studentEnrollmentList.Count>0)
+                var defaultCalender = this.context?.SchoolCalendars.FirstOrDefault(x => x.TenantId == studentEnrollmentListViewModel.TenantId && x.SchoolId == studentEnrollmentListViewModel.SchoolId && x.AcademicYear.ToString() == studentEnrollmentListViewModel.AcademicYear && x.DefaultCalender == true);
+
+                if (defaultCalender != null)
                 {
-                    studentEnrollmentListView.studentEnrollments = studentEnrollmentList;
-                    studentEnrollmentListView.studentEnrollments = studentEnrollmentList;
-                    studentEnrollmentListView._tenantName = studentEnrollmentListModel._tenantName;
-                    studentEnrollmentListView._token = studentEnrollmentListModel._token;
-                    studentEnrollmentListView._failure = false;
+                    calenderId = defaultCalender.CalenderId;
                 }
-                else
+
+                var studentEnrollmentList = this.context?.StudentEnrollment.Where(x => x.TenantId == studentEnrollmentListViewModel.TenantId && x.StudentGuid == studentEnrollmentListViewModel.StudentGuid).OrderByDescending(x => x.EnrollmentId).ToList();
+
+                if(studentEnrollmentList.Count>0)
                 {
-                    studentEnrollmentListView.studentEnrollments = null;
-                    studentEnrollmentListView._tenantName = studentEnrollmentListModel._tenantName;
-                    studentEnrollmentListView._token = studentEnrollmentListModel._token;
+                    var studentEnrollment = studentEnrollmentList.Select(y => new StudentEnrollmentListForView
+                    {
+                        TenantId = y.TenantId,
+                        SchoolId = y.SchoolId,
+                        StudentId = y.StudentId,
+                        GradeLevelTitle = y.GradeLevelTitle,
+                        RollingOption = y.RollingOption,
+                        SchoolName = y.SchoolName,
+                        LastUpdated = y.LastUpdated,
+                        SchoolTransferred = y.SchoolTransferred,
+                        TransferredGrade = y.TransferredGrade,
+                        TransferredSchoolId = y.TransferredSchoolId,
+                        UpdatedBy = y.UpdatedBy,
+                        AcademicYear = this.context?.SchoolCalendars.FirstOrDefault(z => z.CalenderId == y.CalenderId && z.SchoolId == y.SchoolId)?.AcademicYear,
+                        CalenderId = y.CalenderId,
+                        EnrollmentCode = y.EnrollmentCode,
+                        EnrollmentId = y.EnrollmentId,
+                        EnrollmentDate = y.EnrollmentDate,
+                        ExitCode = y.ExitCode,
+                        ExitDate = y.ExitDate,
+                        StudentGuid=y.StudentGuid,
+                        EnrollmentType=this.context?.StudentEnrollmentCode.FirstOrDefault(s => s.TenantId==y.TenantId && s.SchoolId==y.SchoolId && s.Title == y.EnrollmentCode)?.Type,
+                        ExitType = this.context?.StudentEnrollmentCode.FirstOrDefault(s => s.TenantId == y.TenantId && s.SchoolId == y.SchoolId && s.Title == y.ExitCode)?.Type,
+                        Type = this.context?.StudentMaster.FirstOrDefault(s => s.TenantId == y.TenantId && s.SchoolId == y.SchoolId && s.StudentId == y.StudentId)?.EnrollmentType
+                    }).ToList();
+                    studentEnrollmentListView.studentEnrollmentListForView = studentEnrollment;
+                    studentEnrollmentListView.TenantId = studentEnrollmentListViewModel.TenantId;
+                    studentEnrollmentListView.CalenderId = calenderId;
+                    studentEnrollmentListView.AcademicYear = studentEnrollmentListViewModel.AcademicYear;
+                    studentEnrollmentListView.RollingOption = "Next Grade at Current School";
+                    studentEnrollmentListView.StudentId = studentEnrollmentListViewModel.StudentId;
+                    studentEnrollmentListView._tenantName = studentEnrollmentListViewModel._tenantName;
+                    studentEnrollmentListView._token = studentEnrollmentListViewModel._token;
+                    studentEnrollmentListView._failure = false;
+                }               
+                 else
+                {
+                    studentEnrollmentListView.studentEnrollmentListForView = null;
+                    studentEnrollmentListView._tenantName = studentEnrollmentListViewModel._tenantName;
                     studentEnrollmentListView._failure = true;
                     studentEnrollmentListView._message = NORECORDFOUND;
                 }                
@@ -769,54 +1267,12 @@ namespace opensis.data.Repository
             {
                 studentEnrollmentListView._message = es.Message;
                 studentEnrollmentListView._failure = true;
-                studentEnrollmentListView._tenantName = studentEnrollmentListModel._tenantName;
-                studentEnrollmentListView._token = studentEnrollmentListModel._token;
+                studentEnrollmentListView._tenantName = studentEnrollmentListViewModel._tenantName;
+                studentEnrollmentListView._token = studentEnrollmentListViewModel._token;
             }
             return studentEnrollmentListView;
         }
-        /// <summary>
-        /// Update Enrollment
-        /// </summary>
-        /// <param name="student"></param>
-        /// <returns></returns>
-        //    public StudentAddViewModel UpdateEnrollment(StudentAddViewModel student)
-        //    {
-        //        try
-        //        {
-        //            var studentUpdate = this.context?.StudentEnrollment.FirstOrDefault(x => x.TenantId == student.studentEnrollment.TenantId && x.SchoolId == student.studentEnrollment.SchoolId && x.StudentId == student.studentEnrollment.StudentId);
-
-        //            studentUpdate.TenantId = student.studentEnrollment.TenantId;
-        //            studentUpdate.SchoolId = student.studentEnrollment.SchoolId;
-        //            studentUpdate.StudentId = student.studentEnrollment.StudentId;
-        //            studentUpdate.EnrollmentId = student.studentEnrollment.EnrollmentId;
-        //            studentUpdate.GradeId = student.studentEnrollment.GradeId;
-        //            studentUpdate.SectionId = student.studentEnrollment.SectionId;
-        //            studentUpdate.StartDate = student.studentEnrollment.StartDate;
-        //            studentUpdate.EndDate = student.studentEnrollment.EndDate;
-        //            studentUpdate.EnrollmentCode = student.studentEnrollment.EnrollmentCode;
-        //            studentUpdate.DropCode = student.studentEnrollment.DropCode;
-        //            studentUpdate.NextSchool = student.studentEnrollment.NextSchool;
-        //            studentUpdate.CalendarId = student.studentEnrollment.CalendarId;
-        //            studentUpdate.LastSchool = student.studentEnrollment.LastSchool;
-        //            studentUpdate.LastUpdated = DateTime.UtcNow;
-        //            studentUpdate.UpdatedBy = student.studentEnrollment.UpdatedBy;
-
-        //            this.context?.SaveChanges();
-        //            student._failure = false;
-
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            student.studentEnrollment = null;
-        //            student._failure = true;
-        //            student._message = ex.Message;
-
-        //        }
-        //        return student;
-
-        //    }
-
-
+       
 
         /// <summary>
         /// View Student By Id
@@ -834,8 +1290,19 @@ namespace opensis.data.Repository
                 if (studentData != null)
                 {
                     studentView.studentMaster = studentData;
+                    studentView.CurrentGradeLevel = this.context?.StudentEnrollment.Where(x => x.TenantId == studentData.TenantId && x.StudentGuid == studentData.StudentGuid && x.IsActive == true).Select(x => x.GradeLevelTitle).FirstOrDefault();
 
-                    var customFields = this.context?.FieldsCategory.Where(x => x.TenantId == student.studentMaster.TenantId && x.SchoolId == student.studentMaster.SchoolId && x.Module == "Student").OrderByDescending(x=>x.IsSystemCategory).ThenBy(x=>x.SortOrder)
+                    if (studentData.StudentPortalId != null)
+                    {
+                        var userMasterData = this.context?.UserMaster.FirstOrDefault(x => x.EmailAddress == studentData.StudentPortalId);
+
+                        if (userMasterData != null)
+                        {
+                            studentView.LoginEmail = userMasterData.EmailAddress;
+                            studentView.PortalAccess = userMasterData.IsActive;
+                        }
+                    }
+                   var customFields = this.context?.FieldsCategory.Where(x => x.TenantId == student.studentMaster.TenantId && x.SchoolId == student.studentMaster.SchoolId && x.Module == "Student").OrderByDescending(x=>x.IsSystemCategory).ThenBy(x=>x.SortOrder)
                         .Select(y => new FieldsCategory
                         {
                             TenantId = y.TenantId,
@@ -871,15 +1338,21 @@ namespace opensis.data.Repository
                             }).OrderByDescending(x=>x.SystemField).ThenBy(x=>x.SortOrder).ToList()
                         }).ToList();
                     studentView.fieldsCategoryList = customFields;
+                    studentView._tenantName = student._tenantName;
+                    studentView._token = student._token;
                 }
                 else
                 {
+                    studentView._tenantName = student._tenantName;
+                    studentView._token = student._token;
                     studentView._failure = true;
                     studentView._message = NORECORDFOUND;
                 }
             }
             catch (Exception es)
             {
+                studentView._tenantName = student._tenantName;
+                studentView._token = student._token;
                 studentView._failure = true;
                 studentView._message = es.Message;
             }
@@ -935,28 +1408,58 @@ namespace opensis.data.Repository
             try
             {
                 int resultData;
-                var StudentSibling = this.context?.StudentMaster.Where(x => x.FirstGivenName == studentSiblingListViewModel.FirstGivenName && x.LastFamilyName == studentSiblingListViewModel.LastFamilyName && x.TenantId == studentSiblingListViewModel.TenantId && (studentSiblingListViewModel.SchoolId == null || (x.SchoolId == studentSiblingListViewModel.SchoolId)) && (studentSiblingListViewModel.Dob == null || (x.Dob == studentSiblingListViewModel.Dob)) && (studentSiblingListViewModel.StudentInternalId == null || (x.StudentInternalId.ToLower().Trim() == studentSiblingListViewModel.StudentInternalId.ToLower().Trim()))).ToList();               
-                if (StudentSibling.Count > 0)
+                var studentData = (from student in this.context?.StudentMaster
+                                   join enrollment in this.context?.StudentEnrollment on student.StudentId equals enrollment.StudentId
+                                   where student.SchoolId == enrollment.SchoolId && student.TenantId == enrollment.TenantId && enrollment.GradeLevelTitle != null
+                                   select new
+                                   {
+                                       student.TenantId,
+                                       student.SchoolId,
+                                       student.StudentId,
+                                       student.HomeAddressLineOne,
+                                       student.HomeAddressLineTwo,
+                                       student.HomeAddressCountry,
+                                       student.HomeAddressState,
+                                       student.HomeAddressCity,
+                                       student.HomeAddressZip,
+                                       student.StudentInternalId,
+                                       student.FirstGivenName,
+                                       student.MiddleName,
+                                       student.LastFamilyName,
+                                       student.Dob,
+                                       enrollment.GradeLevelTitle
+                                   });
+                if (studentData != null && studentData.Count() > 0)
                 {
-                    var siblingsOfStudent = StudentSibling.Select(s => new GetStudentForView
+                    var StudentSibling = studentData.Where(x => x.FirstGivenName == studentSiblingListViewModel.FirstGivenName && x.LastFamilyName == studentSiblingListViewModel.LastFamilyName && x.TenantId == studentSiblingListViewModel.TenantId && x.GradeLevelTitle == studentSiblingListViewModel.GradeLevelTitle && (studentSiblingListViewModel.SchoolId == null || (x.SchoolId == studentSiblingListViewModel.SchoolId)) && (studentSiblingListViewModel.Dob == null || (x.Dob == studentSiblingListViewModel.Dob)) && (studentSiblingListViewModel.StudentInternalId == null || (x.StudentInternalId.ToLower().Trim() == studentSiblingListViewModel.StudentInternalId.ToLower().Trim()))).ToList();
+                    if (StudentSibling.Count > 0)
                     {
-                        FirstGivenName = s.FirstGivenName,
-                        LastFamilyName = s.LastFamilyName,
-                        Dob = s.Dob,
-                        StudentId = s.StudentId,
-                        StudentInternalId=s.StudentInternalId,
-                        SchoolId=s.SchoolId,
-                        TenantId=s.TenantId,
-                        SchoolName = this.context?.SchoolMaster.Where(x=>x.SchoolId== s.SchoolId)?.Select(e=>e.SchoolName).FirstOrDefault(),
-                        Address= ToFullAddress(s.HomeAddressLineOne, s.HomeAddressLineTwo,
-                    int.TryParse(s.HomeAddressCity, out resultData) == true ? this.context.City.Where(x => x.Id == Convert.ToInt32(s.HomeAddressCity)).FirstOrDefault().Name : s.HomeAddressCity,
-                    int.TryParse(s.HomeAddressState, out resultData) == true ? this.context.State.Where(x => x.Id == Convert.ToInt32(s.HomeAddressState)).FirstOrDefault().Name : s.HomeAddressState,
-                    int.TryParse(s.HomeAddressCountry, out resultData) == true ? this.context.Country.Where(x => x.Id == Convert.ToInt32(s.HomeAddressCountry)).FirstOrDefault().Name : string.Empty, s.HomeAddressZip),
-                    }).ToList();
-                    StudentSiblingList.getStudentForView = siblingsOfStudent;
-                    StudentSiblingList._tenantName = studentSiblingListViewModel._tenantName;
-                    StudentSiblingList._token = studentSiblingListViewModel._token;
-                    StudentSiblingList._failure = false;
+                        var siblingsOfStudent = StudentSibling.Select(s => new GetStudentForView
+                        {
+                            FirstGivenName = s.FirstGivenName,
+                            LastFamilyName = s.LastFamilyName,
+                            Dob = s.Dob,
+                            StudentId = s.StudentId,
+                            StudentInternalId = s.StudentInternalId,
+                            SchoolId = s.SchoolId,
+                            TenantId = s.TenantId,
+                            SchoolName = this.context?.SchoolMaster.Where(x => x.SchoolId == s.SchoolId)?.Select(e => e.SchoolName).FirstOrDefault(),
+                            Address = ToFullAddress(s.HomeAddressLineOne, s.HomeAddressLineTwo,
+                        int.TryParse(s.HomeAddressCity, out resultData) == true ? this.context.City.Where(x => x.Id == Convert.ToInt32(s.HomeAddressCity)).FirstOrDefault().Name : s.HomeAddressCity,
+                        int.TryParse(s.HomeAddressState, out resultData) == true ? this.context.State.Where(x => x.Id == Convert.ToInt32(s.HomeAddressState)).FirstOrDefault().Name : s.HomeAddressState,
+                        int.TryParse(s.HomeAddressCountry, out resultData) == true ? this.context.Country.Where(x => x.Id == Convert.ToInt32(s.HomeAddressCountry)).FirstOrDefault().Name : string.Empty, s.HomeAddressZip),
+                            GradeLevelTitle = s.GradeLevelTitle
+                        }).ToList();
+                        StudentSiblingList.getStudentForView = siblingsOfStudent;
+                        StudentSiblingList._tenantName = studentSiblingListViewModel._tenantName;
+                        StudentSiblingList._token = studentSiblingListViewModel._token;
+                        StudentSiblingList._failure = false;
+                    }
+                    else
+                    {
+                        StudentSiblingList._failure = true;
+                        StudentSiblingList._message = NORECORDFOUND;
+                    }
                 }
                 else
                 {
@@ -986,8 +1489,8 @@ namespace opensis.data.Repository
             {
                 if (siblingAddUpdateForStudentModel.studentMaster.StudentId > 0)
                 {
-                    var studentAssociateTo = this.context?.StudentMaster.FirstOrDefault(x => x.StudentId == siblingAddUpdateForStudentModel.studentMaster.StudentId);
-                    var studentAssociateBy = this.context?.StudentMaster.FirstOrDefault(x => x.StudentId == siblingAddUpdateForStudentModel.StudentId);
+                    var studentAssociateTo = this.context?.StudentMaster.FirstOrDefault(x => x.StudentId == siblingAddUpdateForStudentModel.studentMaster.StudentId && x.SchoolId == siblingAddUpdateForStudentModel.studentMaster.SchoolId);
+                    var studentAssociateBy = this.context?.StudentMaster.FirstOrDefault(x => x.StudentId == siblingAddUpdateForStudentModel.StudentId && x.SchoolId == siblingAddUpdateForStudentModel.SchoolId);
                     if (studentAssociateTo != null)
                     {
                         if (studentAssociateTo.Associationship != null)
@@ -1048,7 +1551,11 @@ namespace opensis.data.Repository
             try
             {
                 var Associationship = studentListModel.TenantId + "#" + studentListModel.SchoolId + "#" + studentListModel.StudentId;
-                var studentAssociationship = this.context?.StudentMaster.Where(x => x.Associationship.Contains(Associationship)).Include(x=>x.SchoolMaster).ToList();
+                var studentAssociationship = this.context?.StudentMaster.Where(x => x.Associationship.Contains(Associationship)).Include(x=>x.SchoolMaster).Include(x=>x.StudentEnrollment).ToList();
+                foreach(var studentData in studentAssociationship)
+                {
+                    studentData.StudentEnrollment = studentData.StudentEnrollment.Where(x => x.IsActive == true && x.SchoolId == studentData.SchoolId && x.TenantId == studentData.TenantId && x.StudentId == studentData.StudentId).ToList();
+                }
                 if (studentAssociationship.Count > 0)
                 {
                     studentList.studentMaster = studentAssociationship;
@@ -1083,12 +1590,12 @@ namespace opensis.data.Repository
             {
                 string StudentAssociateToAfterDel;
                 string StudentAssociateByAfterDel;
-                var StudentAssociateTo = this.context?.StudentMaster.FirstOrDefault(x => x.StudentId == siblingAddUpdateForStudentModel.studentMaster.StudentId);
-                var StudentAssociateBy = this.context?.StudentMaster.FirstOrDefault(x => x.StudentId == siblingAddUpdateForStudentModel.StudentId);
+                var StudentAssociateTo = this.context?.StudentMaster.FirstOrDefault(x => x.StudentId == siblingAddUpdateForStudentModel.studentMaster.StudentId && x.SchoolId == siblingAddUpdateForStudentModel.studentMaster.SchoolId);
+                var StudentAssociateBy = this.context?.StudentMaster.FirstOrDefault(x => x.StudentId == siblingAddUpdateForStudentModel.StudentId && x.SchoolId == siblingAddUpdateForStudentModel.SchoolId);
                 var StudentAssociateToDataDel = siblingAddUpdateForStudentModel.studentMaster.TenantId + "#" + siblingAddUpdateForStudentModel.studentMaster.SchoolId + "#" + siblingAddUpdateForStudentModel.studentMaster.StudentId;
                 var StudentAssociateByDataDel = siblingAddUpdateForStudentModel.studentMaster.TenantId + "#" + siblingAddUpdateForStudentModel.SchoolId + "#" + siblingAddUpdateForStudentModel.StudentId;
 
-                if (StudentAssociateTo != null)
+                if (StudentAssociateTo != null && StudentAssociateTo.Associationship != null)
                 {
                     var AssociationshipToData = StudentAssociateTo.Associationship;
 
@@ -1111,7 +1618,7 @@ namespace opensis.data.Repository
                     StudentAssociateTo.Associationship = StudentAssociateToAfterDel;
                 }
 
-                if (StudentAssociateBy != null)
+                if (StudentAssociateBy != null && StudentAssociateBy.Associationship != null)
                 {
                     var AssociationshipByData = StudentAssociateBy.Associationship;
 
@@ -1132,9 +1639,10 @@ namespace opensis.data.Repository
                         StudentAssociateByAfterDel = null;
                     }
                     StudentAssociateBy.Associationship = StudentAssociateByAfterDel;
+                    siblingAddUpdateForStudentModel._message = "Associationship Remove Successfully";
                 }
                 this.context?.SaveChanges();
-                siblingAddUpdateForStudentModel._message = "Associationship Remove Successfully";
+                
             }
 
             catch (Exception es)
@@ -1152,7 +1660,7 @@ namespace opensis.data.Repository
         /// <returns></returns>
         public CheckStudentInternalIdViewModel CheckStudentInternalId(CheckStudentInternalIdViewModel checkStudentInternalIdViewModel)
         {
-            var checkInternalId = this.context?.StudentMaster.Where(x =>x.TenantId== checkStudentInternalIdViewModel.TenantId && x.StudentInternalId == checkStudentInternalIdViewModel.StudentInternalId).ToList();
+            var checkInternalId = this.context?.StudentMaster.Where(x => x.TenantId == checkStudentInternalIdViewModel.TenantId && x.SchoolId == checkStudentInternalIdViewModel.SchoolId && x.StudentInternalId == checkStudentInternalIdViewModel.StudentInternalId).ToList();
             if(checkInternalId.Count()>0)
             {
                 checkStudentInternalIdViewModel.IsValidInternalId = false;
@@ -1164,6 +1672,36 @@ namespace opensis.data.Repository
                 checkStudentInternalIdViewModel._message = "Student Internal Id Is Valid";
             }
             return checkStudentInternalIdViewModel;
+        }
+
+        /// <summary>
+        /// Add or Update Student Photo
+        /// </summary>
+        /// <param name="studentAddViewModel"></param>
+        /// <returns></returns>
+        public StudentAddViewModel AddUpdateStudentPhoto(StudentAddViewModel studentAddViewModel)
+        {
+            try
+            {
+                var studentUpdate = this.context?.StudentMaster.FirstOrDefault(x => x.TenantId == studentAddViewModel.studentMaster.TenantId && x.SchoolId == studentAddViewModel.studentMaster.SchoolId && x.StudentId == studentAddViewModel.studentMaster.StudentId);
+                if (studentUpdate != null)
+                {
+                    studentUpdate.StudentPhoto = studentAddViewModel.studentMaster.StudentPhoto;
+                    this.context?.SaveChanges();
+                    studentAddViewModel._message = "Updated Successfully";
+                }
+                else
+                {
+                    studentAddViewModel._failure = true;
+                    studentAddViewModel._message = NORECORDFOUND;
+                }
+            }
+            catch (Exception es)
+            {
+                studentAddViewModel._failure = true;
+                studentAddViewModel._message = es.Message;
+            }
+            return studentAddViewModel;
         }
     }
 }

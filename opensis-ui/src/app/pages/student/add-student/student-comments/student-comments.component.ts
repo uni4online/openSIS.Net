@@ -12,11 +12,13 @@ import icComment from '@iconify/icons-ic/twotone-comment';
 import { MatDialog } from '@angular/material/dialog';
 import { EditCommentComponent } from './edit-comment/edit-comment.component';
 import {StudentService} from '../../../../services/student.service';
+import {ExcelService} from '../../../../services/excel.service';
 import {StudentCommentsListViewModel, StudentCommentsAddView} from '../../../../models/studentCommentsModel';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmDialogComponent } from '../../../../pages/shared-module/confirm-dialog/confirm-dialog.component';
 import { SchoolCreate } from '../../../../enums/school-create.enum';
 import { SharedFunction } from '../../../../pages/shared/shared-function';
+import { DatePipe } from '@angular/common';
 
 
 @Component({
@@ -27,7 +29,8 @@ import { SharedFunction } from '../../../../pages/shared/shared-function';
     stagger60ms,
     fadeInUp400ms,
     fadeInRight400ms
-  ]
+  ],
+  providers: [DatePipe]
 })
 export class StudentCommentsComponent implements OnInit {
 
@@ -36,6 +39,7 @@ export class StudentCommentsComponent implements OnInit {
   icAdd = icAdd;
   icComment = icComment;
   icPrint = icPrint;
+  listCount;
   StudentCreate=SchoolCreate;
   @Input() studentCreateMode:SchoolCreate;
   @Input() studentDetailsForViewAndEdit;
@@ -48,7 +52,9 @@ export class StudentCommentsComponent implements OnInit {
     public translateService:TranslateService,
     private snackbar: MatSnackBar,
     private studentService:StudentService,
-    private commonFunction:SharedFunction
+    private commonFunction:SharedFunction,
+    private excelService:ExcelService,
+    private datePipe: DatePipe
     ) {
     translateService.use('en');
   }
@@ -78,20 +84,55 @@ export class StudentCommentsComponent implements OnInit {
         }
         else{
           if (res._failure) {     
-            this.snackbar.open('Student Comments Not Found. ' + res._message, 'LOL THANKS', {
-              duration: 10000
-            });
+            if(res._message==="NO RECORD FOUND"){
+              if(res.studentCommentsList==null){
+                this.listCount =null;
+                this.studentCommentsListViewModel.studentCommentsList=null ;
+              }
+             
+            } else{
+              this.snackbar.open('Student Comments Not Found. ' + res._message, 'LOL THANKS', {
+                duration: 10000
+              });
+            }
           }
           else {       
             this.studentCommentsListViewModel.studentCommentsList=res.studentCommentsList
+            this.listCount =res.studentCommentsList.length;
             this.studentCommentsListViewModel.studentCommentsList.map(n=>{
               n.lastUpdated=this.commonFunction.serverToLocalDateAndTime(n.lastUpdated)
-            })
+            });
           }
         }
       }
     );
   }
+
+  exportCommentsToExcel(){
+    if(this.studentCommentsListViewModel.studentCommentsList?.length>0 || this.studentCommentsListViewModel.studentCommentsList!=null){
+      let commentList=this.studentCommentsListViewModel.studentCommentsList?.map((item)=>{
+        return{
+                   Comment: this.stripHtml(item.comment),
+                   UpdatedBy: item.updatedBy,
+                   LastUpdated: this.datePipe.transform(item.lastUpdated,'MMM d, y, h:mm a')
+        }
+      });
+      this.excelService.exportAsExcelFile(commentList,'Comments_')
+     }else{
+       this.snackbar.open('No Records Found. Failed to Export Comments','', {
+         duration: 5000
+       });
+     }
+  }
+
+  stripHtml(html){
+    // Create a new div element
+    let temporalDivElement = document.createElement("div");
+    // Set the HTML content with the providen
+    temporalDivElement.innerHTML = html;
+    // Retrieve the text property of the element (cross-browser support)
+    return temporalDivElement.textContent || temporalDivElement.innerText || "";
+}
 
   confirmDelete(element){
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {

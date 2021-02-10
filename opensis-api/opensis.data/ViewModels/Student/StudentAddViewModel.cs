@@ -10,8 +10,10 @@ namespace opensis.data.ViewModels.Student
         public StudentMaster studentMaster { get; set; }
         public List<FieldsCategory> fieldsCategoryList { get; set; }
         public int? SelectedCategoryId { get; set; }
-
+        public string AcademicYear { get; set; }
         public string LoginEmail { get; set; }
-        public string PasswordHash {get; set;}
+        public string PasswordHash { get; set; }
+        public bool? PortalAccess { get; set; }
+        public string CurrentGradeLevel { get; set; }
     }
 }

@@ -11,9 +11,9 @@ namespace opensis.data.ViewModels.Student
         public Guid? TenantId { get; set; }
         public int? SchoolId { get; set; }
         public string StudentInternalId { get; set; }
-        public int? GradeId { get; set; }
         public string FirstGivenName { get; set; }
         public string LastFamilyName { get; set; }
         public DateTime? Dob { get; set; }
+        public string GradeLevelTitle { get; set; }
     }
 }

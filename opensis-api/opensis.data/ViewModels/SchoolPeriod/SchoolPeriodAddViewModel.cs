@@ -7,6 +7,6 @@ namespace opensis.data.ViewModels.SchoolPeriod
 {
     public class SchoolPeriodAddViewModel: CommonFields
     {
-        public SchoolPeriods tableSchoolPeriods { get; set; }
+        public SchoolPeriodsObsolete tableSchoolPeriods { get; set; }
     }
 }

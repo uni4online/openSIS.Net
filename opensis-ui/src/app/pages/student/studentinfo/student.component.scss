@@ -1,10 +1,12 @@
-table {
-    width: 100%;
-  }
   .hide{
     display: none;
   }
-  .mat-footer-cell{
-    text-align: center;
-    font-style: italic;
+
+.table-search {
+  width: 70px;
+  transition: all 0.3s ease;
+
+  &:focus {
+    width: 180px;
   }
+}

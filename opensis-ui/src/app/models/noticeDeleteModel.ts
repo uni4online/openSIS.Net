@@ -1,11 +1,15 @@
 import { CommonField } from './commonField';
 
 export class NoticeDeleteModel extends CommonField {
-    public NoticeId: number
+    public NoticeId: number;
+    public schoolId: number;
+    public tenantId: string
     constructor() {
         super();
         this.NoticeId = 0;
-        this._tenantName=sessionStorage.getItem('tenant')
-        this._token=sessionStorage.getItem('token')
+        this._tenantName=sessionStorage.getItem('tenant');
+        this._token=sessionStorage.getItem('token');
+        this.schoolId =  + sessionStorage.getItem('selectedSchoolId');
+        this.tenantId = sessionStorage.getItem("tenantId");
     }
 }

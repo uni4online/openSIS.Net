@@ -18,6 +18,7 @@ import { EnrollmentCodesService } from '../../../services/enrollment-codes.servi
 import { EnrollmentCodeAddView, EnrollmentCodeListView } from '../../../models/enrollmentCodeModel';
 import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confirm-dialog.component';
 import { TranslateService } from '@ngx-translate/core';
+import { ExcelService } from '../../../services/excel.service';
 
 @Component({
   selector: 'vex-enrollment-codes',
@@ -29,7 +30,6 @@ import { TranslateService } from '@ngx-translate/core';
   ]
 })
 export class EnrollmentCodesComponent implements OnInit {
-  @Input()
   columns = [
     { label: 'Title',       property: 'title',      type: 'text', visible: true },
     { label: 'Short Name',  property: 'shortName',  type: 'text', visible: true },
@@ -37,8 +37,6 @@ export class EnrollmentCodesComponent implements OnInit {
     { label: 'Type',        property: 'type',       type: 'text', visible: true },
     { label: 'Action',      property: 'action',     type: 'text', visible: true }
   ];
-
- 
 
   icMoreVert = icMoreVert;
   icAdd = icAdd;
@@ -50,13 +48,14 @@ export class EnrollmentCodesComponent implements OnInit {
   searchKey:string;
   enrollmentCodelistView:EnrollmentCodeListView=new EnrollmentCodeListView();
   enrollmentAddView:EnrollmentCodeAddView=new EnrollmentCodeAddView()
-
+  enrollmentListForExcel:EnrollmentCodeListView;
   constructor(private router: Router,
     private dialog: MatDialog,
     private snackbar: MatSnackBar,
     private enrollmentCodeService:EnrollmentCodesService,
     private loaderService:LoaderService,
-    private translateService : TranslateService
+    private translateService : TranslateService,
+    private excelService:ExcelService
     ) {
       translateService.use('en')
       this.loaderService.isLoading.subscribe((val) => {
@@ -80,17 +79,48 @@ export class EnrollmentCodesComponent implements OnInit {
         }
         else{
           if (res._failure) {     
-            this.snackbar.open('Enrollment code list failed. ' + res._message, 'LOL THANKS', {
-              duration: 10000
-            });
+            if (res._message === "NO RECORD FOUND") {
+              if (res.studentEnrollmentCodeList == null) {
+                this.enrollmentList=new MatTableDataSource([]) ;
+                this.enrollmentList.sort=this.sort; 
+              }
+              else {
+                this.enrollmentList=new MatTableDataSource(res.studentEnrollmentCodeList) ;
+                this.enrollmentList.sort=this.sort;  
+              }
+  
+            } else {
+              this.snackbar.open('Enrollment code list failed.' + res._message, 'LOL THANKS', {
+                duration: 10000
+              });
+            }
           } 
           else { 
             this.enrollmentList=new MatTableDataSource(res.studentEnrollmentCodeList) ;
+            this.enrollmentListForExcel=res;
             this.enrollmentList.sort=this.sort;   
           }
         }
       }
     )
+  }
+
+  exportEnrollmentCodesToExcel(){
+    if(this.enrollmentListForExcel.studentEnrollmentCodeList.length>0){
+      let enrollmentList=this.enrollmentListForExcel.studentEnrollmentCodeList?.map((item)=>{
+        return{
+                   Title: item.title,
+                   ShortName: item.shortName,
+                   SortOrder: item.sortOrder,
+                   Type: item.type,
+        }
+      });
+      this.excelService.exportAsExcelFile(enrollmentList,'Enrollment_List_')
+     }else{
+       this.snackbar.open('No Records Found. Failed to Export Enrollment List','', {
+         duration: 5000
+       });
+     }
   }
 
   goToAdd(){   
@@ -106,9 +136,6 @@ export class EnrollmentCodesComponent implements OnInit {
   }
 
   getPageEvent(event){    
-    // this.getAllSchool.pageNumber=event.pageIndex+1;
-    // this.getAllSchool.pageSize=event.pageSize;
-    // this.callAllSchool(this.getAllSchool);
   }
 
   toggleColumnVisibility(column, event) {

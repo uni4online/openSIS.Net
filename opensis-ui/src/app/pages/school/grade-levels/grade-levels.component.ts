@@ -28,104 +28,129 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   ]
 })
 export class GradeLevelsComponent implements OnInit {
-  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator; 
-  @ViewChild(MatSort) sort:MatSort
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort
 
   icEdit = icEdit;
   icDelete = icDelete;
   icSearch = icSearch;
   icAdd = icAdd;
   icFilterList = icFilterList;
-  getAllGradeLevels:GetAllGradeLevelsModel = new GetAllGradeLevelsModel();
-  gradeLevelList:MatTableDataSource<GetAllGradeLevelsModel>;
-  getGradeEquivalencyList:GelAllGradeEquivalencyModel = new GelAllGradeEquivalencyModel();
-  sendGradeLevelsToDialog:[];
-  editMode:boolean;
-  sendDetailsToEditComponent:[];
-  loading:boolean=false;
-  searchKey:string;
-  deleteGradeLevelData:AddGradeLevelModel=new AddGradeLevelModel();
+  getAllGradeLevels: GetAllGradeLevelsModel = new GetAllGradeLevelsModel();
+  gradeLevelList: MatTableDataSource<GetAllGradeLevelsModel>;
+  getGradeEquivalencyList: GelAllGradeEquivalencyModel = new GelAllGradeEquivalencyModel();
+  sendGradeLevelsToDialog: [];
+  editMode: boolean;
+  sendDetailsToEditComponent: [];
+  loading: boolean = false;
+  searchKey: string;
+  deleteGradeLevelData: AddGradeLevelModel = new AddGradeLevelModel();
   columns = [
     { label: 'Title', property: 'title', type: 'text', visible: true },
     { label: 'Short Name', property: 'shortName', type: 'text', visible: true },
-    { label: 'Sort Order', property: 'sortOrder', type: 'number', visible: true},
-    { label: 'Grade Level Equivalency', property: 'gradeDescription', type: 'text', visible: true},
+    { label: 'Sort Order', property: 'sortOrder', type: 'number', visible: true },
+    { label: 'Grade Level Equivalency', property: 'gradeDescription', type: 'text', visible: true },
     // { label: 'Age Range', property: 'ageRange', type: 'text', visible: false},
     // { label: 'Educational Stage', property: 'educationalStage', type: 'text', visible: false},
-    { label: 'Next Grade', property: 'nextGrade', type: 'text', visible: true},
+    { label: 'Next Grade', property: 'nextGrade', type: 'text', visible: true },
     { label: 'Action', property: 'action', type: 'text', visible: true }
   ];
   constructor(private dialog: MatDialog,
-    public translateService:TranslateService,
-    private gradeLevelService:GradeLevelService,
-    private loaderService:LoaderService,
-    private snackbar: MatSnackBar) { 
-      translateService.use('en');
+    public translateService: TranslateService,
+    private gradeLevelService: GradeLevelService,
+    private loaderService: LoaderService,
+    private snackbar: MatSnackBar) {
+    translateService.use('en');
     this.loaderService.isLoading.subscribe((val) => {
       this.loading = val;
-    }); 
-  }
-    ngOnInit(): void {
-      this.getGradeEquivalency()
-      this.getAllGradeLevel();
-    }
-
-    getGradeEquivalency(){
-      this.gradeLevelService.getAllGradeEquivalency(this.getGradeEquivalencyList).subscribe((res)=>{
-        this.getGradeEquivalencyList=res;
-      })
-    }
-
-  openAddNew() {
-    this.editMode=false;
-    this.dialog.open(EditGradeLevelsComponent, {
-      data: {
-        editMode:this.editMode,
-        gradeLevels:this.sendGradeLevelsToDialog,
-        gradeLevelEquivalencyList:this.getGradeEquivalencyList},
-      width: '600px'
-    }).afterClosed().subscribe((res) => {
-      if(res){
-        this.getAllGradeLevel();
-      }            
     });
   }
-
-  openEdit(editDetails){
-    this.editMode = true;
-    this.dialog.open(EditGradeLevelsComponent,{
-      data:{
-        editMode:this.editMode,
-        editDetails:editDetails,
-        gradeLevels:this.sendGradeLevelsToDialog,
-        gradeLevelEquivalencyList:this.getGradeEquivalencyList
-      },
-      width:'600px'
-    }).afterClosed().subscribe((res) => {
-      if(res){
-        this.getAllGradeLevel();
-      }            
-    });
+  ngOnInit(): void {
+    this.getGradeEquivalency()
+    this.getAllGradeLevel();
   }
 
-
-  getAllGradeLevel(){
-    this.getAllGradeLevels.schoolId=+sessionStorage.getItem("selectedSchoolId");
-    this.getAllGradeLevels._tenantName=sessionStorage.getItem("tenant");
-    this.getAllGradeLevels._token=sessionStorage.getItem("token");
-    this.gradeLevelService.getAllGradeLevels(this.getAllGradeLevels).subscribe((res)=>{
-        this.gradeLevelList = new MatTableDataSource(res.tableGradelevelList);
-        this.gradeLevelList.sort = this.sort;
-        this.sendGradeLevelsToDialog=res.tableGradelevelList;
+  getGradeEquivalency() {
+    this.gradeLevelService.getAllGradeEquivalency(this.getGradeEquivalencyList).subscribe((res) => {
+      this.getGradeEquivalencyList = res;
     })
   }
 
-  onSearchClear(){
-    this.searchKey="";
+  openAddNew() {
+    this.editMode = false;
+    this.dialog.open(EditGradeLevelsComponent, {
+      data: {
+        editMode: this.editMode,
+        gradeLevels: this.sendGradeLevelsToDialog,
+        gradeLevelEquivalencyList: this.getGradeEquivalencyList
+      },
+      width: '600px'
+    }).afterClosed().subscribe((res) => {
+      if (res) {
+        this.getAllGradeLevel();
+      }
+    });
+  }
+
+  openEdit(editDetails) {
+    this.editMode = true;
+    this.dialog.open(EditGradeLevelsComponent, {
+      data: {
+        editMode: this.editMode,
+        editDetails: editDetails,
+        gradeLevels: this.sendGradeLevelsToDialog,
+        gradeLevelEquivalencyList: this.getGradeEquivalencyList
+      },
+      width: '600px'
+    }).afterClosed().subscribe((res) => {
+      if (res) {
+        this.getAllGradeLevel();
+      }
+    });
+  }
+
+
+  getAllGradeLevel() {
+    this.getAllGradeLevels.schoolId = +sessionStorage.getItem("selectedSchoolId");
+    this.getAllGradeLevels._tenantName = sessionStorage.getItem("tenant");
+    this.getAllGradeLevels._token = sessionStorage.getItem("token");
+    this.gradeLevelService.getAllGradeLevels(this.getAllGradeLevels).subscribe((res) => {
+      if (typeof (res) == 'undefined') {
+        this.snackbar.open('Grade Level List failed. ' + sessionStorage.getItem("httpError"), '', {
+          duration: 10000
+        });
+      }
+      else {
+        if (res._failure) {
+          if (res._message === "NO RECORD FOUND") {
+            if (res.tableGradelevelList == null) {
+              this.gradeLevelList = new MatTableDataSource([]);
+              this.gradeLevelList.sort = this.sort;
+              this.sendGradeLevelsToDialog = [];
+            }
+
+          } else {
+            this.snackbar.open('Grade Level List failed. ' + res._message, '', {
+              duration: 10000
+            });
+          }
+
+        }
+        else {
+          this.gradeLevelList = new MatTableDataSource(res.tableGradelevelList);
+          this.gradeLevelList.sort = this.sort;
+          this.sendGradeLevelsToDialog = res.tableGradelevelList;
+        }
+      }
+    })
+  }
+
+  onSearchClear() {
+    this.searchKey = "";
     this.applyFilter();
   }
 
-  applyFilter(){
+  applyFilter() {
     this.gradeLevelList.filter = this.searchKey.trim().toLowerCase()
   }
 
@@ -139,36 +164,37 @@ export class GradeLevelsComponent implements OnInit {
     column.visible = !column.visible;
   }
 
-  confirmDelete(deleteDetails){
+  confirmDelete(deleteDetails) {
     // call our modal window
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       maxWidth: "400px",
       data: {
-          title: "Are you sure?",
-          message: "You are about to delete "+deleteDetails.title+"."}
+        title: "Are you sure?",
+        message: "You are about to delete " + deleteDetails.title + "."
+      }
     });
     // listen to response
     dialogRef.afterClosed().subscribe(dialogResult => {
       // if user pressed yes dialogResult will be true, 
       // if user pressed no - it will be false
-      if(dialogResult){
+      if (dialogResult) {
         this.deleteGradeLevel(deleteDetails);
       }
-   });
+    });
   }
 
-  deleteGradeLevel(deleteDetails){
+  deleteGradeLevel(deleteDetails) {
     this.deleteGradeLevelData.tblGradelevel.schoolId = deleteDetails.schoolId;
     this.deleteGradeLevelData.tblGradelevel.gradeId = deleteDetails.gradeId;
-    this.deleteGradeLevelData._tenantName=sessionStorage.getItem("tenant");
-    this.deleteGradeLevelData._token=sessionStorage.getItem("token");
-    this.gradeLevelService.deleteGradelevel(this.deleteGradeLevelData).subscribe((res)=>{
+    this.deleteGradeLevelData._tenantName = sessionStorage.getItem("tenant");
+    this.deleteGradeLevelData._token = sessionStorage.getItem("token");
+    this.gradeLevelService.deleteGradelevel(this.deleteGradeLevelData).subscribe((res) => {
       if (typeof (res) == 'undefined') {
         this.snackbar.open('Grade Level Deletion failed. ' + sessionStorage.getItem("httpError"), '', {
           duration: 10000
         });
-      }else if (res._failure) {
-        this.snackbar.open(res._message, 'LOL THANKS', {
+      } else if (res._failure) {
+        this.snackbar.open(res._message, '', {
           duration: 10000
         });
       } else {

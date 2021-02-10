@@ -13,6 +13,7 @@ namespace opensis.data.ViewModels.ParentInfos
             getStudentForView = new List<GetStudentForView>();
         }
         public ParentInfo parentInfo { get; set; }
+        public ParentAssociationship parentAssociationship { get;set; }
         public string PasswordHash { get; set; }
         public List<GetStudentForView> getStudentForView { get; set; }
     }

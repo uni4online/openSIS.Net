@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { CalendarEvent, CalendarEventAction, CalendarEventTimesChangedEvent, CalendarMonthViewBeforeRenderEvent, CalendarMonthViewDay, CalendarView, DAYS_OF_WEEK } from 'angular-calendar';
 import { addDays, addHours, endOfDay, endOfMonth, endOfWeek, format, isSameDay, isSameMonth, startOfDay, startOfMonth, startOfWeek, subDays } from 'date-fns';
@@ -25,7 +25,8 @@ import { map } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confirm-dialog.component';
 import * as moment from 'moment';
-
+import { LayoutService } from 'src/@vex/services/layout.service';
+import { LoaderService } from '../../../services/loader.service';
 const colors: any = {
   blue: {
     primary: '#5c77ff',
@@ -42,6 +43,7 @@ const colors: any = {
 };
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'vex-calendar',
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss'],
@@ -59,7 +61,7 @@ const colors: any = {
 
 export class CalendarComponent implements OnInit {
   @ViewChild('modalContent', { static: true }) modalContent: TemplateRef<any>;
-  isMarkingPeriod:string;
+  isMarkingPeriod: string;
   getCalendarList: CalendarListModel = new CalendarListModel();
   getAllMembersList: GetAllMembersList = new GetAllMembersList();
   getAllCalendarEventList: CalendarEventListViewModel = new CalendarEventListViewModel();
@@ -79,16 +81,36 @@ export class CalendarComponent implements OnInit {
   icAdd = icAdd;
   icEdit = icEdit;
   icDelete = icDelete;
-  icWarning=icWarning;
+  icWarning = icWarning;
   events$: Observable<CalendarEvent<{ calendar: CalendarEventModel }>[]>;
   refresh: Subject<any> = new Subject();
   calendarFrom: FormControl;
   cssClass: string;
-  constructor(private http: HttpClient, private dialog: MatDialog,
-    private snackbar: MatSnackBar, public translate: TranslateService, private _membershipService: MembershipService,
-    private _calendarEventService: CalendarEventService, private _calendarService: CalendarService) {
+  loading: boolean;
+  constructor(private http: HttpClient,
+    private dialog: MatDialog,
+    private snackbar: MatSnackBar,
+    public translate: TranslateService,
+    private membershipService: MembershipService,
+    private calendarEventService: CalendarEventService,
+    private calendarService: CalendarService,
+    private layoutService: LayoutService,
+    private loaderService: LoaderService,
+    private cdr: ChangeDetectorRef,) {
     this.translate.setDefaultLang('en');
-    this._calendarEventService.currentEvent.subscribe(
+    if (localStorage.getItem("collapseValue") !== null) {
+      if (localStorage.getItem("collapseValue") === "false") {
+        this.layoutService.expandSidenav();
+      } else {
+        this.layoutService.collapseSidenav();
+      }
+    } else {
+      this.layoutService.expandSidenav();
+    }
+    this.loaderService.isLoading.subscribe((res) => {
+      this.loading = res;
+    });
+    this.calendarEventService.currentEvent.subscribe(
       res => {
         if (res) {
           this.getAllCalendarEvent();
@@ -99,13 +121,17 @@ export class CalendarComponent implements OnInit {
 
   changeCalendar(event) {
     this.getDays(event.days);
-    this._calendarService.setCalendarId(event.calenderId);
+    this.calendarService.setCalendarId(event.calenderId);
     this.getAllCalendarEvent();
+  }
+
+  ngAfterViewChecked() {
+    this.cdr.detectChanges();
   }
 
   //Show all members
   getAllMemberList() {
-    this._membershipService.getAllMembers(this.getAllMembersList).subscribe(
+    this.membershipService.getAllMembers(this.getAllMembersList).subscribe(
       (res) => {
         if (typeof (res) == 'undefined') {
           this.snackbar.open('No Member Found. ' + sessionStorage.getItem("httpError"), '', {
@@ -126,7 +152,7 @@ export class CalendarComponent implements OnInit {
   }
   //Show all calendar
   getAllCalendar() {
-    this._calendarService.getAllCalendar(this.getCalendarList).subscribe((data) => {
+    this.calendarService.getAllCalendar(this.getCalendarList).subscribe((data) => {
       this.calendars = data.calendarList;
       this.showCalendarView = false;
       if (this.calendars.length !== 0) {
@@ -134,21 +160,21 @@ export class CalendarComponent implements OnInit {
         const defaultCalender = this.calendars.find(element => element.defaultCalender === true);
         if (defaultCalender != null) {
           this.selectedCalendar = defaultCalender;
-          this._calendarService.setCalendarId(this.selectedCalendar.calenderId);
+          this.calendarService.setCalendarId(this.selectedCalendar.calenderId);
           this.getDays(this.selectedCalendar.days);
           this.getAllCalendarEvent();
         }
         this.refresh.next();
       }
-      
+
     });
-   
+
   }
 
   // Rendar all events in calendar
   getAllCalendarEvent() {
-    this.getAllCalendarEventList.calendarId = this._calendarService.getCalendarId();
-    this.events$ = this._calendarEventService.getAllCalendarEvent(this.getAllCalendarEventList).pipe(
+    this.getAllCalendarEventList.calendarId = this.calendarService.getCalendarId();
+    this.events$ = this.calendarEventService.getAllCalendarEvent(this.getAllCalendarEventList).pipe(
       map(({ calendarEventList }: { calendarEventList: CalendarEventModel[] }) => {
         return calendarEventList.map((calendar: CalendarEventModel) => {
 
@@ -191,8 +217,8 @@ export class CalendarComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.isMarkingPeriod=sessionStorage.getItem("markingPeriod");
-    if(this.isMarkingPeriod!="null"){
+    this.isMarkingPeriod = sessionStorage.getItem("markingPeriod");
+    if (this.isMarkingPeriod != "null") {
       this.getAllCalendar();
       this.getAllMemberList();
     }
@@ -225,12 +251,12 @@ export class CalendarComponent implements OnInit {
     this.calendarEventAddViewModel.schoolCalendarEvent = event.meta.calendar;
     this.calendarEventAddViewModel.schoolCalendarEvent.startDate = this.formatDate(newEnd);
     this.calendarEventAddViewModel.schoolCalendarEvent.endDate = this.formatDate(newStart);
-    this._calendarEventService.updateCalendarEvent(this.calendarEventAddViewModel).subscribe(data => {
+    this.calendarEventService.updateCalendarEvent(this.calendarEventAddViewModel).subscribe(data => {
       if (data._failure) {
         this.snackbar.open('Event dragging failed. ' + data._message, '', {
           duration: 10000
         });
-      } 
+      }
     });
     this.refresh.next();
   }
@@ -238,7 +264,7 @@ export class CalendarComponent implements OnInit {
   //Open modal for add new calendar
   openAddNewCalendar() {
     this.dialog.open(AddCalendarComponent, {
-      data: { allMembers: this.getAllMembersList, membercount: this.getAllMembersList.getAllMemberList.length,calendarListCount:this.calendars.length },
+      data: { allMembers: this.getAllMembersList, membercount: this.getAllMembersList.getAllMemberList.length, calendarListCount: this.calendars.length },
       width: '600px'
     }).afterClosed().subscribe(data => {
       if (data === 'submited') {
@@ -268,7 +294,7 @@ export class CalendarComponent implements OnInit {
 
   deleteCalendar(id: number) {
     this.calendarAddViewModel.schoolCalendar.calenderId = id;
-    this._calendarService.deleteCalendar(this.calendarAddViewModel).subscribe(
+    this.calendarService.deleteCalendar(this.calendarAddViewModel).subscribe(
       (res) => {
         if (res._failure) {
           this.snackbar.open('Calendar Deletion failed. ' + res._message, '', {
@@ -298,7 +324,7 @@ export class CalendarComponent implements OnInit {
 
   // Open add new event by clicking calendar day
   openAddNewEvent(event) {
-    if (!event.isWeekend) {
+    if (!event.isWeekend && event.inMonth) {
       this.dialog.open(AddEventComponent, {
         data: { allMembers: this.getAllMembersList, membercount: this.getAllMembersList.getAllMemberList.length, day: event },
         width: '600px'
@@ -309,9 +335,16 @@ export class CalendarComponent implements OnInit {
       });
     }
     else {
-      this.snackbar.open('Cannot add event in weekend', '', {
-        duration: 2000
-      });
+      if (event.isWeekend) {
+        this.snackbar.open('Cannot add event in weekend', '', {
+          duration: 2000
+        });
+      }
+      if (!event.isWeekend) {
+        this.snackbar.open('Cannot add event in previous month', '', {
+          duration: 2000
+        });
+      }
 
     }
   }

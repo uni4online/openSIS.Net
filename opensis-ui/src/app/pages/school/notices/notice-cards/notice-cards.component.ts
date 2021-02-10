@@ -33,7 +33,7 @@ export class NoticeCardsComponent implements OnInit {
   @Input() visibleTo: number;
   @Input() getAllMembersList;
 
-  constructor(private dialog: MatDialog,private _noticeService: NoticeService,public translateService: TranslateService, private Activeroute: ActivatedRoute, private snackbar: MatSnackBar) {
+  constructor(private dialog: MatDialog,private noticeService: NoticeService,public translateService: TranslateService, private Activeroute: ActivatedRoute, private snackbar: MatSnackBar) {
     translateService.use('en');
   }
 
@@ -64,20 +64,20 @@ export class NoticeCardsComponent implements OnInit {
 
 deleteNotice(id){
   this.noticeDeleteModel.NoticeId= +id;
-  this._noticeService.deleteNotice(this.noticeDeleteModel).subscribe(
+  this.noticeService.deleteNotice(this.noticeDeleteModel).subscribe(
     (res) => {
     if (res._failure) {
-      this.snackbar.open('Notice Deletion failed. ' + res._message, 'LOL THANKS', {
+      this.snackbar.open('Notice Deletion failed. ' + res._message, '', {
         duration: 10000
       });
     } else {
-       this._noticeService.getAllNotice(this.noticeListViewModel).subscribe((res) => {
-         this.noticeListViewModel = res;
-       });
+      //  this.noticeService.getAllNotice(this.noticeListViewModel).subscribe((res) => {
+      //    this.noticeListViewModel = res;
+      //  });
       this.snackbar.open('Notice Deleted Successful.', '', {
         duration: 10000
       });
-      this._noticeService.changeNotice(true)      
+      this.noticeService.changeNotice(true)      
     }
   });
 }

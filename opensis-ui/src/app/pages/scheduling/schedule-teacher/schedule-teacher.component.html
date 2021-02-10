@@ -1,0 +1,464 @@
+<vex-page-layout>
+    <vex-page-layout-header class="pb-16" fxLayout="column" fxLayoutAlign="center start">
+        <vex-secondary-toolbar current="Schedule Teacher" class="w-full">
+            <vex-breadcrumbs [crumbs]="['Scheduling']" class="flex-auto"></vex-breadcrumbs>
+        </vex-secondary-toolbar>
+    </vex-page-layout-header>
+
+    <vex-page-layout-content class="-mt-6">
+        <div class="card -mt-16">
+            <div class="p-6 text-center">To schedule teachers into course sections, search and select teacher(s) and course section(s) first.</div>
+            <hr class="border-normal">
+            <div class="flex w-full">
+                <div class="w-1/2 border-r border-normal cursor-pointer relative" (click)="selectTeacher()">
+                    <div class="flex items-center">
+                        <div class="w-2/12 bg-green text-white text-center py-6 rounded-bl relative arrow-right">
+                            <i class="icon icon-plus3 sm:text-xl lg:text-4xl"></i>
+                        </div>
+                        <div class="w-10/12 pl-6">
+                            <h2>Teacher</h2>
+                            <p class="text-blue">Select Teacher to Schedule</p>
+                        </div>
+                    </div>
+                    <div class="schedule-icon bg-white"><img src="assets/img/icons/teacher-course-schedule.svg" width="80%" class="inline-block"></div>
+                </div>
+                <div class="w-1/2 cursor-pointer" (click)="selectCourseSection()">
+                    <div class="flex items-center">
+                        <div class="w-10/12 text-right pr-6">
+                            <h2>Course Section</h2>
+                            <p class="text-blue">Select Course Section to Schedule</p>
+                        </div>
+                        <div class="w-2/12 bg-primary text-white text-center py-6 rounded-br relative arrow-left">
+                            <i class="icon icon-plus3 sm:text-xl lg:text-4xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="pt-6">
+            <h4 class="text-primary font-bold">Occurrence</h4>
+            <p>The course occurrences are given below and selected by default. Check teacher availability before proceeding to scheduling.</p>
+            <div class="card mt-4 p-4">
+                <div class="teacher-info mb-2">
+                    <span class="text-lg inline-block align-middle text-green font-bold">Danielle Boucher</span>
+                    <span class="inline-block align-middle ml-3" matTooltip="Homeroom Teacher"><img src="assets/img/icons/homeroom_teacher.svg" class="w-4 opacity-50"></span>
+                    <span class="dot-separator"></span>
+                    <span>#287</span>
+                    <span class="dot-separator"></span>
+                    <span><a href="" class="hover:text-blue">danielle.boucher@example.com</a></span>
+                </div>
+
+                <div class="course-section-occurrence border border-normal rounded bg-skyblue mb-4">
+                    <div class="px-3 py-2">
+                        <span class="text-primary font-bold"><mat-checkbox color="primary" checked="checked">Geometry - GEOM001</mat-checkbox></span>
+                        <span class="dot-separator"></span>
+                        <span>Duration : Quarter 1 (Jan 01, 2021 - Mar 31, 2021)</span>
+                    </div>
+                    <div class="bg-white border-t border-normal rounded-b">
+                        <div class="overflow-x-auto">
+                            <table class="w-full fixed-schedule-table">
+                                <tr>
+                                    <td>
+                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">Monday</mat-checkbox></div>
+                                        <div class="mt-2">
+                                            <p>Period 1</p>
+                                            <p>9:00 AM - 9:50 AM</p>
+                                            <p>Room 101</p>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">Tuesday</mat-checkbox></div>
+                                        <div class="mt-2">
+                                            <p>Period 1</p>
+                                            <p>9:00 AM - 9:50 AM</p>
+                                            <p>Room 101</p>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">Wednesday</mat-checkbox></div>
+                                        <div class="mt-2">
+                                            <p>Period 1</p>
+                                            <p>9:00 AM - 9:50 AM</p>
+                                            <p>Room 101</p>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">Thursday</mat-checkbox></div>
+                                        <div class="mt-2">
+                                            <p>Period 1</p>
+                                            <p>9:00 AM - 9:50 AM</p>
+                                            <p>Room 101</p>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">Friday</mat-checkbox></div>
+                                        <div class="mt-2">
+                                            <p>Period 1</p>
+                                            <p>9:00 AM - 9:50 AM</p>
+                                            <p>Room 101</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="course-section-occurrence border border-normal rounded bg-skyblue mb-4">
+                    <div class="px-3 py-2">
+                        <span class="text-primary font-bold"><mat-checkbox color="primary" checked="checked">Geometry - GEOM004</mat-checkbox></span>
+                        <span class="dot-separator"></span>
+                        <span>Duration : Feb 15, 2021 - Jun 10, 2021</span>
+                    </div>
+                    <div class="bg-white border-t border-normal rounded-b">
+                        <div class="overflow-x-auto">
+                            <table class="w-full fixed-schedule-table">
+                                <tr>
+                                    <td>
+                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">Monday</mat-checkbox></div>
+                                        <div class="mt-2">
+                                            <p>Period 1</p>
+                                            <p>9:00 AM - 9:50 AM</p>
+                                            <p>Room 101</p>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">Tuesday</mat-checkbox></div>
+                                        <div class="mt-2">
+                                            <p>Period 1</p>
+                                            <p>9:00 AM - 9:50 AM</p>
+                                            <p>Room 101</p>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">Wednesday</mat-checkbox></div>
+                                        <div class="mt-2">
+                                            <p>Period 1</p>
+                                            <p>9:00 AM - 9:50 AM</p>
+                                            <p>Room 101</p>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">Thursday</mat-checkbox></div>
+                                        <div class="mt-2">
+                                            <p>Period 1</p>
+                                            <p>9:00 AM - 9:50 AM</p>
+                                            <p>Room 101</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="course-section-occurrence border border-normal rounded bg-skyblue mb-4">
+                    <div class="px-3 py-2">
+                        <span class="text-primary font-bold"><mat-checkbox color="primary" checked="checked">Geometry - GEOM005</mat-checkbox></span>
+                        <span class="dot-separator"></span>
+                        <span>Duration : Quarter 1 (Jan 01, 2021 - Mar 31, 2021)</span>
+                    </div>
+                    <div class="bg-white border-t border-normal rounded-b">
+                        <div class="overflow-x-auto overflow-y-hidden">
+                            <table class="w-full calendar-schedule-table">
+                                <thead>
+                                    <tr>
+                                        <th width="1%"></th>
+                                        <th>Date</th>
+                                        <th>Period</th>
+                                        <th>Room</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><mat-checkbox color="primary" checked="checked"></mat-checkbox></td>
+                                        <td>2/5/2021</td>
+                                        <td>Period 1 (9:00 AM - 9:50 AM)</td>
+                                        <td>Room 101</td>
+                                    </tr>
+                                    <tr>
+                                        <td><mat-checkbox color="primary" checked="checked"></mat-checkbox></td>
+                                        <td>2/5/2021</td>
+                                        <td>Period 1 (9:00 AM - 9:50 AM)</td>
+                                        <td>Room 101</td>
+                                    </tr>
+                                    <tr>
+                                        <td><mat-checkbox color="primary" checked="checked"></mat-checkbox></td>
+                                        <td>2/5/2021</td>
+                                        <td>Period 1 (9:00 AM - 9:50 AM)</td>
+                                        <td>Room 101</td>
+                                    </tr>
+                                    <tr>
+                                        <td><mat-checkbox color="primary" checked="checked"></mat-checkbox></td>
+                                        <td>2/5/2021</td>
+                                        <td>Period 1 (9:00 AM - 9:50 AM)</td>
+                                        <td>Room 101</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="course-section-occurrence border border-normal rounded bg-skyblue mb-4">
+                    <div class="px-3 py-2">
+                        <span class="text-primary font-bold"><mat-checkbox color="primary" checked="checked">Geometry - GEOM006</mat-checkbox></span>
+                        <span class="dot-separator"></span>
+                        <span>Duration : Quarter 1 (Jan 01, 2021 - Mar 31, 2021)</span>
+                    </div>
+                    <div class="bg-white border-t border-normal rounded-b">
+                        <div class="overflow-x-auto overflow-y-hidden">
+                            <table class="w-full fixed-schedule-table">
+                                <tr>
+                                    <td>
+                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">A</mat-checkbox></div>
+                                        <div class="mt-2">
+                                            <p>Period 1</p>
+                                            <p>9:00 AM - 9:50 AM</p>
+                                            <p>Room 101</p>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">C</mat-checkbox></div>
+                                        <div class="mt-2">
+                                            <p>Period 1</p>
+                                            <p>9:00 AM - 9:50 AM</p>
+                                            <p>Room 101</p>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">A</mat-checkbox></div>
+                                        <div class="mt-2">
+                                            <p>Period 1</p>
+                                            <p>9:00 AM - 9:50 AM</p>
+                                            <p>Room 101</p>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">D</mat-checkbox></div>
+                                        <div class="mt-2">
+                                            <p>Period 1</p>
+                                            <p>9:00 AM - 9:50 AM</p>
+                                            <p>Room 101</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-4 p-4">
+                <div class="teacher-info mb-2">
+                    <span class="text-lg inline-block align-middle text-green font-bold">Lian Fang</span>
+                    <span class="dot-separator"></span>
+                    <span>#287</span>
+                    <span class="dot-separator"></span>
+                    <span><a href="" class="hover:text-blue">lianfang@example.com</a></span>
+                </div>
+
+                <div class="course-section-occurrence border border-normal rounded bg-skyblue mb-4">
+                    <div class="px-3 py-2">
+                        <span class="text-primary font-bold"><mat-checkbox color="primary" checked="checked">Geometry - GEOM001</mat-checkbox></span>
+                        <span class="dot-separator"></span>
+                        <span>Duration : Quarter 1 (Jan 01, 2021 - Mar 31, 2021)</span>
+                    </div>
+                    <div class="bg-white border-t border-normal rounded-b">
+                        <div class="overflow-x-auto">
+                            <table class="w-full fixed-schedule-table">
+                                <tr>
+                                    <td>
+                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">Monday</mat-checkbox></div>
+                                        <div class="mt-2">
+                                            <p>Period 1</p>
+                                            <p>9:00 AM - 9:50 AM</p>
+                                            <p>Room 101</p>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">Tuesday</mat-checkbox></div>
+                                        <div class="mt-2">
+                                            <p>Period 1</p>
+                                            <p>9:00 AM - 9:50 AM</p>
+                                            <p>Room 101</p>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">Wednesday</mat-checkbox></div>
+                                        <div class="mt-2">
+                                            <p>Period 1</p>
+                                            <p>9:00 AM - 9:50 AM</p>
+                                            <p>Room 101</p>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">Thursday</mat-checkbox></div>
+                                        <div class="mt-2">
+                                            <p>Period 1</p>
+                                            <p>9:00 AM - 9:50 AM</p>
+                                            <p>Room 101</p>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">Friday</mat-checkbox></div>
+                                        <div class="mt-2">
+                                            <p>Period 1</p>
+                                            <p>9:00 AM - 9:50 AM</p>
+                                            <p>Room 101</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="course-section-occurrence border border-normal rounded bg-skyblue mb-4">
+                    <div class="px-3 py-2">
+                        <span class="text-primary font-bold"><mat-checkbox color="primary" checked="checked">Geometry - GEOM004</mat-checkbox></span>
+                        <span class="dot-separator"></span>
+                        <span>Duration : Feb 15, 2021 - Jun 10, 2021</span>
+                    </div>
+                    <div class="bg-white border-t border-normal rounded-b">
+                        <div class="overflow-x-auto">
+                            <table class="w-full fixed-schedule-table">
+                                <tr>
+                                    <td>
+                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">Monday</mat-checkbox></div>
+                                        <div class="mt-2">
+                                            <p>Period 1</p>
+                                            <p>9:00 AM - 9:50 AM</p>
+                                            <p>Room 101</p>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">Tuesday</mat-checkbox></div>
+                                        <div class="mt-2">
+                                            <p>Period 1</p>
+                                            <p>9:00 AM - 9:50 AM</p>
+                                            <p>Room 101</p>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">Wednesday</mat-checkbox></div>
+                                        <div class="mt-2">
+                                            <p>Period 1</p>
+                                            <p>9:00 AM - 9:50 AM</p>
+                                            <p>Room 101</p>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">Thursday</mat-checkbox></div>
+                                        <div class="mt-2">
+                                            <p>Period 1</p>
+                                            <p>9:00 AM - 9:50 AM</p>
+                                            <p>Room 101</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="course-section-occurrence border border-normal rounded bg-skyblue mb-4">
+                    <div class="px-3 py-2">
+                        <span class="text-primary font-bold"><mat-checkbox color="primary" checked="checked">Geometry - GEOM005</mat-checkbox></span>
+                        <span class="dot-separator"></span>
+                        <span>Duration : Quarter 1 (Jan 01, 2021 - Mar 31, 2021)</span>
+                    </div>
+                    <div class="bg-white border-t border-normal rounded-b">
+                        <div class="overflow-x-auto overflow-y-hidden">
+                            <table class="w-full calendar-schedule-table">
+                                <thead>
+                                    <tr>
+                                        <th width="1%"></th>
+                                        <th>Date</th>
+                                        <th>Period</th>
+                                        <th>Room</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><mat-checkbox color="primary" checked="checked"></mat-checkbox></td>
+                                        <td>2/5/2021</td>
+                                        <td>Period 1 (9:00 AM - 9:50 AM)</td>
+                                        <td>Room 101</td>
+                                    </tr>
+                                    <tr>
+                                        <td><mat-checkbox color="primary" checked="checked"></mat-checkbox></td>
+                                        <td>2/5/2021</td>
+                                        <td>Period 1 (9:00 AM - 9:50 AM)</td>
+                                        <td>Room 101</td>
+                                    </tr>
+                                    <tr>
+                                        <td><mat-checkbox color="primary" checked="checked"></mat-checkbox></td>
+                                        <td>2/5/2021</td>
+                                        <td>Period 1 (9:00 AM - 9:50 AM)</td>
+                                        <td>Room 101</td>
+                                    </tr>
+                                    <tr>
+                                        <td><mat-checkbox color="primary" checked="checked"></mat-checkbox></td>
+                                        <td>2/5/2021</td>
+                                        <td>Period 1 (9:00 AM - 9:50 AM)</td>
+                                        <td>Room 101</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="course-section-occurrence border border-normal rounded bg-skyblue mb-4">
+                    <div class="px-3 py-2">
+                        <span class="text-primary font-bold"><mat-checkbox color="primary" checked="checked">Geometry - GEOM006</mat-checkbox></span>
+                        <span class="dot-separator"></span>
+                        <span>Duration : Quarter 1 (Jan 01, 2021 - Mar 31, 2021)</span>
+                    </div>
+                    <div class="bg-white border-t border-normal rounded-b">
+                        <div class="overflow-x-auto overflow-y-hidden">
+                            <table class="w-full fixed-schedule-table">
+                                <tr>
+                                    <td>
+                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">A</mat-checkbox></div>
+                                        <div class="mt-2">
+                                            <p>Period 1</p>
+                                            <p>9:00 AM - 9:50 AM</p>
+                                            <p>Room 101</p>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">C</mat-checkbox></div>
+                                        <div class="mt-2">
+                                            <p>Period 1</p>
+                                            <p>9:00 AM - 9:50 AM</p>
+                                            <p>Room 101</p>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">A</mat-checkbox></div>
+                                        <div class="mt-2">
+                                            <p>Period 1</p>
+                                            <p>9:00 AM - 9:50 AM</p>
+                                            <p>Room 101</p>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">D</mat-checkbox></div>
+                                        <div class="mt-2">
+                                            <p>Period 1</p>
+                                            <p>9:00 AM - 9:50 AM</p>
+                                            <p>Room 101</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </vex-page-layout-content>
+</vex-page-layout>

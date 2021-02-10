@@ -12,12 +12,14 @@ namespace opensis.data.ViewModels.ParentInfos
         {
             getStudentForView = new List<GetStudentForView>();
         }
-
-        public string Associationship { get; set; }
         public Guid TenantId { get; set; }
         public int SchoolId { get; set; }
+        public int ParentId { get; set; }
         public string Firstname { get; set; }
+        public string Middlename { get; set; }
         public string Lastname { get; set; }
+        public string Salutation { get; set; }
+        public string Suffix { get; set; }
         public string Mobile { get; set; }
         public string WorkPhone { get; set; }
         public string HomePhone { get; set; }        
@@ -29,7 +31,9 @@ namespace opensis.data.ViewModels.ParentInfos
         public bool IsCustodian { get; set; }
         public string AddressLineOne { get; set; }
         public List<GetStudentForView> getStudentForView { get; set; }
-        
+        public string[] students { get; set; }
+
+
 
         //public string Country { get; set; }
         //public string City { get; set; }

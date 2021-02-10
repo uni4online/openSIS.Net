@@ -7,6 +7,9 @@ namespace opensis.data.Models
     {
         public Language()
         {
+            StaffMasterFirstLanguageNavigation = new HashSet<StaffMaster>();
+            StaffMasterSecondLanguageNavigation = new HashSet<StaffMaster>();
+            StaffMasterThirdLanguageNavigation = new HashSet<StaffMaster>();
             StudentMasterFirstLanguage = new HashSet<StudentMaster>();
             StudentMasterSecondLanguage = new HashSet<StudentMaster>();
             StudentMasterThirdLanguage = new HashSet<StudentMaster>();
@@ -18,9 +21,18 @@ namespace opensis.data.Models
         public string Locale { get; set; }
         public string LanguageCode { get; set; }
 
+        public string CreatedBy { get; set; }
+        public DateTime? CreatedOn { get; set; }
+        public string UpdatedBy { get; set; }
+        public DateTime? UpdatedOn { get; set; }
+
+
         public virtual ICollection<UserMaster> UserMaster { get; set; }
         public virtual ICollection<StudentMaster> StudentMasterFirstLanguage { get; set; }
         public virtual ICollection<StudentMaster> StudentMasterSecondLanguage { get; set; }
         public virtual ICollection<StudentMaster> StudentMasterThirdLanguage { get; set; }
+        public virtual ICollection<StaffMaster> StaffMasterFirstLanguageNavigation { get; set; }
+        public virtual ICollection<StaffMaster> StaffMasterSecondLanguageNavigation { get; set; }
+        public virtual ICollection<StaffMaster> StaffMasterThirdLanguageNavigation { get; set; }
     }
 }

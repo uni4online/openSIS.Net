@@ -39,11 +39,10 @@ export class EditSchoolFieldsComponent implements OnInit {
     ) {
       this.form=fb.group({
         fieldId:[0],
-        title:['',[Validators.required]],
-        fieldType:[],
+        title:['',[ValidationService.noWhitespaceValidator]],
+        fieldType:['',[Validators.required]],
         selectOptions:[''],
         defaultSelection:[,[ValidationService.defaultSelectionValidator]],
-        sortOrder:[,[Validators.required,Validators.min(1)]],
         required:[false],
         hide:[false],
         systemField:[false]
@@ -61,7 +60,6 @@ export class EditSchoolFieldsComponent implements OnInit {
         this.form.controls.title.patchValue(data.information.title)
         this.form.controls.selectOptions.patchValue(data.information.selectOptions.replaceAll("|","\n"))
         this.form.controls.defaultSelection.patchValue(data.information.defaultSelection)
-        this.form.controls.sortOrder.patchValue(data.information.sortOrder)
         this.form.controls.required.patchValue(data.information.required)
         this.form.controls.fieldType.patchValue(data.information.type)
         this.form.controls.hide.patchValue(data.information.hide)
@@ -79,7 +77,6 @@ export class EditSchoolFieldsComponent implements OnInit {
         this.customFieldAddView.customFields.title=this.form.controls.title.value;
         this.customFieldAddView.customFields.selectOptions=this.form.controls.selectOptions.value.replaceAll("\n","|");
         this.customFieldAddView.customFields.defaultSelection=this.form.controls.defaultSelection.value;
-        this.customFieldAddView.customFields.sortOrder=this.form.controls.sortOrder.value;
         this.customFieldAddView.customFields.required=this.form.controls.required.value;
         this.customFieldAddView.customFields.hide=this.form.controls.hide.value;
         this.customFieldAddView.customFields.systemField=this.form.controls.systemField.value;
@@ -95,7 +92,7 @@ export class EditSchoolFieldsComponent implements OnInit {
             }
             else{
               if (res._failure) {
-                this.snackbar.open('School field failed. ' + res._message, 'LOL THANKS', {
+                this.snackbar.open('School field failed. ' + res._message, '', {
                   duration: 10000
                 });
               } 
@@ -120,7 +117,6 @@ export class EditSchoolFieldsComponent implements OnInit {
             this.customFieldAddView.customFields.selectOptions="";
           }
         this.customFieldAddView.customFields.defaultSelection=this.form.controls.defaultSelection.value;
-        this.customFieldAddView.customFields.sortOrder=this.form.controls.sortOrder.value;
         this.customFieldAddView.customFields.required=this.form.controls.required.value;
         this.customFieldAddView.customFields.hide=this.form.controls.hide.value;
         this.customFieldAddView.customFields.systemField=this.form.controls.systemField.value;
@@ -133,7 +129,7 @@ export class EditSchoolFieldsComponent implements OnInit {
             }
             else{
               if (res._failure) {
-                this.snackbar.open('School field failed. ' + res._message, 'LOL THANKS', {
+                this.snackbar.open('School field failed. ' + res._message, '', {
                   duration: 10000
                 });
               } 
@@ -149,5 +145,4 @@ export class EditSchoolFieldsComponent implements OnInit {
       }
     }
   }
-
 }

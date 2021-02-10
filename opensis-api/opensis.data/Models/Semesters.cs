@@ -7,6 +7,7 @@ namespace opensis.data.Models
     {
         public Semesters()
         {
+            CourseSection = new HashSet<CourseSection>();
             Quarters = new HashSet<Quarters>();
         }
 
@@ -31,6 +32,7 @@ namespace opensis.data.Models
 
         public virtual SchoolMaster SchoolMaster { get; set; }
         public virtual SchoolYears SchoolYears { get; set; }
+        public virtual ICollection<CourseSection> CourseSection { get; set; }
         public virtual ICollection<Quarters> Quarters { get; set; }
     }
 }

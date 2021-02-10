@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { fadeInRight400ms } from '../../../../@vex/animations/fade-in-right.animation';
 import { ImageCropperService } from '../../../services/image-cropper.service';
 
@@ -16,7 +16,9 @@ import { LoaderService } from '../../../services/loader.service';
 import { SchoolCreate } from '../../../enums/school-create.enum';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { ModuleIdentifier } from '../../../enums/module-identifier.enum';
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'vex-add-school',
   templateUrl: './add-school.component.html',
   styleUrls: ['./add-school.component.scss'],
@@ -26,7 +28,7 @@ import { Subject } from 'rxjs';
 })
 
 export class AddSchoolComponent implements OnInit, OnDestroy {
-  SchoolCreate = SchoolCreate;
+  schoolCreate = SchoolCreate;
   schoolCreateMode: SchoolCreate = SchoolCreate.ADD;
   schoolTitle = "Add School Information";
   pageStatus = "Add School"
@@ -38,45 +40,60 @@ export class AddSchoolComponent implements OnInit, OnDestroy {
   schoolId: number = null;
   enableCropTool = false;
   indexOfCategory :number = 0;
-  modeForImage = true;
   schoolAddViewModel: SchoolAddViewModel = new SchoolAddViewModel();
   customFieldModel: [CustomFieldModel];
   currentCategory = 1;
   loading: boolean;
   destroySubject$: Subject<void> = new Subject();
-  constructor(private _imageCropperService: ImageCropperService,
+  moduleIdentifier=ModuleIdentifier;
+  constructor(private imageCropperService: ImageCropperService,
     private Activeroute: ActivatedRoute,
     private snackbar: MatSnackBar,
-    private _schoolService: SchoolService,
+    private schoolService: SchoolService,
     private commonFunction: SharedFunction,
     private layoutService: LayoutService,
-    private _loaderService: LoaderService,
-    private customFieldservice: CustomFieldService) {
+    private loaderService: LoaderService,
+    private customFieldservice: CustomFieldService,
+    private cdr: ChangeDetectorRef) {
     this.layoutService.collapseSidenav();
-    this._imageCropperService.getUncroppedEvent().pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
-      this._schoolService.setSchoolImage(btoa(res.target.result));
+    this.imageCropperService.getUncroppedEvent().pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
+      this.schoolService.setSchoolImage(btoa(res.target.result));
     });
-    this._schoolService.categoryToSend.subscribe((res) => {
+    this.schoolService.modeToUpdate.pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
+      if(res==this.schoolCreate.VIEW){
+        this.pageStatus="View School";
+      }else{
+        this.pageStatus="Edit School";
+      }
+    });
+    this.schoolService.categoryToSend.pipe(takeUntil(this.destroySubject$)).subscribe((res) => {
         this.currentCategory = this.currentCategory + 1;
     });
-    this._loaderService.isLoading.subscribe((val) => {
+    this.loaderService.isLoading.pipe(takeUntil(this.destroySubject$)).subscribe((val) => {
       this.loading = val;
     });
+    this.schoolService.getSchoolDetailsForGeneral.pipe(takeUntil(this.destroySubject$)).subscribe((res: SchoolAddViewModel) => {
+      this.schoolAddViewModel=res;
+    })
   }
 
   ngOnInit() {
-    this.schoolCreateMode = this.SchoolCreate.ADD;
-    this._schoolService.sendDetails(this.schoolAddViewModel);
-    this.schoolId = this._schoolService.getSchoolId();
+    this.schoolCreateMode = this.schoolCreate.ADD;
+    this.schoolService.sendDetails(this.schoolAddViewModel);
+    this.schoolId = this.schoolService.getSchoolId();
     if (this.schoolId != null) {
-      this.schoolCreateMode = this.SchoolCreate.VIEW;
-      this._imageCropperService.nextMessage(true);
+      this.schoolCreateMode = this.schoolCreate.VIEW;
       this.getSchoolGeneralandWashInfoDetails();
       this.onViewMode();
-    }else if (this.schoolCreateMode == this.SchoolCreate.ADD) {
+    }else if (this.schoolCreateMode == this.schoolCreate.ADD) {
       this.getAllFieldsCategory();
+      this.imageCropperService.enableUpload({module:this.moduleIdentifier.SCHOOL,upload:true,mode:this.schoolCreate.ADD});
     }
 
+  }
+
+  ngAfterViewChecked() {
+    this.cdr.detectChanges();
   }
 
   onViewMode() {
@@ -85,17 +102,15 @@ export class AddSchoolComponent implements OnInit, OnDestroy {
   }
 
   changeCategory(categoryDetails,index) {
-    let schoolDetails = this._schoolService.getSchoolDetails();
+    let schoolDetails = this.schoolService.getSchoolDetails();
     if (schoolDetails != undefined || schoolDetails != null) {
-      this.schoolCreateMode = this.SchoolCreate.EDIT;
+      this.schoolCreateMode = this.schoolCreate.EDIT;
       this.currentCategory = categoryDetails.categoryId;
       this.indexOfCategory= index;
       this.schoolAddViewModel = schoolDetails;
     }
 
-    if (this.schoolCreateMode == this.SchoolCreate.VIEW) {
-      this.pageStatus = "View School"
-      this._imageCropperService.nextMessage(true);
+    if (this.schoolCreateMode == this.schoolCreate.VIEW) {
       this.currentCategory = categoryDetails.categoryId;
       this.indexOfCategory= index;
     }
@@ -127,23 +142,27 @@ export class AddSchoolComponent implements OnInit, OnDestroy {
   }
 
   getSchoolGeneralandWashInfoDetails() {
-    this.schoolAddViewModel.schoolMaster.schoolDetail[0].schoolId = this._schoolService.getSchoolId();
+    this.schoolAddViewModel.schoolMaster.schoolDetail[0].schoolId = this.schoolService.getSchoolId();
     this.schoolAddViewModel.schoolMaster.schoolId = this.schoolAddViewModel.schoolMaster.schoolDetail[0].schoolId;
-    this._schoolService.ViewSchool(this.schoolAddViewModel).subscribe(data => {
+    this.schoolService.ViewSchool(this.schoolAddViewModel).subscribe(data => {
       this.schoolAddViewModel = data;
-      this._schoolService.sendDetails(this.schoolAddViewModel);
+      this.responseImage = this.schoolAddViewModel.schoolMaster.schoolDetail[0].schoolLogo;
+      this.schoolAddViewModel.schoolMaster.schoolDetail[0].schoolLogo=null;
+      this.schoolService.sendDetails(this.schoolAddViewModel);
       this.fieldsCategory = data.schoolMaster.fieldsCategory;
       this.schoolTitle = this.schoolAddViewModel.schoolMaster.schoolName;
-      this.responseImage = this.schoolAddViewModel.schoolMaster.schoolDetail[0].schoolLogo;
-      this._schoolService.setSchoolImage(this.responseImage);
+      this.schoolService.setSchoolImage(this.responseImage);
+      this.schoolService.setSchoolCloneImage(this.responseImage);
     });
   }
 
   ngOnDestroy() {
-    this._schoolService.setSchoolDetails(null)
-    this._schoolService.setSchoolImage(null);
-    this._schoolService.setSchoolId(null);
+    this.schoolService.setSchoolDetails(null)
+    this.schoolService.setSchoolImage(null);
+    this.schoolService.setSchoolId(null);
+    this.schoolService.setSchoolCloneImage(null);
     this.destroySubject$.next();
+    this.destroySubject$.complete();
   }
 
 }

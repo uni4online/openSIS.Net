@@ -5,8 +5,9 @@ import icUsers from '@iconify/icons-ic/twotone-people';
 import icSchedule from '@iconify/icons-ic/twotone-date-range';
 import icGrade from '@iconify/icons-ic/twotone-leaderboard';
 import icAttendance from '@iconify/icons-ic/twotone-access-alarm';
-import icParents from '@iconify/icons-ic/baseline-escalator-warning';
-
+import icListOfValues from '@iconify/icons-ic/baseline-format-list-bulleted';
+import { TranslateService } from '@ngx-translate/core';
+import { LayoutService } from 'src/@vex/services/layout.service';
 @Component({
   selector: 'vex-settings',
   templateUrl: './settings.component.html',
@@ -20,9 +21,20 @@ export class SettingsComponent implements OnInit {
   icSchedule = icSchedule;
   icGrade = icGrade;
   icAttendance = icAttendance;
-  icParents = icParents;
+  icListOfValues = icListOfValues;
 
-  constructor() { }
+  constructor(public translateService:TranslateService,private layoutService: LayoutService,) {
+    if(localStorage.getItem("collapseValue") !== null){
+      if( localStorage.getItem("collapseValue") === "false"){
+        this.layoutService.expandSidenav();
+      }else{
+        this.layoutService.collapseSidenav();
+      } 
+    }else{
+      this.layoutService.expandSidenav();
+    }
+    translateService.use('en');
+  }
 
   ngOnInit(): void {
   }

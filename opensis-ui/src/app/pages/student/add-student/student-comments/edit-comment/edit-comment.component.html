@@ -7,10 +7,9 @@
 <mat-divider class="-mx-6 text-border"></mat-divider>
 <form [formGroup]="form">
     <mat-dialog-content fxLayout="column">
-        <div class="mt-6" appearance="outline" color="primary">
-            <mat-label>{{'enterComment' | translate}}</mat-label>
-            <quill-editor formControlName="Body" name="Body"  (onEditorChanged)="changedEditor($event)" ></quill-editor>
-            
+        <div class="border rounded mt-6">
+            <quill-editor formControlName="Body" name="Body" (onEditorChanged)="changedEditor($event)" [styles]="{ height: '250px' }">
+            </quill-editor>
         </div>
         <mat-error *ngIf="(form.get('Body').touched && form.get('Body').hasError('required'))">{{'commentIsRequired'|translate}}</mat-error>
     </mat-dialog-content>

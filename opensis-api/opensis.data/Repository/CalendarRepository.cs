@@ -26,7 +26,16 @@ namespace opensis.data.Repository
         /// <returns></returns>
         public CalendarAddViewModel AddCalendar(CalendarAddViewModel calendar)
         {
-            int? calenderId = Utility.GetMaxPK(this.context, new Func<SchoolCalendars, int>(x => x.CalenderId));
+            //int? calenderId = Utility.GetMaxPK(this.context, new Func<SchoolCalendars, int>(x => x.CalenderId));
+            int? calenderId = 1;
+
+            var calenderData = this.context?.SchoolCalendars.Where(x => x.TenantId == calendar.schoolCalendar.TenantId && x.SchoolId == calendar.schoolCalendar.SchoolId).OrderByDescending(x => x.CalenderId).FirstOrDefault();
+
+            if (calenderData != null)
+            {
+                calenderId = calenderData.CalenderId + 1;
+            }
+
             calendar.schoolCalendar.CalenderId = (int)calenderId;
             calendar.schoolCalendar.LastUpdated = DateTime.UtcNow;
             var checkDefaultCalendar = this.context?.SchoolCalendars.Where(x => x.AcademicYear == calendar.schoolCalendar.AcademicYear && x.TenantId == calendar.schoolCalendar.TenantId && x.SchoolId == calendar.schoolCalendar.SchoolId).ToList().Find(x => x.DefaultCalender == true);
@@ -89,33 +98,48 @@ namespace opensis.data.Repository
             try
             {
                 var calendarRepository = this.context?.SchoolCalendars.FirstOrDefault(x => x.TenantId == calendar.schoolCalendar.TenantId && x.SchoolId == calendar.schoolCalendar.SchoolId && x.CalenderId == calendar.schoolCalendar.CalenderId);
-                calendarRepository.SchoolId = calendar.schoolCalendar.SchoolId;
-                calendarRepository.TenantId = calendar.schoolCalendar.TenantId;
-                calendarRepository.Title = calendar.schoolCalendar.Title;
-                calendarRepository.AcademicYear = calendar.schoolCalendar.AcademicYear;
+
+                var enrollmentCalendar = this.context?.StudentEnrollment.FirstOrDefault(x => x.TenantId == calendar.schoolCalendar.TenantId && x.SchoolId == calendar.schoolCalendar.SchoolId && x.CalenderId == calendar.schoolCalendar.CalenderId);
+
+                if(enrollmentCalendar!= null && calendar.schoolCalendar.DefaultCalender==false)
+                {
+                    calendar.schoolCalendar = null;
+                    calendar._failure = true;
+                    calendar._message = "Default Calendar cannot be updated because it has enrollment.";
+                    return calendar;
+                }
+
                 var checkDefaultCalendar = this.context?.SchoolCalendars.Where(x => x.AcademicYear == calendar.schoolCalendar.AcademicYear && x.TenantId == calendar.schoolCalendar.TenantId && x.SchoolId == calendar.schoolCalendar.SchoolId && x.CalenderId != calendar.schoolCalendar.CalenderId).ToList().Find(x => x.DefaultCalender == true);
+
                 if (checkDefaultCalendar == null)
                 {
-                    calendarRepository.DefaultCalender = true;
+                    calendar.schoolCalendar.DefaultCalender = true;
                 }
                 else
                 {
-                    calendarRepository.DefaultCalender = calendar.schoolCalendar.DefaultCalender;
+                    var enrollmentDefaultCalendar = this.context?.StudentEnrollment.FirstOrDefault(x => x.TenantId == calendar.schoolCalendar.TenantId && x.SchoolId == calendar.schoolCalendar.SchoolId && x.CalenderId == checkDefaultCalendar.CalenderId);
+
+                    if (enrollmentDefaultCalendar != null && calendar.schoolCalendar.DefaultCalender == true)
+                    {
+                        calendar.schoolCalendar = null;
+                        calendar._failure = true;
+                        calendar._message = "Existing Default Calendar cannot be updated because it has already enrollment.";
+                        return calendar;
+                    }
+                    //calendarRepository.DefaultCalender = calendar.schoolCalendar.DefaultCalender;                        
                 }
-                if (calendar.schoolCalendar.DefaultCalender == true)
+                
+                if (calendar.schoolCalendar.DefaultCalender == true )
                 {
                     (from p in this.context?.SchoolCalendars
                      where p.CalenderId != calendarRepository.CalenderId && p.AcademicYear == calendar.schoolCalendar.AcademicYear && p.TenantId == calendar.schoolCalendar.TenantId && p.SchoolId == calendar.schoolCalendar.SchoolId
                      select p).ToList().ForEach(x => x.DefaultCalender = false);
 
-                }
+                }                
+                calendar.schoolCalendar.LastUpdated = DateTime.Now;
+                this.context.Entry(calendarRepository).CurrentValues.SetValues(calendar.schoolCalendar);
+                this.context?.SaveChanges();
 
-                calendarRepository.Days = calendar.schoolCalendar.Days;
-                calendarRepository.LastUpdated = DateTime.UtcNow;
-                calendarRepository.VisibleToMembershipId = calendar.schoolCalendar.VisibleToMembershipId;
-                calendarRepository.UpdatedBy = calendar.schoolCalendar.UpdatedBy;
-                calendarRepository.StartDate = calendar.schoolCalendar.StartDate;
-                calendarRepository.EndDate = calendar.schoolCalendar.EndDate;
                 this.context?.SaveChanges();
                 calendar._failure = false;
                 return calendar;
@@ -139,10 +163,20 @@ namespace opensis.data.Repository
             try
             {
                 var calendarRepository = this.context?.SchoolCalendars.Where(x => x.TenantId == calendarList.TenantId && x.SchoolId == calendarList.SchoolId && x.AcademicYear == calendarList.AcademicYear).OrderBy(x => x.Title).ToList();
+
                 calendarListModel.CalendarList = calendarRepository;
                 calendarListModel._tenantName = calendarList._tenantName;
                 calendarListModel._token = calendarList._token;
-                calendarListModel._failure = false;
+
+                if (calendarRepository.Count > 0)
+                {
+                    calendarListModel._failure = false;
+                }
+                else
+                {
+                    calendarListModel._failure = true;
+                    calendarListModel._message = NORECORDFOUND;
+                }
             }
             catch (Exception es)
             {
@@ -169,9 +203,12 @@ namespace opensis.data.Repository
                 if (calendarRepository != null)
                 {
                     var eventsExist = this.context?.CalendarEvents.FirstOrDefault(x => x.TenantId == calendarRepository.TenantId && x.SchoolId == calendarRepository.SchoolId && x.CalendarId == calendarRepository.CalenderId);
-                    if (eventsExist != null)
+
+                    var enrollmentExist = this.context?.StudentEnrollment.FirstOrDefault(x => x.TenantId == calendarRepository.TenantId && x.SchoolId == calendarRepository.SchoolId && x.CalenderId == calendarRepository.CalenderId);
+
+                    if (eventsExist != null || enrollmentExist != null)
                     {
-                        calendar._message = "Calendar cannot deleted because it has event.";
+                        calendar._message = "Calendar cannot be deleted because it has an association.";
                         calendar._failure = true;
                     }
                     else

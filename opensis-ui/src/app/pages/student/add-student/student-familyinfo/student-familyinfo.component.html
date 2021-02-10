@@ -4,17 +4,23 @@
         <mat-card-title>{{'familyInformation'|translate}}</mat-card-title>
     </mat-card-header>
     <mat-card-content>
+    <div class="-mx-4">
         <mat-tab-group>
             <mat-tab label="{{'contacts'|translate}}">
               <ng-template matTabContent>
-                <vex-student-contacts></vex-student-contacts>
+            <div class="px-gutter pt-6">
+                <vex-student-contacts [studentDetailsForViewAndEditData]="studentDetailsForViewAndEditData"></vex-student-contacts>
+            </div>
             </ng-template>
             </mat-tab>
             <mat-tab label="{{'siblingInfo'|translate}}">
               <ng-template matTabContent>
+            <div class="px-gutter pt-6">
                     <vex-siblingsinfo></vex-siblingsinfo>
+            </div>
               </ng-template>
             </mat-tab>
           </mat-tab-group>
+    </div>
     </mat-card-content>
 </mat-card>

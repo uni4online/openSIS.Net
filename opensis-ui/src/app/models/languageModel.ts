@@ -1,4 +1,4 @@
-import { CommonField } from "../models/commonField";
+
 
 
 class tableLanguage {
@@ -6,16 +6,43 @@ class tableLanguage {
     lcid: string;
     locale: string;
     languageCode: string;
+    createdBy: string;
+    createdOn: string;
+    updatedBy: string;
+    updatedOn: string;
     userMaster: []
 }
 
-export class LanguageModel extends CommonField {
+export class LanguageAddModel {    
+    public language:tableLanguage;   
+    public _failure: boolean;
+    public _message:string;
+    public _tenantName:string;
+    public _token:string;
     
-    public tableLanguage : tableLanguage;
-   
-    constructor() {
-        super();
-        this.tableLanguage=null;     
+    constructor() {       
+        this.language =new tableLanguage();
+        this._failure=false;
+        this._message="";
+        this._tenantName="";
+        this._token="";
+          
+    }
+}
+
+export class LanguageModel  {
+    
+    public tableLanguage : [tableLanguage];
+    public _failure: boolean;
+    public _message:string;
+    public _tenantName:string;
+    public _token:string;
+    constructor() {       
+        this.tableLanguage=null;   
+        this._failure=false;
+        this._message="";
+        this._tenantName="";
+        this._token="";  
     }
 }
 

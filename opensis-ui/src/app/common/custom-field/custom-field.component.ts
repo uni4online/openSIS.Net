@@ -17,6 +17,8 @@ import { CustomFieldsValueModel } from '../../../../src/app/models/customFieldsV
 import { Router } from '@angular/router';
 import { StudentAddModel } from '../../../../src/app/models/studentModel';
 import { StudentService } from '../../../../src/app/services/student.service';
+import { StaffAddModel } from '../../models/staffModel';
+import { StaffService } from '../../services/staff.service';
 
 @Component({
   selector: 'vex-custom-field',
@@ -32,6 +34,7 @@ export class CustomFieldComponent implements OnInit {
   SchoolCreate = SchoolCreate;
   @Input() schoolCreateMode;
   @Input() studentCreateMode;
+  @Input() staffCreateMode;
   @Input() categoryTitle;
   @Input() categoryId;
   @Input() schoolDetailsForViewAndEdit;
@@ -42,18 +45,23 @@ export class CustomFieldComponent implements OnInit {
   editInfo: boolean = false;
   studentAddViewModel: StudentAddModel = new StudentAddModel();
   schoolAddViewModel: SchoolAddViewModel = new SchoolAddViewModel();
+  staffAddViewModel: StaffAddModel = new StaffAddModel();
   @ViewChild('f') currentForm: NgForm;
+  staffMultiSelectValue;
+  studentMultiSelectValue;
+  schoolMultiSelectValue
   f: NgForm;
-  formActionButtonTitle: string;
+  formActionButtonTitle = "update";
   constructor(
     private snackbar: MatSnackBar,
     private commonFunction: SharedFunction,
-    private _studentService:StudentService,
-    private _schoolService: SchoolService,
+    private studentService: StudentService,
+    private schoolService: SchoolService,
+    private staffService: StaffService,
     private router: Router,
   ) {
     if (this.module === 'School') {
-      this._schoolService.getSchoolDetailsForGeneral.subscribe((res: SchoolAddViewModel) => {
+      this.schoolService.getSchoolDetailsForGeneral.subscribe((res: SchoolAddViewModel) => {
         this.schoolAddViewModel = res;
         this.checkCustomValue();
       });
@@ -66,8 +74,13 @@ export class CustomFieldComponent implements OnInit {
       this.checkStudentCustomValue();
 
     }
-    else if(this.module === 'School'){
+    else if (this.module === 'School') {
       this.checkNgOnInitCustomValue();
+    }
+    else if (this.module === 'Staff') {
+      this.staffAddViewModel = this.schoolDetailsForViewAndEdit;
+      this.checkStaffCustomValue();
+
     }
   }
 
@@ -80,6 +93,9 @@ export class CustomFieldComponent implements OnInit {
       else if (this.module === 'Student') {
         this.updateStudent();
       }
+      else if (this.module === 'Staff') {
+        this.updateStaff();
+      }
     }
   }
 
@@ -89,14 +105,21 @@ export class CustomFieldComponent implements OnInit {
       let catId = this.categoryId;
       if (this.schoolDetailsForViewAndEdit.schoolMaster.fieldsCategory !== undefined) {
         this.schoolAddViewModel = this.schoolDetailsForViewAndEdit;
-        for (let i = 0; i < this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].customFields.length; i++) {
-          if (this.schoolAddViewModel.schoolMaster.fieldsCategory[catId].customFields[i].customFieldsValue.length == 0) {
-            this.schoolAddViewModel.schoolMaster.fieldsCategory[catId].customFields[i].customFieldsValue.push(new CustomFieldsValueModel());
+        for (let customField of this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].customFields) {
+          if (customField.customFieldsValue.length == 0) {
+            customField.customFieldsValue.push(new CustomFieldsValueModel());
+          }
+          else {
+            if (customField.type === 'Multiple SelectBox') {
+              this.schoolMultiSelectValue = customField.customFieldsValue[0].customFieldValue.split('|');
+
+            }
           }
         }
       }
 
     }
+    
   }
 
 
@@ -105,10 +128,39 @@ export class CustomFieldComponent implements OnInit {
       let catId = this.categoryId;
       if (this.studentAddViewModel.fieldsCategoryList !== undefined) {
 
-        for (let i = 0; i < this.studentAddViewModel.fieldsCategoryList[this.categoryId]?.customFields.length; i++) {
-          if (this.studentAddViewModel.fieldsCategoryList[catId].customFields[i]?.customFieldsValue.length == 0) {
+        for (let studentCustomField of this.studentAddViewModel.fieldsCategoryList[this.categoryId]?.customFields) {
+          if (studentCustomField?.customFieldsValue.length == 0) {
 
-            this.studentAddViewModel.fieldsCategoryList[catId]?.customFields[i]?.customFieldsValue.push(new CustomFieldsValueModel());
+            studentCustomField?.customFieldsValue.push(new CustomFieldsValueModel());
+          }
+          else {
+            if (studentCustomField?.type === 'Multiple SelectBox') {
+              this.studentMultiSelectValue = studentCustomField?.customFieldsValue[0].customFieldValue.split('|');
+
+            }
+          }
+        }
+
+      }
+    }
+
+  }
+
+  checkStaffCustomValue() {
+    if (this.staffAddViewModel !== undefined) {
+      let catId = this.categoryId;
+      if (this.staffAddViewModel.fieldsCategoryList !== undefined) {
+
+        for (let staffCustomField of this.staffAddViewModel.fieldsCategoryList[this.categoryId]?.customFields) {
+          if (staffCustomField?.customFieldsValue.length == 0) {
+
+            staffCustomField?.customFieldsValue.push(new CustomFieldsValueModel());
+          }
+          else {
+            if (staffCustomField?.type === 'Multiple SelectBox') {
+              this.staffMultiSelectValue = staffCustomField?.customFieldsValue[0].customFieldValue.split('|');
+
+            }
           }
         }
 
@@ -117,26 +169,32 @@ export class CustomFieldComponent implements OnInit {
   }
 
   checkCustomValue() {
-    
+
     if (this.schoolAddViewModel !== undefined) {
       let catId = this.categoryId;
       if (this.schoolAddViewModel.schoolMaster.fieldsCategory !== undefined) {
 
-        for (let i = 0; i < this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].customFields.length; i++) {
-          if (this.schoolAddViewModel.schoolMaster.fieldsCategory[catId].customFields[i].customFieldsValue.length == 0) {
+        for (let customField of this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].customFields) {
+          if (customField.customFieldsValue.length == 0) {
 
-            this.schoolAddViewModel.schoolMaster.fieldsCategory[catId].customFields[i].customFieldsValue.push(new CustomFieldsValueModel());
+            customField.customFieldsValue.push(new CustomFieldsValueModel());
           }
         }
 
       }
     }
+
   }
-  updateStudent(){
-    this.studentAddViewModel.selectedCategoryId= this.studentAddViewModel.fieldsCategoryList[this.categoryId].categoryId;
-    this.studentAddViewModel._tenantName=sessionStorage.getItem("tenant");
-    this.studentAddViewModel._token=sessionStorage.getItem("token");
-    this._studentService.UpdateStudent(this.studentAddViewModel).subscribe(data => {                        
+  updateStudent() {
+    this.studentAddViewModel.selectedCategoryId = this.studentAddViewModel.fieldsCategoryList[this.categoryId].categoryId;
+    this.studentAddViewModel._tenantName = sessionStorage.getItem("tenant");
+    this.studentAddViewModel._token = sessionStorage.getItem("token");
+    for (let studentCustomField of this.studentAddViewModel.fieldsCategoryList[this.categoryId].customFields) {
+      if (studentCustomField.type === "Multiple SelectBox" && this.studentMultiSelectValue !== undefined) {
+        studentCustomField.customFieldsValue[0].customFieldValue = this.studentMultiSelectValue.toString().replaceAll(",", "|");
+      }
+    }
+    this.studentService.UpdateStudent(this.studentAddViewModel).subscribe(data => {
       if (typeof (data) == 'undefined') {
         this.snackbar.open(this.categoryTitle + ' Updation failed. ' + sessionStorage.getItem("httpError"), '', {
           duration: 10000
@@ -147,25 +205,31 @@ export class CustomFieldComponent implements OnInit {
           this.snackbar.open(this.categoryTitle + ' Updation failed. ' + data._message, 'LOL THANKS', {
             duration: 10000
           });
-        } else {    
+        } else {
           this.snackbar.open(this.categoryTitle + ' Updated Successfully.', '', {
             duration: 10000
           });
-          
-          
+          this.studentCreateMode = this.SchoolCreate.VIEW
+
+
         }
       }
-  
+
     })
   }
-  
+
 
   updateSchool() {
     this.schoolAddViewModel.selectedCategoryId = this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].categoryId;
     this.schoolAddViewModel.schoolMaster.city = this.schoolAddViewModel.schoolMaster.city.toString();
     this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolOpened = this.commonFunction.formatDateSaveWithoutTime(this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolOpened);
     this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolClosed = this.commonFunction.formatDateSaveWithoutTime(this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolClosed);
-    this._schoolService.UpdateSchool(this.schoolAddViewModel).subscribe(data => {
+    for (let schoolCustomField of this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].customFields) {
+      if (schoolCustomField.type === "Multiple SelectBox" && this.schoolMultiSelectValue !== undefined) {
+        schoolCustomField.customFieldsValue[0].customFieldValue = this.schoolMultiSelectValue.toString().replaceAll(",", "|");
+      }
+    }
+    this.schoolService.UpdateSchool(this.schoolAddViewModel).subscribe(data => {
       if (typeof (data) == 'undefined') {
         this.snackbar.open(this.categoryTitle + ' ' + sessionStorage.getItem("httpError"), '', {
           duration: 10000
@@ -181,17 +245,54 @@ export class CustomFieldComponent implements OnInit {
           this.snackbar.open(this.categoryTitle + " " + 'Updation Successful', '', {
             duration: 10000
           });
-          this._schoolService.changeMessage(true);
+          this.schoolCreateMode = this.SchoolCreate.VIEW
+          this.schoolService.changeMessage(true);
+
         }
       }
 
     });
   }
 
+  updateStaff() {
+    this.staffAddViewModel.selectedCategoryId = this.staffAddViewModel.fieldsCategoryList[this.categoryId].categoryId;
+    this.staffAddViewModel._token = sessionStorage.getItem("token");
+    this.staffAddViewModel._tenantName = sessionStorage.getItem("tenant");
+    for (let staffCustomField of this.staffAddViewModel.fieldsCategoryList[this.categoryId].customFields) {
+      if (staffCustomField.type === "Multiple SelectBox" && this.staffMultiSelectValue !== undefined) {
+        staffCustomField.customFieldsValue[0].customFieldValue = this.staffMultiSelectValue.toString().replaceAll(",", "|");
+      }
+    }
+    this.staffService.updateStaff(this.staffAddViewModel).subscribe(data => {
+      if (typeof (data) == 'undefined') {
+        this.snackbar.open(this.categoryTitle + ' ' + sessionStorage.getItem("httpError"), '', {
+          duration: 10000
+        });
+      }
+      else {
+        if (data._failure) {
+          this.snackbar.open(this.categoryTitle + ' ' + + data._message, 'LOL THANKS', {
+            duration: 10000
+          });
+        } else {
+          this.snackbar.open(this.categoryTitle + " " + 'Updation Successful', '', {
+            duration: 10000
+          });
+          this.staffCreateMode = this.SchoolCreate.VIEW;
+        }
+      }
+
+    })
+  }
+
 
   editOtherInfo() {
     this.schoolCreateMode = this.SchoolCreate.EDIT;
     this.studentCreateMode = this.SchoolCreate.EDIT;
+    this.staffCreateMode = this.SchoolCreate.EDIT;
+    this.studentService.changePageMode(this.studentCreateMode);
+    this.staffService.changePageMode(this.staffCreateMode);
+    this.schoolService.changePageMode(this.schoolCreateMode);
     this.formActionButtonTitle = "update";
   }
 }

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, NgForm } from '@angular/forms';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
@@ -14,7 +14,8 @@ import { StudentService } from '../../../../services/student.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ViewParentInfoModel } from '../../../../models/parentInfoModel';
 import { ParentInfoService } from '../../../../services/parent-info.service';
-
+import { ImageCropperService } from '../../../../services/image-cropper.service';
+import { ModuleIdentifier } from '../../../../enums/module-identifier.enum';
 @Component({
   selector: 'vex-student-medicalinfo',
   templateUrl: './student-medicalinfo.component.html',
@@ -25,11 +26,13 @@ import { ParentInfoService } from '../../../../services/parent-info.service';
     fadeInRight400ms
   ]
 })
-export class StudentMedicalinfoComponent implements OnInit {
-  StudentCreate = SchoolCreate;
+export class StudentMedicalinfoComponent implements OnInit, OnDestroy {
+  moduleIdentifier=ModuleIdentifier;
+  studentCreate = SchoolCreate;
   @Input() studentCreateMode: SchoolCreate;
   @Input() categoryId;
   @Input() studentDetailsForViewAndEdit;
+  @ViewChild('f') currentForm: NgForm;
   @Output() studentDetailsForParent = new EventEmitter<StudentAddModel>();
   studentAddModel: StudentAddModel = new StudentAddModel();
   parentInfoModel: ViewParentInfoModel = new ViewParentInfoModel();
@@ -39,37 +42,52 @@ export class StudentMedicalinfoComponent implements OnInit {
   icAdd = icAdd;
   icComment = icComment;
   parentsFullName = [];
+  cloneStudentAddModel;
   constructor(private fb: FormBuilder,
     public translateService: TranslateService,
-    private _studentService: StudentService,
+    private studentService: StudentService,
     private snackbar: MatSnackBar,
-    private _parentInfoService: ParentInfoService) {
+    private parentInfoService: ParentInfoService,
+    private imageCropperService: ImageCropperService) {
     translateService.use('en');
 
   }
 
   ngOnInit(): void {
-    if (this.studentCreateMode == this.StudentCreate.VIEW) {
+    if (this.studentCreateMode == this.studentCreate.VIEW) {
+      this.studentService.changePageMode(this.studentCreateMode);
       this.studentAddModel = this.studentDetailsForViewAndEdit;
+      this.cloneStudentAddModel = JSON.stringify(this.studentAddModel);
+      this.imageCropperService.enableUpload({module:this.moduleIdentifier.STUDENT,upload:false,mode:this.studentCreate.VIEW});
     } else {
       this.getAllParents();
-      this.studentAddModel = this._studentService.getStudentDetails();
+      this.studentService.changePageMode(this.studentCreateMode);
+      this.studentAddModel = this.studentService.getStudentDetails();
     }
   }
 
   editMedicalInfo() {
     this.getAllParents();
-    this.studentCreateMode = this.StudentCreate.EDIT
+    this.studentCreateMode = this.studentCreate.EDIT;
+    this.studentService.changePageMode(this.studentCreateMode);
+    this.imageCropperService.enableUpload({module:this.moduleIdentifier.STUDENT,upload:true,mode:this.studentCreate.VIEW});
   }
 
   cancelEdit() {
-    this.studentCreateMode = this.StudentCreate.VIEW
+    if(JSON.stringify(this.studentAddModel)!==this.cloneStudentAddModel){
+      this.studentAddModel=JSON.parse(this.cloneStudentAddModel);
+      this.studentService.sendDetails(JSON.parse(this.cloneStudentAddModel));
+    }
+    this.studentCreateMode = this.studentCreate.VIEW;
+    this.studentService.changePageMode(this.studentCreateMode);
+    this.imageCropperService.enableUpload({module:this.moduleIdentifier.STUDENT,upload:false,mode:this.studentCreate.VIEW});
+    this.imageCropperService.cancelImage("student");
   }
 
   getAllParents() {
     this.parentInfoModel.studentId = this.studentAddModel.studentMaster.studentId;
-    this._parentInfoService.ViewParentListForStudent(this.parentInfoModel).subscribe((res) => {
-      this.concatenateParentsName(res.parentInfoList);
+    this.parentInfoService.ViewParentListForStudent(this.parentInfoModel).subscribe((res) => {
+      this.concatenateParentsName(res.parentInfoListForView);
     })
   }
 
@@ -80,31 +98,50 @@ export class StudentMedicalinfoComponent implements OnInit {
   }
 
   submit() {
-    this.studentAddModel.selectedCategoryId= this.studentAddModel.fieldsCategoryList[this.categoryId].categoryId;
-    
-    this.studentAddModel._tenantName = sessionStorage.getItem("tenant");
-    this.studentAddModel._token = sessionStorage.getItem("token");
-    this._studentService.UpdateStudent(this.studentAddModel).subscribe(data => {
-      if (typeof (data) == 'undefined') {
-        this.snackbar.open('Medical Information Updation failed. ' + sessionStorage.getItem("httpError"), '', {
-          duration: 10000
-        });
-      }
-      else {
-        if (data._failure) {
-          this.snackbar.open('Medical Information Updation failed. ' + data._message, 'LOL THANKS', {
-            duration: 10000
-          });
-        } else {
-          this.snackbar.open('Medical Information Update Successfully.', '', {
-            duration: 10000
-          });
-          this.studentDetailsForParent.emit(data);
-
+    this.currentForm.form.markAllAsTouched();
+    if (this.currentForm.form.valid) {
+      if(this.studentAddModel.fieldsCategoryList!==null){
+        this.studentAddModel.selectedCategoryId = this.studentAddModel.fieldsCategoryList[this.categoryId].categoryId;
+        
+        for (let studentCustomField of this.studentAddModel.fieldsCategoryList[this.categoryId].customFields) {
+          if (studentCustomField.type === "Multiple SelectBox" && this.studentService.getStudentMultiselectValue() !== undefined) {
+            studentCustomField.customFieldsValue[0].customFieldValue = this.studentService.getStudentMultiselectValue().toString().replaceAll(",", "|");
+          }
         }
       }
+      this.studentAddModel._tenantName = sessionStorage.getItem("tenant");
+      this.studentAddModel._token = sessionStorage.getItem("token");
+      this.studentService.UpdateStudent(this.studentAddModel).subscribe(data => {
+        if (typeof (data) == 'undefined') {
+          this.snackbar.open('Medical Information Updation failed. ' + sessionStorage.getItem("httpError"), '', {
+            duration: 10000
+          });
+        }
+        else {
+          if (data._failure) {
+            this.snackbar.open('Medical Information Updation failed. ' + data._message, 'LOL THANKS', {
+              duration: 10000
+            });
+          } else {
+            this.snackbar.open('Medical Information Update Successful.', '', {
+              duration: 10000
+            });
+          this.studentService.setStudentCloneImage(data.studentMaster.studentPhoto);
+            data.studentMaster.studentPhoto=null;
+            this.cloneStudentAddModel=JSON.stringify(data);
+            this.studentCreateMode = this.studentCreate.VIEW;
+            this.studentService.changePageMode(this.studentCreateMode);
+            this.studentDetailsForParent.emit(data);
 
-    })
+          }
+        }
+
+      })
+    }
+  }
+
+  ngOnDestroy() {
+    this.imageCropperService.enableUpload({module:this.moduleIdentifier.STUDENT,upload:false,mode:this.studentCreate.VIEW});
   }
 
 }

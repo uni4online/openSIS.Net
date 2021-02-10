@@ -3,7 +3,7 @@
     <div class="flex items-center mx-4" fxLayout="row" fxLayoutAlign="center center">
         <h3 class="flex-auto">{{'comments' | translate}}</h3>
         <div>
-            <a routerLink="" class="cursor-pointer p-1 mt-1 mr-3 inline-block align-middle" matTooltip="Export as Excel"><i class="icon icon-file-excel text-lg"></i></a>
+            <a (click)="exportCommentsToExcel()" class="cursor-pointer p-1 mt-1 mr-3 inline-block align-middle" matTooltip="Export as Excel"><i class="icon icon-file-excel text-lg"></i></a>
             <a routerLink="" class="cursor-pointer p-1 mt-1 mr-3 inline-block align-middle" matTooltip="Print"><mat-icon [icIcon]="icPrint"></mat-icon></a>
             <button mat-raised-button color="primary" class="align-middle" (click)='openAddNew()'>
                 <mat-icon [icIcon]="icAdd"></mat-icon> {{'addComment' |translate}}
@@ -12,7 +12,7 @@
     </div>
     <mat-card-content>
         <div @stagger fxLayout="column">
-            <div class="mt-6 mx-4">
+            <div class="mt-6 mx-4" *ngIf="listCount > 0">
                 <div class="mb-4" *ngFor="let studentComment of studentCommentsListViewModel.studentCommentsList">
                     <mat-accordion class="w-full">
                         <mat-expansion-panel>
@@ -45,6 +45,7 @@
                 </div>
 
             </div>
+            <div class="text-center" *ngIf="listCount === null">No Data</div>
         </div>
     </mat-card-content>
 </mat-card>

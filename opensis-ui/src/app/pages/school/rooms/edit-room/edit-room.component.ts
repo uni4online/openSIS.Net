@@ -8,6 +8,7 @@ import { RoomAddView } from '../../../../models/roomModel';
 import { RoomService } from '../../../../services/room.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ValidationService } from '../../../shared/validation.service';
 
 @Component({
   selector: 'vex-edit-room',
@@ -34,9 +35,9 @@ export class EditRoomComponent implements OnInit {
     private roomService:RoomService) {
       this.form=fb.group({
         roomId:[0],
-        title:['',[Validators.required]],
-        capacity:[,[Validators.required,Validators.min(0)]],
-        sortorder:[,[Validators.required,Validators.min(1)]],
+        title:['',[ValidationService.noWhitespaceValidator]],
+        capacity:[,[ValidationService.noWhitespaceValidator,Validators.min(0)]],
+        sortorder:[,[ValidationService.noWhitespaceValidator,Validators.min(1)]],
         description:[],
         isActive:[false]
   
@@ -62,6 +63,7 @@ export class EditRoomComponent implements OnInit {
 
   }
   submit(){
+    this.form.markAllAsTouched();
     if (this.form.valid) { 
     if(this.form.controls.roomId.value==0){
       this.roomAddViewModel.tableRoom.title=this.form.controls.title.value
@@ -78,12 +80,12 @@ export class EditRoomComponent implements OnInit {
           }
           else{
             if (res._failure) {
-              this.snackbar.open('Room list failed. ' + res._message, 'LOL THANKS', {
+              this.snackbar.open('Room list failed. ' + res._message, '', {
                 duration: 10000
               });
             } 
             else { 
-              this.snackbar.open('Room Created Successfully. ' + res._message, 'LOL THANKS', {
+              this.snackbar.open('Room Created Successfully. ' + res._message, '', {
                 duration: 10000
               });
               this.dialogRef.close('submited');
@@ -109,12 +111,12 @@ export class EditRoomComponent implements OnInit {
           }
           else{
             if (res._failure) {
-              this.snackbar.open('Room list failed. ' + res._message, 'LOL THANKS', {
+              this.snackbar.open('Room list failed. ' + res._message, '', {
                 duration: 10000
               });
             } 
             else { 
-              this.snackbar.open('Room Edited Successfully. ' + res._message, 'LOL THANKS', {
+              this.snackbar.open('Room Edited Successfully. ' + res._message, '', {
                 duration: 10000
               });
               this.dialogRef.close('submited');

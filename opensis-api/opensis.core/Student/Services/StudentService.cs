@@ -79,8 +79,16 @@ namespace opensis.core.Student.Services
                 if (TokenManager.CheckToken(pageResult._tenantName, pageResult._token))
                 {
                     studentList = this.studentRepository.GetAllStudentList(pageResult);
-                    studentList._message = SUCCESS;
-                    studentList._failure = false;
+                    if (studentList.studentMaster.Count > 0)
+                    {
+                        studentList._message = SUCCESS;
+                        studentList._failure = false;
+                    }
+                    else
+                    {
+                        studentList._message = "NO RECORD FOUND";
+                        studentList._failure = true;
+                    }
                     logger.Info("Method getAllStudentList end with success.");
                 }
 
@@ -482,10 +490,14 @@ namespace opensis.core.Student.Services
             }
             return studentEnrollmentAddModel;
         }
-
-        public StudentEnrollmentListModel GetAllStudentEnrollment(StudentEnrollmentListModel studentEnrollmentListModel)
+        /// <summary>
+        /// Get All Student Enrollment
+        /// </summary>
+        /// <param name="studentEnrollmentListModel"></param>
+        /// <returns></returns>
+        public StudentEnrollmentListViewModel GetAllStudentEnrollment(StudentEnrollmentListViewModel studentEnrollmentListModel)
         {
-            StudentEnrollmentListModel studentEnrollmentListView = new StudentEnrollmentListModel();
+            StudentEnrollmentListViewModel studentEnrollmentListView = new StudentEnrollmentListViewModel();
             try
             {
                 if (TokenManager.CheckToken(studentEnrollmentListModel._tenantName, studentEnrollmentListModel._token))
@@ -505,6 +517,46 @@ namespace opensis.core.Student.Services
             }
 
             return studentEnrollmentListView;
+        }
+        /// <summary>
+        /// Update Student Enrollment
+        /// </summary>
+        /// <param name="studentEnrollmentListModel"></param>
+        /// <returns></returns>
+        public StudentEnrollmentListModel UpdateStudentEnrollment(StudentEnrollmentListModel studentEnrollmentListModel)
+        {
+            StudentEnrollmentListModel studentEnrollmentUpdate = new StudentEnrollmentListModel();
+            if (TokenManager.CheckToken(studentEnrollmentListModel._tenantName, studentEnrollmentListModel._token))
+            {
+
+                studentEnrollmentUpdate = this.studentRepository.UpdateStudentEnrollment(studentEnrollmentListModel);
+            }
+            else
+            {
+                studentEnrollmentUpdate._failure = true;
+                studentEnrollmentUpdate._message = TOKENINVALID;
+            }
+            return studentEnrollmentUpdate;
+        }
+
+        /// <summary>
+        /// Add or Update Student Photo
+        /// </summary>
+        /// <param name="studentAddViewModel"></param>
+        /// <returns></returns>
+        public StudentAddViewModel AddUpdateStudentPhoto(StudentAddViewModel studentAddViewModel)
+        {
+            StudentAddViewModel studentPhotoUpdate = new StudentAddViewModel();
+            if (TokenManager.CheckToken(studentAddViewModel._tenantName, studentAddViewModel._token))
+            {
+                studentPhotoUpdate = this.studentRepository.AddUpdateStudentPhoto(studentAddViewModel);
+            }
+            else
+            {
+                studentPhotoUpdate._failure = true;
+                studentPhotoUpdate._message = TOKENINVALID;
+            }
+            return studentPhotoUpdate;
         }
     }
 }

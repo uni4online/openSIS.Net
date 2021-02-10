@@ -25,7 +25,7 @@ export class RoomModel  {
         this.sortOrder=null;
         this.isActive=null;
         this.lastUpdated=null;
-        this.updatedBy=null;
+        this.updatedBy=sessionStorage.getItem('email');
 
     }
 }

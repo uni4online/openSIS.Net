@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import icLayers from '@iconify/icons-ic/twotone-layers';
-import icAssigment from '@iconify/icons-ic/twotone-assignment';
 import { Icon } from '@visurel/iconify-angular';
-import icContactSupport from '@iconify/icons-ic/twotone-contact-support';
-import icContacts from '@iconify/icons-ic/twotone-contacts';
-import icAssessment from '@iconify/icons-ic/twotone-assessment';
-import icBook from '@iconify/icons-ic/twotone-book';
+import icSchool from '@iconify/icons-ic/twotone-account-balance';
+import icStudents from '@iconify/icons-ic/twotone-school';
+import icStaff from '@iconify/icons-ic/twotone-people';
+import icEvent from '@iconify/icons-ic/twotone-event';
+import icNotice from '@iconify/icons-ic/twotone-assignment';
 import { PopoverRef } from '../popover/popover-ref';
 
 export interface MegaMenuFeature {
@@ -27,34 +26,29 @@ export class MegaMenuComponent implements OnInit {
 
   features: MegaMenuFeature[] = [
     {
-      icon: icLayers,
-      label: 'Dashboard',
-      route: '/'
+      icon: icSchool,
+      label: 'School',
+      route: './school/schoolinfo/add-school'
     },
     {
-      icon: icAssigment,
-      label: 'AIO-Table',
-      route: '/apps/aio-table'
+      icon: icStudents,
+      label: 'Student',
+      route: './school/students/student-generalinfo'
     },
     {
-      icon: icContactSupport,
-      label: 'Help Center',
-      route: '/apps/help-center'
+      icon: icStaff,
+      label: 'Staff',
+      route: './school/staff/add-staff'
     },
     {
-      icon: icContacts,
-      label: 'Contacts',
-      route: '/apps/contacts/grid'
+      icon: icEvent,
+      label: 'Event',
+      route: './school/schoolcalendars'
     },
     {
-      icon: icAssessment,
-      label: 'Scrumboard',
-      route: '/apps/scrumboard/1'
-    },
-    {
-      icon: icBook,
-      label: 'Documentation',
-      route: '/documentation'
+      icon: icNotice,
+      label: 'Notice',
+      route: './school/notices'
     }
   ];
 

@@ -40,11 +40,10 @@ export class EditStaffFieldsComponent implements OnInit {
     ) {
       this.form=fb.group({
         fieldId:[0],
-        title:['',[Validators.required]],
-        fieldType:[],
+        title:['',[ValidationService.noWhitespaceValidator]],
+        fieldType:['',[Validators.required]],
         selectOptions:[''],
         defaultSelection:[,[ValidationService.defaultSelectionValidator]],
-        sortOrder:[,[Validators.required,Validators.min(1)]],
         required:[false],
         hide:[false],
         systemField:[false]
@@ -62,7 +61,6 @@ export class EditStaffFieldsComponent implements OnInit {
         this.form.controls.title.patchValue(data.information.title)
         this.form.controls.selectOptions.patchValue(data.information.selectOptions.replaceAll("|","\n"))
         this.form.controls.defaultSelection.patchValue(data.information.defaultSelection)
-        this.form.controls.sortOrder.patchValue(data.information.sortOrder)
         this.form.controls.required.patchValue(data.information.required)
         this.form.controls.fieldType.patchValue(data.information.type)
         this.form.controls.hide.patchValue(data.information.hide)
@@ -80,28 +78,26 @@ export class EditStaffFieldsComponent implements OnInit {
         this.customFieldAddView.customFields.title=this.form.controls.title.value;
         this.customFieldAddView.customFields.selectOptions=this.form.controls.selectOptions.value.replaceAll("\n","|");
         this.customFieldAddView.customFields.defaultSelection=this.form.controls.defaultSelection.value;
-        this.customFieldAddView.customFields.sortOrder=this.form.controls.sortOrder.value;
         this.customFieldAddView.customFields.required=this.form.controls.required.value;
         this.customFieldAddView.customFields.hide=this.form.controls.hide.value;
         this.customFieldAddView.customFields.systemField=this.form.controls.systemField.value;
         this.customFieldAddView.customFields.type=this.form.controls.fieldType.value;
         this.customFieldAddView.customFields.module=this.fieldCategoryModule.Staff;
-        //this.customFieldAddView.customFields.type="Custom";
          this.customFieldService.addCustomField(this.customFieldAddView).subscribe(
           (res:CustomFieldAddView)=>{
             if(typeof(res)=='undefined'){
-              this.snackbar.open('School field failed. ' + sessionStorage.getItem("httpError"), '', {
+              this.snackbar.open('Staff field failed. ' + sessionStorage.getItem("httpError"), '', {
                 duration: 10000
               });
             }
             else{
               if (res._failure) {
-                this.snackbar.open('School field failed. ' + res._message, 'LOL THANKS', {
+                this.snackbar.open('Staff field failed. ' + res._message, '', {
                   duration: 10000
                 });
               } 
               else { 
-                this.snackbar.open('School field Successful Created.', '', {
+                this.snackbar.open('Staff field Successful Created.', '', {
                   duration: 10000
                 }); 
                 this.dialogRef.close('submited');
@@ -121,25 +117,24 @@ export class EditStaffFieldsComponent implements OnInit {
             this.customFieldAddView.customFields.selectOptions="";
           }
         this.customFieldAddView.customFields.defaultSelection=this.form.controls.defaultSelection.value;
-        this.customFieldAddView.customFields.sortOrder=this.form.controls.sortOrder.value;
         this.customFieldAddView.customFields.required=this.form.controls.required.value;
         this.customFieldAddView.customFields.hide=this.form.controls.hide.value;
         this.customFieldAddView.customFields.systemField=this.form.controls.systemField.value;
         this.customFieldService.updateCustomField(this.customFieldAddView).subscribe(
           (res:CustomFieldAddView)=>{
             if(typeof(res)=='undefined'){
-              this.snackbar.open('School field failed. ' + sessionStorage.getItem("httpError"), '', {
+              this.snackbar.open('Staff field failed. ' + sessionStorage.getItem("httpError"), '', {
                 duration: 10000
               });
             }
             else{
               if (res._failure) {
-                this.snackbar.open('School field failed. ' + res._message, 'LOL THANKS', {
+                this.snackbar.open('Staff field failed. ' + res._message, '', {
                   duration: 10000
                 });
               } 
               else {
-                this.snackbar.open('School field Successful Edited.', '', {
+                this.snackbar.open('Staff field Successful Edited.', '', {
                   duration: 10000
                 }); 
                 this.dialogRef.close('submited');

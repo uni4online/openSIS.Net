@@ -47,6 +47,33 @@ namespace opensis.data.Helper
 
             return GetMaxId;
         }
+        public static long? GetMaxLongPK<TEntity>(CRMContext cRMContext, Func<TEntity, long> columnSelector) where TEntity : class
+        {
+            long? GetMaxId = 0;
+
+
+            var entityClass = cRMContext?.Set<TEntity>();
+            if (entityClass.Count() == 0)
+            {
+                GetMaxId = 1;
+            }
+            else
+            {
+                GetMaxId = cRMContext?.Set<TEntity>().Max(columnSelector);
+                if (GetMaxId == null || GetMaxId <= 0)
+                {
+                    GetMaxId = 1;
+                }
+                else
+                {
+                    GetMaxId = GetMaxId + 1;
+                }
+            }
+
+
+            return GetMaxId;
+        }
+
         /// <summary>
         /// This method returns a decrypt string for a password.
         /// </summary>

@@ -37,13 +37,14 @@ export class LoginComponent implements OnInit {
   icLanguage = icLanguage;
   public tenant = "";
   UserModel: UserViewModel = new UserViewModel();
-  loading: Boolean;
+  loading: boolean;
   languages: LanguageModel = new LanguageModel();
   listOfLanguageCode;
-  selectedLanguage;
+  selectedLanguage:string=null;
   languageList;
   expiredDate
   setValue = false;
+  forceLoaderToStop:boolean;
 
   constructor(
     private router: Router,
@@ -53,20 +54,22 @@ export class LoginComponent implements OnInit {
     private snackbar: MatSnackBar,
     private loginService: LoginService,
     public translate: TranslateService,
-    private loaderService: LoaderService,
-    private cookieService: CookieService
+    private cookieService: CookieService,
+    private loaderService: LoaderService
   ) {
     this.Activeroute.params.subscribe(params => { this.tenant = params.id || 'opensisv2'; });
     this.translate.addLangs(['en', 'fr']);
     this.translate.setDefaultLang('en');
     sessionStorage.setItem("tenant", this.tenant);
-    this.loaderService.isLoading.subscribe((v) => {
-      this.loading = v;
+    this.loaderService.isLoading.subscribe((val) => {
+      this.loading = val;
     });
+
     this.GetAllLanguage();
     this.form = this.fb.group({
       email: ['', [Validators.required, ValidationService.emailValidator]],
-      password: ['', Validators.required]
+      password: ['', Validators.required],
+      language:['en-us', Validators.required]
     });
   }
   get f() { return this.form.controls; }
@@ -98,6 +101,7 @@ export class LoginComponent implements OnInit {
   }
 
   send() {
+    this.form.markAsTouched();
     if (this.form.dirty && this.form.valid) {
       this.UserModel._tenantName = this.tenant;
       this.UserModel.password = this.form.value.password;
@@ -116,6 +120,8 @@ export class LoginComponent implements OnInit {
             sessionStorage.setItem("token", data._token);
             sessionStorage.setItem("tenantId", data.tenantId);
             sessionStorage.setItem("email", data.email);
+            sessionStorage.setItem("user", data.name);
+            sessionStorage.setItem("membershipName", data.membershipName);
             this.router.navigateByUrl("/school/dashboards");
           }
         }
@@ -124,33 +130,27 @@ export class LoginComponent implements OnInit {
   }
 
   GetAllLanguage() {
+    this.forceLoaderToStop=false;
     this.languages._tenantName = this.tenant;
-    this.loginService.getAllLanguage(this.languages).subscribe((res) => {
-      this.languageList = res.tableLanguage;
-      // **Below commented lines(4) will be uncommented when we will have multilingual feature.
-      //  this.listOfLanguageCode = this.languageList.map(a=>a.languageCode);
-      //   this.translate.addLangs(this.listOfLanguageCode);
-      //   this.translate.setDefaultLang('en');
-      // this.selectedLanguage=this.translate.defaultLang
-      if (this.languageList?.length > 0) {
-        let modifiedLanguageList = [];
-        for (let i = 0; i < this.languageList?.length; i++) {
-          if (this.languageList[i].lcid == "en-us" || this.languageList[i].lcid == "fr-fr" || this.languageList[i].lcid == "es-es") {
-            modifiedLanguageList.push(this.languageList[i]);
-          }
-          if (modifiedLanguageList.length >= 3) {
-            break;
-          }
+    this.loginService.getAllLanguageForLogin(this.languages).subscribe((res) => {
+      if(res._failure){
+        this.form.patchValue({
+          language:null
+        })
+      }else{
+        this.languageList = res.tableLanguage;
+        this.forceLoaderToStop=true;
+        // **Below commented lines(4) will be uncommented when we will have multilingual feature.
+        //  this.listOfLanguageCode = this.languageList.map(a=>a.languageCode);
+        //   this.translate.addLangs(this.listOfLanguageCode);
+        //   this.translate.setDefaultLang('en');
+        let checkPreviousPreference = sessionStorage.getItem("language");
+        if (checkPreviousPreference == null) {
+          sessionStorage.setItem("language", 'en-us');
+          this.selectedLanguage = sessionStorage.getItem("language");
+        } else {
+          this.selectedLanguage = sessionStorage.getItem("language");
         }
-        this.languageList = modifiedLanguageList;
-      }
-
-      let checkPreviousPreference = sessionStorage.getItem("language");
-      if (checkPreviousPreference == null) {
-        sessionStorage.setItem("language", 'en-us');
-        this.selectedLanguage = sessionStorage.getItem("language");
-      } else {
-        this.selectedLanguage = sessionStorage.getItem("language");
       }
     })
   }

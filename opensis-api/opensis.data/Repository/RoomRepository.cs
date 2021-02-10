@@ -29,16 +29,43 @@ namespace opensis.data.Repository
         /// <returns></returns>
         public RoomAddViewModel AddRoom(RoomAddViewModel rooms)
         {
-            int? RoomlId = Utility.GetMaxPK(this.context, new Func<Rooms, int>(x => x.RoomId));
-            rooms.tableRoom.RoomId = (int)RoomlId;
-            rooms.tableRoom.LastUpdated = DateTime.UtcNow;
-            rooms.tableRoom.TenantId = rooms.tableRoom.TenantId;
-            rooms.tableRoom.IsActive = rooms.tableRoom.IsActive;
-            this.context?.Rooms.Add(rooms.tableRoom);
-            this.context?.SaveChanges();
+            try
+            {
+                var checkRoomTitle = this.context?.Rooms.Where(x => x.SchoolId == rooms.tableRoom.SchoolId && x.TenantId == rooms.tableRoom.TenantId && x.Title.ToLower() == rooms.tableRoom.Title.ToLower()).FirstOrDefault();
 
+                if (checkRoomTitle !=null)
+                {
+                    rooms._failure = true;
+                    rooms._message = "Room Title Already Exists";
+                }
+                else
+                {
+                    //int? RoomlId = Utility.GetMaxPK(this.context, new Func<Rooms, int>(x => x.RoomId));
+
+                    int? RoomlId = 1;
+
+                    var RoomlIdData = this.context?.Rooms.Where(x => x.SchoolId == rooms.tableRoom.SchoolId && x.TenantId == rooms.tableRoom.TenantId).OrderByDescending(x => x.RoomId).FirstOrDefault();
+
+                    if (RoomlIdData != null)
+                    {
+                        RoomlId = RoomlIdData.RoomId + 1;
+                    }
+                    rooms.tableRoom.RoomId = (int)RoomlId;
+                    rooms.tableRoom.LastUpdated = DateTime.UtcNow;
+                    rooms.tableRoom.TenantId = rooms.tableRoom.TenantId;
+                    rooms.tableRoom.IsActive = rooms.tableRoom.IsActive;
+                    this.context?.Rooms.Add(rooms.tableRoom);
+                    this.context?.SaveChanges();
+                }               
+            }
+            catch (Exception es)
+            {
+                rooms._message = es.Message;
+                rooms._failure = true;
+            }            
             return rooms;
         }
+
         /// <summary>
         /// Get Room By Id
         /// </summary>
@@ -80,27 +107,40 @@ namespace opensis.data.Repository
             try
             {
                 var roomMaster = this.context?.Rooms.FirstOrDefault(x => x.TenantId == room.tableRoom.TenantId && x.SchoolId == room.tableRoom.SchoolId && x.RoomId == room.tableRoom.RoomId);
-                roomMaster.SchoolId = room.tableRoom.SchoolId;
-                roomMaster.TenantId = room.tableRoom.TenantId;
-                roomMaster.Title = room.tableRoom.Title;
-                roomMaster.Capacity = room.tableRoom.Capacity;
-                roomMaster.Description = room.tableRoom.Description;
-                roomMaster.SortOrder = room.tableRoom.SortOrder;
-                roomMaster.IsActive = room.tableRoom.IsActive;
-                room.tableRoom.LastUpdated = DateTime.UtcNow;
-                roomMaster.UpdatedBy = room.tableRoom.UpdatedBy;
-                this.context?.SaveChanges();
-                room._failure = false;
-                return room;
+                if (roomMaster !=null)
+                {
+                    var checkRoomTitle = this.context?.Rooms.Where(x => x.SchoolId == room.tableRoom.SchoolId && x.TenantId == room.tableRoom.TenantId && x.RoomId != room.tableRoom.RoomId && x.Title.ToLower() == room.tableRoom.Title.ToLower()).FirstOrDefault();
+
+                    if (checkRoomTitle !=null)
+                    {
+                        room._failure = true;
+                        room._message = "Room Title Already Exists";
+                    }
+                    else
+                    {
+                        room.tableRoom.LastUpdated = DateTime.UtcNow;
+                        this.context.Entry(roomMaster).CurrentValues.SetValues(room.tableRoom);
+                        this.context?.SaveChanges();
+                        room._failure = false;
+                    }                    
+                }
+                else
+                {
+                    room.tableRoom = null;
+                    room._failure = true;
+                    room._message = NORECORDFOUND;
+                }
             }
             catch (Exception ex)
             {
-                room.tableRoom = null;
+                
                 room._failure = true;
-                room._message = NORECORDFOUND;
-                return room;
+                room._message = ex.Message;
+                
             }
+            return room;
         }
+
         /// <summary>
         /// Get All Room
         /// </summary>
@@ -112,11 +152,22 @@ namespace opensis.data.Repository
             try
             {
 
-                var room = this.context?.Rooms.Where(x => x.TenantId == roomList.TenantId && x.SchoolId == roomList.SchoolId).OrderBy(x => x.SortOrder).ToList();
-                roomListModel.TableroomList = room;
-                roomListModel._tenantName = roomList._tenantName;
-                roomListModel._token = roomList._token;
-                roomListModel._failure = false;
+                var room = this.context?.Rooms.Where(x => x.TenantId == roomList.TenantId && x.SchoolId == roomList.SchoolId && x.IsActive == true).OrderBy(x => x.SortOrder).ToList();
+                if (room.Count > 0)
+                {
+                    roomListModel.TableroomList = room;
+                    roomListModel._tenantName = roomList._tenantName;
+                    roomListModel._token = roomList._token;
+                    roomListModel._failure = false;
+                }
+                else
+                {
+                    roomListModel.TableroomList = null;
+                    roomListModel._tenantName = roomList._tenantName;
+                    roomListModel._token = roomList._token;
+                    roomListModel._failure = true;
+                    roomListModel._message = NORECORDFOUND;
+                }
             }
             catch (Exception es)
             {

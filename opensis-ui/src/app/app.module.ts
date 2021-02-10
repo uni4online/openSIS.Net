@@ -25,7 +25,8 @@ import { LoaderInterceptor } from './services/loader.interceptor';
 import { LoaderService } from './services/loader.service';
 import { ResponseMessageService } from './services/response-message.service';
 import { ConfirmDialogComponent } from './pages/shared-module/confirm-dialog/confirm-dialog.component';
-
+import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
+ 
 
 @NgModule({
   declarations: [AppComponent],
@@ -41,7 +42,9 @@ import { ConfirmDialogComponent } from './pages/shared-module/confirm-dialog/con
     MatDatepickerModule,
     MatCheckboxModule,
     MatSnackBarModule,
-
+     
+    OwlDateTimeModule, 
+    OwlNativeDateTimeModule,
     // Vex
     VexModule,
     CustomLayoutModule,

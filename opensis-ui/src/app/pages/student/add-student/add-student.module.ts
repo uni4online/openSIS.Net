@@ -17,6 +17,7 @@ import { ContainerModule } from '../../../../@vex/directives/container/container
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { StudentGeneralinfoComponent } from '../add-student/student-generalinfo/student-generalinfo.component';
 import { StudentAddressandcontactsComponent } from '../add-student/student-addressandcontacts/student-addressandcontacts.component';
 import { StudentEnrollmentinfoComponent } from '../add-student/student-enrollmentinfo/student-enrollmentinfo.component';
@@ -44,10 +45,12 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { ViewstudentLogininfoComponent } from './viewstudent-logininfo/viewstudent-logininfo.component';
-import { ViewstudentEnrollmentinfoComponent } from './viewstudent-enrollmentinfo/viewstudent-enrollmentinfo.component';
 import { CustomFieldModule } from '../../../../../src/app/common/custom-field/custom-field.module';
 import { CustomFieldWithoutFormModule } from '../../../../../src/app/common/custom-field-without-form/custom-field-without-form.module';
 import {MatTabsModule} from '@angular/material/tabs';
+import { ViewStudentGeneralinfoComponent } from './view-student-generalinfo/view-student-generalinfo.component';
+import { ViewStudentAddressandcontactsComponent } from './view-student-addressandcontacts/view-student-addressandcontacts.component';
+import { DatePipe } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -63,13 +66,15 @@ import {MatTabsModule} from '@angular/material/tabs';
     StudentContactsComponent,
     SiblingsinfoComponent,
     ViewstudentLogininfoComponent,
-    ViewstudentEnrollmentinfoComponent
+    ViewStudentGeneralinfoComponent,
+    ViewStudentAddressandcontactsComponent
   ],
   imports: [
     CommonModule,
     MatIconModule,
     MatInputModule,
     MatSelectModule,
+    MatProgressSpinnerModule,
     IconModule,
     MatButtonModule,   
     MatCardModule,
@@ -103,6 +108,9 @@ import {MatTabsModule} from '@angular/material/tabs';
     CustomFieldModule,
     CustomFieldWithoutFormModule,
     MatTabsModule
+  ],
+  providers: [
+    DatePipe
   ]
 })
 export class AddStudentModule { }

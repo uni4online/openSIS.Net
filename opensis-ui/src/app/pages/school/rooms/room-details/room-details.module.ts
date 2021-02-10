@@ -1,3 +1,4 @@
+import { SharedModuleModule } from './../../../shared-module/shared-module.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RoomDetailsComponent } from './room-details.component';
@@ -21,7 +22,8 @@ import { TranslateModule } from '@ngx-translate/core';
     IconModule,
     FlexLayoutModule,
     MatDividerModule,
-    TranslateModule
+    TranslateModule,
+    SharedModuleModule
   ]
 })
 export class EditRoomModule { }

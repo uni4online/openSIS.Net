@@ -133,6 +133,128 @@ namespace opensis.data.Migrations.SqlServerMigrations
                     b.ToTable("attendance_code_categories");
                 });
 
+            modelBuilder.Entity("opensis.data.Models.Block", b =>
+                {
+                    b.Property<Guid>("TenantId")
+                        .HasColumnName("tenant_id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("SchoolId")
+                        .HasColumnName("school_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("BlockId")
+                        .HasColumnName("block_id")
+                        .HasColumnType("int");
+
+                    b.Property<long?>("BlockSortOrder")
+                        .HasColumnName("block_sort_order")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("BlockTitle")
+                        .HasColumnName("block_title")
+                        .HasColumnType("varchar(200)")
+                        .HasMaxLength(200)
+                        .IsUnicode(false);
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnName("created_by")
+                        .HasColumnType("varchar(150)")
+                        .HasMaxLength(150)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnName("created_on")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnName("updated_by")
+                        .HasColumnType("varchar(150)")
+                        .HasMaxLength(150)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnName("updated_on")
+                        .HasColumnType("datetime");
+
+                    b.HasKey("TenantId", "SchoolId", "BlockId");
+
+                    b.ToTable("block");
+                });
+
+            modelBuilder.Entity("opensis.data.Models.BlockPeriod", b =>
+                {
+                    b.Property<Guid>("TenantId")
+                        .HasColumnName("tenant_id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("SchoolId")
+                        .HasColumnName("school_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("BlockId")
+                        .HasColumnName("block_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PeriodId")
+                        .HasColumnName("period_id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnName("created_by")
+                        .HasColumnType("varchar(150)")
+                        .HasMaxLength(150)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnName("created_on")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("PeriodEndTime")
+                        .HasColumnName("period_end_time")
+                        .HasColumnType("char(8)")
+                        .IsFixedLength(true)
+                        .HasMaxLength(8)
+                        .IsUnicode(false);
+
+                    b.Property<string>("PeriodShortName")
+                        .HasColumnName("period_short_name")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<int?>("PeriodSortOrder")
+                        .HasColumnName("period_sort_order")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PeriodStartTime")
+                        .HasColumnName("period_start_time")
+                        .HasColumnType("char(8)")
+                        .IsFixedLength(true)
+                        .HasMaxLength(8)
+                        .IsUnicode(false);
+
+                    b.Property<string>("PeriodTitle")
+                        .HasColumnName("period_title")
+                        .HasColumnType("varchar(200)")
+                        .HasMaxLength(200)
+                        .IsUnicode(false);
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnName("updated_by")
+                        .HasColumnType("varchar(150)")
+                        .HasMaxLength(150)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnName("updated_on")
+                        .HasColumnType("datetime");
+
+                    b.HasKey("TenantId", "SchoolId", "BlockId", "PeriodId");
+
+                    b.ToTable("block_period");
+                });
+
             modelBuilder.Entity("opensis.data.Models.CalendarEvents", b =>
                 {
                     b.Property<Guid>("TenantId")
@@ -220,6 +342,16 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("CreatedBy")
+                        .HasColumnName("created_by")
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnName("created_on")
+                        .HasColumnType("datetime");
+
                     b.Property<string>("Name")
                         .HasColumnName("name")
                         .HasColumnType("nvarchar(50)")
@@ -228,6 +360,16 @@ namespace opensis.data.Migrations.SqlServerMigrations
                     b.Property<int?>("StateId")
                         .HasColumnName("stateid")
                         .HasColumnType("int");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnName("updated_by")
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnName("updated_on")
+                        .HasColumnType("datetime");
 
                     b.HasKey("Id");
 
@@ -250,10 +392,30 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .HasMaxLength(5)
                         .IsUnicode(false);
 
+                    b.Property<string>("CreatedBy")
+                        .HasColumnName("created_by")
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnName("created_on")
+                        .HasColumnType("datetime");
+
                     b.Property<string>("Name")
                         .HasColumnName("name")
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnName("updated_by")
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnName("updated_on")
+                        .HasColumnType("datetime");
 
                     b.HasKey("Id");
 
@@ -1738,6 +1900,612 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         });
                 });
 
+            modelBuilder.Entity("opensis.data.Models.Course", b =>
+                {
+                    b.Property<Guid>("TenantId")
+                        .HasColumnName("tenant_id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("SchoolId")
+                        .HasColumnName("school_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CourseId")
+                        .HasColumnName("course_id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CourseCategory")
+                        .HasColumnName("course_category")
+                        .HasColumnType("varchar(8)")
+                        .HasComment("'Core' or 'Elective'")
+                        .HasMaxLength(8)
+                        .IsUnicode(false);
+
+                    b.Property<string>("CourseDescription")
+                        .HasColumnName("course_description")
+                        .HasColumnType("varchar(max)")
+                        .IsUnicode(false);
+
+                    b.Property<string>("CourseGradeLevel")
+                        .HasColumnName("course_grade_level")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("CourseProgram")
+                        .HasColumnName("course_program")
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100)
+                        .IsUnicode(false);
+
+                    b.Property<string>("CourseShortName")
+                        .HasColumnName("course_short_name")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("CourseSubject")
+                        .HasColumnName("course_subject")
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100)
+                        .IsUnicode(false);
+
+                    b.Property<string>("CourseTitle")
+                        .HasColumnName("course_title")
+                        .HasColumnType("varchar(max)")
+                        .IsUnicode(false);
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnName("created_by")
+                        .HasColumnType("varchar(150)")
+                        .HasMaxLength(150)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnName("created_on")
+                        .HasColumnType("datetime");
+
+                    b.Property<double?>("CreditHours")
+                        .HasColumnName("credit_hours")
+                        .HasColumnType("float");
+
+                    b.Property<bool?>("IsCourseActive")
+                        .HasColumnName("is_course_active")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Standard")
+                        .HasColumnName("standard")
+                        .HasColumnType("varchar(50)")
+                        .HasComment("choose between US Common Core library or school specific standards library.")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("StandardRefNo")
+                        .HasColumnName("standard_ref_no")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnName("updated_by")
+                        .HasColumnType("varchar(150)")
+                        .HasMaxLength(150)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnName("updated_on")
+                        .HasColumnType("datetime");
+
+                    b.HasKey("TenantId", "SchoolId", "CourseId");
+
+                    b.ToTable("course");
+                });
+
+            modelBuilder.Entity("opensis.data.Models.CourseBlockSchedule", b =>
+                {
+                    b.Property<Guid>("TenantId")
+                        .HasColumnName("tenant_id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("SchoolId")
+                        .HasColumnName("school_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CourseId")
+                        .HasColumnName("course_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CourseSectionId")
+                        .HasColumnName("course_section_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Serial")
+                        .HasColumnName("serial")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("BlockId")
+                        .HasColumnName("block_id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnName("created_by")
+                        .HasColumnType("varchar(150)")
+                        .HasMaxLength(150)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnName("created_on")
+                        .HasColumnType("datetime");
+
+                    b.Property<int>("GradeScaleId")
+                        .HasColumnName("grade_scale_id")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PeriodId")
+                        .HasColumnName("period_id")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("RoomId")
+                        .HasColumnName("room_id")
+                        .HasColumnType("int");
+
+                    b.Property<bool?>("TakeAttendance")
+                        .HasColumnName("take_attendance")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnName("updated_by")
+                        .HasColumnType("varchar(150)")
+                        .HasMaxLength(150)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnName("updated_on")
+                        .HasColumnType("datetime");
+
+                    b.HasKey("TenantId", "SchoolId", "CourseId", "CourseSectionId", "Serial")
+                        .HasName("PK_course_block_schedule_1");
+
+                    b.HasIndex("TenantId", "SchoolId", "RoomId");
+
+                    b.HasIndex("TenantId", "SchoolId", "BlockId", "PeriodId");
+
+                    b.ToTable("course_block_schedule");
+                });
+
+            modelBuilder.Entity("opensis.data.Models.CourseCalendarSchedule", b =>
+                {
+                    b.Property<Guid>("TenantId")
+                        .HasColumnName("tenant_id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("SchoolId")
+                        .HasColumnName("school_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CourseId")
+                        .HasColumnName("course_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CourseSectionId")
+                        .HasColumnName("course_section_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Serial")
+                        .HasColumnName("serial")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("BlockId")
+                        .HasColumnName("block_id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnName("created_by")
+                        .HasColumnType("varchar(150)")
+                        .HasMaxLength(150)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnName("created_on")
+                        .HasColumnType("datetime");
+
+                    b.Property<DateTime?>("Date")
+                        .HasColumnName("date")
+                        .HasColumnType("date");
+
+                    b.Property<int>("GradeScaleId")
+                        .HasColumnName("grade_scale_id")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PeriodId")
+                        .HasColumnName("period_id")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("RoomId")
+                        .HasColumnName("room_id")
+                        .HasColumnType("int");
+
+                    b.Property<bool?>("TakeAttendance")
+                        .HasColumnName("take_attendance")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnName("updated_by")
+                        .HasColumnType("varchar(150)")
+                        .HasMaxLength(150)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnName("updated_on")
+                        .HasColumnType("datetime");
+
+                    b.HasKey("TenantId", "SchoolId", "CourseId", "CourseSectionId", "Serial")
+                        .HasName("PK_course_calendar_schedule_1");
+
+                    b.HasIndex("TenantId", "SchoolId", "RoomId");
+
+                    b.HasIndex("TenantId", "SchoolId", "BlockId", "PeriodId");
+
+                    b.ToTable("course_calendar_schedule");
+                });
+
+            modelBuilder.Entity("opensis.data.Models.CourseFixedSchedule", b =>
+                {
+                    b.Property<Guid>("TenantId")
+                        .HasColumnName("tenant_id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("SchoolId")
+                        .HasColumnName("school_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CourseId")
+                        .HasColumnName("course_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CourseSectionId")
+                        .HasColumnName("course_section_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Serial")
+                        .HasColumnName("serial")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("BlockId")
+                        .HasColumnName("block_id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnName("created_by")
+                        .HasColumnType("varchar(150)")
+                        .HasMaxLength(150)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnName("created_on")
+                        .HasColumnType("datetime");
+
+                    b.Property<int>("GradeScaleId")
+                        .HasColumnName("grade_scale_id")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PeriodId")
+                        .HasColumnName("period_id")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("RoomId")
+                        .HasColumnName("room_id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnName("updated_by")
+                        .HasColumnType("varchar(150)")
+                        .HasMaxLength(150)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnName("updated_on")
+                        .HasColumnType("datetime");
+
+                    b.HasKey("TenantId", "SchoolId", "CourseId", "CourseSectionId", "Serial")
+                        .HasName("PK_course_fixed_schedule_1");
+
+                    b.HasIndex("TenantId", "SchoolId", "RoomId");
+
+                    b.HasIndex("TenantId", "SchoolId", "BlockId", "PeriodId");
+
+                    b.ToTable("course_fixed_schedule");
+                });
+
+            modelBuilder.Entity("opensis.data.Models.CourseSection", b =>
+                {
+                    b.Property<Guid>("TenantId")
+                        .HasColumnName("tenant_id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("SchoolId")
+                        .HasColumnName("school_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CourseId")
+                        .HasColumnName("course_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CourseSectionId")
+                        .HasColumnName("course_section_id")
+                        .HasColumnType("int");
+
+                    b.Property<bool?>("AffectsClassRank")
+                        .HasColumnName("affects_class_rank")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("AffectsHonorRoll")
+                        .HasColumnName("affects_honor_roll")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("AttendanceCategoryId")
+                        .HasColumnName("attendance_category_id")
+                        .HasColumnType("int");
+
+                    b.Property<bool?>("AttendanceTaken")
+                        .HasColumnName("attendance_taken")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("CalendarId")
+                        .HasColumnName("calendar_id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CourseSectionName")
+                        .HasColumnName("course_section_name")
+                        .HasColumnType("varchar(200)")
+                        .HasMaxLength(200)
+                        .IsUnicode(false);
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnName("created_by")
+                        .HasColumnType("varchar(150)")
+                        .HasMaxLength(150)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnName("created_on")
+                        .HasColumnType("datetime");
+
+                    b.Property<decimal?>("CreditHours")
+                        .HasColumnName("credit_hours")
+                        .HasColumnType("decimal(8, 2)");
+
+                    b.Property<bool?>("DurationBasedOnPeriod")
+                        .HasColumnName("duration_based_on_period")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("DurationEndDate")
+                        .HasColumnName("duration_end_date")
+                        .HasColumnType("date");
+
+                    b.Property<DateTime?>("DurationStartDate")
+                        .HasColumnName("duration_start_date")
+                        .HasColumnType("date");
+
+                    b.Property<int>("GradeScaleId")
+                        .HasColumnName("grade_scale_id")
+                        .HasColumnType("int");
+
+                    b.Property<bool?>("IsActive")
+                        .HasColumnName("is_active")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("IsWeightedCourse")
+                        .HasColumnName("is_weighted_course")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("MeetingDays")
+                        .HasColumnName("meeting_days")
+                        .HasColumnType("varchar(13)")
+                        .HasComment("Starting Sunday as 0, 0|1|2|3|4|5|6")
+                        .HasMaxLength(13)
+                        .IsUnicode(false);
+
+                    b.Property<bool?>("OnlineClassRoom")
+                        .HasColumnName("online_class_room")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("OnlineClassroomPassword")
+                        .HasColumnName("online_classroom_password")
+                        .HasColumnType("varchar(20)")
+                        .HasMaxLength(20)
+                        .IsUnicode(false);
+
+                    b.Property<string>("OnlineClassroomUrl")
+                        .HasColumnName("online_classroom_url")
+                        .HasColumnType("varchar(250)")
+                        .HasMaxLength(250)
+                        .IsUnicode(false);
+
+                    b.Property<int?>("QtrMarkingPeriodId")
+                        .HasColumnName("qtr_marking_period_id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ScheduleType")
+                        .HasColumnName("schedule_type")
+                        .HasColumnType("varchar(25)")
+                        .HasComment("Fixed Schedule (1) / Variable Schedule (2) / Calendar Days (3) / Bell schedule (4)")
+                        .HasMaxLength(25)
+                        .IsUnicode(false);
+
+                    b.Property<int?>("Seats")
+                        .HasColumnName("seats")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SmstrMarkingPeriodId")
+                        .HasColumnName("smstr_marking_period_id")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("StandardGradeScaleId")
+                        .HasColumnName("standard_grade_scale_id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnName("updated_by")
+                        .HasColumnType("varchar(150)")
+                        .HasMaxLength(150)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnName("updated_on")
+                        .HasColumnType("datetime");
+
+                    b.Property<bool?>("UseStandards")
+                        .HasColumnName("use_standards")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("YrMarkingPeriodId")
+                        .HasColumnName("yr_marking_period_id")
+                        .HasColumnType("int");
+
+                    b.HasKey("TenantId", "SchoolId", "CourseId", "CourseSectionId")
+                        .HasName("PK_course_section_1");
+
+                    b.HasIndex("TenantId", "SchoolId", "AttendanceCategoryId");
+
+                    b.HasIndex("TenantId", "SchoolId", "CalendarId");
+
+                    b.HasIndex("TenantId", "SchoolId", "GradeScaleId");
+
+                    b.HasIndex("TenantId", "SchoolId", "QtrMarkingPeriodId");
+
+                    b.HasIndex("TenantId", "SchoolId", "SmstrMarkingPeriodId");
+
+                    b.HasIndex("TenantId", "SchoolId", "YrMarkingPeriodId");
+
+                    b.ToTable("course_section");
+                });
+
+            modelBuilder.Entity("opensis.data.Models.CourseStandard", b =>
+                {
+                    b.Property<Guid>("TenantId")
+                        .HasColumnName("tenant_id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("SchoolId")
+                        .HasColumnName("school_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CourseId")
+                        .HasColumnName("course_id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StandardRefNo")
+                        .HasColumnName("standard_ref_no")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnName("created_by")
+                        .HasColumnType("varchar(150)")
+                        .HasMaxLength(150)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnName("created_on")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnName("updated_by")
+                        .HasColumnType("varchar(150)")
+                        .HasMaxLength(150)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnName("updated_on")
+                        .HasColumnType("datetime");
+
+                    b.HasKey("TenantId", "SchoolId", "CourseId", "StandardRefNo");
+
+                    b.HasIndex("TenantId", "SchoolId", "StandardRefNo");
+
+                    b.ToTable("course_standard");
+                });
+
+            modelBuilder.Entity("opensis.data.Models.CourseVariableSchedule", b =>
+                {
+                    b.Property<Guid>("TenantId")
+                        .HasColumnName("tenant_id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("SchoolId")
+                        .HasColumnName("school_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CourseId")
+                        .HasColumnName("course_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CourseSectionId")
+                        .HasColumnName("course_section_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Serial")
+                        .HasColumnName("serial")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("BlockId")
+                        .HasColumnName("block_id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnName("created_by")
+                        .HasColumnType("varchar(150)")
+                        .HasMaxLength(150)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnName("created_on")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("Day")
+                        .HasColumnName("day")
+                        .HasColumnType("varchar(15)")
+                        .HasMaxLength(15)
+                        .IsUnicode(false);
+
+                    b.Property<int>("GradeScaleId")
+                        .HasColumnName("grade_scale_id")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PeriodId")
+                        .HasColumnName("period_id")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("RoomId")
+                        .HasColumnName("room_id")
+                        .HasColumnType("int");
+
+                    b.Property<bool?>("TakeAttendance")
+                        .HasColumnName("take_attendance")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnName("updated_by")
+                        .HasColumnType("varchar(150)")
+                        .HasMaxLength(150)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnName("updated_on")
+                        .HasColumnType("datetime");
+
+                    b.HasKey("TenantId", "SchoolId", "CourseId", "CourseSectionId", "Serial")
+                        .HasName("PK_course_variable_schedule_1");
+
+                    b.HasIndex("TenantId", "SchoolId", "RoomId");
+
+                    b.HasIndex("TenantId", "SchoolId", "BlockId", "PeriodId");
+
+                    b.ToTable("course_variable_schedule");
+                });
+
             modelBuilder.Entity("opensis.data.Models.CustomFields", b =>
                 {
                     b.Property<Guid>("TenantId")
@@ -1896,6 +2664,217 @@ namespace opensis.data.Migrations.SqlServerMigrations
                     b.ToTable("custom_fields_value");
                 });
 
+            modelBuilder.Entity("opensis.data.Models.DpdownValuelist", b =>
+                {
+                    b.Property<long>("Id")
+                        .HasColumnName("id")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnName("created_by")
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnName("created_on")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("LovColumnValue")
+                        .IsRequired()
+                        .HasColumnName("lov_column_value")
+                        .HasColumnType("varchar(max)")
+                        .IsUnicode(false);
+
+                    b.Property<string>("LovName")
+                        .IsRequired()
+                        .HasColumnName("lov_name")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<int>("SchoolId")
+                        .HasColumnName("school_id")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnName("tenant_id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnName("updated_by")
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnName("updated_on")
+                        .HasColumnType("datetime");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TenantId", "SchoolId");
+
+                    b.ToTable("dpdown_valuelist");
+                });
+
+            modelBuilder.Entity("opensis.data.Models.EffortGradeLibraryCategory", b =>
+                {
+                    b.Property<Guid>("TenantId")
+                        .HasColumnName("tenant_id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("SchoolId")
+                        .HasColumnName("school_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EffortCategoryId")
+                        .HasColumnName("effort_category_id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CategoryName")
+                        .HasColumnName("category_name")
+                        .HasColumnType("varchar(200)")
+                        .HasMaxLength(200)
+                        .IsUnicode(false);
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnName("created_by")
+                        .HasColumnType("varchar(150)")
+                        .HasMaxLength(150)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnName("created_on")
+                        .HasColumnType("datetime");
+
+                    b.Property<int?>("SortOrder")
+                        .HasColumnName("sort_order")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnName("updated_by")
+                        .HasColumnType("varchar(150)")
+                        .HasMaxLength(150)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnName("updated_on")
+                        .HasColumnType("datetime");
+
+                    b.HasKey("TenantId", "SchoolId", "EffortCategoryId")
+                        .HasName("PK_effort_category");
+
+                    b.ToTable("effort_grade_library_category");
+                });
+
+            modelBuilder.Entity("opensis.data.Models.EffortGradeLibraryCategoryItem", b =>
+                {
+                    b.Property<Guid>("TenantId")
+                        .HasColumnName("tenant_id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("SchoolId")
+                        .HasColumnName("school_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EffortCategoryId")
+                        .HasColumnName("effort_category_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EffortItemId")
+                        .HasColumnName("effort_item_id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnName("created_by")
+                        .HasColumnType("varchar(150)")
+                        .HasMaxLength(150)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnName("created_on")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("EffortItemTitle")
+                        .HasColumnName("effort_item_title")
+                        .HasColumnType("varchar(200)")
+                        .HasMaxLength(200)
+                        .IsUnicode(false);
+
+                    b.Property<int?>("SortOrder")
+                        .HasColumnName("sort_order")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnName("updated_by")
+                        .HasColumnType("varchar(150)")
+                        .HasMaxLength(150)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnName("updated_on")
+                        .HasColumnType("datetime");
+
+                    b.HasKey("TenantId", "SchoolId", "EffortCategoryId", "EffortItemId")
+                        .HasName("PK_effort_category_item");
+
+                    b.ToTable("effort_grade_library_category_item");
+                });
+
+            modelBuilder.Entity("opensis.data.Models.EffortGradeScale", b =>
+                {
+                    b.Property<Guid>("TenantId")
+                        .HasColumnName("tenant_id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("SchoolId")
+                        .HasColumnName("school_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EffortGradeScaleId")
+                        .HasColumnName("effort_grade_scale_id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnName("created_by")
+                        .HasColumnType("varchar(150)")
+                        .HasMaxLength(150)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnName("created_on")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("GradeScaleComment")
+                        .HasColumnName("grade_scale_comment")
+                        .HasColumnType("varchar(200)")
+                        .HasMaxLength(200)
+                        .IsUnicode(false);
+
+                    b.Property<int?>("GradeScaleValue")
+                        .HasColumnName("grade_scale_value")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SortOrder")
+                        .HasColumnName("sort_order")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnName("updated_by")
+                        .HasColumnType("varchar(150)")
+                        .HasMaxLength(150)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnName("updated_on")
+                        .HasColumnType("datetime");
+
+                    b.HasKey("TenantId", "SchoolId", "EffortGradeScaleId");
+
+                    b.ToTable("effort_grade_scale");
+                });
+
             modelBuilder.Entity("opensis.data.Models.FieldsCategory", b =>
                 {
                     b.Property<Guid>("TenantId")
@@ -1958,6 +2937,75 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .HasName("PK_custom_category");
 
                     b.ToTable("fields_category");
+                });
+
+            modelBuilder.Entity("opensis.data.Models.Grade", b =>
+                {
+                    b.Property<Guid>("TenantId")
+                        .HasColumnName("tenant_id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("SchoolId")
+                        .HasColumnName("school_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GradeScaleId")
+                        .HasColumnName("grade_scale_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GradeId")
+                        .HasColumnName("grade_id")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Breakoff")
+                        .HasColumnName("breakoff")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Comment")
+                        .HasColumnName("comment")
+                        .HasColumnType("varchar(max)")
+                        .IsUnicode(false);
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnName("created_by")
+                        .HasColumnType("varchar(150)")
+                        .HasMaxLength(150)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnName("created_on")
+                        .HasColumnType("datetime");
+
+                    b.Property<int?>("SortOrder")
+                        .HasColumnName("sort_order")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .HasColumnName("title")
+                        .HasColumnType("varchar(max)")
+                        .IsUnicode(false);
+
+                    b.Property<decimal?>("UnweightedGpValue")
+                        .HasColumnName("unweighted_gp_value")
+                        .HasColumnType("decimal(5, 2)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnName("updated_by")
+                        .HasColumnType("varchar(150)")
+                        .HasMaxLength(150)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnName("updated_on")
+                        .HasColumnType("datetime");
+
+                    b.Property<decimal?>("WeightedGpValue")
+                        .HasColumnName("weighted_gp_value")
+                        .HasColumnType("decimal(5, 2)");
+
+                    b.HasKey("TenantId", "SchoolId", "GradeScaleId", "GradeId");
+
+                    b.ToTable("grade");
                 });
 
             modelBuilder.Entity("opensis.data.Models.GradeEquivalency", b =>
@@ -2047,6 +3095,156 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         });
                 });
 
+            modelBuilder.Entity("opensis.data.Models.GradeScale", b =>
+                {
+                    b.Property<Guid>("TenantId")
+                        .HasColumnName("tenant_id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("SchoolId")
+                        .HasColumnName("school_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GradeScaleId")
+                        .HasColumnName("grade_scale_id")
+                        .HasColumnType("int");
+
+                    b.Property<bool?>("CalculateGpa")
+                        .HasColumnName("calculate_gpa")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnName("created_by")
+                        .HasColumnType("varchar(150)")
+                        .HasMaxLength(150)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnName("created_on")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("GradeScaleComment")
+                        .HasColumnName("grade_scale_comment")
+                        .HasColumnType("varchar(max)")
+                        .IsUnicode(false);
+
+                    b.Property<string>("GradeScaleName")
+                        .HasColumnName("grade_scale_name")
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100)
+                        .IsUnicode(false);
+
+                    b.Property<decimal?>("GradeScaleValue")
+                        .HasColumnName("grade_scale_value")
+                        .HasColumnType("decimal(5, 2)");
+
+                    b.Property<int?>("SortOrder")
+                        .HasColumnName("sort_order")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnName("updated_by")
+                        .HasColumnType("varchar(150)")
+                        .HasMaxLength(150)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnName("updated_on")
+                        .HasColumnType("datetime");
+
+                    b.Property<bool?>("UseAsStandardGradeScale")
+                        .HasColumnName("use_as_standard_grade_scale")
+                        .HasColumnType("bit");
+
+                    b.HasKey("TenantId", "SchoolId", "GradeScaleId");
+
+                    b.ToTable("grade_scale");
+                });
+
+            modelBuilder.Entity("opensis.data.Models.GradeUsStandard", b =>
+                {
+                    b.Property<Guid>("TenantId")
+                        .HasColumnName("tenant_id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("SchoolId")
+                        .HasColumnName("school_id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StandardRefNo")
+                        .HasColumnName("standard_ref_no")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("Course")
+                        .HasColumnName("course")
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100)
+                        .IsUnicode(false);
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnName("created_by")
+                        .HasColumnType("varchar(150)")
+                        .HasMaxLength(150)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnName("created_on")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("Domain")
+                        .HasColumnName("domain")
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100)
+                        .IsUnicode(false);
+
+                    b.Property<string>("GradeLevel")
+                        .HasColumnName("grade_level")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<int?>("GradeStandardId")
+                        .HasColumnName("grade_standard_id")
+                        .HasColumnType("int");
+
+                    b.Property<bool?>("IsSchoolSpecific")
+                        .HasColumnName("is_school_specific")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("StandardDetails")
+                        .HasColumnName("standard_details")
+                        .HasColumnType("varchar(max)")
+                        .IsUnicode(false);
+
+                    b.Property<string>("Subject")
+                        .HasColumnName("subject")
+                        .HasColumnType("char(50)")
+                        .IsFixedLength(true)
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("Topic")
+                        .HasColumnName("topic")
+                        .HasColumnType("varchar(max)")
+                        .IsUnicode(false);
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnName("updated_by")
+                        .HasColumnType("varchar(150)")
+                        .HasMaxLength(150)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnName("updated_on")
+                        .HasColumnType("datetime");
+
+                    b.HasKey("TenantId", "SchoolId", "StandardRefNo");
+
+                    b.ToTable("grade_us_standard");
+                });
+
             modelBuilder.Entity("opensis.data.Models.Gradelevels", b =>
                 {
                     b.Property<Guid>("TenantId")
@@ -2105,11 +3303,76 @@ namespace opensis.data.Migrations.SqlServerMigrations
                     b.ToTable("gradelevels");
                 });
 
+            modelBuilder.Entity("opensis.data.Models.HonorRolls", b =>
+                {
+                    b.Property<Guid>("TenantId")
+                        .HasColumnName("tenant_id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("SchoolId")
+                        .HasColumnName("school_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("HonorRollId")
+                        .HasColumnName("honor_roll_id")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Breakoff")
+                        .HasColumnName("breakoff")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnName("created_by")
+                        .HasColumnType("varchar(150)")
+                        .HasMaxLength(150)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnName("created_on")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("HonorRoll")
+                        .HasColumnName("honor_roll")
+                        .HasColumnType("varchar(20)")
+                        .HasMaxLength(20)
+                        .IsUnicode(false);
+
+                    b.Property<int>("MarkingPeriodId")
+                        .HasColumnName("marking_period_id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnName("updated_by")
+                        .HasColumnType("varchar(150)")
+                        .HasMaxLength(150)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnName("updated_on")
+                        .HasColumnType("datetime");
+
+                    b.HasKey("TenantId", "SchoolId", "HonorRollId");
+
+                    b.HasIndex("TenantId", "SchoolId", "MarkingPeriodId");
+
+                    b.ToTable("honor_rolls");
+                });
+
             modelBuilder.Entity("opensis.data.Models.Language", b =>
                 {
                     b.Property<int>("LangId")
                         .HasColumnName("lang_id")
                         .HasColumnType("int");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnName("created_by")
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnName("created_on")
+                        .HasColumnType("datetime");
 
                     b.Property<string>("LanguageCode")
                         .HasColumnName("language_code")
@@ -2128,6 +3391,16 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .HasColumnType("nchar(50)")
                         .IsFixedLength(true)
                         .HasMaxLength(50);
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnName("updated_by")
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnName("updated_on")
+                        .HasColumnType("datetime");
 
                     b.HasKey("LangId")
                         .HasName("pk_table_language");
@@ -3400,7 +4673,7 @@ namespace opensis.data.Migrations.SqlServerMigrations
                     b.ToTable("notice");
                 });
 
-            modelBuilder.Entity("opensis.data.Models.ParentInfo", b =>
+            modelBuilder.Entity("opensis.data.Models.ParentAddress", b =>
                 {
                     b.Property<Guid>("TenantId")
                         .HasColumnName("tenant_id")
@@ -3410,12 +4683,12 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .HasColumnName("school_id")
                         .HasColumnType("int");
 
-                    b.Property<int>("StudentId")
-                        .HasColumnName("student_id")
-                        .HasColumnType("int");
-
                     b.Property<int>("ParentId")
                         .HasColumnName("parent_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StudentId")
+                        .HasColumnName("student_id")
                         .HasColumnType("int");
 
                     b.Property<string>("AddressLineOne")
@@ -3430,11 +4703,118 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .HasMaxLength(200)
                         .IsUnicode(false);
 
-                    b.Property<string>("Associationship")
-                        .HasColumnName("associationship")
-                        .HasColumnType("varchar(max)")
-                        .HasComment("tenantid#schoolid#studentid | tenantid#schoolid#studentid | ....")
+                    b.Property<string>("City")
+                        .HasColumnName("city")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
                         .IsUnicode(false);
+
+                    b.Property<string>("Country")
+                        .HasColumnName("country")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("LastUpdated")
+                        .HasColumnName("last_updated")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("State")
+                        .HasColumnName("state")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<bool>("StudentAddressSame")
+                        .HasColumnName("student_address_same")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnName("updated_by")
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100)
+                        .IsUnicode(false);
+
+                    b.Property<string>("Zip")
+                        .HasColumnName("zip")
+                        .HasColumnType("varchar(15)")
+                        .HasMaxLength(15)
+                        .IsUnicode(false);
+
+                    b.HasKey("TenantId", "SchoolId", "ParentId", "StudentId")
+                        .HasName("PK_parent_address_1");
+
+                    b.ToTable("parent_address");
+                });
+
+            modelBuilder.Entity("opensis.data.Models.ParentAssociationship", b =>
+                {
+                    b.Property<Guid>("TenantId")
+                        .HasColumnName("tenant_id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("SchoolId")
+                        .HasColumnName("school_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ParentId")
+                        .HasColumnName("parent_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StudentId")
+                        .HasColumnName("student_id")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Associationship")
+                        .HasColumnName("associationship")
+                        .HasColumnType("bit")
+                        .HasComment("tenantid#schoolid#studentid | tenantid#schoolid#studentid | ....");
+
+                    b.Property<string>("ContactType")
+                        .HasColumnName("contact_type")
+                        .HasColumnType("varchar(9)")
+                        .HasComment("Primary | Secondary | Other")
+                        .HasMaxLength(9)
+                        .IsUnicode(false);
+
+                    b.Property<bool?>("IsCustodian")
+                        .HasColumnName("is_custodian")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastUpdated")
+                        .HasColumnName("last_updated")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("Relationship")
+                        .HasColumnName("relationship")
+                        .HasColumnType("varchar(30)")
+                        .HasMaxLength(30)
+                        .IsUnicode(false);
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnName("updated_by")
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100)
+                        .IsUnicode(false);
+
+                    b.HasKey("TenantId", "SchoolId", "ParentId", "StudentId");
+
+                    b.ToTable("parent_associationship");
+                });
+
+            modelBuilder.Entity("opensis.data.Models.ParentInfo", b =>
+                {
+                    b.Property<Guid>("TenantId")
+                        .HasColumnName("tenant_id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("SchoolId")
+                        .HasColumnName("school_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ParentId")
+                        .HasColumnName("parent_id")
+                        .HasColumnType("int");
 
                     b.Property<bool?>("BusDropoff")
                         .HasColumnName("bus_dropoff")
@@ -3450,25 +4830,6 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .HasColumnName("bus_pickup")
                         .HasColumnType("bit");
 
-                    b.Property<string>("City")
-                        .HasColumnName("city")
-                        .HasColumnType("varchar(50)")
-                        .HasMaxLength(50)
-                        .IsUnicode(false);
-
-                    b.Property<string>("ContactType")
-                        .HasColumnName("contact_type")
-                        .HasColumnType("varchar(9)")
-                        .HasComment("Primary | Secondary | Other")
-                        .HasMaxLength(9)
-                        .IsUnicode(false);
-
-                    b.Property<string>("Country")
-                        .HasColumnName("country")
-                        .HasColumnType("varchar(50)")
-                        .HasMaxLength(50)
-                        .IsUnicode(false);
-
                     b.Property<string>("Firstname")
                         .HasColumnName("firstname")
                         .HasColumnType("varchar(50)")
@@ -3480,10 +4841,6 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .HasColumnType("varchar(15)")
                         .HasMaxLength(15)
                         .IsUnicode(false);
-
-                    b.Property<bool>("IsCustodian")
-                        .HasColumnName("is_custodian")
-                        .HasColumnType("bit");
 
                     b.Property<bool>("IsPortalUser")
                         .HasColumnName("is_portal_user")
@@ -3518,16 +4875,18 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .HasMaxLength(15)
                         .IsUnicode(false);
 
+                    b.Property<Guid>("ParentGuid")
+                        .HasColumnName("parent_guid")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte[]>("ParentPhoto")
+                        .HasColumnName("parent_photo")
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<string>("PersonalEmail")
                         .HasColumnName("personal_email")
                         .HasColumnType("varchar(150)")
                         .HasMaxLength(150)
-                        .IsUnicode(false);
-
-                    b.Property<string>("Relationship")
-                        .HasColumnName("relationship")
-                        .HasColumnType("varchar(20)")
-                        .HasMaxLength(20)
                         .IsUnicode(false);
 
                     b.Property<string>("Salutation")
@@ -3535,16 +4894,6 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .HasColumnType("varchar(20)")
                         .HasMaxLength(20)
                         .IsUnicode(false);
-
-                    b.Property<string>("State")
-                        .HasColumnName("state")
-                        .HasColumnType("varchar(50)")
-                        .HasMaxLength(50)
-                        .IsUnicode(false);
-
-                    b.Property<bool?>("StudentAddressSame")
-                        .HasColumnName("student_address_same")
-                        .HasColumnType("bit");
 
                     b.Property<string>("Suffix")
                         .HasColumnName("suffix")
@@ -3576,13 +4925,8 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .HasMaxLength(15)
                         .IsUnicode(false);
 
-                    b.Property<string>("Zip")
-                        .HasColumnName("zip")
-                        .HasColumnType("varchar(15)")
-                        .HasMaxLength(15)
-                        .IsUnicode(false);
-
-                    b.HasKey("TenantId", "SchoolId", "StudentId", "ParentId");
+                    b.HasKey("TenantId", "SchoolId", "ParentId")
+                        .HasName("PK_parent_info_1");
 
                     b.ToTable("parent_info");
                 });
@@ -3619,6 +4963,51 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .HasName("pk_table_plans");
 
                     b.ToTable("plans");
+                });
+
+            modelBuilder.Entity("opensis.data.Models.Programs", b =>
+                {
+                    b.Property<Guid>("TenantId")
+                        .HasColumnName("tenant_id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("SchoolId")
+                        .HasColumnName("school_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProgramId")
+                        .HasColumnName("program_id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnName("created_by")
+                        .HasColumnType("varchar(150)")
+                        .HasMaxLength(150)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnName("created_on")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("ProgramName")
+                        .HasColumnName("program_name")
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100)
+                        .IsUnicode(false);
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnName("updated_by")
+                        .HasColumnType("varchar(150)")
+                        .HasMaxLength(150)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnName("updated_on")
+                        .HasColumnType("datetime");
+
+                    b.HasKey("TenantId", "SchoolId", "ProgramId");
+
+                    b.ToTable("programs");
                 });
 
             modelBuilder.Entity("opensis.data.Models.ProgressPeriods", b =>
@@ -3995,9 +5384,9 @@ namespace opensis.data.Migrations.SqlServerMigrations
 
                     b.Property<string>("Gender")
                         .HasColumnName("gender")
-                        .HasColumnType("nchar(6)")
+                        .HasColumnType("nchar(15)")
                         .IsFixedLength(true)
-                        .HasMaxLength(6);
+                        .HasMaxLength(15);
 
                     b.Property<bool?>("HandwashingAvailable")
                         .HasColumnName("handwashing_available")
@@ -4267,6 +5656,10 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .IsFixedLength(true)
                         .HasMaxLength(50);
 
+                    b.Property<Guid>("SchoolGuid")
+                        .HasColumnName("school_guid")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("SchoolInternalId")
                         .HasColumnName("school_internal_id")
                         .HasColumnType("varchar(50)")
@@ -4321,7 +5714,7 @@ namespace opensis.data.Migrations.SqlServerMigrations
                     b.ToTable("school_master");
                 });
 
-            modelBuilder.Entity("opensis.data.Models.SchoolPeriods", b =>
+            modelBuilder.Entity("opensis.data.Models.SchoolPeriodsObsolete", b =>
                 {
                     b.Property<Guid>("TenantId")
                         .HasColumnName("tenant_id")
@@ -4400,7 +5793,7 @@ namespace opensis.data.Migrations.SqlServerMigrations
                     b.HasKey("TenantId", "SchoolId", "PeriodId")
                         .HasName("pk_table_school_periods");
 
-                    b.ToTable("school_periods");
+                    b.ToTable("school_periods_obsolete");
                 });
 
             modelBuilder.Entity("opensis.data.Models.SchoolYears", b =>
@@ -4613,6 +6006,561 @@ namespace opensis.data.Migrations.SqlServerMigrations
                     b.ToTable("semesters");
                 });
 
+            modelBuilder.Entity("opensis.data.Models.StaffCertificateInfo", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnName("id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CertificationCode")
+                        .HasColumnName("certification_code")
+                        .HasColumnType("varchar(20)")
+                        .HasMaxLength(20)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("CertificationDate")
+                        .HasColumnName("certification_date")
+                        .HasColumnType("date");
+
+                    b.Property<string>("CertificationDescription")
+                        .HasColumnName("certification_description")
+                        .HasColumnType("varchar(max)")
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("CertificationExpiryDate")
+                        .HasColumnName("certification_expiry_date")
+                        .HasColumnType("date");
+
+                    b.Property<string>("CertificationName")
+                        .HasColumnName("certification_name")
+                        .HasColumnType("varchar(150)")
+                        .HasMaxLength(150)
+                        .IsUnicode(false);
+
+                    b.Property<bool?>("PrimaryCertification")
+                        .HasColumnName("primary_certification")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("SchoolId")
+                        .HasColumnName("school_id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ShortName")
+                        .HasColumnName("short_name")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<int?>("StaffId")
+                        .HasColumnName("staff_id")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("TenantId")
+                        .HasColumnName("tenant_id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnName("updated_at")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnName("updated_by")
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100)
+                        .IsUnicode(false);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TenantId", "StaffId");
+
+                    b.ToTable("staff_certificate_info");
+                });
+
+            modelBuilder.Entity("opensis.data.Models.StaffMaster", b =>
+                {
+                    b.Property<Guid>("TenantId")
+                        .HasColumnName("tenant_id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("StaffId")
+                        .HasColumnName("staff_id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("AlternateId")
+                        .HasColumnName("alternate_id")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<bool?>("BusDropoff")
+                        .HasColumnName("bus_dropoff")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("BusNo")
+                        .HasColumnName("bus_no")
+                        .HasColumnType("varchar(15)")
+                        .HasMaxLength(15)
+                        .IsUnicode(false);
+
+                    b.Property<bool?>("BusPickup")
+                        .HasColumnName("bus_pickup")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("CountryOfBirth")
+                        .HasColumnName("country_of_birth")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DisabilityDescription")
+                        .HasColumnName("disability_description")
+                        .HasColumnType("varchar(200)")
+                        .HasMaxLength(200)
+                        .IsUnicode(false);
+
+                    b.Property<string>("DistrictId")
+                        .HasColumnName("district_id")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("Dob")
+                        .HasColumnName("dob")
+                        .HasColumnType("date");
+
+                    b.Property<string>("EmergencyEmail")
+                        .HasColumnName("emergency_email")
+                        .HasColumnType("varchar(150)")
+                        .HasMaxLength(150)
+                        .IsUnicode(false);
+
+                    b.Property<string>("EmergencyFirstName")
+                        .HasColumnName("emergency_first_name")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("EmergencyHomePhone")
+                        .HasColumnName("emergency_home_phone")
+                        .HasColumnType("varchar(15)")
+                        .HasMaxLength(15)
+                        .IsUnicode(false);
+
+                    b.Property<string>("EmergencyLastName")
+                        .HasColumnName("emergency_last_name")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("EmergencyMobilePhone")
+                        .HasColumnName("emergency_mobile_phone")
+                        .HasColumnType("varchar(15)")
+                        .HasMaxLength(15)
+                        .IsUnicode(false);
+
+                    b.Property<string>("EmergencyWorkPhone")
+                        .HasColumnName("emergency_work_phone")
+                        .HasColumnType("varchar(15)")
+                        .HasMaxLength(15)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnName("end_date")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Ethnicity")
+                        .HasColumnName("ethnicity")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("Facebook")
+                        .HasColumnName("facebook")
+                        .HasColumnType("varchar(max)")
+                        .IsUnicode(false);
+
+                    b.Property<string>("FirstGivenName")
+                        .HasColumnName("first_given_name")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<int?>("FirstLanguage")
+                        .HasColumnName("first_language")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Gender")
+                        .HasColumnName("gender")
+                        .HasColumnType("varchar(6)")
+                        .HasMaxLength(6)
+                        .IsUnicode(false);
+
+                    b.Property<string>("HomeAddressCity")
+                        .HasColumnName("home_address_city")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("HomeAddressCountry")
+                        .HasColumnName("home_address_country")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("HomeAddressLineOne")
+                        .HasColumnName("home_address_line_one")
+                        .HasColumnType("varchar(200)")
+                        .HasMaxLength(200)
+                        .IsUnicode(false);
+
+                    b.Property<string>("HomeAddressLineTwo")
+                        .HasColumnName("home_address_line_two")
+                        .HasColumnType("varchar(200)")
+                        .HasMaxLength(200)
+                        .IsUnicode(false);
+
+                    b.Property<string>("HomeAddressState")
+                        .HasColumnName("home_address_state")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("HomeAddressZip")
+                        .HasColumnName("home_address_zip")
+                        .HasColumnType("varchar(15)")
+                        .HasMaxLength(15)
+                        .IsUnicode(false);
+
+                    b.Property<string>("HomePhone")
+                        .HasColumnName("home_phone")
+                        .HasColumnType("varchar(15)")
+                        .HasMaxLength(15)
+                        .IsUnicode(false);
+
+                    b.Property<bool?>("HomeroomTeacher")
+                        .HasColumnName("homeroom_teacher")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Instagram")
+                        .HasColumnName("instagram")
+                        .HasColumnType("varchar(max)")
+                        .IsUnicode(false);
+
+                    b.Property<string>("JobTitle")
+                        .HasColumnName("job_title")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("JoiningDate")
+                        .HasColumnName("joining_date")
+                        .HasColumnType("date");
+
+                    b.Property<string>("LastFamilyName")
+                        .HasColumnName("last_family_name")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("LastUpdated")
+                        .HasColumnName("last_updated")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("LastUpdatedBy")
+                        .HasColumnName("last_updated_by")
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100)
+                        .IsUnicode(false);
+
+                    b.Property<string>("Linkedin")
+                        .HasColumnName("linkedin")
+                        .HasColumnType("varchar(max)")
+                        .IsUnicode(false);
+
+                    b.Property<string>("LoginEmailAddress")
+                        .HasColumnName("login_email_address")
+                        .HasColumnType("varchar(150)")
+                        .HasMaxLength(150)
+                        .IsUnicode(false);
+
+                    b.Property<string>("MailingAddressCity")
+                        .HasColumnName("mailing_address_city")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("MailingAddressCountry")
+                        .HasColumnName("mailing_address_country")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("MailingAddressLineOne")
+                        .HasColumnName("mailing_address_line_one")
+                        .HasColumnType("varchar(200)")
+                        .HasMaxLength(200)
+                        .IsUnicode(false);
+
+                    b.Property<string>("MailingAddressLineTwo")
+                        .HasColumnName("mailing_address_line_two")
+                        .HasColumnType("varchar(200)")
+                        .HasMaxLength(200)
+                        .IsUnicode(false);
+
+                    b.Property<bool?>("MailingAddressSameToHome")
+                        .HasColumnName("mailing_address_same_to_home")
+                        .HasColumnType("bit")
+                        .HasComment("if true, home address will be replicated to mailing");
+
+                    b.Property<string>("MailingAddressState")
+                        .HasColumnName("mailing_address_state")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("MailingAddressZip")
+                        .HasColumnName("mailing_address_zip")
+                        .HasColumnType("varchar(15)")
+                        .HasMaxLength(15)
+                        .IsUnicode(false);
+
+                    b.Property<string>("MaritalStatus")
+                        .HasColumnName("marital_status")
+                        .HasColumnType("varchar(10)")
+                        .HasMaxLength(10)
+                        .IsUnicode(false);
+
+                    b.Property<string>("MiddleName")
+                        .HasColumnName("middle_name")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("MobilePhone")
+                        .HasColumnName("mobile_phone")
+                        .HasColumnType("varchar(15)")
+                        .HasMaxLength(15)
+                        .IsUnicode(false);
+
+                    b.Property<int?>("Nationality")
+                        .HasColumnName("nationality")
+                        .HasColumnType("int");
+
+                    b.Property<string>("OfficePhone")
+                        .HasColumnName("office_phone")
+                        .HasColumnType("varchar(15)")
+                        .HasMaxLength(15)
+                        .IsUnicode(false);
+
+                    b.Property<string>("OtherGovtIssuedNumber")
+                        .HasColumnName("other_govt_issued_number")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("OtherGradeLevelTaught")
+                        .HasColumnName("other_grade_level_taught")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("OtherSubjectTaught")
+                        .HasColumnName("other_subject_taught")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("PersonalEmail")
+                        .HasColumnName("personal_email")
+                        .HasColumnType("varchar(max)")
+                        .IsUnicode(false);
+
+                    b.Property<bool?>("PhysicalDisability")
+                        .HasColumnName("physical_disability")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("PortalAccess")
+                        .HasColumnName("portal_access")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("PreferredName")
+                        .HasColumnName("preferred_name")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("PreviousName")
+                        .HasColumnName("previous_name")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("PrimaryGradeLevelTaught")
+                        .HasColumnName("primary_grade_level_taught")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("PrimarySubjectTaught")
+                        .HasColumnName("primary_subject_taught")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("Profile")
+                        .HasColumnName("profile")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("Race")
+                        .HasColumnName("race")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("RelationshipToStaff")
+                        .HasColumnName("relationship_to_staff")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("Salutation")
+                        .HasColumnName("salutation")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("SchoolEmail")
+                        .HasColumnName("school_email")
+                        .HasColumnType("varchar(max)")
+                        .IsUnicode(false);
+
+                    b.Property<int>("SchoolId")
+                        .HasColumnName("school_id")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SecondLanguage")
+                        .HasColumnName("second_language")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SocialSecurityNumber")
+                        .HasColumnName("social_security_number")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<Guid>("StaffGuid")
+                        .HasColumnName("staff_guid")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("StaffInternalId")
+                        .HasColumnName("staff_internal_id")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<byte[]>("StaffPhoto")
+                        .HasColumnName("staff_photo")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("StateId")
+                        .HasColumnName("state_id")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("Suffix")
+                        .HasColumnName("suffix")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<int?>("ThirdLanguage")
+                        .HasColumnName("third_language")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Twitter")
+                        .HasColumnName("twitter")
+                        .HasColumnType("varchar(max)")
+                        .IsUnicode(false);
+
+                    b.Property<string>("Youtube")
+                        .HasColumnName("youtube")
+                        .HasColumnType("varchar(max)")
+                        .IsUnicode(false);
+
+                    b.HasKey("TenantId", "StaffId")
+                        .HasName("PK_staff_master_1");
+
+                    b.HasIndex("FirstLanguage");
+
+                    b.HasIndex("SecondLanguage");
+
+                    b.HasIndex("ThirdLanguage");
+
+                    b.HasIndex("TenantId", "SchoolId");
+
+                    b.ToTable("staff_master");
+                });
+
+            modelBuilder.Entity("opensis.data.Models.StaffSchoolInfo", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnName("id")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnName("end_date")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Profile")
+                        .HasColumnName("profile")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<int?>("SchoolAttachedId")
+                        .HasColumnName("school_attached_id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SchoolAttachedName")
+                        .HasColumnName("school_attached_name")
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100)
+                        .IsUnicode(false);
+
+                    b.Property<int?>("SchoolId")
+                        .HasColumnName("school_id")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("StaffId")
+                        .HasColumnName("staff_id")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("StartDate")
+                        .HasColumnName("start_date")
+                        .HasColumnType("date");
+
+                    b.Property<Guid?>("TenantId")
+                        .HasColumnName("tenant_id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnName("updated_at")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnName("updated_by")
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100)
+                        .IsUnicode(false);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TenantId", "StaffId");
+
+                    b.ToTable("staff_school_info");
+                });
+
             modelBuilder.Entity("opensis.data.Models.State", b =>
                 {
                     b.Property<int>("Id")
@@ -4625,10 +6573,26 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .HasColumnName("countryid")
                         .HasColumnType("int");
 
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Name")
                         .HasColumnName("name")
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnName("updated_by")
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnName("updated_on")
+                        .HasColumnType("datetime");
 
                     b.HasKey("Id");
 
@@ -4705,9 +6669,8 @@ namespace opensis.data.Migrations.SqlServerMigrations
 
                     b.Property<string>("Filetype")
                         .HasColumnName("filetype")
-                        .HasColumnType("char(50)")
-                        .IsFixedLength(true)
-                        .HasMaxLength(50)
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100)
                         .IsUnicode(false);
 
                     b.Property<string>("UploadedBy")
@@ -4773,6 +6736,10 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .HasMaxLength(50)
                         .IsUnicode(false);
 
+                    b.Property<bool?>("IsActive")
+                        .HasColumnName("is_active")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime?>("LastUpdated")
                         .HasColumnName("last_updated")
                         .HasColumnType("datetime");
@@ -4796,11 +6763,19 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .HasMaxLength(200)
                         .IsUnicode(false);
 
+                    b.Property<Guid>("StudentGuid")
+                        .HasColumnName("student_guid")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("TransferredGrade")
                         .HasColumnName("transferred_grade")
                         .HasColumnType("varchar(50)")
                         .HasMaxLength(50)
                         .IsUnicode(false);
+
+                    b.Property<int?>("TransferredSchoolId")
+                        .HasColumnName("transferred_school_id")
+                        .HasColumnType("int");
 
                     b.Property<string>("UpdatedBy")
                         .HasColumnName("updated_by")
@@ -4810,7 +6785,7 @@ namespace opensis.data.Migrations.SqlServerMigrations
 
                     b.HasKey("TenantId", "SchoolId", "StudentId", "EnrollmentId");
 
-                    b.HasIndex("TenantId", "SchoolId", "CalenderId");
+                    b.HasIndex("TenantId", "SchoolId", "StudentGuid");
 
                     b.ToTable("student_enrollment");
                 });
@@ -4909,7 +6884,7 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .IsUnicode(false);
 
                     b.Property<string>("BusNo")
-                        .HasColumnName("bus_No")
+                        .HasColumnName("bus_no")
                         .HasColumnType("varchar(15)")
                         .HasMaxLength(15)
                         .IsUnicode(false);
@@ -4953,6 +6928,14 @@ namespace opensis.data.Migrations.SqlServerMigrations
                     b.Property<bool?>("Eligibility504")
                         .HasColumnName("eligibility_504")
                         .HasColumnType("bit");
+
+                    b.Property<string>("EnrollmentType")
+                        .HasColumnName("enrollment_type")
+                        .HasColumnType("char(8)")
+                        .IsFixedLength(true)
+                        .HasComment("\"Internal\" or \"External\". Default \"Internal\"")
+                        .HasMaxLength(8)
+                        .IsUnicode(false);
 
                     b.Property<DateTime?>("EstimatedGradDate")
                         .HasColumnName("estimated_grad_date")
@@ -5048,6 +7031,10 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .HasColumnType("varchar(50)")
                         .HasMaxLength(50)
                         .IsUnicode(false);
+
+                    b.Property<bool?>("IsActive")
+                        .HasColumnName("is_active")
+                        .HasColumnType("bit");
 
                     b.Property<string>("LastFamilyName")
                         .HasColumnName("last_family_name")
@@ -5246,6 +7233,10 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .HasMaxLength(50)
                         .IsUnicode(false);
 
+                    b.Property<Guid>("StudentGuid")
+                        .HasColumnName("student_guid")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("StudentInternalId")
                         .HasColumnName("student_internal_id")
                         .HasColumnType("varchar(50)")
@@ -5301,7 +7292,8 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .HasColumnType("varchar(max)")
                         .IsUnicode(false);
 
-                    b.HasKey("TenantId", "SchoolId", "StudentId");
+                    b.HasKey("TenantId", "SchoolId", "StudentId")
+                        .HasName("PK_student_master_1");
 
                     b.HasIndex("FirstLanguageId");
 
@@ -5311,7 +7303,56 @@ namespace opensis.data.Migrations.SqlServerMigrations
 
                     b.HasIndex("TenantId", "SchoolId", "SectionId");
 
+                    b.HasIndex("TenantId", "SchoolId", "StudentGuid")
+                        .IsUnique()
+                        .HasName("IX_student_master");
+
                     b.ToTable("student_master");
+                });
+
+            modelBuilder.Entity("opensis.data.Models.Subject", b =>
+                {
+                    b.Property<Guid>("TenantId")
+                        .HasColumnName("tenant_id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("SchoolId")
+                        .HasColumnName("school_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SubjectId")
+                        .HasColumnName("subject_id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnName("created_by")
+                        .HasColumnType("varchar(150)")
+                        .HasMaxLength(150)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnName("created_on")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("SubjectName")
+                        .HasColumnName("subject_name")
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100)
+                        .IsUnicode(false);
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnName("updated_by")
+                        .HasColumnType("varchar(150)")
+                        .HasMaxLength(150)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnName("updated_on")
+                        .HasColumnType("datetime");
+
+                    b.HasKey("TenantId", "SchoolId", "SubjectId");
+
+                    b.ToTable("subject");
                 });
 
             modelBuilder.Entity("opensis.data.Models.UserMaster", b =>
@@ -5465,12 +7506,148 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("opensis.data.Models.Block", b =>
+                {
+                    b.HasOne("opensis.data.Models.SchoolMaster", "SchoolMaster")
+                        .WithMany("Block")
+                        .HasForeignKey("TenantId", "SchoolId")
+                        .HasConstraintName("FK_block_school_master")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("opensis.data.Models.BlockPeriod", b =>
+                {
+                    b.HasOne("opensis.data.Models.SchoolMaster", "SchoolMaster")
+                        .WithMany("BlockPeriod")
+                        .HasForeignKey("TenantId", "SchoolId")
+                        .HasConstraintName("FK_block_period_school_master")
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("opensis.data.Models.City", b =>
                 {
                     b.HasOne("opensis.data.Models.State", "State")
                         .WithMany("City")
                         .HasForeignKey("StateId")
                         .HasConstraintName("FK_city_state");
+                });
+
+            modelBuilder.Entity("opensis.data.Models.CourseBlockSchedule", b =>
+                {
+                    b.HasOne("opensis.data.Models.Block", "Block")
+                        .WithMany("CourseBlockSchedule")
+                        .HasForeignKey("TenantId", "SchoolId", "BlockId")
+                        .HasConstraintName("FK_course_block_schedule_block");
+
+                    b.HasOne("opensis.data.Models.Rooms", "Rooms")
+                        .WithMany("CourseBlockSchedule")
+                        .HasForeignKey("TenantId", "SchoolId", "RoomId")
+                        .HasConstraintName("FK_course_block_schedule_rooms");
+
+                    b.HasOne("opensis.data.Models.BlockPeriod", "BlockPeriod")
+                        .WithMany("CourseBlockSchedule")
+                        .HasForeignKey("TenantId", "SchoolId", "BlockId", "PeriodId")
+                        .HasConstraintName("FK_course_block_schedule_block_periods");
+                });
+
+            modelBuilder.Entity("opensis.data.Models.CourseCalendarSchedule", b =>
+                {
+                    b.HasOne("opensis.data.Models.Rooms", "Rooms")
+                        .WithMany("CourseCalendarSchedule")
+                        .HasForeignKey("TenantId", "SchoolId", "RoomId")
+                        .HasConstraintName("FK_course_calendar_schedule_rooms");
+
+                    b.HasOne("opensis.data.Models.BlockPeriod", "BlockPeriod")
+                        .WithMany("CourseCalendarSchedule")
+                        .HasForeignKey("TenantId", "SchoolId", "BlockId", "PeriodId")
+                        .HasConstraintName("FK_course_calendar_schedule_block_periods");
+                });
+
+            modelBuilder.Entity("opensis.data.Models.CourseFixedSchedule", b =>
+                {
+                    b.HasOne("opensis.data.Models.Rooms", "Rooms")
+                        .WithMany("CourseFixedSchedule")
+                        .HasForeignKey("TenantId", "SchoolId", "RoomId")
+                        .HasConstraintName("FK_course_fixed_schedule_rooms");
+
+                    b.HasOne("opensis.data.Models.BlockPeriod", "BlockPeriod")
+                        .WithMany("CourseFixedSchedule")
+                        .HasForeignKey("TenantId", "SchoolId", "BlockId", "PeriodId")
+                        .HasConstraintName("FK_course_fixed_schedule_block_periods");
+                });
+
+            modelBuilder.Entity("opensis.data.Models.CourseSection", b =>
+                {
+                    b.HasOne("opensis.data.Models.SchoolMaster", "SchoolMaster")
+                        .WithMany("CourseSection")
+                        .HasForeignKey("TenantId", "SchoolId")
+                        .HasConstraintName("FK_course_section_school_master")
+                        .IsRequired();
+
+                    b.HasOne("opensis.data.Models.AttendanceCodeCategories", "AttendanceCodeCategories")
+                        .WithMany("CourseSection")
+                        .HasForeignKey("TenantId", "SchoolId", "AttendanceCategoryId")
+                        .HasConstraintName("FK_course_section_attendance_code_categories");
+
+                    b.HasOne("opensis.data.Models.SchoolCalendars", "SchoolCalendars")
+                        .WithMany("CourseSection")
+                        .HasForeignKey("TenantId", "SchoolId", "CalendarId")
+                        .HasConstraintName("FK_course_section_school_calendars");
+
+                    b.HasOne("opensis.data.Models.Course", "Course")
+                        .WithMany("CourseSection")
+                        .HasForeignKey("TenantId", "SchoolId", "CourseId")
+                        .HasConstraintName("FK_course_section_course")
+                        .IsRequired();
+
+                    b.HasOne("opensis.data.Models.GradeScale", "GradeScale")
+                        .WithMany("CourseSection")
+                        .HasForeignKey("TenantId", "SchoolId", "GradeScaleId")
+                        .HasConstraintName("FK_course_section_grade_scale")
+                        .IsRequired();
+
+                    b.HasOne("opensis.data.Models.Quarters", "Quarters")
+                        .WithMany("CourseSection")
+                        .HasForeignKey("TenantId", "SchoolId", "QtrMarkingPeriodId")
+                        .HasConstraintName("FK_course_section_quarters");
+
+                    b.HasOne("opensis.data.Models.Semesters", "Semesters")
+                        .WithMany("CourseSection")
+                        .HasForeignKey("TenantId", "SchoolId", "SmstrMarkingPeriodId")
+                        .HasConstraintName("FK_course_section_semesters");
+
+                    b.HasOne("opensis.data.Models.SchoolYears", "SchoolYears")
+                        .WithMany("CourseSection")
+                        .HasForeignKey("TenantId", "SchoolId", "YrMarkingPeriodId")
+                        .HasConstraintName("FK_course_section_school_years");
+                });
+
+            modelBuilder.Entity("opensis.data.Models.CourseStandard", b =>
+                {
+                    b.HasOne("opensis.data.Models.Course", "Course")
+                        .WithMany("CourseStandard")
+                        .HasForeignKey("TenantId", "SchoolId", "CourseId")
+                        .HasConstraintName("FK_course_standard_course")
+                        .IsRequired();
+
+                    b.HasOne("opensis.data.Models.GradeUsStandard", "GradeUsStandard")
+                        .WithMany("CourseStandard")
+                        .HasForeignKey("TenantId", "SchoolId", "StandardRefNo")
+                        .HasConstraintName("FK_course_standard_grade_us_standard")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("opensis.data.Models.CourseVariableSchedule", b =>
+                {
+                    b.HasOne("opensis.data.Models.Rooms", "Rooms")
+                        .WithMany("CourseVariableSchedule")
+                        .HasForeignKey("TenantId", "SchoolId", "RoomId")
+                        .HasConstraintName("FK_course_variable_schedule_rooms");
+
+                    b.HasOne("opensis.data.Models.BlockPeriod", "BlockPeriod")
+                        .WithMany("CourseVariableSchedule")
+                        .HasForeignKey("TenantId", "SchoolId", "BlockId", "PeriodId")
+                        .HasConstraintName("FK_course_variable_schedule_block_periods");
                 });
 
             modelBuilder.Entity("opensis.data.Models.CustomFields", b =>
@@ -5497,12 +7674,48 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("opensis.data.Models.DpdownValuelist", b =>
+                {
+                    b.HasOne("opensis.data.Models.SchoolMaster", "SchoolMaster")
+                        .WithMany("DpdownValuelist")
+                        .HasForeignKey("TenantId", "SchoolId")
+                        .HasConstraintName("FK_dpdown_valuelist_school_master")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("opensis.data.Models.EffortGradeLibraryCategoryItem", b =>
+                {
+                    b.HasOne("opensis.data.Models.EffortGradeLibraryCategory", "EffortGradeLibraryCategory")
+                        .WithMany("EffortGradeLibraryCategoryItem")
+                        .HasForeignKey("TenantId", "SchoolId", "EffortCategoryId")
+                        .HasConstraintName("FK_effort_category_item_effort_category")
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("opensis.data.Models.FieldsCategory", b =>
                 {
                     b.HasOne("opensis.data.Models.SchoolMaster", "SchoolMaster")
                         .WithMany("FieldsCategory")
                         .HasForeignKey("TenantId", "SchoolId")
                         .HasConstraintName("FK_custom_category_school_master")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("opensis.data.Models.Grade", b =>
+                {
+                    b.HasOne("opensis.data.Models.GradeScale", "GradeScale")
+                        .WithMany("Grade")
+                        .HasForeignKey("TenantId", "SchoolId", "GradeScaleId")
+                        .HasConstraintName("FK_grade_grade_scale")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("opensis.data.Models.GradeScale", b =>
+                {
+                    b.HasOne("opensis.data.Models.SchoolMaster", "SchoolMaster")
+                        .WithMany("GradeScale")
+                        .HasForeignKey("TenantId", "SchoolId")
+                        .HasConstraintName("FK_grade_scale_school_master")
                         .IsRequired();
                 });
 
@@ -5520,6 +7733,15 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("opensis.data.Models.HonorRolls", b =>
+                {
+                    b.HasOne("opensis.data.Models.SchoolYears", "SchoolYears")
+                        .WithMany("HonorRolls")
+                        .HasForeignKey("TenantId", "SchoolId", "MarkingPeriodId")
+                        .HasConstraintName("FK_honor_rolls_honor_rolls")
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("opensis.data.Models.Membership", b =>
                 {
                     b.HasOne("opensis.data.Models.SchoolMaster", "SchoolMaster")
@@ -5529,12 +7751,12 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("opensis.data.Models.ParentInfo", b =>
+            modelBuilder.Entity("opensis.data.Models.ParentAddress", b =>
                 {
-                    b.HasOne("opensis.data.Models.StudentMaster", "StudentMaster")
-                        .WithMany("ParentInfo")
-                        .HasForeignKey("TenantId", "SchoolId", "StudentId")
-                        .HasConstraintName("FK_parent_info_student_master")
+                    b.HasOne("opensis.data.Models.ParentInfo", "ParentInfo")
+                        .WithMany("ParentAddress")
+                        .HasForeignKey("TenantId", "SchoolId", "ParentId")
+                        .HasConstraintName("FK_parent_address_parent_info")
                         .IsRequired();
                 });
 
@@ -5586,15 +7808,6 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .HasConstraintName("FK_school_master_plans");
                 });
 
-            modelBuilder.Entity("opensis.data.Models.SchoolPeriods", b =>
-                {
-                    b.HasOne("opensis.data.Models.SchoolMaster", "SchoolMaster")
-                        .WithMany("SchoolPeriods")
-                        .HasForeignKey("TenantId", "SchoolId")
-                        .HasConstraintName("FK_school_periods_school_master")
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("opensis.data.Models.SchoolYears", b =>
                 {
                     b.HasOne("opensis.data.Models.SchoolMaster", "SchoolMaster")
@@ -5616,6 +7829,46 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .WithMany("Semesters")
                         .HasForeignKey("TenantId", "SchoolId", "YearId")
                         .HasConstraintName("FK_semesters_school_years");
+                });
+
+            modelBuilder.Entity("opensis.data.Models.StaffCertificateInfo", b =>
+                {
+                    b.HasOne("opensis.data.Models.StaffMaster", "StaffMaster")
+                        .WithMany("StaffCertificateInfo")
+                        .HasForeignKey("TenantId", "StaffId")
+                        .HasConstraintName("FK_staff_certificate_info_staff_master");
+                });
+
+            modelBuilder.Entity("opensis.data.Models.StaffMaster", b =>
+                {
+                    b.HasOne("opensis.data.Models.Language", "FirstLanguageNavigation")
+                        .WithMany("StaffMasterFirstLanguageNavigation")
+                        .HasForeignKey("FirstLanguage")
+                        .HasConstraintName("FK_staff_master_language");
+
+                    b.HasOne("opensis.data.Models.Language", "SecondLanguageNavigation")
+                        .WithMany("StaffMasterSecondLanguageNavigation")
+                        .HasForeignKey("SecondLanguage")
+                        .HasConstraintName("FK_staff_master_language1");
+
+                    b.HasOne("opensis.data.Models.Language", "ThirdLanguageNavigation")
+                        .WithMany("StaffMasterThirdLanguageNavigation")
+                        .HasForeignKey("ThirdLanguage")
+                        .HasConstraintName("FK_staff_master_language2");
+
+                    b.HasOne("opensis.data.Models.SchoolMaster", "SchoolMaster")
+                        .WithMany("StaffMaster")
+                        .HasForeignKey("TenantId", "SchoolId")
+                        .HasConstraintName("FK_staff_master_school_master")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("opensis.data.Models.StaffSchoolInfo", b =>
+                {
+                    b.HasOne("opensis.data.Models.StaffMaster", "StaffMaster")
+                        .WithMany("StaffSchoolInfo")
+                        .HasForeignKey("TenantId", "StaffId")
+                        .HasConstraintName("FK_staff_school_info_staff_master");
                 });
 
             modelBuilder.Entity("opensis.data.Models.State", b =>
@@ -5646,15 +7899,20 @@ namespace opensis.data.Migrations.SqlServerMigrations
 
             modelBuilder.Entity("opensis.data.Models.StudentEnrollment", b =>
                 {
-                    b.HasOne("opensis.data.Models.SchoolCalendars", "SchoolCalendars")
-                        .WithMany("StudentEnrollment")
-                        .HasForeignKey("TenantId", "SchoolId", "CalenderId")
-                        .HasConstraintName("FK_student_enrollment_school_calendars");
-
                     b.HasOne("opensis.data.Models.StudentMaster", "StudentMaster")
                         .WithMany("StudentEnrollment")
-                        .HasForeignKey("TenantId", "SchoolId", "StudentId")
+                        .HasForeignKey("TenantId", "SchoolId", "StudentGuid")
                         .HasConstraintName("FK_student_enrollment_student_master")
+                        .HasPrincipalKey("TenantId", "SchoolId", "StudentGuid")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("opensis.data.Models.StudentEnrollmentCode", b =>
+                {
+                    b.HasOne("opensis.data.Models.SchoolMaster", "SchoolMaster")
+                        .WithMany("StudentEnrollmentCode")
+                        .HasForeignKey("TenantId", "SchoolId")
+                        .HasConstraintName("FK_student_enrollment_code_school_master1")
                         .IsRequired();
                 });
 

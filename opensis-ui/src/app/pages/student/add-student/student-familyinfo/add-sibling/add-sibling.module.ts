@@ -20,7 +20,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { SharedModuleModule } from '../../../../shared-module/shared-module.module';
-
+import { FormsModule }   from '@angular/forms';
 
 @NgModule({
   declarations: [AddSiblingComponent],
@@ -44,7 +44,8 @@ import { SharedModuleModule } from '../../../../shared-module/shared-module.modu
     MatSelectModule,
     MatSlideToggleModule,
     MatExpansionModule,
-    SharedModuleModule
+    SharedModuleModule,
+    FormsModule
   ]
 })
 export class AddSiblingModule { }

@@ -6,7 +6,7 @@
 
 @import "../node_modules/quill/dist/quill.snow.css";
 @import "./@vex/styles/partials/plugins/_quill.scss";
-
+@import "~ng-pick-datetime/assets/style/picker.min.css";
 
 .mat-button-toggle-appearance-standard {
   .mat-button-toggle-label-content {
@@ -19,6 +19,16 @@
   .login-bg {
     background: rgba(var(--background-base), 1);
   }
+}
+
+.dot-separator {
+  display: inline-block;
+  vertical-align: 15%;
+  margin: 0 10px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(0,0,0, 0.3);
 }
 
 
@@ -40,8 +50,55 @@
   }
 }
 
+.mat-drawer-content {
+  z-index: auto !important;
+}
+
+
+.attendance-code-tab-group {
+  .mat-tab-label {
+    padding: 0 !important;
+
+    .mat-tab-label-content {
+      display: block;
+      width: 100%;
+
+      > span {
+        padding: 14px 24px;
+        display: block;
+      }
+    }
+
+    &.mat-tab-label-active {
+      .mat-tab-label-content {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        padding: 0 24px;
+  
+        > span {
+          padding: 14px 14px 14px 0;
+        }
+      }
+    }
+  }
+}
+
+.mat-form-field-appearance-outline .mat-form-field-prefix, 
+.mat-form-field-appearance-outline .mat-form-field-suffix {
+  top: -3px !important;
+}
+
+.mat-paginator-page-size {
+  .mat-form-field-appearance-fill {
+    .mat-select-arrow-wrapper {
+      transform: translateY(0%);
+    }
+  }
+}
+
 .mat-form-field {
-  margin-bottom: 15px !important;
+  margin-bottom: 15px;
   min-height: 49px;
 
   .mat-form-field-wrapper {
@@ -180,7 +237,7 @@
     }
 
     .mat-form-field-underline {
-    display: none !important
+      display: none !important;
     }
   }
 
@@ -235,6 +292,7 @@
           height: 48px;
         }
       }
+
       .mat-expansion-panel-body {
         padding: 0;
 
@@ -277,6 +335,10 @@
     border-bottom: 1px solid var(--foreground-divider);
   }
 
+}
+
+.border-normal {
+  border-color: rgba(0,0,0,0.1);
 }
 
 /*
@@ -895,3 +957,24 @@
 
 
 //End of bootstrap card
+
+
+/* Default Table Properties */
+table {
+  width: 100%;
+}
+
+.mat-table {
+  .mat-header-row {
+    .mat-header-cell {
+      color      : rgb(0 0 0) !important;
+      font-size  : 14px !important;
+      font-weight: bold;
+    }
+  }
+
+  .mat-footer-cell {
+    text-align: center;
+    font-style: italic;
+  }
+}

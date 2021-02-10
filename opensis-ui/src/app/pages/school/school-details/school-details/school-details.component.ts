@@ -1,4 +1,4 @@
-import { Component, Input, OnInit,Output,EventEmitter, ViewChild } from '@angular/core';
+import { Component, Input, OnInit,Output,EventEmitter, ViewChild, OnDestroy } from '@angular/core';
 import icMoreVert from '@iconify/icons-ic/twotone-more-vert';
 import icAdd from '@iconify/icons-ic/baseline-add';
 import icSearch from '@iconify/icons-ic/search';
@@ -19,9 +19,13 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { LoaderService } from '../../../../services/loader.service';
 import { FormControl } from '@angular/forms';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { SchoolAddViewModel } from '../../../../models/schoolMasterModel';
-
+import { ImageCropperService } from '../../../../services/image-cropper.service';
+import { LayoutService } from 'src/@vex/services/layout.service';
+import { ExcelService } from '../../../../services/excel.service';
+import { Subject } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 @Component({
   selector: 'vex-school-details',
   templateUrl: './school-details.component.html',
@@ -31,7 +35,7 @@ import { SchoolAddViewModel } from '../../../../models/schoolMasterModel';
     stagger40ms
   ],
 })
-export class SchoolDetailsComponent implements OnInit {
+export class SchoolDetailsComponent implements OnInit,OnDestroy {
   columns = [
     { label: 'Name', property: 'schoolName', type: 'text', visible: true },
     { label: 'Address', property: 'streetAddress1', type: 'text', visible: true, cssClasses: ['font-medium'] },
@@ -51,9 +55,10 @@ export class SchoolDetailsComponent implements OnInit {
   icFilterList = icFilterList;
   fapluscircle = "fa-plus-circle";
   tenant = "";
-  loading:Boolean;
+  loading:boolean;
   getAllSchool: GetAllSchoolModel = new GetAllSchoolModel();
-  SchoolModelList: MatTableDataSource<AllSchoolListModel>;
+  SchoolModelList: MatTableDataSource<any>;
+  destroySubject$: Subject<void> = new Subject();
 
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator; 
   @ViewChild(MatSort) sort:MatSort
@@ -61,11 +66,25 @@ export class SchoolDetailsComponent implements OnInit {
   constructor(private schoolService: SchoolService,
     private snackbar: MatSnackBar,
     private router: Router,
-    private loaderService:LoaderService
+    private loaderService:LoaderService,
+    private imageCropperService:ImageCropperService,
+    private layoutService: LayoutService,
+    private excelService:ExcelService,
+    public translateService: TranslateService,
     ) 
-    { 
-     this.getAllSchool.filterParams=null;
-     this.loaderService.isLoading.subscribe((val) => {
+    { translateService.use('en');
+      if(localStorage.getItem("collapseValue") !== null){
+        if( localStorage.getItem("collapseValue") === "false"){
+          this.layoutService.expandSidenav();
+        }else{
+          this.layoutService.collapseSidenav();
+        } 
+      }else{
+        this.layoutService.expandSidenav();
+      }
+      
+      this.getAllSchool.filterParams=null;
+      this.loaderService.isLoading.pipe(takeUntil(this.destroySubject$)).subscribe((val) => {
         this.loading = val;
       });
       this.callAllSchool();
@@ -136,7 +155,7 @@ export class SchoolDetailsComponent implements OnInit {
   }
 
   goToAdd(){
-    this.schoolService.setSchoolId(null)
+    this.schoolService.setSchoolId(null);
     this.router.navigate(["school/schoolinfo/add-school"]);
   }  
 
@@ -178,7 +197,7 @@ export class SchoolDetailsComponent implements OnInit {
         this.pageNumber = data.pageNumber;
         this.pageSize = data._pageSize;
 
-        this.SchoolModelList = new MatTableDataSource(data.getSchoolForView);
+        this.SchoolModelList = new MatTableDataSource(data.schoolMaster);
         this.getAllSchool=new GetAllSchoolModel();
       }
     });
@@ -203,5 +222,41 @@ export class SchoolDetailsComponent implements OnInit {
     column.visible = !column.visible;
   }
 
+   exportSchoolListToExcel(){
+    let getAllSchool: GetAllSchoolModel = new GetAllSchoolModel();
+    getAllSchool.pageNumber=0;
+    getAllSchool.pageSize=0;
+    getAllSchool.sortingModel=null;
+      this.schoolService.GetAllSchoolList(getAllSchool).subscribe(res => {
+        if(res._failure){
+          this.snackbar.open('Failed to Export School List.'+ res._message, 'LOL THANKS', {
+          duration: 10000
+          });
+        }else{
+          if(res.schoolMaster.length>0){
+            let schoolList = res.schoolMaster?.map((x)=>{
+              return {
+                Name:x.schoolName,
+                Address: x.streetAddress1 +','+ x.streetAddress2 +','+ x.city +','+ x.state +','+ x.country,
+                Principal:x.schoolDetail[0].nameOfPrincipal,
+                Phone:x.schoolDetail[0].telephone,
+                Status:x.schoolDetail[0].status?'Active':'Inactive'
+              }
+            });
+            this.excelService.exportAsExcelFile(schoolList,'Schools_List_')
+          }else{
+            this.snackbar.open('No Records Found. Failed to Export School List','', {
+              duration: 5000
+            });
+          }
+        }
+      });
+    
+   }
+
+  ngOnDestroy(){
+    this.destroySubject$.next();
+    this.destroySubject$.complete();
+  }
 
 }

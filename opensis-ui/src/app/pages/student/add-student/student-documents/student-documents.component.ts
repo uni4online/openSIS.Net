@@ -66,6 +66,7 @@ export class StudentDocumentsComponent implements OnInit {
   filesType=[];
   uploadSuccessfull = false;
   totalCount:Number;pageNumber:Number;pageSize:Number;
+  studentDocument=[];
   getAllStudentDocumentsList: GetAllStudentDocumentsList = new GetAllStudentDocumentsList();   
   StudentDocumentModelList: MatTableDataSource<any>;
   studentDocumentAddModel: StudentDocumentAddModel = new StudentDocumentAddModel();
@@ -87,32 +88,33 @@ export class StudentDocumentsComponent implements OnInit {
   ngOnInit(): void {  
     this.getAllDocumentsList();
   }  
-
-  HandleReaderLoaded(e) {     
-    this.base64 = btoa(e.target.result); 
-    this.base64Arr.push(this.base64);
-    
+  //Split base 64 data from its datatype then push to base64 array
+  HandleReaderLoaded(e) {   
+    let str = e.substr(e.indexOf(",") + 1);
+    this.base64Arr.push(str);  
   }
   onSelect(event) {  
     this.files.push(...event.addedFiles);
     let count = this.files.length;
-    let prevCount = count-1;    
-    
-    this.files.forEach((value, index) => {
-      if(index === prevCount){   
-        this.filesName.push(value.name);
-        this.filesType.push(value.type);
-        const reader = new FileReader();      
-        reader.onload = this.HandleReaderLoaded.bind(this);       
-        reader.readAsBinaryString(value);       
-      }     
-    })
-   
+    let prevCount = count-1;   
+    for(let i=0; i<this.files.length;i++){
+      this.filesName.push(this.files[i].name)
+      this.filesType.push(this.files[i].type)
+      const reader = new FileReader();
+      reader.readAsDataURL(this.files[i]);
+      reader.onload=()=>{
+        this.HandleReaderLoaded(reader.result)
+      }
+    }  
   }
 
   
   onRemove(event) {    
     this.files.splice(this.files.indexOf(event), 1);
+    this.filesName.splice(this.files.indexOf(event), 1);
+    this.filesType.splice(this.files.indexOf(event), 1);
+    this.base64Arr.splice(this.files.indexOf(event), 1);
+    
   }
 
   confirmDelete(deleteDetails)
@@ -121,7 +123,7 @@ export class StudentDocumentsComponent implements OnInit {
       maxWidth: "400px",
       data: {
           title: "Are you sure?",
-          message: "You are about to delete File "+deleteDetails.fileUploaded+"."}
+          message: "You are about to delete File "+deleteDetails.filename+"."}
     });
     
     dialogRef.afterClosed().subscribe(dialogResult => {      
@@ -169,7 +171,7 @@ export class StudentDocumentsComponent implements OnInit {
   }
 
   uploadFile(){
-    let studentDocument = [];    
+    
     this.base64Arr.forEach((value, index) => {
         var obj = {};
           obj = {     
@@ -183,10 +185,13 @@ export class StudentDocumentsComponent implements OnInit {
             uploadedBy:sessionStorage.getItem("email"),
             studentMaster: null
           }   
-          studentDocument.push(obj);    
-      });  
-      if(studentDocument.length > 0){
-        this.studentDocumentAddModel.studentDocuments=studentDocument;
+          this.studentDocument.push(obj);    
+      }); 
+     
+      
+     if(this.studentDocument.length > 0){
+       
+        this.studentDocumentAddModel.studentDocuments=this.studentDocument;
         this.studentService.AddStudentDocument(this.studentDocumentAddModel).subscribe(data => {
           if (typeof (data) == 'undefined') {
             this.snackbar.open('Student Document Upload failed. ' + sessionStorage.getItem("httpError"), '', {
@@ -202,9 +207,15 @@ export class StudentDocumentsComponent implements OnInit {
               this.snackbar.open('Student Document Upload Successful.', '', {
                 duration: 10000
               }).afterOpened().subscribe(data => {
+                this.base64Arr=[];
+                this.studentDocument = [];
+                this.filesName=[];
+                this.filesType=[];
                 this.uploadSuccessfull = true;
                 this.isShowDiv=true;
                 this.getAllDocumentsList();
+                this.files = [];
+                
               });                  
             }
           }
@@ -231,9 +242,16 @@ export class StudentDocumentsComponent implements OnInit {
     this.getAllStudentDocumentsList.studentId = this.studentDetailsForViewAndEdit.studentMaster.studentId;
     this.studentService.GetAllStudentDocumentsList(this.getAllStudentDocumentsList).subscribe(data => {
       if(data._failure){
-        this.snackbar.open('Student Document Information failed. '+ data._message, 'LOL THANKS', {
-        duration: 10000
-        });
+        if(data._message==="NO RECORD FOUND"){
+          if(data.studentDocumentsList==null){
+            this.StudentDocumentModelList=new MatTableDataSource([]) ;
+        this.StudentDocumentModelList.sort=this.sort;     
+          }
+        } else{
+          this.snackbar.open('Student Document failed. ' + data._message, 'LOL THANKS', {
+            duration: 10000
+          });
+        }
       }else{   
         
         this.StudentDocumentModelList = new MatTableDataSource(data.studentDocumentsList);
@@ -251,6 +269,7 @@ export class StudentDocumentsComponent implements OnInit {
 
   toggleDisplayDiv() {
     this.isShowDiv = !this.isShowDiv;
+    this.uploadSuccessfull = false;
   }
 
   get visibleColumns() {

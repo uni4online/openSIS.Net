@@ -8,58 +8,48 @@
             <div class="flex w-full justify-between">
                 <div class="py-3" fxFlex.lt-md="auto" fxHide.xs fxLayout="row"
                     fxLayoutAlign="start center">
-
-                    <div class="flex">
-                        <input class="pr-4 py-3 border-0 outline-none w-full bg-transparent" placeholder="Search..."
-                            type="search">
-                        <button class="ml-4" fxFlex="none" fxHide.gt-xs mat-icon-button type="button">
-                            <mat-icon [icIcon]="icSearch"></mat-icon>
-                        </button>
-                    </div>
+                   
                 </div>
                 <div class="pt-3">
-                    <button [matMenuTriggerFor]="columnFilterMenu" class="ml-4" fxFlex="none" mat-icon-button
-                        matTooltip="Filter Columns" type="button">
-                        <mat-icon [icIcon]="icFilterList"></mat-icon>
-                    </button>
-                </div>
+
+                </div> 
+              
             </div>
         </div>
-        <table @stagger mat-table [dataSource]="StaffCertificationFieldsModelList" class="table-auto w-full"
-                matSort>
+        <table @stagger mat-table [dataSource]="staffCertificateList" class="table-auto w-full" matSort>
                 
-                <ng-container matColumnDef="certification_name">
+                <ng-container matColumnDef="certificationName">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'certificationName'|translate}}</th>
                     <td mat-cell *matCellDef="let element">
-                        <a routerLink="" (click)='openViewDetails()' class="text-primary cursor-pointer">{{element.certification_name}}</a>
+                        <a routerLink="" (click)='openViewDetails(element)' class="text-primary cursor-pointer">{{element.certificationName|EmtyValueCheckPipe}}</a>
                     </td>
                 </ng-container>
 
-                <ng-container matColumnDef="short_name">
+                <ng-container matColumnDef="shortName">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'shortName'|translate}}</th>
                     <td mat-cell *matCellDef="let element">
-                        {{element.short_name}}
+                        {{element.shortName|EmtyValueCheckPipe}}
                     </td>
                 </ng-container>
                 
-                <ng-container matColumnDef="primary_certification_indicator">
+                <ng-container matColumnDef="primaryCertification">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'primaryCertificationIndicator'|translate}}</th>
                     <td mat-cell *matCellDef="let element">
-                        {{element.primary_certification_indicator}}
+                        {{element.primaryCertification|EmtyBooleanCheckPipe}}
                     </td>
                 </ng-container>
                 
-                <ng-container matColumnDef="certification_date">
+                <ng-container matColumnDef="certificationDate">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'certificationDate'|translate}}</th>
                     <td mat-cell *matCellDef="let element">
-                        {{element.certification_date}}
+                        {{element.certificationDate|date:'MMM dd, y'|EmtyValueCheckPipe}}
                     </td>
                 </ng-container>
 
-                <ng-container matColumnDef="certification_expiry_date">
+                <ng-container matColumnDef="certificationExpiryDate">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'certificationExpiryDate'|translate}}</th>
                     <td mat-cell *matCellDef="let element">
-                        {{element.certification_expiry_date}}
+                        {{element.certificationExpiryDate|date:'MMM dd, y'|EmtyValueCheckPipe}}
                     </td>
                 </ng-container>
 
@@ -67,10 +57,10 @@
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'actions'|translate}}
                     </th>
                     <td mat-cell *matCellDef="let element">
-                        <a routerLink="" class="mr-3 cursor-pointer">
+                        <a (click)="openEditdata(element)" class="mr-3 cursor-pointer">
                             <mat-icon [icIcon]="icEdit"></mat-icon>
                         </a>
-                        <a routerLink="" class="mr-3 cursor-pointer">
+                        <a (click)="confirmDelete(element)" class="mr-3 cursor-pointer">
                             <mat-icon [icIcon]="icDelete"></mat-icon>
                         </a>
                     </td>
@@ -81,10 +71,16 @@
                         <vex-mat-spinner-overlay *ngIf="loading" color="accent"></vex-mat-spinner-overlay>
                     </mat-footer-cell>
                 </ng-container>
+                <ng-container matColumnDef="noData">
+                    <td mat-footer-cell *matFooterCellDef colspan="6">
+                        {{loading?'Fetching Data...':'No Data'}}
+                    </td>
+                </ng-container>
 
                 <tr mat-header-row *matHeaderRowDef="visibleColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: visibleColumns" @fadeInUp></tr>
-                <!-- <mat-footer-row *matFooterRowDef="['loading']" [class.hide]="!loading"></mat-footer-row> -->
+                <tr mat-footer-row *matFooterRowDef="['loading']" [class.hide]="!loading"></tr>
+                <tr mat-footer-row *matFooterRowDef="['noData']" [class.hide]="staffCertificateList?.data.length!=0"></tr>
 
             </table>
     </mat-card-content>

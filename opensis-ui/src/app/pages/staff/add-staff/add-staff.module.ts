@@ -17,6 +17,7 @@ import { ContainerModule } from '../../../../@vex/directives/container/container
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TranslateModule } from '@ngx-translate/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -33,14 +34,15 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { StaffGeneralinfoComponent } from './staff-generalinfo/staff-generalinfo.component';
-import { ViewstaffGeneralinfoComponent } from './viewstaff-generalinfo/viewstaff-generalinfo.component';
 import { StaffSchoolinfoComponent } from './staff-schoolinfo/staff-schoolinfo.component';
-import { ViewstaffSchoolinfoComponent } from './viewstaff-schoolinfo/viewstaff-schoolinfo.component';
 import { StaffLogininfoComponent } from './staff-logininfo/staff-logininfo.component';
 import { StaffAddressinfoComponent } from './staff-addressinfo/staff-addressinfo.component';
-import { ViewstaffAddressinfoComponent } from './viewstaff-addressinfo/viewstaff-addressinfo.component';
 import { StaffCertificationinfoComponent } from './staff-certificationinfo/staff-certificationinfo.component';
 import { ViewstaffCertificationinfoComponent } from './viewstaff-certificationinfo/viewstaff-certificationinfo.component';
+import { CustomFieldModule } from '../../../../../src/app/common/custom-field/custom-field.module';
+import { CustomFieldWithoutFormModule } from '../../../../../src/app/common/custom-field-without-form/custom-field-without-form.module';
+import { ViewStaffGeneralinfoComponent } from './view-staff-generalinfo/view-staff-generalinfo.component';
+import { ViewStaffAddressinfoComponent } from './view-staff-addressinfo/view-staff-addressinfo.component';
 
 
 
@@ -52,10 +54,9 @@ import { ViewstaffCertificationinfoComponent } from './viewstaff-certificationin
     StaffLogininfoComponent,
     StaffAddressinfoComponent,
     StaffCertificationinfoComponent,
-    ViewstaffGeneralinfoComponent,
-    ViewstaffSchoolinfoComponent,
-    ViewstaffAddressinfoComponent,
-    ViewstaffCertificationinfoComponent
+    ViewstaffCertificationinfoComponent,
+    ViewStaffGeneralinfoComponent,
+    ViewStaffAddressinfoComponent
   ],
   imports: [
     CommonModule,
@@ -75,6 +76,7 @@ import { ViewstaffCertificationinfoComponent } from './viewstaff-certificationin
     MatSidenavModule,
     MatInputModule,
     MatSelectModule,
+    MatProgressSpinnerModule,
     TranslateModule,
     BrowserAnimationsModule,
     FormsModule,
@@ -91,7 +93,9 @@ import { ViewstaffCertificationinfoComponent } from './viewstaff-certificationin
     //MatButtonToggleModule,
     MatTableModule,
     MatTooltipModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    CustomFieldModule,
+    CustomFieldWithoutFormModule
   ]
 })
 export class StaffinfoModule { }

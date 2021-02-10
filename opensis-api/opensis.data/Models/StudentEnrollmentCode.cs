@@ -16,5 +16,6 @@ namespace opensis.data.Models
         public string Type { get; set; }
         public DateTime? LastUpdated { get; set; }
         public string UpdatedBy { get; set; }
+        public virtual SchoolMaster SchoolMaster { get; set; }
     }
 }

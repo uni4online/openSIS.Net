@@ -13,13 +13,14 @@ import { TranslateService } from '@ngx-translate/core';
 import { EditSchoolFieldsComponent } from './edit-school-fields/edit-school-fields.component';
 import { SchoolFieldsCategoryComponent } from './school-fields-category/school-fields-category.component';
 import { CustomFieldService } from '../../../services/custom-field.service';
-import {CustomFieldAddView, CustomFieldListViewModel} from '../../../models/customFieldModel';
+import {CustomFieldAddView, CustomFieldDragDropModel, CustomFieldListViewModel} from '../../../models/customFieldModel';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confirm-dialog.component';
 import { LoaderService } from '../../../services/loader.service';
 import { FieldsCategoryListView,FieldsCategoryAddView } from '../../../models/fieldsCategoryModel';
 import {FieldCategoryModuleEnum} from '../../../enums/field-category-module.enum'
+import { CdkDragDrop} from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'vex-school-fields',
@@ -34,15 +35,12 @@ export class SchoolFieldsComponent implements OnInit {
   
   columns = [
     /* { label: '', property: 'type', type: 'text', visible: true }, */
-    { label: 'Field Name', property: 'field_name', type: 'text', visible: true },
-    { label: 'Sort Order', property: 'sortOrder', type: 'number', visible: false },
-    { label: 'Field Type', property: 'field_type', type: 'text', visible: true },
-    { label: 'Select Options', property: 'selectOptions', type: 'text', visible: true },
-    { label: 'Required', property: 'required', type: 'checkbox', visible: false },
-    { label: 'In Used', property: 'inUsed', type: 'checkbox', visible: true },
-    { label: 'System Field', property: 'systemField', type: 'checkbox', visible: false },
+    { label: 'Id', property: 'fieldId', type: 'text', visible: true },
+    { label: 'Field Name', property: 'title', type: 'text', visible: true },
+    { label: 'Field Type', property: 'type', type: 'text', visible: true },
+    { label: 'In Used', property: 'hide', type: 'checkbox', visible: true },
     { label: 'Action', property: 'action', type: 'text', visible: true }
-  ];
+   ];
 
   EnrollmentCodeModelList;
   fieldsCategoryList;
@@ -61,6 +59,7 @@ export class SchoolFieldsComponent implements OnInit {
   customFieldAddView:CustomFieldAddView= new CustomFieldAddView()
   fieldsCategoryListView:FieldsCategoryListView= new FieldsCategoryListView();
   fieldsCategoryAddView:FieldsCategoryAddView= new FieldsCategoryAddView();
+  customFieldDragDropModel:CustomFieldDragDropModel= new CustomFieldDragDropModel();
 
   constructor(
     private snackbar: MatSnackBar,
@@ -133,7 +132,7 @@ export class SchoolFieldsComponent implements OnInit {
         }
         else{
           if (res._failure) {
-            this.snackbar.open('Custom Field failed. ' + res._message, 'LOL THANKS', {
+            this.snackbar.open('Custom Field failed. ' + res._message, '', {
               duration: 10000
             });
           } 
@@ -178,12 +177,12 @@ getAllCustomFieldCategory(){
       }
       else{
         if (res._failure) {
-          this.snackbar.open('Field Category list failed. ' + res._message, 'LOL THANKS', {
+          this.snackbar.open('Field Category list failed. ' + res._message, '', {
             duration: 10000
           });
         } 
         else{
-          this.fieldsCategoryList= res.fieldsCategoryList 
+          this.fieldsCategoryList= res.fieldsCategoryList
           if(this.currentCategoryId==null){
             this.currentCategoryId=res.fieldsCategoryList[0].categoryId  
             this.customFieldList=new MatTableDataSource(res.fieldsCategoryList[0].customFields) ;
@@ -222,12 +221,12 @@ deleteFieldCategory(element){
       }
       else{
         if (res._failure) {
-          this.snackbar.open('Field Category delete failed. ' + res._message, 'LOL THANKS', {
+          this.snackbar.open('Field Category delete failed. ' + res._message, '', {
             duration: 10000
           });
         } 
         else{
-          this.snackbar.open('' + res._message, 'LOL THANKS', {
+          this.snackbar.open('' + res._message, '', {
             duration: 10000
           });
           this.getAllCustomFieldCategory()
@@ -250,4 +249,27 @@ confirmDeleteFieldCategory(element){
  });
 }
 
+  drop(event: CdkDragDrop<string[]>) {
+    this.customFieldDragDropModel.categoryId=this.currentCategoryId
+    this.customFieldDragDropModel.currentSortOrder=this.customFieldList.data[event.currentIndex].sortOrder
+    this.customFieldDragDropModel.previousSortOrder=this.customFieldList.data[event.previousIndex].sortOrder
+    this.customFieldservice.updateCustomFieldSortOrder(this.customFieldDragDropModel).subscribe(
+      (res:CustomFieldDragDropModel)=>{
+        if(typeof(res)=='undefined'){
+          this.snackbar.open('Custom Field Drag short failed. ' + sessionStorage.getItem("httpError"), '', {
+            duration: 10000
+          });
+        }else{
+          if (res._failure) {
+            this.snackbar.open('Custom Field Drag short failed. ' + res._message, '', {
+              duration: 10000
+            });
+          } 
+          else{
+            this.getAllCustomFieldCategory()
+          }
+        }
+      }
+    ); 
+  }
 }

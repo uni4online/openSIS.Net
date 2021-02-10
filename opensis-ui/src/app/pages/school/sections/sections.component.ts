@@ -17,6 +17,7 @@ import { SectionService } from '../../../services/section.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confirm-dialog.component';
+import {LayoutService} from 'src/@vex/services/layout.service';
 @Component({
   selector: 'vex-sections',
   templateUrl: './sections.component.html',
@@ -53,10 +54,21 @@ export class SectionsComponent implements OnInit {
     public translateService:TranslateService, 
     private loaderService:LoaderService,
     private sectionService:SectionService,
-    private snackbar: MatSnackBar    
+    private snackbar: MatSnackBar,
+    private layoutService:LayoutService    
     ) 
   { 
-    translateService.use('en');    
+    
+    translateService.use('en');   
+    if(localStorage.getItem("collapseValue") !== null){
+      if( localStorage.getItem("collapseValue") === "false"){
+        this.layoutService.expandSidenav();
+      }else{
+        this.layoutService.collapseSidenav();
+      } 
+    }else{
+      this.layoutService.expandSidenav();
+    }
     this.loaderService.isLoading.subscribe((val) => {
        this.loading = val;
      });
@@ -94,9 +106,17 @@ export class SectionsComponent implements OnInit {
   callAllSection(getAllSection){
     this.sectionService.GetAllSection(this.getAllSection).subscribe(data => {
       if(data._failure){
-        this.snackbar.open('School information failed. '+ data._message, 'LOL THANKS', {
-        duration: 10000
-        });
+        if(data._message==="NO RECORD FOUND"){
+          if(data.tableSectionsList==null){
+            this.SectionModelList = new MatTableDataSource([]);
+            this.SectionModelList.sort=this.sort; 
+          }
+         
+        } else{
+          this.snackbar.open('Section List failed. ' + data._message, '', {
+            duration: 10000
+          });
+        }
       }else{     
         this.SectionModelList = new MatTableDataSource(data.tableSectionsList);
         this.SectionModelList.sort=this.sort;      
@@ -147,7 +167,7 @@ export class SectionsComponent implements OnInit {
       }
       else {
         if (data._failure) {
-          this.snackbar.open('Section Deletion failed. ' + data._message, 'LOL THANKS', {
+          this.snackbar.open('Section Deletion failed. ' + data._message, '', {
             duration: 10000
           });
         } else {

@@ -6,6 +6,8 @@ export class UserViewModel extends CommonField {
     
     public password : string;
     public email: string;
+    public name: string;
+    public membershipName : string;
     public userId?:  number;
     public tenantId: string;
     constructor() {
@@ -15,5 +17,17 @@ export class UserViewModel extends CommonField {
         this.userId = 0;
         this.email="";
         this.password = "";
+    }
+}
+
+export class CheckUserEmailAddressViewModel extends CommonField {
+    public tenantId: string;
+    public emailAddress: string;
+    public isValidEmailAddress: boolean;
+    constructor() {
+        super();
+        this.tenantId = sessionStorage.getItem("tenantId");
+        this._tenantName = sessionStorage.getItem("tenant");
+        this._token = sessionStorage.getItem("token");
     }
 }

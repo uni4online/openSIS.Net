@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { fadeInRight400ms } from '../../../../@vex/animations/fade-in-right.animation';
 import { ImageCropperService } from 'src/app/services/image-cropper.service';
@@ -22,11 +22,13 @@ import { StudentAddModel } from '../../../models/studentModel';
 import { CustomFieldService } from '../../../services/custom-field.service';
 import { FieldsCategoryListView } from '../../../models/fieldsCategoryModel';
 import { SchoolCreate } from '../../../enums/school-create.enum';
-import icHospital from '@iconify/icons-ic/round-local-hospital';
+import icHospital from '@iconify/icons-ic/baseline-medical-services';
 import { takeUntil } from 'rxjs/operators';
 import { LoaderService } from '../../../services/loader.service';
+import { ModuleIdentifier } from '../../../enums/module-identifier.enum';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'vex-add-student',
   templateUrl: './add-student.component.html',
   styleUrls: ['./add-student.component.scss'],
@@ -37,7 +39,7 @@ import { LoaderService } from '../../../services/loader.service';
   ]
 })
 export class AddStudentComponent implements OnInit, OnDestroy {
-  StudentCreate = SchoolCreate;
+  studentCreate = SchoolCreate;
   studentCreateMode: SchoolCreate = SchoolCreate.ADD;
   fieldsCategoryListView = new FieldsCategoryListView();
   currentCategory: number = 3; // because 3 is the id of general info.
@@ -51,7 +53,7 @@ export class AddStudentComponent implements OnInit, OnDestroy {
   icBilling = icBilling;
   icHospital = icHospital;
   studentId: number;
-  studentTitle = "Add Student Information";
+  studentTitle:string;
   pageStatus = "Add Student"
   module = 'Student';
   responseImage: string;
@@ -61,40 +63,54 @@ export class AddStudentComponent implements OnInit, OnDestroy {
   criticalAlert = false;
   destroySubject$: Subject<void> = new Subject();
   loading: boolean;
+  moduleIdentifier=ModuleIdentifier;
   constructor(private layoutService: LayoutService,
-    private _studentService: StudentService,
+    private studentService: StudentService,
     private snackbar: MatSnackBar,
     private customFieldservice: CustomFieldService,
     private imageCropperService: ImageCropperService,
-    private _loaderService: LoaderService,
+    private loaderService: LoaderService,
     private cdr: ChangeDetectorRef) {
+
     this.layoutService.collapseSidenav();
     this.imageCropperService.getCroppedEvent().pipe(takeUntil(this.destroySubject$)).subscribe((res) => {
-      this._studentService.setStudentImage(res[1]);
+      this.studentService.setStudentImage(res[1]);
     });
-    this._studentService.categoryToSend.pipe(takeUntil(this.destroySubject$)).subscribe((res: number) => {
+    this.studentService.categoryToSend.pipe(takeUntil(this.destroySubject$)).subscribe((res: number) => {
       this.currentCategory = res;
     });
-    this._loaderService.isLoading.pipe(takeUntil(this.destroySubject$)).subscribe((currentState) => {
+    this.studentService.modeToUpdate.pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
+      if(res==this.studentCreate.VIEW){
+        this.pageStatus="View Student";
+      }else{
+        this.pageStatus="Edit Student";
+      }
+    });
+    this.loaderService.isLoading.pipe(takeUntil(this.destroySubject$)).subscribe((currentState) => {
       this.loading = currentState;
     });
+    this.studentService.getStudentDetailsForGeneral.pipe(takeUntil(this.destroySubject$)).subscribe((res: StudentAddModel) => {
+      this.studentAddModel=res;
+    })
   }
 
   ngOnInit(): void {
-    this.studentCreateMode = this.StudentCreate.ADD
-    this.studentId = this._studentService.getStudentId();
+    this.studentCreateMode = this.studentCreate.ADD
+    this.studentId = this.studentService.getStudentId();
     if (this.studentId != null || this.studentId != undefined) {
-      this.studentCreateMode = this.StudentCreate.VIEW;
+     this.imageCropperService.enableUpload({module:this.moduleIdentifier.STUDENT,upload:true,mode:this.studentCreate.VIEW});
+      this.studentCreateMode = this.studentCreate.VIEW;
       this.getStudentDetailsUsingId();
       this.onViewMode();
-    } else if (this.studentCreateMode == this.StudentCreate.ADD) {
+    } else if (this.studentCreateMode == this.studentCreate.ADD) {
+      this.imageCropperService.enableUpload({module:this.moduleIdentifier.STUDENT,upload:true,mode:this.studentCreate.ADD});
       this.getAllFieldsCategory();
     }
 
   }
 
   onViewMode() {
-    this._studentService.setStudentImage(this.responseImage);
+    this.studentService.setStudentImage(this.responseImage);
     this.pageStatus = "View Student"
   }
 
@@ -107,16 +123,16 @@ export class AddStudentComponent implements OnInit, OnDestroy {
   }
 
   changeCategory(field, index) {
-    let studentDetails = this._studentService.getStudentDetails();
+    let studentDetails = this.studentService.getStudentDetails();
 
     if (studentDetails != undefined || studentDetails != null) {
-      this.studentCreateMode = this.StudentCreate.EDIT;
+      this.studentCreateMode = this.studentCreate.EDIT;
       this.currentCategory = field.categoryId;
       this.indexOfCategory = index;
       this.studentAddModel = studentDetails;
     }
 
-    if (this.studentCreateMode == this.StudentCreate.VIEW) {
+    if (this.studentCreateMode == this.studentCreate.VIEW) {
       this.currentCategory = field.categoryId;
       this.indexOfCategory = index;
       this.pageStatus = "View Student"
@@ -139,7 +155,9 @@ export class AddStudentComponent implements OnInit, OnDestroy {
           });
         }
         else {
-          this.fieldsCategory = res.fieldsCategoryList.filter(x => x.isSystemCategory == true);
+          this.fieldsCategory = res.fieldsCategoryList;
+          this.studentAddModel.fieldsCategoryList= res.fieldsCategoryList;
+          this.studentService.sendDetails(this.studentAddModel);
         }
       }
     }
@@ -148,13 +166,15 @@ export class AddStudentComponent implements OnInit, OnDestroy {
 
   getStudentDetailsUsingId() {
     this.studentAddModel.studentMaster.studentId = this.studentId;
-    this._studentService.viewStudent(this.studentAddModel).subscribe(data => {
+    this.studentService.viewStudent(this.studentAddModel).subscribe(data => {
       this.studentAddModel = data;
-      this.fieldsCategory = data.fieldsCategoryList;
-      this._studentService.sendDetails(this.studentAddModel);
       this.responseImage = this.studentAddModel.studentMaster.studentPhoto;
+      this.fieldsCategory = data.fieldsCategoryList;
+      this.studentAddModel.studentMaster.studentPhoto=null;
+      this.studentService.sendDetails(this.studentAddModel);
       this.studentTitle = this.studentAddModel.studentMaster.firstGivenName + " " + this.studentAddModel.studentMaster.lastFamilyName;
-      this._studentService.setStudentImage(this.responseImage);
+      this.studentService.setStudentImage(this.responseImage);
+      this.studentService.setStudentCloneImage(this.responseImage);
       this.checkCriticalAlertFromMedical(this.studentAddModel);
     });
   }
@@ -163,11 +183,19 @@ export class AddStudentComponent implements OnInit, OnDestroy {
     this.cdr.detectChanges();
   }
 
+  afterSavingGeneralInfo(data){
+    this.studentTitle = data.studentMaster.firstGivenName + " " + data.studentMaster.lastFamilyName;
+
+  }
+
   ngOnDestroy() {
-    this._studentService.setStudentDetails(null);
-    this._studentService.setStudentImage(null);
-    this._studentService.setStudentId(null);
+    this.studentService.setStudentDetails(null);
+    this.studentService.setStudentImage(null);
+    this.studentService.setStudentId(null);
+    this.studentService.sendDetails(null);
+    this.studentService.setStudentCloneImage(null);
     this.destroySubject$.next();
+    this.destroySubject$.complete();
   }
 
 }

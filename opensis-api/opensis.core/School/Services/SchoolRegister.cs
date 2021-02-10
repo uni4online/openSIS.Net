@@ -182,6 +182,37 @@ namespace opensis.core.School.Services
 
         //    return isvalid;
         //}
-
+        /// <summary>
+        /// Student Enrollment School List
+        /// </summary>
+        /// <param name="schoolListViewModel"></param>
+        /// <returns></returns>
+        public SchoolListViewModel StudentEnrollmentSchoolList(SchoolListViewModel schoolListViewModel)
+        {
+            logger.Info("Method studentEnrollmentSchoolList called.");
+            SchoolListViewModel schoolListView = new SchoolListViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(schoolListViewModel._tenantName, schoolListViewModel._token))
+                {
+                    schoolListView = this.schoolRepository.StudentEnrollmentSchoolList(schoolListViewModel);
+                    schoolListView._message = SUCCESS;
+                    schoolListView._failure = false;
+                    logger.Info("Method StudentEnrollmentSchoolList end with success.");
+                }
+                else
+                {
+                    schoolListView._failure = true;
+                    schoolListView._message = TOKENINVALID;
+                }
+            }
+            catch (Exception ex)
+            {
+                schoolListView._message = ex.Message;
+                schoolListView._failure = true;
+                logger.Error("Method StudentEnrollmentSchoolList end with error :" + ex.Message);
+            }
+            return schoolListView;
+        }
     }
 }

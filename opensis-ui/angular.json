@@ -31,6 +31,8 @@
               "src/CHANGELOG.md"
             ],
             "styles": [
+              "node_modules/angular-calendar/css/angular-calendar.css",
+              "src/@vex/styles/partials/plugins/_angular-calendar.scss",
               "src/@vex/styles/tailwind.scss",
               "src/styles.scss"
             ],

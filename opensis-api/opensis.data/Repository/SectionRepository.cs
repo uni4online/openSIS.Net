@@ -25,12 +25,39 @@ namespace opensis.data.Repository
         /// <returns></returns>
         public SectionAddViewModel AddSection(SectionAddViewModel section)
         {
-            int? MasterSectionId = Utility.GetMaxPK(this.context, new Func<Sections, int>(x => x.SectionId));
-            section.tableSections.SectionId = (int)MasterSectionId;
-            section.tableSections.LastUpdated = DateTime.UtcNow;
-            this.context?.Sections.Add(section.tableSections);
-            this.context?.SaveChanges();
-            section._failure = false;
+            try
+            {
+                var checkSectionName = this.context?.Sections.Where(x => x.SchoolId == section.tableSections.SchoolId && x.TenantId == section.tableSections.TenantId && x.Name.ToLower() == section.tableSections.Name.ToLower()).FirstOrDefault();
+
+                if (checkSectionName != null)
+                {
+                    section._failure = true;
+                    section._message = "Section Name Already Exists";
+                }
+                else
+                {
+                    //int? MasterSectionId = Utility.GetMaxPK(this.context, new Func<Sections, int>(x => x.SectionId));
+                    int? MasterSectionId = 1;
+
+                    var SectionData = this.context?.Sections.Where(x => x.SchoolId == section.tableSections.SchoolId && x.TenantId == section.tableSections.TenantId).OrderByDescending(x => x.SectionId).FirstOrDefault();
+
+                    if (SectionData != null)
+                    {
+                        MasterSectionId = SectionData.SectionId + 1;
+                    }
+
+                    section.tableSections.SectionId = (int)MasterSectionId;
+                    section.tableSections.LastUpdated = DateTime.UtcNow;
+                    this.context?.Sections.Add(section.tableSections);
+                    this.context?.SaveChanges();
+                    section._failure = false;
+                }                
+            }
+            catch(Exception es)
+            {
+                section._failure = true;
+                section._message = es.Message;
+            }            
             return section;
         }
 
@@ -45,28 +72,36 @@ namespace opensis.data.Repository
             try
             {
                 var sectionUpdate = this.context?.Sections.FirstOrDefault(x => x.TenantId == section.tableSections.TenantId && x.SchoolId == section.tableSections.SchoolId && x.SectionId == section.tableSections.SectionId);
+                if (sectionUpdate!=null)
+                {
+                    var checkSectionName = this.context?.Sections.Where(x => x.SchoolId == section.tableSections.SchoolId && x.TenantId == section.tableSections.TenantId && x.SectionId!=section.tableSections.SectionId && x.Name.ToLower() == section.tableSections.Name.ToLower()).FirstOrDefault();
 
-                sectionUpdate.TenantId = section.tableSections.TenantId;
-                sectionUpdate.SchoolId = section.tableSections.SchoolId;
-                sectionUpdate.SectionId = section.tableSections.SectionId;
-                sectionUpdate.Name = section.tableSections.Name;
-                sectionUpdate.SortOrder = section.tableSections.SortOrder;
-                section.tableSections.LastUpdated = DateTime.UtcNow;
-                sectionUpdate.UpdatedBy = section.tableSections.UpdatedBy;
-
-                this.context?.SaveChanges();
-
-                section._failure = false;
-                return section;
+                    if (checkSectionName != null)
+                    {
+                        section._failure = true;
+                        section._message = "Section Name Already Exists";
+                    }
+                    else
+                    {
+                        section.tableSections.LastUpdated = DateTime.UtcNow;
+                        this.context.Entry(sectionUpdate).CurrentValues.SetValues(section.tableSections);
+                        this.context?.SaveChanges();
+                        section._failure = false;
+                    }                    
+                }
+                else
+                {
+                    section.tableSections = null;
+                    section._failure = true;
+                    section._message = NORECORDFOUND;
+                }                
             }
             catch (Exception ex)
             {
-                section.tableSections = null;
                 section._failure = true;
-                section._message = NORECORDFOUND;
-                return section;
+                section._message = ex.Message;
             }
-
+            return section;
         }
 
         /// <summary>
@@ -111,12 +146,22 @@ namespace opensis.data.Repository
             SectionListViewModel sectionList = new SectionListViewModel();
             try
             {
-
                 var sectionAll = this.context?.Sections.Where(x => x.TenantId == section.TenantId && x.SchoolId == section.SchoolId).OrderBy(x => x.SortOrder).ToList();
-                sectionList.tableSectionsList = sectionAll;
-                sectionList._tenantName = section._tenantName;
-                sectionList._token = section._token;
-                sectionList._failure = false;
+                if (sectionAll.Count > 0)
+                {
+                    sectionList.tableSectionsList = sectionAll;
+                    sectionList._tenantName = section._tenantName;
+                    sectionList._token = section._token;
+                    sectionList._failure = false;
+                }
+                else
+                {
+                    sectionList.tableSectionsList = null;
+                    sectionList._tenantName = section._tenantName;
+                    sectionList._token = section._token;
+                    sectionList._failure = true;
+                    sectionList._message = NORECORDFOUND;
+                }
             }
             catch (Exception es)
             {

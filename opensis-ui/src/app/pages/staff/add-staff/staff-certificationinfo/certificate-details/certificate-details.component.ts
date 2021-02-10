@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import icClose from '@iconify/icons-ic/twotone-close';
 import { fadeInUp400ms } from '../../../../../../@vex/animations/fade-in-up.animation';
@@ -16,8 +16,13 @@ import { stagger60ms } from '../../../../../../@vex/animations/stagger.animation
 export class CertificateDetailsComponent implements OnInit {
 
   icClose = icClose;
-
-  constructor(private dialogRef: MatDialogRef<CertificateDetailsComponent>) { }
+  certificateDetails
+  constructor(
+    private dialogRef: MatDialogRef<CertificateDetailsComponent>,
+    @Inject(MAT_DIALOG_DATA) public data:any,
+    ) { 
+      this.certificateDetails=data
+    }
 
   ngOnInit(): void {
   }

@@ -1,4 +1,4 @@
-<vex-mat-spinner-overlay *ngIf="loading"></vex-mat-spinner-overlay>
+<vex-mat-spinner-overlay *ngIf="loading && forceLoaderToStop"></vex-mat-spinner-overlay>
 
 <div class="w-full h-full login-bg" fxLayout="column" fxLayoutAlign="center center">
   <div @fadeInUp class="w-full md:max-w-md">
@@ -43,12 +43,22 @@
 
           <mat-form-field appearance="outline" class="vex-flex-form-field" color="primary">
             <mat-label>{{'language'|translate}}</mat-label>
-            <mat-select [value]="selectedLanguage" matNativeControl required #selectedLang (selectionChange)="switchLang(selectedLang.value)">
+            <mat-select formControlName="language" matNativeControl required (selectionChange)="switchLang($event.value)">
               <mat-option *ngFor="let language of languageList" [value]="language.lcid">
                 {{language.locale}}
               </mat-option>
             </mat-select>
+            <mat-error *ngIf="form.get('language').hasError('required')">{{'languageIsRequired'|translate}}</mat-error>
           </mat-form-field>
+          <!-- <mat-form-field appearance="outline" class="vex-flex-form-field" color="primary">
+            <mat-label>{{'language'|translate}}</mat-label>
+            <mat-select formControlName="language" matNativeControl required (selectionChange)="switchLang($event.value)">
+              <mat-option *ngFor="let language of languageList" [value]="language">
+                {{language}}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="form.get('language').hasError('required')">{{'languageIsRequired'|translate}}</mat-error>
+          </mat-form-field> -->
         </div>
   
         <div fxLayout="row" fxLayoutAlign="space-between center" class="mb-3">

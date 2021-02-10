@@ -8,6 +8,7 @@
 
         &.active {
             @apply bg-blue;
+            @apply text-white;
 
             a {
                 font-weight: bold;

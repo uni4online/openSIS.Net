@@ -19,16 +19,24 @@ import { BreadcrumbsModule } from '../../../../@vex/components/breadcrumbs/bread
 import { MatButtonModule } from '@angular/material/button';
 import { PageLayoutModule } from '../../../../@vex/components/page-layout/page-layout.module';
 import { ContainerModule } from '../../../../@vex/directives/container/container.module';
-
+import {SharedModuleModule} from '../../shared-module/shared-module.module';
+import { CalendarModule as AngularCalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [DashboardAnalyticsComponent],
   imports: [
     CommonModule,
+    AngularCalendarModule.forRoot({
+      provide: DateAdapter,
+      useFactory: adapterFactory
+    }),
     DashboardAnalyticsRoutingModule,
     FlexLayoutModule,
     ChartModule,
     MatIconModule,
+    MatTooltipModule,
     WidgetQuickLineChartModule,
     WidgetQuickValueCenterModule,
     WidgetQuickValueStartModule,
@@ -41,7 +49,8 @@ import { ContainerModule } from '../../../../@vex/directives/container/container
     BreadcrumbsModule,
     MatButtonModule,
     PageLayoutModule,
-    ContainerModule
+    ContainerModule,
+    SharedModuleModule
   ]
 })
 export class DashboardAnalyticsModule {

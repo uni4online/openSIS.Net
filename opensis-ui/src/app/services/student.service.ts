@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { StudentAddModel, StudentListModel, StudentResponseListModel, GetAllStudentDocumentsList, StudentDocumentAddModel, StudentSiblingSearch, StudentSiblingAssociation, StudentViewSibling, CheckStudentInternalIdViewModel } from '../models/studentModel';
+import { StudentAddModel, StudentListModel, StudentResponseListModel, GetAllStudentDocumentsList, StudentDocumentAddModel, StudentSiblingSearch, StudentSiblingAssociation, StudentViewSibling, CheckStudentInternalIdViewModel, StudentEnrollmentModel, StudentEnrollmentSchoolListModel } from '../models/studentModel';
 import { StudentCommentsAddView, StudentCommentsListViewModel } from '../models/studentCommentsModel'
 import { BehaviorSubject, Subject } from 'rxjs';
-import { GetAllParentInfoModel, AddParentInfoModel, ParentInfoList } from '../models/studentModel';
 import { CryptoService } from './Crypto.service';
 @Injectable({
   providedIn: 'root'
@@ -70,10 +69,35 @@ export class StudentService {
     return this.studentId;
   }
 
+  private studentMultiselectValue: any;
+  setStudentMultiselectValue(value: any) {
+    this.studentMultiselectValue = value;
+  }
+  getStudentMultiselectValue() {
+    return this.studentMultiselectValue;
+  }
+
   private studentImage;
   setStudentImage(imageInBase64) {
     this.studentImage = imageInBase64;
   }
+
+   // Update Mode in Student
+ public pageMode = new Subject;
+ modeToUpdate=this.pageMode.asObservable();
+
+ changePageMode(mode:number){
+     this.pageMode.next(mode);
+ }
+ 
+ // for cancel after Student photo added
+ public cloneStudentImage
+ setStudentCloneImage(image){
+   this.cloneStudentImage = image;
+ }
+ getStudentCloneImage(){
+   return this.cloneStudentImage;
+ }
 
   //Student comment
   addStudentComment(obj: StudentCommentsAddView) {
@@ -114,24 +138,6 @@ export class StudentService {
     return this.http.post<StudentDocumentAddModel>(apiurl, obj)
   }
 
-  viewParentListForStudent(obj: GetAllParentInfoModel) {
-    let apiurl = this.apiUrl + obj._tenantName + "/ParentInfo/viewParentListForStudent";
-    return this.http.post<GetAllParentInfoModel>(apiurl, obj)
-  }
-  addParentForStudent(obj: AddParentInfoModel) {
-    let apiurl = this.apiUrl + obj._tenantName + "/ParentInfo/addParentForStudent";
-    return this.http.post<AddParentInfoModel>(apiurl, obj)
-  }
-  deleteParentInfo(obj: AddParentInfoModel) {
-    let apiurl = this.apiUrl + obj._tenantName + "/ParentInfo/deleteParentInfo";
-    return this.http.post<AddParentInfoModel>(apiurl, obj)
-  }
-
-  searchParentInfoForStudent(obj: ParentInfoList) {
-    let apiurl = this.apiUrl + obj._tenantName + "/ParentInfo/searchParentInfoForStudent";
-    return this.http.post<ParentInfoList>(apiurl, obj)
-  }
-
   // Student Sibling
   siblingSearch(searchDetails: StudentSiblingSearch) {
     let apiurl = this.apiUrl + searchDetails._tenantName + "/Student/siblingSearch";
@@ -148,6 +154,30 @@ export class StudentService {
   removeSibling(studentDetails: StudentSiblingAssociation) {
     let apiurl = this.apiUrl + studentDetails._tenantName + "/Student/removeSibling";
     return this.http.post<StudentSiblingAssociation>(apiurl, studentDetails)
+  }
+
+  // Student Enrollment
+
+  updateStudentEnrollment(studentDetails:StudentEnrollmentModel){
+    let apiurl = this.apiUrl + studentDetails._tenantName + "/Student/updateStudentEnrollment";
+    return this.http.put<StudentEnrollmentModel>(apiurl, studentDetails)
+  }
+
+  getAllStudentEnrollment(studentDetails:StudentEnrollmentModel){
+    let apiurl = this.apiUrl + studentDetails._tenantName + "/Student/getAllStudentEnrollment";
+    return this.http.post<StudentEnrollmentModel>(apiurl, studentDetails)
+  }
+
+  studentEnrollmentSchoolList(schoolDetails:StudentEnrollmentSchoolListModel){
+    let apiurl = this.apiUrl + schoolDetails._tenantName + "/School/studentEnrollmentSchoolList";
+    return this.http.post<StudentEnrollmentSchoolListModel>(apiurl, schoolDetails)
+  }
+
+  addUpdateStudentPhoto(obj: StudentAddModel){
+    obj.studentMaster.studentId = this.getStudentId();
+    obj.studentMaster.studentPhoto = this.studentImage;
+    let apiurl = this.apiUrl + obj._tenantName + "/Student/addUpdateStudentPhoto";
+    return this.http.put<StudentAddModel>(apiurl, obj)
   }
 
 

@@ -84,7 +84,7 @@ const routes: Routes = [
           {
             path: 'parents',
             loadChildren: () => import('./pages/parent/parentinfo/parentinfo.module').then(m => m.ParentinfoModule),
-            //canActivate: [AuthGuard]            
+            canActivate: [AuthGuard]            
           }
         ]
       },
@@ -94,6 +94,26 @@ const routes: Routes = [
           {
             path: 'staff',
             loadChildren: () => import('./pages/staff/staffinfo/staffinfo.module').then(m => m.StaffinfoModule),
+            canActivate: [AuthGuard]            
+          }
+        ]
+      },
+      {
+        path: '',
+        children: [
+          {
+            path: 'course-manager',
+            loadChildren: () => import('./pages/courses/course-manager/course-manager.module').then(m => m.CourseManagerModule),
+            //canActivate: [AuthGuard]            
+          }
+        ]
+      },
+      {
+        path: '',
+        children: [
+          {
+            path: 'schedule-teacher',
+            loadChildren: () => import('./pages/scheduling/schedule-teacher/schedule-teacher.module').then(m => m.ScheduleTeacherModule),
             //canActivate: [AuthGuard]            
           }
         ]

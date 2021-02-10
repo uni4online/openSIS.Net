@@ -22,6 +22,8 @@ import { SharedModuleModule } from '../../../shared-module/shared-module.module'
 import { CalendarModule as AngularCalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import {MatSortModule} from '@angular/material/sort';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [SchoolDetailsComponent],
@@ -47,6 +49,8 @@ import {MatSortModule} from '@angular/material/sort';
     MatButtonToggleModule,
     SharedModuleModule,
     MatSortModule,
+    MatProgressSpinnerModule,
+    TranslateModule,
     AngularCalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory

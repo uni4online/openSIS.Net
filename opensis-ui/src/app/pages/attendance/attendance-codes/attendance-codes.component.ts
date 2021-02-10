@@ -19,7 +19,7 @@ import {MatTabGroup } from '@angular/material/tabs';
 import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confirm-dialog.component';
 import { AttendanceCodeService } from '../../../services/attendance-code.service';
 import { AttendanceCodeCategoryModel, AttendanceCodeModel, GetAllAttendanceCategoriesListModel, GetAllAttendanceCodeModel } from '../../../models/attendanceCodeModel';
-import {AttendanceCodeEnum} from '../../../enums/attendance_code.enum';
+import {AttendanceCodeEnum} from '../../../enums/attendance-code.enum';
 
 @Component({
   selector: 'vex-attendance-codes',
@@ -187,9 +187,17 @@ export class AttendanceCodesComponent implements OnInit {
     this.getAllAttendanceCategoriesListModel.schoolId=+sessionStorage.getItem("selectedSchoolId");
     this.attendanceCodeService.getAllAttendanceCodeCategories(this.getAllAttendanceCategoriesListModel).subscribe((res)=>{
       if(res._failure){
-        this.snackbar.open('Attendance Category failed. '+ res._message, 'LOL THANKS', {
-        duration: 10000
-        });
+        if(res._message==="NO RECORD FOUND"){
+          this.attendanceCategories=[];
+          this.snackbar.open(res._message, '', {
+            duration: 10000
+          });
+         
+        } else{
+          this.snackbar.open('Attendance Category List failed. ' + res._message, '', {
+            duration: 10000
+          });
+        }
       }else{     
         this.attendanceCategories = res.attendanceCodeCategoriesList;
         if(this.isCategoryDeleted){
@@ -220,7 +228,7 @@ export class AttendanceCodesComponent implements OnInit {
           duration: 10000
         });
       }else if (res._failure) {
-        this.snackbar.open(res._message, 'LOL THANKS', {
+        this.snackbar.open(res._message, '', {
           duration: 10000
         });
       } else {
@@ -242,8 +250,20 @@ export class AttendanceCodesComponent implements OnInit {
   this.getAllAttendanceCodeModel.attendanceCategoryId=this.selectedAttendanceCategory;
   this.getAllAttendanceCodeModel.schoolId=+sessionStorage.getItem("selectedSchoolId");
   this.attendanceCodeService.getAllAttendanceCode(this.getAllAttendanceCodeModel).subscribe((res)=>{
-    this.attendanceCodeList = new MatTableDataSource(res.attendanceCodeList);
-    this.attendanceCodeList.sort = this.sort;
+    if(res._failure){
+      if(res._message==="NO RECORD FOUND"){
+        this.attendanceCodeList = new MatTableDataSource([]);
+        this.attendanceCodeList.sort = this.sort;       
+      } else{
+        this.snackbar.open('Attendance Codes failed. ' + res._message, '', {
+          duration: 10000
+        });
+      }
+    }else{
+      this.attendanceCodeList = new MatTableDataSource(res.attendanceCodeList);
+      this.attendanceCodeList.sort = this.sort;
+    }
+   
   })
   }
 
@@ -259,7 +279,7 @@ export class AttendanceCodesComponent implements OnInit {
           duration: 10000
         });
       }else if (res._failure) {
-        this.snackbar.open(res._message, 'LOL THANKS', {
+        this.snackbar.open(res._message, '', {
           duration: 10000
         });
       } else {
